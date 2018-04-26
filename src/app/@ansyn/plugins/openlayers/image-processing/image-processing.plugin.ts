@@ -20,9 +20,9 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
-
+	private lastProcessingParams = {};
 	currentMap$ = this.store$.select(mapStateSelector)
-		.map(( mapState: IMapState ) => MapFacadeService.mapById(mapState.mapsList, this.mapId))
+		.map((mapState: IMapState) => MapFacadeService.mapById(mapState.mapsList, this.mapId))
 		.filter(Boolean);
 
 	onToggleImageProcessing$: Observable<any> = this.currentMap$
@@ -33,9 +33,9 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	imageManualProcessArgs$ = this.currentMap$
 		.map((currentMap: CaseMapState) => currentMap.data.imageManualProcessArgs)
-		.distinctUntilChanged(isEqual)
 		.filter(this.isImageLayerAndImageProcessing.bind(this))
-		.do(this.setManualImageProcessing.bind(this));
+		.filter((imageManualProcessArgs) => !isEqual(this.lastProcessingParams, imageManualProcessArgs))
+		.do((imageManualProcessArgs) => this._imageProcessing.processImage(imageManualProcessArgs));
 
 	constructor(public store$: Store<any>) {
 		super();
@@ -65,19 +65,14 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	public setManualImageProcessing(processingParams: Object): void {
-		this._imageProcessing.processImage(processingParams);
-	}
-
-
 	public isImageLayerAndImageProcessing(): boolean {
-		return Boolean(this.imageLayer && this._imageProcessing)
+		return Boolean(this.imageLayer && this._imageProcessing);
 	}
 
 	onInit() {
 		this.subscriptions.push(
 			this.onToggleImageProcessing$.subscribe(),
 			this.imageManualProcessArgs$.subscribe()
-		)
+		);
 	}
 }

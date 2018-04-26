@@ -28,23 +28,19 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		.map((tools: IToolsState) => tools.manualImageProcessingParams)
 		.distinctUntilChanged()
 		.filter(Boolean)
-		.do((imageManualProcessArgs) => {
-			console.log(imageManualProcessArgs);
-			this.imageManualProcessArgs = imageManualProcessArgs;
-		});
+		.do((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs);
 
 	get params() {
 		return this.config.ImageProcParams;
 	}
 
-	get defaultValues(): ImageManualProcessArgs {
+	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
 		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
 			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
-
-	imageManualProcessArgs: ImageManualProcessArgs = this.defaultValues;
+	imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
 
 	@HostBinding('class.expand') @Input() expand;
 
@@ -62,7 +58,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	}
 
 	resetParams() {
-		this.store$.dispatch(new SetManualImageProcessing(this.defaultValues));
+		this.store$.dispatch(new SetManualImageProcessing({ ...this.defaultImageManualProcessArgs }));
 	}
 
 	ngOnInit(): void {

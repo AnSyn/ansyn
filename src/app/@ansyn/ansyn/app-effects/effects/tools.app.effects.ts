@@ -79,6 +79,12 @@ export class ToolsAppEffects {
 		return this.config.ImageProcParams;
 	}
 
+	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
+		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+		}, {});
+	}
+
 	/**
 	 * @type Effect
 	 * @name drawInterrupted$
@@ -165,29 +171,16 @@ export class ToolsAppEffects {
 		});
 
 	@Effect()
-	updateImageProcessing$: any = this
+	updateImageProcessingOnTools$: any = this
 		.activeMap$
+		.filter((map) => Boolean(map.data.overlay))
 		.withLatestFrom(this.store$.select(toolsStateSelector).pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))
-		.mergeMap(([map, manualImageProcessingParams]: [CaseMapState, ImageManualProcessArgs]) => {
-			const imageManualProcessArgs: ImageManualProcessArgs = <any> {};
-			this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
-			console.log('Yolo');
+		.filter(([map, manualImageProcessingParams]) => !isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams))
+		.mergeMap(([map]: [CaseMapState, ImageManualProcessArgs]) => [
+			map.data.isAutoImageProcessingActive ? new DisableImageProcessing() : new EnableImageProcessing(),
+			new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs)
+		]);
 
-			const actions = [];
-			if (map.data.isAutoImageProcessingActive) {
-				actions.push(new DisableImageProcessing());
-			} else {
-				actions.push(new EnableImageProcessing());
-			}
-			if (Boolean(map.data.overlay)) {
-				if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
-					actions.push(new SetManualImageProcessing((map.data && map.data.imageManualProcessArgs) || imageManualProcessArgs));
-				}
-			}
-			return actions;
-		});
-
-	//
 	// @Effect()
 	// overlayChanged$: any = this.overlay$
 	// 	.mergeMap((map: CaseMapState) => {

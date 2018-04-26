@@ -3,6 +3,7 @@ import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
 import { MarkUpClass, MarkUpData, OverlayDropMarkUp, TimelineRange } from '../reducers/overlays.reducer';
 import { OverlaysCriteria, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { HoveredOverlayData } from '@ansyn/overlays/models/hovered-overlay-data.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -28,7 +29,9 @@ export const OverlaysActionTypes = {
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
 	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
-	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE')
+	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE'),
+	SET_HOVERED_OVERLAY: 'SET_HOVERED_OVERLAY',
+	CLEAR_HOVERED_OVERLAY: 'CLEAR_HOVERED_OVERLAY'
 };
 
 export class SelectOverlayAction implements Action {
@@ -173,6 +176,19 @@ export class SetOverlaysStatusMessage implements Action {
 	}
 }
 
+export class SetHoveredOverlay implements Action {
+	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
+
+	constructor(public payload: HoveredOverlayData) {
+	}
+}
+
+export class ClearHoveredOverlay implements Action {
+	type = OverlaysActionTypes.CLEAR_HOVERED_OVERLAY;
+
+	constructor(public payload?: string) {
+	}
+}
 
 export class RedrawTimelineAction implements Action {
 	type = OverlaysActionTypes.REDRAW_TIMELINE;
@@ -200,3 +216,5 @@ export type OverlaysActions
 	| SetOverlaysStatusMessage
 	| AddMarkUp
 	| RemoveMarkUp
+	| SetHoveredOverlay
+	| ClearHoveredOverlay

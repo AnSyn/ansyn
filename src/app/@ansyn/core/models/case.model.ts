@@ -32,7 +32,8 @@ export enum CaseGeoFilter {
 	Polygon = 'Polygon'
 }
 
-export interface ImageProcessingHash {
+export interface OverlaysManualProcessArgs {
+	/* overlayId -> imageManualProcessArgs */
 	[key: string]: ImageManualProcessArgs
 }
 

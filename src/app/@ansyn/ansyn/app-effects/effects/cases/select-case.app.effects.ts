@@ -101,14 +101,12 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: Case): Action[] {
 		const { state } = payload;
 		// status-bar
-		const { orientation, geoFilter, timeFilter } = state;
+		const { orientation, geoFilter, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
 		// core
 		const { favoriteOverlays, time, region } = state;
 		const { layout } = state.maps;
-
-		const manualArguments  = state.overlaysManualProcessArgs;
 
 		if (typeof time.from === 'string') {
 			time.from = new Date(time.from);
@@ -127,7 +125,7 @@ export class SelectCaseAppEffects {
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetAnnotationsLayer(annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
-			new UpdateImageProcessingHash(manualArguments)
+			new UpdateOverlaysManualProcessArgs(overlaysManualProcessArgs)
 		];
 	}
 

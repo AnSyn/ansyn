@@ -29,7 +29,7 @@ export interface IToolsState {
 	annotationMode: AnnotationMode;
 	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
-	imageProcessingHash: { [key: string]: ImageManualProcessArgs }
+	overlaysManualProcessArgs: OverlaysManualProcessArgs;
 }
 
 export const toolsInitialState: IToolsState = {
@@ -45,7 +45,7 @@ export const toolsInitialState: IToolsState = {
 		fillColor: '#ffffff'
 	},
 	manualImageProcessingParams: undefined,
-	imageProcessingHash: {}
+	overlaysManualProcessArgs: {}
 };
 
 export const toolsFeatureKey = 'tools';
@@ -54,20 +54,8 @@ export const toolsStateSelector: MemoizedSelector<any, IToolsState> = createFeat
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<toolsFlags, boolean>;
 	switch (action.type) {
-
-		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS: {
-			const { mapId, processingParams } = action.payload;
-			return {
-				...state,
-				imageProcessingHash: {
-					...state.imageProcessingHash,
-					[mapId]: processingParams
-				}
-			};
-		}
-
-		case ToolsActionsTypes.UPDATE_IMAGE_PROCESSING_HASH:
-			return { ...state, imageProcessingHash: action.payload };
+		case ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS:
+			return { ...state, overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload }};
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };
@@ -140,14 +128,10 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
-			tmpMap = new Map(state.flags);
-			return { ...state, flags: tmpMap, manualImageProcessingParams: action.payload.processingParams };
+			return { ...state, manualImageProcessingParams: action.payload };
 
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
 			return { ...state, activeOverlaysFootprintMode: action.payload };
-
-		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS:
-			return { ...state, manualImageProcessingParams: action.payload.processingParams };
 
 		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
@@ -162,4 +146,4 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 }
 
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
-export const selectImageProcessingHash = createSelector(toolsStateSelector, (tools: IToolsState) => tools.imageProcessingHash);
+export const selectOverlaysManualProcessArgs = createSelector(toolsStateSelector, (tools: IToolsState) => tools.overlaysManualProcessArgs);

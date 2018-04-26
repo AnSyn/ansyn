@@ -21,7 +21,7 @@ import { ContextMenuPlugin } from '@ansyn/plugins/openlayers/context-menu/contex
 		ImageryModule.provideCollection([
 			{ provide: BaseImageryPlugin, useClass: NorthCalculationsPlugin, deps: [Actions, LoggerService, Store, ProjectionService], multi: true },
 			{ provide: BaseImageryPlugin, useClass: CenterMarkerPlugin, deps: [], multi: true },
-			{ provide: BaseImageryPlugin, useClass: ImageProcessingPlugin, deps: [Actions], multi: true },
+			{ provide: BaseImageryPlugin, useClass: ImageProcessingPlugin, deps: [Store], multi: true },
 			{ provide: BaseImageryPlugin, useClass: MonitorPlugin, deps: [Store], multi: true },
 			{ provide: BaseImageryPlugin, useClass: ContextMenuPlugin, deps: [Store, Actions, ProjectionService], multi: true },
 			...VisualizersProviders

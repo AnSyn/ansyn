@@ -12,7 +12,7 @@ import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class ImageProcessingPlugin extends BaseImageryPlugin {
@@ -21,22 +21,23 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
 
-	onToggleImageProcessing$: Observable<any> = this.actions$
-		.ofType<SetMapAutoImageProcessing>(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
-		.filter((action: SetMapAutoImageProcessing) => action.payload.mapId === this.mapId && this.isImageLayerAndImageProcessing())
-		.do((action: SetMapAutoImageProcessing) =>  {
-			this.setAutoImageProcessing(action.payload.toggleValue)
-		});
+	currentMap$ = this.store$.select(mapStateSelector)
+		.map(( mapState: IMapState ) => MapFacadeService.mapById(mapState.mapsList, this.mapId))
+		.filter(Boolean);
 
-	onSetManualImageProcessing$: Observable<any> = this.actions$
-		.ofType<SetMapManualImageProcessing>(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
-		.filter((action: SetMapManualImageProcessing) => action.payload.mapId === this.mapId && this.isImageLayerAndImageProcessing())
-		.do((action: SetMapManualImageProcessing) => {
-			this.setManualImageProcessing(action.payload.processingParams);
-		});
+	onToggleImageProcessing$: Observable<any> = this.currentMap$
+		.map((currentMap: CaseMapState) => currentMap.data.isAutoImageProcessingActive)
+		.distinctUntilChanged()
+		.filter(this.isImageLayerAndImageProcessing.bind(this))
+		.do(this.setAutoImageProcessing.bind(this));
 
+	imageManualProcessArgs$ = this.currentMap$
+		.map((currentMap: CaseMapState) => currentMap.data.imageManualProcessArgs)
+		.distinctUntilChanged(isEqual)
+		.filter(this.isImageLayerAndImageProcessing.bind(this))
+		.do(this.setManualImageProcessing.bind(this));
 
-	constructor(public actions$: Actions) {
+	constructor(public store$: Store<any>) {
 		super();
 	}
 
@@ -76,7 +77,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	onInit() {
 		this.subscriptions.push(
 			this.onToggleImageProcessing$.subscribe(),
-			this.onSetManualImageProcessing$.subscribe()
+			this.imageManualProcessArgs$.subscribe()
 		)
 	}
 }

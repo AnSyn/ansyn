@@ -152,18 +152,14 @@ export class ToolsAppEffects {
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
-		.mergeMap(([action, mapState, casesState]: [DisplayOverlaySuccessAction, IMapState, ICasesState]) => {
-			// action 1: EnableImageProcessing
+		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector))
+		.mergeMap(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
 			let imageManualProcessArgs: ImageManualProcessArgs = <any> {};
 			this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
 			const actions = [];
 			const updatedMapList = [...mapState.mapsList];
-			console.log('New Overlay Loaded');
-			if (casesState.selectedCase.state.overlaysManualProcessArgs) {
-				imageManualProcessArgs = casesState.selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] || imageManualProcessArgs;
-			}
-			// actions.push(new UpdateOverlaysManualProcessArgs({ [action.payload.overlay.id]: imageManualProcessArgs }));
+			const mapToUpdate = updatedMapList.find((map) => map.id === MapFacadeService.activeMap(mapState).id);
+			mapToUpdate.data.imageManualProcessArgs = toolsState.overlaysManualProcessArgs[action.payload.overlay.id];
 			actions.push(new SetMapsDataActionStore({ mapsList: updatedMapList }));
 			return actions;
 		});
@@ -172,8 +168,7 @@ export class ToolsAppEffects {
 	updateImageProcessing$: any = this
 		.activeMap$
 		.withLatestFrom(this.store$.select(toolsStateSelector).pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))
-		.filter(([map, manualImageProcessingParams]) => !isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams))
-		.mergeMap(([map]: [CaseMapState, ImageManualProcessArgs]) => {
+		.mergeMap(([map, manualImageProcessingParams]: [CaseMapState, ImageManualProcessArgs]) => {
 			const imageManualProcessArgs: ImageManualProcessArgs = <any> {};
 			this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
 			console.log('Yolo');
@@ -185,8 +180,9 @@ export class ToolsAppEffects {
 				actions.push(new EnableImageProcessing());
 			}
 			if (Boolean(map.data.overlay)) {
-				const overlayId = map.data.overlay.id;
-				actions.push(new SetManualImageProcessing((map.data && map.data.imageManualProcessArgs) || imageManualProcessArgs));
+				if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
+					actions.push(new SetManualImageProcessing((map.data && map.data.imageManualProcessArgs) || imageManualProcessArgs));
+				}
 			}
 			return actions;
 		});

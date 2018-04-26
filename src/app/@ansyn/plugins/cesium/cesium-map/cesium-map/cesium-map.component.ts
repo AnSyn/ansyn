@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IMap, ImageryMapComponent } from '@ansyn/imagery/index';
 import { CesiumMap } from './cesium-map';
-import { BaseImageryPlugin } from '@ansyn/imagery';
 import {
 	BaseImageryPluginProvider, ProvideMap,
 } from '@ansyn/imagery/imagery/providers/imagery.providers';
+import { ImageryMapComponent } from '@ansyn/imagery/model/imagery-map-component';
+import { IMap } from '@ansyn/imagery/model/imap';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @Component({
 	selector: 'ansyn-cesium-component',

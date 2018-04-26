@@ -1,12 +1,13 @@
-import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { inject, TestBed } from '@angular/core/testing';
-import { DataLayersService } from './data-layers.service';
+import { DataLayersService, layersConfig } from './data-layers.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;

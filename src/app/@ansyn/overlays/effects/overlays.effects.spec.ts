@@ -13,11 +13,9 @@ import {
 	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
 	overlaysStateSelector
 } from '../reducers/overlays.reducer';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreInitialState, coreStateSelector, LoggerService } from '@ansyn/core';
-import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

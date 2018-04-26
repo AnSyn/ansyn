@@ -12,14 +12,14 @@ import {
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Action, Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
+import { IOverlaysState, overlaysStateSelector, overlaysStatusMessages } from '../reducers/overlays.reducer';
 import { Overlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState, UpdateOverlaysCountAction } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
-import { overlaysStatusMessages } from '../reducers/index';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export class OverlaysEffects {

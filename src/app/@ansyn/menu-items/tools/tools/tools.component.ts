@@ -8,8 +8,8 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { IToolsState, SubMenuEnum, toolsFlags, toolsStateSelector, selectSubMenu } from '../reducers/tools.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
 import { SetSubMenu } from '../actions/tools.actions';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-tools',

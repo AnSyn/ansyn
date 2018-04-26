@@ -5,13 +5,12 @@ import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
-import { CaseMapPosition } from '@ansyn/core';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/fromPromise';
 import { Point } from 'geojson';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export interface MapInstanceChanged {
 	id: string;

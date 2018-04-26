@@ -1,17 +1,29 @@
 import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
-import { CopySelectedCaseLinkAction, ExpandAction, UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
-import { Observable } from 'rxjs/Observable';
 import {
-	BackToWorldView, CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter, CaseTimeState,
-	CoreActionTypes, coreStateSelector, GoAdjacentOverlay, ICoreState, LayoutKey,
-	layoutOptions, Overlay, OverlaysCriteria, SetLayoutAction, SetOverlaysCriteriaAction, UpdateOverlaysCountAction
-} from '@ansyn/core';
-import { IStatusBarConfig, IToolTipsConfig, StatusBarConfig, ComboBoxesProperties, statusBarFlagsItemsEnum } from '../../models';
-import { SetComboBoxesProperties } from '../../actions';
-import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+	CopySelectedCaseLinkAction, ExpandAction, SetComboBoxesProperties,
+	UpdateStatusFlagsAction
+} from '../../actions/status-bar.actions';
+import { Observable } from 'rxjs/Observable';
+
+import { ComboBoxesProperties, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Actions } from '@ngrx/effects';
+import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
+import {
+	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter,
+	CaseTimeState
+} from '@ansyn/core/models/case.model';
+import {
+	BackToWorldView,
+	CoreActionTypes, GoAdjacentOverlay, SetLayoutAction, SetOverlaysCriteriaAction,
+	UpdateOverlaysCountAction
+} from '@ansyn/core/actions/core.actions';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
+import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 
 @Component({
 	selector: 'ansyn-status-bar',

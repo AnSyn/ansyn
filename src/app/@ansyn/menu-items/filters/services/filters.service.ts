@@ -2,9 +2,9 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { Filter } from '../models/filter';
 import 'rxjs/add/observable/of';
-import { FilterMetadata } from '@ansyn/menu-items/filters';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { CaseFacetsState, CaseFilters } from '@ansyn/core';
+import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
+import { CaseFacetsState, CaseFilters } from '@ansyn/core/models/case.model';
 
 export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
 

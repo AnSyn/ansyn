@@ -1,5 +1,5 @@
 import { Filter } from '../filter';
-import { FilterType } from '@ansyn/core';
+import { FilterType } from '@ansyn/core/models/case.model';
 
 export abstract class FilterMetadata {
 	type: FilterType;

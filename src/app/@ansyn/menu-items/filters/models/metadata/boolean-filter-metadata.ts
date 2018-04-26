@@ -1,7 +1,7 @@
 import { Filter } from '../filter';
 import { CaseBooleanFilterMetadata } from '@ansyn/menu-items/cases/models/case.model';
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType } from '@ansyn/core';
+import { FilterType } from '@ansyn/core/models/case.model';
 
 export interface BooleanProperties {
 	value: boolean;

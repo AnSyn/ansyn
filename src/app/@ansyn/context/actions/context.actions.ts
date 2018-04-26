@@ -1,4 +1,4 @@
-import { Context } from '@ansyn/core';
+import { Context } from '@ansyn/core/models/context.model';
 
 export enum ContextActionTypes {
 	ADD_ALL_CONTEXT = '[Context] Add All Contexts',

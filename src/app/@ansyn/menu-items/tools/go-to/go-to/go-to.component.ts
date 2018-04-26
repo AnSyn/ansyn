@@ -8,14 +8,14 @@ import {
 	SetPinLocationModeAction
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs/Observable';
-import { IToolsConfig, toolsConfig } from '../../models';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
-import { CoordinatesSystem } from '@ansyn/core/models';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
 import { SetSubMenu } from '../../actions/tools.actions';
 import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
+import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-go-to',

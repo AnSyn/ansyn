@@ -1,6 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { Filter } from '../filter';
-import { FilterType } from '@ansyn/core';
+import { FilterType } from '@ansyn/core/models/case.model';
 
 export interface EnumFiled {
 	count: number;

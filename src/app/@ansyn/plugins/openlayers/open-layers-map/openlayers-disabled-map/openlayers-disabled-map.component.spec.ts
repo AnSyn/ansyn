@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OpenLayersDisabledMapComponent } from './openlayers-disabled-map.component';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cold } from 'jasmine-marbles';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
 
 describe('openLayersMap OpenLayersDisabledMapComponent spec', () => {
 	let component: OpenLayersDisabledMapComponent;

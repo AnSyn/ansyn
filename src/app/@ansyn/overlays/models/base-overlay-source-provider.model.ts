@@ -1,4 +1,3 @@
-import { LoggerService, Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
@@ -7,6 +6,7 @@ import { LimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/limited-arra
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 export interface DateRange {
 	start: Date;

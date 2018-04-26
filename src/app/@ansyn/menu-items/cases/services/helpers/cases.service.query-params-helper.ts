@@ -8,13 +8,12 @@ import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
 import { Context } from '../../models/context.model';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import * as centroid from '@turf/centroid';
-import { CaseState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import {
+	CaseGeoFilter, CaseState, ImageManualProcessArgs,
+	OverlaysManualProcessArgs
+} from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
-import {
-	CaseFacetsState, CaseGeoFilter, CaseLayersState, IContextEntity, Overlay,
-	OverlaysManualProcessArgs
-} from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 
 export class QueryParamsHelper {

@@ -2,19 +2,21 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
 import { IAppState } from '../';
 import '@ansyn/core/utils/clone-deep';
-import { CoreActionTypes, SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	CoreActionTypes, GoAdjacentOverlay, SetFavoriteOverlaysAction, SetOverlaysCriteriaAction,
+	ToggleFavoriteAction
+} from '@ansyn/core/actions/core.actions';
+import { DisplayOverlayFromStoreAction, LoadOverlaysAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { GoAdjacentOverlay, LoggerService, SetOverlaysCriteriaAction } from '@ansyn/core';
-import { LoadOverlaysAction, MarkUpClass, SetMarkUp } from '@ansyn/overlays';
-import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 @Injectable()
 export class CoreAppEffects {

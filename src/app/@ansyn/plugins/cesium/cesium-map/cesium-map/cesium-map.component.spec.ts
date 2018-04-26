@@ -1,10 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CesiumMapComponent } from './cesium-map.component';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map';
-import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map';
+import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map/cesium-map';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
 
 describe('CesiumMapComponent', () => {
 	let component: CesiumMapComponent;

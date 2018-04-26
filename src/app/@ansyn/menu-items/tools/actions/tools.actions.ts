@@ -1,10 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
-import { AnnotationProperties } from '../reducers/tools.reducer';
+import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core/models/case.model';
+import { AnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ImageManualProcessArgs } from '@ansyn/core';
-import { SubMenuEnum } from '@ansyn/menu-items';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),

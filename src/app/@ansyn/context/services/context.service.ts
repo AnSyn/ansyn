@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@angular/core';
 import { ContextConfig } from '../models/context.config';
 import { IContextConfig } from '../models/context.config.model';
 import { Observable } from 'rxjs/Observable';
-import { ErrorHandlerService } from '@ansyn/core';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 @Injectable()
 export class ContextService {

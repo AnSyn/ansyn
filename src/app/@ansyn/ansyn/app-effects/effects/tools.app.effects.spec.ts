@@ -19,19 +19,23 @@ import {
 	SetActiveOverlaysFootprintModeAction,
 	SetManualImageProcessingArguments
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { Case } from '@ansyn/core/models/case.model';
-import { CasesReducer, ICasesState, SelectCaseAction } from '@ansyn/menu-items/cases';
-import { ActiveMapChangedAction, SetMapAutoImageProcessing } from '@ansyn/map-facade';
+import { Case, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import {
 	DisableImageProcessing,
 	EnableImageProcessing,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess
-} from '@ansyn/menu-items/tools';
-import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
+} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { SetMapManualImageProcessing, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import {
+	ActiveMapChangedAction, SetMapAutoImageProcessing, SetMapManualImageProcessing,
+	SetMapsDataActionStore
+} from '@ansyn/map-facade/actions/map.actions';
+import {
+	casesFeatureKey, CasesReducer, casesStateSelector,
+	ICasesState
+} from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -40,8 +44,9 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { BackToWorldView, ImageManualProcessArgs } from '@ansyn/core';
-import { toolsConfig } from '@ansyn/menu-items/tools/models';
+import { BackToWorldView } from '@ansyn/core/actions/core.actions';
+import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -128,38 +133,38 @@ describe('ToolsAppEffects', () => {
 							ed50Customized: ''
 						},
 						ImageProcParams:
-						[
-							{
-								name: 'Sharpness',
-								defaultValue: 0,
-								min: 0,
-								max: 100
-							},
-							{
-								name: 'Contrast',
-								defaultValue: 0,
-								min: -100,
-								max: 100
-							},
-							{
-								name: 'Brightness',
-								defaultValue: 100,
-								min: -100,
-								max: 100
-							},
-							{
-								name: 'Gamma',
-								defaultValue: 100,
-								min: 1,
-								max: 200
-							},
-							{
-								name: 'Saturation',
-								defaultValue: 0,
-								min: 1,
-								max: 100
-							}
-						]
+							[
+								{
+									name: 'Sharpness',
+									defaultValue: 0,
+									min: 0,
+									max: 100
+								},
+								{
+									name: 'Contrast',
+									defaultValue: 0,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Brightness',
+									defaultValue: 100,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Gamma',
+									defaultValue: 100,
+									min: 1,
+									max: 200
+								},
+								{
+									name: 'Saturation',
+									defaultValue: 0,
+									min: 1,
+									max: 100
+								}
+							]
 					}
 				}
 			]

@@ -30,7 +30,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		.filter(Boolean)
 		.do((imageManualProcessArgs) => {
 			console.log(imageManualProcessArgs);
-			this.imageManualProcessArgs = imageManualProcessArgs
+			this.imageManualProcessArgs = imageManualProcessArgs;
 		});
 
 	get params() {
@@ -39,7 +39,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	get defaultValues(): ImageManualProcessArgs {
 		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any> {...initialObject, [imageProcParam.name]: imageProcParam.defaultValue }
+			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 

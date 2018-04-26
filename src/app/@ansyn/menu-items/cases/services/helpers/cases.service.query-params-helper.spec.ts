@@ -7,8 +7,10 @@ import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 describe('CasesService', () => {
 	let casesService: CasesService;

@@ -1,7 +1,7 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
-import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
+import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core/models/case.model';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',

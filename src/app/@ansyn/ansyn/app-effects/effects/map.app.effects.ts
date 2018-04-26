@@ -3,63 +3,64 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable, ObservableInput } from 'rxjs/Observable';
 import {
-	DisplayOverlayFailedAction, DisplayOverlaySuccessAction, OverlaysActionTypes,
-	RequestOverlayByIDFromBackendAction
+	DisplayOverlayAction,
+	DisplayOverlayFailedAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
-import { BaseMapSourceProvider, ImageryCommunicatorService, ImageryProviderService } from '@ansyn/imagery';
 import {
-	LayersActionTypes, SelectLayerAction,
+	LayersActionTypes,
+	SelectLayerAction,
 	UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { IAppState } from '../';
-import { MapActionTypes, MapFacadeService } from '@ansyn/map-facade';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
-import { DisplayOverlayAction, IOverlaysState, MarkUpClass, OverlaysService, SetMarkUp } from '@ansyn/overlays';
-import {
-	statusBarToastMessages
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
-import {
-	ImageryCreatedAction
-} from '@ansyn/map-facade/actions/map.actions';
-import {
-	endTimingLog,
-	extentFromGeojson,
-	getFootprintIntersectionRatioInExtent,
-	startTimingLog
-} from '@ansyn/core/utils';
-import {
-	SetMapGeoEnabledModeToolsActionStore,
-	StartMouseShadow
-} from '@ansyn/menu-items/tools/actions/tools.actions';
+import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { ImageryCreatedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { SetMapGeoEnabledModeToolsActionStore, StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { CaseMapState } from '@ansyn/core/models';
-import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { CoreActionTypes, SetToastMessageAction, ToggleMapLayersAction } from '@ansyn/core/actions/core.actions';
-import { AddAlertMsg, AlertMsgTypes, BackToWorldView, RemoveAlertMsg } from '@ansyn/core';
+import {
+	AddAlertMsg, BackToWorldView,
+	CoreActionTypes, RemoveAlertMsg, SetToastMessageAction,
+	ToggleMapLayersAction
+} from '@ansyn/core/actions/core.actions';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
-import { toolsFlags } from '@ansyn/menu-items';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils/calc-extent';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 
 @Injectable()
 export class MapAppEffects {
+	set onDisplayOverlay$(value: ObservableInput<any>) {
+		this._onDisplayOverlay$ = value;
+	}
 
 
 	/**
 	 * @type Effect
-	 * @name onDisplayOverlay$
+	 * @name _onDisplayOverlay$
 	 * @ofType DisplayOverlayAction
 	 * @dependencies map
 	 * @filter There is a full overlay
 	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?, SetToastMessageAction?
 	 */
-	@Effect()
-	onDisplayOverlay$: ObservableInput<any> = this.actions$
+	@Effect() private
+	_onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(this.onDisplayOverlayFilter.bind(this))

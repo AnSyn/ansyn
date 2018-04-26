@@ -1,14 +1,15 @@
-import { BaseMapSourceProvider } from '@ansyn/imagery/index';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
-import { OpenlayersMapName, ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map';
 import { Injectable } from '@angular/core';
-import { Overlay } from '@ansyn/core/index';
-import { extentFromGeojson } from '@ansyn/core/utils/index';
 import proj from 'ol/proj';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
+import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 
 export const OpenLayerPlanetSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';

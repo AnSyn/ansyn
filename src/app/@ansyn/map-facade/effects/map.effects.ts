@@ -3,44 +3,31 @@ import { Actions, Effect } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import * as intersect from '@turf/intersect';
-import { OverlaysService } from '@ansyn/overlays';
 import { polygon } from '@turf/helpers';
-import {
-	AddAlertMsg,
-	AlertMsgTypes,
-	BackToWorldSuccess,
-	BackToWorldView,
-	CaseMapPosition,
-	CoreActionTypes,
-	coreStateSelector,
-	ICoreState, RemoveAlertMsg,
-	SetLayoutSuccessAction
-} from '@ansyn/core';
+
+import 'rxjs/add/observable/forkJoin';
 import {
 	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
-	DecreasePendingMapsCountAction,
-	ImageryCreatedAction,
-	ImageryRemovedAction,
-	MapActionTypes,
-	MapsListChangedAction,
-	PinLocationModeTriggerAction,
-	PositionChangedAction,
-	SetMapsDataActionStore,
+	AnnotationContextMenuTriggerAction, ContextMenuGetFilteredOverlaysAction, DecreasePendingMapsCountAction,
+	ImageryCreatedAction, ImageryRemovedAction,
+	MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction, PositionChangedAction, SetMapsDataActionStore,
 	SynchronizeMapsAction
-} from '../actions/map.actions';
-
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
-
-import { ContextMenuGetFilteredOverlaysAction } from '@ansyn/map-facade';
-import 'rxjs/add/observable/forkJoin';
+} from '@ansyn/map-facade/actions/map.actions';
+import {
+	AddAlertMsg, BackToWorldSuccess, BackToWorldView, CoreActionTypes, RemoveAlertMsg,
+	SetLayoutSuccessAction
+} from '@ansyn/core/actions/core.actions';
+import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 @Injectable()
 export class MapEffects {

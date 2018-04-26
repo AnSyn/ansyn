@@ -1,6 +1,4 @@
-import { IMap } from '@ansyn/imagery';
 import { EventEmitter, Injectable } from '@angular/core';
-import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -23,6 +21,8 @@ import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
+import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { IMap } from '@ansyn/imagery/model/imap';
 
 export const OpenlayersMapName = 'openLayersMap';
 

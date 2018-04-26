@@ -2,15 +2,11 @@ import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provide
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
-import { IOverlaysState, TimelineRange } from '../reducers/overlays.reducer';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysState, OverlayDrop, TimelineRange } from '../reducers/overlays.reducer';
+import { OverlaysCriteria, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
-import * as bbox from '@turf/bbox';
-import * as bboxPolygon from '@turf/bbox-polygon';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { OverlaysCriteria } from '@ansyn/core';
-import { OverlayDrop } from '@ansyn/overlays';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 

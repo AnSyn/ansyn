@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SetLayoutAction, SetWindowLayout, WindowLayout } from '@ansyn/core/index';
 import { Actions } from '@ngrx/effects';
-import { LoadDefaultCaseAction } from '@ansyn/menu-items';
+import { SetLayoutAction, SetWindowLayout } from '@ansyn/core/actions/core.actions';
+import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { WindowLayout } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class AnsynApi {

@@ -1,15 +1,13 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { VisualizerStateStyle } from '../models/visualizer-state';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable } from '@angular/core';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
-import { CommunicatorEntity } from '@ansyn/imagery';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import { Actions } from '@ngrx/effects';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { BackToWorldView, CoreActionTypes, Overlay } from '@ansyn/core';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 @Injectable()
 export class FrameVisualizer extends EntitiesVisualizer {
@@ -85,6 +83,6 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			this.drawFrameToOverLay$.subscribe(),
 			this.isActive$.subscribe(),
 			this.removeOverlayFram$.subscribe()
-		)
+		);
 	}
 }

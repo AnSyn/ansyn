@@ -10,20 +10,20 @@ import { ContextModule } from '@ansyn/context/context.module';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule } from '@angular/common/http';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
 import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
-import { contextFeatureKey } from '@ansyn/context/reducers';
-import { ContextReducer } from '@ansyn/context/reducers/context.reducer';
-import { AddCaseAction } from '@ansyn/menu-items';
-import { ContextConfig } from '@ansyn/context';
+import { contextFeatureKey, ContextReducer } from '@ansyn/context/reducers/context.reducer';
 import { ContextService } from '@ansyn/context/services/context.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { ContextConfig } from '@ansyn/context/models/context.config';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

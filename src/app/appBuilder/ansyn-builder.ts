@@ -4,12 +4,11 @@ import { NgModule, NgModuleRef } from '@angular/core';
 import { AnsynApi } from './ansyn-api.service';
 import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { AnsynModule } from '@ansyn/ansyn/ansyn.module';
-import { getProviders } from '@ansyn/ansyn/app-providers/index';
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { LoadDefaultCaseAction } from '@ansyn/menu-items/index';
-import { coreInitialState, WindowLayout } from '@ansyn/core';
+import { WindowLayout } from '@ansyn/core/reducers/core.reducer';
+import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {

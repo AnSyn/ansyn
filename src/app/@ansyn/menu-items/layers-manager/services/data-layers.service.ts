@@ -9,8 +9,8 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { ErrorHandlerService } from '@ansyn/core';
 import { StorageService } from "@ansyn/core/services/storage/storage.service";
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 

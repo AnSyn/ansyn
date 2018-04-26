@@ -6,10 +6,10 @@ import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Overlay } from '../models/overlay.model';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { OverlaysCriteria, OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoggerService, OverlaysCriteria } from '@ansyn/core';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

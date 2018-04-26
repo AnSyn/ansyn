@@ -10,7 +10,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
 export interface ModeList {
 	mode: AnnotationMode;

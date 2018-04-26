@@ -2,10 +2,10 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { WelcomeNotificationComponent } from './welcome-notification.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { coreFeatureKey, CoreReducer, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/core.actions';
-import { CoreConfig, ICoreConfig } from '@ansyn/core/models';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 
 describe('WelcomeNotificationComponent', () => {
 	let component: WelcomeNotificationComponent;

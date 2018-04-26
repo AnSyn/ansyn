@@ -1,13 +1,12 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { CaseMapPosition } from '@ansyn/core';
 import { IMap } from '../model/imap';
 import { Observable } from 'rxjs/Observable';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/observable/merge';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export class CommunicatorEntity {
 	private _managerSubscriptions;

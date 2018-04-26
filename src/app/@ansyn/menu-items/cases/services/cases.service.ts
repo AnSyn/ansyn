@@ -8,15 +8,11 @@ import 'rxjs/add/observable/of';
 import { Case } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
-import {
-	CaseFacetsState,
-	CaseGeoFilter, CaseLayersState, CaseMapsState,
-	CasePreview, CaseState, CaseTimeState, ErrorHandlerService, IContextEntity, ImageManualProcessArgs,
-	Overlay, OverlaysManualProcessArgs
-} from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
 import * as moment from 'moment';
 import { StorageService, StoredEntity } from '@ansyn/core/services/storage/storage.service';
+import { CasePreview, CaseState, CaseTimeState } from '@ansyn/core/models/case.model';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -142,7 +138,7 @@ export class CasesService {
 	loadCase(selectedCaseId: string): Observable<any> {
 		return this.storageService.get<CasePreview, CaseState>(this.config.schema, selectedCaseId)
 			.map(storedEntity =>
-				this.parseCase({ ...storedEntity.preview, state: storedEntity.data }))
+				this.parseCase(<Case>{ ...storedEntity.preview, state: storedEntity.data }))
 			.catch(err => this.errorHandlerService.httpErrorHandle(err));
 	}
 

@@ -9,7 +9,7 @@ import { LayersManagerComponent } from './components/layers-manager/layers-manag
 import { LayerTreeComponent } from './components/layer-tree/layer-tree.component';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
-import { CoreModule } from '@ansyn/core/index';
+import { CoreModule } from '@ansyn/core/core.module';
 
 @NgModule({
 	imports: [

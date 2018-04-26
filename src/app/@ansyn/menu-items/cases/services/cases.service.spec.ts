@@ -1,13 +1,15 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { CasesService } from './cases.service';
+import { casesConfig, CasesService } from './cases.service';
 import { Case } from '../models/case.model';
-import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CaseGeoFilter, CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import 'rxjs/add/observable/of';
 import { UUID } from 'angular2-uuid';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 export const MockCasesConfig = {
 	provide: casesConfig,

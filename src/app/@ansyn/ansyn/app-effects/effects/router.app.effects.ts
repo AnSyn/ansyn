@@ -2,14 +2,20 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction } from '@ansyn/menu-items/cases';
-import { NavigateCaseTriggerAction, RouterActionTypes, SetStateAction } from '@ansyn/router';
 import { IRouterState, routerStateSelector } from '@ansyn/router/reducers/router.reducer';
-import { SaveCaseAsSuccessAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import {
+	CasesActionTypes,
+	LoadCaseAction,
+	LoadDefaultCaseAction, SaveCaseAsSuccessAction,
+	SelectCaseAction
+} from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/core/models/case.model';
-import { ISetStatePayload } from '@ansyn/router/actions/router.actions';
+import {
+	ISetStatePayload, NavigateCaseTriggerAction, RouterActionTypes,
+	SetStateAction
+} from '@ansyn/router/actions/router.actions';
 
 @Injectable()
 export class RouterAppEffects {

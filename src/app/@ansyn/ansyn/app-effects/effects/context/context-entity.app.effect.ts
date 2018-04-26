@@ -4,15 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
-import { CaseMapState } from '@ansyn/core';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ImageryCommunicatorService, IVisualizerEntity } from '@ansyn/imagery';
 import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 
 @Injectable()

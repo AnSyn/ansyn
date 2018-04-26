@@ -7,15 +7,17 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { CasesService } from '@ansyn/menu-items/cases';
-import { Overlay } from '@ansyn/overlays';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 import {
-	IMapState, mapStateSelector, RemovePendingOverlayAction, SetPendingOverlaysAction,
+	RemovePendingOverlayAction, SetPendingOverlaysAction,
 	SynchronizeMapsAction
-} from '@ansyn/map-facade';
-import { CoreActionTypes, LayoutKey, layoutOptions, SetLayoutAction } from '@ansyn/core';
+} from '@ansyn/map-facade/actions/map.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export class OverlaysAppEffects {

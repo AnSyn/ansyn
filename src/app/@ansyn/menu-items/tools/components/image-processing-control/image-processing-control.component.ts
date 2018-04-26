@@ -2,14 +2,12 @@ import { Component, EventEmitter, HostBinding, Inject, Input, Output, OnInit, On
 import { IToolsState } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
-import { IToolsConfig, toolsConfig } from '../../models';
-import { IImageProcParam } from '../../models/tools-config';
-import { ImageManualProcessArgs } from '@ansyn/core';
+import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { toolsStateSelector } from '../../reducers/tools.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Subscription } from "rxjs/Subscription";
-import { IMapState } from "@ansyn/map-facade";
 import { Observable } from 'rxjs/Observable';
+import { ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 
 
 export interface IImageProcParamComp extends IImageProcParam {

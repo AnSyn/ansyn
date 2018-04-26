@@ -4,17 +4,18 @@ import { ILayerTreeNode } from '../models/layer-tree-node';
 import { LayerType } from '../models/layer-type';
 import { LayersEffects } from './layers.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { DataLayersService } from '../services/data-layers.service';
+import { DataLayersService, layersConfig } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from '../actions/layers.actions';
 import { Observable } from 'rxjs/Observable';
-import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;

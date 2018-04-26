@@ -1,9 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
+import { AlertMsgTypes, IToastMessage, WindowLayout } from '../reducers/core.reducer';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
-import { WindowLayout } from '@ansyn/core';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),

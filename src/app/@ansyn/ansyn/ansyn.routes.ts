@@ -1,7 +1,8 @@
-import { PlaceholderComponent } from '@ansyn/core/';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { AuthGuard, UnAuthGuard } from '@ansyn/login/guards';
 import { Routes } from '@angular/router';
+import { AuthGuard } from '@ansyn/login/guards/auth.guard';
+import { UnAuthGuard } from '@ansyn/login/guards/unauth.guard';
+import { PlaceholderComponent } from '@ansyn/core/components/placeholder/placeholder.component';
 
 
 export const ansynRoutes: Routes = [

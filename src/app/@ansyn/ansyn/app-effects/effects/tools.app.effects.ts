@@ -149,7 +149,7 @@ export class ToolsAppEffects {
 	onActiveMapChangesUpdateFromHash$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(mapStateSelector))
-		.filter(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => toolsState.imageProcessingHash.hasOwnProperty(action.payload))
+		.filter(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => Boolean(toolsState.imageProcessingHash) && toolsState.imageProcessingHash.hasOwnProperty(action.payload))
 		.mergeMap(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => {
 			const activeMap: CaseMapState = MapFacadeService.activeMap(mapState);
 			if (!activeMap.data.overlay) {
@@ -197,14 +197,18 @@ export class ToolsAppEffects {
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectImageProcessingHash))
-		.mergeMap(([action, mapState, imageProcessingHash]: [DisplayOverlaySuccessAction, IMapState, ImageProcessingHash]) => {
-			const selectedMap: CaseMapState = MapFacadeService.mapById(mapState.mapsList, action.payload.mapId );
+		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector), this.store$.select(selectImageProcessingHash),
+			(action: DisplayOverlaySuccessAction, cases: ICasesState, mapsState: IMapState, imageProcessingHash: ImageProcessingHash) => {
+				const mapId = action.payload.mapId || mapsState.activeMapId;
+				const selectedMap: CaseMapState = MapFacadeService.mapById(mapsState.mapsList, mapId);
+				return [action, selectedMap, cloneDeep(cases.selectedCase), imageProcessingHash];
+			})
+		.filter(([action, selectedMap, selectedCase]: [DisplayOverlaySuccessAction, CaseMapState, Case, ImageProcessingHash]) => Boolean(selectedMap))
+		.mergeMap(([action, selectedMap, selectedCase, imageProcessingHash]: [DisplayOverlaySuccessAction, CaseMapState, Case, ImageProcessingHash]) => {
+			// action 1: EnableImageProcessing
 			const actions = [new EnableImageProcessing()];
-
 			let manualProcessArgs: ImageManualProcessArgs;
 			let params = this.config.ImageProcParams.map(param => {
-				manualProcessArgs[param.name] = param.defaultValue;
 				return param.defaultValue;
 			});
 
@@ -216,7 +220,10 @@ export class ToolsAppEffects {
 				Saturation: params[4]
 			};
 
-			manualProcessArgs = (imageProcessingHash && imageProcessingHash[action.payload.overlay.id]) || manualProcessArgs;
+			// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
+			if (selectedCase.state.overlaysManualProcessArgs) {
+				manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] || manualProcessArgs;
+			}
 
 			if (selectedMap.data.isAutoImageProcessingActive) {
 				// auto process action
@@ -315,7 +322,7 @@ export class ToolsAppEffects {
 			const overlayId = activeMap.data.overlay.id;
 			selectedCase = updateOverlaysManualProcessArgs(selectedCase, overlayId, null);
 			return [
-				new SetManualImageProcessingArguments({ processingParams: undefined }),
+				// new SetManualImageProcessingArguments({ processingParams: undefined }),
 				new UpdateCaseAction(selectedCase)
 			];
 		});

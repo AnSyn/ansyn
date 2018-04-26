@@ -5,4 +5,4 @@ import { AppAnsynModule } from '../app/app.module';
 if (Boolean(0)) {
 	platformBrowserDynamic().bootstrapModule(AppAnsynModule);
 }
-window['Ansyn'] = AnsynBuilder;
+window['Ansyn1'] = AnsynBuilder;

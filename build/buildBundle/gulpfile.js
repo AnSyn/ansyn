@@ -2,7 +2,7 @@ const gulp = require('gulp');
 const gp_concat = require('gulp-concat');
 const gulpSequence = require('gulp-sequence');
 const distFolder = './dist';
-const path = require('path')
+const path = require('path');
 const del = require('del');
 const replace = require('replace');
 const credentials = {
@@ -11,10 +11,12 @@ const credentials = {
 }
 const deploy = {
 	withZone: {
+		fileName: "ansynWithZone.js",
 		local: './deployWithZone',
 		remote: 'https://' + credentials.user + ':' + credentials.password +'@gist.github.com/shaharido1/4b6d5fc928654e4e497b6d2e270df144'
 	},
 	noZone: {
+		fileName: "ansynNoZone1.js",
 		local: './deployNoZone',
 		remote: 'https://' + credentials.user + ':' + credentials.password + '@gist.github.com/shaharido1/8488dcd6254b855669fbff7fb5a11baf'
 	}
@@ -43,6 +45,7 @@ gulp.task('git-credentials', function(done){
 })
 
 gulp.task('removeZone', function (done) {
+	currentDeploy = deploy.noZone;
 	replace({
 		regex: '\import \'zone.js',
 		replacement: '\/\/ import \'zone.js',
@@ -55,6 +58,7 @@ gulp.task('removeZone', function (done) {
 });
 
 gulp.task('addZone', function (done) {
+	currentDeploy = deploy.withZone;
 	replace({
 		regex: '\// import \'zone',
 		replacement: '\import \'zone',
@@ -76,6 +80,7 @@ gulp.task('webPackcompile', function (done) {
 });
 
 gulp.task('concat', function () {
+	console.log(currentDeploy.fileName)
 	return gulp.src([
 		"./start.txt",
 		path.join(distFolder, 'inline.bundle.js'),
@@ -86,7 +91,7 @@ gulp.task('concat', function () {
 		path.join(distFolder, 'main.bundle.js'),
 		'./end.txt'
 	])
-		.pipe(gp_concat('ansyn.cdn.withZone.js'))
+		.pipe(gp_concat(currentDeploy.fileName))
 		.pipe(gulp.dest(currentDeploy.local));
 });
 
@@ -155,12 +160,12 @@ gulp.task('git-push', function (done) {
 });
 
 gulp.task('copyToLocal', function (done){
-	gulp.src('./deployWithZone/ansyn.cdn.withZone.js').pipe(gulp.dest('../../../angular1-ansyn/angular-seed/app/bower_components'))
+	gulp.src(path.join(currentDeploy.local, currentDeploy.fileName)).pipe(gulp.dest('../../../angular1-ansyn/angular-seed/app/bower_components'))
 })
 
 gulp.task('localDeploy', function (done) {
 	currentDeploy = deploy.withZone;
-	gulpSequence('clean', 'addZone', 'webPackcompile', 'concat', 'copyToLocal', function (err) {
+	gulpSequence('clean', 'webPackcompile', 'concat', 'copyToLocal', 'clean', function (err) {
 		console.log(err);
 			return done()
 	})
@@ -168,7 +173,6 @@ gulp.task('localDeploy', function (done) {
 
 
 gulp.task('sequenceWithZone', function (done) {
-	currentDeploy = deploy.withZone;
 	gulpSequence('clean', 'addZone', 'webPackcompile', 'concat', 'git-init', 'git-add', 'git-commit', 'git-addRemote', 'git-push', function (err) {
 		console.log(err);
 		gulpSequence('clean', function() {
@@ -178,7 +182,6 @@ gulp.task('sequenceWithZone', function (done) {
 });
 
 gulp.task('sequenceNoZone', function (done) {
-	currentDeploy = deploy.noZone;
 	gulpSequence('clean', 'removeZone', 'webPackcompile', 'concat', 'git-init', 'git-add', 'git-commit', 'git-addRemote', 'git-push', function (err) {
 		console.log(err);
 		gulpSequence('clean', function() {

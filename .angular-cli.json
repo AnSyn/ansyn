@@ -72,7 +72,43 @@
 				"dev": "configuration/configuration.dev.ts",
 				"prod": "configuration/configuration.prod.ts"
 			}
+		},
+		{
+			"name": "devApp",
+			"root": "src",
+			"outDir": "build/buildBundle/dist",
+			"assets": [
+				{
+					"glob": "**/*",
+					"input": "./app/@ansyn/assets",
+					"output": "./assets/"
+				},
+				"favicon.ico"
+			],
+			"index": "app/appBuilder/devApiApp/app.component.html",
+			"main": "app/appBuilder/devApp.main.ts",
+			"polyfills": "polyfills.ts",
+			"test": "test.ts",
+			"tsconfig": "tsconfig.app.json",
+			"testTsconfig": "tsconfig.spec.json",
+			"prefix": "ansyn",
+			"styles": [
+				"./styles/styles.less"
+			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/@ansyn"
+				]
+			},
+			"scripts": [
+			],
+			"environmentSource": "configuration/configuration.ts",
+			"environments": {
+				"dev": "configuration/configuration.dev.ts",
+				"prod": "configuration/configuration.prod.ts"
+			}
 		}
+
 	],
 	"e2e": {
 		"protractor": {

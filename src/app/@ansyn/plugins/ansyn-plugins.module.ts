@@ -20,7 +20,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 		ImageryModule.provideCollection([
 			{ provide: BaseImageryPlugin, useClass: NorthCalculationsPlugin, deps: [Actions, LoggerService, Store, ProjectionService], multi: true },
 			{ provide: BaseImageryPlugin, useClass: CenterMarkerPlugin, deps: [], multi: true },
-			{ provide: BaseImageryPlugin, useClass: ImageProcessingPlugin, deps: [Actions], multi: true },
+			{ provide: BaseImageryPlugin, useClass: ImageProcessingPlugin, deps: [Store], multi: true },
 			{ provide: BaseImageryPlugin, useClass: MonitorPlugin, deps: [Store], multi: true },
 			...VisualizersProviders
 		])

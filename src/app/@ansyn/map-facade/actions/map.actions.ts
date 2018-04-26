@@ -122,13 +122,6 @@ export class SetMapAutoImageProcessing implements Action {
 	}
 }
 
-export class SetMapManualImageProcessing implements Action {
-	type = MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING;
-
-	constructor(public payload: { mapId: string, processingParams: Object }) {
-	}
-}
-
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 

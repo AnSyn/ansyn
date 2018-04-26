@@ -18,15 +18,13 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
-	SET_MANUAL_IMAGE_PROCESSING_SUCCESS: type('SET_MANUAL_IMAGE_PROCESSING_SUCCESS'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
-	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
-	UPDATE_IMAGE_PROCESSING_HASH: type('UPDATE_IMAGE_PROCESSING_HASH'),
+	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
@@ -34,18 +32,10 @@ export const ToolsActionsTypes = {
 
 };
 
-export class UpdateImageProcessingHash implements Action {
-	type = ToolsActionsTypes.UPDATE_IMAGE_PROCESSING_HASH;
+export class UpdateOverlaysManualProcessArgs implements Action {
+	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
 
-	constructor(public payload: ImageProcessingHash) {
-
-	}
-}
-
-export class SetManualImageProcessingSuccess implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS;
-
-	constructor(public payload?: any) {
+	constructor(public payload: OverlaysManualProcessArgs) {
 
 	}
 }
@@ -184,14 +174,7 @@ export class EnableImageProcessing implements Action {
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
-	};
-}
-
-export class SetManualImageProcessingArguments implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS;
-
-	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
+	constructor(public payload: ImageManualProcessArgs ) {
 	};
 }
 
@@ -212,7 +195,8 @@ export class SetSubMenu implements Action {
 }
 
 export type ToolsActions =
-	StartMouseShadow
+	UpdateOverlaysManualProcessArgs
+	| StartMouseShadow
 	| StopMouseShadow
 	| DisableMouseShadow
 	| EnableMouseShadow
@@ -227,7 +211,6 @@ export type ToolsActions =
 	| EnableImageProcessing
 	| SetAutoImageProcessingSuccess
 	| SetMapGeoEnabledModeToolsActionStore
-	| SetManualImageProcessingArguments
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState

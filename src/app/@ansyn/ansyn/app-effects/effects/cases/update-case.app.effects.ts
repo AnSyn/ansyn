@@ -22,7 +22,7 @@ export const UpdateCaseActionTypes = [
 	MapActionTypes.STORE.SET_MAPS_DATA, // -> maps: activeMapId, data
 	CoreActionTypes.SET_LAYOUT, // -> maps: layoutIndex
 	CoreActionTypes.SET_OVERLAYS_CRITERIA, // -> time, region
-	ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS
+	ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS
 ];
 
 
@@ -42,13 +42,14 @@ export class UpdateCaseAppEffects {
 		.withLatestFrom(this.store$)
 		.map(([action, { cases, core, tools, statusBar, map, layers, filters }]: [Action, IAppState]) => {
 			// properties that should have been saved on another store ( not cases )
-			let { contextEntities, overlaysManualProcessArgs, facets } = cases.selectedCase.state;
+			let { contextEntities, facets } = cases.selectedCase.state;
 			const { id, name, lastModified, owner, creationTime, selectedContextId } = cases.selectedCase;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
 			const { activeMapId, mapsList } = map;
 			const { annotationsLayer, displayAnnotationsLayer } = layers;
 			const { favoriteOverlays, overlaysCriteria, layout } = core;
 			const { time, region } = overlaysCriteria;
+			const { overlaysManualProcessArgs } = tools;
 			if (facetChangesActionType.includes(action.type)) {
 				facets = FiltersService.buildCaseFacets(filters);
 			}

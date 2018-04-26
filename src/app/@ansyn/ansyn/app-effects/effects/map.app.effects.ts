@@ -64,6 +64,30 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
+	 * @name onSetManualImageProcessing$
+	 * @ofType SetMapManualImageProcessing
+	 * @dependencies map
+	 * @filter There is a full overlay
+	 * @action SetMapsDataAction
+	 */
+	@Effect()
+	onSetManualImageProcessing$: Observable<any> = this.actions$
+		.ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState])
+		.filter(([activeMap]: [CaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay))
+		.mergeMap(([activeMap, action, mapState]: [CaseMapState, SetManualImageProcessing, IMapState]) => {
+			const updatedMapList = [ ...mapState.mapsList ];
+			activeMap.data.imageManualProcessArgs = action.payload;
+			const overlayId = activeMap.data.overlay.id;
+			return [
+				new SetMapsDataActionStore({ mapsList: updatedMapList }),
+				new UpdateOverlaysManualProcessArgs({ [overlayId]: action.payload })
+			];
+		});
+
+	/**
+	 * @type Effect
 	 * @name displayOverlayOnNewMapInstance$
 	 * @ofType MapInstanceChangedAction
 	 * @dependencies map

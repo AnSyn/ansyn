@@ -108,7 +108,7 @@ export class SelectCaseAppEffects {
 		const { favoriteOverlays, time, region } = state;
 		const { layout } = state.maps;
 
-		const { manualArguments } = state.overlaysManualProcessArgs;
+		const manualArguments  = state.overlaysManualProcessArgs;
 
 		if (typeof time.from === 'string') {
 			time.from = new Date(time.from);

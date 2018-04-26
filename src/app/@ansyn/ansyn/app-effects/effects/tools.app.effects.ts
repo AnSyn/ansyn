@@ -158,12 +158,13 @@ export class ToolsAppEffects {
 			let imageManualProcessArgs: ImageManualProcessArgs = <any> {};
 			this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
 			const actions = [];
+			const updatedMapList = [...mapState.mapsList];
 			console.log('New Overlay Loaded');
 			if (casesState.selectedCase.state.overlaysManualProcessArgs) {
 				imageManualProcessArgs = casesState.selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] || imageManualProcessArgs;
 			}
-			actions.push(new UpdateOverlaysManualProcessArgs({ [action.payload.overlay.id]: imageManualProcessArgs }));
-
+			// actions.push(new UpdateOverlaysManualProcessArgs({ [action.payload.overlay.id]: imageManualProcessArgs }));
+			actions.push(new SetMapsDataActionStore({ mapsList: updatedMapList }));
 			return actions;
 		});
 

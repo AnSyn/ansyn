@@ -19,6 +19,7 @@ import {
 	EnableMouseShadow,
 	GoToAction,
 	SetActiveOverlaysFootprintModeAction,
+	SetManualImageProcessing,
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow
@@ -51,7 +52,7 @@ import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducer
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-
+import { isEqual } from 'lodash';
 
 
 @Injectable()
@@ -72,8 +73,11 @@ export class ToolsAppEffects {
 
 	activeMap$ = this.store$.select(mapStateSelector)
 		.map((mapState) => MapFacadeService.activeMap(mapState))
-		.filter(Boolean)
-		.distinctUntilChanged();
+		.filter(Boolean);
+
+	get params() {
+		return this.config.ImageProcParams;
+	}
 
 	/**
 	 * @type Effect
@@ -145,20 +149,60 @@ export class ToolsAppEffects {
 		.map((action) => new SetActiveOverlaysFootprintModeAction(action.payload));
 
 
+	@Effect()
+	onDisplayOverlaySuccess$: Observable<any> = this.actions$
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(casesStateSelector))
+		.mergeMap(([action, mapState, casesState]: [DisplayOverlaySuccessAction, IMapState, ICasesState]) => {
+			// action 1: EnableImageProcessing
+			let imageManualProcessArgs: ImageManualProcessArgs = <any> {};
+			this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
+			const actions = [];
+			console.log('New Overlay Loaded');
+			if (casesState.selectedCase.state.overlaysManualProcessArgs) {
+				imageManualProcessArgs = casesState.selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] || imageManualProcessArgs;
+			}
+			actions.push(new UpdateOverlaysManualProcessArgs({ [action.payload.overlay.id]: imageManualProcessArgs }));
+
+			return actions;
+		});
 
 	@Effect()
 	updateImageProcessing$: any = this
 		.activeMap$
-		.mergeMap((map: CaseMapState) => {
+		.withLatestFrom(this.store$.select(toolsStateSelector).pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))
+		.filter(([map, manualImageProcessingParams]) => !isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams))
+		.mergeMap(([map]: [CaseMapState, ImageManualProcessArgs]) => {
+			const imageManualProcessArgs: ImageManualProcessArgs = <any> {};
+			this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
+			console.log('Yolo');
+
 			const actions = [];
 			if (map.data.isAutoImageProcessingActive) {
 				actions.push(new DisableImageProcessing());
 			} else {
 				actions.push(new EnableImageProcessing());
 			}
-
+			if (Boolean(map.data.overlay)) {
+				const overlayId = map.data.overlay.id;
+				actions.push(new SetManualImageProcessing((map.data && map.data.imageManualProcessArgs) || imageManualProcessArgs));
+			}
 			return actions;
 		});
+
+	//
+	// @Effect()
+	// overlayChanged$: any = this.overlay$
+	// 	.mergeMap((map: CaseMapState) => {
+	// 		const imageManualProcessArgs: ImageManualProcessArgs = <any> {};
+	// 		this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
+	// 		const actions = [];
+	// 		actions.push(new SetManualImageProcessing((map.data && map.data.imageManualProcessArgs) || imageManualProcessArgs));
+	//
+	// 		console.log('Im Here');
+	// 		return actions;
+	// 	});
+
 	// /**
 	//  * @type Effect
 	//  * @name onActiveMapChangesUpdateHash$
@@ -280,7 +324,7 @@ export class ToolsAppEffects {
 			return [action, mapsState];
 		})
 		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			mapsState = updatesMapAutoImageProcessingFlag(mapsState, true);
+			// mapsState = updatesMapAutoImageProcessingFlag(mapsState, true);
 			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
 
 			return [

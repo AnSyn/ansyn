@@ -38,11 +38,11 @@ export interface OverlaysManualProcessArgs {
 }
 
 export interface ImageManualProcessArgs {
-	Brightness: number
-	Contrast: number
-	Gamma: number
-	Saturation: number
-	Sharpness: number
+	Brightness?: number
+	Contrast?: number
+	Gamma?: number
+	Saturation?: number
+	Sharpness?: number
 }
 
 export interface OverlaysManualProcessArgs {

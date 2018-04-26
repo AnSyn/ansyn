@@ -27,42 +27,45 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	public manualImageProcessingParams$: Observable<Object> = this.store$.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.manualImageProcessingParams)
 		.distinctUntilChanged()
-		.do((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs);
+		.filter(Boolean)
+		.do((imageManualProcessArgs) => {
+			console.log(imageManualProcessArgs);
+			this.imageManualProcessArgs = imageManualProcessArgs
+		});
 
 	get params() {
 		return this.config.ImageProcParams;
 	}
 
-	imageManualProcessArgs: ImageManualProcessArgs = <any> {};
+	get defaultValues(): ImageManualProcessArgs {
+		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any> {...initialObject, [imageProcParam.name]: imageProcParam.defaultValue }
+		}, {});
+	}
+
+
+	imageManualProcessArgs: ImageManualProcessArgs = this.defaultValues;
 
 	@HostBinding('class.expand') @Input() expand;
 
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
-		this.resetImageManualProcessArgs(this.imageManualProcessArgs);
 	}
 
 	resetOne(name) {
 		this.updateParam(name, this.params[name].defaultValue);
 	}
 
-	updateParam(key, value) {
+	updateParam(value, key) {
 		const imageManualProcessArgs = { ...this.imageManualProcessArgs };
 		imageManualProcessArgs[key] = value;
 		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArgs));
 	}
 
 	resetParams() {
-		const imageManualProcessArgs = { ...this.imageManualProcessArgs };
-		this.resetImageManualProcessArgs(imageManualProcessArgs);
-		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArgs));
-	}
-
-	resetImageManualProcessArgs(imageManualProcessArgs): void {
-		this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
+		this.store$.dispatch(new SetManualImageProcessing(this.defaultValues));
 	}
 
 	ngOnInit(): void {
-		this.resetParams();
 		this.subscriptions.push(
 			this.manualImageProcessingParams$.subscribe()
 		);
@@ -72,52 +75,3 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 }
-
-// this.onManualProcessingExpand$.subscribe(),
-
-// resetAllParamsAndEmit() {
-// 	this.resetParams();
-// 	this.manualImageProcess();
-// 	this.isActive.emit(false);
-// }
-
-// this.params.forEach(param => {
-// 	param.value = param.defaultValue;
-// });
-
-
-// manualProcessArgsFromParams(): ImageManualProcessArgs {
-// 	const manualProcessArgs = {
-// 		Sharpness: this.params[0].value,
-// 		Contrast: this.params[1].value,
-// 		Brightness: this.params[2].value,
-// 		Gamma: this.params[3].value,
-// 		Saturation: this.params[4].value
-// 	};
-// 	return manualProcessArgs;
-// }
-
-//
-// const isChangeFromDefualt = this.params.some(({ value, defaultValue }) => value !== defaultValue);
-// let dispatchValue = <ImageManualProcessArgs> {};
-// if (isChangeFromDefualt) {
-// 	this.params.forEach(param => {
-// 		dispatchValue[param.name] = param.value;
-// 	});
-// }
-// else {
-// 	dispatchValue = undefined;
-// }
-// this.isActive.emit(isChangeFromDefualt);
-
-
-// public onManualProcessingExpand$ = this.store$.select(selectSubMenu)
-// 	.withLatestFrom(this.store$.select(mapStateSelector))
-// 	.filter(([selectedSubMenu]: [SubMenuEnum, IMapState]) => selectedSubMenu === SubMenuEnum.manualImageProcessing)
-// 	.do(([selectedSubMenu, mapState]: [SubMenuEnum, IMapState]) => {
-// 		this.store$.dispatch(new SetMapManualImageProcessing({
-// 			mapId: mapState.activeMapId,
-// 			processingParams: this.manualProcessArgsFromParams()
-// 		}));
-// 	})
-// 	.distinctUntilChanged();

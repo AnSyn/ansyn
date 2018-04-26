@@ -36,12 +36,13 @@
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
 				[class.mode-on]="isImageControlActive && !imageProcessingDisabled"
 				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled && !onAutoImageProcessing"
-				[disabled]="imageProcessingDisabled || onAutoImageProcessing">
+				[disabled]="onAutoImageProcessing">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled && !onAutoImageProcessing"></ansyn-image-processing-control>
+		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !onAutoImageProcessing"></ansyn-image-processing-control>
 	</div>
-
+	<!-- disabled: imageProcessingDisabled ||-->
+	<!-- expand: !imageProcessingDisabled &&-->
 	<div class="display-overlay-visualizer">
 		<button tooltip-class="right"
 				tooltip-value="Display Overlays"

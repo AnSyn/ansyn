@@ -7,8 +7,8 @@
 				   type="range"
 				   [min]="param.min"
 				   [max]="param.max"
-				   [(ngModel)]="imageManualProcessArgs[param.name]"
-				   (ngModelChange)="updateParam(param.name, imageManualProcessArgs[param.name])">
+				   [ngModel]="imageManualProcessArgs[param.name]"
+				   (ngModelChange)="updateParam($event, param.name)">
 			<button class="button-reset" (click)="resetOne(param)">reset</button>
 		</li>
 	</ul>

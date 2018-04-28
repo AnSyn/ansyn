@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ComboBoxesProperties } from '../models/combo-boxes.model.ts';
+import { ComboBoxesProperties } from '../models/combo-boxes.model';
 import { statusBarFlagsItemsEnum } from '../models/status-bar-flag-items.model';
 
 export const StatusBarActionsTypes = {

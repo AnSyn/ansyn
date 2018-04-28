@@ -5,7 +5,7 @@ import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
 import { Observable } from 'rxjs/Observable';
-import { AlertMsg } from '../../reducers';
+import { AlertMsg } from '../../reducers/core.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '@ansyn/core/utils/time';

@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
-import { IAppState } from '../';
 import '@ansyn/core/utils/clone-deep';
 import {
 	CoreActionTypes, GoAdjacentOverlay, SetFavoriteOverlaysAction, SetOverlaysCriteriaAction,
@@ -17,6 +16,7 @@ import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducer
 import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 
 @Injectable()
 export class CoreAppEffects {

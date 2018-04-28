@@ -16,7 +16,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { CaseModal } from '../../reducers/cases.reducer';
-import { CasePreview } from "@ansyn/core";
+import { CasePreview } from '@ansyn/core/models/case.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [

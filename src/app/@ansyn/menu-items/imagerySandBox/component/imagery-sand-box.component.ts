@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
-import { Case } from '@ansyn/menu-items/cases';
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
@@ -12,6 +10,8 @@ import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { casesStateSelector } from '../../cases/reducers/cases.reducer';
 import { Feature, Point } from 'geojson';
 import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
+import { Case } from '@ansyn/core/models/case.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 @Component({
 	selector: 'ansyn-map-sand-box',

@@ -1,4 +1,3 @@
-import { IMap, BaseImageryPlugin } from '@ansyn/imagery';
 import Vector from 'ol/source/vector';
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
@@ -7,7 +6,9 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { IMap } from '@ansyn/imagery/model/imap';
 
 export class CenterMarkerPlugin extends BaseImageryPlugin {
 	static supported = [OpenlayersMapName];

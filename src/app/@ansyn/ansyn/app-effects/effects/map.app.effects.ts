@@ -46,21 +46,17 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 
 @Injectable()
 export class MapAppEffects {
-	set onDisplayOverlay$(value: ObservableInput<any>) {
-		this._onDisplayOverlay$ = value;
-	}
-
 
 	/**
 	 * @type Effect
-	 * @name _onDisplayOverlay$
+	 * @name onDisplayOverlay$
 	 * @ofType DisplayOverlayAction
 	 * @dependencies map
 	 * @filter There is a full overlay
 	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?, SetToastMessageAction?
 	 */
-	@Effect() private
-	_onDisplayOverlay$: ObservableInput<any> = this.actions$
+	@Effect()
+	onDisplayOverlay$: ObservableInput<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.filter(this.onDisplayOverlayFilter.bind(this))

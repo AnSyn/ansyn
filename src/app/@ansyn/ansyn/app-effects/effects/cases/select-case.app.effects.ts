@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { IAppState } from '../../';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
@@ -20,6 +19,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.ac
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 
 @Injectable()
 export class SelectCaseAppEffects {

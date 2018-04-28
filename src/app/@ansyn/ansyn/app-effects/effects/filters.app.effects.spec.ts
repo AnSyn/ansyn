@@ -27,9 +27,12 @@ import {
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysInitialState,
-	overlaysStateSelector
+	overlaysStateSelector, overlaysStatusMessages
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction,
+	SetOverlaysStatusMessage
+} from '@ansyn/overlays/actions/overlays.actions';
 import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
@@ -40,8 +43,7 @@ import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/ac
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { SliderFilterMetadata } from '@ansyn/menu-items';
-import { overlaysStatusMessages, SetOverlaysStatusMessage } from '@ansyn/overlays';
+import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

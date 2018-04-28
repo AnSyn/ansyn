@@ -6,9 +6,9 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { LoginModule } from '@ansyn/login';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { configuration } from '../../configuration/configuration';
+import { LoginModule } from '@ansyn/login/login.module';
 
 export function MetaReducer(reducer) {
 	return function (state, action) {

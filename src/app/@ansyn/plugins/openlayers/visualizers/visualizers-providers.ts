@@ -1,12 +1,10 @@
 import { PinPointVisualizer  } from '@ansyn/plugins/openlayers/visualizers/region/pin-point.visualizer';
 import { ContextEntityVisualizer } from '@ansyn/ansyn/app-providers/app-visualizers/context-entity.visualizer';
-import { BaseImageryPlugin } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
 import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/polyline-visualizer';
 import { GoToVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/goto.visualizer';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
-import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/visualizers/index';
 import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/heatmap-visualizer';
 import { ImageryPluginProvider } from '@ansyn/imagery/model/plugins-collection';
@@ -14,6 +12,8 @@ import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { PolygonSearchVisualizer } from "@ansyn/plugins/openlayers/visualizers/region/polygon-search.visualizer";
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/measure-distance.visualizer';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export const VisualizersProviders: ImageryPluginProvider[] = [
 	{

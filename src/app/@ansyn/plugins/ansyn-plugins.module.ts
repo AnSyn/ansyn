@@ -11,6 +11,7 @@ import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/cent
 import { OpenLayersMapModule } from '@ansyn/plugins/openlayers/open-layers-map/open-layers-map.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 @NgModule({
 	imports: [

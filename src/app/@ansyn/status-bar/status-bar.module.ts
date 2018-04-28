@@ -7,7 +7,7 @@ import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
-import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models';
+import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models/combo-boxes.model';
 
 
 @NgModule({

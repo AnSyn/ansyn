@@ -1,9 +1,11 @@
-import { AddMenuItemAction, MenuActionTypes, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
-import { SetBadgeAction } from '../actions/menu.actions';
-import { MenuItem } from '../models';
+import {
+	AddMenuItemAction, MenuActionTypes, SelectMenuItemAction, SetBadgeAction,
+	UnSelectMenuItemAction
+} from '../actions/menu.actions';
 import { isDevMode } from '@angular/core';
 import { sessionData, updateSession } from '../helpers/menu-session.helper';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { MenuItem } from '@ansyn/menu/models/menu-item.model';
 
 export interface IMenuState {
 	menuItems: Map<string, MenuItem>;

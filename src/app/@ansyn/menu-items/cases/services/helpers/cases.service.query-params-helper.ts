@@ -4,17 +4,16 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
-import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
-import { Context } from '../../models/context.model';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import * as centroid from '@turf/centroid';
 import {
-	CaseGeoFilter, CaseState, ImageManualProcessArgs,
+	CaseGeoFilter, CaseMapsState, CaseMapState, CaseState, ImageManualProcessArgs,
 	OverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
+import { Context } from '@ansyn/core/models/context.model';
 
 export class QueryParamsHelper {
 

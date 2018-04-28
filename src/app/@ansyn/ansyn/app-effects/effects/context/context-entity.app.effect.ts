@@ -13,6 +13,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 
 
 @Injectable()

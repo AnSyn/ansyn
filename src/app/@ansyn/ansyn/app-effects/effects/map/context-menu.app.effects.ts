@@ -1,5 +1,6 @@
 import { Actions, Effect } from '@ngrx/effects';
 import {
+	ContextMenuDisplayAction,
 	ContextMenuGetFilteredOverlaysAction,
 	ContextMenuShowAction,
 	MapActionTypes
@@ -12,7 +13,6 @@ import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { inside } from '@turf/turf';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { ContextMenuDisplayAction } from '@ansyn/map-facade';
 
 @Injectable()
 export class ContextMenuAppEffects {

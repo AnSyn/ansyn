@@ -5,13 +5,12 @@ import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases
 import { CasesModule } from '../../cases.module';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
-import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CasesService } from '@ansyn/menu-items';
 import { CoreConfig } from '@ansyn/core/models/core.config';
+import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;

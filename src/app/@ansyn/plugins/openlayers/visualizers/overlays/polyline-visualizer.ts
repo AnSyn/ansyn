@@ -13,17 +13,19 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
-import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { MarkUpClass, MarkUpData, overlaysStateSelector, SetMarkUp } from '@ansyn/overlays';
+import {
+	IOverlaysState, MarkUpClass, MarkUpData,
+	overlaysStateSelector
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { CommunicatorEntity } from '@ansyn/imagery';
 import { MultiLineString } from 'geojson';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 @Injectable()
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {

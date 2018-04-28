@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig, KeyAndValue } from '@ansyn/overlays/models/overlays.config';
-import { OverlaysService } from '@ansyn/overlays';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',

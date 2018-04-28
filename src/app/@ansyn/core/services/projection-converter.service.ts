@@ -1,8 +1,8 @@
 import { inRange, isEqual } from 'lodash';
 import proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models';
-import { CoordinatesSystem } from '../models';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 
 export interface UtmZone {
 	zone: number;

@@ -5,11 +5,10 @@ import { DrawOverlaysOnMapTriggerAction, MapActionTypes } from '@ansyn/map-facad
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { CommunicatorEntity } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { MapFacadeService } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 
 @Injectable()
 export class FootprintHeatmapVisualizer extends EntitiesVisualizer {

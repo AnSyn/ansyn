@@ -3,7 +3,10 @@ import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
-import { BaseOverlaySourceProvider, StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import {
+	BaseOverlaySourceProvider, IFetchParams,
+	StartAndEndDate
+} from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { toRadians } from '@ansyn/core/utils/math';
 import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { limitArray } from '@ansyn/core/utils/limited-array';

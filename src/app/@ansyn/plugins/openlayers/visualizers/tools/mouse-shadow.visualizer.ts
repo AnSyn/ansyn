@@ -3,8 +3,8 @@ import Feature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
-import { IVisualizerEntity } from '@ansyn/imagery';
 import { FeatureCollection } from 'geojson';
+import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;

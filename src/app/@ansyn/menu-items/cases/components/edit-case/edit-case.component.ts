@@ -6,11 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { Case } from '../../models/case.model';
-import { Context } from '../../models/context.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
-import { selectContextsArray } from '@ansyn/context/reducers';
 import { CasePreview } from '../../models/case.model';
+import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
+import { Context } from '@ansyn/core/models/context.model';
 
 const animationsDuring = '0.2s';
 

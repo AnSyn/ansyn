@@ -4,7 +4,7 @@ import { ImageryRotationComponent } from './imagery-rotation.component';
 import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 describe('ImageryRotationComponent', () => {
 	let component: ImageryRotationComponent;

@@ -1,13 +1,13 @@
-import { BaseImageryPlugin } from '@ansyn/imagery';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { Injectable } from '@angular/core';
-import { SetProgressBarAction } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import TileSource from 'ol/source/tile';
 import { Observable } from 'rxjs/Observable';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class MonitorPlugin extends BaseImageryPlugin {

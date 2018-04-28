@@ -1,5 +1,4 @@
 import { FiltersAppEffects } from './effects/filters.app.effects';
-import { IFiltersState } from '@ansyn/menu-items/filters';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { LayersAppEffects } from './effects/layers.app.effects';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -13,7 +12,6 @@ import { MenuAppEffects } from './effects/menu.app.effects';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
 import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IToolsState } from '@ansyn/menu-items/tools';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
@@ -25,6 +23,8 @@ import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
+import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 
 
 export interface IAppState {

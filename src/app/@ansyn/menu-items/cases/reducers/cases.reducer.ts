@@ -3,9 +3,9 @@ import { Case } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { CasePreview } from "@ansyn/core";
 import { Dictionary } from '@ngrx/entity/src/models';
 import { Operator } from 'rxjs/Operator';
+import { CasePreview } from '@ansyn/core/models/case.model';
 
 export interface CaseModal {
 	show: boolean,
@@ -40,7 +40,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.addOne(action.payload, state);
 
 		case CasesActionTypes.UPDATE_CASE: {
-			const caseToUpdate: Case = { ...action.payload, lastModified: new Date() };
+			const caseToUpdate = <any> { ...action.payload, lastModified: new Date() };
 			const selectedCase = caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
 			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
 		}

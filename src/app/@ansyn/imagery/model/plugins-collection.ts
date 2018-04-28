@@ -1,6 +1,6 @@
 import { InjectionToken, ValueProvider } from '@angular/core';
 import { StaticClassProvider } from '@angular/core/src/di/provider';
-import { BaseImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export const PLUGINS_COLLECTIONS: InjectionToken<ImageryPluginProvider[]> = new InjectionToken('PLUGINS_COLLECTIONS');
 

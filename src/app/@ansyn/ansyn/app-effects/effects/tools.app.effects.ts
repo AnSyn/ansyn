@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IAppState } from '../';
 import {
 	DisableImageProcessing,
 	EnableImageProcessing,
@@ -56,6 +55,7 @@ import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actio
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 
 
 

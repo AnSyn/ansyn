@@ -1,11 +1,11 @@
-import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
 import { Injectable } from '@angular/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
 
 export const OpenLayerESRI_4326SourceProviderMapType = OpenlayersMapName;
 export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';

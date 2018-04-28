@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import * as area from '@turf/area';
 import * as intersect from '@turf/intersect';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { LimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { Feature, GeoJsonObject } from 'geojson';

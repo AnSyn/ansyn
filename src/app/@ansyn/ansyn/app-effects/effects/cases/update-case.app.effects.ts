@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { IAppState } from '../../';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
@@ -13,6 +12,7 @@ import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 import { Case } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 
 export const UpdateCaseActionTypes = [
 	...facetChangesActionType, // -> facets

@@ -11,8 +11,8 @@ import {
 import { schemeCategory10, selection } from 'd3';
 import * as d3 from 'd3/build/d3';
 import eventDrops from 'new-ansyn-event-drops';
-import { OverlaysService } from '../../services';
-import { OverlayDrop, OverlayLine } from '@ansyn/overlays/reducers';
+import { OverlaysService } from '../../services/overlays.service';
+import { OverlayDrop, OverlayLine } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	IOverlaysState,
 	MarkUpClass,
@@ -30,11 +30,11 @@ import { Actions } from '@ngrx/effects';
 import {
 	DisplayOverlayFromStoreAction,
 	OverlaysActionTypes,
-	SetTimelineStateAction,
-	SetMarkUp
+	RedrawTimelineAction,
+	SetMarkUp,
+	SetTimelineStateAction
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
-import { RedrawTimelineAction } from '@ansyn/overlays';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {

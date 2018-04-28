@@ -17,7 +17,7 @@ import {
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export class OverlaysAppEffects {

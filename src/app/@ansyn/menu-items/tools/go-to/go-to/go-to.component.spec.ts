@@ -1,14 +1,14 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { GoToComponent } from './go-to.component';
-import { toolsConfig } from '../../models';
 import { Store, StoreModule } from '@ngrx/store';
 import { IToolsState, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { CoreModule } from '@ansyn/core/core.module';
-import { ProjectionConverterService } from '@ansyn/core/services';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;

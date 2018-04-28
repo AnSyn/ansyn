@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs/Observable';
-import { IFetchParams, StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import {
+	BaseOverlaySourceProvider, IFetchParams,
+	StartAndEndDate
+} from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
@@ -10,6 +13,7 @@ import { HttpResponseBase } from '@angular/common/http/src/response';
 import { OverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';

@@ -1,22 +1,19 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
+
 import {
-	IToolsState, selectSubMenu,
-	SetActiveCenter,
-	SetPinLocationModeAction, SubMenuEnum,
-	toolsFlags
-} from '@ansyn/menu-items';
-import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+	IToolsState, selectSubMenu, SubMenuEnum, toolsFlags,
+	toolsStateSelector
+} from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Feature from 'ol/feature';
 import { Point } from 'geojson';
-import { mapStateSelector } from '@ansyn/map-facade';
-import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
+import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 export class GoToVisualizer extends EntitiesVisualizer {
 	/* data */

@@ -1,5 +1,5 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { fetchConfigProviders } from '@ansyn/ansyn/app-providers';
 import { AppAnsynModule } from './app/app/app.module';
+import { fetchConfigProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
 
 fetchConfigProviders().then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));

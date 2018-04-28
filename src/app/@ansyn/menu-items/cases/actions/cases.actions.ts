@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
 import { Case } from '../models/case.model';
-import { Context } from '../models/context.model';
 import { Params } from '@angular/router';
 
 export const CasesActionTypes = {

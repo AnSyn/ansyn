@@ -1,11 +1,11 @@
-import { BaseMapSourceProvider } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';
 import { Injectable } from '@angular/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
 
 export const OpenLayerBingSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerBingSourceProviderSourceType = 'BING';

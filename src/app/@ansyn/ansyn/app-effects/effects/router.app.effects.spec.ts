@@ -6,7 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { routerFeatureKey, RouterReducer } from '@ansyn/router/reducers/router.reducer';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CasesService } from '@ansyn/menu-items';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 describe('RouterAppEffects', () => {
 	let actions: Observable<any>;

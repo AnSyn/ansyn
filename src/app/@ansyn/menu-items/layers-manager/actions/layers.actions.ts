@@ -2,6 +2,7 @@ import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
 import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { Action } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
+import { Layer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 export const LayersActionTypes = {
 	BEGIN_LAYER_TREE_LOAD: 'BEGIN_LAYER_TREE_LOAD',
@@ -37,8 +38,6 @@ export class SetAnnotationsLayer implements Action {
 	}
 }
 
-
-
 export class BeginLayerTreeLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_TREE_LOAD;
 }
@@ -47,8 +46,8 @@ export class LayerTreeLoadedAction implements Action {
 	type = LayersActionTypes.LAYER_TREE_LOADED;
 
 	constructor(public payload: {
-		layers: ILayerTreeNodeRoot[],
-		selectedLayers: ILayerTreeNodeLeaf[]
+		layers: Layer[],
+		selectedLayers: Layer[]
 	}) {
 	}
 }
@@ -56,14 +55,14 @@ export class LayerTreeLoadedAction implements Action {
 export class SelectLayerAction implements Action {
 	type = LayersActionTypes.SELECT_LAYER;
 
-	constructor(public payload: ILayerTreeNodeLeaf) {
+	constructor(public payload: Layer) {
 	}
 }
 
 export class UnselectLayerAction implements Action {
 	type = LayersActionTypes.UNSELECT_LAYER;
 
-	constructor(public payload: ILayerTreeNodeLeaf) {
+	constructor(public payload: Layer) {
 	}
 }
 

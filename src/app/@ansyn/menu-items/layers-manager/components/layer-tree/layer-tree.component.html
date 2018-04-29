@@ -7,7 +7,7 @@
 </div>
 <tree-root class="tree"
 		   [focused]="true"
-		   [nodes]="source$ | async"
+		   [nodes]="source$"
 		   [options]="options">
 	<ng-template #treeNodeTemplate let-node let-index="index">
 		<div id="node{{ node.data.id }}" (click)="onDivClicked($event,node)">

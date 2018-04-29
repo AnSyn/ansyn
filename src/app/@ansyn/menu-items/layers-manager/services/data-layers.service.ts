@@ -24,6 +24,19 @@ interface LayerNodesBundle {
 	selectedLayers: ILayerTreeNodeLeaf[]
 }
 
+export interface Layer{
+	url: string;
+	name: string;
+	id: string;
+	isChecked: boolean;
+	isIndeterminate: boolean;
+}
+
+export interface LayersBundle{
+	layers: Layer[],
+	selectedLayers: Layer[]
+}
+
 @Injectable()
 export class DataLayersService {
 
@@ -34,7 +47,7 @@ export class DataLayersService {
 				@Inject(layersConfig) public config: ILayersManagerConfig) {
 	}
 
-	public getAllLayersInATree(): Observable<LayerRootsBundle> {
+	public getAllLayersInATree(): Observable<LayersBundle> {
 		return this.storageService.getPage(this.config.schema, 0, 100)
 			.map(this.extractData.bind(this))
 			.catch(err => {
@@ -42,111 +55,135 @@ export class DataLayersService {
 			});
 	}
 
-	public extractData(dataLayerArray: IServerDataLayerContainerRoot[]): LayerRootsBundle {
-		let clientTree: LayerRootsBundle = this.serverTreeToClientTree(dataLayerArray);
-		return clientTree || { layers: [], selectedLayers: [] };
+	public extractData(dataLayerArray: IServerDataLayerContainerRoot[]): LayersBundle {
+		let clientCollection: LayersBundle = this.serverTreeToClientCollection(dataLayerArray);
+		return clientCollection || { layers: [], selectedLayers: [] };
 	}
 
-	private serverTreeToClientTree(serverTree: IServerDataLayerContainerRoot[]): LayerRootsBundle {
-		let allRoots: ILayerTreeNodeRoot[] = [];
-		let selectedLayers: ILayerTreeNodeLeaf[] = [];
+	private serverTreeToClientCollection(serverTree: IServerDataLayerContainerRoot[]): LayersBundle {
+		let allLayers: Layer[] = [];
+		let selectedLayers: Layer[] = [];
 
 		for (let serverRoot of serverTree) {
-			let rootBundle: LayerRootsBundle = this.serverRootContainerToClientRootContainer(serverRoot);
-			allRoots = allRoots.concat(rootBundle.layers);
+			let rootBundle: LayersBundle = this.serverDataLayersToClientLayerTreeNodes(serverRoot.dataLayers);
+			allLayers = allLayers.concat(rootBundle.layers);
 			selectedLayers = selectedLayers.concat(rootBundle.selectedLayers);
 		}
 
-
-		return { layers: allRoots, selectedLayers: selectedLayers };
+		return { layers: allLayers, selectedLayers: selectedLayers };
 	}
-
-	private serverRootContainerToClientRootContainer(container: IServerDataLayerContainerRoot): LayerRootsBundle {
-		let flattenedBundle: LayerNodesBundle = this.flattenChildren(container);
-		let flattenedChildren: ILayerTreeNode[] = flattenedBundle.layers;
-		let selectedChildrenNodes: ILayerTreeNodeLeaf[] = flattenedBundle.selectedLayers;
-
-		let allChecked: boolean = flattenedChildren.every(child => child.isChecked);
-		let allUncheked: boolean = flattenedChildren.every(child => !child.isChecked);
-		let isIndeterminate: boolean = !(allChecked || allUncheked);
-
-		return {
-			layers: [{
-				id: container.id,
-				name: container.name,
-				type: container.type,
-				children: flattenedChildren,
-				isChecked: allChecked,
-				isIndeterminate: isIndeterminate
-			}],
-			selectedLayers: selectedChildrenNodes
-		};
-	}
-
-	private serverLayerContainerToLayerTreeNodes(container: IServerDataLayerContainer): LayerNodesBundle {
-		let flattenedBundle: LayerNodesBundle = this.flattenChildren(container);
-		let flattenedChildren: ILayerTreeNode[] = flattenedBundle.layers;
-		let selectedChildrenNodes: ILayerTreeNodeLeaf[] = flattenedBundle.selectedLayers;
-
-		let allChecked: boolean = flattenedChildren.every(child => child.isChecked);
-		let allUncheked: boolean = flattenedChildren.every(child => !child.isChecked);
-		let isIndeterminate: boolean = !(allChecked || allUncheked);
-
-		return {
-			layers: [{
-				id: container.id,
-				name: container.name,
-				children: flattenedChildren,
-				isChecked: allChecked,
-				isIndeterminate: isIndeterminate
-			}],
-			selectedLayers: selectedChildrenNodes
-		};
-	}
-
-	private flattenChildren(container: IServerDataLayerContainer): LayerNodesBundle {
-		let flattenedChildren: ILayerTreeNode[] = [];
-		let selectedChildrenNodes: ILayerTreeNodeLeaf[] = [];
-
-		if (container.dataLayerContainers) {
-			container.dataLayerContainers.forEach(childContainer => {
-				let childContainerBundle: LayerNodesBundle = this.serverLayerContainerToLayerTreeNodes(childContainer);
-
-				flattenedChildren = flattenedChildren.concat(childContainerBundle.layers);
-				selectedChildrenNodes = selectedChildrenNodes.concat(childContainerBundle.selectedLayers);
-			});
-		}
-
-		if (container.dataLayers) {
-			let dataLayersBundle: LayerNodesBundle = this.serverDataLayersToClientLayerTreeNodes(container.dataLayers);
-
-			flattenedChildren = flattenedChildren.concat(dataLayersBundle.layers);
-			selectedChildrenNodes = selectedChildrenNodes.concat(dataLayersBundle.selectedLayers);
-		}
-
-		return { layers: flattenedChildren, selectedLayers: selectedChildrenNodes };
-	}
-
-	private serverDataLayersToClientLayerTreeNodes(serverDataLayers: IServerDataLayer[]): LayerNodesBundle {
-		let allLayers: ILayerTreeNodeLeaf[] = [];
-		let selectedLayers: ILayerTreeNodeLeaf[] = [];
+	private serverDataLayersToClientLayerTreeNodes(serverDataLayers: IServerDataLayer[]): LayersBundle {
+		let allLayers: Layer[] = [];
+		let selectedLayers: Layer[] = [];
 
 		for (let serverDataLayer of serverDataLayers) {
-			let layerTreeNode: ILayerTreeNodeLeaf = {
+			let layer: Layer = {
 				id: serverDataLayer.id,
 				name: serverDataLayer.name,
 				url: serverDataLayer.url,
-				children: [],
 				isChecked: serverDataLayer.isChecked,
 				isIndeterminate: false
 			};
 
-			allLayers.push(layerTreeNode);
-			if (layerTreeNode.isChecked) {
-				selectedLayers.push(layerTreeNode);
+			allLayers.push(layer);
+			if (layer.isChecked) {
+				selectedLayers.push(layer);
 			}
 		}
 		return { layers: allLayers, selectedLayers: selectedLayers };
 	}
+// 		return this.storageService.getPage(this.config.schema, 0, 100)
+// 			.map(this.extractData.bind(this))
+// 			.catch(err => {
 
+// 				return this.errorHandlerService.httpErrorHandle(err);
+// 			});
+// 	}
+//
+// 	public extractData(dataLayerArray: IServerDataLayerContainerRoot[]): LayerRootsBundle {
+// 		let clientTree: LayerRootsBundle = this.serverTreeToClientTree(dataLayerArray);
+// 		return clientTree || { layers: [], selectedLayers: [] };
+// 	}
+//
+// 	private serverTreeToClientTree(serverTree: IServerDataLayerContainerRoot[]): LayerRootsBundle {
+// 		let allRoots: ILayerTreeNodeRoot[] = [];
+// 		let selectedLayers: ILayerTreeNodeLeaf[] = [];
+//
+// 		for (let serverRoot of serverTree) {
+// 			let rootBundle: LayerRootsBundle = this.serverRootContainerToClientRootContainer(serverRoot);
+// 			allRoots = allRoots.concat(rootBundle.layers);
+// 			selectedLayers = selectedLayers.concat(rootBundle.selectedLayers);
+// 		}
+//
+//
+// 		return { layers: allRoots, selectedLayers: selectedLayers };
+// 	}
+//
+// 	private serverRootContainerToClientRootContainer(container: IServerDataLayerContainerRoot): LayerRootsBundle {
+// 		let flattenedBundle: LayerNodesBundle = this.flattenChildren(container);
+// 		let flattenedChildren: ILayerTreeNode[] = flattenedBundle.layers;
+// 		let selectedChildrenNodes: ILayerTreeNodeLeaf[] = flattenedBundle.selectedLayers;
+//
+// 		let allChecked: boolean = flattenedChildren.every(child => child.isChecked);
+// 		let allUncheked: boolean = flattenedChildren.every(child => !child.isChecked);
+// 		let isIndeterminate: boolean = !(allChecked || allUncheked);
+//
+// 		return {
+// 			layers: [{
+// 				id: container.id,
+// 				name: container.name,
+// 				type: container.type,
+// 				children: flattenedChildren,
+// 				isChecked: allChecked,
+// 				isIndeterminate: isIndeterminate
+// 			}],
+// 			selectedLayers: selectedChildrenNodes
+// 		};
+// 	}
+//
+// 	private serverLayerContainerToLayerTreeNodes(container: IServerDataLayerContainer): LayerNodesBundle {
+// 		let flattenedBundle: LayerNodesBundle = this.flattenChildren(container);
+// 		let flattenedChildren: ILayerTreeNode[] = flattenedBundle.layers;
+// 		let selectedChildrenNodes: ILayerTreeNodeLeaf[] = flattenedBundle.selectedLayers;
+//
+// 		let allChecked: boolean = flattenedChildren.every(child => child.isChecked);
+// 		let allUncheked: boolean = flattenedChildren.every(child => !child.isChecked);
+// 		let isIndeterminate: boolean = !(allChecked || allUncheked);
+//
+// 		return {
+// 			layers: [{
+// 				id: container.id,
+// 				name: container.name,
+// 				children: flattenedChildren,
+// 				isChecked: allChecked,
+// 				isIndeterminate: isIndeterminate
+// 			}],
+// 			selectedLayers: selectedChildrenNodes
+// 		};
+// 	}
+//
+// 	private flattenChildren(container: IServerDataLayerContainer): LayerNodesBundle {
+// 		let flattenedChildren: ILayerTreeNode[] = [];
+// 		let selectedChildrenNodes: ILayerTreeNodeLeaf[] = [];
+//
+// 		if (container.dataLayerContainers) {
+// 			container.dataLayerContainers.forEach(childContainer => {
+// 				let childContainerBundle: LayerNodesBundle = this.serverLayerContainerToLayerTreeNodes(childContainer);
+//
+// 				flattenedChildren = flattenedChildren.concat(childContainerBundle.layers);
+// 				selectedChildrenNodes = selectedChildrenNodes.concat(childContainerBundle.selectedLayers);
+// 			});
+// 		}
+//
+// 		if (container.dataLayers) {
+// 			let dataLayersBundle: LayerNodesBundle = this.serverDataLayersToClientLayerTreeNodes(container.dataLayers);
+//
+// 			flattenedChildren = flattenedChildren.concat(dataLayersBundle.layers);
+// 			selectedChildrenNodes = selectedChildrenNodes.concat(dataLayersBundle.selectedLayers);
+// 		}
+//
+// 		return { layers: flattenedChildren, selectedLayers: selectedChildrenNodes };
+// 	}
+//
+// 	public getAllLayersInATree(): Observable<LayerRootsBundle> {
 }

@@ -1,0 +1,26 @@
+<div class="layers">
+	<div class="private-layers">
+		<ansyn-checkbox
+			id="annotation-layer"
+			[checked]="annotationLayerChecked"
+			text="Annotations"
+			(inputClicked)="annotationLayerClick()"></ansyn-checkbox>
+	</div>
+	<div class="layers" *ngFor="let layer of source$ | async">
+		<div class="left-side">
+			<div class="checkbox">
+				<ansyn-checkbox
+					id="checkbox{{ layer.id }}"
+					class="regular-checkbox"
+					(change)="onCheckboxClicked($event,layer)"
+					[checked]="layer.isChecked ? 'checked' : ''"></ansyn-checkbox>
+				<label for="checkbox{{ layer.id }}"></label>
+			</div>
+			<div class="filter-row">
+				<div class="field-name-container">
+					<span class="field-name" [title]="layer.name">{{layer.name}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -35,6 +35,7 @@ fetch('/assets/config/app.config.json')
 				setTimeout(() => {
 					api.displayOverLay(overlay);
 					api.mapPosition$.subscribe(({payload}) => console.log(payload.position))
+					api.pointerMove$.subscribe((res) => console.log(res))
 				}, 5000);
 			},
 			{

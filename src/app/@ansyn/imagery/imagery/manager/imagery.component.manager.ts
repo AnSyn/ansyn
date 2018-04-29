@@ -25,7 +25,6 @@ export class ImageryComponentManager {
 	public centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
-	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged> = new EventEmitter<MapInstanceChanged>();
 	public activeMapName: string;
 
@@ -171,11 +170,6 @@ export class ImageryComponentManager {
 		this._subscriptions.push(this._activeMap.singleClick.subscribe((event: Array<any>) => {
 			this.singleClick.emit(event);
 		}));
-
-		this._subscriptions.push(this._activeMap.contextMenu.subscribe((event: Array<any>) => {
-			this.contextMenu.emit(event);
-		}));
-
 	}
 
 	public get ActiveMap(): IMap {

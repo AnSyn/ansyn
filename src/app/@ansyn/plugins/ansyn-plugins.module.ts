@@ -12,6 +12,7 @@ import { OpenLayersMapModule } from '@ansyn/plugins/openlayers/open-layers-map/o
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ContextMenuPlugin } from '@ansyn/plugins/openlayers/context-menu/context-menu.plugin';
 
 @NgModule({
 	imports: [
@@ -22,6 +23,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 			{ provide: BaseImageryPlugin, useClass: CenterMarkerPlugin, deps: [], multi: true },
 			{ provide: BaseImageryPlugin, useClass: ImageProcessingPlugin, deps: [Actions], multi: true },
 			{ provide: BaseImageryPlugin, useClass: MonitorPlugin, deps: [Store], multi: true },
+			{ provide: BaseImageryPlugin, useClass: ContextMenuPlugin, deps: [Store, Actions, ProjectionService], multi: true },
 			...VisualizersProviders
 		])
 	]

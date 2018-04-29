@@ -16,7 +16,6 @@ export class CommunicatorEntity {
 	public positionChanged: EventEmitter<{ id: string, position: CaseMapPosition }>;
 	public centerChanged: EventEmitter<Point>;
 	public singleClick: EventEmitter<any>;
-	public contextMenu: EventEmitter<any>;
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
 	public imageryPluginsInitialized = new EventEmitter<string>();
 	private _virtualNorth = 0;
@@ -37,7 +36,6 @@ export class CommunicatorEntity {
 		this.centerChanged = new EventEmitter<Point>();
 		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
 		this.singleClick = new EventEmitter<any>();
-		this.contextMenu = new EventEmitter<any>();
 		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 
 		this._managerSubscriptions = [];
@@ -60,10 +58,6 @@ export class CommunicatorEntity {
 
 		this._managerSubscriptions.push(this._manager.singleClick.subscribe((event: any) => {
 			this.singleClick.emit(event);
-		}));
-
-		this._managerSubscriptions.push(this._manager.contextMenu.subscribe((event: any) => {
-			this.contextMenu.emit(event);
 		}));
 
 		this._managerSubscriptions.push(this._manager.mapInstanceChanged.subscribe((event: any) => {

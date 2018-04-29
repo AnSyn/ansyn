@@ -36,14 +36,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public centerChanged: EventEmitter<GeoPoint> = new EventEmitter<GeoPoint>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
-	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
 	private projectionSubscription: Subscription = null;
 	private approximateProjectionSubscription: Subscription = null;
 	private _subscriptions: Subscription[] = [];
-	private _contextMenuEventListener: (e: MouseEvent) => void;
 	private _moveEndListener: () => void;
-	private _containerElem: HTMLElement;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
 	private _flags = {
@@ -147,19 +144,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
-
-		this._containerElem = <HTMLElement> this._mapObject.getViewport();
-
-		this._contextMenuEventListener = (e: MouseEvent) => {
-			e.preventDefault();
-
-			this._containerElem.click();
-
-			let coordinate = this._mapObject.getCoordinateFromPixel([e.offsetX, e.offsetY]);
-			this.positionToPoint(coordinate, point => this.contextMenu.emit({ point, e }));
-		};
-
-		this._containerElem.addEventListener('contextmenu', this._contextMenuEventListener);
 	}
 
 	createView(layer): View {
@@ -434,9 +418,5 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 
 		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
-
-		if (this._containerElem) {
-			this._containerElem.removeEventListener('contextmenu', this._contextMenuEventListener);
-		}
 	}
 }

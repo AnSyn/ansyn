@@ -9,7 +9,6 @@ export abstract class IMap<T = any> {
 	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
 	singleClick: EventEmitter<any>;
-	contextMenu: EventEmitter<any>;
 	mapType: string;
 	mapObject: T;
 	projectionService: ProjectionService;

@@ -144,16 +144,16 @@ export class ToolsAppEffects {
 		});
 
 	@Effect()
-	updateImageProcessingOnTools$: any = this
+	updateImageProcessingOnTools$: Observable<any> = this
 		.activeMap$
 		.filter((map) => Boolean(map.data.overlay))
 		.withLatestFrom(this.store$.select(toolsStateSelector).pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))
 		.mergeMap(([map, manualImageProcessingParams]: [CaseMapState, ImageManualProcessArgs]) => {
-			const actions = [map.data.overlay ? new EnableImageProcessing() : new DisableImageProcessing()];
+			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
 			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}
-			actions.push(new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive));
+
 			return actions;
 		});
 

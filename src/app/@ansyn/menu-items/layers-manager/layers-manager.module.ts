@@ -9,6 +9,7 @@ import { LayersManagerComponent } from './components/layers-manager/layers-manag
 import { LayerTreeComponent } from './components/layer-tree/layer-tree.component';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
+import { LayerCollectionComponent } from '@ansyn/menu-items/layers-manager/components/layers-collection/layer-collection.component';
 import { CoreModule } from '@ansyn/core/core.module';
 
 @NgModule({
@@ -19,7 +20,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
 		EffectsModule.forFeature([LayersEffects])
 	],
-	declarations: [LayersManagerComponent, LayerTreeComponent],
+	declarations: [LayersManagerComponent, LayerTreeComponent, LayerCollectionComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })

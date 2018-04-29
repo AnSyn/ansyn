@@ -6,6 +6,7 @@ import { ILayerTreeNode } from '../../models/layer-tree-node';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { layersStateSelector } from '../../reducers/layers.reducer';
+import { Layer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 @Component({
 	selector: 'ansyn-layer-managers',
@@ -15,17 +16,16 @@ import { layersStateSelector } from '../../reducers/layers.reducer';
 
 export class LayersManagerComponent {
 
-	public nodes$: Observable<ILayerTreeNode[]> = this.store.select(layersStateSelector).map((state: ILayerState) => state.layers);
-
+	public nodes$: Observable<Layer[]> = this.store.select(layersStateSelector).map((state: ILayerState) => state.layers);
 	constructor(protected store: Store<ILayerState>) {
 	}
 
 	public onNodeActivationChanged(args: NodeActivationChangedEventArgs) {
 		if (args.newState) {
-			this.store.dispatch(new SelectLayerAction(args.node));
+			this.store.dispatch(new SelectLayerAction(args.layer));
 		}
 		else {
-			this.store.dispatch(new UnselectLayerAction(args.node));
+			this.store.dispatch(new UnselectLayerAction(args.layer));
 		}
 	}
 

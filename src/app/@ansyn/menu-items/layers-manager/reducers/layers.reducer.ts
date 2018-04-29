@@ -4,10 +4,11 @@ import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
+import { Layer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 export interface ILayerState {
-	layers: ILayerTreeNodeRoot[];
-	selectedLayers: ILayerTreeNodeLeaf[];
+	layers: Layer[];
+	selectedLayers: Layer[];
 	displayAnnotationsLayer: boolean;
 	annotationsLayer: FeatureCollection<any>;
 }
@@ -49,7 +50,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 				return state;
 			}
 
-			let newSelectedArray: ILayerTreeNodeLeaf[] = [
+			let newSelectedArray: Layer[] = [
 				...state.selectedLayers.slice(0, unselectedLayerIndex),
 				...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)
 			];

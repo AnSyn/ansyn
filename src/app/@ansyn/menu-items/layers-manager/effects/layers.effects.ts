@@ -9,7 +9,7 @@ import {
 	SelectLayerAction,
 	UnselectLayerAction
 } from '../actions/layers.actions';
-import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
+import { DataLayersService, Layer, LayerRootsBundle, LayersBundle } from '../services/data-layers.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
@@ -39,7 +39,7 @@ export class LayersEffects {
 			return this.dataLayersService.getAllLayersInATree();
 		})
 		.withLatestFrom(this.store.select(layersStateSelector))
-		.mergeMap(([layersBundle, store]: [LayerRootsBundle, ILayerState]) => {
+		.mergeMap(([layersBundle, store]: [LayersBundle, ILayerState]) => {
 			let actionsArray = [];
 
 			store.selectedLayers.forEach((selectedLayer) => {
@@ -51,7 +51,7 @@ export class LayersEffects {
 				selectedLayers: layersBundle.selectedLayers
 			}));
 
-			layersBundle.selectedLayers.forEach((layer: ILayerTreeNodeLeaf) => {
+			layersBundle.selectedLayers.forEach((layer: Layer) => {
 				actionsArray.push(new SelectLayerAction(layer));
 			});
 

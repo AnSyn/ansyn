@@ -17,7 +17,6 @@ import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions'
 	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit, OnDestroy {
-	imageProcessInitParams = null;
 	isImageControlActive = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
@@ -52,6 +51,10 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	get onAutoImageProcessing() {
 		return this.flags.get(toolsFlags.autoImageProcessing);
+	}
+
+	get imageManualProcessingDisabled() {
+		return this.imageProcessingDisabled || this.onAutoImageProcessing;
 	}
 
 	get onMeasureTool() {
@@ -98,7 +101,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
 			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
 		}
-		this.imageProcessInitParams = null;
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {

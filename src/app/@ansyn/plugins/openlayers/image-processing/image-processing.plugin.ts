@@ -20,7 +20,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
-	private lastProcessingParams = {};
 	currentMap$ = this.store$.select(mapStateSelector)
 		.map((mapState: IMapState) => MapFacadeService.mapById(mapState.mapsList, this.mapId))
 		.filter(Boolean);
@@ -32,10 +31,12 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		.do(this.setAutoImageProcessing.bind(this));
 
 	imageManualProcessArgs$ = this.currentMap$
+		.filter((currentMap: CaseMapState) => !currentMap.data.isAutoImageProcessingActive)
 		.map((currentMap: CaseMapState) => currentMap.data.imageManualProcessArgs)
 		.filter(this.isImageLayerAndImageProcessing.bind(this))
-		.filter((imageManualProcessArgs) => !isEqual(this.lastProcessingParams, imageManualProcessArgs))
-		.do((imageManualProcessArgs) => this._imageProcessing.processImage(imageManualProcessArgs));
+		.do((imageManualProcessArgs) => {
+			this._imageProcessing.processImage(imageManualProcessArgs);
+		});
 
 	constructor(public store$: Store<any>) {
 		super();
@@ -48,7 +49,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		if (this.imageLayer && this.imageLayer.getSource() instanceof Raster) {
 			this._imageProcessing = new OpenLayersImageProcessing((<any>this.imageLayer).getSource());
 		}
-
 		return Observable.of(true);
 	}
 

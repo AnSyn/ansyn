@@ -17,7 +17,6 @@ import {
 	PullActiveCenter,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
-	SetManualImageProcessingArguments
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import {
@@ -306,10 +305,15 @@ describe('ToolsAppEffects', () => {
 		it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
 			const activeMap = MapFacadeService.activeMap(imapState);
 			activeMap.data.isAutoImageProcessingActive = false;
-			actions = hot('--a--', { a: new DisplayOverlaySuccessAction({ overlay: <any> { id: 'id' }, mapId : activeMap.id }) });
+			actions = hot('--a--', {
+				a: new DisplayOverlaySuccessAction({
+					overlay: <any> { id: 'id' },
+					mapId: activeMap.id
+				})
+			});
 			const expectedResults = cold('--(abcd)--', {
 				a: new EnableImageProcessing(),
-				b: new SetMapManualImageProcessing({mapId: activeMap.id, processingParams: manualProcessArgs}),
+				b: new SetMapManualImageProcessing({ mapId: activeMap.id, processingParams: manualProcessArgs }),
 				c: new SetManualImageProcessingArguments({ processingParams: manualProcessArgs }),
 				d: new SetAutoImageProcessingSuccess(false)
 			});

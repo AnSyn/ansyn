@@ -4,7 +4,7 @@
 		"baseUrl": "src",
 		"paths": {
 			"@ansyn/*": ["app/@ansyn/*"],
-			"@builder/*": ["app/appBuilder/*"]
+			"@builder/*": ["app/builder/*"]
 		},
 		"outDir": "./dist/out-tsc",
 		"sourceMap": true,

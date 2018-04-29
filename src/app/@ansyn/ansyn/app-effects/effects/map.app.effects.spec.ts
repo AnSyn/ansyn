@@ -260,16 +260,6 @@ describe('MapAppEffects', () => {
 		baseSourceProviders = _baseSourceProviders;
 	}));
 
-
-	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
-		toolsState.flags.set(toolsFlags.shadowMouse, true);
-		const action = new MapInstanceChangedAction(<any> {id: 'tmpId2'});
-		actions = hot('--a--', {a: action});
-		const expectedResults = cold('--a--', {a: new StartMouseShadow()});
-
-		expect(mapAppEffects.onAddCommunicatorShowShadowMouse$).toBeObservable(expectedResults);
-	});
-
 	describe('onDisplayOverlay$ communicator should set Layer on map, by getFootprintIntersectionRatioInExtent', () => {
 		const fakeLayer = {};
 		const fakeExtent = [1, 2, 3, 4];

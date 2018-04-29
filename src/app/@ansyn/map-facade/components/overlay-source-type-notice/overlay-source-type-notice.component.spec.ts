@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlaySourceTypeNoticeComponent } from './overlay-source-type-notice.component';
-import { OverlaysService } from '@ansyn/overlays';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 

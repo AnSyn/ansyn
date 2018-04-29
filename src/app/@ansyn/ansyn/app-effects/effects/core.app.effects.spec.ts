@@ -12,6 +12,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
+import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
 
 function mockOverlay(id: string): Overlay {
 	const overlay = new Overlay();

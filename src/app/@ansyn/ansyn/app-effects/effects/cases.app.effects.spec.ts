@@ -1,8 +1,6 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
-import { casesConfig, CasesReducer, CasesService } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
-import { OverlayReducer } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -15,8 +13,8 @@ import { Case } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs/Observable';
-import { overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { contextFeatureKey, ContextReducer } from '@ansyn/context/reducers/context.reducer';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -24,6 +22,7 @@ import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { ContextConfig } from '@ansyn/context/models/context.config';
+import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

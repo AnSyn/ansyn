@@ -5,7 +5,7 @@ import { SaveCaseComponent } from './save-case.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CasesModule } from '../../cases.module';
 import { Store, StoreModule } from '@ngrx/store';
-import { casesConfig } from '@ansyn/menu-items/cases';
+import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { Observable } from 'rxjs/Observable';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';

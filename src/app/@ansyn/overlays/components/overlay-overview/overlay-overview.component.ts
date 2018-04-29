@@ -4,6 +4,7 @@ import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { HoveredOverlayData } from '@ansyn/overlays/models/hovered-overlay-data.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -15,9 +16,15 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public x: number;
 	public y: number;
 	public showFlag = false;
+	public overlay: any = {};
 
-	hoveredOverlay$: Observable<HoveredOverlayData> = this.store$.select(overlaysStateSelector)
+	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)
 		.pluck<IOverlaysState, HoveredOverlayData>('hoveredOverlay')
+		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck<IOverlaysState, Map<any, any>>('overlays')))
+		.map(([hoveredOverlay, overlays]: [HoveredOverlayData, Map<any, any>]) => [
+			hoveredOverlay,
+			overlays.get(hoveredOverlay && hoveredOverlay.id)
+		])
 		.distinctUntilChanged();
 
 	constructor(
@@ -35,11 +42,12 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 
-	showOrHide(eventData: HoveredOverlayData | null) {
-		if (eventData) {
+	showOrHide([eventData, overlay]: [HoveredOverlayData, Overlay]) {
+		if (eventData && overlay) {
 			this.element.nativeElement.style.left = (eventData.x - 50) + 'px';
-			this.element.nativeElement.style.top = (eventData.y - 50) + 'px';
+			this.element.nativeElement.style.top = (eventData.y - 150 - 50) + 'px';
 			this.showFlag = true;
+			this.overlay = overlay;
 		} else {
 			this.showFlag = false;
 		}

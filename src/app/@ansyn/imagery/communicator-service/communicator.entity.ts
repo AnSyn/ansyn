@@ -209,14 +209,4 @@ export class CommunicatorEntity {
 			this.ActiveMap.removeLayer(layer);
 		}
 	}
-
-	// CommunicatorEntity methods end
-
-	// ======shadow mouse start
-	public setMouseShadowListener(enable: boolean): Observable<any> {
-		this.ActiveMap.setPointerMove(enable);
-		return this.ActiveMap.getPointerMove();
-	}
-
-	// ======shadow mouse end
 }

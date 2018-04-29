@@ -163,21 +163,6 @@ export class MapAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onAddCommunicatorShowShadowMouse$
-	 * @ofType MapInstanceChangedAction, SetMapsDataActionStore
-	 * @dependencies cases, statusBar
-	 * @filter shadowMouse flag on
-	 * @actions StartMouseShadow
-	 */
-	@Effect()
-	onAddCommunicatorShowShadowMouse$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION, MapActionTypes.STORE.SET_MAPS_DATA)
-		.withLatestFrom(this.store$.select(toolsStateSelector))
-		.filter(([action, toolsState]: [any, IToolsState]) => toolsState.flags.get(toolsFlags.shadowMouse))
-		.map(() => new StartMouseShadow());
-
-	/**
-	 * @type Effect
 	 * @name setOverlaysNotInCase$
 	 * @ofType SetFilteredOverlaysAction, SetMapsDataActionStore
 	 * @dependencies overlays, map

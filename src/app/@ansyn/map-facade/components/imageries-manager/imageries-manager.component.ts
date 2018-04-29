@@ -11,6 +11,7 @@ import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer
 import { MapsLayout } from '@ansyn/core/models/maps-layout';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -108,6 +109,7 @@ export class ImageriesManagerComponent implements OnInit {
 	changeActiveImagery(value) {
 		if (this.activeMapId !== value) {
 			this.store.dispatch(new SetMapsDataActionStore({ activeMapId: value }));
+			this.store.dispatch(new ActiveImageryMouseEnter());
 		}
 	}
 

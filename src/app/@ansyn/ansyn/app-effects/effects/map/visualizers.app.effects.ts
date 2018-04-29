@@ -19,7 +19,6 @@ import {
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
-import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
 import {
 	DrawOverlaysOnMapTriggerAction,
 	MapActionTypes,
@@ -63,76 +62,6 @@ export class VisualizersAppEffects {
 	shouldDrawOverlaysOnMap$: Observable<DrawOverlaysOnMapTriggerAction> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION)
 		.map((action) => new DrawOverlaysOnMapTriggerAction());
-
-
-	/**
-	 * @type Effect
-	 * @name onStartMapShadow$
-	 * @ofType StartMouseShadow
-	 */
-	@Effect({ dispatch: false })
-	onStartMapShadow$: any = this.actions$
-		.ofType(ToolsActionsTypes.START_MOUSE_SHADOW)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [StartMouseShadow, IMapState]) => {
-			let shadowMouseProducer: Observable<any>;
-			const shadowMouseConsumers = new Array<CaseMapState>();
-			mapState.mapsList.forEach((map: CaseMapState) => {
-				this.clearShadowMouse(map); // remove all previous listeners and drawers
-
-				if (map.id === mapState.activeMapId) {
-					shadowMouseProducer = this.setShadowMouseProducer(map);
-				} else {
-					shadowMouseConsumers.push(map);
-				}
-			});
-			shadowMouseConsumers.forEach((map: CaseMapState) => this.addShadowMouseConsumer(map, shadowMouseProducer));
-		});
-
-	/**
-	 * @type Effect
-	 * @name onActiveImageryMouseLeave$
-	 * @ofType ActiveImageryMouseLeave
-	 * @filter shadow Mouse is on
-	 * @action StopMouseShadow
-	 */
-	@Effect()
-	onActiveImageryMouseLeave$ = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
-		.filter((shadowMouseOn: boolean) => shadowMouseOn)
-		.map(() => new StopMouseShadow({ updateTools: false }));
-
-	/**
-	 * @type Effect
-	 * @name onActiveImageryMouseEnter$
-	 * @ofType ActiveImageryMouseEnter
-	 * @filter shadow Mouse is on
-	 * @action StartMouseShadow
-	 */
-	@Effect()
-	onActiveImageryMouseEnter$ = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => toolState.flags.get(toolsFlags.shadowMouse))
-		.filter((shadowMouseOn: boolean) => shadowMouseOn)
-		.map(() => new StartMouseShadow({ updateTools: false }));
-
-	/**
-	 * @type Effect
-	 * @name onEndMapShadow$
-	 * @ofType StopMouseShadow
-	 */
-	@Effect({ dispatch: false })
-	onEndMapShadow$ = this.actions$
-		.ofType(ToolsActionsTypes.STOP_MOUSE_SHADOW)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [StopMouseShadow, IMapState]) => {
-			mapState.mapsList.forEach((map: CaseMapState) => {
-				// remove all listeners and drawers
-				this.clearShadowMouse(map);
-			});
-		});
-
 
 	/**
 	 * @type Effect
@@ -188,70 +117,6 @@ export class VisualizersAppEffects {
 	getPlugin<T>(mapId, visualizerType): T {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		return communicator ? communicator.getPlugin<T>(visualizerType) : null;
-	}
-
-	// set shadow mouse producer (remove previous producers)
-	setShadowMouseProducer(mapData: CaseMapState): Observable<any> {
-		this.removeShadowMouseProducer(mapData); // remove previous producer
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (communicator) {
-			return communicator.setMouseShadowListener(true);
-		}
-	}
-
-	// clear shadow mouse producer
-	removeShadowMouseProducer(mapData: CaseMapState) {
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (communicator) {
-			communicator.setMouseShadowListener(false);
-		}
-	}
-
-	// add shadow mouse consumer (listen to producer)
-	addShadowMouseConsumer(mapData: CaseMapState, pointerMoveProducer: Observable<any>) {
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (communicator && pointerMoveProducer) {
-			pointerMoveProducer.subscribe(point => {
-				const mouseShadowVisualizer = communicator.getPlugin<MouseShadowVisualizer>(MouseShadowVisualizer);
-				if (!mouseShadowVisualizer) {
-					return;
-				}
-
-				const shadowMousePoint: GeoJSON.Point = {
-					type: 'Point',
-					// calculate projection?
-					coordinates: point
-				};
-				const shadowMouseFeatureJson: GeoJSON.Feature<any> = {
-					type: 'Feature',
-					geometry: shadowMousePoint,
-					properties: {}
-				};
-				mouseShadowVisualizer.clearEntities();
-				mouseShadowVisualizer.setEntities([{ id: 'shadowMouse', featureJson: shadowMouseFeatureJson }])
-					.subscribe();
-			});
-		}
-	}
-
-	// clear shadow entities
-	clearShadowMouseEntities(mapData: CaseMapState) {
-		const communicator = this.imageryCommunicatorService.provide(mapData.id);
-		if (communicator) {
-			const mouseShadowVisualizer = communicator.getPlugin<MouseShadowVisualizer>(MouseShadowVisualizer);
-			if (!mouseShadowVisualizer) {
-				return;
-			}
-			mouseShadowVisualizer.clearEntities();
-		}
-	}
-
-	// clear shadow mouse producer and entities
-	clearShadowMouse(mapData: CaseMapState) {
-		// remove producer (in case this is shadow producer)
-		this.removeShadowMouseProducer(mapData);
-		// clear shadow layer (in case this is shadow consumer)
-		this.clearShadowMouseEntities(mapData);
 	}
 
 }

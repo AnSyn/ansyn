@@ -57,10 +57,6 @@ export abstract class IMap<T = any> {
 
 	abstract dispose(): void;
 
-	abstract setPointerMove(enable: boolean);
-
-	abstract getPointerMove(): Observable<any>;
-
 	abstract addSingleClickEvent();
 
 	abstract removeSingleClickEvent();

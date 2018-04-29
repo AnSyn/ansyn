@@ -1,13 +1,16 @@
-import { BaseImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { ContextMenuShowAction } from '@ansyn/map-facade';
-import { IAppState } from '@ansyn/ansyn';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { Observable } from 'rxjs/Observable';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { ContextMenuShowAction } from '@ansyn/map-facade/actions/map.actions';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { inside } from '@turf/turf';
 
 export class ContextMenuPlugin extends BaseImageryPlugin {
 	static supported = [OpenlayersMapName];
@@ -24,15 +27,20 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		this.containerElem.addEventListener('contextmenu', this.contextMenuEventListener.bind(this));
 	}
 
-	contextMenuEventListener(e: MouseEvent) {
-		e.preventDefault();
+	contextMenuEventListener(event: MouseEvent) {
+		event.preventDefault();
 
 		this.containerElem.click();
 
-		let coordinate = this.iMap.mapObject.getCoordinateFromPixel([e.offsetX, e.offsetY]);
+		let coordinate = this.iMap.mapObject.getCoordinateFromPixel([event.offsetX, event.offsetY]);
 		this.positionToPoint(coordinate)
-			.do((point) => {
-				this.store$.dispatch(new ContextMenuShowAction({ point, e }));
+			.withLatestFrom(this.store$.select(overlaysStateSelector))
+			.do(([point, overlaysState]) => {
+				const overlays = overlaysState.filteredOverlays
+					.map((id: string): Overlay => overlaysState.overlays.get(id))
+					.filter(({ footprint }) => inside(point, footprint));
+
+				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));
 			})
 			.subscribe();
 	}

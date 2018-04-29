@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Feature, Point, Position } from 'geojson';
+import { Point, Position } from 'geojson';
 import { ImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
@@ -17,7 +17,6 @@ export const MapActionTypes = {
 	SET_MAP_MANUAL_IMAGE_PROCESSING: 'SET_MAP_MANUAL_IMAGE_PROCESSING',
 	CONTEXT_MENU: {
 		SHOW: 'CONTEXT_MENU_SHOW',
-		GET_FILTERED_OVERLAYS: 'GET_FILTERED_OVERLAYS',
 		DISPLAY: 'DISPLAY'
 	},
 	VISUALIZERS: {
@@ -49,6 +48,12 @@ export const MapActionTypes = {
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
 	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY'
 };
+
+export interface ContextMenuShowPayload  {
+	point: Point;
+	overlays: Overlay[];
+	event: MouseEvent;
+}
 
 export type MapActions = any;
 
@@ -132,14 +137,7 @@ export class SetMapManualImageProcessing implements Action {
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
-	constructor(public payload: { point: Point, e: MouseEvent }) {
-	}
-}
-
-export class ContextMenuGetFilteredOverlaysAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS;
-
-	constructor(public payload: Overlay[]) {
+	constructor(public payload: ContextMenuShowPayload) {
 	}
 }
 

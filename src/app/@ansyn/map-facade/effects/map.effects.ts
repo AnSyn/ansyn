@@ -14,7 +14,7 @@ import { polygon } from '@turf/helpers';
 import 'rxjs/add/observable/forkJoin';
 import {
 	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction, ContextMenuGetFilteredOverlaysAction, DecreasePendingMapsCountAction,
+	AnnotationContextMenuTriggerAction, DecreasePendingMapsCountAction,
 	ImageryCreatedAction, ImageryRemovedAction,
 	MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction, PositionChangedAction, SetMapsDataActionStore,
 	SynchronizeMapsAction
@@ -248,16 +248,6 @@ export class MapEffects {
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$
 		.ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
 		.map(({ payload }) => payload);
-
-	/**
-	 * @type Effect
-	 * @name getFilteredOverlays$
-	 * @ofType ContextMenuGetFilteredOverlaysAction
-	 */
-	@Effect({ dispatch: false })
-	getFilteredOverlays$: Observable<ContextMenuGetFilteredOverlaysAction> = this.actions$
-		.ofType<ContextMenuGetFilteredOverlaysAction>(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
-		.share();
 
 	/**
 	 * @type Effect

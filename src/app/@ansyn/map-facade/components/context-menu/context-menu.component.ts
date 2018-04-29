@@ -2,7 +2,10 @@ import { Component, ElementRef, HostBinding, HostListener, Inject, OnInit, Rende
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { ContextMenuDisplayAction, ContextMenuShowAction, ContextMenuTriggerAction } from '../../actions/map.actions';
+import {
+	ContextMenuDisplayAction, ContextMenuShowAction, ContextMenuTriggerAction,
+	MapActionTypes
+} from '../../actions/map.actions';
 import { MapEffects } from '../../effects/map.effects';
 import { uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
@@ -15,6 +18,7 @@ import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
 import { selectGeoFilter } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { Actions } from '@ngrx/effects';
 
 export interface OverlayButton {
 	name: string;
@@ -39,21 +43,6 @@ export class ContextMenuComponent implements OnInit {
 		.filter(Boolean)
 		.map((activeMap: CaseMapState) => activeMap.data.overlay)
 		.distinctUntilChanged();
-
-	filteredOverlays$: Observable<Overlay[]> = this.mapEffects$
-		.getFilteredOverlays$
-		.map(({ payload }) => payload)
-		.withLatestFrom(this.displayedOverlay$, (filteredOverlays: Overlay[], displayedOverlay: Overlay) => {
-			const displayedOverlayId = (displayedOverlay && displayedOverlay.id);
-			return [
-				filteredOverlays.filter(({ id }) => id !== displayedOverlayId),
-				displayedOverlay
-			];
-		})
-		.do(([filteredOverlays, displayedOverlay]: [Overlay[], Overlay]) => {
-			this.initializeSensors(filteredOverlays, displayedOverlay);
-		})
-		.map(([filteredOverlays]: [Overlay[], Overlay]) => filteredOverlays);
 
 	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectGeoFilter)
 		.do((geoFilter) => this.geoFilter = geoFilter);
@@ -148,7 +137,7 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	constructor(protected store: Store<IMapState>,
-				protected mapEffects$: MapEffects,
+				protected actions$: Actions,
 				protected elem: ElementRef,
 				protected renderer: Renderer2,
 				public store$: Store<any>,
@@ -160,16 +149,27 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.filteredOverlays$
-			.subscribe((filteredOverlays: Overlay[]) => this.filteredOverlays = filteredOverlays);
-		this.mapEffects$.onContextMenuShow$.subscribe(this.show.bind(this));
+
+		this.actions$
+			.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
+			.do(this.show.bind(this))
+			.withLatestFrom(this.displayedOverlay$)
+			.do(this.setFilteredOverlays.bind(this))
+			.subscribe();
 		this.geoFilter$.subscribe();
+	}
+
+	setFilteredOverlays([action, displayedOverlay]: [ContextMenuShowAction, Overlay]) {
+		const displayedOverlayId = (displayedOverlay && displayedOverlay.id);
+		const filteredOverlays = action.payload.overlays.filter(({ id }) => id !== displayedOverlayId);
+		this.initializeSensors(filteredOverlays, displayedOverlay);
+		this.filteredOverlays = filteredOverlays;
 	}
 
 	show(action: ContextMenuShowAction) {
 		this.point = action.payload.point;
-		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.e.y}px`);
-		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.e.x}px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.event.y}px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.event.x}px`);
 		this.elem.nativeElement.focus();
 	}
 

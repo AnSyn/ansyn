@@ -47,7 +47,8 @@ export const MapActionTypes = {
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
-	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY'
+	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
+	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER'
 };
 
 export type MapActions = any;
@@ -239,5 +240,12 @@ export class ImageryPluginsInitialized implements Action {
 export class ClickOutsideMap implements Action  {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
 	constructor(public payload: any) {
+	}
+}
+export class ShadowMouseProducer implements Action {
+	readonly type = MapActionTypes.SHADOW_MOUSE_PRODUCER
+
+	constructor(public payload: any) {
+
 	}
 }

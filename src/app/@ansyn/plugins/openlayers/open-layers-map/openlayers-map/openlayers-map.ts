@@ -35,7 +35,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private _mapObject: OLMap;
 	public centerChanged: EventEmitter<GeoPoint> = new EventEmitter<GeoPoint>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	public pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 
@@ -113,16 +112,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const point = <GeoPoint> turf.geometry('Point', coordinates);
 		this.projectionSubscription = this.projectionService
 			.projectAccurately(point, this).subscribe(cb);
-	}
-
-	private approximatePositionToPoint(coordinates: ol.Coordinate, cb: (p: GeoPoint) => void) {
-		if (this.approximateProjectionSubscription) {
-			this.approximateProjectionSubscription.unsubscribe();
-		}
-
-		const point = <GeoPoint> turf.geometry('Point', coordinates);
-		this.approximateProjectionSubscription = this.projectionService.projectApproximately(point, this)
-			.subscribe(cb);
 	}
 
 	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
@@ -425,26 +414,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	public singleClickListener(e) {
 		this.positionToPoint(e.coordinate, p => this.singleClick.emit({ lonLat: p.coordinates }));
-	}
-
-	// *****-- pointer move --********
-
-	public onPointerMove(e) {
-		this.approximatePositionToPoint(e.coordinate, p => this.pointerMove.emit(p.coordinates));
-	}
-
-	public setPointerMove(enable: boolean) {
-		// clear previous move listeners
-		this.mapObject['un']('pointermove', this.onPointerMove, this);
-		this.pointerMove = new EventEmitter<any>();
-
-		if (enable) {
-			this.mapObject.on('pointermove', this.onPointerMove, this);
-		}
-	}
-
-	public getPointerMove(): Observable<any> {
-		return this.pointerMove;
 	}
 
 	// IMap End

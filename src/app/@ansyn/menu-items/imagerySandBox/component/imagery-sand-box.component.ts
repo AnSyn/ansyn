@@ -26,7 +26,6 @@ export class ImagerySandBoxComponent implements OnInit {
 	public selectedCase: Case;
 	public overlaysCriteria: OverlaysCriteria;
 	public isSpecialDisplayed = false;
-	private _isMouseShadowEnabled = false;
 	@ViewChild('showAnnotations') showAnnotations;
 
 	constructor(public imageryCommunicatorService: ImageryCommunicatorService, public store: Store<ICasesState>) {
@@ -94,7 +93,7 @@ export class ImagerySandBoxComponent implements OnInit {
 			time: {
 				type: 'absolute',
 				to: this.selectedCase.state.time.to,
-				from: this.selectedCase.state.time.from,
+				from: this.selectedCase.state.time.from
 			},
 			region: this.selectedCase.state.region
 		};

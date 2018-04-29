@@ -20,6 +20,7 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {

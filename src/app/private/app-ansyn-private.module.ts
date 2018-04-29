@@ -1,15 +1,14 @@
 import { AnsynAppMetaData, AppAnsynModule } from '../app/app.module';
 import { NgModule } from '@angular/core';
 import { PrivateModule } from './private.module';
-import { AppAnsynComponent } from '../app/app.component';
+import { AnsynPrivateModule } from './ansyn-private/ansyn-private.module';
 
 @NgModule({
 	...AnsynAppMetaData,
 	imports: [
 		...AnsynAppMetaData.imports,
-		PrivateModule
-	],
-	bootstrap: [AppAnsynComponent]
+		AnsynPrivateModule
+	]
 })
 export class PrivateAnsynAppModule extends AppAnsynModule {
 }

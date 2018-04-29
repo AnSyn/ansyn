@@ -16,6 +16,8 @@ import {
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

@@ -1,4 +1,4 @@
-import { layersConfig } from '@ansyn/menu-items/layers-manager';
+import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LayerTreeComponent } from './layer-tree.component';

@@ -6,7 +6,7 @@ import { CasesModule } from '../../cases.module';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
-import { casesConfig } from '@ansyn/menu-items/cases';
+import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';

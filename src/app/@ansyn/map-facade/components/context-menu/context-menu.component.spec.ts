@@ -8,7 +8,7 @@ import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
 import { mapFacadeConfig,  } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
-import { statusBarFeatureKey, StatusBarReducer } from "@ansyn/status-bar";
+import { statusBarFeatureKey, StatusBarReducer } from "@ansyn/status-bar/reducers/status-bar.reducer";
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;

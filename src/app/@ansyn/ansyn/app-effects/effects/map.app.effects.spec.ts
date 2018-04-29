@@ -62,7 +62,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
-
+import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	mapType = 'mapType1';
 	sourceType = 'sourceType1';
@@ -291,14 +291,14 @@ describe('MapAppEffects', () => {
 			};
 
 
-			Object.defineProperty(utils, 'extentFromGeojson', {
+			Object.defineProperty(extentFromGeojson, 'extentFromGeojson', {
 				writable: true,
 				configurable: true,
 				value: () => {
 				}
 			});
 
-			spyOn(utils, 'extentFromGeojson').and.returnValue(fakeExtent);
+			spyOn(extentFromGeojson, 'extentFromGeojson').and.returnValue(fakeExtent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');

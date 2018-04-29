@@ -1,5 +1,5 @@
-import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu';
-import { CasesReducer } from '@ansyn/menu-items/cases';
+import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
+import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';

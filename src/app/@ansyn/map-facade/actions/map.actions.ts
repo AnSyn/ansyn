@@ -115,13 +115,6 @@ export class ContextMenuTriggerAction implements Action {
 	}
 }
 
-export class SetMapAutoImageProcessing implements Action {
-	type = MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING;
-
-	constructor(public payload: { mapId: string, toggleValue: boolean }) {
-	}
-}
-
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 

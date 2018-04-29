@@ -104,32 +104,6 @@ export class ToolsAppEffects {
 		.filter(([action, isPolygonSearch, isPolygonGeoFilter]: [SelectMenuItemAction, boolean, boolean]) => isPolygonSearch && isPolygonGeoFilter)
 		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 
-
-	/**
-	 * @type Effect
-	 * @name onActiveMapChanges$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies map
-	 * @filter There is an active map
-	 * @action DisableImageProcessing?, EnableImageProcessing?, SetAutoImageProcessingSuccess?
-	 */
-	@Effect()
-	onActiveMapChanges$: Observable<ActiveMapChangedAction | DisableImageProcessing | SetAutoImageProcessingSuccess> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => mapState)
-		.map(MapFacadeService.activeMap)
-		.filter(activeMap => Boolean(activeMap))
-		.mergeMap((activeMap: CaseMapState) => {
-			if (!activeMap.data.overlay) {
-				return [new DisableImageProcessing()];
-			} else {
-				return [
-					new EnableImageProcessing(),
-					new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
-				];
-			}
-		});
-
 	/**
 	 * @type Effect
 	 * @name onActiveMapChangesSetOverlaysFootprintMode$
@@ -160,10 +134,11 @@ export class ToolsAppEffects {
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector))
 		.mergeMap(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
-			let imageManualProcessArgs: ImageManualProcessArgs = <any> {};
-			this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
+			const imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
+
 			const actions = [];
 			const updatedMapList = [...mapState.mapsList];
+
 			const mapToUpdate = updatedMapList.find((map) => map.id === MapFacadeService.activeMap(mapState).id);
 			mapToUpdate.data.imageManualProcessArgs = toolsState.overlaysManualProcessArgs[action.payload.overlay.id];
 			actions.push(new SetMapsDataActionStore({ mapsList: updatedMapList }));
@@ -175,108 +150,14 @@ export class ToolsAppEffects {
 		.activeMap$
 		.filter((map) => Boolean(map.data.overlay))
 		.withLatestFrom(this.store$.select(toolsStateSelector).pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))
-		.filter(([map, manualImageProcessingParams]) => !isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams))
-		.mergeMap(([map]: [CaseMapState, ImageManualProcessArgs]) => [
-			map.data.isAutoImageProcessingActive ? new DisableImageProcessing() : new EnableImageProcessing(),
-			new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs)
-		]);
-
-	// @Effect()
-	// overlayChanged$: any = this.overlay$
-	// 	.mergeMap((map: CaseMapState) => {
-	// 		const imageManualProcessArgs: ImageManualProcessArgs = <any> {};
-	// 		this.params.forEach((imageProcParam) => imageManualProcessArgs[imageProcParam.name] = imageProcParam.defaultValue);
-	// 		const actions = [];
-	// 		actions.push(new SetManualImageProcessing((map.data && map.data.imageManualProcessArgs) || imageManualProcessArgs));
-	//
-	// 		console.log('Im Here');
-	// 		return actions;
-	// 	});
-
-	// /**
-	//  * @type Effect
-	//  * @name onActiveMapChangesUpdateHash$
-	//  * @ofType ActiveMapChangedAction
-	//  * @dependencies map
-	//  * @filter
-	//  * @action DisableImageProcessing?, EnableImageProcessing?, SetManualImageProcessingArguments?
-	//  */
-	// @Effect()
-	// onActiveMapChangesUpdateFromHash$: Observable<any> = this.actions$
-	// 	.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-	// 	.withLatestFrom(this.store$.select(toolsStateSelector), this.store$.select(mapStateSelector))
-	// 	.filter(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => Boolean(toolsState.imageProcessingHash) && toolsState.imageProcessingHash.hasOwnProperty(action.payload))
-	// 	.mergeMap(([action, toolsState, mapState]: [ActiveMapChangedAction, IToolsState, IMapState]) => {
-	// 		const activeMap: CaseMapState = MapFacadeService.activeMap(mapState);
-	// 		if (!activeMap.data.overlay) {
-	// 			return [new DisableImageProcessing()];
-	// 		}
-	// 		return [
-	// 			new EnableImageProcessing(),
-	// 			new SetManualImageProcessing({ processingParams: toolsState.imageProcessingHash[action.payload] })
-	// 		];
-	// 	});
-
-
-	// /**
-	//  * @type Effect
-	//  * @name onDisplayOverlaySuccess$
-	//  * @ofType DisplayOverlaySuccessAction
-	//  * @dependencies map
-	//  * @action EnableImageProcessing, SetMapAutoImageProcessing?, SetMapManualImageProcessing?, SetManualImageProcessingArguments, SetAutoImageProcessingSuccess
-	//  */
-	//
-	// @Effect()
-	// onDisplayOverlaySuccess$: Observable<any> = this.actions$
-	// 	.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-	// 	.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectOverlaysManualProcessArgs),
-	// 		(action: DisplayOverlaySuccessAction, mapsState: IMapState, overlaysManualProcessArgs: OverlaysManualProcessArgs) => {
-	// 			const mapId = action.payload.mapId || mapsState.activeMapId;
-	// 			const selectedMap: CaseMapState = MapFacadeService.mapById(mapsState.mapsList, mapId);
-	// 			return [action, selectedMap, overlaysManualProcessArgs];
-	// 		})
-	// 	.filter(([action, selectedMap]: [DisplayOverlaySuccessAction, CaseMapState, OverlaysManualProcessArgs]) => Boolean(selectedMap))
-	// 	.mergeMap(([action, selectedMap, overlaysManualProcessArgs]: [DisplayOverlaySuccessAction, CaseMapState, OverlaysManualProcessArgs]) => {
-	// 		// action 1: EnableImageProcessing
-	// 		const actions = [new EnableImageProcessing()];
-	// 		let manualProcessArgs: ImageManualProcessArgs;
-	// 		let params = this.config.ImageProcParams.map(param => {
-	// 			return param.defaultValue;
-	// 		});
-	//
-	// 		manualProcessArgs = {
-	// 			Sharpness: params[0],
-	// 			Contrast: params[1],
-	// 			Brightness: params[2],
-	// 			Gamma: params[3],
-	// 			Saturation: params[4]
-	// 		};
-	//
-	// 		// action 2: SetMapManualImageProcessing / SetMapAutoImageProcessing (optional)
-	// 		if (selectedCase.state.overlaysManualProcessArgs) {
-	// 			manualProcessArgs = selectedCase.state.overlaysManualProcessArgs[action.payload.overlay.id] || manualProcessArgs;
-	// 		}
-	//
-	// 		if (selectedMap.data.isAutoImageProcessingActive) {
-	// 			// auto process action
-	// 			actions.push(new SetMapAutoImageProcessing({
-	// 				mapId: selectedMap.id,
-	// 				toggleValue: selectedMap.data.isAutoImageProcessingActive
-	// 			}));
-	// 		} else if (manualProcessArgs) {
-	// 			// manual process action
-	// 			actions.push(new SetMapManualImageProcessing({
-	// 				mapId: selectedMap.id,
-	// 				processingParams: manualProcessArgs
-	// 			}));
-	// 		}
-	// 		// action 3: update Manual Image Processing Arguments
-	// 		actions.push(new SetManualImageProcessingArguments({ processingParams: manualProcessArgs }));
-	//
-	// 		// action 4: SetAutoImageProcessingSuccess (autoImageProcessing / manualImageProcessing / null)
-	// 		actions.push(new SetAutoImageProcessingSuccess(selectedMap.data.isAutoImageProcessingActive));
-	// 		return actions;
-	// 	});
+		.mergeMap(([map, manualImageProcessingParams]: [CaseMapState, ImageManualProcessArgs]) => {
+			const actions = [map.data.overlay ? new EnableImageProcessing() : new DisableImageProcessing()];
+			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
+				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
+			}
+			actions.push(new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive));
+			return actions;
+		});
 
 	/**
 	 * @type Effect
@@ -310,18 +191,11 @@ export class ToolsAppEffects {
 	@Effect()
 	toggleAutoImageProcessing$: Observable<any> = this.actions$
 		.ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: SetAutoImageProcessing, mapsState: IMapState) => {
-			return [action, mapsState];
-		})
+		.withLatestFrom(this.store$.select(mapStateSelector))
 		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			// mapsState = updatesMapAutoImageProcessingFlag(mapsState, true);
 			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
-
+			activeMap.data.isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
-				new SetMapAutoImageProcessing({
-					mapId: mapsState.activeMapId,
-					toggleValue: activeMap.data.isAutoImageProcessingActive
-				}),
 				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),
 				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
 			];

@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { EntityState } from '@ngrx/entity/src/models';
 import { ContextActionTypes, ContextActions } from '../actions/context.actions';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { Context } from '@ansyn/core/models/context.model';
 
 export const contextFeatureKey = 'context';
@@ -19,5 +19,5 @@ export function ContextReducer(state: IContextState = contextInitialState, actio
 	}
 }
 
-export const contextFeatureSelector = createFeatureSelector(contextFeatureKey);
+export const contextFeatureSelector: MemoizedSelector<any, IContextState>  = createFeatureSelector(contextFeatureKey);
 export const selectContextsArray = createSelector(contextFeatureSelector, contextAdapter.getSelectors().selectAll);

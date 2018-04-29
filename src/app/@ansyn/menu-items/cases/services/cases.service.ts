@@ -55,15 +55,15 @@ export class CasesService {
 	}
 
 	parseCasePreview(casePreview: CasePreview): CasePreview {
-		return {
+		return <any> {
 			...casePreview,
 			creationTime: new Date(casePreview.creationTime),
 			lastModified: new Date(casePreview.lastModified)
 		};
 	}
 
-	parseCase(caseValue: Case) {
-		return {
+	parseCase(caseValue: Case): Case {
+		return <any> {
 			...caseValue,
 			creationTime: new Date(caseValue.creationTime),
 			lastModified: new Date(caseValue.lastModified),

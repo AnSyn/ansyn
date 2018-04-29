@@ -1,14 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { PolygonSearchVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/polygon-search.visualizer';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { EffectsModule } from '@ngrx/effects';
-import { UUID } from 'angular2-uuid';
-import { Observable } from 'rxjs/Observable';
-import { Feature, Polygon } from 'geojson';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { Actions, EffectsModule } from '@ngrx/effects';
 
 describe('mouseShadowVisualizer', () => {
 	let mouseShadowVisualizer: MouseShadowVisualizer;
@@ -17,18 +11,27 @@ describe('mouseShadowVisualizer', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({})]
+			providers: [
+				{
+					provide: MouseShadowVisualizer,
+					useClass: MouseShadowVisualizer,
+					deps: [Actions, Store, ProjectionService]
+				},
+				{ provide: ProjectionService, useValue: {} }
+			],
+			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([])]
 		});
 	});
 
-
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([Store, MouseShadowVisualizer], (_store: Store<any>, _mouseShadowVisualizer: MouseShadowVisualizer) => {
 		store = _store;
-	}));
-
-	beforeEach(inject([ProjectionService], (projectionService: ProjectionService) => {
-		projectionService = projectionService;
+		mouseShadowVisualizer = _mouseShadowVisualizer;
 	}));
 
 
+	it('should be created', () => {
+		expect(mouseShadowVisualizer).toBeTruthy();
+	});
 });
+
+

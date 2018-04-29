@@ -1,4 +1,4 @@
-import { Compiler, Injector, NgModule, NgModuleFactory, NgModuleFactoryLoader } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ansynMenuItems } from './ansyn.menu-items';
 import { AnsynComponent } from './ansyn/ansyn.component';
@@ -25,46 +25,36 @@ import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
 import { AlgorithmsModule } from '@ansyn/menu-items/algorithms/algorithms.module';
 import { SettingsModule } from '@ansyn/menu-items/settings/settings.module';
 import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagery-sand-box.module';
-import { configuration } from '../../../configuration/configuration';
-declare function require(name: string);
 
-let privateModule;
-try {
-	privateModule = require(configuration.privatePath);
-} catch (error) {
-}
-
-const imports = [
-	CommonModule,
-	AppProvidersModule,
+const MenuItemsModules = [
 	CasesModule,
 	FiltersModule,
 	LayersManagerModule,
 	ToolsModule,
 	AlgorithmsModule,
 	SettingsModule,
-	ImagerySandBoxModule,
-	OverlaysModule,
-	FormsModule,
-	HttpClientModule,
-	BrowserAnimationsModule,
-	AnsynPluginsModule,
-	CoreModule,
-	MenuModule.provideMenuItems(ansynMenuItems),
-	AlertsModule.provideAlerts(ansynAlerts),
-	AppEffectsModule,
-	MapFacadeModule,
-	ImageryModule,
-	StatusBarModule,
-	AnsynRouterModule,
+	ImagerySandBoxModule
 ];
 
-if (privateModule) {
-	imports.push({ ngModule: privateModule.PrivateModule.forRoot(), providers: [] });
-}
-
 @NgModule({
-	imports,
+	imports: [
+		CommonModule,
+		AppProvidersModule,
+		...MenuItemsModules,
+		OverlaysModule,
+		FormsModule,
+		HttpClientModule,
+		BrowserAnimationsModule,
+		AnsynPluginsModule,
+		CoreModule,
+		MenuModule.provideMenuItems(ansynMenuItems),
+		AlertsModule.provideAlerts(ansynAlerts),
+		AppEffectsModule,
+		MapFacadeModule,
+		ImageryModule,
+		StatusBarModule,
+		AnsynRouterModule
+	],
 	declarations: [AnsynComponent],
 	exports: [AnsynComponent]
 })

@@ -1,0 +1,3 @@
+[submodule "src/app/private/ansyn-private"]
+	path = src/app/private/ansyn-private
+	url = https://bitbucket.org/ansyn/ansyn-private

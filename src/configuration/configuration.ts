@@ -1,4 +1,4 @@
 export const configuration = {
 	production: false,
-	privatePath: '../../private/private.module'
+	privatePath: './ansyn-private.module'
 };

@@ -72,6 +72,41 @@
 				"dev": "configuration/configuration.dev.ts",
 				"prod": "configuration/configuration.prod.ts"
 			}
+		},
+		{
+			"name": "private",
+			"root": "src",
+			"outDir": "src/app/private/dist",
+			"assets": [
+				{
+					"glob": "**/*",
+					"input": "./app/@ansyn/assets",
+					"output": "./assets/"
+				},
+				"favicon.ico"
+			],
+			"index": "index.html",
+			"main": "app/private/main.private.ts",
+			"polyfills": "polyfills.ts",
+			"test": "test.ts",
+			"tsconfig": "tsconfig.private.json",
+			"testTsconfig": "tsconfig.spec.json",
+			"prefix": "ansyn",
+			"styles": [
+				"./styles/styles.less"
+			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/@ansyn"
+				]
+			},
+			"scripts": [
+			],
+			"environmentSource": "configuration/configuration.ts",
+			"environments": {
+				"dev": "configuration/configuration.dev.ts",
+				"prod": "configuration/configuration.prod.ts"
+			}
 		}
 	],
 	"e2e": {

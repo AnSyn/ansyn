@@ -8,7 +8,6 @@
 		"types": []
 	},
 	"exclude": [
-		"app/private/*.ts",
 		"test.ts",
 		"**/*.spec.ts"
 	]

@@ -5,10 +5,14 @@ import { Observable } from 'rxjs/Observable';
 import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/select-case.app.effects';
 
 import { cold, hot } from 'jasmine-marbles';
-import { SetAnnotationsLayer, ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import {
+	SetAnnotationsLayer,
+	ToggleDisplayAnnotationsLayer
+} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
-	SetFavoriteOverlaysAction, SetLayoutAction,
+	SetFavoriteOverlaysAction,
+	SetLayoutAction,
 	SetOverlaysCriteriaAction
 } from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -17,11 +21,19 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	Case,
-	CaseGeoFilter, CaseLayersState, CaseMapsState, CaseOrientation, CaseRegionState, CaseState, CaseTimeFilter,
-	CaseTimeState
+	CaseGeoFilter,
+	CaseLayersState,
+	CaseMapsState,
+	CaseOrientation,
+	CaseRegionState,
+	CaseState,
+	CaseTimeFilter,
+	CaseTimeState,
+	OverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -34,8 +46,8 @@ describe('SelectCaseAppEffects', () => {
 		}
 	};
 	let mockOverlaysService = {
-		getStartDateViaLimitFacets: () => Observable.of({startDate: new Date(), endDate: new Date()}),
-		getStartAndEndDateViaRangeFacets: () => Observable.of({startDate: new Date(), endDate: new Date()})
+		getStartDateViaLimitFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() }),
+		getStartAndEndDateViaRangeFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() })
 	};
 
 	beforeEach(async(() => {
@@ -81,9 +93,20 @@ describe('SelectCaseAppEffects', () => {
 				region: CaseRegionState = {},
 				favoriteOverlays: Overlay[] = [],
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} };
+				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} },
+				overlaysManualProcessArgs: OverlaysManualProcessArgs = {};
 
-			const state: CaseState = <any> { orientation, geoFilter, timeFilter, time, region, favoriteOverlays, maps, layers };
+			const state: CaseState = <any> {
+				orientation,
+				geoFilter,
+				timeFilter,
+				time,
+				region,
+				favoriteOverlays,
+				maps,
+				layers,
+				overlaysManualProcessArgs
+			};
 
 			const payload: Case = {
 				id: 'caseId',
@@ -96,7 +119,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefg)--', {
+			const expectedResult = cold('--(abcdefgh)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region }),
@@ -104,9 +127,10 @@ describe('SelectCaseAppEffects', () => {
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
 				f: new SetAnnotationsLayer(layers.annotationsLayer),
 				g: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
+				h: new UpdateOverlaysManualProcessArgs(overlaysManualProcessArgs)
 			});
 
-			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult)
+			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);
 		});
 	});
 });

@@ -45,7 +45,6 @@ export class MapFacadeService {
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
 			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
-			communicator.contextMenu.subscribe(this.contextMenu.bind(this)),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
 			communicator.imageryPluginsInitialized.subscribe(this.imageryPluginsInitialized.bind(this))
 		);
@@ -64,10 +63,6 @@ export class MapFacadeService {
 	positionChanged($event: { id: string, position: CaseMapPosition }) {
 		const mapInstance = <CaseMapState> MapFacadeService.mapById(this.mapsList, $event.id);
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
-	}
-
-	contextMenu(event) {
-		this.store.dispatch(new ContextMenuShowAction(event));
 	}
 
 	imageryPluginsInitialized(event) {

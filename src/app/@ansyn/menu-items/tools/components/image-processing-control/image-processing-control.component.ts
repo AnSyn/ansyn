@@ -2,10 +2,11 @@ import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angul
 import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
-import { Subscription } from "rxjs/Subscription";
+import { IToolsConfig, toolsConfig } from '../../models/tools-config';
+import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		.filter(Boolean)
 		.do((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs);
 
-	get params() {
+	get params(): Array<IImageProcParam> {
 		return this.config.ImageProcParams;
 	}
 
@@ -40,8 +41,8 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
 	}
 
-	resetOne(name) {
-		this.updateParam(name, this.params[name].defaultValue);
+	resetOne(paramToReset) {
+		this.updateParam(this.params.find((param) => param.name === paramToReset.name).defaultValue, paramToReset.name);
 	}
 
 	updateParam(value, key) {

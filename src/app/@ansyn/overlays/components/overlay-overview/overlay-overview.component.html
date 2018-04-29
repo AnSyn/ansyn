@@ -1,3 +1,9 @@
 <div class="overlay-overview" [hidden]="!showFlag">
-  overlay-overview works!
+	<main>
+		<img [src]="overlay ? overlay.thumbnailUrl : ''">
+	</main>
+	<footer>
+		<div>{{overlay.sensorName}}</div>
+		<div>{{overlay.date | date}}</div>
+	</footer>
 </div>

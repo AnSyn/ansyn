@@ -3,16 +3,9 @@ import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
-import { toolsStateSelector } from '../../reducers/tools.reducer';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from 'rxjs/Observable';
 import { ImageManualProcessArgs } from '@ansyn/core/models/case.model';
-
-
-export interface IImageProcParamComp extends IImageProcParam {
-	value: number;
-}
 
 
 @Component({

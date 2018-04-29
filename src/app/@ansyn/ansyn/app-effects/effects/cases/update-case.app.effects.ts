@@ -13,6 +13,7 @@ import { FiltersService } from '@ansyn/menu-items/filters/services/filters.servi
 import { Case } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 export const UpdateCaseActionTypes = [
 	...facetChangesActionType, // -> facets

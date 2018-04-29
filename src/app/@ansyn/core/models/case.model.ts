@@ -1,4 +1,3 @@
-///<reference path="../../imagery/model/base-imagery-visualizer.ts"/>
 import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
@@ -32,11 +31,6 @@ export enum CaseGeoFilter {
 	Polygon = 'Polygon'
 }
 
-export interface OverlaysManualProcessArgs {
-	/* overlayId -> imageManualProcessArgs */
-	[key: string]: ImageManualProcessArgs
-}
-
 export interface ImageManualProcessArgs {
 	Brightness?: number
 	Contrast?: number
@@ -46,7 +40,7 @@ export interface ImageManualProcessArgs {
 }
 
 export interface OverlaysManualProcessArgs {
-	[ key: string ]: ImageManualProcessArgs
+	[key: string]: ImageManualProcessArgs
 }
 
 export interface CaseState {

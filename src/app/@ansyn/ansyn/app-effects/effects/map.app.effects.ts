@@ -19,8 +19,12 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { ImageryCreatedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { SetMapGeoEnabledModeToolsActionStore, StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { ImageryCreatedAction, MapActionTypes, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
+import {
+	SetManualImageProcessing,
+	SetMapGeoEnabledModeToolsActionStore,
+	StartMouseShadow, ToolsActionsTypes, UpdateOverlaysManualProcessArgs
+} from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';

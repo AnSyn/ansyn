@@ -24,7 +24,7 @@ import {
 	ShowOverlaysFootprintAction,
 	StopMouseShadow
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { ActiveMapChangedAction, MapActionTypes, SetMapAutoImageProcessing } from '@ansyn/map-facade/actions/map.actions';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
@@ -33,11 +33,9 @@ import {
 	PinLocationModeTriggerAction,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
-import { Case, CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import {
@@ -50,7 +48,7 @@ import { StatusBarActionsTypes, UpdateStatusFlagsAction } from '@ansyn/status-ba
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { isEqual } from 'lodash';
 
@@ -75,7 +73,7 @@ export class ToolsAppEffects {
 		.map((mapState) => MapFacadeService.activeMap(mapState))
 		.filter(Boolean);
 
-	get params() {
+	get params():  Array<IImageProcParam> {
 		return this.config.ImageProcParams;
 	}
 

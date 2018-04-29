@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core/models/case.model';
+import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
 import { AnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 

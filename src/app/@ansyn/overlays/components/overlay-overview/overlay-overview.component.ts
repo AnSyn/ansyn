@@ -47,7 +47,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	showOrHide([eventData, overlay]: [HoveredOverlayData, Overlay]) {
 		if (eventData && overlay) {
 			this.element.nativeElement.style.left = (eventData.x - 50) + 'px';
-			// this.element.nativeElement.style.top = (eventData.y - 150 - 50) + 'px';
 			this.showFlag = true;
 			this.overlay = overlay;
 			this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));

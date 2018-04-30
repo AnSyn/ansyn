@@ -4,10 +4,18 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisableImageProcessing,
+	DisableMouseShadow,
 	EnableImageProcessing,
+	EnableMouseShadow,
+	GoToAction,
 	SetActiveCenter,
+	SetActiveOverlaysFootprintModeAction,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
+	SetManualImageProcessing,
+	SetPinLocationModeAction,
+	ShowOverlaysFootprintAction,
+	StopMouseShadow,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -15,31 +23,22 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import 'rxjs/add/operator/withLatestFrom';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
-	DisableMouseShadow,
-	EnableMouseShadow,
-	GoToAction,
-	SetActiveOverlaysFootprintModeAction,
-	SetManualImageProcessing,
-	SetPinLocationModeAction,
-	ShowOverlaysFootprintAction,
-	StopMouseShadow
-} from '@ansyn/menu-items/tools/actions/tools.actions';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import {
 	AnnotationRemoveFeature,
+	MapActionTypes,
 	PinLocationModeTriggerAction,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import {
-	IStatusBarState, selectGeoFilter,
+	IStatusBarState,
+	selectGeoFilter,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
@@ -73,7 +72,7 @@ export class ToolsAppEffects {
 		.map((mapState) => MapFacadeService.activeMap(mapState))
 		.filter(Boolean);
 
-	get params():  Array<IImageProcParam> {
+	get params(): Array<IImageProcParam> {
 		return this.config.ImageProcParams;
 	}
 
@@ -130,17 +129,16 @@ export class ToolsAppEffects {
 	@Effect()
 	onDisplayOverlaySuccess$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.filter((action: DisplayOverlaySuccessAction) => !action.payload.forceFirstDisplay)
 		.withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector))
-		.mergeMap(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
+		.map(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
 			const imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
-
-			const actions = [];
 			const updatedMapList = [...mapState.mapsList];
+			const mapToUpdate = MapFacadeService.mapById(updatedMapList, action.payload.mapId);
 
-			const mapToUpdate = updatedMapList.find((map) => map.id === MapFacadeService.activeMap(mapState).id);
-			mapToUpdate.data.imageManualProcessArgs = toolsState.overlaysManualProcessArgs[action.payload.overlay.id];
-			actions.push(new SetMapsDataActionStore({ mapsList: updatedMapList }));
-			return actions;
+			mapToUpdate.data.imageManualProcessArgs = toolsState.overlaysManualProcessArgs[action.payload.overlay.id] || imageManualProcessArgs;
+
+			return new SetMapsDataActionStore({ mapsList: updatedMapList });
 		});
 
 	@Effect()

@@ -7,7 +7,8 @@ import {
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
-	RequestOverlayByIDFromBackendAction, SetMarkUp
+	RequestOverlayByIDFromBackendAction,
+	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	LayersActionTypes,
@@ -23,7 +24,9 @@ import { ImageryCreatedAction, MapActionTypes, SetMapsDataActionStore } from '@a
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
-	StartMouseShadow, ToolsActionsTypes, UpdateOverlaysManualProcessArgs
+	StartMouseShadow,
+	ToolsActionsTypes,
+	UpdateOverlaysManualProcessArgs
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
@@ -31,8 +34,11 @@ import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overl
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import {
-	AddAlertMsg, BackToWorldView,
-	CoreActionTypes, RemoveAlertMsg, SetToastMessageAction,
+	AddAlertMsg,
+	BackToWorldView,
+	CoreActionTypes,
+	RemoveAlertMsg,
+	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
@@ -81,12 +87,12 @@ export class MapAppEffects {
 		.map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState])
 		.filter(([activeMap]: [CaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay))
 		.mergeMap(([activeMap, action, mapState]: [CaseMapState, SetManualImageProcessing, IMapState]) => {
-			const updatedMapList = [ ...mapState.mapsList ];
+			const updatedMapList = [...mapState.mapsList];
 			activeMap.data.imageManualProcessArgs = action.payload;
 			const overlayId = activeMap.data.overlay.id;
 			return [
 				new SetMapsDataActionStore({ mapsList: updatedMapList }),
-				new UpdateOverlaysManualProcessArgs({ [overlayId]: action.payload })
+				new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
 			];
 		});
 

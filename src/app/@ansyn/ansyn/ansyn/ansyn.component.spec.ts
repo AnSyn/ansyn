@@ -10,7 +10,7 @@ import { initialMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.r
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { coreFeatureKey, coreInitialState, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -28,6 +28,7 @@ describe('AnsynComponent', () => {
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
 	const ansynTools = MockComponent({ selector: 'ansyn-tools' });
+	const mockOverlayOverviewComponent = MockComponent({selector: 'ansyn-overlay-overview'});
 
 	const cases: Case[] = [{
 		id: 'tmp',
@@ -82,6 +83,7 @@ describe('AnsynComponent', () => {
 				mockStatus,
 				mockImageryView,
 				mockEmptyComponent,
+				mockOverlayOverviewComponent,
 				ansynTools
 			],
 			imports: [

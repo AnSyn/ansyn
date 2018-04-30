@@ -1,5 +1,5 @@
 import { CaseFacetsState, CaseRegionState, CaseTimeState } from './case.model';
-import { Entity } from '@ansyn/core';
+import { Entity } from '@ansyn/core/services/storage/storage.service';
 
 export interface Context extends Entity{
 	id: string;

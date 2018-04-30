@@ -14,7 +14,21 @@ export class ContextService {
 	}
 
 	loadContexts(): Observable<any> {
-		return this.storageService.getPage(this.config.schema, 0, 100)
+		return this.storageService.getPage<any>(this.config.schema, 0, 100)
 			.catch(err => this.errorHandlerService.httpErrorHandle(err));
+	}
+
+	loadContext(selectedContextId: string): Observable<Context> {
+		return this.storageService.get<Context, Context>(this.config.schema, selectedContextId)
+			.map(storedEntity =>
+				this.parseContext({...storedEntity.preview, ...storedEntity.data}))
+			.catch(err => this.errorHandlerService.httpErrorHandle(err));
+	}
+
+	private parseContext(contextValue: Context) {
+		return {
+			...contextValue,
+			creationTime: new Date(contextValue.creationTime)
+		};
 	}
 }

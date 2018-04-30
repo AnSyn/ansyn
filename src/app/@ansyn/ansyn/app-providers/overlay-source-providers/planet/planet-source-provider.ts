@@ -38,6 +38,12 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = PlanetOverlaySourceType;
 	private httpHeaders: HttpHeaders;
 
+	protected planetDic = {
+		'sensorType': 'item_type',
+		'sensorName': 'satellite_id',
+		'photoTime': 'acquired',
+		'bestResolution': 'gsd'
+	};
 
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected http: HttpClient,
@@ -101,7 +107,68 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<StartAndEndDate> {
-		return Observable.empty();
+		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
+		let fetchRegion = params.region;
+		if (fetchRegion.type === 'MultiPolygon') {
+			fetchRegion = geojsonMultiPolygonToPolygon(fetchRegion as GeoJSON.MultiPolygon);
+		}
+
+		const bboxFilter = { type: 'GeometryFilter', field_name: 'geometry', config: fetchRegion };
+		const dateFilter = {
+			type: 'DateRangeFilter', field_name: 'acquired',
+			config: { gte: new Date(0).toISOString(), lte: new Date().toISOString() }
+		};
+
+		const filters = this.parsePlanetFilters(params.facets);
+
+		const pageLimit: any = params.limit ? params.limit : DEFAULT_OVERLAYS_LIMIT;
+		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([bboxFilter, dateFilter]),
+			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
+			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
+			.map((overlays: Overlay[]) => {
+				let startDate = new Date();
+				let endDate = new Date(0);
+				if (overlays.length === 0) {
+					const currentDate = new Date();
+					startDate = moment().subtract(1, 'month').toDate();  // month ago
+					endDate = new Date();
+				} else {
+					startDate = new Date();
+					endDate = new Date(0);
+					overlays.forEach((overlay: Overlay) => {
+
+						const date = new Date(overlay.photoTime);
+						if (date < startDate) {
+							startDate = date;
+						}
+						if (endDate < date) {
+							endDate = date;
+						}
+					});
+				}
+				return { startDate, endDate };
+			})
+			.catch((error: HttpResponseBase | any) => {
+				return this.errorHandlerService.httpErrorHandle(error);
+			});
+	}
+
+	public parsePlanetFilters(facets = {filters: []}) {
+		if (Object.getOwnPropertyNames(facets).length === 0) {
+			return '';
+		}
+
+		return facets.filters.map(filterObj => {
+			if (filterObj.fieldName === 'bestResolution') {
+				return `${this.planetDic[filterObj.fieldName]} <= '` + filterObj.metadata.end +  "'";
+			}
+			let filterStr = `${this.planetDic[filterObj.fieldName]} = '`;
+			filterObj.metadata.forEach((v, i, a) => {
+				const sChar = i === a.length - 1 ? "'" : ",";
+				filterStr = filterStr + v + sChar;
+			});
+			return filterStr
+		});
 	}
 
 	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {

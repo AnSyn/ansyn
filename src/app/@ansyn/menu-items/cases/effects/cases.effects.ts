@@ -174,34 +174,6 @@ export class CasesEffects {
 
 	/**
 	 * @type Effect
-	 * @name loadDefaultCaseContext$
-	 * @ofType LoadDefaultCaseAction
-	 * @filter Payload does not have context
-	 * @action SelectCaseAction
-	 */
-	@Effect()
-	loadDefaultCaseContext$: Observable<SelectCaseAction> = this.actions$
-		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
-		.filter((action: LoadDefaultCaseAction) => action.payload.context)
-		.switchMap((action: LoadDefaultCaseAction) => {
-			return this.actions$
-				.ofType(ContextActionTypes.ADD_ALL_CONTEXT)
-				.withLatestFrom(this.store.select(selectContextsArray), (_, contexts: Context[]) => contexts)
-				.map((contexts: Context[]) => {
-					const contextName = action.payload.context;
-					let defaultCaseQueryParams: Case;
-					const context = contexts.find(c => c.name === contextName);
-					if (context) {
-						defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
-					} else {
-						defaultCaseQueryParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
-					}
-					return new SelectCaseAction(defaultCaseQueryParams);
-				});
-		});
-
-	/**
-	 * @type Effect
 	 * @name onSaveCaseAs$
 	 * @ofType SaveCaseAsAction
 	 * @action AddCaseAction

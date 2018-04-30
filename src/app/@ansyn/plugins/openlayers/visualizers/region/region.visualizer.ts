@@ -19,9 +19,10 @@ import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-fla
 import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
+import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
+	toastMessage = "Illegal Polygon";
 	core$ = this.store$.select(coreStateSelector);
 	mapState$ = this.store$.select(mapStateSelector);
 
@@ -107,6 +108,11 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				const region = this.createRegion(geoJsonFeature);
 				if (turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
 					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+				}
+				else {
+					this.store$.dispatch(new SetToastMessageAction({
+						toastText: this.toastMessage
+					}));
 				}
 			})
 			.subscribe();

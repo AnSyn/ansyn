@@ -1,8 +1,10 @@
 import { CaseFacetsState, CaseRegionState, CaseTimeState } from './case.model';
+import { Entity } from '@ansyn/core';
 
-export interface Context {
+export interface Context extends Entity{
 	id: string;
 	name: string;
+	creationTime: Date;
 
 	/* optionals */
 	layoutIndex?: number;

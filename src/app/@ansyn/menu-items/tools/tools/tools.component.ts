@@ -79,6 +79,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		this.toggleSubMenu(null);
 		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 

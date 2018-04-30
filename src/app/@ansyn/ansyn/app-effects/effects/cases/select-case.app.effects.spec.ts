@@ -127,7 +127,7 @@ describe('SelectCaseAppEffects', () => {
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
 				f: new SetAnnotationsLayer(layers.annotationsLayer),
 				g: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
-				h: new UpdateOverlaysManualProcessArgs(overlaysManualProcessArgs)
+				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs })
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

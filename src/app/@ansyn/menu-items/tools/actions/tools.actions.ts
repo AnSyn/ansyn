@@ -35,7 +35,7 @@ export const ToolsActionsTypes = {
 export class UpdateOverlaysManualProcessArgs implements Action {
 	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
 
-	constructor(public payload: OverlaysManualProcessArgs) {
+	constructor(public payload: { override?: boolean, data: OverlaysManualProcessArgs }) {
 
 	}
 }

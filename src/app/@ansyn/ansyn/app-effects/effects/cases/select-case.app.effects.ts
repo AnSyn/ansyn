@@ -6,7 +6,8 @@ import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
-	SetFavoriteOverlaysAction, SetLayoutAction,
+	SetFavoriteOverlaysAction,
+	SetLayoutAction,
 	SetOverlaysCriteriaAction
 } from '@ansyn/core/actions/core.actions';
 import {
@@ -126,7 +127,7 @@ export class SelectCaseAppEffects {
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetAnnotationsLayer(annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
-			new UpdateOverlaysManualProcessArgs(overlaysManualProcessArgs)
+			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs })
 		];
 	}
 

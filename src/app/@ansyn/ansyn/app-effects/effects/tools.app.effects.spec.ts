@@ -89,13 +89,17 @@ describe('ToolsAppEffects', () => {
 			}
 		} as any
 	}];
+
 	const imapState: any = {
 		mapsList: [
 			{
 				id: 'imagery1',
 				data: {
 					position: { zoom: 1, center: 2 },
-					isAutoImageProcessingActive: true, overlay: 'overlay'
+					isAutoImageProcessingActive: true,
+					overlay: { id : 'id' },
+					imageManualProcessArgs: {}
+
 				}
 			}
 		],
@@ -237,32 +241,6 @@ describe('ToolsAppEffects', () => {
 		expect(toolsAppEffects).toBeTruthy();
 	});
 
-	/*describe('onActiveMapChanges', () => {
-		it('onActiveMapChanges with overlay and image processing as true, should raise EnableImageProcessing and ***** with true', () => {
-			const activeMap = MapFacadeService.activeMap(imapState);
-			activeMap.data.overlay = 'overlay' as any;
-			activeMap.data.isAutoImageProcessingActive = true;
-			actions = hot('--ab--', { a: new ActiveMapChangedAction('fakeId') });
-			const expectedResults = cold('--(ab)--', {
-				a: new EnableImageProcessing(),
-				b: new SetAutoImageProcessingSuccess(true)
-			});
-			expect(toolsAppEffects.updateImageProcessingOnTools$).toBeObservable(expectedResults);
-		});
-
-		it('onActiveMapChanges  with overlay and image processing as false on should raise EnableImageProcessing and ToggleImageProcessingSuccess with false', () => {
-			const activeMap = MapFacadeService.activeMap(imapState);
-			activeMap.data.overlay = 'overlay' as any;
-			activeMap.data.isAutoImageProcessingActive = false;
-			activeMap.data.imageManualProcessArgs = {};
-			actions = hot('--ab--', { a: new ActiveMapChangedAction('fakeId') });
-			const expectedResults = cold('--(ab)--', {
-				a: new EnableImageProcessing(),
-				b: new SetAutoImageProcessingSuccess(false),
-			});
-			expect(toolsAppEffects.updateImageProcessingOnTools$).toBeObservable(expectedResults);
-		});
-	});*/
 
 	describe('onDisplayOverlaySuccess', () => {
 		const manualProcessArgs = {
@@ -273,20 +251,34 @@ describe('ToolsAppEffects', () => {
 			Saturation: 0
 		};
 
-		it('onDisplayOverlaySuccess with image processing as false should raise ToggleMapAutoImageProcessing and ToggleAutoImageProcessingSuccess accordingly', () => {
-			const activeMap = MapFacadeService.activeMap(imapState);
-			activeMap.data.isAutoImageProcessingActive = false;
+		it('onDisplayOverlaySuccess with id and given args should raise SetMapsDataActionStore with the given args', () => {
+			const overlayId = 'id';
+
+			const args = {
+				Brightness: 1,
+				Contrast: 2,
+				Gamma: 3,
+				Saturation: 4,
+				Sharpness: 5
+			};
+
+			toolsState.overlaysManualProcessArgs = { [overlayId]: args };
+
 			actions = hot('--a--', {
 				a: new DisplayOverlaySuccessAction({
-					overlay: <any> { id: 'id' },
-					mapId: activeMap.id
+					overlay: <any> { id: overlayId },
+					mapId: 'imagery1'
 				})
 			});
 
 			const updatedMapList = [...imapState.mapsList];
+			updatedMapList[0].data.overlaysManualProcessArgs = args;
+			toolsState.overlaysManualProcessArgs = {}
+
 			const expectedResults = cold('--(a)--', {
 				a: new SetMapsDataActionStore({ mapsList: updatedMapList })
 			});
+
 			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
 		});
 	});

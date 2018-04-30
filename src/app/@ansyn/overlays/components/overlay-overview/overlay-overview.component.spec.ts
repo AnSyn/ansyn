@@ -5,9 +5,14 @@ import { By } from '@angular/platform-browser';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { ClearHoveredOverlay, SetHoveredOverlay } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	ClearHoveredOverlay,
+	LoadOverlaysSuccessAction,
+	SetHoveredOverlay
+} from '@ansyn/overlays/actions/overlays.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
-fdescribe('OverlayOverviewComponent', () => {
+describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
 	let fixture: ComponentFixture<OverlayOverviewComponent>;
 	let store: Store<any>;
@@ -39,6 +44,16 @@ fdescribe('OverlayOverviewComponent', () => {
 
 	describe('Show or hide me according to store', () => {
 		let innerWrapper: any;
+		let classExists = (className) => innerWrapper.nativeElement.classList.contains(className);
+		let overlayId = '234';
+		let overlays: Overlay[] = [{
+			id: overlayId,
+			name: 'bcd',
+			photoTime: 'ttt',
+			date: new Date(),
+			azimuth: 100,
+			isGeoRegistered: true
+		}];
 		beforeEach(() => {
 			innerWrapper = fixture.debugElement.query(By.css('.overlay-overview'));
 		});
@@ -46,15 +61,17 @@ fdescribe('OverlayOverviewComponent', () => {
 			expect(innerWrapper).toBeDefined();
 		});
 		it ('should hide me by default', () => {
-			expect(innerWrapper.nativeElement.hidden).toBeTruthy();
+			expect(classExists('show')).toBeFalsy();
 		});
 		it ('should show or hide me according to store', () => {
-			store.dispatch(new SetHoveredOverlay({id: '234'}));
+			store.dispatch(new LoadOverlaysSuccessAction(overlays));
+			store.dispatch(new SetHoveredOverlay({id: overlayId}));
 			fixture.detectChanges();
-			expect(innerWrapper.nativeElement.hidden).toBeFalsy();
+			console.log(window.getComputedStyle(innerWrapper.nativeElement).visibility);
+			expect(classExists('show')).toBeTruthy();
 			store.dispatch(new ClearHoveredOverlay());
 			fixture.detectChanges();
-			expect(innerWrapper.nativeElement.hidden).toBeTruthy();
+			expect(classExists('show')).toBeFalsy();
 		});
 	});
 });

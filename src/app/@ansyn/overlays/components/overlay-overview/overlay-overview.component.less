@@ -10,9 +10,14 @@
 
 .overlay-overview {
 	background-color: white;
+	box-shadow: 0 0 15px 0 #2e2d46;
 	border: 2px white solid;
 	font-size: 12px;
 	min-width: 250px;
+	visibility: hidden;
+	opacity: 0;
+	transform: translateY(50px);
+	transition: opacity 0.5s, transform 0.5s, visibility 0.6s;
 
 	.flex-parent {
 		display: flex;
@@ -30,4 +35,10 @@
 			justify-content: space-between;
 		}
 	}
+}
+
+.show {
+	visibility: visible;
+	opacity: 1;
+	transform: translateY(0);
 }

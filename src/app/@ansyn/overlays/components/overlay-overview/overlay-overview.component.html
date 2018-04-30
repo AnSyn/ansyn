@@ -1,5 +1,8 @@
-<div class="overlay-overview" [hidden]="!showFlag">
-	<div class="flex-parent">
+<div class="overlay-overview"
+	 [class.show]="showFlag"
+>
+	<div class="flex-parent"
+	>
 		<main>
 			<img [src]="overlay ? overlay.thumbnailUrl : ''">
 		</main>

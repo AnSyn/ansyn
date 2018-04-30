@@ -1,4 +1,4 @@
-import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, StartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';

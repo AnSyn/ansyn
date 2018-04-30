@@ -6,16 +6,15 @@ import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
-	SetFavoriteOverlaysAction,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction
+	SetFavoriteOverlaysAction, SetLayoutAction,
+	SetOverlaysCriteriaAction, SetToastMessageAction
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
 	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -23,6 +22,10 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
+import { Context } from '@ansyn/core/models/context.model';
+import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { ContextService } from '@ansyn/context/services/context.service';
 
 @Injectable()
 export class SelectCaseAppEffects {

@@ -97,7 +97,7 @@ describe('ToolsAppEffects', () => {
 				data: {
 					position: { zoom: 1, center: 2 },
 					isAutoImageProcessingActive: true,
-					overlay: { id : 'id' },
+					overlay: { id: 'id' },
 					imageManualProcessArgs: {}
 
 				}
@@ -262,7 +262,6 @@ describe('ToolsAppEffects', () => {
 				Sharpness: 5
 			};
 
-			toolsState.overlaysManualProcessArgs = { [overlayId]: args };
 
 			actions = hot('--a--', {
 				a: new DisplayOverlaySuccessAction({
@@ -273,7 +272,6 @@ describe('ToolsAppEffects', () => {
 
 			const updatedMapList = [...imapState.mapsList];
 			updatedMapList[0].data.overlaysManualProcessArgs = args;
-			toolsState.overlaysManualProcessArgs = {}
 
 			const expectedResults = cold('--(a)--', {
 				a: new SetMapsDataActionStore({ mapsList: updatedMapList })

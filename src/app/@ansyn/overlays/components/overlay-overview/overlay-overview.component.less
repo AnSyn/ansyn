@@ -1,6 +1,8 @@
 @import '../../../core/less/common';
 @import "../../../core/less/z-index-globals";
 
+@animation-duration: 0.3s;
+
 :host {
 	position: absolute;
 	z-index: @z-index-overlay-overview;
@@ -17,7 +19,7 @@
 	visibility: hidden;
 	opacity: 0;
 	transform: translateY(50px);
-	transition: opacity 0.5s, transform 0.5s, visibility 0.6s;
+	transition: opacity @animation-duration, transform @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
 
 	.flex-parent {
 		display: flex;

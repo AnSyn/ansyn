@@ -1,5 +1,6 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 
+import * as turf from '@turf/turf';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
@@ -104,7 +105,9 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 			.do((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+				if (turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
+					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+				}
 			})
 			.subscribe();
 	}

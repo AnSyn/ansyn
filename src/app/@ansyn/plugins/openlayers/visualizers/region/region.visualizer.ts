@@ -11,7 +11,8 @@ import Draw from 'ol/interaction/draw';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import {
-	IStatusBarState, selectGeoFilter,
+	IStatusBarState,
+	selectGeoFilter,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
@@ -22,7 +23,7 @@ import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.ac
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
-	toastMessage = "Illegal Polygon";
+	illegalPolygonMessage = 'Illegal Polygon';
 	core$ = this.store$.select(coreStateSelector);
 	mapState$ = this.store$.select(mapStateSelector);
 
@@ -82,7 +83,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 			this.drawChanges$.subscribe(),
 			this.onContextMenu$.subscribe(),
 			this.interactionChanges$.subscribe()
-		)
+		);
 	}
 
 	drawChanges([geoFilter, region, geoFilterIndicator]) {
@@ -98,7 +99,10 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
+		this.store$.dispatch(new UpdateStatusFlagsAction({
+			key: statusBarFlagsItemsEnum.geoFilterSearch,
+			value: false
+		}));
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
@@ -111,7 +115,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				}
 				else {
 					this.store$.dispatch(new SetToastMessageAction({
-						toastText: this.toastMessage
+						toastText: this.illegalPolygonMessage
 					}));
 				}
 			})
@@ -137,7 +141,10 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
+		this.store$.dispatch(new UpdateStatusFlagsAction({
+			key: statusBarFlagsItemsEnum.geoFilterSearch,
+			value: false
+		}));
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {

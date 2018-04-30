@@ -1,29 +1,33 @@
+@import '../../../core/less/common';
 @import "../../../core/less/z-index-globals";
 
 :host {
 	position: absolute;
 	z-index: @z-index-overlay-overview;
 	left: 0;
-	bottom: 0;
+	bottom: calc(~"1px + @{timeline-area-height}");
 }
 
 .overlay-overview {
 	background-color: white;
 	border: 2px white solid;
 	font-size: 12px;
-	display: flex;
-	flex-direction: column;
-	justify-content: start;
-	align-items: center;
 	min-width: 250px;
 
-	img {
-		height: 150px;
-	}
-
-	footer {
-		width: 100%;
+	.flex-parent {
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
+		justify-content: start;
+		align-items: center;
+
+		img {
+			height: 150px;
+		}
+
+		footer {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+		}
 	}
 }

@@ -1,9 +1,11 @@
 <div class="overlay-overview" [hidden]="!showFlag">
-	<main>
-		<img [src]="overlay ? overlay.thumbnailUrl : ''">
-	</main>
-	<footer>
-		<div>{{overlay.sensorName}}</div>
-		<div>{{overlay.date | date}}</div>
-	</footer>
+	<div class="flex-parent">
+		<main>
+			<img [src]="overlay ? overlay.thumbnailUrl : ''">
+		</main>
+		<footer>
+			<div>{{overlay.sensorName}}</div>
+			<div>{{formattedTime}}</div>
+		</footer>
+	</div>
 </div>

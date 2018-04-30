@@ -262,6 +262,7 @@ describe('ToolsAppEffects', () => {
 				Sharpness: 5
 			};
 
+			toolsState.overlaysManualProcessArgs = { [overlayId]: args };
 
 			actions = hot('--a--', {
 				a: new DisplayOverlaySuccessAction({
@@ -270,8 +271,8 @@ describe('ToolsAppEffects', () => {
 				})
 			});
 
-			const updatedMapList = [...imapState.mapsList];
-			updatedMapList[0].data.overlaysManualProcessArgs = args;
+			const updatedMapList = cloneDeep(imapState.mapsList);
+			updatedMapList[0].data.imageManualProcessArgs = args;
 
 			const expectedResults = cold('--(a)--', {
 				a: new SetMapsDataActionStore({ mapsList: updatedMapList })

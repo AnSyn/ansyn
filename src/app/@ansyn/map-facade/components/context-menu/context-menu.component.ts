@@ -3,21 +3,21 @@ import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
-	ContextMenuDisplayAction, ContextMenuShowAction, ContextMenuTriggerAction,
+	ContextMenuDisplayAction,
+	ContextMenuShowAction,
+	ContextMenuTriggerAction,
 	MapActionTypes
 } from '../../actions/map.actions';
-import { MapEffects } from '../../effects/map.effects';
 import { uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { MapFacadeService } from '../../services/map-facade.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { CaseGeoFilter, CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
 import { selectGeoFilter } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { Actions } from '@ngrx/effects';
 
 export interface OverlayButton {
@@ -35,7 +35,7 @@ export class ContextMenuComponent implements OnInit {
 	mapState$ = this.store.select(mapStateSelector);
 
 	get filterField() {
-		return this.config.contextMenu.filterField
+		return this.config.contextMenu.filterField;
 	}
 
 	displayedOverlay$: Observable<Overlay> = this.mapState$

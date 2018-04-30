@@ -2,13 +2,18 @@
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
 		"outDir": "../out-tsc/app",
+		"paths": {
+			"@ansyn/*": ["app/@ansyn/*"],
+			"@builder/*": ["app/builder/*"],
+			"@ansyn/submodules/*": ["app/submodules/*"]
+		},
 		"baseUrl": "./",
 		"module": "es2015",
 		"target": "es5",
 		"types": []
 	},
 	"exclude": [
-		"app/private/*.ts",
+		"app/submodules/submodules/*.ts",
 		"test.ts",
 		"**/*.spec.ts"
 	]

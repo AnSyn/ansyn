@@ -86,10 +86,10 @@
 				"favicon.ico"
 			],
 			"index": "index.html",
-			"main": "app/private/main.private.ts",
+			"main": "main.ts",
 			"polyfills": "polyfills.ts",
 			"test": "test.ts",
-			"tsconfig": "tsconfig.private.json",
+			"tsconfig": "tsconfig.submodules.json",
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [

@@ -43,6 +43,7 @@ import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 
 @Injectable()
 export class MapAppEffects {
@@ -234,19 +235,10 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
 		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
-		.do(({ payload }) => {
-			const mapId = payload.mapId;
-
-			let communicator;
-			if (!mapId) {
-				communicator = this.imageryCommunicatorService.communicatorsAsArray()[0];
-			} else {
-				communicator = this.imageryCommunicatorService.provide(mapId);
-			}
-
+		.map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId))
+		.do((communicator: CommunicatorEntity) => {
 			communicator.ActiveMap.toggleGroup('layers');
-
-			communicator.getAllVisualizers().forEach(v => v.toggleVisibility());
+			communicator.visualizers.forEach(v => v.toggleVisibility());
 		});
 
 

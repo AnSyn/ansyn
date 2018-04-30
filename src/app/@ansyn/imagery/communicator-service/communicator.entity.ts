@@ -7,6 +7,7 @@ import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-posi
 import { GeoJsonObject, Point } from 'geojson';
 import 'rxjs/add/observable/merge';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 
 export class CommunicatorEntity {
 	private _managerSubscriptions;
@@ -21,11 +22,15 @@ export class CommunicatorEntity {
 	private _virtualNorth = 0;
 
 	get imageryCommunicatorService(): ImageryCommunicatorService {
-		return this._manager.imageryCommunicatorService
+		return this._manager.imageryCommunicatorService;
 	}
 
 	get plugins(): BaseImageryPlugin[] {
 		return this._manager.plugins;
+	}
+
+	get visualizers(): BaseImageryVisualizer[] {
+		return <any> this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
 	}
 
 	constructor(public _manager: ImageryComponentManager) {
@@ -72,7 +77,7 @@ export class CommunicatorEntity {
 		);
 	}
 
-	get id () {
+	get id() {
 		return this._manager.id;
 	}
 

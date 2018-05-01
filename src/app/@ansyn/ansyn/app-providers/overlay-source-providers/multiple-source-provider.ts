@@ -1,8 +1,5 @@
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import * as intersect from '@turf/intersect';
-import * as area from '@turf/area';
-import * as difference from '@turf/difference';
 import {
 	BaseOverlaySourceProvider, DateRange, IFetchParams, OverlayFilter,
 	StartAndEndDate
@@ -10,6 +7,7 @@ import {
 import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { area, intersect, difference } from '@turf/turf';
 
 export interface FiltersList {
 	name: string,

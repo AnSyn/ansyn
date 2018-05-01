@@ -12,6 +12,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -42,7 +43,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
 		const id = UUID.UUID();
-		const featureJson = turf.polygon(region.coordinates);
+		const featureJson = region.type === "Point" ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
 		const entities = [{ id, featureJson }];
 		return this.setEntities(entities);
 	}

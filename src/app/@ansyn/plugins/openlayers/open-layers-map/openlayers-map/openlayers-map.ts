@@ -11,14 +11,17 @@ import OSM from 'ol/source/osm';
 import Layer from 'ol/layer/layer';
 import TileLayer from 'ol/layer/tile';
 import VectorLayer from 'ol/layer/vector';
-import Feature from 'ol/feature';
+import olFeature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs/Observable';
-import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
+import {
+	Feature, FeatureCollection, GeoJsonObject, Geometry, GeometryObject, Point as GeoPoint,
+	Polygon
+} from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
@@ -208,10 +211,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
-		const collection = turf.featureCollection([ExtentCalculator.extentToPolygon(extent)]);
+		const collection: any = turf.featureCollection([ExtentCalculator.extentToPolygon(extent)]);
 
-		this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
-			.subscribe((features: Feature[]) => {
+		this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this)
+			.subscribe((features: olFeature[]) => {
 				view.fit(features[0].getGeometry() as olPolygon, { nearest: true });
 			});
 	}
@@ -309,15 +312,15 @@ export class OpenLayersMap extends IMap<OLMap> {
 			return Observable.of(null);
 		}
 
-		return this.projectionService.projectCollectionAccurately([new Feature(new olPolygon(coordinates))], this)
+		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], this)
 			.map((collection: FeatureCollection<GeometryObject>) => collection.features[0].geometry as Polygon);
 	}
 
 	fitRotateExtent(map: OLMap, extentFeature: CaseMapExtentPolygon): Observable<boolean> {
-		const collection: FeatureCollection<Polygon> = turf.featureCollection([turf.feature(extentFeature)]);
+		const collection: any = turf.featureCollection([turf.feature(extentFeature)]);
 
-		return this.projectionService.projectCollectionAccuratelyToImage<Feature>(collection, this)
-			.map((features: Feature[]) => {
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this)
+			.map((features: olFeature[]) => {
 				const view: View = map.getView();
 				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });

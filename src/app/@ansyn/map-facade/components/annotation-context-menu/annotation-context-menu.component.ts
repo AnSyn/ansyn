@@ -15,7 +15,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	contextMenuWrapperStyle;
 	private _subscriptions: Subscription[] = [];
 
-	@Input('mapId') mapId;
+	@Input() mapId;
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {

@@ -46,11 +46,11 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	createRegion(geoJsonFeature: any): any {
-		return getPolygonByPointAndRadius(geoJsonFeature.geometry.coordinates).geometry;
+		return geoJsonFeature.geometry;
 	}
 
 	onContextMenu(coordinates: Position): void {
-		const region = getPolygonByPointAndRadius(coordinates).geometry;
+		const region = turf.geometry('Point', coordinates);
 		this.store$.dispatch(new UpdateStatusFlagsAction({
 			key: statusBarFlagsItemsEnum.geoFilterSearch,
 			value: false

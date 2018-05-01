@@ -52,8 +52,8 @@ Thumbs.db
 #chrome debug
 /out/chrome/*
 
-yarn.lock
 yarn-error.log
+package-lock.json
 
 /e2e/REPORTS
 *.patch

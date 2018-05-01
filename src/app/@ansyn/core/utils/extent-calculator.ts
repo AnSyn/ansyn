@@ -1,7 +1,6 @@
 import { CaseMapExtent, CaseMapExtentPolygon } from '@ansyn/core/models/case-map-position.model';
 import { toRadians } from './math';
-import * as turfCenter from '@turf/center';
-import * as turf from '@turf/turf';
+import { polygon, center } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
 
 export class ExtentCalculator {
@@ -18,7 +17,7 @@ export class ExtentCalculator {
 
 		const coordinates = [[minX, minY], [minX, maxY], [maxX, maxY], [maxX, minY], [minX, minY]];
 
-		return turf.polygon([coordinates]);
+		return polygon([coordinates]);
 	}
 
 	static calcRotation(extentPolygon: CaseMapExtentPolygon) {
@@ -34,7 +33,7 @@ export class ExtentCalculator {
 		const type = 'Feature';
 		const properties = {};
 		const geometry = extentPolygon;
-		return <ol.Coordinate> turfCenter({ type, geometry, properties }).geometry.coordinates;
+		return <ol.Coordinate> center(<any> { type, geometry, properties }).geometry.coordinates;
 	}
 
 	static calcResolution(extentPolygon: CaseMapExtentPolygon, mapSize: [number, number], rotation: number) {

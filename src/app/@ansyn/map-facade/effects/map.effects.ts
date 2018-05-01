@@ -8,8 +8,7 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import * as intersect from '@turf/intersect';
-import { polygon } from '@turf/helpers';
+import { intersect, polygon } from '@turf/turf';
 
 import 'rxjs/add/observable/forkJoin';
 import {

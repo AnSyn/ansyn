@@ -5,7 +5,7 @@ import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import * as centroid from '@turf/centroid';
+import { centroid } from '@turf/turf';
 import {
 	CaseGeoFilter, CaseMapsState, CaseMapState, CaseState, ImageManualProcessArgs,
 	OverlaysManualProcessArgs
@@ -74,7 +74,7 @@ export class QueryParamsHelper {
 								const geoPoint: Point = <any>geoJsonGeomtry;
 								geoPoint.coordinates = geoPoint.coordinates.reverse();
 
-								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;
+								updatedCaseModel.state.region = geoPoint;
 
 								updatedCaseModel.state.contextEntities = [];
 

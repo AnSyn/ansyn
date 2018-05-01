@@ -143,7 +143,7 @@ export class ToolsAppEffects {
 			const updatedMapList = [...mapState.mapsList];
 			const mapToUpdate = MapFacadeService.mapById(updatedMapList, action.payload.mapId);
 
-			mapToUpdate.data.imageManualProcessArgs = Boolean(toolsState.overlaysManualProcessArgs) ? toolsState.overlaysManualProcessArgs[action.payload.overlay.id] : imageManualProcessArgs;
+			mapToUpdate.data.imageManualProcessArgs = (Boolean(toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || imageManualProcessArgs;
 
 			return new SetMapsDataActionStore({ mapsList: updatedMapList });
 		});

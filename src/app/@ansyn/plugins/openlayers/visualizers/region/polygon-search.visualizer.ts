@@ -1,6 +1,6 @@
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Actions } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { UUID } from 'angular2-uuid';
 import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
@@ -9,13 +9,12 @@ import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { Injectable } from '@angular/core';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })
 export class PolygonSearchVisualizer extends RegionVisualizer {
@@ -53,6 +52,9 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(point: Position): void {
-		this.store$.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: true }));
+		this.store$.dispatch(new UpdateStatusFlagsAction({
+			key: statusBarFlagsItemsEnum.geoFilterSearch,
+			value: true
+		}));
 	}
 }

@@ -1,5 +1,5 @@
 import { InjectionToken, ValueProvider } from '@angular/core';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPluginMetaData } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export const PLUGINS_COLLECTIONS: InjectionToken<BaseImageryPluginClass[]> = new InjectionToken('PLUGINS_COLLECTIONS');
 
@@ -9,9 +9,7 @@ export interface PluginsCollectionProvider extends ValueProvider {
 	multi: true;
 }
 
-export interface BaseImageryPluginClass {
-	supported?: string[];
-	deps?: string[];
+export interface BaseImageryPluginClass extends ImageryPluginMetaData{
 	new(...args): BaseImageryPlugin;
 }
 

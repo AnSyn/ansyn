@@ -14,10 +14,11 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Subscription } from 'rxjs/Subscription';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Actions, Store, ProjectionService]
 })
 export class MouseShadowVisualizer extends EntitiesVisualizer {

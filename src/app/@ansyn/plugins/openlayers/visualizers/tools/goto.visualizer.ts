@@ -1,7 +1,10 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 
 import {
-	IToolsState, selectSubMenu, SubMenuEnum, toolsFlags,
+	IToolsState,
+	selectSubMenu,
+	SubMenuEnum,
+	toolsFlags,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
@@ -14,11 +17,11 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
 import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Actions } from '@ngrx/effects';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Store]
 })
 export class GoToVisualizer extends EntitiesVisualizer {
@@ -68,10 +71,9 @@ export class GoToVisualizer extends EntitiesVisualizer {
 
 	public singleClickListener(e) {
 		this.iMap.projectionService
-			.projectAccurately({type: 'Point', coordinates: e.coordinate}, this.iMap)
+			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap)
 			.take(1)
-			.subscribe((point: Point) =>
-			{
+			.subscribe((point: Point) => {
 				this.store$.dispatch(new SetPinLocationModeAction(false));
 				this.store$.dispatch(new SetActiveCenter(point.coordinates));
 			});

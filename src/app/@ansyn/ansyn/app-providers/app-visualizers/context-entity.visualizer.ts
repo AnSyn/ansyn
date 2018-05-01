@@ -7,14 +7,11 @@ import { IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs/Observable';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { Store } from '@ngrx/store';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Actions } from '@ngrx/effects';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: []
 })
 export class ContextEntityVisualizer extends EntitiesVisualizer {

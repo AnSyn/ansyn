@@ -2,18 +2,18 @@ import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
+import { inside } from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs/Observable';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ContextMenuShowAction } from '@ansyn/map-facade/actions/map.actions';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { inside } from '@turf/turf';
 
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })
 export class ContextMenuPlugin extends BaseImageryPlugin {

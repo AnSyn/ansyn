@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
@@ -12,7 +11,10 @@ import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import {
+	OpenLayersMap,
+	OpenlayersMapName
+} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { IMap } from '@ansyn/imagery/model/imap';
 import { LoggerService } from '@ansyn/core/services/logger.service';
@@ -26,12 +28,12 @@ export interface INorthData {
 	northOffsetRad: number;
 	actualNorth: number;
 }
+
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Actions, LoggerService, Store, ProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
-	static supported = [OpenlayersMapName];
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
@@ -47,25 +49,25 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	getCorrectedNorth(): Observable<INorthData> {
 		return this.getProjectedCenters()
-		.map((projectedCenters: Point[]): INorthData => {
-			const projectedCenterView = projectedCenters[0].coordinates;
-			const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
-			const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-			const northOffsetDeg = toDegrees(northOffsetRad);
-			const view = (<IMap>this.iMap).mapObject.getView();
-			const actualNorth = northOffsetRad + view.getRotation();
-			return { northOffsetRad, northOffsetDeg, actualNorth };
-		})
-		.mergeMap((northData: INorthData) => {
-			this.iMap.mapObject.getView().setRotation(northData.actualNorth);
-			this.iMap.mapObject.renderSync();
-			if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-				return Observable.throw({ result: northData.actualNorth });
-			}
-			return Observable.of(northData.actualNorth);
-		})
-		.retry(this.maxNumberOfRetries)
-		.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
+			.map((projectedCenters: Point[]): INorthData => {
+				const projectedCenterView = projectedCenters[0].coordinates;
+				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
+				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
+				const northOffsetDeg = toDegrees(northOffsetRad);
+				const view = (<IMap>this.iMap).mapObject.getView();
+				const actualNorth = northOffsetRad + view.getRotation();
+				return { northOffsetRad, northOffsetDeg, actualNorth };
+			})
+			.mergeMap((northData: INorthData) => {
+				this.iMap.mapObject.getView().setRotation(northData.actualNorth);
+				this.iMap.mapObject.renderSync();
+				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
+					return Observable.throw({ result: northData.actualNorth });
+				}
+				return Observable.of(northData.actualNorth);
+			})
+			.retry(this.maxNumberOfRetries)
+			.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
 	}
 
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
@@ -84,9 +86,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				observer.error('no coordinate for pixel');
 			}
 			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
-			observer.next([olCenterView, olCenterViewWithOffset])
+			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-		.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers))
+			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
 	}
 
 	onInit() {

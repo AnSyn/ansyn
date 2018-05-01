@@ -9,7 +9,7 @@ import condition from 'ol/events/condition';
 import Select from 'ol/interaction/select';
 import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
-import { Inject, Injectable } from '@angular/core';
+import { Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
@@ -19,18 +19,20 @@ import { Actions } from '@ngrx/effects';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import {
-	IOverlaysState, MarkUpClass, MarkUpData,
+	IOverlaysState,
+	MarkUpClass,
+	MarkUpData,
 	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Store, Actions, VisualizersConfig]
 })
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
@@ -110,7 +112,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	}
 
 	private propsByFeature(feature: Feature) {
-		const classes = this.markups.findKeysByValue(<string>feature.getId(), "overlaysIds");
+		const classes = this.markups.findKeysByValue(<string>feature.getId(), 'overlaysIds');
 
 		const isFavorites = classes.includes(MarkUpClass.favorites);
 		const isActive = classes.includes(MarkUpClass.active);

@@ -8,7 +8,7 @@ import { StaticClassProvider } from '@angular/core/src/di/provider';
 export function BaseImageryPluginProviderFactory(pluginsCollections: Array<BaseImageryPluginClass[]>, parent: Injector, map: IMap) {
 		const providers: StaticClassProvider[] = pluginsCollections
 			.reduce<BaseImageryPluginClass[]>((previousValue, collection) => [...previousValue, ...collection], [])
-			.filter((value: BaseImageryPluginClass) => value.supported.includes(map.mapType))
+			.filter((value: BaseImageryPluginClass) => value.supported.some(ins => map instanceof ins))
 			.map<StaticClassProvider>((value: BaseImageryPluginClass) => ({
 				provide: BaseImageryPlugin,
 				useClass: value,

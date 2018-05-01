@@ -1,19 +1,18 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { DrawOverlaysOnMapTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Store, Actions]
 })
 export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
@@ -52,6 +51,6 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe()
-		)
+		);
 	}
 }

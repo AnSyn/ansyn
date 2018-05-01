@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
+	SetSubMenu,
 	StartMouseShadow,
 	StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, SubMenuEnum, toolsFlags, toolsStateSelector, selectSubMenu } from '../reducers/tools.reducer';
-import { SetSubMenu } from '../actions/tools.actions';
+import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
 @Component({
@@ -23,6 +23,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged();
+
+	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector)
+		.map((state: IToolsState) => !!state.flags.get(toolsFlags.imageProcessingDisabled))
+		.distinctUntilChanged()
+		.filter(Boolean);
 
 	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
 	subMenu: SubMenuEnum;
@@ -71,6 +76,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.subMenu$.subscribe(),
 			this.flags$.subscribe(_flags => {
 				this.flags = _flags;
+			}),
+			this.imageProcessingDisabled$.subscribe(() => {
+				this.closeManualProcessingMenu();
 			})
 		);
 	}
@@ -98,9 +106,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleAutoImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing());
-		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
-			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
-		}
+		this.closeManualProcessingMenu();
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {
@@ -114,5 +120,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	isExpand(subMenu: SubMenuEnum): boolean {
 		return this.subMenu === subMenu;
+	}
+
+	closeManualProcessingMenu() {
+		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
+			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
+		}
 	}
 }

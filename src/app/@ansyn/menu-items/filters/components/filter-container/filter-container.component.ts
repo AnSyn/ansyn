@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs/Observable';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 
@@ -35,10 +35,12 @@ import 'rxjs/add/operator/distinctUntilChanged';
 		])
 	]
 })
-export class FilterContainerComponent implements OnInit {
+export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	public show = true;
+	public onlyFavorite = true;
 	public metadataFromState: FilterMetadata;
+	subscribers = [];
 
 	@Input() filter;
 	@ViewChild('fields') fields: ElementRef;
@@ -51,6 +53,11 @@ export class FilterContainerComponent implements OnInit {
 			return state.filters;
 		});
 
+	showOnlyFavorites$: Observable<any> = this.store.select(filtersStateSelector)
+		.pluck<IFiltersState, boolean>('showOnlyFavorites')
+		.distinctUntilChanged()
+		.do((showOnlyFavorites) => this.onlyFavorite = showOnlyFavorites);
+
 	constructor(protected store: Store<IFiltersState>) {
 	}
 
@@ -59,9 +66,17 @@ export class FilterContainerComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.metadataFromState$.subscribe((filters) => {
-			this.metadataFromState = cloneDeep(filters.get(this.filter));
-		});
+		this.subscribers.push(
+			this.metadataFromState$.subscribe((filters) => {
+				this.metadataFromState = cloneDeep(filters.get(this.filter));
+			}),
+			this.showOnlyFavorites$.subscribe()
+		);
+
+	}
+
+	ngOnDestroy() {
+		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
 	onMetadataChange(metadata: any): void {

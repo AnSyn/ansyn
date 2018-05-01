@@ -6,16 +6,21 @@ import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
-	LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
-	SetFilteredOverlaysAction, SetOverlaysStatusMessage
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
+	SetFilteredOverlaysAction,
+	SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	IOverlaysState, overlaysStateSelector,
+	IOverlaysState,
+	overlaysStateSelector,
 	overlaysStatusMessages
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	EnableOnlyFavoritesSelectionAction,
-	InitializeFiltersAction, ResetFiltersAction
+	InitializeFiltersAction,
+	ResetFiltersAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
@@ -48,7 +53,7 @@ export class FiltersAppEffects {
 		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
-		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
+		.filter(([action, filters]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
 			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
@@ -156,8 +161,8 @@ export class FiltersAppEffects {
 		if (filters.showOnlyFavorites) {
 			return favorites;
 		} else {
-			const filteredOvelrays = OverlaysService.filter(overlays, parsedFilters);
-			return union(favorites, filteredOvelrays);
+			const filteredOverlays = OverlaysService.filter(overlays, parsedFilters);
+			return union(favorites, filteredOverlays);
 		}
 	}
 }

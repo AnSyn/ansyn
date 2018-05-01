@@ -1,7 +1,9 @@
 <div class="container">
 
 	<div class="title-row">
-		<span class="title">{{ filter.displayName }}</span>
+
+		<span *ngIf="!onlyFavorite" class="title" >{{ filter.displayName }}</span>
+		<span *ngIf="onlyFavorite" class="title-disabled" >{{ filter.displayName }}</span>
 		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()"
 			  class="filtered">(filtered)</span>
 

@@ -6,7 +6,8 @@ import { ImageryProviderService } from './provider-service/imagery-provider.serv
 import { IImageryConfig } from './model/iimagery-config';
 import { ConfigurationToken } from './model/configuration.token';
 import { CacheService } from './cache-service/cache.service';
-import { createCollection, ImageryPluginProvider } from './model/plugins-collection';
+import { createCollection } from './model/plugins-collection';
+import { BaseImageryPluginClass } from '@ansyn/imagery/model/plugins-collection';
 
 @NgModule({
 	imports: [CommonModule],
@@ -32,7 +33,7 @@ export class ImageryModule {
 		};
 	}
 
-	static provideCollection(providers: Array<ImageryPluginProvider>): ModuleWithProviders {
+	static provideCollection(providers: BaseImageryPluginClass[]): ModuleWithProviders {
 		return {
 			ngModule: ImageryModule,
 			providers: [createCollection(providers)]

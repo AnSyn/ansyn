@@ -43,3 +43,14 @@ export class BaseImageryPlugin {
 
 	}
 }
+export interface ImageryPluginMetaData {
+	supported: string[];
+	deps: any[];
+}
+
+export function ImageryPlugin({ supported, deps }: ImageryPluginMetaData) {
+	return function (constructor) {
+		constructor.supported = supported;
+		constructor.deps = deps;
+	}
+}

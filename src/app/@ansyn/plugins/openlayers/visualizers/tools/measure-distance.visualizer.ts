@@ -25,7 +25,12 @@ import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/action
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
-
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Actions, Store]
+})
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	drawDistamceMeasureOnMap$: Observable<any> = this.actions$

@@ -14,7 +14,13 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
 import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { Actions } from '@ngrx/effects';
+import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Store]
+})
 export class GoToVisualizer extends EntitiesVisualizer {
 	/* data */
 	mapState$ = this.store$.select(mapStateSelector);

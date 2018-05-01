@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ansynMenuItems } from './ansyn.menu-items';
 import { AnsynComponent } from './ansyn/ansyn.component';
-
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core/core.module';
 import { MenuModule } from '@ansyn/menu/menu.module';
@@ -25,6 +24,7 @@ import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
 import { AlgorithmsModule } from '@ansyn/menu-items/algorithms/algorithms.module';
 import { SettingsModule } from '@ansyn/menu-items/settings/settings.module';
 import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagery-sand-box.module';
+import { AnsynSubmodulesModule } from '@ansyn/submodules/ansyn-submodules.module';
 
 const MenuItemsModules = [
 	CasesModule,
@@ -53,7 +53,8 @@ const MenuItemsModules = [
 		MapFacadeModule,
 		ImageryModule,
 		StatusBarModule,
-		AnsynRouterModule
+		AnsynRouterModule,
+		AnsynSubmodulesModule
 	],
 	declarations: [AnsynComponent],
 	exports: [AnsynComponent]

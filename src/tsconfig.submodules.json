@@ -5,7 +5,7 @@
 		"paths": {
 			"@ansyn/*": ["app/@ansyn/*"],
 			"@builder/*": ["app/builder/*"],
-			"@ansyn/submodules/*": ["app/submodules/*"]
+			"@ansyn/submodules/*": ["app/submodules/submodules/*"]
 		},
 		"baseUrl": "./",
 		"module": "es2015",
@@ -13,7 +13,6 @@
 		"types": []
 	},
 	"exclude": [
-		"app/submodules/submodules/*.ts",
 		"test.ts",
 		"**/*.spec.ts"
 	]

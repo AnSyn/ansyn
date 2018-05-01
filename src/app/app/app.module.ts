@@ -16,27 +16,22 @@ export function MetaReducer(reducer) {
 	};
 }
 
-export const metaReducers = [MetaReducer];
-
-const imports = [
+export const imports = [
 	BrowserModule,
-	StoreModule.forRoot({}, { metaReducers }),
+	StoreModule.forRoot({}, { metaReducers: [MetaReducer] }),
 	EffectsModule.forRoot([]),
 	LoginModule,
 	AnsynModule,
 	AppRoutingModule
 ];
+
 if (configuration.production) {
 	enableProdMode();
 } else {
-	// For help on dev-tools see: https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
-	imports.push(StoreDevtoolsModule.instrument({
-		maxAge: 25 //  Retains last 25 states.
-	}));
-	console.log('NGRX Store Dev-tools Module enabled');
+	imports.push(StoreDevtoolsModule.instrument({ maxAge: 25 }));
 }
 
-@NgModule({
+export const AnsynAppMetaData = {
 	imports,
 	providers: [
 		{
@@ -47,8 +42,9 @@ if (configuration.production) {
 	declarations: [AppAnsynComponent],
 	exports: [AppAnsynComponent],
 	bootstrap: [AppAnsynComponent]
-})
+};
 
+@NgModule(AnsynAppMetaData)
 export class AppAnsynModule {
 	constructor(protected loggerService: LoggerService) {
 		window.onerror = function (e) {

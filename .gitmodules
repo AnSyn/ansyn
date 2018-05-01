@@ -1,0 +1,3 @@
+[submodule "src/app/submodules/submodules"]
+	path = src/app/submodules/submodules
+	url = https://bitbucket.org/ansyn/ansyn-submodules

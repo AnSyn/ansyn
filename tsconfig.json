@@ -2,11 +2,12 @@
 	"compileOnSave": false,
 	"compilerOptions": {
 		"baseUrl": "src",
+		"outDir": "./dist/out-tsc",
 		"paths": {
 			"@ansyn/*": ["app/@ansyn/*"],
-			"@builder/*": ["app/builder/*"]
+			"@builder/*": ["app/builder/*"],
+			"@ansyn/submodules/*": ["app/submodules/*"]
 		},
-		"outDir": "./dist/out-tsc",
 		"sourceMap": true,
 		"declaration": false,
 		"moduleResolution": "node",

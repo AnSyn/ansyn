@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { IMap } from '@ansyn/imagery/model/imap';
@@ -26,7 +26,10 @@ export interface INorthData {
 	northOffsetRad: number;
 	actualNorth: number;
 }
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Actions, LoggerService, Store, ProjectionService]
+})
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	static supported = [OpenlayersMapName];
 	communicator: CommunicatorEntity;

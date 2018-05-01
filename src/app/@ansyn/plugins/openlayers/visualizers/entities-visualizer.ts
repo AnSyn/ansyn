@@ -30,7 +30,6 @@ export const VisualizerStates = {
 
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
-	static supported = [OpenlayersMapName];
 	isHideable = false;
 	isHidden = false;
 	public source: SourceVector;

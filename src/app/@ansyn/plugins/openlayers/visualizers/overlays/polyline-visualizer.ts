@@ -26,8 +26,13 @@ import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Store, Actions, VisualizersConfig]
+})
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
 	markups: ExtendMap<MarkUpClass, MarkUpData>;

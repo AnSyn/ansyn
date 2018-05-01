@@ -6,12 +6,19 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IMap } from '@ansyn/imagery/model/imap';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { Store } from '@ngrx/store';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { Actions } from '@ngrx/effects';
 
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: []
+})
 export class CenterMarkerPlugin extends BaseImageryPlugin {
-	static supported = [OpenlayersMapName];
 	private _iconStyle: Style;
 	private _existingLayer;
 

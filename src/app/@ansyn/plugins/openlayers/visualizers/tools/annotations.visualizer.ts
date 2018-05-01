@@ -32,8 +32,15 @@ import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
+import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { Actions } from '@ngrx/effects';
+import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Store]
+})
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
 	isHideable = true;

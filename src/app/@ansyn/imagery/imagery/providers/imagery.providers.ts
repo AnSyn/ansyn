@@ -1,16 +1,25 @@
 import { FactoryProvider, Injector } from '@angular/core';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
-import { ImageryPluginProvider, PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
+import { PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
 import { IMap } from '@ansyn/imagery/model/imap';
+import { BaseImageryPluginClass } from '@ansyn/imagery/model/plugins-collection';
+import { StaticClassProvider } from '@angular/core/src/di/provider';
 
-export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryPluginProvider[]>, parent: Injector, map: IMap) {
-		const providers = pluginsCollections
-			.reduce((previousValue, collection) => [...previousValue, ...collection], [])
-			.filter(({ provide, useClass }: ImageryPluginProvider) => provide === BaseImageryPlugin && useClass.supported.includes(map.mapType));
+export function BaseImageryPluginProviderFactory(pluginsCollections: Array<BaseImageryPluginClass[]>, parent: Injector, map: IMap) {
+		const providers: StaticClassProvider[] = pluginsCollections
+			.reduce<BaseImageryPluginClass[]>((previousValue, collection) => [...previousValue, ...collection], [])
+			.filter((value: BaseImageryPluginClass) => value.supported.includes(map.mapType))
+			.map<StaticClassProvider>((value: BaseImageryPluginClass) => ({
+				provide: BaseImageryPlugin,
+				useClass: value,
+				multi: true,
+				deps: [...value.deps]
+			}));
 
 		if (providers.length === 0) {
 			return [];
 		}
+
 		const childInjector = Injector.create(providers, parent);
 		return childInjector.get(BaseImageryPlugin);
 }

@@ -5,14 +5,16 @@ import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/mod
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import TileSource from 'ol/source/tile';
 import { Observable } from 'rxjs/Observable';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
+import { Actions } from '@ngrx/effects';
 
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenlayersMapName, DisabledOpenLayersMapName],
+	deps: [Store]
+})
 export class MonitorPlugin extends BaseImageryPlugin {
-	static supported = [OpenlayersMapName, DisabledOpenLayersMapName];
-
 	source: TileSource;
 
 	isFirstLoad: boolean;

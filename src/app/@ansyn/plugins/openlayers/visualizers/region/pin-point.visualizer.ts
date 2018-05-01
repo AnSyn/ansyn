@@ -14,8 +14,13 @@ import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Store, Actions, ProjectionService]
+})
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({

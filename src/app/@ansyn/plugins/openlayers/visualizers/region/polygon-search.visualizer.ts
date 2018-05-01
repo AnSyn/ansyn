@@ -1,6 +1,6 @@
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Actions } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { UUID } from 'angular2-uuid';
 import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
@@ -11,10 +11,14 @@ import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Injectable } from '@angular/core';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-@Injectable()
-export class PolygonSearchVisualizer extends RegionVisualizer {
-	static fillAlpha = 0.4;
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Store, Actions, ProjectionService]
+})
+export class PolygonSearchVisualizer extends RegionVisualizer {
 	constructor(public store$: Store<any>,
 				public actions$: Actions,
 				public projectionService: ProjectionService) {

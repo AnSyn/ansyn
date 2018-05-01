@@ -8,8 +8,13 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenlayersMapName],
+	deps: [Store, Actions, VisualizersConfig]
+})
 export class FrameVisualizer extends EntitiesVisualizer {
 	public markups: any[] = [];
 	public isActive = false;

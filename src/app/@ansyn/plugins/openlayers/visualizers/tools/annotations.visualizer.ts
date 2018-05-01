@@ -13,16 +13,19 @@ import { IVisualizerEntity, VisualizerInteractions } from '@ansyn/imagery/model/
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
-	AnnotationMode, AnnotationsContextMenuBoundingRect,
+	AnnotationMode,
+	AnnotationsContextMenuBoundingRect,
 	AnnotationsContextMenuEvent
 } from '@ansyn/core/models/visualizers/annotations.model';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { Store } from '@ngrx/store';
-import { Injectable } from '@angular/core';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
-	AnnotationProperties, IToolsState, selectSubMenu, SubMenuEnum,
+	AnnotationProperties,
+	IToolsState,
+	selectSubMenu,
+	SubMenuEnum,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
@@ -32,13 +35,11 @@ import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
-import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Actions } from '@ngrx/effects';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Store]
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -275,7 +276,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.removeDrawInteraction();
 
 		if (!isActiveMap) {
-			this.mode =  undefined;
+			this.mode = undefined;
 			return;
 		}
 

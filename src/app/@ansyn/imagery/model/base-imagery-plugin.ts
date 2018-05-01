@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { IMap } from '@ansyn/imagery/model/imap';
 
 export class BaseImageryPlugin {
-	static supported = [];
 	subscriptions: Subscription[] = [];
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
@@ -43,9 +42,10 @@ export class BaseImageryPlugin {
 
 	}
 }
+
 export interface ImageryPluginMetaData {
-	supported: string[];
-	deps: any[];
+	supported?: { new(...args): IMap }[];
+	deps?: any[];
 }
 
 export function ImageryPlugin({ supported, deps }: ImageryPluginMetaData) {

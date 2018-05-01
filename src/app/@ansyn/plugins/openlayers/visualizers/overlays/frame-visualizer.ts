@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { Observable } from 'rxjs/Observable';
-import { Inject, Injectable } from '@angular/core';
+import { Inject } from '@angular/core';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -8,11 +8,11 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
-	supported: [OpenlayersMapName],
+	supported: [OpenLayersMap],
 	deps: [Store, Actions, VisualizersConfig]
 })
 export class FrameVisualizer extends EntitiesVisualizer {

@@ -1,5 +1,5 @@
-@import '../../../core/less/common';
-@import "../../../core/less/z-index-globals";
+@import 'core/less/common';
+@import "core/less/z-index-globals";
 
 @animation-duration: 0.3s;
 
@@ -16,26 +16,23 @@
 	border: 2px white solid;
 	font-size: 12px;
 	min-width: 250px;
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
 	visibility: hidden;
 	opacity: 0;
 	transform: translateY(50px);
 	transition: opacity @animation-duration, transform @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
 
-	.flex-parent {
+	img {
+		height: 150px;
+	}
+
+	footer {
+		width: 100%;
 		display: flex;
-		flex-direction: column;
-		justify-content: start;
-		align-items: center;
-
-		img {
-			height: 150px;
-		}
-
-		footer {
-			width: 100%;
-			display: flex;
-			justify-content: space-between;
-		}
+		justify-content: space-between;
 	}
 }
 

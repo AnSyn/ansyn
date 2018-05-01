@@ -2,21 +2,21 @@
 
 	<div class="title-row">
 
-		<span *ngIf="!onlyFavorite" class="title">{{ filter.displayName }}</span>
-		<span *ngIf="onlyFavorite" class="title-disabled">{{ filter.displayName }}</span>
-		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()"
+		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName }}</span>
+
+		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered() && !showOnlyFavorite"
 			  class="filtered">(filtered)</span>
 
-		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledButton || onlyFavorite"
+		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledShowAll"
 				(click)="show = !show">
 		</button>
 
-		<div *ngIf="!onlyFavorite" class="show-all">
+		<div *ngIf="!showOnlyFavorite" class="show-all">
 			<span (click)="showAll()">Show all</span>
 		</div>
 	</div>
 
-	<div class="fields" *ngIf="!onlyFavorite" #fields [@fieldsTrigger]="show">
+	<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
 		<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
 			<ansyn-enum-filter-container
 				*ngSwitchCase="'Enum'"

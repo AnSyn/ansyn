@@ -38,7 +38,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	public show = true;
-	public onlyFavorite = false;
+	public showOnlyFavorite = false;
 	public metadataFromState: FilterMetadata;
 	subscribers = [];
 
@@ -56,13 +56,13 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	showOnlyFavorites$: Observable<any> = this.store.select(filtersStateSelector)
 		.pluck<IFiltersState, boolean>('showOnlyFavorites')
 		.distinctUntilChanged()
-		.do((showOnlyFavorites) => this.onlyFavorite = showOnlyFavorites);
+		.do((showOnlyFavorites) => this.showOnlyFavorite = showOnlyFavorites);
 
 	constructor(protected store: Store<IFiltersState>) {
 	}
 
-	get disabledButton() {
-		return !this.metadataFromState;
+	get disabledShowAll() {
+		return !this.metadataFromState || this.showOnlyFavorite;
 	}
 
 	ngOnInit() {

@@ -38,7 +38,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	public show = true;
-	public onlyFavorite = true;
+	public onlyFavorite = false;
 	public metadataFromState: FilterMetadata;
 	subscribers = [];
 

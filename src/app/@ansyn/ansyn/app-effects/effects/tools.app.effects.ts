@@ -13,7 +13,7 @@ import {
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	SetManualImageProcessing,
-	SetPinLocationModeAction, SetSubMenu,
+	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow,
 	ToolsActionsTypes
@@ -113,8 +113,7 @@ export class ToolsAppEffects {
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => MapFacadeService.activeMap(mapState))
 		.mergeMap((activeMap: CaseMapState) => {
-			const actions = [];
-			actions.push(new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode));
+			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 			if (!Boolean(activeMap.data.overlay)) {
 				actions.push(new DisableImageProcessing());
 			}

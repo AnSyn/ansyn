@@ -25,9 +25,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		.distinctUntilChanged();
 
 	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector)
-		.map((state: IToolsState) => !!state.flags.get(toolsFlags.imageProcessingDisabled))
+		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
 		.distinctUntilChanged()
-		.filter(Boolean);
+		.map((flags) => flags.get(toolsFlags.imageProcessingDisabled))
+		.distinctUntilChanged()
+		.filter(Boolean)
+		.do(this.closeManualProcessingMenu.bind(this));
 
 	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
 	subMenu: SubMenuEnum;
@@ -77,9 +80,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.flags$.subscribe(_flags => {
 				this.flags = _flags;
 			}),
-			this.imageProcessingDisabled$.subscribe(() => {
-				this.closeManualProcessingMenu();
-			})
+			this.imageProcessingDisabled$.subscribe()
 		);
 	}
 

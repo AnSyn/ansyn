@@ -56,9 +56,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 	switch (action.type) {
 		case ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS:
 			if (action.payload.override) {
-				return { ...state, overlaysManualProcessArgs: action.payload };
+				return { ...state, overlaysManualProcessArgs: action.payload.data };
 			}
-			return { ...state, overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload } };
+			return { ...state, overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data } };
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };

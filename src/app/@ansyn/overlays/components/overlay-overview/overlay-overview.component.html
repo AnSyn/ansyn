@@ -2,10 +2,10 @@
 	 [class.show]="showFlag"
 >
 	<main>
-		<img [src]="overlay ? overlay.thumbnailUrl : ''">
+		<img [src]="overlay?.thumbnailUrl || ''">
 	</main>
 	<footer>
-		<div>{{overlay.sensorName}}</div>
+		<div>{{overlay?.sensorName}}</div>
 		<div>{{formattedTime}}</div>
 	</footer>
 </div>

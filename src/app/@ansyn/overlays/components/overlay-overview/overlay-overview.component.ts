@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
@@ -14,11 +14,11 @@ import { getTimeFormat } from '@ansyn/core/utils/time';
 })
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	private _subscriptions: Subscription[] = [];
-	public x: number;
-	public y: number;
-	public showFlag = false;
-	public overlay: any = {};
+	public overlay: any;
 	public formattedTime: string;
+	public showFlag = false;
+
+	@HostBinding('style.left.px') x: number;
 
 	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)
 		.pluck<IOverlaysState, HoveredOverlayData>('hoveredOverlay')
@@ -29,10 +29,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		])
 		.distinctUntilChanged();
 
-	constructor(
-		protected store$: Store<IOverlaysState>,
-		protected element: ElementRef
-	) {	}
+	constructor(protected store$: Store<IOverlaysState>) {
+	}
 
 	ngOnInit() {
 		this._subscriptions.push(
@@ -46,7 +44,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	showOrHide([eventData, overlay]: [HoveredOverlayData, Overlay]) {
 		if (eventData && overlay) {
-			this.element.nativeElement.style.left = (eventData.x - 50) + 'px';
+			this.x = (eventData.x - 50);
 			this.showFlag = true;
 			this.overlay = overlay;
 			this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));

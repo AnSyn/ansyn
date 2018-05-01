@@ -186,7 +186,7 @@ export class SetHoveredOverlay implements Action {
 export class ClearHoveredOverlay implements Action {
 	type = OverlaysActionTypes.CLEAR_HOVERED_OVERLAY;
 
-	constructor(public payload?: string) {
+	constructor(public payload?: any) {
 	}
 }
 

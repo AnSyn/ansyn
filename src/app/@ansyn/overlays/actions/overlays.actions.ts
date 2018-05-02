@@ -3,7 +3,7 @@ import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
 import { MarkUpClass, MarkUpData, OverlayDropMarkUp, TimelineRange } from '../reducers/overlays.reducer';
 import { OverlaysCriteria, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { HoveredOverlayData } from '@ansyn/overlays/models/hovered-overlay-data.model';
+import { HoveredOverlayDropData } from '@ansyn/overlays/models/hovered-overlay-data.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -179,7 +179,7 @@ export class SetOverlaysStatusMessage implements Action {
 export class SetHoveredOverlay implements Action {
 	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
 
-	constructor(public payload: HoveredOverlayData) {
+	constructor(public payload: HoveredOverlayDropData) {
 	}
 }
 

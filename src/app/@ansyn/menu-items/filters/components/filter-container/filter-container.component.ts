@@ -7,6 +7,8 @@ import { FilterMetadata } from '../../models/metadata/filter-metadata.interface'
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -40,6 +42,8 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	public show = true;
 	public showOnlyFavorite = false;
 	public metadataFromState: FilterMetadata;
+	public shortMetadataFromState: FilterMetadata;
+	public shownFilters: FilterMetadata;
 	subscribers = [];
 
 	@Input() filter;
@@ -51,6 +55,16 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		.distinctUntilChanged()
 		.map((state: IFiltersState) => {
 			return state.filters;
+		})
+		.do(filters => {
+			this.metadataFromState = cloneDeep(filters.get(this.filter));
+			if (this.filter.type === 'Enum') {
+				if (Boolean(this.metadataFromState)) {
+					this.shortMetadataFromState = cloneDeep(this.metadataFromState);
+					(<EnumFilterMetadata>this.shortMetadataFromState).enumsFields.trimMap(10);
+					this.shownFilters = cloneDeep(this.shortMetadataFromState);
+				}
+			}
 		});
 
 	showOnlyFavorites$: Observable<any> = this.store.select(filtersStateSelector)
@@ -67,12 +81,9 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.subscribers.push(
-			this.metadataFromState$.subscribe((filters) => {
-				this.metadataFromState = cloneDeep(filters.get(this.filter));
-			}),
+			this.metadataFromState$.subscribe(),
 			this.showOnlyFavorites$.subscribe()
 		);
-
 	}
 
 	ngOnDestroy() {
@@ -88,6 +99,12 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 			const clonedMetadata: FilterMetadata = Object.assign(Object.create(this.metadataFromState), this.metadataFromState);
 			clonedMetadata.showAll();
 			this.onMetadataChange(clonedMetadata);
+		}
+	}
+
+	showMore(): void {
+		if (this.filter.type === 'Enum') {
+			this.shownFilters = this.metadataFromState;
 		}
 	}
 }

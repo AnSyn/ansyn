@@ -11,6 +11,10 @@ export class ExtendMap<T, V> {
 		return Array.from(this.map.keys());
 	}
 
+	values() {
+		return this.map.values();
+	}
+
 	set(t: T, v: V) {
 		this.map.set(t, v);
 	}
@@ -19,6 +23,13 @@ export class ExtendMap<T, V> {
 		return this.map.get(t);
 	}
 
+	has(t: T): boolean {
+		return this.map.has(t);
+	}
+
+	forEach(cb) {
+		this.map.forEach(cb);
+	}
 
 	findKeysByValue(searchValue, arrayField = 'overlaysIds'): T[] {
 		return Array.from(this.map)
@@ -36,5 +47,16 @@ export class ExtendMap<T, V> {
 				val[arrayField] = val[arrayField].filter(item => item !== searchValue);
 				this.map.set(key, val);
 			});
+	}
+
+	trimMap(size) {
+		if (this.map.size < size) {
+			return;
+		}
+		else {
+			let arr = Array.from(this.map).filter((val, index) => index < size);
+			this.map = new Map();
+			arr.forEach(val => this.map.set(val[0], val[1]));
+		}
 	}
 }

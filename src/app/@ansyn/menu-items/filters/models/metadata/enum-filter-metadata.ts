@@ -1,6 +1,7 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { Filter } from '../filter';
 import { FilterType } from '@ansyn/core/models/case.model';
+import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 
 export interface EnumFiled {
 	count: number;
@@ -9,11 +10,11 @@ export interface EnumFiled {
 
 export class EnumFilterMetadata implements FilterMetadata {
 
-	enumsFields: Map<string, EnumFiled>;
+	enumsFields: ExtendMap<string, EnumFiled>;
 	type: FilterType;
 
 	constructor() {
-		this.enumsFields = new Map<string, EnumFiled>();
+		this.enumsFields = new ExtendMap<string, EnumFiled>();
 		this.type = 'Enum';
 	}
 
@@ -38,7 +39,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	initializeFilter(selectedValues: string[]): void {
-		this.enumsFields = new Map<string, { count: number, isChecked: boolean }>();
+		this.enumsFields = new ExtendMap<string, { count: number, isChecked: boolean }>();
 		if (selectedValues) {
 			for (let key of selectedValues) {
 				this.enumsFields.set(key, { count: 0, isChecked: true });

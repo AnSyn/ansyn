@@ -1,10 +1,7 @@
-import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
-import { ILayerTreeNode } from '../models/layer-tree-node';
 import { LayerType } from '../models/layer-type';
 import { LayersEffects } from './layers.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { DataLayersService, layersConfig } from '../services/data-layers.service';
+import { DataLayersService, Layer, layersConfig } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from '../actions/layers.actions';
@@ -16,6 +13,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { LayersContainer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -59,48 +57,36 @@ describe('LayersEffects', () => {
 	});
 
 	it('beginLayerTreeLoad$ should call dataLayersService.getAllLayersInATree with case id from state, and return LayerTreeLoadedAction', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = {
+		let staticLayer: Layer = {
+			url: 'fakeStaticUrl',
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fakeUrl',
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			isIndeterminate: false
 		};
-		let staticLayer: ILayerTreeNodeRoot = {
-			name: 'staticLayer',
-			id: 'staticLayerId',
-			isChecked: false,
-			type: LayerType.static,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[staticLeaf]
-		};
-		let dynamicLayer: ILayerTreeNodeRoot = {
+		let dynamicLayer: Layer = {
+			url: 'fakeDynamicUrl',
 			name: 'dynamicLayer',
 			id: 'dynamicLayerId',
 			isChecked: false,
-			type: LayerType.dynamic,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			isIndeterminate: false
 		};
-		let complexLayer: ILayerTreeNodeRoot = {
+		let complexLayer: Layer = {
+			url: 'fakeComplexUrl',
 			name: 'complexLayers',
 			id: 'complexLayersId',
 			isChecked: false,
-			type: LayerType.complex,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			isIndeterminate: false
 		};
 
-		let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
-		let selectedLayers: ILayerTreeNode[] = [staticLeaf];
+		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
 
-		let loadedTreeBundle = { layers: layers, selectedLayers: selectedLayers };
+		let loadedTreeBundle = { layers: layers, selectedLayers: [staticLayer] };
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(loadedTreeBundle));
 		actions = hot('--a--', { a: new BeginLayerTreeLoadAction() });
 		const expectedResults = cold('--(ab)--', {
 			a: new LayerTreeLoadedAction(<any>loadedTreeBundle),
-			b: new SelectLayerAction(<any>staticLeaf)
+			b: new SelectLayerAction(<any>staticLayer)
 		});
 		expect(layersEffects.beginLayerTreeLoad$).toBeObservable(expectedResults);
 

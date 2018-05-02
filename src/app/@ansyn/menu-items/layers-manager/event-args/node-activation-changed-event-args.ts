@@ -1,4 +1,3 @@
-import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { Layer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 export class NodeActivationChangedEventArgs {

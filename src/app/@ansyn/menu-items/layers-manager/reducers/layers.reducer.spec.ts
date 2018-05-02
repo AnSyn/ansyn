@@ -1,247 +1,300 @@
 import {
 	LayerTreeLoadedAction,
-	SelectLayerAction, SetAnnotationsLayer, ToggleDisplayAnnotationsLayer,
+	SelectLayerAction,
+	SetAnnotationsLayer,
+	ToggleDisplayAnnotationsLayer,
 	UnselectLayerAction
 } from '../actions/layers.actions';
-import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
-import { ILayerTreeNode } from '../models/layer-tree-node';
 import { LayerType } from '../models/layer-type';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
+import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 describe('LayersReducer', () => {
 
 	it('LAYER_TREE_LOADED action should add the new tree to the state', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = {
+		let staticLayer: Layer = {
+			url: 'fakeStaticUrl',
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fakeUrl',
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			isIndeterminate: false
 		};
-		let staticLayer: ILayerTreeNodeRoot = {
-			name: 'staticLayer',
-			id: 'staticLayerId',
-			isChecked: false,
-			type: LayerType.static,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[staticLeaf]
-		};
-		let dynamicLayer: ILayerTreeNodeRoot = {
+		let dynamicLayer: Layer = {
+			url: 'fakeDynamicUrl',
 			name: 'dynamicLayer',
 			id: 'dynamicLayerId',
 			isChecked: false,
-			type: LayerType.dynamic,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			isIndeterminate: false
 		};
-		let complexLayer: ILayerTreeNodeRoot = {
+		let complexLayer: Layer = {
+			url: 'fakeComplexUrl',
 			name: 'complexLayers',
 			id: 'complexLayersId',
 			isChecked: false,
-			type: LayerType.complex,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			isIndeterminate: false
 		};
 
-		let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
+		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
 
 		let action: LayerTreeLoadedAction = new LayerTreeLoadedAction({
-			layers: layers, selectedLayers: [staticLeaf]
+			layersContainer: {
+				type: LayerType.static, layerBundle: { layers: layers, selectedLayers: [staticLayer] }
+			}
 		});
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);
-		expect(result.layers).toEqual(layers);
-		expect(result.selectedLayers).toEqual([staticLeaf]);
+		expect(result.layersContainer.layerBundle.layers).toEqual(layers);
+		expect(result.layersContainer.layerBundle.selectedLayers).toEqual([staticLayer]);
 	});
 
 	it('SELECT_LAYER action should add the newly selected layer to the selectedLayers list', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = {
+		let staticLayer: Layer = {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fakeUrl',
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			url: 'fakestaticUrl',
+			isIndeterminate: false
 		};
-		let staticLayer: ILayerTreeNodeRoot = {
-			name: 'staticLayer',
-			id: 'staticLayerId',
-			isChecked: false,
+		let staticLayerContainer: LayersContainer = {
 			type: LayerType.static,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[staticLeaf]
+			layerBundle: {
+				layers: [staticLayer],
+				selectedLayers: []
+			}
 		};
-		let dynamicLayer: ILayerTreeNodeRoot = {
-			name: 'dynamicLayer',
-			id: 'dynamicLayerId',
-			isChecked: false,
+		let dynamicLayerContainer: LayersContainer = {
 			type: LayerType.dynamic,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'dynamicLayer',
+					id: 'dynamicLayerId',
+					url: 'fakedynamicUrl',
+					isChecked: false,
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
-		let complexLayer: ILayerTreeNodeRoot = {
-			name: 'complexLayers',
-			id: 'complexLayersId',
-			isChecked: false,
+		let complexLayerContainer: LayersContainer = {
 			type: LayerType.complex,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'staticLayer',
+					id: 'staticLayerId',
+					isChecked: false,
+					url: 'fakecomplexUrl',
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
 
-		let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
+		let layersContainers: LayersContainer[] = [staticLayerContainer, dynamicLayerContainer, complexLayerContainer];
+		let layers: Layer[] = [];
+		for (let layersContainer of layersContainers) {
+			layers.concat(layersContainer.layerBundle.layers);
+		}
+		let action: SelectLayerAction = new SelectLayerAction(staticLayer);
 
-		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
+		let result: ILayerState = LayersReducer(<ILayerState>{
+			layersContainer: {
+				type: LayerType.static,
+				layerBundle: { layers: layers, selectedLayers: [staticLayer] }
+			}
+		}, action);
 
-		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [staticLeaf] }, action);
-
-		expect(result.layers).toEqual(layers);
-		expect(result.selectedLayers).toEqual([staticLeaf]);
+		expect(result.layersContainer.layerBundle.layers).toEqual(layers);
+		expect(result.layersContainer.layerBundle.selectedLayers).toEqual([staticLayer]);
 	});
 
 	it('SELECT_LAYER action with already selected layer should keep the old state', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = {
+		let staticLayer: Layer = {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fakeUrl',
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			url: 'fakestaticUrl',
+			isIndeterminate: false
 		};
-		let staticLayer: ILayerTreeNodeRoot = {
-			name: 'staticLayer',
-			id: 'staticLayerId',
-			isChecked: false,
+		let staticLayerContainer: LayersContainer = {
 			type: LayerType.static,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[staticLeaf]
+			layerBundle: {
+				layers: [staticLayer],
+				selectedLayers: []
+			}
 		};
-		let dynamicLayer: ILayerTreeNodeRoot = {
-			name: 'dynamicLayer',
-			id: 'dynamicLayerId',
-			isChecked: false,
+		let dynamicLayerContainer: LayersContainer = {
 			type: LayerType.dynamic,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'dynamicLayer',
+					id: 'dynamicLayerId',
+					url: 'fakedynamicUrl',
+					isChecked: false,
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
-		let complexLayer: ILayerTreeNodeRoot = {
-			name: 'complexLayers',
-			id: 'complexLayersId',
-			isChecked: false,
+		let complexLayerContainer: LayersContainer = {
 			type: LayerType.complex,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'staticLayer',
+					id: 'staticLayerId',
+					isChecked: false,
+					url: 'fakecomplexUrl',
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
 
-		let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
+		let layersContainers: LayersContainer[] = [staticLayerContainer, dynamicLayerContainer, complexLayerContainer];
+		let layers: Layer[] = [];
+		for (let layersContainer of layersContainers) {
+			layers.concat(layersContainer.layerBundle.layers);
+		}
+		let action: SelectLayerAction = new SelectLayerAction(staticLayer);
 
-		let action: SelectLayerAction = new SelectLayerAction(staticLeaf);
+		let result: ILayerState = LayersReducer(<ILayerState>{
+			layersContainer: {
+				type: LayerType.static,
+				layerBundle: { layers: layers, selectedLayers: [staticLayer] }
+			}
+		}, action);
 
-		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [staticLeaf] }, action);
-
-		expect(result.layers).toEqual(layers);
-		expect(result.selectedLayers).toEqual([staticLeaf]);
+		expect(result.layersContainer.layerBundle.layers).toEqual(layers);
+		expect(result.layersContainer.layerBundle.selectedLayers).toEqual([staticLayer]);
 	});
 
 	it('UNSELECT_LAYER action should remove the newly unselected layer from the selectedLayers list', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = {
+		let staticLayer: Layer = {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fakeUrl',
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			url: 'fakestaticUrl',
+			isIndeterminate: false
 		};
-		let staticLayer: ILayerTreeNodeRoot = {
-			name: 'staticLayer',
-			id: 'staticLayerId',
-			isChecked: false,
+		let staticLayerContainer: LayersContainer = {
 			type: LayerType.static,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[staticLeaf]
+			layerBundle: {
+				layers: [staticLayer],
+				selectedLayers: []
+			}
 		};
-		let dynamicLayer: ILayerTreeNodeRoot = {
-			name: 'dynamicLayer',
-			id: 'dynamicLayerId',
-			isChecked: false,
+		let dynamicLayerContainer: LayersContainer = {
 			type: LayerType.dynamic,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'dynamicLayer',
+					id: 'dynamicLayerId',
+					url: 'fakedynamicUrl',
+					isChecked: false,
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
-		let complexLayer: ILayerTreeNodeRoot = {
-			name: 'complexLayers',
-			id: 'complexLayersId',
-			isChecked: false,
+		let complexLayerContainer: LayersContainer = {
 			type: LayerType.complex,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'staticLayer',
+					id: 'staticLayerId',
+					isChecked: false,
+					url: 'fakecomplexUrl',
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
+		let layersContainers: LayersContainer[] = [staticLayerContainer, dynamicLayerContainer, complexLayerContainer];
+		let layers: Layer[] = [];
+		for (let layersContainer of layersContainers) {
+			layers.concat(layersContainer.layerBundle.layers);
+		}
+		let action: SelectLayerAction = new UnselectLayerAction(staticLayer);
 
-		let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
+		let result: ILayerState = LayersReducer(<ILayerState>{
+			layersContainer: {
+				type: LayerType.static,
+				layerBundle: { layers: layers, selectedLayers: [staticLayer] }
+			}
+		}, action);
 
-		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
-
-		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [staticLeaf] }, action);
-
-		expect(result.layers).toEqual(layers);
-		expect(result.selectedLayers).toEqual([]);
+		expect(result.layersContainer.layerBundle.layers).toEqual(layers);
+		expect(result.layersContainer.layerBundle.selectedLayers).toEqual([]);
 	});
 
 	it('UNSELECT_LAYER action with already unselected layer should return the old state', () => {
-		let staticLeaf: ILayerTreeNodeLeaf = {
+		let staticLayer: Layer = {
 			name: 'staticLayer',
 			id: 'staticLayerId',
 			isChecked: false,
-			url: 'fakeUrl',
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			url: 'fakestaticUrl',
+			isIndeterminate: false
 		};
-		let staticLayer: ILayerTreeNodeRoot = {
-			name: 'staticLayer',
-			id: 'staticLayerId',
-			isChecked: false,
+		let staticLayerContainer: LayersContainer = {
 			type: LayerType.static,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[staticLeaf]
+			layerBundle: {
+				layers: [staticLayer],
+				selectedLayers: []
+			}
 		};
-		let dynamicLayer: ILayerTreeNodeRoot = {
-			name: 'dynamicLayer',
-			id: 'dynamicLayerId',
-			isChecked: false,
+		let dynamicLayerContainer: LayersContainer = {
 			type: LayerType.dynamic,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'dynamicLayer',
+					id: 'dynamicLayerId',
+					url: 'fakedynamicUrl',
+					isChecked: false,
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
-		let complexLayer: ILayerTreeNodeRoot = {
-			name: 'complexLayers',
-			id: 'complexLayersId',
-			isChecked: false,
+		let complexLayerContainer: LayersContainer = {
 			type: LayerType.complex,
-			isIndeterminate: false,
-			children: <ILayerTreeNode[]>[]
+			layerBundle: {
+				layers: [{
+					name: 'staticLayer',
+					id: 'staticLayerId',
+					isChecked: false,
+					url: 'fakecomplexUrl',
+					isIndeterminate: false
+				}],
+				selectedLayers: []
+			}
 		};
+		let layersContainers: LayersContainer[] = [staticLayerContainer, dynamicLayerContainer, complexLayerContainer];
+		let layers: Layer[] = [];
+		for (let layersContainer of layersContainers) {
+			layers.concat(layersContainer.layerBundle.layers);
+		}
+		let action: SelectLayerAction = new UnselectLayerAction(staticLayer);
 
-		let layers: ILayerTreeNodeRoot[] = [staticLayer, dynamicLayer, complexLayer];
+		let result: ILayerState = LayersReducer(<ILayerState>{
+			layersContainer: {
+				type: LayerType.static,
+				layerBundle: { layers: layers, selectedLayers: [] }
+			}
+		}, action);
 
-		let action: UnselectLayerAction = new UnselectLayerAction(staticLeaf);
-
-		let result: ILayerState = LayersReducer(<ILayerState>{ layers: layers, selectedLayers: [] }, action);
-
-		expect(result.layers).toEqual(layers);
-		expect(result.selectedLayers).toEqual([]);
+		expect(result.layersContainer.layerBundle.layers).toEqual(layers);
+		expect(result.layersContainer.layerBundle.selectedLayers).toEqual([]);
 	});
 
 	describe('ANNOTATIONS', () => {
 
 		it('TOGGLE_DISPLAY_LAYER', () => {
-			let action = new ToggleDisplayAnnotationsLayer( true );
+			let action = new ToggleDisplayAnnotationsLayer(true);
 			let result: ILayerState = LayersReducer(initialLayersState, action);
 			expect(result.displayAnnotationsLayer).toBeTruthy();
 
-			action = new ToggleDisplayAnnotationsLayer( false);
+			action = new ToggleDisplayAnnotationsLayer(false);
 			result = LayersReducer(initialLayersState, action);
-			expect(result.displayAnnotationsLayer).toBeFalsy()
+			expect(result.displayAnnotationsLayer).toBeFalsy();
 		});
 
 		it('SET_LAYER', () => {
@@ -249,6 +302,6 @@ describe('LayersReducer', () => {
 			const result: ILayerState = LayersReducer(initialLayersState, action);
 			expect(result.annotationsLayer).toEqual(<any>'some geoJSON Object');
 		});
-	})
+	});
 
 });

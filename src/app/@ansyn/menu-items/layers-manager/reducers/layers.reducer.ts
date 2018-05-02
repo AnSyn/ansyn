@@ -1,21 +1,23 @@
 import { ILayerState } from './layers.reducer';
-import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
-import { Layer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 export interface ILayerState {
-	layers: Layer[];
-	selectedLayers: Layer[];
+	layersContainer: LayersContainer;
 	displayAnnotationsLayer: boolean;
 	annotationsLayer: FeatureCollection<any>;
 }
 
 export const initialLayersState: ILayerState = {
-	layers: [],
-	selectedLayers: [],
+	layersContainer: {
+		type: null,
+		layerBundle: {
+			layers: [],
+			selectedLayers: []
+		}
+	},
 	displayAnnotationsLayer: false,
 	annotationsLayer: null
 
@@ -32,27 +34,27 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 		case LayersActionTypes.LAYER_TREE_LOADED:
 			return Object.assign({}, state, {
-				layers: action.payload.layers,
-				selectedLayers: action.payload.selectedLayers
-			});
+				layersContainer: action.payload.layersContainer
+			}
+			);
 
 		case LayersActionTypes.SELECT_LAYER:
-			let selectedLayerIndex: number = state.selectedLayers.indexOf(action.payload);
+			let selectedLayerIndex: number = state.layersContainer.layerBundle.selectedLayers.indexOf(action.payload);
 			if (selectedLayerIndex > -1) {
 				return state;
 			}
 
-			return Object.assign({}, state, { selectedLayers: state.selectedLayers.concat([action.payload]) });
+			return Object.assign({}, state, { selectedLayers: state.layersContainer.layerBundle.selectedLayers.concat([action.payload]) });
 
 		case LayersActionTypes.UNSELECT_LAYER:
-			let unselectedLayerIndex: number = state.selectedLayers.indexOf(action.payload);
+			let unselectedLayerIndex: number = state.layersContainer.layerBundle.selectedLayers.indexOf(action.payload);
 			if (unselectedLayerIndex === -1) {
 				return state;
 			}
 
 			let newSelectedArray: Layer[] = [
-				...state.selectedLayers.slice(0, unselectedLayerIndex),
-				...state.selectedLayers.slice(unselectedLayerIndex + 1, state.selectedLayers.length)
+				...state.layersContainer.layerBundle.selectedLayers.slice(0, unselectedLayerIndex),
+				...state.layersContainer.layerBundle.selectedLayers.slice(unselectedLayerIndex + 1, state.layersContainer.layerBundle.selectedLayers.length)
 			];
 			return Object.assign({}, state, { selectedLayers: newSelectedArray });
 

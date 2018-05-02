@@ -1,79 +1,138 @@
 @import "core/less/common";
 
-.layers {
-	margin-top: 30px;
-	margin-left: 7px;
-	margin-bottom: 7px;
-}
+div.container {
+	padding: 0 0 20px 0;
+	// margin-top: 25px;
+	// margin-left: 10px;
 
-div.left-side {
-	display: flex;
-	div.filter-row {
-		display: inline-block;
-		position: relative;
-		bottom: 5px;
-		margin-left: 5px;
+	.private-layers {
+		margin-bottom: 10px;
+	}
 
-		div.field-name-container {
-			max-width: 150px;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			display: inline-block;
+	div.title-row {
+		padding: 5px 0 10px 0;
+
+		span.title {
+			font-family: Open Sans;
+			font-style: normal;
+			font-weight: bold;
+			font-size: 14px;
+			line-height: 100%;
 			color: #FFFFFF;
-			top: 4px;
-			position: relative;
+		}
 
-			span.field-name {
-				font-size: 14px;
-				font-style: normal;
+		button.down-arrow {
+			width: 10px;
+			height: 10px;
+			padding: 0;
+			background: transparent;
+			border: none;
+			border-bottom: 2px solid #FFFFFF;
+			border-left: 2px solid #FFFFFF;
+			float: right;
+			margin-right: 10px;
+			margin-top: 4px;
+			cursor: pointer;
+			outline: none;
+
+			&:disabled {
+				opacity: 0.7;
 			}
+		}
+
+		div.show-all {
+			float: right;
+			font-size: 12px;
+			font-style: normal;
+			color: rgba(255, 255, 255, 0.75);
+			margin-right: 7px;
+			cursor: pointer;
 		}
 	}
-	div.checkbox {
-		margin-right: 5px;
 
-		input {
-			label {
-				display: inline;
-			}
-		}
+	div.layers {
+		 display: flex;
+		 padding: 2.5px 0;
+		 justify-content: space-between;
 
-		input.regular-checkbox {
-			display: none;
-		}
+		 &:hover {
+			 div.left-side {
+				 visibility: visible;
+			 }
+		 }
 
-		input.regular-checkbox + label {
-			border: 1px solid #C9C9C9;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05);
-			padding: 9px;
-			border-radius: 3px;
-			display: inline-block;
-			position: relative;
-		}
+		 div.left-side {
+			 display: flex;
 
-		input.regular-checkbox:hover + label:hover {
-			border: 1px solid #FFFFFF;
-		}
+			 div.checkbox {
+				 margin-right: 0px;
 
-		input.regular-checkbox + label:active {
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 3px rgba(0, 0, 0, 0.1);
-		}
+				 input {
+					 label {
+						 display: inline;
+					 }
+				 }
 
-		input.regular-checkbox:checked + label {
-			background-color: #FFFFFF;
-			border: 1px solid #FFFFFF;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
-			color: #FFFFFF;
+				 input.regular-checkbox {
+					 display: none;
+				 }
 
-			&:after {
-				content: '\2714';
-				font-size: 14px;
-				position: absolute;
-				top: 0;
-				left: 3px;
-				color: @application-main-color;
-			}
-		}
-	}
+				 input.regular-checkbox + label {
+					 border: 1px solid #C9C9C9;
+					 box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05);
+					 padding: 9px;
+					 border-radius: 3px;
+					 display: inline-block;
+					 position: relative;
+				 }
+
+				 input.regular-checkbox:hover + label:hover {
+					 border: 1px solid #FFFFFF;
+				 }
+
+				 input.regular-checkbox + label:active {
+					 box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+				 }
+
+				 input.regular-checkbox:checked + label {
+					 background-color: #FFFFFF;
+					 border: 1px solid #FFFFFF;
+					 box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+					 color: #FFFFFF;
+
+					 &:after {
+						 content: '\2714';
+						 font-size: 14px;
+						 position: absolute;
+						 top: 0;
+						 left: 3px;
+						 color: @application-main-color;
+					 }
+				 }
+			 }
+
+			 div.layer-row {
+				 display: inline-block;
+				 position: relative;
+				 bottom: 5px;
+				 margin-left: 0px;
+
+				 div.field-name-container {
+					 max-width: 150px;
+					 white-space: nowrap;
+					 overflow: hidden;
+					 text-overflow: ellipsis;
+					 display: inline-block;
+					 color: #FFFFFF;
+					 top: 4px;
+					 position: relative;
+
+					 span.field-name {
+						 font-size: 14px;
+						 font-style: normal;
+					 }
+				 }
+			 }
+		 }
+	 }
 }

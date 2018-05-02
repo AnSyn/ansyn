@@ -44,6 +44,7 @@ import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
+import { FilterType } from '@ansyn/core/models/case.model';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -54,10 +55,10 @@ describe('Filters app effects', () => {
 	const filterMetadata2: FilterMetadata = new EnumFilterMetadata();
 	const filterMetadata3: FilterMetadata = new SliderFilterMetadata();
 	const filterMetadata4: FilterMetadata = new SliderFilterMetadata();
-	const filterKey: Filter = { modelName: 'enumModel1', displayName: 'Enum Model', type: 'Enum' };
-	const filterKey2: Filter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: 'Enum' };
-	const filterKey3: Filter = { modelName: 'SliderModel', displayName: 'Slider Model', type: 'Slider' };
-	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: 'Slider' };
+	const filterKey: Filter = { modelName: 'enumModel1', displayName: 'Enum Model', type: FilterType.Enum };
+	const filterKey2: Filter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: FilterType.Enum };
+	const filterKey3: Filter = { modelName: 'SliderModel', displayName: 'Slider Model', type: FilterType.Slider };
+	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
 	const favoriteOver = new Overlay();

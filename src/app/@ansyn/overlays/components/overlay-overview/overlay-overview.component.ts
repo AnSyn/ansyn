@@ -16,8 +16,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	private _subscriptions: Subscription[] = [];
 	public overlay: any;
 	public formattedTime: string;
-	public showFlag = false;
 
+	@HostBinding('class.show') showFlag = false;
 	@HostBinding('style.left.px') x: number;
 
 	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)

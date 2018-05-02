@@ -8,9 +8,6 @@
 	z-index: @z-index-overlay-overview;
 	left: 0;
 	bottom: calc(~"1px + @{timeline-area-height}");
-}
-
-.overlay-overview {
 	background-color: white;
 	box-shadow: 0 0 15px 0 #2e2d46;
 	border: 2px white solid;
@@ -25,19 +22,19 @@
 	transform: translateY(50px);
 	transition: opacity @animation-duration, transform @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
 
-	img {
-		height: 150px;
-	}
-
-	footer {
-		width: 100%;
-		display: flex;
-		justify-content: space-between;
+	&.show {
+		visibility: visible;
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 
-.show {
-	visibility: visible;
-	opacity: 1;
-	transform: translateY(0);
+img {
+	height: 150px;
+}
+
+footer {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
 }

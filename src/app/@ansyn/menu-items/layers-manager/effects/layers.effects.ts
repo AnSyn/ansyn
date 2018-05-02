@@ -1,5 +1,4 @@
 import { ILayerState, layersStateSelector } from '../reducers/layers.reducer';
-import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import {
 	BeginLayerTreeLoadAction,
 	ErrorLoadingLayersAction,
@@ -9,7 +8,7 @@ import {
 	SelectLayerAction,
 	UnselectLayerAction
 } from '../actions/layers.actions';
-import { DataLayersService, Layer, LayerRootsBundle, LayersBundle } from '../services/data-layers.service';
+import { DataLayersService, Layer, LayersContainer } from '../services/data-layers.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
@@ -39,19 +38,18 @@ export class LayersEffects {
 			return this.dataLayersService.getAllLayersInATree();
 		})
 		.withLatestFrom(this.store.select(layersStateSelector))
-		.mergeMap(([layersBundle, store]: [LayersBundle, ILayerState]) => {
+		.mergeMap(([layersContainer, store]: [LayersContainer, ILayerState]) => {
 			let actionsArray = [];
 
-			store.selectedLayers.forEach((selectedLayer) => {
+			store.layersContainer.layerBundle.selectedLayers.forEach((selectedLayer) => {
 				actionsArray.push(new UnselectLayerAction(selectedLayer));
 			});
 
 			actionsArray.push(new LayerTreeLoadedAction({
-				layers: layersBundle.layers,
-				selectedLayers: layersBundle.selectedLayers
+			layersContainer: layersContainer
 			}));
 
-			layersBundle.selectedLayers.forEach((layer: Layer) => {
+			layersContainer.layerBundle.selectedLayers.forEach((layer: Layer) => {
 				actionsArray.push(new SelectLayerAction(layer));
 			});
 

@@ -1,8 +1,6 @@
-import { ILayerTreeNodeRoot } from '../models/layer-tree-node-root';
-import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
 import { Action } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
-import { Layer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 export const LayersActionTypes = {
 	BEGIN_LAYER_TREE_LOAD: 'BEGIN_LAYER_TREE_LOAD',
@@ -12,7 +10,7 @@ export const LayersActionTypes = {
 	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
 	ANNOTATIONS: {
 		SET_LAYER: 'SET_LAYER',
-		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER',
+		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER'
 	}
 };
 
@@ -46,8 +44,7 @@ export class LayerTreeLoadedAction implements Action {
 	type = LayersActionTypes.LAYER_TREE_LOADED;
 
 	constructor(public payload: {
-		layers: Layer[],
-		selectedLayers: Layer[]
+		layersContainer: LayersContainer
 	}) {
 	}
 }

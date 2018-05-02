@@ -4,7 +4,7 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
 import { Feature, FeatureCollection, Point as GeoPoint, Point } from 'geojson';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
@@ -15,9 +15,8 @@ import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/m
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Subscription } from 'rxjs/Subscription';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
-@ImageryPlugin({
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Actions, Store, ProjectionService]
 })
@@ -67,29 +66,9 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		}
 		]));
 
-
-	addShadowMouseConsumer(pointerMoveProducer: Observable<any>) {
-		if (this.communicator && pointerMoveProducer) {
-			pointerMoveProducer.subscribe(point => {
-				const shadowMousePoint: Point = {
-					type: 'Point',
-					coordinates: point
-				};
-				const shadowMouseFeatureJson: Feature<any> = {
-					type: 'Feature',
-					geometry: shadowMousePoint,
-					properties: {}
-				};
-				this.clearEntities();
-				this.setEntities([{ id: 'shadowMouse', featureJson: shadowMouseFeatureJson }])
-					.subscribe();
-			});
-		}
-	}
-
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected projectionService: ProjectionService) {
 		super();
-		// set icon
+
 		this._iconSrc = new Style({
 			image: new Icon({
 				scale: 1,

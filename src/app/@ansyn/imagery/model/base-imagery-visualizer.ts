@@ -2,6 +2,7 @@ import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/visualizers/mode
 import { Feature } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { BaseImageryPlugin } from './base-imagery-plugin';
+import { ImageryPlugin, ImageryPluginMetaData } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export interface IVisualizerEntity {
 	id: string;
@@ -81,4 +82,18 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	 */
 
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
+}
+
+export interface ImageryVisualizerMetaData extends ImageryPluginMetaData {
+
+}
+
+export interface BaseImageryVisualizerClass extends ImageryVisualizerMetaData {
+	new(...args): BaseImageryVisualizer;
+}
+
+export function ImageryVisualizer({ supported, deps }: ImageryVisualizerMetaData) {
+	return function (constructor: BaseImageryVisualizerClass) {
+		ImageryPlugin({ supported, deps })(constructor);
+	}
 }

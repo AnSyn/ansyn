@@ -1,13 +1,14 @@
 import { FactoryProvider, Injector } from '@angular/core';
-import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
+import { BaseImageryPlugin, BaseImageryPluginClass } from '../../model/base-imagery-plugin';
 import { PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
 import { IMap } from '@ansyn/imagery/model/imap';
-import { BaseImageryPluginClass } from '@ansyn/imagery/model/plugins-collection';
 import { StaticClassProvider } from '@angular/core/src/di/provider';
+import { ImageryCollectionEntitiy } from '@ansyn/imagery/model/plugins-collection';
 
-export function BaseImageryPluginProviderFactory(pluginsCollections: Array<BaseImageryPluginClass[]>, parent: Injector, map: IMap) {
+export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryCollectionEntitiy[]>, parent: Injector, map: IMap) {
 		const providers: StaticClassProvider[] = pluginsCollections
-			.reduce<BaseImageryPluginClass[]>((previousValue, collection) => [...previousValue, ...collection], [])
+			.reduce<ImageryCollectionEntitiy[]>((previousValue, collection) => [...previousValue, ...collection], [])
+			.filter((value: BaseImageryPluginClass) => value.prototype instanceof BaseImageryPlugin)
 			.filter((value: BaseImageryPluginClass) => value.supported.some(ins => map instanceof ins))
 			.map<StaticClassProvider>((value: BaseImageryPluginClass) => ({
 				provide: BaseImageryPlugin,

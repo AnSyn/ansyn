@@ -1,5 +1,8 @@
 import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
-import { IVisualizerEntity, VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import {
+	ImageryVisualizer, IVisualizerEntity,
+	VisualizerInteractions
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
@@ -29,9 +32,8 @@ import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
-@ImageryPlugin({
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, VisualizersConfig]
 })

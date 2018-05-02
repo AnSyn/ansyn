@@ -1,13 +1,17 @@
 import { Component, HostBinding, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { HoveredOverlayDropData } from '@ansyn/overlays/models/hovered-overlay-data.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
 import { DOCUMENT } from '@angular/common';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	ClearHoveredOverlay,
+	DisplayOverlayFromStoreAction,
+	SetMarkUp
+} from '@ansyn/overlays/actions/overlays.actions';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -19,12 +23,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public overlay: any;
 	public formattedTime: string;
 	public overlayId: string;
-	isHoveringOverDrop = false;
-	isHoveringOverMe = false;
 
-	@HostBinding('class.show')  get show() {
-		return this.isHoveringOverDrop || this.isHoveringOverMe
-	}
+	@HostBinding('class.show')  isHoveringOverDrop = false;
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.bottom.px') bottom = 0;
 
@@ -37,14 +37,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		])
 		.distinctUntilChanged();
 
-	@HostListener('mouseover')
-	onMouseOver() {
-		this.isHoveringOverMe = true;
-	}
-
-	@HostListener('mouseout')
+	// Mark the original overlay as un-hovered when mouse leaves
+	@HostListener('mouseleave')
 	onMouseOut() {
-		this.isHoveringOverMe = false;
+		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+		this.store$.dispatch(new ClearHoveredOverlay());
 	}
 
 	constructor(
@@ -66,7 +63,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	showOrHide([eventData, overlay]: [HoveredOverlayDropData, Overlay]) {
 		if (eventData && overlay) {
 			this.left = eventData.drop_x - 50;
-			this.bottom = this.document.body.offsetHeight - eventData.drop_y + 10;
+			this.bottom = this.document.body.offsetHeight - eventData.drop_y;
 			this.overlayId = eventData.overlayId;
 			this.isHoveringOverDrop = true;
 			this.overlay = overlay;

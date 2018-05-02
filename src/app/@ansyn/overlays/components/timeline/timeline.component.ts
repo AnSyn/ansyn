@@ -193,8 +193,10 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
-		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
-		this.store$.dispatch(new ClearHoveredOverlay());
+		if (d3.event.toElement.id !== 'overlay-overview-transparent') {
+			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			this.store$.dispatch(new ClearHoveredOverlay());
+		}
 	}
 
 	clickEvent() {

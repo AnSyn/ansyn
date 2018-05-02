@@ -65,17 +65,9 @@ describe('OverlayOverviewComponent', () => {
 			fixture.detectChanges();
 			expect(classExists('show')).toBeFalsy();
 		});
-		it('should continue to show me when I am hovered over', () => {
-			fixture.debugElement.triggerEventHandler('mouseover', {});
-			fixture.detectChanges();
-			expect(classExists('show')).toBeTruthy();
-			fixture.debugElement.triggerEventHandler('mouseout', {});
-			fixture.detectChanges();
-			expect(classExists('show')).toBeFalsy();
-		})
 	});
 
-	describe('onDblClick', () => {
+	describe('on double click', () => {
 		let image: any;
 		beforeEach(() => {
 			image = fixture.debugElement.query(By.css('img'));
@@ -89,5 +81,14 @@ describe('OverlayOverviewComponent', () => {
 			fixture.detectChanges();
 			expect(component.store$.dispatch).toHaveBeenCalled();
 		});
-	})
+	});
+
+	describe('on mouse leave', () => {
+		it('should call store.dispatch twice on mouse leave event', () => {
+			let calls = spyOn(component.store$, 'dispatch').calls;
+			fixture.debugElement.triggerEventHandler('mouseleave', {});
+			fixture.detectChanges();
+			expect(calls.count()).toEqual(2);
+		});
+	});
 });

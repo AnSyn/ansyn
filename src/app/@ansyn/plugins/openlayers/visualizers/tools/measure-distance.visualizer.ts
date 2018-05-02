@@ -45,7 +45,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
 		.do(([isActiveMap, isMeasureToolActive]) => {
-			console.log("isActiveMap , ", isActiveMap , 'isMeasureToolActive', isMeasureToolActive);
 			if (isActiveMap && isMeasureToolActive) {
 				this.createInteraction();
 			} else {

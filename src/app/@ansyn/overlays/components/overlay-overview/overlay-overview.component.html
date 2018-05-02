@@ -1,7 +1,10 @@
-<main>
-	<img [src]="overlay?.thumbnailUrl || ''">
-</main>
-<footer>
-	<div>{{overlay?.sensorName}}</div>
-	<div>{{formattedTime}}</div>
-</footer>
+<div class="overlay-overview">
+	<main>
+		<img [src]="overlay?.thumbnailUrl || ''">
+	</main>
+	<footer>
+		<div>{{overlay?.sensorName}}</div>
+		<div>{{formattedTime}}</div>
+	</footer>
+</div>
+<div class="transparent"></div>

@@ -23,7 +23,7 @@ import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.ac
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
-	illegalPolygonMessage = 'Illegal Polygon';
+	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
 	core$ = this.store$.select(coreStateSelector);
 	mapState$ = this.store$.select(mapStateSelector);
 
@@ -115,7 +115,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				}
 				else {
 					this.store$.dispatch(new SetToastMessageAction({
-						toastText: this.illegalPolygonMessage
+						toastText: this.selfIntersectMessage
 					}));
 				}
 			})

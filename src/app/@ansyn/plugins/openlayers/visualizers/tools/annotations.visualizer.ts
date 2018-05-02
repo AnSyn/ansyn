@@ -42,11 +42,11 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store]
+	deps: [Store],
+	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
-	isHideable = true;
 	disableCache = true;
 
 	public mode: AnnotationMode;

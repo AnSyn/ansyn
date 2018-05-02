@@ -14,7 +14,7 @@ import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import {
-	BaseImageryVisualizer, IVisualizerEntity,
+	BaseImageryVisualizer, BaseImageryVisualizerClass, IVisualizerEntity,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 
@@ -30,7 +30,6 @@ export const VisualizerStates = {
 
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
-	isHideable = false;
 	isHidden = false;
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
@@ -92,7 +91,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	toggleVisibility() {
-		if (!this.isHideable) {
+		if (!(<BaseImageryVisualizerClass>this.constructor).isHideable) {
 			return;
 		}
 

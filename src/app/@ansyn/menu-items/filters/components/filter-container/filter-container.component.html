@@ -20,7 +20,7 @@
 		<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
 			<ansyn-enum-filter-container
 				*ngSwitchCase="'Enum'"
-				[metadata]="metadataFromState"
+				[metadata]="shownFilters"
 				(onMetadataChange)="onMetadataChange($event)">
 			</ansyn-enum-filter-container>
 
@@ -41,5 +41,9 @@
 
 	<div *ngIf="!metadataFromState">
 		Loading...
+	</div>
+
+	<div class="show-more" >
+		<span (click)="showMore()">Show all</span>
 	</div>
 </div>

@@ -28,7 +28,6 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	type: string;
 	source: any;
 	vector: any;
-	isHideable: boolean;
 	isHidden: boolean;
 	interactions: Map<VisualizerInteractionTypes, any>;
 
@@ -85,15 +84,15 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 }
 
 export interface ImageryVisualizerMetaData extends ImageryPluginMetaData {
-
+	isHideable?: boolean;
 }
 
 export interface BaseImageryVisualizerClass extends ImageryVisualizerMetaData {
 	new(...args): BaseImageryVisualizer;
 }
 
-export function ImageryVisualizer({ supported, deps }: ImageryVisualizerMetaData) {
+export function ImageryVisualizer(metaData: ImageryVisualizerMetaData) {
 	return function (constructor: BaseImageryVisualizerClass) {
-		ImageryPlugin({ supported, deps })(constructor);
+		ImageryPlugin(metaData)(constructor);
 	}
 }

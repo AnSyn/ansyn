@@ -52,9 +52,10 @@ export interface BaseImageryPluginClass extends ImageryPluginMetaData {
 	new(...args): BaseImageryPlugin;
 }
 
-export function ImageryPlugin({ supported, deps }: ImageryPluginMetaData) {
+export function ImageryPlugin(metaData: ImageryPluginMetaData) {
 	return function (constructor: BaseImageryPluginClass) {
-		constructor.supported = supported;
-		constructor.deps = deps;
+		Object.keys(metaData).forEach((key) => {
+			constructor[key] = metaData[key];
+		});
 	}
 }

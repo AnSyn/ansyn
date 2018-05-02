@@ -14,8 +14,6 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 	deps: []
 })
 export class ContextEntityVisualizer extends EntitiesVisualizer {
-	isHideable = true;
-
 	referenceDate: Date;
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;

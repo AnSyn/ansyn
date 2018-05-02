@@ -1,5 +1,7 @@
 import { Filter } from './filter';
 
+
 export interface IFiltersConfig {
-	filters: Filter[];
+	shortFilterListLength: number,
+	filters: Filter[]
 }

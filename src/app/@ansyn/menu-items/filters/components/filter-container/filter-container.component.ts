@@ -4,11 +4,14 @@ import { cloneDeep } from 'lodash';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs/Observable';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { MENU_ITEMS } from '@ansyn/menu/menu.module';
+import { MenuItem } from '@ansyn/menu/models/menu-item.model';
+import { IFiltersConfig } from '@ansyn/menu-items/filters/models/filters-config';
+import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -61,7 +64,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 			if (this.filter.type === 'Enum') {
 				if (Boolean(this.metadataFromState)) {
 					this.shortMetadataFromState = cloneDeep(this.metadataFromState);
-					(<EnumFilterMetadata>this.shortMetadataFromState).enumsFields.trimMap(10);
+					(<EnumFilterMetadata>this.shortMetadataFromState).enumsFields.trimMap(this.config.shortFilterListLength);
 					this.shownFilters = cloneDeep(this.shortMetadataFromState);
 				}
 			}
@@ -72,7 +75,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		.distinctUntilChanged()
 		.do((showOnlyFavorites) => this.showOnlyFavorite = showOnlyFavorites);
 
-	constructor(protected store: Store<IFiltersState>) {
+	constructor(protected store: Store<IFiltersState>,  @Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
 	get disabledShowAll() {

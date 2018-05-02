@@ -43,10 +43,10 @@
 		Loading...
 	</div>
 
-	<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider">
+	<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
 		<span (click)="toggleListLength()">SHOW MORE</span>
 	</div>
-	<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider">
+	<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
 		<span (click)="toggleListLength()">SHOW LESS</span>
 	</div>
 </div>

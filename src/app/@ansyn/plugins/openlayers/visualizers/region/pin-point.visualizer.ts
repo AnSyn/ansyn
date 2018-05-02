@@ -14,9 +14,9 @@ import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-fla
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 
-@ImageryPlugin({
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })

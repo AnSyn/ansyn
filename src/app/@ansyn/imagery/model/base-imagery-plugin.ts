@@ -48,8 +48,12 @@ export interface ImageryPluginMetaData {
 	deps?: any[];
 }
 
+export interface BaseImageryPluginClass extends ImageryPluginMetaData {
+	new(...args): BaseImageryPlugin;
+}
+
 export function ImageryPlugin({ supported, deps }: ImageryPluginMetaData) {
-	return function (constructor) {
+	return function (constructor: BaseImageryPluginClass) {
 		constructor.supported = supported;
 		constructor.deps = deps;
 	}

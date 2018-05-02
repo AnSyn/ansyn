@@ -18,9 +18,9 @@ import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
 import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 
-@ImageryPlugin({
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store]
 })

@@ -9,9 +9,9 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 
-@ImageryPlugin({
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, VisualizersConfig]
 })

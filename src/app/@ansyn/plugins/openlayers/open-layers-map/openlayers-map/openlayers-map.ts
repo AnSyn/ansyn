@@ -18,10 +18,7 @@ import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs/Observable';
-import {
-	Feature, FeatureCollection, GeoJsonObject, Geometry, GeometryObject, Point as GeoPoint,
-	Polygon
-} from 'geojson';
+import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';

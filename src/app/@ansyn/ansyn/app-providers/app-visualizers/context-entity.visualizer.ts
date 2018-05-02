@@ -6,11 +6,10 @@ import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs/Observable';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
-@ImageryPlugin({
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: []
 })

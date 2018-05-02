@@ -11,10 +11,10 @@ import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 
-@ImageryPlugin({
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })

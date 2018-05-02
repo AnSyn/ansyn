@@ -1,11 +1,7 @@
-<div class="overlay-overview"
-	 [class.show]="showFlag"
->
-	<main>
-		<img [src]="overlay?.thumbnailUrl || ''">
-	</main>
-	<footer>
-		<div>{{overlay?.sensorName}}</div>
-		<div>{{formattedTime}}</div>
-	</footer>
-</div>
+<main>
+	<img [src]="overlay?.thumbnailUrl || ''">
+</main>
+<footer>
+	<div>{{overlay?.sensorName}}</div>
+	<div>{{formattedTime}}</div>
+</footer>

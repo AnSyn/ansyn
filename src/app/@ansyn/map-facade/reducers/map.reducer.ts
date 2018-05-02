@@ -1,6 +1,6 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { range } from 'lodash';
@@ -114,3 +114,5 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return state;
 	}
 }
+
+export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);

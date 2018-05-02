@@ -20,8 +20,8 @@ import {
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -30,30 +30,28 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Actions, Store]
+	deps: [Store]
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
-	drawDistamceMeasureOnMap$: Observable<any> = this.actions$
-		.ofType<SetMeasureDistanceToolState>(ToolsActionsTypes.SET_MEASURE_TOOL_STATE)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, { activeMapId }]: [SetMeasureDistanceToolState, IMapState]) => activeMapId === this.mapId)
-		.map(([action, { activeMapId }]: [SetMeasureDistanceToolState, IMapState]) => {
-			if (action.payload) {
+	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId)
+		.map((activeMapId) => activeMapId === this.mapId)
+		.distinctUntilChanged();
+
+	isMeasureToolActive$: Observable<boolean> = this.store$.select(toolsStateSelector)
+		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
+		.map((flags) => flags.get(toolsFlags.isMeasureToolActive))
+		.distinctUntilChanged();
+
+	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
+		.do(([isActiveMap, isMeasureToolActive]) => {
+			console.log("isActiveMap , ", isActiveMap , 'isMeasureToolActive', isMeasureToolActive);
+			if (isActiveMap && isMeasureToolActive) {
 				this.createInteraction();
 			} else {
 				this.clearInteractionAndEntities();
 			}
 		});
-
-	onActiveMapChangesDeleteOldMeasureLayer$ = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.filter(action => action.payload === this.mapId)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => {
-			return [action, toolState.flags.get(toolsFlags.isMeasureToolActive)];
-		})
-		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
-		.do(() => this.createInteraction());
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -109,7 +107,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected actions$: Actions, protected store$: Store<any>) {
+	constructor(protected store$: Store<any>) {
 		super(null, {
 			initial: {
 				stroke: {
@@ -135,8 +133,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.drawDistamceMeasureOnMap$.subscribe(),
-			this.onActiveMapChangesDeleteOldMeasureLayer$.subscribe()
+			this.onChanges$.subscribe()
 		);
 	}
 

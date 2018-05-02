@@ -76,7 +76,10 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	showOnlyFavorites$: Observable<any> = this.store.select(filtersStateSelector)
 		.pluck<IFiltersState, boolean>('showOnlyFavorites')
 		.distinctUntilChanged()
-		.do((showOnlyFavorites) => this.showOnlyFavorite = showOnlyFavorites);
+		.do((showOnlyFavorites) => {
+			this.showOnlyFavorite = showOnlyFavorites
+			this.isLongFiltersList = false;
+		});
 
 	constructor(protected store: Store<IFiltersState>, @Inject(filtersConfig) protected config: IFiltersConfig) {
 	}

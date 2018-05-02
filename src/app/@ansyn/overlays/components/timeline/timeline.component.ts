@@ -189,7 +189,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	onMouseOver({ id }: IEventDropsEvent) {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
-		this.store$.dispatch(new SetHoveredOverlay({id: id, x: d3.event.x, y: d3.event.y}));
+		this.store$.dispatch(new SetHoveredOverlay({overlayId: id, drop_x: d3.event.x, drop_y: d3.event.y}));
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {

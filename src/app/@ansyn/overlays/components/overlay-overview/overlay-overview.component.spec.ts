@@ -10,6 +10,7 @@ import {
 	SetHoveredOverlay
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { By } from '@angular/platform-browser';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
@@ -41,7 +42,7 @@ describe('OverlayOverviewComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	describe('Show or hide me according to store', () => {
+	describe('Show or hide me', () => {
 		let classExists = (className) => fixture.nativeElement.classList.contains(className);
 		let overlayId = '234';
 		let overlays: Overlay[] = [{
@@ -57,12 +58,36 @@ describe('OverlayOverviewComponent', () => {
 		});
 		it('should show or hide me according to store', () => {
 			store.dispatch(new LoadOverlaysSuccessAction(overlays));
-			store.dispatch(new SetHoveredOverlay({ id: overlayId }));
+			store.dispatch(new SetHoveredOverlay({ overlayId: overlayId }));
 			fixture.detectChanges();
 			expect(classExists('show')).toBeTruthy();
 			store.dispatch(new ClearHoveredOverlay());
 			fixture.detectChanges();
 			expect(classExists('show')).toBeFalsy();
 		});
+		it('should continue to show me when I am hovered over', () => {
+			fixture.debugElement.triggerEventHandler('mouseover', {});
+			fixture.detectChanges();
+			expect(classExists('show')).toBeTruthy();
+			fixture.debugElement.triggerEventHandler('mouseout', {});
+			fixture.detectChanges();
+			expect(classExists('show')).toBeFalsy();
+		})
 	});
+
+	describe('onDblClick', () => {
+		let image: any;
+		beforeEach(() => {
+			image = fixture.debugElement.query(By.css('img'));
+		});
+		it('image should exist', () => {
+			expect(image).toBeDefined();
+		});
+		it('should call store.dispatch when double clicking on the image', () => {
+			spyOn(component.store$, 'dispatch');
+			image.triggerEventHandler('dblclick', {});
+			fixture.detectChanges();
+			expect(component.store$.dispatch).toHaveBeenCalled();
+		});
+	})
 });

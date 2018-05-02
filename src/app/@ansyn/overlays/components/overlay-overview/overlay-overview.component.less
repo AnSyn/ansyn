@@ -6,8 +6,6 @@
 :host {
 	position: absolute;
 	z-index: @z-index-overlay-overview;
-	left: 0;
-	bottom: calc(~"1px + @{timeline-area-height}");
 	background-color: white;
 	box-shadow: 0 0 15px 0 #2e2d46;
 	border: 2px white solid;
@@ -19,13 +17,13 @@
 	align-items: center;
 	visibility: hidden;
 	opacity: 0;
-	transform: translateY(50px);
+	transform: translateY(0);
 	transition: opacity @animation-duration, transform @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
 
 	&.show {
 		visibility: visible;
 		opacity: 1;
-		transform: translateY(0);
+		transform: translateY(-100px);
 	}
 }
 

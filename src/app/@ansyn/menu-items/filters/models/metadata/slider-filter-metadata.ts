@@ -12,7 +12,7 @@ export class SliderFilterMetadata implements FilterMetadata {
 	type: FilterType;
 
 	constructor() {
-		this.type = 'Slider';
+		this.type = FilterType.Slider;
 
 		this.min = Number.MAX_SAFE_INTEGER;
 		this.max = Number.MIN_SAFE_INTEGER;

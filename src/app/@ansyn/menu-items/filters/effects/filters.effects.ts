@@ -15,7 +15,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { CaseFacetsState, CaseFilter, CaseFilters } from '@ansyn/core/models/case.model';
+import { CaseFacetsState, CaseFilter, CaseFilters, FilterType } from '@ansyn/core/models/case.model';
 import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
 import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resolver';
 
@@ -73,7 +73,7 @@ export class FiltersEffects {
 
 		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
 			return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
-				return filterMetadata.find((item) => item.type === filterType);
+				return filterMetadata.find((item) => item.type === FilterType[filterType]);
 			};
 		})();
 

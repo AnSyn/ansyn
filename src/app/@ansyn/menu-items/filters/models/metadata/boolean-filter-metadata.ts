@@ -9,7 +9,7 @@ export interface BooleanProperties {
 }
 
 export class BooleanFilterMetadata implements FilterMetadata{
-	type: FilterType = 'Boolean';
+	type: FilterType = FilterType.Boolean;
 
 	trueProperties: BooleanProperties = {
 		value: true,

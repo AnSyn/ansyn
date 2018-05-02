@@ -74,7 +74,7 @@ export type CaseEnumFilterMetadata = string[];
 
 export type CaseFilterMetadata = CaseBooleanFilterMetadata | CaseEnumFilterMetadata;
 
-export type FilterType = 'Enum' | 'Slider' | 'Boolean';
+export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'};
 
 export interface CaseFilter {
 	type: FilterType;

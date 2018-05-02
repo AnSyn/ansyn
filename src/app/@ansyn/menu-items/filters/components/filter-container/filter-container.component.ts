@@ -8,10 +8,9 @@ import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } fr
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { MENU_ITEMS } from '@ansyn/menu/menu.module';
-import { MenuItem } from '@ansyn/menu/models/menu-item.model';
 import { IFiltersConfig } from '@ansyn/menu-items/filters/models/filters-config';
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
+import { FilterType } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -43,6 +42,8 @@ import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.servic
 export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	public show = true;
+	public isLongFiltersList = false;
+	public isGotSmallListFromProvider = true;
 	public showOnlyFavorite = false;
 	public metadataFromState: FilterMetadata;
 	public shortMetadataFromState: FilterMetadata;
@@ -61,8 +62,10 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		})
 		.do(filters => {
 			this.metadataFromState = cloneDeep(filters.get(this.filter));
-			if (this.filter.type === 'Enum') {
+			if (this.filter.type === FilterType.Enum) {
 				if (Boolean(this.metadataFromState)) {
+					this.isGotSmallListFromProvider = (<EnumFilterMetadata>this.metadataFromState).enumsFields.size <= this.config.shortFilterListLength;
+					(<EnumFilterMetadata>this.metadataFromState).enumsFields.sort((a, b) => b[1].count - a[1].count);
 					this.shortMetadataFromState = cloneDeep(this.metadataFromState);
 					(<EnumFilterMetadata>this.shortMetadataFromState).enumsFields.trimMap(this.config.shortFilterListLength);
 					this.shownFilters = cloneDeep(this.shortMetadataFromState);
@@ -75,7 +78,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		.distinctUntilChanged()
 		.do((showOnlyFavorites) => this.showOnlyFavorite = showOnlyFavorites);
 
-	constructor(protected store: Store<IFiltersState>,  @Inject(filtersConfig) protected config: IFiltersConfig) {
+	constructor(protected store: Store<IFiltersState>, @Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
 	get disabledShowAll() {
@@ -105,9 +108,10 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	showMore(): void {
-		if (this.filter.type === 'Enum') {
-			this.shownFilters = this.metadataFromState;
+	toggleListLength(): void {
+		if (this.filter.type === FilterType.Enum) {
+			this.isLongFiltersList = !this.isLongFiltersList;
+			this.shownFilters = this.isLongFiltersList ? this.metadataFromState : this.shortMetadataFromState;
 		}
 	}
 }

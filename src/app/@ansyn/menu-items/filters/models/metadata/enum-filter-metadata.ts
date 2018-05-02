@@ -15,7 +15,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 
 	constructor() {
 		this.enumsFields = new ExtendMap<string, EnumFiled>();
-		this.type = 'Enum';
+		this.type = FilterType.Enum;
 	}
 
 	updateMetadata(key: string): void {

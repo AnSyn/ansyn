@@ -88,10 +88,8 @@ export class CommunicatorEntity {
 
 	// CommunicatorEntity methods begin
 
-	public setActiveMap(mapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		return this._manager.setActiveMap(mapName, position, layer).then((data) => {
-			return data;
-		});
+	get setActiveMap() {
+		return this._manager.setActiveMap.bind(this._manager);
 	}
 
 	public get activeMapName(): string {

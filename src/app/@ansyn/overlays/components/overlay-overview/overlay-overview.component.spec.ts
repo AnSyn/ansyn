@@ -3,19 +3,24 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { OverlayOverviewComponent } from './overlay-overview.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	ClearHoveredOverlay,
-	LoadOverlaysSuccessAction,
-	SetHoveredOverlay
+	IOverlaysState,
+	MarkUpClass,
+	OverlayReducer,
+	overlaysFeatureKey
+} from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	LoadOverlaysSuccessAction, SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { By } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
 	let fixture: ComponentFixture<OverlayOverviewComponent>;
 	let store: Store<any>;
+	let document: Document;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -28,8 +33,9 @@ describe('OverlayOverviewComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<IOverlaysState>) => {
+	beforeEach(inject([Store, DOCUMENT], (_store: Store<IOverlaysState>, _document: Document) => {
 		store = _store;
+		document = _document;
 	}));
 
 	beforeEach(() => {
@@ -53,42 +59,52 @@ describe('OverlayOverviewComponent', () => {
 			azimuth: 100,
 			isGeoRegistered: true
 		}];
+		let neededElement: Element;
+
+		beforeAll(() => {
+			neededElement = document.createElement("CIRCLE");
+			neededElement.id = `dropId-${overlayId}`;
+			document.body.appendChild(neededElement);
+		});
 		it('should hide me by default', () => {
 			expect(classExists('show')).toBeFalsy();
 		});
 		it('should show or hide me according to store', () => {
 			store.dispatch(new LoadOverlaysSuccessAction(overlays));
-			store.dispatch(new SetHoveredOverlay({ overlayId: overlayId }));
+			store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [overlayId] } }));
 			fixture.detectChanges();
 			expect(classExists('show')).toBeTruthy();
-			store.dispatch(new ClearHoveredOverlay());
+			store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 			fixture.detectChanges();
 			expect(classExists('show')).toBeFalsy();
+		});
+		afterAll(() => {
+			document.body.removeChild(neededElement);
 		});
 	});
 
 	describe('on double click', () => {
-		let image: any;
+		let div: any;
 		beforeEach(() => {
-			image = fixture.debugElement.query(By.css('img'));
+			div = fixture.debugElement.query(By.css('.overlay-overview'));
 		});
-		it('image should exist', () => {
-			expect(image).toBeDefined();
+		it('Div should exist', () => {
+			expect(div).toBeDefined();
 		});
 		it('should call store.dispatch when double clicking on the image', () => {
 			spyOn(component.store$, 'dispatch');
-			image.triggerEventHandler('dblclick', {});
+			div.triggerEventHandler('dblclick', {});
 			fixture.detectChanges();
 			expect(component.store$.dispatch).toHaveBeenCalled();
 		});
 	});
 
 	describe('on mouse leave', () => {
-		it('should call store.dispatch twice on mouse leave event', () => {
-			let calls = spyOn(component.store$, 'dispatch').calls;
+		it('should call store.dispatch on mouse leave event', () => {
+			let spy = spyOn(component.store$, 'dispatch');
 			fixture.debugElement.triggerEventHandler('mouseleave', {});
 			fixture.detectChanges();
-			expect(calls.count()).toEqual(2);
+			expect(spy).toHaveBeenCalled();
 		});
 	});
 });

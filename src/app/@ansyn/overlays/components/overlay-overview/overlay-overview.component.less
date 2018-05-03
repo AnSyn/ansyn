@@ -8,6 +8,7 @@
 	z-index: @z-index-overlay-overview;
 	font-size: 12px;
 	min-width: 250px;
+	user-select: none;
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
@@ -34,7 +35,7 @@
 		opacity: 1;
 
 		.transparent {
-			// This will be the gap between this popup and the drop below it
+			// This will be the visible gap between this popup and the drop below it
 			height: 20px;
 		}
 	}
@@ -42,7 +43,6 @@
 
 img {
 	height: 150px;
-	cursor: pointer;
 }
 
 footer {

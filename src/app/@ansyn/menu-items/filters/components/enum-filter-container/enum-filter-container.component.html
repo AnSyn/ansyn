@@ -1,4 +1,4 @@
-<div class="enum-fields-enumerator" *ngFor="let enumMetadata of metadata && metadata.enumsFields | mapIterator | sort | ShowMorePipe ">
+<div class="enum-fields-enumerator" *ngFor="let enumMetadata of metadata && metadata.enumsFields | mapIterator | sort | showMore:isLongFiltersList ">
 
 	<div class="left-side">
 		<div class="checkbox">

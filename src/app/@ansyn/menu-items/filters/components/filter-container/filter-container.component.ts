@@ -43,11 +43,9 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	public show = true;
 	public isLongFiltersList = false;
-	public isGotSmallListFromProvider = true;
 	public showOnlyFavorite = false;
+	public isGotSmallListFromProvider = true;
 	public metadataFromState: FilterMetadata;
-	public shortMetadataFromState: FilterMetadata;
-	public shownFilters: FilterMetadata;
 	subscribers = [];
 
 	@Input() filter;
@@ -62,22 +60,17 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		})
 		.do(filters => {
 			this.metadataFromState = cloneDeep(filters.get(this.filter));
-			if (this.filter.type === FilterType.Enum) {
-				if (Boolean(this.metadataFromState)) {
-					this.isGotSmallListFromProvider = (<EnumFilterMetadata>this.metadataFromState).enumsFields.size <= this.config.shortFilterListLength;
-					(<EnumFilterMetadata>this.metadataFromState).enumsFields.sort((a, b) => b[1].count - a[1].count);
-					this.shortMetadataFromState = cloneDeep(this.metadataFromState);
-					(<EnumFilterMetadata>this.shortMetadataFromState).enumsFields.trimMap(this.config.shortFilterListLength);
-					this.shownFilters = cloneDeep(this.shortMetadataFromState);
-				}
-			}
+		})
+		.filter(() => this.filter.type === FilterType.Enum && Boolean(this.metadataFromState))
+		.do(() => {
+			this.isGotSmallListFromProvider = (<EnumFilterMetadata>this.metadataFromState).enumsFields.size <= this.config.shortFilterListLength;
 		});
 
 	showOnlyFavorites$: Observable<any> = this.store.select(filtersStateSelector)
 		.pluck<IFiltersState, boolean>('showOnlyFavorites')
 		.distinctUntilChanged()
 		.do((showOnlyFavorites) => {
-			this.showOnlyFavorite = showOnlyFavorites
+			this.showOnlyFavorite = showOnlyFavorites;
 			this.isLongFiltersList = false;
 		});
 
@@ -111,10 +104,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleListLength(): void {
-		if (this.filter.type === FilterType.Enum) {
-			this.isLongFiltersList = !this.isLongFiltersList;
-			this.shownFilters = this.isLongFiltersList ? this.metadataFromState : this.shortMetadataFromState;
-		}
+	toggleShowMoreLess(): void {
+		this.isLongFiltersList = !this.isLongFiltersList;
 	}
 }

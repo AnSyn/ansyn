@@ -6,13 +6,13 @@ import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
-export const OpenLayerESRI_4326SourceProviderMapType = OpenlayersMapName;
 export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 
 @Injectable()
 export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
-	public mapType = OpenLayerESRI_4326SourceProviderMapType;
+	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerESRI_4326SourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

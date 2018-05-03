@@ -6,13 +6,13 @@ import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
-export const OpenLayerBingSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerBingSourceProviderSourceType = 'BING';
 
 @Injectable()
 export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
-	public mapType = OpenLayerBingSourceProviderMapType;
+	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerBingSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

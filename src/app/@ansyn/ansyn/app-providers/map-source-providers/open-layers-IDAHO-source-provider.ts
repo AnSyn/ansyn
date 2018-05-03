@@ -10,15 +10,15 @@ import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
-export const OpenLayerIDAHOSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
 @Injectable()
 export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 
-	public mapType = OpenLayerIDAHOSourceProviderMapType;
+	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

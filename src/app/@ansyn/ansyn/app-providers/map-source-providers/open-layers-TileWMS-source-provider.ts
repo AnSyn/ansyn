@@ -6,14 +6,14 @@ import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
-export const OpenLayerTileWMSSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 
 
 @Injectable()
 export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
-	public mapType = OpenLayerTileWMSSourceProviderMapType;
+	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

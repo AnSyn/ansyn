@@ -10,16 +10,13 @@ import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
-export const OpenLayerPlanetSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 
 @Injectable()
 export class OpenLayerPlanetSourceProvider extends BaseMapSourceProvider {
-
-
-
-	public mapType = OpenLayerPlanetSourceProviderMapType;
+	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerPlanetSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

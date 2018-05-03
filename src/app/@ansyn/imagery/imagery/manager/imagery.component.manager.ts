@@ -87,16 +87,11 @@ export class ImageryComponentManager {
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
-		let relevantMapConfig: IMapConfig = null;
-		this.config.geoMapsInitialMapSource.forEach((mapConfig) => {
-			if (mapConfig.mapType === mapType) {
-				relevantMapConfig = mapConfig;
-			}
-		});
+		const relevantMapConfig: IMapConfig = this.config.geoMapsInitialMapSource.find((mapConfig) => mapConfig.mapType === mapType);
 		if (!relevantMapConfig) {
 			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
 		}
-		const sourceProvider = this._baseSourceProviders.find((item) => item.mapType === relevantMapConfig.mapType && item.sourceType === relevantMapConfig.mapSource);
+		const sourceProvider = this._baseSourceProviders.find((item) => item.mapTypes.includes(relevantMapConfig.mapType) && item.sourceType === relevantMapConfig.mapSource);
 		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata);
 	}
 

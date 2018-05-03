@@ -5,7 +5,7 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
-	abstract mapType: string;
+	abstract mapTypes: string[];
 
 	abstract sourceType: string;
 

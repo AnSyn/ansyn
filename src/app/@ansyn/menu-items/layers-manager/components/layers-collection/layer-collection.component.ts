@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -33,20 +33,15 @@ import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers
 	]
 })
 
-export class LayerCollectionComponent implements OnInit {
+export class LayerCollectionComponent {
 	@Input() collection: LayersContainer;
 	public show = true;
 
 	constructor(public store: Store<ILayerState>) {
 	}
 
-	ngOnInit() {
-
-	}
-
 	public onCheckboxClicked(event, layer: Layer): void {
-		layer.isChecked = event.target.checked;
-		if (layer.isChecked) {
+		if (event.target.checked) {
 			this.store.dispatch(new SelectLayerAction(layer));
 		} else {
 			this.store.dispatch(new UnselectLayerAction(layer));

@@ -11,6 +11,7 @@ import {
 	SetOverlaysCriteriaAction
 } from '@ansyn/core/actions/core.actions';
 import {
+	BeginLayerCollectionLoadAction,
 	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
@@ -125,6 +126,7 @@ export class SelectCaseAppEffects {
 			new SetOverlaysCriteriaAction({ time, region }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
+			new BeginLayerCollectionLoadAction(),
 			new SetAnnotationsLayer(annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs })

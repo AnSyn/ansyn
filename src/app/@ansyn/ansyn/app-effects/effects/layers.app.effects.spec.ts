@@ -69,14 +69,4 @@ describe('LayersAppEffects', () => {
 		layersAppEffects = _layersAppEffects;
 	}));
 
-
-	it('selectCase$', () => {
-		let selectedCase = <any> { id: 'id' };
-		actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
-		const expectedResults = cold('--b--', {
-			b: new BeginLayerCollectionLoadAction()
-		});
-		expect(layersAppEffects.selectCase$).toBeObservable(expectedResults);
-	});
-
 });

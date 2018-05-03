@@ -6,6 +6,7 @@ import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/sel
 
 import { cold, hot } from 'jasmine-marbles';
 import {
+	BeginLayerCollectionLoadAction,
 	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
@@ -119,12 +120,13 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefgh)--', {
+			const expectedResult = cold('--(abcdeifgh)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
+				i: new BeginLayerCollectionLoadAction(),
 				f: new SetAnnotationsLayer(layers.annotationsLayer),
 				g: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
 				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs })

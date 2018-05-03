@@ -1,28 +1,20 @@
 <div class="container">
+
 	<div class="title-row">
-		<span class="title">Annotations</span>
-	</div>
-	<div class="private-layers">
-		<ansyn-checkbox
-			id="annotation-layer"
-			[checked]="annotationLayerChecked"
-			text="Annotations"
-			(inputClicked)="annotationLayerClick()"></ansyn-checkbox>
-	</div>
-	<div class="title-row">
-		<span class="title">{{ type | async }} Layers</span>
-		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledButton"
+		<span class="title">{{ collection.type }} Layers</span>
+		<button [@rotateArrow]="show" #downArrow class="down-arrow"
 				(click)="show = !show">
 		</button>
 	</div>
-	<div class="layers" *ngFor="let layer of source$ | async" [@layersTrigger]="show">
+
+	<div class="layers" *ngFor="let layer of collection.dataLayers" [@layersTrigger]="show">
 		<div class="left-side">
 			<div class="checkbox">
 				<ansyn-checkbox
 					id="checkbox{{ layer.id }}"
 					class="regular-checkbox"
 					(change)="onCheckboxClicked($event,layer)"
-					[checked]="layer.isChecked ? 'checked' : ''"></ansyn-checkbox>
+					[checked]="layer.isChecked"></ansyn-checkbox>
 				<label for="checkbox{{ layer.id }}"></label>
 			</div>
 			<div class="layer-row">
@@ -32,4 +24,5 @@
 			</div>
 		</div>
 	</div>
+
 </div>

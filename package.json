@@ -41,7 +41,6 @@
 		"@ngrx/store-devtools": "5.1.0",
 		"@turf/turf": "5.1.6",
 		"@types/openlayers": "^4.6.2",
-		"angular-tree-component": "6.1.0",
 		"angular2-uuid": "1.1.1",
 		"core-js": "^2.4.1",
 		"crypto-js": "3.1.9-1",

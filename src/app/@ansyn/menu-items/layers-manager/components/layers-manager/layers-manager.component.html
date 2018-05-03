@@ -1,3 +1,18 @@
 <div class="collection">
-	<ansyn-layer-collection [source$]="nodes$" (nodeActivationChanged)="onNodeActivationChanged($event)"></ansyn-layer-collection>
+
+	<div class="title-row">
+		<span class="title">Annotations</span>
+	</div>
+
+	<div class="private-layers">
+		<ansyn-checkbox
+			id="annotation-layer"
+			[checked]="annotationLayerChecked"
+			text="Annotations"
+			(inputClicked)="annotationLayerClick()"></ansyn-checkbox>
+	</div>
+
+	<ng-container *ngFor="let collection of LayersContainers$ | async">
+		<ansyn-layer-collection [collection]="collection"></ansyn-layer-collection>
+	</ng-container>
 </div>

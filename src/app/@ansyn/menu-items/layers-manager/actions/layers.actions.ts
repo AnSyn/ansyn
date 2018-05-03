@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
-import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export const LayersActionTypes = {
-	BEGIN_LAYER_TREE_LOAD: 'BEGIN_LAYER_TREE_LOAD',
-	LAYER_TREE_LOADED: 'LAYER_TREE_LOADED',
+	BEGIN_LAYER_COLLECTION_LOAD: 'BEGIN_LAYER_COLLECTION_LOAD',
+	LAYER_COLLECTION_LOADED: 'LAYER_COLLECTION_LOADED',
 	SELECT_LAYER: 'SELECT_LAYER',
 	UNSELECT_LAYER: 'UNSELECT_LAYER',
 	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
@@ -16,8 +16,8 @@ export const LayersActionTypes = {
 
 export type LayersActions =
 	| ToggleDisplayAnnotationsLayer
-	| BeginLayerTreeLoadAction
-	| LayerTreeLoadedAction
+	| BeginLayerCollectionLoadAction
+	| LayerCollectionLoadedAction
 	| SelectLayerAction
 	| UnselectLayerAction
 	| ErrorLoadingLayersAction;
@@ -36,16 +36,14 @@ export class SetAnnotationsLayer implements Action {
 	}
 }
 
-export class BeginLayerTreeLoadAction implements Action {
-	type = LayersActionTypes.BEGIN_LAYER_TREE_LOAD;
+export class BeginLayerCollectionLoadAction implements Action {
+	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;
 }
 
-export class LayerTreeLoadedAction implements Action {
-	type = LayersActionTypes.LAYER_TREE_LOADED;
+export class LayerCollectionLoadedAction implements Action {
+	type = LayersActionTypes.LAYER_COLLECTION_LOADED;
 
-	constructor(public payload: {
-		layersContainer: LayersContainer
-	}) {
+	constructor(public payload: LayersContainer[] ) {
 	}
 }
 

@@ -1,12 +1,9 @@
-import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { Observable } from 'rxjs/Observable';
-import { NodeActivationChangedEventArgs } from '@ansyn/menu-items/layers-manager/event-args/node-activation-changed-event-args';
-import { Layer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { LayerType } from '@ansyn/menu-items/layers-manager/models/layer-type';
+import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 @Component({
 	selector: 'ansyn-layer-collection',
@@ -37,36 +34,22 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 
 export class LayerCollectionComponent implements OnInit {
-	@Input() source$: Observable<Layer[]>;
-	@Output() public nodeActivationChanged = new EventEmitter<NodeActivationChangedEventArgs>();
-	public type: Observable<LayerType> = this.store.select(layersStateSelector).map((state: ILayerState) => state.layersContainer.type);
+	@Input() collection: LayersContainer;
 	public show = true;
-
-	public annotationLayerChecked;
 
 	constructor(public store: Store<ILayerState>) {
 	}
 
-	get disabledButton() {
-		return !this.source$ && !this.type;
-	}
-
 	ngOnInit() {
-		this.store.select<ILayerState>(layersStateSelector)
-			.pluck<ILayerState, boolean>('displayAnnotationsLayer')
-			.subscribe(result => {
-				this.annotationLayerChecked = result;
-			});
-	}
 
-	annotationLayerClick() {
-		this.store.dispatch(new ToggleDisplayAnnotationsLayer(!this.annotationLayerChecked));
 	}
 
 	public onCheckboxClicked(event, layer: Layer): void {
-		let newCheckValue: boolean = !layer.isChecked;
-
-		layer.isChecked = newCheckValue;
-		this.nodeActivationChanged.emit(new NodeActivationChangedEventArgs(layer, newCheckValue));
+		layer.isChecked = event.target.checked;
+		if (layer.isChecked) {
+			this.store.dispatch(new SelectLayerAction(layer));
+		} else {
+			this.store.dispatch(new UnselectLayerAction(layer));
+		}
 	}
 }

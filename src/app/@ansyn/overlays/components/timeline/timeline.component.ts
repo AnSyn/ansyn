@@ -32,9 +32,7 @@ import {
 	OverlaysActionTypes,
 	SetTimelineStateAction,
 	SetMarkUp,
-	RedrawTimelineAction,
-	ClearHoveredOverlay,
-	SetHoveredOverlay
+	RedrawTimelineAction
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { schemeCategory10 } from 'd3-scale';
@@ -189,13 +187,11 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	onMouseOver({ id }: IEventDropsEvent) {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
-		this.store$.dispatch(new SetHoveredOverlay({overlayId: id, drop_x: d3.event.x, drop_y: d3.event.y}));
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
 		if (d3.event.toElement.id !== 'overlay-overview-transparent') {
 			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
-			this.store$.dispatch(new ClearHoveredOverlay());
 		}
 	}
 

@@ -5,7 +5,6 @@ import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.action
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { HoveredOverlayDropData } from '@ansyn/overlays/models/hovered-overlay-data.model';
 
 export interface TimelineRange {
 	start: Date;
@@ -64,7 +63,6 @@ export interface IOverlaysState {
 	timeLineRange: TimelineRange;
 	statusMessage: string;
 	dropsMarkUp: ExtendMap<MarkUpClass, MarkUpData>;
-	hoveredOverlay: HoveredOverlayDropData;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, MarkUpData> = new ExtendMap<MarkUpClass, MarkUpData>();
@@ -83,7 +81,6 @@ export const overlaysInitialState: IOverlaysState = {
 	filteredOverlays: [],
 	statusMessage: null,
 	dropsMarkUp: initDropsMarkUp,
-	hoveredOverlay: null
 };
 
 export const overlaysFeatureKey = 'overlays';
@@ -234,18 +231,6 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				...state,
 				dropsMarkUp
 
-			};
-
-		case OverlaysActionTypes.SET_HOVERED_OVERLAY:
-			return {
-				...state,
-				hoveredOverlay: action.payload
-			};
-
-		case OverlaysActionTypes.CLEAR_HOVERED_OVERLAY:
-			return {
-				...state,
-				hoveredOverlay: null
 			};
 
 		default :

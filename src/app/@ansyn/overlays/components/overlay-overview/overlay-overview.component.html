@@ -1,8 +1,6 @@
-<div class="overlay-overview">
+<div class="overlay-overview" (dblclick)="onDblClick()">
 	<main>
-		<img 	[src]="overlay?.thumbnailUrl || ''"
-				(dblclick)="onDblClick()"
-		>
+		<img [src]="overlay?.thumbnailUrl || ''">
 	</main>
 	<footer>
 		<div>{{overlay?.sensorName}}</div>

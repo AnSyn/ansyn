@@ -36,6 +36,7 @@ import {
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { schemeCategory10 } from 'd3-scale';
+import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -190,7 +191,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
-		if (d3.event.toElement.id !== 'overlay-overview-transparent') {
+		if (d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID) {
 			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}

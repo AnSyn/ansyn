@@ -38,10 +38,10 @@ export class LayersEffects {
 			return this.dataLayersService.getAllLayersInATree();
 		})
 		.withLatestFrom(this.store.select(layersStateSelector))
-		.mergeMap(([layersContainer, store]: [LayersContainer, ILayerState]) => {
+		.mergeMap(([layersContainer, layersState]: [LayersContainer, ILayerState]) => {
 			let actionsArray = [];
 
-			store.layersContainer.layerBundle.selectedLayers.forEach((selectedLayer) => {
+			layersState.layersContainer.layerBundle.selectedLayers.forEach((selectedLayer) => {
 				actionsArray.push(new UnselectLayerAction(selectedLayer));
 			});
 

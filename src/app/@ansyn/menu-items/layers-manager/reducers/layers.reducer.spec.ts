@@ -1,17 +1,16 @@
 import {
-	LayerTreeLoadedAction,
+	LayerCollectionLoadedAction,
 	SelectLayerAction,
 	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer,
 	UnselectLayerAction
 } from '../actions/layers.actions';
-import { LayerType } from '../models/layer-type';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
-import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { Layer, LayersContainer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('LayersReducer', () => {
 
-	it('LAYER_TREE_LOADED action should add the new tree to the state', () => {
+	it('LAYER_COLLECTION_LOADED action should add the new tree to the state', () => {
 		let staticLayer: Layer = {
 			url: 'fakeStaticUrl',
 			name: 'staticLayer',
@@ -36,7 +35,7 @@ describe('LayersReducer', () => {
 
 		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
 
-		let action: LayerTreeLoadedAction = new LayerTreeLoadedAction({
+		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction({
 			layersContainer: {
 				type: LayerType.static, layerBundle: { layers: layers, selectedLayers: [staticLayer] }
 			}
@@ -213,16 +212,17 @@ describe('LayersReducer', () => {
 		for (let layersContainer of layersContainers) {
 			layers.concat(layersContainer.layerBundle.layers);
 		}
-		let action: SelectLayerAction = new UnselectLayerAction(staticLayer);
+		let action: UnselectLayerAction = new UnselectLayerAction(staticLayer);
 
 		let result: ILayerState = LayersReducer(<ILayerState>{
-			layersContainer: {
-				type: LayerType.static,
-				layerBundle: { layers: layers, selectedLayers: [staticLayer] }
-			}
+			// layersContainer: {
+			// 	type: LayerType.static,
+			// 	layerBundle: { layers: layers, selectedLayers: [staticLayer] }
+			// }
 		}, action);
 
 		expect(result.layersContainer.layerBundle.layers).toEqual(layers);
+
 		expect(result.layersContainer.layerBundle.selectedLayers).toEqual([]);
 	});
 
@@ -267,12 +267,13 @@ describe('LayersReducer', () => {
 				selectedLayers: []
 			}
 		};
+
 		let layersContainers: LayersContainer[] = [staticLayerContainer, dynamicLayerContainer, complexLayerContainer];
 		let layers: Layer[] = [];
 		for (let layersContainer of layersContainers) {
 			layers.concat(layersContainer.layerBundle.layers);
 		}
-		let action: SelectLayerAction = new UnselectLayerAction(staticLayer);
+		let action: UnselectLayerAction = new UnselectLayerAction(staticLayer);
 
 		let result: ILayerState = LayersReducer(<ILayerState>{
 			layersContainer: {

@@ -5,7 +5,7 @@ import {
 	LayersReducer,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { BeginLayerTreeLoadAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { BeginLayerCollectionLoadAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
@@ -74,7 +74,7 @@ describe('LayersAppEffects', () => {
 		let selectedCase = <any> { id: 'id' };
 		actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
 		const expectedResults = cold('--b--', {
-			b: new BeginLayerTreeLoadAction()
+			b: new BeginLayerCollectionLoadAction()
 		});
 		expect(layersAppEffects.selectCase$).toBeObservable(expectedResults);
 	});

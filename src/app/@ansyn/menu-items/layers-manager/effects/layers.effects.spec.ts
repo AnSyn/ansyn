@@ -4,7 +4,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { DataLayersService, Layer, layersConfig } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
-import { BeginLayerTreeLoadAction, LayerTreeLoadedAction, SelectLayerAction } from '../actions/layers.actions';
+import { BeginLayerCollectionLoadAction, LayerCollectionLoadedAction, SelectLayerAction } from '../actions/layers.actions';
 import { Observable } from 'rxjs/Observable';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -55,7 +55,7 @@ describe('LayersEffects', () => {
 		expect(layersEffects).toBeDefined();
 	});
 
-	it('beginLayerTreeLoad$ should call dataLayersService.getAllLayersInATree with case id from state, and return LayerTreeLoadedAction', () => {
+	it('beginLayerTreeLoad$ should call dataLayersService.getAllLayersInATree with case id from state, and return LayerCollectionLoadedAction', () => {
 		let staticLayer: Layer = {
 			url: 'fakeStaticUrl',
 			name: 'staticLayer',
@@ -85,9 +85,9 @@ describe('LayersEffects', () => {
 			layerBundle: { layers: layers, selectedLayers: [staticLayer] }
 		};
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(loadedTreeBundle));
-		actions = hot('--a--', { a: new BeginLayerTreeLoadAction() });
+		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction() });
 		const expectedResults = cold('--(ab)--', {
-			a: new LayerTreeLoadedAction(<any>{ layersContainer: loadedTreeBundle }),
+			a: new LayerCollectionLoadedAction(<any>{ layersContainer: loadedTreeBundle }),
 			b: new SelectLayerAction(<any>staticLayer)
 		});
 		expect(layersEffects.beginLayerTreeLoad$).toBeObservable(expectedResults);

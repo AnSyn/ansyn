@@ -37,8 +37,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 
-	private projectionSubscription: Subscription = null;
-	private approximateProjectionSubscription: Subscription = null;
 	private _subscriptions: Subscription[] = [];
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
@@ -103,12 +101,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoPoint) => void) {
-		if (this.projectionSubscription) {
-			this.projectionSubscription.unsubscribe();
-		}
 		const point = <GeoPoint> turf.geometry('Point', coordinates);
-		this.projectionSubscription = this.projectionService
-			.projectAccurately(point, this).subscribe(cb);
+		this.projectionService
+			.projectAccurately(point, this)
+			.take(1)
+			.subscribe(cb);
 	}
 
 	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
@@ -153,13 +150,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
-		if (this.projectionSubscription) {
-			this.projectionSubscription.unsubscribe();
-		}
-
-		if (this.approximateProjectionSubscription) {
-			this.approximateProjectionSubscription.unsubscribe();
-		}
 		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		this.setMainLayer(layer);
@@ -402,14 +392,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	// IMap End
 	public dispose() {
-		if (this.projectionSubscription) {
-			this.projectionSubscription.unsubscribe();
-		}
-
-		if (this.approximateProjectionSubscription) {
-			this.approximateProjectionSubscription.unsubscribe();
-		}
-
 		this.removeAllLayers();
 
 		if (this._mapObject) {

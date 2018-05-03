@@ -54,6 +54,7 @@ import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class MapAppEffects {
@@ -301,37 +302,35 @@ export class MapAppEffects {
 		const prevOverlay = mapData.overlay;
 		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
-		const mapType = communicator.ActiveMap.mapType;
-		const sourceLoader = this.baseSourceProviders.find((item) => item.mapType === mapType && item.sourceType === overlay.sourceType);
+
+		const geoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
+		const notGeoRegisteredMap = !overlay.isGeoRegistered && communicator.activeMapName === OpenlayersMapName;
+		const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
+
+		const mapType = newActiveMapName || communicator.ActiveMap.mapType;
+		const sourceLoader = this.baseSourceProviders.find((item) => item.sourceType === overlay.sourceType);
 
 		if (!sourceLoader) {
 			return Observable.of(new SetToastMessageAction({
-				toastText: 'No source loader for ' + mapType + '/' + overlay.sourceType,
+				toastText: 'No source loader for ' + overlay.sourceType,
 				showWarningIcon: true
 			}));
 		}
 
+		const changeActiveMap = mergeMap((layer) => {
+			let observable = Observable.of(true);
+			if (newActiveMapName) {
+				observable = Observable.fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, layer));
+			}
+			return observable.map(() => layer);
+		});
+
+		const extent = (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
+		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
+		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
+
 		return Observable.fromPromise(sourceLoader.createAsync(overlay))
-			.switchMap(layer => {
-				let observable;
-				if (overlay.isGeoRegistered) {
-					if (communicator.activeMapName === DisabledOpenLayersMapName) {
-						observable = Observable.fromPromise(communicator.setActiveMap(OpenlayersMapName, mapData.position, layer));
-					}
-					if (intersection < this.config.overlayCoverage) {
-						observable = communicator.resetView(layer, mapData.position, extentFromGeojson(overlay.footprint));
-					} else {
-						observable = communicator.resetView(layer, mapData.position);
-					}
-				} else {
-					if (communicator.activeMapName !== DisabledOpenLayersMapName) {
-						observable = Observable.fromPromise(communicator.setActiveMap(DisabledOpenLayersMapName, mapData.position, layer));
-					} else {
-						observable = communicator.resetView(layer, mapData.position);
-					}
-				}
-				return observable.map(() => new DisplayOverlaySuccessAction(payload));
-			})
+			.pipe(changeActiveMap, resetView, displaySuccess)
 			.catch(() => Observable.from([
 				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
 				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })

@@ -14,7 +14,7 @@ export class SortPipe implements PipeTransform {
 
 	transform(array: Array<KeyVal>, args?: any[]): Array<KeyVal> {
 		array.sort((a: KeyVal, b: KeyVal) => {
-			return b.value.count - a.value.count
+			return b.value.count - a.value.count;
 		});
 		return array;
 	}

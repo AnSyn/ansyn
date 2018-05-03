@@ -6,14 +6,14 @@ import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
-export const OpenLayerOSMSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
 
 @Injectable()
 export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
-	public mapType = OpenLayerOSMSourceProviderMapType;
+	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerOSMSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

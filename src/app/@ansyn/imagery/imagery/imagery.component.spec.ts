@@ -10,7 +10,7 @@ import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	mapType = 'mapType1';
+	mapTypes = ['mapType1'];
 	sourceType = 'sourceType1';
 
 	create(metaData: any): any {

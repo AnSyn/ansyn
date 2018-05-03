@@ -17,19 +17,6 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 export class LayersAppEffects {
 	/**
 	 * @type Effect
-	 * @name selectCase$
-	 * @ofType SelectCaseAction
-	 * @filter The selected case is not empty
-	 * @action ToggleDisplayAnnotationsLayer | BeginLayerCollectionLoadAction | SetAnnotationsLayer
-	 */
-	@Effect()
-	selectCase$: Observable<ToggleDisplayAnnotationsLayer | BeginLayerCollectionLoadAction | SetAnnotationsLayer> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(({ payload }: SelectCaseAction) => Boolean(payload))
-		.map(() => new BeginLayerCollectionLoadAction());
-
-	/**
-	 * @type Effect
 	 * @name renderMaps$,
 	 * @ofType SelectLayerAction, UnselectLayerAction
 	 * @action ContainerChangedTriggerAction

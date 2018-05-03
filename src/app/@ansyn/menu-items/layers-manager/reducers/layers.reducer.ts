@@ -2,7 +2,7 @@ import { ILayerState } from './layers.reducer';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
-import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export interface ILayerState {
 	layersContainers: LayersContainer[];
@@ -26,12 +26,19 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			return { ...state, layersContainers: action.payload };
 
+		case LayersActionTypes.SELECT_LAYER:
+			action.payload.isChecked = true;
+			return { ...state, layersContainers: [ ...state.layersContainers ] };
+
+		case LayersActionTypes.UNSELECT_LAYER:
+			action.payload.isChecked = false;
+			return { ...state, layersContainers: [ ...state.layersContainers ] };
+
 		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:
 			return { ...state, displayAnnotationsLayer: action.payload };
 
 		case LayersActionTypes.ANNOTATIONS.SET_LAYER:
 			return { ...state, annotationsLayer: action.payload };
-
 
 		case LayersActionTypes.ERROR_LOADING_LAYERS:
 			return state;

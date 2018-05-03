@@ -13,7 +13,6 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { LayersContainer } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -35,7 +34,7 @@ describe('LayersEffects', () => {
 				},
 				{
 					provide: ErrorHandlerService,
-					useValue: {httpErrorHandle : (some) => null}
+					useValue: { httpErrorHandle: (some) => null }
 				},
 				provideMockActions(() => actions),
 				LayersEffects,
@@ -81,11 +80,14 @@ describe('LayersEffects', () => {
 
 		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
 
-		let loadedTreeBundle = { layers: layers, selectedLayers: [staticLayer] };
+		let loadedTreeBundle = {
+			type: LayerType.static,
+			layerBundle: { layers: layers, selectedLayers: [staticLayer] }
+		};
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(loadedTreeBundle));
 		actions = hot('--a--', { a: new BeginLayerTreeLoadAction() });
 		const expectedResults = cold('--(ab)--', {
-			a: new LayerTreeLoadedAction(<any>loadedTreeBundle),
+			a: new LayerTreeLoadedAction(<any>{ layersContainer: loadedTreeBundle }),
 			b: new SelectLayerAction(<any>staticLayer)
 		});
 		expect(layersEffects.beginLayerTreeLoad$).toBeObservable(expectedResults);

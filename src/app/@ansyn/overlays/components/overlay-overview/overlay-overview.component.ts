@@ -16,6 +16,7 @@ import {
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -27,6 +28,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public overlay: any;
 	public formattedTime: string;
 	public overlayId: string;
+
+	public get const() {
+		return overlayOverviewComponentConstants
+	}
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
 	@HostBinding('style.left.px') left = 0;

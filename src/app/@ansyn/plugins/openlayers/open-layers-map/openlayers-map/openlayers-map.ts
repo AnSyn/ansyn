@@ -94,14 +94,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	public positionToPoint(coordinates: ol.Coordinate, cb: (p: GeoPoint) => void) {
-		const point = <GeoPoint> turf.geometry('Point', coordinates);
-		this.projectionService
-			.projectAccurately(point, this)
-			.take(1)
-			.subscribe(cb);
-	}
-
 	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
 		this._mapLayers = [...layers];
 		const controls = [

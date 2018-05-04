@@ -215,12 +215,6 @@ export class SetIsLoadingAcion implements Action {
 	}
 }
 
-export class ImageryPluginsInitialized implements Action {
-	readonly type = MapActionTypes.IMAGERY_PLUGINS_INITIALIZED;
-	constructor(payload: string) {
-	}
-}
-
 export class ClickOutsideMap implements Action  {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
 	constructor(public payload: any) {

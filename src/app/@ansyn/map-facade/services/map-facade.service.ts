@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
-	ContextMenuShowAction,
 	MapInstanceChangedAction,
 	PositionChangedAction,
-	ImageryPluginsInitialized
 } from '../actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -46,7 +44,6 @@ export class MapFacadeService {
 		communicatorSubscribers.push(
 			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
-			communicator.imageryPluginsInitialized.subscribe(this.imageryPluginsInitialized.bind(this))
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}
@@ -63,9 +60,5 @@ export class MapFacadeService {
 	positionChanged($event: { id: string, position: CaseMapPosition }) {
 		const mapInstance = <CaseMapState> MapFacadeService.mapById(this.mapsList, $event.id);
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
-	}
-
-	imageryPluginsInitialized(event) {
-		this.store.dispatch(new ImageryPluginsInitialized(event));
 	}
 }

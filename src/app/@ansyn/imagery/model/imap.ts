@@ -5,10 +5,8 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { GeoJsonObject, Point } from 'geojson';
 
 export abstract class IMap<T = any> {
-	centerChanged: EventEmitter<Point>;
 	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
-	singleClick: EventEmitter<any>;
 	mapType: string;
 	mapObject: T;
 	projectionService: ProjectionService;
@@ -55,10 +53,6 @@ export abstract class IMap<T = any> {
 	abstract addGeojsonLayer(data: GeoJsonObject);
 
 	abstract dispose(): void;
-
-	abstract addSingleClickEvent();
-
-	abstract removeSingleClickEvent();
 
 	abstract addLayerIfNotExist(layer: any);
 }

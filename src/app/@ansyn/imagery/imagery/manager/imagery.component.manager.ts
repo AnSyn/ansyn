@@ -22,9 +22,7 @@ export class ImageryComponentManager {
 
 	private _activeMap: IMap;
 	private _subscriptions = [];
-	public centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged> = new EventEmitter<MapInstanceChanged>();
 	public activeMapName: string;
 
@@ -70,7 +68,7 @@ export class ImageryComponentManager {
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this._activeMap) {
-			return this._activeMap.resetView(layer, position, extent).switchMap(() => this.resetPlugins());
+			return this._activeMap.resetView(layer, position, extent).mergeMap(() => this.resetPlugins());
 		}
 
 		return Observable.of(true);
@@ -153,17 +151,8 @@ export class ImageryComponentManager {
 	}
 
 	private registerToActiveMapEvents() {
-
-		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: Point) => {
-			this.centerChanged.emit(center);
-		}));
-
 		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit(position);
-		}));
-
-		this._subscriptions.push(this._activeMap.singleClick.subscribe((event: Array<any>) => {
-			this.singleClick.emit(event);
 		}));
 	}
 

@@ -33,17 +33,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private showGroups = new Map<string, boolean>();
 	public mapType: string = OpenlayersMapName;
 	private _mapObject: OLMap;
-	public centerChanged: EventEmitter<GeoPoint> = new EventEmitter<GeoPoint>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	public singleClick: EventEmitter<any> = new EventEmitter<any>();
 
 	private _subscriptions: Subscription[] = [];
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
-
-	private _flags = {
-		singleClickHandler: null
-	};
 	private _mapLayers = [];
 
 	static addGroupLayer(layer: any, groupName: string) {
@@ -128,10 +122,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	initListeners() {
 		this._moveEndListener = () => {
 			this._subscriptions.push(
-				this.getCenter().take(1).subscribe(mapCenter => {
-					this.centerChanged.emit(mapCenter);
-				}),
-
 				this.getPosition().take(1).subscribe(position => {
 					if (position) {
 						this.positionChanged.emit(position);
@@ -375,19 +365,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 			})
 		});
 		this.mapObject.addLayer(layer);
-	}
-
-	// *****-- click events --********
-	public addSingleClickEvent() {
-		this._flags.singleClickHandler = this.mapObject.on('singleclick', this.singleClickListener, this);
-	}
-
-	public removeSingleClickEvent() {
-		this.mapObject.un('singleclick', this.singleClickListener, this);
-	}
-
-	public singleClickListener(e) {
-		this.positionToPoint(e.coordinate, p => this.singleClick.emit({ lonLat: p.coordinates }));
 	}
 
 	// IMap End

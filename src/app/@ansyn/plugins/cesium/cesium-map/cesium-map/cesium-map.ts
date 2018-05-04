@@ -9,10 +9,8 @@ export const CesiumMapName = 'cesium';
 export class CesiumMap extends IMap {
 	static groupLayers = new Map<string, any>();
 
-	centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any>;
-	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	mapType: string = CesiumMapName;
 	mapObject: any;
@@ -85,10 +83,6 @@ export class CesiumMap extends IMap {
 		return [];
 	}
 
-	removeSingleClickEvent() {
-
-	}
-
 	addLayerIfNotExist() {
 
 	}
@@ -97,10 +91,6 @@ export class CesiumMap extends IMap {
 	}
 
 	dispose() {
-	}
-
-	addSingleClickEvent() {
-		throw new Error('Method not implemented.');
 	}
 
 }

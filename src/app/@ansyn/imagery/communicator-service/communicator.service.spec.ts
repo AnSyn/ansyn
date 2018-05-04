@@ -9,10 +9,8 @@ describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	const componentManager1: ImageryComponentManager = <any>{
 		id: '1',
-		centerChanged: new EventEmitter<Point>(),
 		positionChanged: new EventEmitter<{ id: string, position: CaseMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
-		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
 		mapInstanceChanged: new EventEmitter<MapInstanceChanged>(),
@@ -21,10 +19,8 @@ describe('ImageryCommunicatorService', () => {
 
 	const componentManager2: ImageryComponentManager = <any>{
 		id: '2',
-		centerChanged: new EventEmitter<Point>(),
 		positionChanged: new EventEmitter<{ id: string, position: CaseMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
-		singleClick: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
 		mapInstanceChanged: new EventEmitter<MapInstanceChanged>(),

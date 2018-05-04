@@ -16,10 +16,8 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 @Injectable()
 export class OpenLayersDisabledMap extends IMap<Map> {
-	centerChanged: EventEmitter<Point> = new EventEmitter<Point>();
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any> = new EventEmitter<any>();
-	singleClick: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	mapType: string = DisabledOpenLayersMapName;
 	mapObject: Map;
@@ -136,19 +134,11 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		return new Observable();
 	}
 
-	removeSingleClickEvent() {
-	}
-
-
 	getRotation(): number {
 		return NaN;
 	}
 
 	dispose() {
-
-	}
-
-	addSingleClickEvent() {
 
 	}
 }

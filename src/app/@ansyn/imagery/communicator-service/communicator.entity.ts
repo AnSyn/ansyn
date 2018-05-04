@@ -10,14 +10,10 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 
 export class CommunicatorEntity {
-	private _managerSubscriptions;
+	private _managerSubscriptions = [];
 
-
-	public positionChanged: EventEmitter<{ id: string, position: CaseMapPosition }>;
-	public centerChanged: EventEmitter<Point>;
-	public singleClick: EventEmitter<any>;
-	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
-	public imageryPluginsInitialized = new EventEmitter<string>();
+	public positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
+	public mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 	private _virtualNorth = 0;
 
 	get imageryCommunicatorService(): ImageryCommunicatorService {
@@ -33,31 +29,16 @@ export class CommunicatorEntity {
 	}
 
 	constructor(public _manager: ImageryComponentManager) {
-		this.centerChanged = new EventEmitter<Point>();
-		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
-		this.singleClick = new EventEmitter<any>();
-		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
-
-		this._managerSubscriptions = [];
 		this.registerToManagerEvents();
 	}
 
 	initPlugins() {
 		this.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
-		this.imageryPluginsInitialized.emit(this.id);
 	}
 
 	private registerToManagerEvents() {
-		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: Point) => {
-			this.centerChanged.emit(center);
-		}));
-
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit({ id: this._manager.id, position });
-		}));
-
-		this._managerSubscriptions.push(this._manager.singleClick.subscribe((event: any) => {
-			this.singleClick.emit(event);
 		}));
 
 		this._managerSubscriptions.push(this._manager.mapInstanceChanged.subscribe((event: any) => {

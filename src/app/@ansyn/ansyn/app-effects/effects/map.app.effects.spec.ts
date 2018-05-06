@@ -56,7 +56,7 @@ import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';

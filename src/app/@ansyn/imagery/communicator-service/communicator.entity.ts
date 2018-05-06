@@ -28,6 +28,10 @@ export class CommunicatorEntity {
 		return <any> this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
 	}
 
+	get getMapSourceProvider() {
+		return this._manager.getMapSourceProvider.bind(this._manager);
+	}
+
 	constructor(public _manager: ImageryComponentManager) {
 		this.registerToManagerEvents();
 	}

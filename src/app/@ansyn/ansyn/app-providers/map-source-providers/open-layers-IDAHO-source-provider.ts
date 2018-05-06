@@ -18,7 +18,7 @@ export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
 
 
-	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
+	public supported =  [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

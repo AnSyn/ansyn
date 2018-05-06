@@ -13,7 +13,7 @@ export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
 @Injectable()
 export class OpenLayerOSMSourceProvider extends BaseMapSourceProvider {
-	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
+	public supported =  [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerOSMSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

@@ -12,7 +12,7 @@ export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 
 @Injectable()
 export class OpenLayerMapBoxSourceProvider extends BaseMapSourceProvider {
-	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
+	public supported =  [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerMapBoxSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

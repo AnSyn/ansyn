@@ -17,7 +17,6 @@ export const OverlaysActionTypes = {
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DISPLAY_OVERLAY_SUCCESS: type('[Overlay] Display Overlay Success'),
 	DISPLAY_OVERLAY_FAILED: type('[Overlay] Display Overlay Failed'),
-	DEMO: type('[Overlay] demo'),
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
 	ADD_OVERLAYS_MARKUPS: type('ADD_OVERLAYS_MARKUPS'),
 	REMOVE_OVERLAYS_MARKUPS: type('REMOVE_OVERLAYS_MARKUPS'),
@@ -136,14 +135,6 @@ export class DisplayOverlayFailedAction implements Action {
 	}
 }
 
-export class DemoAction implements Action {
-	type = OverlaysActionTypes.DEMO;
-
-	constructor(public payload: any) {
-	}
-}
-
-
 export class SetFilteredOverlaysAction implements Action {
 	type = OverlaysActionTypes.SET_FILTERED_OVERLAYS;
 
@@ -194,7 +185,6 @@ export type OverlaysActions
 	| LoadOverlaysSuccessAction
 	| LoadOverlaysFailAction
 	| ClearFilterAction
-	| DemoAction
 	| SetFilteredOverlaysAction
 	| SetOverlaysStatusMessage
 	| AddMarkUp

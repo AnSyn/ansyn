@@ -58,7 +58,6 @@ export interface IOverlaysState {
 	overlays: Map<string, Overlay>;
 	selectedOverlays: string[];
 	specialObjects: Map<string, OverlaySpecialObject>;
-	demo: number;
 	filteredOverlays: string[];
 	timeLineRange: TimelineRange;
 	statusMessage: string;
@@ -76,7 +75,6 @@ export const overlaysInitialState: IOverlaysState = {
 	overlays: new Map(),
 	selectedOverlays: [],
 	specialObjects: new Map<string, OverlaySpecialObject>(),
-	demo: 1,
 	timeLineRange: { start: new Date(), end: new Date() },
 	filteredOverlays: [],
 	statusMessage: null,

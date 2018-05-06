@@ -30,12 +30,12 @@ import {
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, VisualizersConfig]
+	deps: [Store, VisualizersConfig]
 })
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
@@ -43,11 +43,12 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	protected disableCache = true;
 
-	drawOverlaysOnMap$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store.select(overlaysStateSelector), this.store.select(mapStateSelector))
-		.map(([action, overlaysState, { mapsList }]) => [MapFacadeService.mapById(mapsList, this.mapId), overlaysState])
-		.filter(([map]) => Boolean(map))
+	currentMap$ = this.store.select(mapStateSelector)
+		.map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId))
+		.filter(Boolean);
+
+	drawOverlaysOnMap$: Observable<any> = this.currentMap$
+		.withLatestFrom(this.store.select(overlaysStateSelector))
 		.mergeMap(([map, { overlays, filteredOverlays }]: [CaseMapState, IOverlaysState]) => {
 			if (map.data.overlayDisplayMode === 'Polygon') {
 				const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
@@ -67,9 +68,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		.do((markups) => this.markups = markups)
 		.do(this.onMarkupsChange.bind(this));
 
-	constructor(public store: Store<any>,
-				public actions$: Actions,
-				@Inject(VisualizersConfig) config: IVisualizersConfig) {
+	constructor(public store: Store<any>, @Inject(VisualizersConfig) config: IVisualizersConfig) {
 
 		super(config.FootprintPolylineVisualizer);
 

@@ -5,7 +5,7 @@ import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
 export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';

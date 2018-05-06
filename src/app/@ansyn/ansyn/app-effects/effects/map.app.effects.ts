@@ -49,7 +49,7 @@ import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils/calc-extent';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-source-provider.model';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';

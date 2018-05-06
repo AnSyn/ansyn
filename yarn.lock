@@ -6802,9 +6802,9 @@ netmask@~1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/netmask/-/netmask-1.0.6.tgz#20297e89d86f6f6400f250d9f4f6b4c1945fcd35"
 
-new-ansyn-event-drops@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/new-ansyn-event-drops/-/new-ansyn-event-drops-1.0.3.tgz#4d276e2c00038225021a2c59c470e483da1ccd0b"
+new-ansyn-event-drops@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/new-ansyn-event-drops/-/new-ansyn-event-drops-1.0.4.tgz#79bb50e1247487579e1e6f7100464ccf4894ad8d"
   dependencies:
     ts-loader "^4.2.0"
 

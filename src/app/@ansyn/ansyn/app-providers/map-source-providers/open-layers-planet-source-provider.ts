@@ -16,7 +16,7 @@ export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 
 @Injectable()
 export class OpenLayerPlanetSourceProvider extends BaseMapSourceProvider {
-	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
+	public supported =  [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerPlanetSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

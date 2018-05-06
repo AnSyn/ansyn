@@ -5,13 +5,12 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
-	abstract mapTypes: string[];
-
+	abstract supported: string[];
 	abstract sourceType: string;
 
-		constructor(protected store: Store<any>, protected cacheService: CacheService,
-					protected imageryCommunicatorService: ImageryCommunicatorService) {
-		}
+	constructor(protected store: Store<any>, protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+	}
 
 	protected createOrGetFromCache(metaData: any) {
 		const cacheLayers = this.cacheService.getLayerFromCache(metaData);

@@ -12,7 +12,7 @@ export const OpenLayerBingSourceProviderSourceType = 'BING';
 
 @Injectable()
 export class OpenLayerBingSourceProvider extends BaseMapSourceProvider {
-	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
+	public supported =  [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerBingSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

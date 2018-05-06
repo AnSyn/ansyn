@@ -89,8 +89,16 @@ export class ImageryComponentManager {
 		if (!relevantMapConfig) {
 			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
 		}
-		const sourceProvider = this._baseSourceProviders.find((item) => item.mapTypes.includes(relevantMapConfig.mapType) && item.sourceType === relevantMapConfig.mapSource);
+		const sourceProvider = this.getMapSourceProvider({mapType: relevantMapConfig.mapType, sourceType: relevantMapConfig.mapSource});
 		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata);
+	}
+
+	getMapSourceProvider({ mapType, sourceType }): BaseMapSourceProvider {
+		return this._baseSourceProviders.find((baseSourceProvider: BaseMapSourceProvider) => {
+			const source = baseSourceProvider.sourceType === sourceType;
+			const supported = baseSourceProvider.supported.includes(mapType);
+			return source && supported;
+		});
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {

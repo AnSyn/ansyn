@@ -12,7 +12,7 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 
 @Injectable()
 export class OpenLayerESRI4326SourceProvider extends BaseMapSourceProvider {
-	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
+	public supported =  [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerESRI_4326SourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

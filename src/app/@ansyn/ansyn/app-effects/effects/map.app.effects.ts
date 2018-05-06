@@ -308,7 +308,8 @@ export class MapAppEffects {
 		const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 		const mapType = newActiveMapName || communicator.ActiveMap.mapType;
-		const sourceLoader = this.baseSourceProviders.find(({ mapTypes, sourceType }) => mapTypes.includes(mapType) && sourceType === overlay.sourceType);
+		const { sourceType } = overlay;
+		const sourceLoader = communicator.getMapSourceProvider({ mapType, sourceType });
 
 		if (!sourceLoader) {
 			return Observable.of(new SetToastMessageAction({

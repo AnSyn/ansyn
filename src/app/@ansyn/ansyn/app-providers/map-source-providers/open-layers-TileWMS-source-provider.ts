@@ -13,7 +13,7 @@ export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 
 @Injectable()
 export class OpenLayerTileWMSSourceProvider extends BaseMapSourceProvider {
-	public mapTypes = [OpenlayersMapName, DisabledOpenLayersMapName];
+	public supported =  [OpenlayersMapName, DisabledOpenLayersMapName];
 	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
 
 	constructor(protected store: Store<any>, protected cacheService: CacheService,

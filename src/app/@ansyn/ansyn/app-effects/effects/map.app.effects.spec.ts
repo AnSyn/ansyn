@@ -64,7 +64,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	mapTypes = ['mapType1'];
+	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';
 
 	create(metaData: any): any {

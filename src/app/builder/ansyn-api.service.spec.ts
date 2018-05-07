@@ -73,7 +73,7 @@ describe('apiService', () => {
 	});
 
 	it('should go to location', () => {
-		const position = [-117.91516415144629, 33.81021575723675];
+		const position = [-117.89788973855977, 33.77329129691691];
 		spyOn(store, 'dispatch');
 		ansynApi.goToPosition(position);
 		expect(store.dispatch).toHaveBeenCalledWith(new GoToAction(position));

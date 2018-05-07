@@ -37,6 +37,12 @@ export class EnumFilterMetadata implements FilterMetadata {
 		}
 	}
 
+	resetCount(): void {
+		this.enumsFields.forEach((val, key) => {
+			val.count = 0;
+		});
+	}
+
 	initializeFilter(selectedValues: string[]): void {
 		this.enumsFields = new Map<string, { count: number, isChecked: boolean }>();
 		if (selectedValues) {

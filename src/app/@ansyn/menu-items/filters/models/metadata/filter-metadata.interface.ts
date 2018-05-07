@@ -18,6 +18,8 @@ export abstract class FilterMetadata {
 
 	abstract isFiltered(): boolean;
 
+	abstract resetCount(): void;
+
 	abstract showAll(): void;
 }
 

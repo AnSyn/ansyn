@@ -27,6 +27,11 @@ export class BooleanFilterMetadata implements FilterMetadata{
 		this[key].value = value;
 	}
 
+	resetCount(): void {
+		this.trueProperties.count = 0;
+		this.falseProperties.count = 0;
+	}
+
 	selectOnly(key: string): void {
 		this.trueProperties.value = false;
 		this.falseProperties.value = false;

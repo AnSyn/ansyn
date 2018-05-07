@@ -41,7 +41,7 @@
 		{
 			"name": "builder",
 			"root": "src",
-			"outDir": "build/builder/dist",
+			"outDir": "build/buildBundle/dist",
 			"assets": [
 				{
 					"glob": "**/*",

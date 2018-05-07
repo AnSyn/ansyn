@@ -16,11 +16,7 @@ fetch('/assets/config/app.config.json')
 
 		]);
 		const ansynBuilder = new AnsynBuilder('ansynMap', config, (api) => {
-			setTimeout(() => {
-				const position = [-117.89788973855977, 33.77329129691691];
 
-				api.goToPosition(position)
-			}, 7000)
 			},
 			{
 				sourceProviders: [],

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
@@ -32,11 +32,13 @@ const animations: any[] = [
 
 export class OverlaysContainerComponent  {
 
+	@ViewChild('idForBuilder') element: ElementRef;
 	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
 
 	overlaysLoader$: Observable<any> = this.overlaysState$
 		.pluck <IOverlaysState, boolean>('loading')
-		.distinctUntilChanged();
+		.distinctUntilChanged()
+		.do(() => this.element.nativeElement.click())
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}

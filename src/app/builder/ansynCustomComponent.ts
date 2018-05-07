@@ -6,9 +6,12 @@ export class AnsynCustomComponent extends AnsynComponent implements AfterViewIni
 	@ViewChild('idForBuilder') element: ElementRef;
 
 	ngAfterViewInit() {
-		if (this.element) {
-			this.element.nativeElement.click();
-		}
+		setTimeout(() => {
+			if (this.element) {
+				this.element.nativeElement.click();
+			}
+
+		}, 3000);
 
 
 	}

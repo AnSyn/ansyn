@@ -141,10 +141,3 @@ describe('apiService', () => {
 
 
 });
-
-// api.displayOverLay(overlay);
-// api.getShadowMouse((pointerMove$ : EventEmitter<any>) => pointerMove$.subscribe(point => console.log(point)))
-// api.mapPosition$.subscribe(position => console.log(position))
-// setInterval(() => {
-// 	api.setOutSourceMouseShadow(coords[Math.floor(Math.random() * 10)]);
-// }, 1000);

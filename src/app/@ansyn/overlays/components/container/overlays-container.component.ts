@@ -38,7 +38,7 @@ export class OverlaysContainerComponent  {
 	overlaysLoader$: Observable<any> = this.overlaysState$
 		.pluck <IOverlaysState, boolean>('loading')
 		.distinctUntilChanged()
-		.do(() => this.element.nativeElement.click())
+		.do(() => this.element.nativeElement.click());
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}

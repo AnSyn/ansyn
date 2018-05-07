@@ -7,13 +7,8 @@ export const BOOTSTRAP_COMPONENTS_TOKEN = new InjectionToken('bootstrap_componen
 @Injectable()
 export class DynamicsAnsynModule {
 
-	constructor(public api: AnsynApi,
-				private resolver: ComponentFactoryResolver) {
+	constructor(public api: AnsynApi) {
 	}
 
-	// ngDoBootstrap(appRef: ApplicationRef) {
-	// 		const factory = this.resolver.resolveComponentFactory(AnsynComponent);
-	// 		// factory.selector = componentDef.selector;
-	// 		appRef.bootstrap(factory);
-	// }
+
 }

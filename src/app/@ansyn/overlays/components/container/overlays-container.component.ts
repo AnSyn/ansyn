@@ -30,11 +30,7 @@ const animations: any[] = [
 	animations
 })
 
-export class OverlaysContainerComponent implements OnInit, OnDestroy {
-	drops: any[] = [];
-	selectedOverlays: Array<string> = [];
-	subscribers: any = {};
-	loading: boolean;
+export class OverlaysContainerComponent  {
 
 	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
 
@@ -42,27 +38,10 @@ export class OverlaysContainerComponent implements OnInit, OnDestroy {
 		.pluck <IOverlaysState, boolean>('loading')
 		.distinctUntilChanged();
 
-	constructor(protected store$: Store<IOverlaysState>,
-				protected actions$: Actions) {
-	}
-
-	ngOnInit(): void {
-		this.setStoreSubscribers();
+	constructor(protected store$: Store<IOverlaysState>) {
 	}
 
 
-	setStoreSubscribers(): void {
-
-		this.subscribers.overlaysLoader = this.overlaysLoader$.subscribe(loading => {
-			this.loading = loading;
-		});
-
-	}
-
-
-	ngOnDestroy(): void {
-		Object.keys(this.subscribers).forEach((s) => this.subscribers[s].unsubscribe());
-	}
 }
 
 

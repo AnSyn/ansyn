@@ -11,11 +11,15 @@ import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducer
 import { IAppState } from '../app-effects/app.effects.module';
 import { coreStateSelector, ICoreState, WindowLayout } from '@ansyn/core/reducers/core.reducer';
 
-@Component({
+
+export const ansynComponentMeta = {
 	selector: 'ansyn-app',
 	templateUrl: './ansyn.component.html',
 	styleUrls: ['./ansyn.component.less']
-})
+};
+
+
+@Component(ansynComponentMeta)
 
 export class AnsynComponent implements OnInit {
 	selectedCase$: Observable<Case> = this.store$.select(casesStateSelector)

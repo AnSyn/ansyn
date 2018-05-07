@@ -1,20 +1,14 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { DynamicsAnsynModule } from './dynamic-ansyn.module';
-import { NgModule, NgModuleRef } from '@angular/core';
+import { Component, NgModule, NgModuleRef } from '@angular/core';
 import { AnsynApi } from './ansyn-api.service';
-import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
-import { getProviders } from '@ansyn/ansyn/app-providers/index';
-import { RouterModule } from '@angular/router';
+import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { CoreModule, WindowLayout } from '@ansyn/core';
-import { MenuModule } from '@ansyn/menu';
 import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
 import { ansynMenuItems } from '@ansyn/ansyn/ansyn.menu-items';
 import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
-import { MapFacadeModule } from '@ansyn/map-facade';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
-import { ImageryModule } from '@ansyn/imagery';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
@@ -23,11 +17,24 @@ import { FormsModule } from '@angular/forms';
 import { AppEffectsModule } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { AnsynRouterModule } from '@ansyn/router';
-import {
-	AlgorithmsModule, CasesModule, FiltersModule, ImagerySandBoxModule, LayersManagerModule, SettingsModule,
-	ToolsModule
-} from '@ansyn/menu-items';
+import { WindowLayout } from '@ansyn/core/reducers/core.reducer';
+import { CoreModule } from '@ansyn/core/core.module';
+import { CasesModule } from '@ansyn/menu-items/cases/cases.module';
+import { FiltersModule } from '@ansyn/menu-items/filters/filters.module';
+import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
+import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
+import { AlgorithmsModule } from '@ansyn/menu-items/algorithms/algorithms.module';
+import { SettingsModule } from '@ansyn/menu-items/settings/settings.module';
+import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagery-sand-box.module';
+import { MenuModule } from '@ansyn/menu/menu.module';
+import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
+import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { AnsynRouterModule } from '@ansyn/router/router.module';
+import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
+import { BrowserModule } from '@angular/platform-browser';
+import { AnsynCustomComponent } from '@builder/ansynCustomComponent';
+import { ansynComponentMeta } from '@ansyn/ansyn/ansyn/ansyn.component';
+
 
 export function MetaReducer(reducer) {
 	return function (state, action) {
@@ -45,6 +52,7 @@ export interface AnsynBuilderOptions {
 }
 
 export enum AnsynModulesNames {
+	BrowserModule = 'BrowserModule',
 	CommonModule = 'CommonModule',
 	AppProvidersModule = 'AppProvidersModule',
 	OverlaysModule = 'OverlaysModule',
@@ -67,14 +75,16 @@ export enum AnsynModulesNames {
 	ImageryModule = 'ImageryModule',
 	StatusBarModule = 'StatusBarModule',
 	AnsynRouterModule = 'AnsynRouterModule',
-	RouterModule = 'RouterModule'
+	RouterModule = 'RouterModule',
 }
 
 export class AnsynBuilder {
+	static AnsynModulesNames = AnsynModulesNames;
 	moduleRef: NgModuleRef<DynamicsAnsynModule>;
-	appSelector = 'ansyn-app';
+	appSelector = 'ansyn-app2';
 	ansynModulesMap = new Map<AnsynModulesNames, any>([
 		[AnsynModulesNames.CommonModule, CommonModule],
+		[AnsynModulesNames.BrowserModule, BrowserModule],
 		[AnsynModulesNames.AppProvidersModule, AppProvidersModule],
 		[AnsynModulesNames.OverlaysModule, OverlaysModule],
 		[AnsynModulesNames.FormsModule, FormsModule],
@@ -121,7 +131,8 @@ export class AnsynBuilder {
 		if (!elem) {
 			throw new Error('Cant find element with id ' + this.id);
 		}
-		elem.appendChild(document.createElement(this.appSelector));
+		elem.appendChild(document.createElement(this.id));
+		// elem.appendChild(document.createElement(this.appSelector));
 	}
 
 	setImports() {
@@ -143,20 +154,22 @@ export class AnsynBuilder {
 		}
 	}
 
+
 	buildModule(): any {
 		const configProviders = getProviders(this.config);
 		this.setImports();
 		this.setAppProviders();
+		const AnsynCustomComponenet = Component({ ...ansynComponentMeta, selector: this.id })(AnsynCustomComponent);
 		const options: NgModule = {
 			imports: [
 				...Array.from(this.ansynModulesMap.values()),
 				StoreModule.forRoot({}, { metaReducers }),
 				EffectsModule.forRoot([AnsynApi])
 			],
-			providers: [AnsynApi, ...configProviders],
-			declarations: [AnsynComponent],
-			bootstrap: [AnsynComponent],
-			exports: [AnsynComponent]
+			providers: [AnsynApi, { provide: UrlSerializer, useClass: DefaultUrlSerializer }, ...configProviders],
+			declarations: [AnsynCustomComponenet],
+			bootstrap: [AnsynCustomComponenet],
+			exports: [AnsynCustomComponenet]
 		};
 		return NgModule(options)(class AnsynCustom extends DynamicsAnsynModule {
 		});
@@ -172,6 +185,14 @@ export class AnsynBuilder {
 					this.api.changeWindowLayout(this.options.windowLayout);
 				}
 				this.callback(moduleRef.instance.api);
+				setTimeout(() => {
+					const element = document.getElementById(this.id);
+					if (element) {
+						element.click();
+					}
+				}, 4000);
+
 			});
 	}
+
 }

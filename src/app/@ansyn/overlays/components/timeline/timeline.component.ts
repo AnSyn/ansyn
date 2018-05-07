@@ -1,11 +1,5 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	ElementRef,
-	HostListener,
-	Inject,
-	OnDestroy,
-	OnInit,
+	ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit,
 	ViewChild
 } from '@angular/core';
 import { selection } from 'd3';
@@ -14,25 +8,17 @@ import eventDrops from 'new-ansyn-event-drops';
 import { OverlaysService } from '../../services/overlays.service';
 import { OverlayDrop, OverlayLine } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	IOverlaysState,
-	MarkUpClass,
-	MarkUpData,
-	MarkUpTypes,
-	overlaysStateSelector,
+	IOverlaysState, MarkUpClass, MarkUpData, MarkUpTypes, overlaysStateSelector,
 	TimelineRange
 } from '../../reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { select, selectAll } from 'd3-selection';
 import { Observable } from 'rxjs/Observable';
 import { OverlaysEffects } from '@ansyn/overlays/effects/overlays.effects';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import {
-	DisplayOverlayFromStoreAction,
-	OverlaysActionTypes,
-	SetTimelineStateAction,
-	SetMarkUp,
-	RedrawTimelineAction
+	ClearHoveredOverlay, DisplayOverlayFromStoreAction, OverlaysActionTypes, RedrawTimelineAction,
+	SetHoveredOverlay, SetMarkUp, SetTimelineStateAction
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { schemeCategory10 } from 'd3-scale';
@@ -188,6 +174,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	onMouseOver({ id }: IEventDropsEvent) {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
+		this.store$.dispatch(new SetHoveredOverlay({ id: id, x: d3.event.x, y: d3.event.y }));
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
@@ -246,9 +233,11 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	removeOldEventDrops() {
-		const exsitEventDrops = d3.select('.event-drop-chart');
-		if (exsitEventDrops) {
-			exsitEventDrops.remove();
+		if (this.element) {
+			const exsitEventDrops = this.element.select('.event-drop-chart');
+			if (exsitEventDrops) {
+				exsitEventDrops.remove();
+			}
 		}
 	}
 
@@ -278,13 +267,13 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			.data([this.drops])
 			.call(this.chart);
 
-		select('.drops').append('g').classed('textContainer', true);
+		this.element.clone().select('.drops').append('g').classed('textContainer', true);
 	}
 
 	drawMarkup() {
 		if (this.markup && this.element) {
-			const dropsElements = selectAll('.drop');
-			const textContainer = select('.textContainer');
+			const dropsElements = this.element.selectAll('.drop');
+			const textContainer = this.element.select('.textContainer');
 			this.clearMarkUp(dropsElements);
 			this.markup.keys.forEach(className => {
 				const markUpData = this.markup.get(className);
@@ -320,25 +309,33 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	clearMarkUp(dropsElements) {
 		dropsElements.filter('.changedDrops').attr('class', 'drop').style('filter', null);
-		selectAll('.letters').remove();
+		this.element.selectAll('.letters').remove();
 	}
 
 	arrangeDrops(drops, textContainer) {
 		const changeDrops = drops.filter('.changedDrops');
 		if (!changeDrops.empty()) {
-			changeDrops.moveToFront();
+			this.moveToFront(changeDrops);
 			const activeDrops = changeDrops.filter('.' + MarkUpClass.active);
 			if (!activeDrops.empty()) {
-				activeDrops.moveToFront();
+				this.moveToFront(activeDrops);
 			}
 			const favoriteDrops = changeDrops.filter('.' + MarkUpClass.favorites);
 			if (!favoriteDrops.empty()) {
-				favoriteDrops.moveToFront();
+				this.moveToFront(favoriteDrops);
 				favoriteDrops.style('filter', 'url(#highlight)');
 			}
 		}
-		textContainer.moveToFront();
+		this.moveToFront(textContainer);
 	}
 
+	moveToFront(element) {
+		element.each(function () {
+			this.parentNode.appendChild(this);
+		});
+	}
 
 }
+
+
+

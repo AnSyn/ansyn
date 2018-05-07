@@ -1,26 +1,32 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { SetLayoutAction, SetWindowLayout, WindowLayout } from '@ansyn/core/index';
 import { Actions } from '@ngrx/effects';
-import { LoadDefaultCaseAction } from '@ansyn/menu-items';
-import { VisualizersAppEffects } from '@ansyn/ansyn';
-import { Overlay } from '@ansyn/core';
-import { DisplayOverlayAction } from '@ansyn/overlays';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
 import { Subscription } from 'rxjs/Subscription';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs/Observable';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
-import { CoordinatesSystem } from '@ansyn/core/models';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { SetLayoutAction, SetWindowLayout } from '@ansyn/core/actions/core.actions';
+import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { WindowLayout } from '@ansyn/core/reducers/core.reducer';
+import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { Point as GeoPoint } from 'geojson';
+import * as turf from '@turf/turf';
+import { IMap } from '@ansyn/imagery/model/imap';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { LayoutKey } from '@ansyn/core/models/layout-options.model';
+import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class AnsynApi {
 
-	mouseShadow$ = this.visualizersAppEffects$.onStartMapShadow$.mergeMap(res => res);
 
 	mapPosition$ = this.actions$.ofType<Action>(MapActionTypes.POSITION_CHANGED);
 
+	activeMapId;
 	activateMap$ = <Observable<string>>this.store.select(mapStateSelector)
 		.pluck<IMapState, string>('activeMapId')
 		.do(activeMapId => {
@@ -28,39 +34,53 @@ export class AnsynApi {
 		})
 		.distinctUntilChanged();
 
-	activeMapId;
 	private subscriptions: Array<Subscription> = [];
 	pointerMove$ = new EventEmitter();
+	private iMap: IMap;
 
 	constructor(public store: Store<any>,
 				protected actions$: Actions,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected visualizersAppEffects$: VisualizersAppEffects,
+				protected projectionService: ProjectionService,
 				protected projectionConverterService: ProjectionConverterService) {
 
 		this.subscriptions.push(
-			this.activateMap$.subscribe(),
-			this.mouseShadow$.subscribe()
+			this.activateMap$.subscribe()
 		);
-
-		this.imageryCommunicatorService
-			.instanceCreated
-			.map(({ id }) => this.imageryCommunicatorService.provide(id))
-			.do((comm: CommunicatorEntity) => {
-				comm.pointerMove
-					.do((event) => this.pointerMove$.emit({ mapId: comm.id, event }))
-					.subscribe();
-			})
-			.subscribe();
-
 	}
 
+	setOutSourceMouseShadow(coordinates) {
+		this.store.dispatch(new ShadowMouseProducer({ point: { coordinates, type: 'point' }, outsideSource: true }));
+	}
+
+	getShadowMouse(cb) {
+		const communicator = this.imageryCommunicatorService.provide(this.activeMapId);
+		this.iMap = communicator.ActiveMap;
+		this.iMap.mapObject.on('pointermove', this.onPointerMove, this);
+		return cb(this.pointerMove$);
+	}
+
+	stopShadowMouse() {
+		this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
+		this.pointerMove$.complete();
+	}
+
+
+	private onPointerMove({ coordinate }: any) {
+		const point = <GeoPoint> turf.geometry('Point', coordinate);
+		return this.projectionService.projectApproximately(point, this.iMap)
+			.take(1)
+			.do((projectedPoint) => {
+				this.pointerMove$.emit(projectedPoint.coordinates);
+			})
+			.subscribe();
+	}
 
 	displayOverLay(overlay: Overlay) {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
 
-	changeMapLayout(layout) {
+	changeMapLayout(layout: LayoutKey) {
 		this.store.dispatch(new SetLayoutAction(layout));
 	}
 
@@ -73,15 +93,15 @@ export class AnsynApi {
 		this.store.dispatch(new SetWindowLayout({ windowLayout }));
 	}
 
-	goToPosition(input) {
-		const activeCenterProjDatum: CoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
+	transfromHelper(position, convertMethodFrom: CoordinatesSystem, convertMethodTo: CoordinatesSystem) {
+		const conversionValid = this.projectionConverterService.isValidConversion(position, convertMethodFrom);
+		if (conversionValid) {
+			this.projectionConverterService.convertByProjectionDatum(position, convertMethodFrom, convertMethodTo);
+		}
 
-		// const conversionValid = this.projectionConverterService.isValidConversion(input, );
-		// if (conversionValid) {
-		// 	const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.from, this.from, activeCenterProjDatum);
-		// 	this.store$.dispatch(new GoToAction(goToInput));
-		// }
 	}
 
-
+	goToPosition(position: Array<number>) {
+		this.store.dispatch(new GoToAction(position));
+	}
 }

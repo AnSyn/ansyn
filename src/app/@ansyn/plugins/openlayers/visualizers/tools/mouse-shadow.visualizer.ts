@@ -3,8 +3,8 @@ import olFeature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
-import { Feature, FeatureCollection, Point as GeoPoint, Point } from 'geojson';
-import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { FeatureCollection, Point as GeoPoint } from 'geojson';
+import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
@@ -59,12 +59,13 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 
 
 	drawPoint$ = Observable.combineLatest(this.mouseShadowProducer$, this.isActive$)
-		.filter(([action, isActive]) => !isActive)
-		.mergeMap(([action, isActive]: [ShadowMouseProducer, boolean]) => this.setEntities([{
+		.filter(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => payload.outsideSource || !isActive)
+		.mergeMap(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => this.setEntities([{
 			id: 'shadowMouse',
-			featureJson: turf.point(action.payload.coordinates)
+			featureJson: turf.point(payload.point.coordinates)
 		}
 		]));
+
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected projectionService: ProjectionService) {
 		super();
@@ -114,7 +115,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		return this.projectionService.projectApproximately(point, this.iMap)
 			.take(1)
 			.do((projectedPoint) => {
-				this.store$.dispatch(new ShadowMouseProducer(projectedPoint));
+				this.store$.dispatch(new ShadowMouseProducer({ point: projectedPoint }));
 			})
 			.subscribe();
 	}

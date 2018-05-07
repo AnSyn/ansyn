@@ -20,13 +20,13 @@ export const MapActionTypes = {
 		DISPLAY: 'DISPLAY'
 	},
 	VISUALIZERS: {
-		HOVER_FEATURE: 'HOVER_FEATURE',
+		HOVER_FEATURE: 'HOVER_FEATURE'
 	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	IMAGERY_PLUGINS_INITIALIZED: 'IMAGERY_PLUGINS_INITIALIZED',
 	STORE: {
-		SET_MAPS_DATA: 'SET_MAPS_DATA',
+		SET_MAPS_DATA: 'SET_MAPS_DATA'
 	},
 	VIEW: {
 		SET_IS_LOADING: 'SET_IS_LOADING',
@@ -50,7 +50,7 @@ export const MapActionTypes = {
 	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER'
 };
 
-export interface ContextMenuShowPayload  {
+export interface ContextMenuShowPayload {
 	point: Point;
 	overlays: Overlay[];
 	event: MouseEvent;
@@ -103,6 +103,7 @@ export class ImageryRemovedAction implements Action {
 
 export class MapInstanceChangedAction implements Action {
 	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
+
 	constructor(public payload: MapInstanceChanged) {
 	}
 }
@@ -210,20 +211,30 @@ export class ActiveImageryMouseLeave implements Action {
 
 export class SetIsLoadingAcion implements Action {
 	type = MapActionTypes.VIEW.SET_IS_LOADING;
+
 	constructor(public payload: { mapId: string, show: boolean, text?: string }) {
 
 	}
 }
 
+export class ImageryPluginsInitialized implements Action {
+	readonly type = MapActionTypes.IMAGERY_PLUGINS_INITIALIZED;
+
+	constructor(payload: string) {
+	}
+}
+
 export class ClickOutsideMap implements Action  {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
+
 	constructor(public payload: any) {
 	}
 }
-export class ShadowMouseProducer implements Action {
-	readonly type = MapActionTypes.SHADOW_MOUSE_PRODUCER
 
-	constructor(public payload: any) {
+export class ShadowMouseProducer implements Action {
+	readonly type = MapActionTypes.SHADOW_MOUSE_PRODUCER;
+
+	constructor(public payload: { point: { coordinates: Array<number>, type: string }, outsideSource?: boolean }) {
 
 	}
 }

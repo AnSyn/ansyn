@@ -185,13 +185,6 @@ export class AnsynBuilder {
 					this.api.changeWindowLayout(this.options.windowLayout);
 				}
 				this.callback(moduleRef.instance.api);
-				setTimeout(() => {
-					const element = document.getElementById(this.id);
-					if (element) {
-						element.click();
-					}
-				}, 4000);
-
 			});
 	}
 

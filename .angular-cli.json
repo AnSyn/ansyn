@@ -41,7 +41,7 @@
 		{
 			"name": "builder",
 			"root": "src",
-			"outDir": "build/buildBundle/dist",
+			"outDir": "build/builder/dist",
 			"assets": [
 				{
 					"glob": "**/*",
@@ -51,7 +51,7 @@
 				"favicon.ico"
 			],
 			"index": "index.html",
-			"main": "app/appBuilder/main.builder.ts",
+			"main": "app/builder/main.builder.ts",
 			"polyfills": "polyfills.ts",
 			"test": "test.ts",
 			"tsconfig": "tsconfig.app.json",
@@ -85,10 +85,9 @@
 				},
 				"favicon.ico"
 			],
-			"index": "app/appBuilder/devApiApp/app.component.html",
-			"main": "app/appBuilder/devApp.main.ts",
+			"index": "app/builder/app.component.html",
+			"main": "app/builder/devApp.main.ts",
 			"polyfills": "polyfills.ts",
-			"test": "test.ts",
 			"tsconfig": "tsconfig.app.json",
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",

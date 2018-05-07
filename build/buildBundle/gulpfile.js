@@ -16,7 +16,7 @@ const deploy = {
 		remote: 'https://' + credentials.user + ':' + credentials.password +'@gist.github.com/shaharido1/4b6d5fc928654e4e497b6d2e270df144'
 	},
 	noZone: {
-		fileName: "ansynNoZone1.js",
+		fileName: "ansynNoZone.js",
 		local: './deployNoZone',
 		remote: 'https://' + credentials.user + ':' + credentials.password + '@gist.github.com/shaharido1/8488dcd6254b855669fbff7fb5a11baf'
 	}

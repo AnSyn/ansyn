@@ -11,6 +11,7 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { IFiltersConfig } from '@ansyn/menu-items/filters/models/filters-config';
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
 import { FilterType } from '@ansyn/core/models/case.model';
+import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -66,6 +67,19 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 			this.isGotSmallListFromProvider = (<EnumFilterMetadata>this.metadataFromState).enumsFields.size <= this.config.shortFilterListLength;
 		});
 
+	filteredOverlaysChanged$: Observable<any> = this.store.select(overlaysStateSelector)
+		.withLatestFrom(this.store.select(filtersStateSelector))
+		.map(([overlaysState, filterState]: [IOverlaysState, IFiltersState]) => {
+			this.metadataFromState = cloneDeep(filterState.filters.get(this.filter));
+			this.metadataFromState.resetCount();
+			overlaysState.filteredOverlays.forEach((id: string) => {
+				const overlay = overlaysState.overlays.get(id);
+				this.metadataFromState.accumulateData(overlay[this.filter.modelName]);
+			});
+			return Observable.of(true);
+		});
+
+
 	showOnlyFavorites$: Observable<any> = this.store.select(filtersStateSelector)
 		.pluck<IFiltersState, boolean>('showOnlyFavorites')
 		.distinctUntilChanged()
@@ -84,7 +98,8 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.subscribers.push(
 			this.metadataFromState$.subscribe(),
-			this.showOnlyFavorites$.subscribe()
+			this.showOnlyFavorites$.subscribe(),
+			this.filteredOverlaysChanged$.subscribe()
 		);
 	}
 

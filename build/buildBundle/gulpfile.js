@@ -164,7 +164,7 @@ gulp.task('copyToLocal', function (done){
 })
 
 gulp.task('localDeploy', function (done) {
-	currentDeploy = deploy.withZone;
+	currentDeploy = deploy.noZone;
 	gulpSequence('clean', 'webPackcompile', 'concat', 'copyToLocal', 'clean', function (err) {
 		console.log(err);
 			return done()

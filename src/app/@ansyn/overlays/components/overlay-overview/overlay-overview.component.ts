@@ -3,16 +3,16 @@ import { Subscription } from 'rxjs/Subscription';
 import {
 	IOverlaysState,
 	MarkUpClass,
-	MarkUpData,
-	overlaysStateSelector,
-	selectDropMarkup
+	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import {
+	DisplayOverlayFromStoreAction,
+	SetMarkUp
+} from '@ansyn/overlays/actions/overlays.actions';
 import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 
 @Component({
@@ -36,11 +36,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
 
-	hoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
-		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck<IOverlaysState, Map<any, any>>('overlays')))
-		.map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
-			overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
-		);
+	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)
+		.pluck <IOverlaysState, Overlay>('hoveredOverlay')
+		.distinctUntilChanged();
 
 	// Mark the original overlay as un-hovered when mouse leaves
 	@HostListener('mouseleave')

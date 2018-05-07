@@ -5,6 +5,7 @@ import 'rxjs/add/observable/of';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { CaseFacetsState, CaseFilters } from '@ansyn/core/models/case.model';
+import { FilterModel } from '@ansyn/core/models/filter.model';
 
 export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
 
@@ -29,6 +30,13 @@ export class FiltersService {
 			}
 		});
 		return { showOnlyFavorites, filters };
+	}
+
+	static pluckFilterModels({ filters }: IFiltersState): FilterModel[] {
+		return <any> Array.from(filters).map(([key, value]): FilterModel => ({
+			key: key.modelName,
+			filterFunc: value.filterFunc.bind(value)
+		}));
 	}
 
 	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {

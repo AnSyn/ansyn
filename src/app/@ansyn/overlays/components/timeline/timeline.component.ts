@@ -127,8 +127,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	dropsIdMap: Map<string, OverlayDrop> = new Map();
 	drops: OverlayDrop[] = [];
 	dropsChange$: Observable<OverlayDrop[]> = this.store$.select(selectDrops)
-		.filter(drops => Boolean(drops && drops.length))
+		.filter(Boolean)
 		.do(drops => {
+			this.dropsIdMap = new Map();
 			drops.forEach(drop => {
 				this.dropsIdMap.set(drop.id, drop);
 			});
@@ -216,7 +217,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	initEventDropsSequence() {
-		if (this.drops && this.drops.length) {
+		if (this.drops) {
 			this.removeOldEventDrops();
 			this.initEventDrop();
 			if (this.markup) {

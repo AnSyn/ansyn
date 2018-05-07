@@ -1,4 +1,3 @@
-import { union } from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
@@ -30,12 +29,14 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { Case, CaseFacetsState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
+import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { FilterModel } from '@ansyn/core/models/filter.model';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -55,7 +56,10 @@ export class FiltersAppEffects {
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
 		.filter(([action, filters]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
-			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
+			const filterModels: FilterModel[] = FiltersService.pluckFilterModels(filters);
+			const arrOverlays: Overlay[] = Array.from(overlays.overlays.values());
+			const favorites: any = { only: filters.showOnlyFavorites, overlays: core.favoriteOverlays };
+			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(arrOverlays, filterModels, favorites);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
@@ -145,24 +149,5 @@ export class FiltersAppEffects {
 		.map(({ payload }: SetFavoriteOverlaysAction) => new EnableOnlyFavoritesSelectionAction(Boolean(payload.length)));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
-	}
-
-	isMetadataEmpty(metadata: any): boolean {
-		return metadata === undefined || metadata === null;
-	}
-
-	buildFilteredOverlays(overlays: Map<string, Overlay>, filters: IFiltersState, favoriteOverlays: Overlay[]): string[] {
-		const parsedFilters = Array.from(filters.filters)
-			.map(([key, value]) => ({
-				key: key.modelName,
-				filterFunc: value.filterFunc.bind(value)
-			}));
-		const favorites = favoriteOverlays.map(overlay => overlay.id);
-		if (filters.showOnlyFavorites) {
-			return favorites;
-		} else {
-			const filteredOverlays = OverlaysService.filter(overlays, parsedFilters);
-			return union(favorites, filteredOverlays);
-		}
 	}
 }

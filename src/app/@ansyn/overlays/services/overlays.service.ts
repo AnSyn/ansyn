@@ -7,46 +7,23 @@ import { OverlaysCriteria, OverlaysFetchData } from '@ansyn/core/models/overlay.
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { union } from 'lodash';
+import { FavoritesModel, FilterModel } from '@ansyn/core/models/filter.model';
+import { sortByDate, sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 @Injectable()
 export class OverlaysService {
 
-	static filter(overlays: Map<string, Overlay>, filters: { key: any, filterFunc: (ovrelay: any, key: string) => boolean }[]): string[] {
-		if (!overlays) {
-			return [];
+	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: FavoritesModel): string[] {
+		let parseedOverlays: Overlay[] = favorites.overlays;
+		if (!favorites.only) {
+			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
+			parseedOverlays = [...parseedOverlays, ...filteredOverlays];
 		}
-
-		const overlaysData = [];
-
-		if (!filters || !Array.isArray(filters)) {
-			return Array.from(overlays.keys());
-
-		}
-		overlays.forEach(overlay => {
-			if (filters.every(filter => filter.filterFunc(overlay, filter.key))) {
-				overlaysData.push(overlay.id);
-			}
-		});
-
-		return overlaysData;
-	}
-
-	static sort(overlays: any[]): Overlay[] {
-		if (!overlays) {
-			return [] as Overlay[];
-		}
-		return overlays
-			.sort((o1, o2) => {
-				if (o2.date < o1.date) {
-					return 1;
-				}
-				if (o1.date < o2.date) {
-					return -1;
-				}
-				return 0;
-			});
+		parseedOverlays.sort(sortByDate);
+		return union(parseedOverlays.map(({ id }) => id));
 	}
 
 	static isFullOverlay(overlay: Overlay): boolean {

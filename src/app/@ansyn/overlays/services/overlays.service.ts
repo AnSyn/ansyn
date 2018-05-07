@@ -17,13 +17,13 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 export class OverlaysService {
 
 	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: FavoritesModel): string[] {
-		let parseedOverlays: Overlay[] = favorites.overlays;
+		let parsedOverlays: Overlay[] = favorites.overlays;
 		if (!favorites.only) {
 			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
-			parseedOverlays = [...parseedOverlays, ...filteredOverlays];
+			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
 		}
-		parseedOverlays.sort(sortByDate);
-		return union(parseedOverlays.map(({ id }) => id));
+		parsedOverlays.sort(sortByDate);
+		return union(parsedOverlays.map(({ id }) => id));
 	}
 
 	static isFullOverlay(overlay: Overlay): boolean {

@@ -33,7 +33,7 @@ export class FiltersService {
 	}
 
 	static pluckFilterModels({ filters }: IFiltersState): FilterModel[] {
-		return <any> Array.from(filters).map(([key, value]): FilterModel => ({
+		return Array.from(filters).map(([key, value]): FilterModel => ({
 			key: key.modelName,
 			filterFunc: value.filterFunc.bind(value)
 		}));

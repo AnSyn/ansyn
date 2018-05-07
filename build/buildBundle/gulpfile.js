@@ -160,7 +160,7 @@ gulp.task('git-push', function (done) {
 });
 
 gulp.task('copyToLocal', function (done){
-	gulp.src(path.join(currentDeploy.local, currentDeploy.fileName)).pipe(gulp.dest('../../../angular1-ansyn/angular-seed/app/bower_components'))
+	gulp.src(path.join(currentDeploy.local, currentDeploy.fileName)).pipe(gulp.dest('../../../angular1-ansyn/angular-seed/app/assets'))
 })
 
 gulp.task('localDeploy', function (done) {

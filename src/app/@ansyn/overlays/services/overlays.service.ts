@@ -75,14 +75,9 @@ export class OverlaysService {
 	}
 
 
-	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): Array<any> {
+	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): OverlayDrop[] {
 		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
-
-		specialObjects.forEach((value) => {
-			overlaysData.push(value);
-		});
-
-		return [{ name: undefined, data: overlaysData }];
+		return [ ...overlaysData, ...Array.from(specialObjects.values()) ];
 	}
 
 	get fetchLimit() {

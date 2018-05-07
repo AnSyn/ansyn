@@ -2,7 +2,7 @@ import { Overlay } from '../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 
@@ -11,11 +11,7 @@ export interface TimelineRange {
 	end: Date;
 }
 
-export interface OverlayDrop {
-	id: string,
-	date: Date,
-	otherData?: any
-}
+export type OverlayDrop = Partial<Overlay>;
 
 export interface OverlayDropMarkUp {
 	id: string,
@@ -26,11 +22,6 @@ export interface MarkUpData {
 	overlaysIds: Array<string>
 	type?: MarkUpTypes
 	data?: string
-}
-
-export interface OverlayLine {
-	name: string,
-	data: Array<OverlayDrop>
 }
 
 export enum MarkUpClass {
@@ -47,11 +38,6 @@ export enum MarkUpTypes {
 	symbole = 'symbole'
 }
 
-export interface OverlayLine {
-	name: string,
-	data: Array<OverlayDrop>
-}
-
 export interface IOverlaysState {
 	loaded: boolean;
 	loading: boolean;
@@ -59,6 +45,7 @@ export interface IOverlaysState {
 	selectedOverlays: string[];
 	specialObjects: Map<string, OverlaySpecialObject>;
 	filteredOverlays: string[];
+	drops: OverlayDrop[];
 	timeLineRange: TimelineRange;
 	statusMessage: string;
 	dropsMarkUp: ExtendMap<MarkUpClass, MarkUpData>;
@@ -77,8 +64,9 @@ export const overlaysInitialState: IOverlaysState = {
 	specialObjects: new Map<string, OverlaySpecialObject>(),
 	timeLineRange: { start: new Date(), end: new Date() },
 	filteredOverlays: [],
+	drops: [],
 	statusMessage: null,
-	dropsMarkUp: initDropsMarkUp,
+	dropsMarkUp: initDropsMarkUp
 };
 
 export const overlaysFeatureKey = 'overlays';
@@ -116,16 +104,19 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				return state;
 			}
 
-		case OverlaysActionTypes.LOAD_OVERLAYS:
+		case OverlaysActionTypes.LOAD_OVERLAYS: {
+			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, overlays: new Map(), filteredOverlays: [] });
 			return {
 				...state,
 				loading: true,
 				loaded: false,
 				overlays: new Map(),
-				filteredOverlays: []
+				filteredOverlays: [],
+				drops
 			};
+		}
 
-		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
+		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
 
 			const overlays = OverlaysService.sort(action.payload);
 
@@ -136,14 +127,16 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 					stateOverlays.set(overlay.id, overlay);
 				}
 			});
-
+			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, overlays: stateOverlays });
 			// we already initiliazing the state
 			return {
 				...state,
 				loading: false,
 				loaded: true,
-				overlays: stateOverlays
+				overlays: stateOverlays,
+				drops
 			};
+		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
 			return Object.assign({}, state, {
@@ -151,18 +144,21 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				loaded: false
 			});
 
-		case OverlaysActionTypes.SET_FILTERED_OVERLAYS:
-			return { ...state, filteredOverlays: action.payload };
+		case OverlaysActionTypes.SET_FILTERED_OVERLAYS: {
+			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, filteredOverlays: action.payload });
+			return { ...state, filteredOverlays: action.payload, drops };
+		}
 
-		case OverlaysActionTypes.SET_SPECIAL_OBJECTS:
+		case OverlaysActionTypes.SET_SPECIAL_OBJECTS: {
 			const specialObjectsData = OverlaysService.sort(action.payload) as any;
 
 			const specialObjects = new Map<string, OverlaySpecialObject>();
 			specialObjectsData.forEach((i: OverlaySpecialObject) => {
 				specialObjects.set(i.id, i);
 			});
-
-			return { ...state, specialObjects };
+			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, specialObjects });
+			return { ...state, specialObjects, drops };
+		}
 
 		case OverlaysActionTypes.SET_TIMELINE_STATE:
 			const { start, end } = action.payload.timeLineRange;
@@ -237,3 +233,4 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 }
 
+export const selectDrops: MemoizedSelector<IOverlaysState, OverlayDrop[]> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);

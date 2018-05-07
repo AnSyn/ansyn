@@ -2,13 +2,20 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
 import {
-	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, SetFilteredOverlaysAction
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	LoadOverlaysSuccessAction,
+	SetFilteredOverlaysAction,
+	SetHoveredOverlayAction,
+	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
 import {
+	MarkUpClass,
 	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
 	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -36,6 +43,7 @@ import {
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -336,6 +344,26 @@ describe('OverlaysAppEffects', () => {
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
 
+	});
+
+	describe('hoveredOverlay$ effect', () => {
+		let overlayId = '234';
+		let overlays: Overlay[] = [{
+			id: overlayId,
+			name: 'bcd',
+			photoTime: 'ttt',
+			date: new Date(),
+			azimuth: 100,
+			isGeoRegistered: true
+		}];
+		it ('should get hovered overlay by tracking overlays.dropsMarkUp, and set overlays.hoveredOverlay', () => {
+			let spy = spyOn(store, 'dispatch');
+			actions = hot('--a--b--', {
+				a: new LoadOverlaysSuccessAction(overlays),
+				b: new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [overlayId] } })
+			});
+			expect(spy).toHaveBeenCalledWith(new SetHoveredOverlayAction(overlays[0]));
+		});
 	});
 
 });

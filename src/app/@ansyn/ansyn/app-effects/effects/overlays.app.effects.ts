@@ -2,22 +2,33 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, OverlaysActionTypes
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	IOverlaysState,
+	MarkUpClass,
+	MarkUpData,
+	overlaysStateSelector
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import {
-	RemovePendingOverlayAction, SetPendingOverlaysAction,
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -181,6 +192,24 @@ export class OverlaysAppEffects {
 			const overlay = overlays.get(payload.id);
 			return new DisplayOverlayAction({ overlay, mapId });
 		});
+
+	/**
+	 * @type Effect
+	 * @name hoveredOverlay$
+	 */
+	@Effect({ dispatch: false })
+	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)
+		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
+		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck<IOverlaysState, Map<any, any>>('overlays')))
+		.map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
+			overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
+		)
+		.distinctUntilChanged()
+		.do((overlay: Overlay) => {
+				this.store$.dispatch(new SetHoveredOverlayAction(overlay))
+			}
+		);
+
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,

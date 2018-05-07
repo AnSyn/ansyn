@@ -27,7 +27,8 @@ export const OverlaysActionTypes = {
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
 	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
-	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE')
+	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE'),
+	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY')
 };
 
 export class SelectOverlayAction implements Action {
@@ -171,6 +172,14 @@ export class RedrawTimelineAction implements Action {
 	}
 }
 
+export class SetHoveredOverlayAction implements Action {
+	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
+
+	constructor(public payload?: Overlay) {
+
+	}
+}
+
 
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
@@ -189,3 +198,4 @@ export type OverlaysActions
 	| SetOverlaysStatusMessage
 	| AddMarkUp
 	| RemoveMarkUp
+	| SetHoveredOverlayAction

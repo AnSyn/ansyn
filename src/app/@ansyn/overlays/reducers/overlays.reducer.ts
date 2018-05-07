@@ -49,6 +49,7 @@ export interface IOverlaysState {
 	timeLineRange: TimelineRange;
 	statusMessage: string;
 	dropsMarkUp: ExtendMap<MarkUpClass, MarkUpData>;
+	hoveredOverlay: Overlay;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, MarkUpData> = new ExtendMap<MarkUpClass, MarkUpData>();
@@ -66,7 +67,8 @@ export const overlaysInitialState: IOverlaysState = {
 	filteredOverlays: [],
 	drops: [],
 	statusMessage: null,
-	dropsMarkUp: initDropsMarkUp
+	dropsMarkUp: initDropsMarkUp,
+	hoveredOverlay: null
 };
 
 export const overlaysFeatureKey = 'overlays';
@@ -220,6 +222,12 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				...state,
 				dropsMarkUp
 
+			};
+
+		case OverlaysActionTypes.SET_HOVERED_OVERLAY:
+			return {
+				...state,
+				hoveredOverlay: action.payload
 			};
 
 		default :

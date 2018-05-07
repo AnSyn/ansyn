@@ -6,14 +6,13 @@ import { selection } from 'd3';
 import * as d3 from 'd3/build/d3';
 import eventDrops from 'new-ansyn-event-drops';
 import { OverlaysService } from '../../services/overlays.service';
-import { OverlayDrop, OverlayLine } from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayDrop, selectDrops } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	IOverlaysState, MarkUpClass, MarkUpData, MarkUpTypes, overlaysStateSelector,
 	TimelineRange
 } from '../../reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { Observable } from 'rxjs/Observable';
-import { OverlaysEffects } from '@ansyn/overlays/effects/overlays.effects';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import {
@@ -126,22 +125,18 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		});
 
 	dropsIdMap: Map<string, OverlayDrop> = new Map();
-	drops: Array<OverlayLine> = [];
-	dropsChange$ = this.effects$.drops$
-		.map((drops) => drops.map(entities => ({
-			name: entities.name || '',
-			data: entities.data
-		})))
-		.filter((drops) => Boolean(drops && drops[0] && drops[0].data))
+	drops: OverlayDrop[] = [];
+	dropsChange$: Observable<OverlayDrop[]> = this.store$.select(selectDrops)
+		.filter(drops => Boolean(drops && drops.length))
 		.do(drops => {
-			drops[0].data.forEach(drop => {
+			drops.forEach(drop => {
 				this.dropsIdMap.set(drop.id, drop);
 			});
 		})
 		.do(drops => {
 			this.drops = drops;
-			if (this.drops[0].data.length) {
-				this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops[0].data);
+			if (this.drops.length) {
+				this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops);
 			}
 			this.initEventDropsSequence();
 		});
@@ -154,7 +149,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	constructor(@Inject(OverlaysService) protected overlaysService: OverlaysService,
 				protected store$: Store<IOverlaysState>,
-				protected effects$: OverlaysEffects,
 				protected actions$: Actions) {
 	}
 
@@ -263,7 +257,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.chart = eventDrops(this.configuration);
 		this.element = d3.select(this.context.nativeElement);
 		this.element
-			.data([this.drops])
+			.data([[{ data: this.drops }]])
 			.call(this.chart);
 
 		this.element.clone().select('.drops').append('g').classed('textContainer', true);

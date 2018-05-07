@@ -12,7 +12,10 @@ import {
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Action, Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector, overlaysStatusMessages } from '../reducers/overlays.reducer';
+import {
+	IOverlaysState, overlaysStateSelector, overlaysStatusMessages,
+	selectDrops
+} from '../reducers/overlays.reducer';
 import { Overlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
@@ -78,29 +81,10 @@ export class OverlaysEffects {
 				}));
 		});
 
-	/**
-	 * @type Effect
-	 * @name drops$
-	 * @description this method parse overlays for display ( drops )
-	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction, SetSpecialObjectsActionStore
-	 * @dependencies overlays
-	 */
-
-	@Effect({ dispatch: false })
-	drops$: Observable<any[]> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS,
-			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
-			OverlaysActionTypes.SET_FILTERED_OVERLAYS,
-			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
-		.withLatestFrom(this.store$.select(overlaysStateSelector))
-		.map(([action, overlays]: [Action, IOverlaysState]) => {
-			return OverlaysService.parseOverlayDataForDisplay(overlays);
-		});
-
 	@Effect()
-	dropsCount$: Observable<UpdateOverlaysCountAction> = this.drops$
+	dropsCount$ = this.store$.select(selectDrops)
 		.filter(Boolean)
-		.map(drops => new UpdateOverlaysCountAction(drops[0].data.length));
+		.map(drops => new UpdateOverlaysCountAction(drops.length));
 
 
 	constructor(protected actions$: Actions,

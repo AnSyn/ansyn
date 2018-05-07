@@ -233,12 +233,12 @@ describe('OverlaysService', () => {
 		});
 
 		const result = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result[0].data.length).toBe(1);
+		expect(result.length).toBe(1);
 
 		mockData.specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
 
 		const result2 = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result2[0].data.length).toBe(2);
+		expect(result2.length).toBe(2);
 	});
 
 	it('check the method fetchData with spyOn', () => {

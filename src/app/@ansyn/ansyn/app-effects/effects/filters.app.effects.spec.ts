@@ -45,6 +45,7 @@ import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.r
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { FilterType } from '@ansyn/core/models/case.model';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -121,7 +122,7 @@ describe('Filters app effects', () => {
 		overlaysState.loaded  = true;
 		const filteredOverlays = [];
 		filtersState.filters = new Map();
-		spyOn(filtersAppEffects, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);
+		spyOn(OverlaysService, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
 		const expectedResults = cold('--(bc)--', {
 			b: new SetFilteredOverlaysAction(filteredOverlays),
@@ -161,22 +162,6 @@ describe('Filters app effects', () => {
 		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
 		const expectedResults = cold('--b--', { b: new SetBadgeAction({ key: 'Filters', badge: '3' }) });
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
-	});
-
-	describe('isMetadataEmpty', () => {
-		const empty = [undefined, null];
-		empty.forEach(metadata => {
-			it('should "' + JSON.stringify(metadata) + '" be an empty metadata', () => {
-				expect(filtersAppEffects.isMetadataEmpty(metadata)).toBeTruthy();
-			});
-		});
-
-		const full = [0, false, [0]];
-		full.forEach(metadata => {
-			it('should "' + JSON.stringify(metadata) + '" not be an empty metadata', () => {
-				expect(filtersAppEffects.isMetadataEmpty(metadata)).toBeFalsy();
-			});
-		});
 	});
 
 	it('setShowFavoritesFlagOnFilters$', () => {

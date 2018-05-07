@@ -117,12 +117,9 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
-
-			const overlays = OverlaysService.sort(action.payload);
-
 			const stateOverlays = new Map(state.overlays);
 
-			overlays.forEach(overlay => {
+			action.payload.forEach(overlay => {
 				if (!stateOverlays.has(overlay.id)) {
 					stateOverlays.set(overlay.id, overlay);
 				}
@@ -150,10 +147,8 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		}
 
 		case OverlaysActionTypes.SET_SPECIAL_OBJECTS: {
-			const specialObjectsData = OverlaysService.sort(action.payload) as any;
-
 			const specialObjects = new Map<string, OverlaySpecialObject>();
-			specialObjectsData.forEach((i: OverlaySpecialObject) => {
+			action.payload.forEach((i: OverlaySpecialObject) => {
 				specialObjects.set(i.id, i);
 			});
 			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, specialObjects });

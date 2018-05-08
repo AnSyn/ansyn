@@ -1,5 +1,5 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { DynamicsAnsynModule } from './dynamic-ansyn.module';
+import { DynamicsAnsynModule } from './customModule/dynamic-ansyn.module';
 import { Component, NgModule, NgModuleRef } from '@angular/core';
 import { AnsynApi } from './ansyn-api.service';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
@@ -32,7 +32,7 @@ import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { AnsynRouterModule } from '@ansyn/router/router.module';
 import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
 import { BrowserModule } from '@angular/platform-browser';
-import { AnsynCustomComponent } from '@builder/ansynCustomComponent';
+import { AnsynCustomComponent } from '@builder/customModule/ansynCustomComponent';
 import { ansynComponentMeta } from '@ansyn/ansyn/ansyn/ansyn.component';
 
 

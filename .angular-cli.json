@@ -85,7 +85,7 @@
 				},
 				"favicon.ico"
 			],
-			"index": "app/builder/app.component.html",
+			"index": "app/builder/customModule/index.html",
 			"main": "app/builder/devApp.main.ts",
 			"polyfills": "polyfills.ts",
 			"tsconfig": "tsconfig.app.json",

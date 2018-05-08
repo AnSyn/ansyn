@@ -1,5 +1,5 @@
 import { ComponentFactoryResolver, Injectable, InjectionToken } from '@angular/core';
-import { AnsynApi } from './ansyn-api.service';
+import { AnsynApi } from '../ansyn-api.service';
 
 export const BOOTSTRAP_COMPONENTS_TOKEN = new InjectionToken('bootstrap_components');
 

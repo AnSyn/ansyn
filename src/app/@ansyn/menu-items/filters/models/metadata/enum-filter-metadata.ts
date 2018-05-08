@@ -4,6 +4,7 @@ import { FilterType } from '@ansyn/core/models/case.model';
 
 export interface EnumFiled {
 	count: number;
+	filteredCount: number;
 	isChecked: boolean;
 }
 
@@ -29,25 +30,30 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	accumulateData(value: any): void {
+	accumulateData(value: any, calculateFiltered: Boolean): void {
 		if (!this.enumsFields.get(value)) {
-			this.enumsFields.set(value, { count: 1, isChecked: false });
+			this.enumsFields.set(value, { count: 0, filteredCount: 0, isChecked: false });
 		} else {
-			this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
+			if (calculateFiltered) {
+				this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
+			} else {
+				this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
+			}
 		}
+		// const fiteredCount = Boolean(this.enumsFields.get(value).filteredCount) ? this.enumsFields.get(value).filteredCount : 0;
 	}
 
-	resetCount(): void {
+	resetFilterCount(): void {
 		this.enumsFields.forEach((val, key) => {
-			val.count = 0;
+			val.filteredCount = 0;
 		});
 	}
 
 	initializeFilter(selectedValues: string[]): void {
-		this.enumsFields = new Map<string, { count: number, isChecked: boolean }>();
+		this.enumsFields = new Map<string, { count: number, filteredCount: number, isChecked: boolean }>();
 		if (selectedValues) {
 			for (let key of selectedValues) {
-				this.enumsFields.set(key, { count: 0, isChecked: true });
+				this.enumsFields.set(key, { count: 0, filteredCount: 0, isChecked: true });
 			}
 		}
 	}

@@ -54,7 +54,7 @@
 			"main": "app/builder/main.builder.ts",
 			"polyfills": "polyfills.ts",
 			"test": "test.ts",
-			"tsconfig": "tsconfig.app.json",
+			"tsconfig": "app/builder/tsconfig.builder.json",
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [

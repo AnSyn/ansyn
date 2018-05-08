@@ -10,6 +10,6 @@
 	"exclude": [
 		"test.ts",
 		"**/*.spec.ts",
-		"./app/builder/**/*"
+		""
 	]
 }

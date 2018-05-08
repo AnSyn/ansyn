@@ -94,7 +94,7 @@ describe('Overlay Reducer', () => {
 		const action = new LoadOverlaysSuccessAction(overlays);
 		const result = OverlayReducer(overlaysInitialState, action);
 
-		expect(Array.from(result.overlays.keys())[0]).toBe('13');
+		expect(Array.from(result.overlays.keys())[0]).toBe('12');
 		expect(result.overlays.size).toBe(2);
 		expect(result.loading).toBe(false);
 		expect(result.loaded).toBe(true);

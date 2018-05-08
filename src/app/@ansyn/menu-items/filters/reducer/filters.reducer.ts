@@ -29,10 +29,10 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	switch (action.type) {
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS:
-			return { ...state, ...action.payload, isLoading: false };
+			return { ...state, filters: action.payload, isLoading: false };
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
-			return Object.assign({}, state, { isLoading: true });
+			return { ...state, isLoading: true };
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA:
 			const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
@@ -63,3 +63,4 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 export const selectShowOnlyFavorite = createSelector(filtersStateSelector, ({ showOnlyFavorites }) => showOnlyFavorites);
 export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
+export const selectOldFilters = createSelector(filtersStateSelector, ({ oldFilters }) => oldFilters);

@@ -24,7 +24,6 @@ export const MapActionTypes = {
 	},
 	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
-	IMAGERY_PLUGINS_INITIALIZED: 'IMAGERY_PLUGINS_INITIALIZED',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA'
 	},
@@ -217,12 +216,6 @@ export class SetIsLoadingAcion implements Action {
 	}
 }
 
-export class ImageryPluginsInitialized implements Action {
-	readonly type = MapActionTypes.IMAGERY_PLUGINS_INITIALIZED;
-
-	constructor(payload: string) {
-	}
-}
 
 export class ClickOutsideMap implements Action  {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;

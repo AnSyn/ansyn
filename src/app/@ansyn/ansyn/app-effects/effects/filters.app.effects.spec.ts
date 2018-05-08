@@ -4,48 +4,46 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	casesStateSelector, ICasesState,
-	initialCasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { ICasesState, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	filtersFeatureKey,
 	FiltersReducer,
-	filtersStateSelector, IFiltersState,
+	IFiltersState,
 	initialFiltersState
 } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
+	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
 	ResetFiltersAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { Case } from '@ansyn/core/models/case.model';
+import { Case, FilterType } from '@ansyn/core/models/case.model';
 import {
 	IOverlaysState,
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysInitialState,
-	overlaysStateSelector, overlaysStatusMessages
+	overlaysStatusMessages
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction,
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
-import { initialMenuState, menuFeatureKey, MenuReducer, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import 'rxjs/add/observable/of';
-import { EnableOnlyFavoritesSelectionAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
-import { FilterType } from '@ansyn/core/models/case.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
+import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -87,7 +85,7 @@ describe('Filters app effects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({
-					[casesFeatureKey]: CasesReducer,
+					[coreFeatureKey]: CoreReducer,
 					[filtersFeatureKey]: FiltersReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[menuFeatureKey]: MenuReducer
@@ -95,37 +93,23 @@ describe('Filters app effects', () => {
 			],
 			providers: [
 				FiltersAppEffects,
+				GenericTypeResolverService,
+				{ provide: FiltersService, useValue: {} },
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
-		store = _store;
-		const fakeStore = new Map(<any>[
-			[overlaysStateSelector, overlaysState],
-			[filtersStateSelector, filtersState],
-			[casesStateSelector, casesState],
-			[menuStateSelector, { ...initialMenuState }],
-			[coreStateSelector, { ...coreInitialState, favoriteOverlays: [favoriteOver] }]
-		]);
-		filtersState.filters = new Map();
-		casesState.selectedCase = selectedCase;
-		spyOn(store, 'select').and.callFake((type) => Observable.of(fakeStore.get(type)));
-	}));
-
-	beforeEach(inject([FiltersAppEffects], (_filtersAppEffects: FiltersAppEffects) => {
+	beforeEach(inject([FiltersAppEffects, Store], (_filtersAppEffects: FiltersAppEffects, _store: Store<any>) => {
 		filtersAppEffects = _filtersAppEffects;
+		store = _store;
 	}));
 
 	it('updateOverlayFilters$ effect', () => {
-		overlaysState.loaded  = true;
-		const filteredOverlays = [];
-		filtersState.filters = new Map();
-		spyOn(OverlaysService, 'buildFilteredOverlays').and.callFake(() => filteredOverlays);
-		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-		const expectedResults = cold('--(bc)--', {
-			b: new SetFilteredOverlaysAction(filteredOverlays),
+		spyOn(OverlaysService, 'buildFilteredOverlays').and.callFake(() => []);
+		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
+		const expectedResults = cold('(bc)', {
+			b: new SetFilteredOverlaysAction([]),
 			c: new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchFilters)
 		});
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
@@ -133,9 +117,7 @@ describe('Filters app effects', () => {
 
 	it('initializeFilters$ effect', () => {
 		actions = hot('--a--', { a: new LoadOverlaysSuccessAction([]) });
-		const overlays = Array.from(overlaysState.overlays.values());
-		const facets = (<Case>selectedCase).state.facets;
-		const expectedResults = cold('--b--', { b: new InitializeFiltersAction({ overlays, facets }) });
+		const expectedResults = cold('--b--', { b: new InitializeFiltersAction() });
 		expect(filtersAppEffects.initializeFilters$).toBeObservable(expectedResults);
 	});
 
@@ -146,7 +128,6 @@ describe('Filters app effects', () => {
 	});
 
 	it('updateFiltersBadge$ should calculate filters number', () => {
-		filtersState.filters = filters;
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', { count: 10, filteredCount: 0,  isChecked: true }); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', { count: 10, filteredCount: 0, isChecked: false }); // (!isChecked) => 1
 
@@ -158,16 +139,15 @@ describe('Filters app effects', () => {
 
 		(<SliderFilterMetadata>filterMetadata3).start = -2;
 		(<SliderFilterMetadata>filterMetadata3).end = 2; // (start !== -Infinity || end !== Infinity ) => 3
-
-		actions = hot('--a--', { a: new InitializeFiltersSuccessAction(null) });
-		const expectedResults = cold('--b--', { b: new SetBadgeAction({ key: 'Filters', badge: '3' }) });
+		store.dispatch(new InitializeFiltersSuccessAction(filters));
+		const expectedResults = cold('b', { b: new SetBadgeAction({ key: 'Filters', badge: '3' }) });
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
 	});
 
 	it('setShowFavoritesFlagOnFilters$', () => {
 		const overlays = [new Overlay(), new Overlay()];
-		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(overlays) });
-		const expectedResults = cold('--b--', { b: new EnableOnlyFavoritesSelectionAction(true) });
+		store.dispatch(new SetFavoriteOverlaysAction(overlays));
+		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);
 	});
 });

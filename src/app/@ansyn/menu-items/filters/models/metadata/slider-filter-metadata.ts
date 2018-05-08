@@ -40,7 +40,7 @@ export class SliderFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	resetCount(): void {
+	resetFilterCount(): void {
 		this.min = Number.MAX_SAFE_INTEGER;
 		this.max = Number.MIN_SAFE_INTEGER;
 	}

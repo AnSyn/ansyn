@@ -69,12 +69,12 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	filteredOverlaysChanged$: Observable<any> = this.store.select(overlaysStateSelector)
 		.withLatestFrom(this.store.select(filtersStateSelector))
-		.map(([overlaysState, filterState]: [IOverlaysState, IFiltersState]) => {
+		.map(([{filteredOverlays, overlays}, filterState]: [IOverlaysState, IFiltersState]) => {
 			this.metadataFromState = cloneDeep(filterState.filters.get(this.filter));
-			this.metadataFromState.resetCount();
-			overlaysState.filteredOverlays.forEach((id: string) => {
-				const overlay = overlaysState.overlays.get(id);
-				this.metadataFromState.accumulateData(overlay[this.filter.modelName]);
+			this.metadataFromState.resetFilterCount();
+			filteredOverlays.forEach((id: string) => {
+				const overlay = overlays.get(id);
+				this.metadataFromState.accumulateData(overlay[this.filter.modelName], true);
 			});
 			return Observable.of(true);
 		});

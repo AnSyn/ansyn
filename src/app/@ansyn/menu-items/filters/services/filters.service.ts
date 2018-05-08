@@ -2,7 +2,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { Filter } from '../models/filter';
 import 'rxjs/add/observable/of';
-import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { Filters, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { CaseFacetsState, CaseFilters } from '@ansyn/core/models/case.model';
 import { FilterModel } from '@ansyn/core/models/filter.model';
@@ -32,7 +32,7 @@ export class FiltersService {
 		return { showOnlyFavorites, filters };
 	}
 
-	static pluckFilterModels({ filters }: IFiltersState): FilterModel[] {
+	static pluckFilterModels(filters: Filters): FilterModel[] {
 		return Array.from(filters).map(([key, value]): FilterModel => ({
 			key: key.modelName,
 			filterFunc: value.filterFunc.bind(value)

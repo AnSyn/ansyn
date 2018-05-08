@@ -2,10 +2,11 @@ import {
 	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
+import { IOverlaysState, OverlayDrop } from '@ansyn/overlays/reducers/overlays.reducer';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -108,3 +109,4 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 	}
 }
 
+export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);

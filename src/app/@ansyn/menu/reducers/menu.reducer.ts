@@ -63,6 +63,9 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			const { key, badge } = action.payload;
 			const menuItemsHandler = new Map<string, MenuItem>(state.menuItems);
 			const menuItem = menuItemsHandler.get(key);
+			if (!menuItem) {
+				return state;
+			}
 			menuItem.badge = badge;
 			menuItemsHandler.set(key, menuItem);
 			return { ...state, menuItems: menuItemsHandler };

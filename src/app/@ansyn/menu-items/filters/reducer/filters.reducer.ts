@@ -1,10 +1,12 @@
 import { Filter } from '../models/filter';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+
+export type Filters = Map<Filter, FilterMetadata>;
 
 export interface IFiltersState {
-	filters: Map<Filter, FilterMetadata>;
+	filters: Filters;
 	oldFilters: Map<Filter, FilterMetadata>;
 	isLoading: boolean;
 	showOnlyFavorites: boolean;
@@ -58,3 +60,6 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return state; // Object.assign({},state);
 	}
 }
+
+export const selectShowOnlyFavorite = createSelector(filtersStateSelector, ({ showOnlyFavorites }) => showOnlyFavorites);
+export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);

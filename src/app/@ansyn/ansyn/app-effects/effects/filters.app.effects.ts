@@ -1,20 +1,21 @@
 import { Observable } from 'rxjs/Observable';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
-import { filtersStateSelector, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import {
+	Filters,
+	selectFilters,
+	selectShowOnlyFavorite
+} from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
-	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
+	OverlaysActionTypes, SetFilteredOverlaysAction, SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	IOverlaysState,
-	overlaysStateSelector,
-	overlaysStatusMessages
+	IOverlaysState, overlaysStateSelector, overlaysStatusMessages,
+	selectOverlaysArray
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -23,43 +24,43 @@ import {
 } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
-import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { CoreActionTypes, SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { selectFavoriteOverlays } from '@ansyn/core/reducers/core.reducer';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { Case, CaseFacetsState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { FilterModel } from '@ansyn/core/models/filter.model';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Injectable()
 export class FiltersAppEffects {
 
+	filters$ = this.store$.select(selectFilters);
+	showOnlyFavorite$ = this.store$.select(selectShowOnlyFavorite);
+	favoriteOverlays$ = this.store$.select(selectFavoriteOverlays);
+	overlaysArray$ = this.store$.select(selectOverlaysArray);
+	onFiltersChanges$ = Observable.combineLatest(this.filters$, this.showOnlyFavorite$);
+
 	/**
 	 * @type Effect
 	 * @name updateOverlayFilters$
-	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction, SyncFilteredOverlays
+	 * @ofType onFiltersChanges$
 	 * @action SyncOverlaysWithFavoritesAfterLoadedAction, SetFilteredOverlaysAction
 	 * @filter overlays are loaded
 	 * @dependencies filters, core, overlays
 	 */
 	@Effect()
-	updateOverlayFilters$: Observable<any> = this.actions$
-		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
-		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
-		.filter(([action, filters]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
+	updateOverlayFilters$ = this.onFiltersChanges$
+		.withLatestFrom(this.favoriteOverlays$, this.overlaysArray$)
+		.mergeMap(([[filters, showOnlyFavorite], favoriteOverlays, overlaysArray]: [[Filters, boolean], Overlay[], Overlay[]]) => {
 			const filterModels: FilterModel[] = FiltersService.pluckFilterModels(filters);
-			const arrOverlays: Overlay[] = Array.from(overlays.overlays.values());
-			const favorites: any = { only: filters.showOnlyFavorites, overlays: core.favoriteOverlays };
-			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(arrOverlays, filterModels, favorites);
+			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
@@ -104,10 +105,8 @@ export class FiltersAppEffects {
 	 * @action SetBadgeAction
 	 */
 	@Effect()
-	updateFiltersBadge$: Observable<any> = this.actions$
-		.ofType(...facetChangesActionType)
-		.withLatestFrom(this.store$.select(filtersStateSelector), (action, filtersState: IFiltersState) => filtersState)
-		.map(({ filters, showOnlyFavorites }: IFiltersState) => {
+	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$
+		.map(([ filters, showOnlyFavorites ]: [Filters, boolean]) => {
 			let badge = '0';
 
 			if (showOnlyFavorites) {
@@ -144,9 +143,8 @@ export class FiltersAppEffects {
 	 * @action EnableOnlyFavoritesSelectionAction
 	 */
 	@Effect()
-	setShowFavoritesFlagOnFilters$: Observable<any> = this.actions$
-		.ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.map(({ payload }: SetFavoriteOverlaysAction) => new EnableOnlyFavoritesSelectionAction(Boolean(payload.length)));
+	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$
+		.map((favoriteOverlays: Overlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

@@ -8,21 +8,21 @@ import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { union } from 'lodash';
-import { FavoritesModel, FilterModel } from '@ansyn/core/models/filter.model';
-import { sortByDate, sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { FilterModel } from '@ansyn/core/models/filter.model';
+import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 @Injectable()
 export class OverlaysService {
 
-	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: FavoritesModel): string[] {
-		let parsedOverlays: Overlay[] = favorites.overlays;
-		if (!favorites.only) {
+	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: Overlay[], showOnlyFavorite: boolean): string[] {
+		let parsedOverlays: Overlay[] = favorites;
+		if (!showOnlyFavorite) {
 			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
 			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
 		}
-		parsedOverlays.sort(sortByDate);
+		parsedOverlays.sort(sortByDateDesc);
 		return union(parsedOverlays.map(({ id }) => id));
 	}
 

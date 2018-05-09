@@ -50,10 +50,9 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	updateOverlayFilters$: Observable<any> = this.actions$
-		.ofType(...facetChangesActionType, CoreActionTypes.SET_FAVORITE_OVERLAYS)
+		.ofType(...facetChangesActionType)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(coreStateSelector), this.store$.select(overlaysStateSelector))
 		.filter(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => overlays.loaded)
-		.filter(([action, filters]: [Action, IFiltersState, ICoreState, IOverlaysState]) => filters.showOnlyFavorites || action.type !== CoreActionTypes.SET_FAVORITE_OVERLAYS)
 		.mergeMap(([action, filters, core, overlays]: [Action, IFiltersState, ICoreState, IOverlaysState]) => {
 			const filteredOverlays = this.buildFilteredOverlays(overlays.overlays, filters, core.favoriteOverlays);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;

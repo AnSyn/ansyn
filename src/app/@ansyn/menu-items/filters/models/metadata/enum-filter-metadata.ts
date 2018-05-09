@@ -32,7 +32,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 
 	accumulateData(value: any, calculateFiltered: Boolean): void {
 		if (!this.enumsFields.get(value)) {
-			this.enumsFields.set(value, { count: 0, filteredCount: 0, isChecked: false });
+			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: false });
 		} else {
 			if (calculateFiltered) {
 				this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
@@ -40,7 +40,6 @@ export class EnumFilterMetadata implements FilterMetadata {
 				this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
 			}
 		}
-		// const fiteredCount = Boolean(this.enumsFields.get(value).filteredCount) ? this.enumsFields.get(value).filteredCount : 0;
 	}
 
 	resetFilterCount(): void {

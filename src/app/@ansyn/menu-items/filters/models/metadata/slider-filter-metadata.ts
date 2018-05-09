@@ -40,7 +40,10 @@ export class SliderFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	resetFilterCount(): void {
+	incrementFilteredCount(value: number): void {
+	}
+
+	resetFilteredCount(): void {
 	}
 
 	initializeFilter(range: { start: number, end: number }): void {

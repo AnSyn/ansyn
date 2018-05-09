@@ -6,7 +6,9 @@ export abstract class FilterMetadata {
 
 	abstract initializeFilter(value: any, filter?: Filter): void;
 
-	abstract accumulateData(value: any, calculateFiltered?: Boolean): void;
+	abstract accumulateData(value: any): void;
+
+	abstract incrementFilteredCount(value: any): void;
 
 	abstract postInitializeFilter(value: any): void;
 
@@ -18,7 +20,7 @@ export abstract class FilterMetadata {
 
 	abstract isFiltered(): boolean;
 
-	abstract resetFilterCount(): void;
+	abstract resetFilteredCount(): void;
 
 	abstract showAll(): void;
 }

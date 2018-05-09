@@ -30,7 +30,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		this[key].value = value;
 	}
 
-	resetFilterCount(): void {
+	resetFilteredCount(): void {
 		this.trueProperties.filteredCount = 0;
 		this.falseProperties.filteredCount = 0;
 	}
@@ -41,19 +41,19 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		this[key].value = true;
 	}
 
-	accumulateData(value: boolean, calculateFiltered?: Boolean): void {
-		if (!Boolean(calculateFiltered)) {
-			if (value) {
-				this.trueProperties.count += 1;
-			} else {
-				this.falseProperties.count += 1;
-			}
+	accumulateData(value: boolean): void {
+		if (value) {
+			this.trueProperties.count += 1;
 		} else {
-			if (value) {
-				this.trueProperties.filteredCount += 1;
-			} else {
-				this.falseProperties.filteredCount += 1;
-			}
+			this.falseProperties.count += 1;
+		}
+	}
+
+	incrementFilteredCount(value: boolean): void {
+		if (value) {
+			this.trueProperties.filteredCount += 1;
+		} else {
+			this.falseProperties.filteredCount += 1;
 		}
 	}
 

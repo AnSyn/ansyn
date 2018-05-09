@@ -21,7 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
-	Case,
+	Case, CaseFacetsState,
 	CaseGeoFilter,
 	CaseLayersState,
 	CaseMapsState,
@@ -35,6 +35,7 @@ import {
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { ContextService } from '@ansyn/context/services/context.service';
 
 describe('SelectCaseAppEffects', () => {
@@ -101,7 +102,8 @@ describe('SelectCaseAppEffects', () => {
 				favoriteOverlays: Overlay[] = [],
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} },
-				overlaysManualProcessArgs: OverlaysManualProcessArgs = {};
+				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
+				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] };
 
 			const state: CaseState = <any> {
 				orientation,
@@ -112,7 +114,8 @@ describe('SelectCaseAppEffects', () => {
 				favoriteOverlays,
 				maps,
 				layers,
-				overlaysManualProcessArgs
+				overlaysManualProcessArgs,
+				facets
 			};
 
 			const payload: Case = {
@@ -126,16 +129,17 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdeifgh)--', {
+			const expectedResult = cold('--(abcdefghij)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
-				i: new BeginLayerCollectionLoadAction(),
-				f: new SetAnnotationsLayer(layers.annotationsLayer),
-				g: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
-				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs })
+				f: new BeginLayerCollectionLoadAction(),
+				g: new SetAnnotationsLayer(layers.annotationsLayer),
+				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
+				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				j: new UpdateFacetsAction(facets)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

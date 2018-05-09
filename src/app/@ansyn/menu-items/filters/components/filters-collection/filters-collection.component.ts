@@ -3,7 +3,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Filter } from '../../models/filter';
 import { Store } from '@ngrx/store';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
-import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
+import { UpdateFacetsAction } from '../../actions/filters.actions';
 
 @Component({
 	selector: 'ansyn-filters',
@@ -24,8 +24,9 @@ export class FiltersCollectionComponent implements OnDestroy {
 		this.subscribers.filters = this.store.select(filtersStateSelector)
 			.distinctUntilChanged()
 			.map((state: IFiltersState) => {
+				console.log(state);
 				return {
-					showOnlyFavorites: state.showOnlyFavorites,
+					showOnlyFavorites: state.facets.showOnlyFavorites,
 					enableOnlyFavoritesSelection: state.enableOnlyFavoritesSelection
 				};
 			})
@@ -45,8 +46,8 @@ export class FiltersCollectionComponent implements OnDestroy {
 
 	}
 
-	showOnlyFavorites(data) {
-		this.store.dispatch(new ToggleOnlyFavoriteAction());
+	showOnlyFavorites($event) {
+		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }));
 	}
 
 	ngOnDestroy() {

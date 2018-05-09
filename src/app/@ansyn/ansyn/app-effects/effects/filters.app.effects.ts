@@ -4,10 +4,10 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import {
-	Filters,
+	Filters, selectFacets,
 	selectFilters,
 	selectOldFilters,
-	selectShowOnlyFavorite
+	selectShowOnlyFavorites
 } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
 	LoadOverlaysAction,
@@ -46,13 +46,11 @@ import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-re
 export class FiltersAppEffects {
 
 	filters$: Observable<Filters> = this.store$.select(selectFilters);
-	showOnlyFavorite$ = this.store$.select(selectShowOnlyFavorite);
+	showOnlyFavorite$ = this.store$.select(selectShowOnlyFavorites);
 	favoriteOverlays$ = this.store$.select(selectFavoriteOverlays);
 	overlaysArray$ = this.store$.select(selectOverlaysArray);
 	onFiltersChanges$: Observable<[Filters, boolean]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$);
-	facets$ = this.store$.select(casesStateSelector)
-		.filter(cases => Boolean(cases.selectedCase))
-		.map((cases: ICasesState) => cases.selectedCase.state.facets);
+	facets$ = this.store$.select(selectFacets);
 	oldFilters$ = this.store$.select(selectOldFilters);
 
 	/**
@@ -134,7 +132,7 @@ export class FiltersAppEffects {
 	/**
 	 * @type Effect
 	 * @name updateFiltersBadge$
-	 * @ofType InitializeFiltersSuccessAction, UpdateFilterAction, ToggleOnlyFavoriteAction
+	 * @ofType onFiltersChanges$
 	 * @dependencies filters
 	 * @action SetBadgeAction
 	 */

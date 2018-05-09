@@ -4,27 +4,15 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { ICasesState, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import {
-	filtersFeatureKey,
-	FiltersReducer,
-	IFiltersState,
-	initialFiltersState
-} from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { filtersFeatureKey, FiltersReducer } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
 	ResetFiltersAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { Case, FilterType } from '@ansyn/core/models/case.model';
-import {
-	IOverlaysState,
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
-	overlaysStatusMessages
-} from '@ansyn/overlays/reducers/overlays.reducer';
+import { FilterType } from '@ansyn/core/models/case.model';
+import { OverlayReducer, overlaysFeatureKey, overlaysStatusMessages } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
@@ -62,24 +50,6 @@ describe('Filters app effects', () => {
 
 	const favoriteOver = new Overlay();
 	favoriteOver.id = '2';
-
-	const filtersState = <IFiltersState> { ...initialFiltersState };
-	const casesState = <ICasesState> { ...initialCasesState };
-	const overlaysState = <IOverlaysState> { ...overlaysInitialState };
-
-	const selectedCase: Case = {
-		id: 'case1',
-		state: {
-			maps: {
-				activeMapId: '5555',
-				data: [{ id: '5555', data: {} }, { id: '4444', data: {} }]
-			},
-			facets: {
-				filters: null
-			},
-			favoriteOverlays: [favoriteOver]
-		}
-	} as any;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

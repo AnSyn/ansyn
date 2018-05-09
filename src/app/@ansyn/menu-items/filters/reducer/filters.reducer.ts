@@ -2,6 +2,7 @@ import { Filter } from '../models/filter';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { CaseFacetsState } from '@ansyn/core/models/case.model';
 
 export type Filters = Map<Filter, FilterMetadata>;
 
@@ -9,6 +10,7 @@ export interface IFiltersState {
 	filters: Filters;
 	oldFilters: Map<Filter, FilterMetadata>;
 	isLoading: boolean;
+	facets: CaseFacetsState;
 	showOnlyFavorites: boolean;
 	enableOnlyFavoritesSelection: boolean;
 }
@@ -17,6 +19,10 @@ export const initialFiltersState: IFiltersState = {
 	filters: new Map<Filter, FilterMetadata>(),
 	oldFilters: null,
 	isLoading: true,
+	facets: {
+		showOnlyFavorites: false,
+		filters: []
+	},
 	showOnlyFavorites: false,
 	enableOnlyFavoritesSelection: false
 };
@@ -50,17 +56,18 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 				isLoading: true
 			};
 
-		case FiltersActionTypes.TOGGLE_ONLY_FAVORITES:
-			return Object.assign({}, state, { showOnlyFavorites: !state.showOnlyFavorites });
-
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
 			return Object.assign({}, state, { enableOnlyFavoritesSelection: action.payload });
 
+		case FiltersActionTypes.UPDATE_FACETS:
+			return { ...state, facets: { ...state.facets, ...action.payload } };
+
 		default:
-			return state; // Object.assign({},state);
+			return state;
 	}
 }
 
-export const selectShowOnlyFavorite = createSelector(filtersStateSelector, ({ showOnlyFavorites }) => showOnlyFavorites);
 export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
 export const selectOldFilters = createSelector(filtersStateSelector, ({ oldFilters }) => oldFilters);
+export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
+export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: CaseFacetsState) => showOnlyFavorites);

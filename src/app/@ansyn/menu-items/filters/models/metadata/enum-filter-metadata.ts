@@ -30,7 +30,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	accumulateData(value: any, calculateFiltered: Boolean): void {
+	accumulateData(value: any, calculateFiltered?: Boolean): void {
 		if (!this.enumsFields.get(value)) {
 			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: false });
 		} else {

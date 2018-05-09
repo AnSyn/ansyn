@@ -41,7 +41,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		this[key].value = true;
 	}
 
-	accumulateData(value: boolean, calculateFiltered: Boolean): void {
+	accumulateData(value: boolean, calculateFiltered?: Boolean): void {
 		if (!Boolean(calculateFiltered)) {
 			if (value) {
 				this.trueProperties.count += 1;

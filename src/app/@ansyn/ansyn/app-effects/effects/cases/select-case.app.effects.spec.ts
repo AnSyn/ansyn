@@ -35,6 +35,7 @@ import {
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { ContextService } from '@ansyn/context/services/context.service';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -46,6 +47,10 @@ describe('SelectCaseAppEffects', () => {
 			imageryCountAfter: -1
 		}
 	};
+	let mockContextService = {
+
+	};
+
 	let mockOverlaysService = {
 		getStartDateViaLimitFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() }),
 		getStartAndEndDateViaRangeFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() })
@@ -62,6 +67,10 @@ describe('SelectCaseAppEffects', () => {
 				{
 					provide: CasesService,
 					useValue: mockCasesService
+				},
+				{
+					provide: ContextService,
+					useValue: mockContextService
 				},
 				{
 					provide: OverlaysService,

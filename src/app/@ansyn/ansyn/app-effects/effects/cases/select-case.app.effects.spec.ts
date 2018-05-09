@@ -47,9 +47,6 @@ describe('SelectCaseAppEffects', () => {
 			imageryCountAfter: -1
 		}
 	};
-	let mockContextService = {
-
-	};
 
 	let mockOverlaysService = {
 		getStartDateViaLimitFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() }),
@@ -70,7 +67,7 @@ describe('SelectCaseAppEffects', () => {
 				},
 				{
 					provide: ContextService,
-					useValue: mockContextService
+					useValue: {}
 				},
 				{
 					provide: OverlaysService,

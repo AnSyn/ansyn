@@ -24,7 +24,6 @@ export class FiltersCollectionComponent implements OnDestroy {
 		this.subscribers.filters = this.store.select(filtersStateSelector)
 			.distinctUntilChanged()
 			.map((state: IFiltersState) => {
-				console.log(state);
 				return {
 					showOnlyFavorites: state.facets.showOnlyFavorites,
 					enableOnlyFavoritesSelection: state.enableOnlyFavoritesSelection

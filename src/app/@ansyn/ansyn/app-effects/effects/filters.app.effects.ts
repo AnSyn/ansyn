@@ -16,13 +16,16 @@ import {
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
-import { overlaysStatusMessages, selectOverlaysArray } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	overlaysStateSelector, overlaysStatusMessages,
+	selectOverlaysArray
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction
+	ResetFiltersAction, UpdateFacetsAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
@@ -177,6 +180,22 @@ export class FiltersAppEffects {
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$
 		.map((favoriteOverlays: Overlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)));
+
+	/**
+	 * @type Effect
+	 * @name updateFacetFilters$
+	 * @ofType filters$
+	 * @action UpdateFacetsAction
+	 */
+	@Effect()
+	updateFacetFilters$ = this.filters$
+		.withLatestFrom(this.store$.select(overlaysStateSelector))
+		.filter(([filters, overlays]) => overlays.loaded)
+		.map(([filters, overlays]) => filters)
+		.map((filters: Filters) => {
+			const caseFilters = FiltersService.buildCaseFilters(filters);
+			return new UpdateFacetsAction({ filters: caseFilters });
+		});
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

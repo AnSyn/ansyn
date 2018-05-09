@@ -11,7 +11,6 @@ export interface IFiltersState {
 	oldFilters: Map<Filter, FilterMetadata>;
 	isLoading: boolean;
 	facets: CaseFacetsState;
-	showOnlyFavorites: boolean;
 	enableOnlyFavoritesSelection: boolean;
 }
 
@@ -23,13 +22,12 @@ export const initialFiltersState: IFiltersState = {
 		showOnlyFavorites: false,
 		filters: []
 	},
-	showOnlyFavorites: false,
 	enableOnlyFavoritesSelection: false
 };
 
 export const filtersFeatureKey = 'filters';
 
-export const filtersStateSelector: MemoizedSelector<any, IFiltersState> = createFeatureSelector<IFiltersState>('filters');
+export const filtersStateSelector: MemoizedSelector<any, IFiltersState> = createFeatureSelector<IFiltersState>(filtersFeatureKey);
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
 	switch (action.type) {

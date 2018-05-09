@@ -1,0 +1,40 @@
+{
+	"data": {
+
+	},
+	"preview": {
+		"id": "areaAnalysis",
+		"creationTime": "2018-04-29T14:53:42.475Z",
+		"lastModified": "2018-04-29T14:53:42.475Z",
+		"name": "Area Analysis",
+		"facets": {
+			"filters": [
+				{
+					"metadata": [
+						"Landsat8",
+						"Sentinel-2A",
+						"Sentinel-2B"
+					],
+					"fieldName": "sensorName"
+				},
+				{
+					"metadata": [
+						"Landsat8L1G",
+						"Sentinel2L1C"
+					],
+					"fieldName": "sensorType"
+				}
+			]
+		},
+		"layerIndex": 0,
+		"defaultOverlay": "latest",
+		"zoom": 18,
+		"imageryCountBefore": 30,
+		"timeFilter": "start/end",
+		"geoFilter": "Point",
+		"orientation": "original",
+		"requirements": [
+			"geopoint"
+		]
+	}
+}

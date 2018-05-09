@@ -11,25 +11,25 @@ export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken(
 
 @Injectable()
 export class FiltersService {
-	static buildCaseFacets(filtersState: IFiltersState): CaseFacetsState {
-		const { showOnlyFavorites } = filtersState;
-		const filters: CaseFilters = [];
+	static buildCaseFilters(filters: Filters): CaseFilters {
+		const caseFilters: CaseFilters = [];
 
-		filtersState.filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
-			const currentFilter: any = filters.find(({ fieldName }) => fieldName === filter.modelName);
+		filters.forEach((newMetadata: FilterMetadata, filter: Filter) => {
+			const currentFilter: any = caseFilters.find(({ fieldName }) => fieldName === filter.modelName);
 			const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
 
 			if (!currentFilter && Boolean(outerStateMetadata)) {
 				const [fieldName, metadata] = [filter.modelName, outerStateMetadata];
-				filters.push({ fieldName, metadata, type: filter.type });
+				caseFilters.push({ fieldName, metadata, type: filter.type });
 			} else if (currentFilter && Boolean(outerStateMetadata)) {
 				currentFilter.metadata = outerStateMetadata;
 			} else if (currentFilter && !Boolean(outerStateMetadata)) {
-				const index = filters.indexOf(currentFilter);
-				filters.splice(index, 1);
+				const index = caseFilters.indexOf(currentFilter);
+				caseFilters.splice(index, 1);
 			}
 		});
-		return { showOnlyFavorites, filters };
+
+		return caseFilters;
 	}
 
 	static pluckFilterModels(filters: Filters): FilterModel[] {

@@ -22,6 +22,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
 import { Context } from '@ansyn/core/models/context.model';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
@@ -143,6 +144,8 @@ export class SelectCaseAppEffects {
 
 		// layers
 		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
+		// filters
+		const { facets } = state;
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
@@ -152,7 +155,8 @@ export class SelectCaseAppEffects {
 			new BeginLayerCollectionLoadAction(),
 			new SetAnnotationsLayer(annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
-			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs })
+			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+			new UpdateFacetsAction(facets)
 		];
 	}
 

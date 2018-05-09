@@ -4,19 +4,18 @@ import { Action, Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
-import { facetChangesActionType } from '@ansyn/menu-items/filters/effects/filters.effects';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 import { Case } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
 
 export const UpdateCaseActionTypes = [
-	...facetChangesActionType, // -> facets
+	FiltersActionTypes.UPDATE_FACETS, // -> facets
 	CoreActionTypes.SET_FAVORITE_OVERLAYS, // -> favoriteOverlays
 	StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES, // -> geoFilter, timeFilter, orientation
 	...Object.values(LayersActionTypes.ANNOTATIONS), // -> annotationsLayer, displayAnnotationsLayer
@@ -43,7 +42,7 @@ export class UpdateCaseAppEffects {
 		.withLatestFrom(this.store$)
 		.map(([action, { cases, core, tools, statusBar, map, layers, filters }]: [Action, IAppState]) => {
 			// properties that should have been saved on another store ( not cases )
-			let { contextEntities, facets } = cases.selectedCase.state;
+			const { contextEntities } = cases.selectedCase.state;
 			const { id, name, lastModified, owner, creationTime, selectedContextId } = cases.selectedCase;
 			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
 			const { activeMapId, mapsList } = map;
@@ -51,9 +50,7 @@ export class UpdateCaseAppEffects {
 			const { favoriteOverlays, overlaysCriteria, layout } = core;
 			const { time, region } = overlaysCriteria;
 			const { overlaysManualProcessArgs } = tools;
-			if (facetChangesActionType.includes(action.type)) {
-				facets = FiltersService.buildCaseFacets(filters);
-			}
+			const { facets } = filters;
 
 			const updatedCase: Case = {
 				id,

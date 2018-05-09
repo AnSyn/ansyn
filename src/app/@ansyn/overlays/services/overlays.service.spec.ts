@@ -110,7 +110,7 @@ describe('OverlaysService', () => {
 		},
 		time: {
 			type: 'absolute',
-			from:  new Date(2020),
+			from: new Date(2020),
 			to: new Date()
 		}
 	};
@@ -192,17 +192,24 @@ describe('OverlaysService', () => {
 	});
 
 	it('buildFilteredOverlays should build filtered overlays', () => {
-		//
-		// const mockData = {
-		// 	filters: {},
-		// 	overlays: new Map()
-		// };
-		// overlaysTmpData.forEach(item => {
-		// 	mockData.overlays.set(item.id, item);
-		// });
-		//
-		// const result = OverlaysService.filter(<any>mockData.overlays, <any>mockData.filters);
-		// expect(result.length).toBe(overlaysTmpData.length);
+
+		let o1 = { id: '1', date: new Date(0) },
+			o2 = { id: '2', date: new Date(1) },
+			o3 = { id: '3', date: new Date(2) },
+			o6 = { id: '6', date: new Date(3) },
+			parsedFilters = [ { key: 'fakeFilter', filterFunc: () => true } ],
+			overlays = <any> [o1, o2, o3],
+			favorites = <any> [o1, o6],
+			showOnlyFavorite = false;
+
+		let ids = OverlaysService.buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite);
+		expect(ids).toEqual(['1', '2', '3', '6']);
+
+		/* only favorite ids */
+		showOnlyFavorite = true;
+		ids = OverlaysService.buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite);
+		expect(ids).toEqual(['1', '6']);
+
 	});
 
 
@@ -316,7 +323,7 @@ describe('OverlaysService', () => {
 				start: new Date(1000),
 				end: new Date(5000) // delta tenth is 500 ms
 			};
-			const { start, end} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			const { start, end } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(start.getTime()).toEqual(new Date(1000).getTime());
 			expect(end.getTime()).toEqual(new Date(6200).getTime());
 		});

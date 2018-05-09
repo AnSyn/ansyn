@@ -123,7 +123,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const filters = this.parsePlanetFilters(params.facets);
 
 		const pageLimit: any = params.limit ? params.limit : DEFAULT_OVERLAYS_LIMIT;
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([bboxFilter, dateFilter]),
+		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: Overlay[]) => {
@@ -154,21 +154,16 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	public parsePlanetFilters(facets = {filters: []}) {
+	public parsePlanetFilters(facets = {filters: []}): IPlanetFilter[] {
 		if (Object.getOwnPropertyNames(facets).length === 0) {
-			return '';
+			return [];
 		}
 
 		return facets.filters.map(filterObj => {
 			if (filterObj.fieldName === 'bestResolution') {
-				return `${this.planetDic[filterObj.fieldName]} <= '` + filterObj.metadata.end +  "'";
+				return { type: 'RangeFilter', field_name: this.planetDic[filterObj.fieldName], config: { lte: filterObj.metadata.end, gte: filterObj.metadata.start }};
 			}
-			let filterStr = `${this.planetDic[filterObj.fieldName]} = '`;
-			filterObj.metadata.forEach((v, i, a) => {
-				const sChar = i === a.length - 1 ? "'" : ",";
-				filterStr = filterStr + v + sChar;
-			});
-			return filterStr
+			return { type: 'StringInFilter', field_name: this.planetDic[filterObj.fieldName], config: filterObj.metadata }
 		});
 	}
 

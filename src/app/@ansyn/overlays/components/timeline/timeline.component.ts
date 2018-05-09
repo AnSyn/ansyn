@@ -129,10 +129,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	dropsChange$: Observable<OverlayDrop[]> = this.store$.select(selectDrops)
 		.filter(Boolean)
 		.do(drops => {
-			this.dropsIdMap = new Map();
-			drops.forEach(drop => {
-				this.dropsIdMap.set(drop.id, drop);
-			});
+			this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]));
 		})
 		.do(drops => {
 			this.drops = drops;

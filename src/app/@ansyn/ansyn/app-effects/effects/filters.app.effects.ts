@@ -52,7 +52,7 @@ export class FiltersAppEffects {
 	showOnlyFavorite$ = this.store$.select(selectShowOnlyFavorites);
 	favoriteOverlays$ = this.store$.select(selectFavoriteOverlays);
 	overlaysArray$ = this.store$.select(selectOverlaysArray);
-	onFiltersChanges$: Observable<[Filters, boolean]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$);
+	onFiltersChanges$: Observable<[Filters, boolean, Overlay[]]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$);
 	facets$ = this.store$.select(selectFacets);
 	oldFilters$ = this.store$.select(selectOldFilters);
 
@@ -66,8 +66,8 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	updateOverlayFilters$ = this.onFiltersChanges$
-		.withLatestFrom(this.favoriteOverlays$, this.overlaysArray$)
-		.mergeMap(([[filters, showOnlyFavorite], favoriteOverlays, overlaysArray]: [[Filters, boolean], Overlay[], Overlay[]]) => {
+		.withLatestFrom(this.overlaysArray$)
+		.mergeMap(([[filters, showOnlyFavorite, favoriteOverlays], overlaysArray]: [[Filters, boolean, Overlay[]], Overlay[]]) => {
 			const filterModels: FilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
@@ -141,7 +141,7 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$
-		.map(([filters, showOnlyFavorites]: [Filters, boolean]) => {
+		.map(([filters, showOnlyFavorites]: [Filters, boolean, Overlay[]]) => {
 			let badge = '0';
 
 			if (showOnlyFavorites) {

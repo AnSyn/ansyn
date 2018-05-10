@@ -83,8 +83,8 @@ export class AnsynBuilder {
 	moduleRef: NgModuleRef<DynamicsAnsynModule>;
 	appSelector = 'ansyn-app2';
 	ansynModulesMap = new Map<AnsynModulesNames, any>([
-		[AnsynModulesNames.CommonModule, CommonModule],
-		[AnsynModulesNames.BrowserModule, BrowserModule],
+		// [AnsynModulesNames.CommonModule, CommonModule],
+		// [AnsynModulesNames.BrowserModule, BrowserModule],
 		[AnsynModulesNames.AppProvidersModule, AppProvidersModule],
 		[AnsynModulesNames.OverlaysModule, OverlaysModule],
 		[AnsynModulesNames.FormsModule, FormsModule],
@@ -105,8 +105,9 @@ export class AnsynBuilder {
 		[AnsynModulesNames.MapFacadeModule, MapFacadeModule],
 		[AnsynModulesNames.ImageryModule, ImageryModule],
 		[AnsynModulesNames.StatusBarModule, StatusBarModule],
-		[AnsynModulesNames.AnsynRouterModule, AnsynRouterModule],
-		[AnsynModulesNames.RouterModule, RouterModule.forRoot([], { useHash: true })]
+		// [AnsynModulesNames.AnsynRouterModule, AnsynRouterModule],
+		// [AnsynModulesNames.RouterModule, RouterModule.forRoot([], { useHash: true })
+		// ]
 	]);
 
 	get api() {
@@ -162,6 +163,7 @@ export class AnsynBuilder {
 		const AnsynCustomComponenet = Component({ ...ansynComponentMeta, selector: this.id })(AnsynCustomComponent);
 		const options: NgModule = {
 			imports: [
+				BrowserModule,
 				...Array.from(this.ansynModulesMap.values()),
 				StoreModule.forRoot({}, { metaReducers }),
 				EffectsModule.forRoot([AnsynApi])

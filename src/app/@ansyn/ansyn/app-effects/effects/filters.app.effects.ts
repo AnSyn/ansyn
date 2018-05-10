@@ -4,7 +4,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import {
-	Filters, selectFacets,
+	Filters, filtersStateSelector, IFiltersState, selectFacets,
 	selectFilters,
 	selectOldFilters,
 	selectShowOnlyFavorites
@@ -17,8 +17,8 @@ import {
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	overlaysStateSelector, overlaysStatusMessages,
-	selectOverlaysArray
+	overlaysStateSelector, overlaysStatusMessages, selectFilteredOveralys,
+	selectOverlaysArray, selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -195,6 +195,19 @@ export class FiltersAppEffects {
 		.map((filters: Filters) => {
 			const caseFilters = FiltersService.buildCaseFilters(filters);
 			return new UpdateFacetsAction({ filters: caseFilters });
+		});
+
+	@Effect({ dispatch: false })
+	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys)
+		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap))
+		.do(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>]) => {
+			Array.from(filterState.filters).forEach(([key, metadata]: [Filter, FilterMetadata]) => {
+				metadata.resetFilteredCount();
+				filteredOverlays.forEach((id: string) => {
+					const overlay = overlays.get(id);
+					metadata.incrementFilteredCount(overlay[key.modelName]);
+				});
+			});
 		});
 
 	constructor(protected actions$: Actions,

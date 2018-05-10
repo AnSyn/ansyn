@@ -4,18 +4,22 @@ import {
 } from '../actions/menu.actions';
 import { isDevMode } from '@angular/core';
 import { sessionData, updateSession } from '../helpers/menu-session.helper';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { MenuItem } from '@ansyn/menu/models/menu-item.model';
 
+export interface MenuItems {
+	[key: string]: MenuItem;
+};
+
 export interface IMenuState {
-	menuItems: Map<string, MenuItem>;
+	menuItems: MenuItems;
 	selectedMenuItem: string;
 	isPinned: boolean;
 	clickOutside: boolean;
 }
 
 export const initialMenuState: IMenuState = {
-	menuItems: new Map(),
+	menuItems: {},
 	selectedMenuItem: sessionData().selectedMenuItem,
 	isPinned: sessionData().isPinned,
 	clickOutside: true
@@ -33,19 +37,19 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 	switch (action.type) {
 		case MenuActionTypes.INITIALIZE_MENU_ITEMS: {
-			const menuItems = new Map();
+			const menuItems = {};
 			action.payload.forEach((menuItem: MenuItem) => {
 				if (isMenuItemShown(menuItem)) {
-					menuItems.set(menuItem.name, menuItem);
+					menuItems[menuItem.name] = menuItem;
 				}
 			});
 			return { ...state, menuItems };
 		}
 		case MenuActionTypes.ADD_MENU_ITEM:
-			const menuItems = new Map(state.menuItems);
-			if (isMenuItemShown(action.payload)) {
-				menuItems.set(action.payload.name, action.payload);
+			if (!isMenuItemShown(action.payload)) {
+				return state;
 			}
+			const menuItems = { ...state.menuItems, [action.payload.name]: action.payload };
 			return { ...state, menuItems };
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
@@ -61,14 +65,11 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SET_BADGE:
 			const { key, badge } = action.payload;
-			const menuItemsHandler = new Map<string, MenuItem>(state.menuItems);
-			const menuItem = menuItemsHandler.get(key);
+			const menuItem = state.menuItems[key];
 			if (!menuItem) {
 				return state;
 			}
-			menuItem.badge = badge;
-			menuItemsHandler.set(key, menuItem);
-			return { ...state, menuItems: menuItemsHandler };
+			return { ...state, menuItems: { ...state.menuItems, [key]: {...menuItem, badge } }};
 
 		case MenuActionTypes.TOGGLE_IS_PINNED:
 			updateSession({ isPinned: action.payload });
@@ -80,3 +81,4 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return state;
 	}
 }
+export const selectMenuItems = createSelector(menuStateSelector, ({ menuItems }: IMenuState) => menuItems);

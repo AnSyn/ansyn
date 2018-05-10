@@ -1,7 +1,7 @@
 import {
 	Component, ComponentFactoryResolver, ComponentRef, ElementRef, Inject, Input, OnInit, QueryList,
 	Renderer2,
-	ViewChild, ViewChildren, ViewContainerRef
+	ViewChild, ViewContainerRef
 } from '@angular/core';
 import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
@@ -14,6 +14,7 @@ import { DOCUMENT } from '@angular/common';
 import { MenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
+import { MenuItems, selectMenuItems } from '@ansyn/menu/reducers/menu.reducer';
 
 const animations: any[] = [
 	trigger(
@@ -73,19 +74,17 @@ export class MenuComponent implements OnInit {
 		.pluck<IMenuState, boolean>('clickOutside')
 		.distinctUntilChanged();
 
-	menuItems$: Observable<Map<string, MenuItem>> = this.menuState$
-		.pluck <IMenuState, Map<string, MenuItem>>('menuItems')
-		.distinctUntilChanged();
+	menuItems$: Observable<MenuItems> = this.store.select(selectMenuItems)
 
 	menuItemsAsArray$: Observable<MenuItem[]> = this.menuItems$
-		.map((menuItems: Map<string, MenuItem>) => Array.from(menuItems.values()));
+		.map((menuItems: MenuItems) => Array.from(Object.values(menuItems)));
 
 	selectedMenuItem$: Observable<string> = this.menuState$
 		.pluck <IMenuState, string>('selectedMenuItem')
 		.distinctUntilChanged();
 
 	selectedMenuItemName: string;
-	menuItems: Map<string, MenuItem>;
+	menuItems: MenuItems = {};
 	isPinned: boolean;
 	pinText = 'Pin';
 	clickOutside: boolean;
@@ -102,7 +101,7 @@ export class MenuComponent implements OnInit {
 	}
 
 	get selectedMenuItem(): MenuItem {
-		return this.menuItems && this.menuItems.get(this.selectedMenuItemName);
+		return this.menuItems[this.selectedMenuItemName];
 	}
 
 	forceRedraw() {

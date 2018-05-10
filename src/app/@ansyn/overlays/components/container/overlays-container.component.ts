@@ -1,14 +1,13 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/store-element';
 import { Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector } from '../../reducers/overlays.reducer';
+import { IOverlaysState, selectLoading } from '../../reducers/overlays.reducer';
 import { Observable } from 'rxjs/Observable';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Actions } from '@ngrx/effects';
 
 const animations: any[] = [
 	trigger('timeline-status', [
@@ -30,20 +29,11 @@ const animations: any[] = [
 	animations
 })
 
-export class OverlaysContainerComponent  {
-
-	@ViewChild('idForBuilder') element: ElementRef;
-	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
-
-	overlaysLoader$: Observable<any> = this.overlaysState$
-		.pluck <IOverlaysState, boolean>('loading')
-		.distinctUntilChanged()
-		.do(() => this.element.nativeElement.click());
+export class OverlaysContainerComponent {
+	overlaysLoader$: Observable<any> = this.store$.select(selectLoading);
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}
-
-
 }
 
 

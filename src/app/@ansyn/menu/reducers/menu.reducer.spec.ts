@@ -12,7 +12,7 @@ describe('MenuReducer', () => {
 		};
 		let action: AddMenuItemAction = new AddMenuItemAction(menuItem);
 		let result: IMenuState = MenuReducer(initialMenuState, action);
-		expect(result.menuItems.fakeMenuItem).toEqual(menuItem);
+		expect(result.entities.fakeMenuItem).toEqual(menuItem);
 	});
 
 

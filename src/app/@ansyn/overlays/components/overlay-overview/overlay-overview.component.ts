@@ -71,7 +71,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			if (hoveredElement) {
 				const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
 				this.left = hoveredElementBounds.left - 50;
-				this.bottom = this.topElement.offsetHeight - hoveredElementBounds.top;
+				this.bottom = this.topElement.offsetHeight - hoveredElementBounds.top + 15;
 				this.isHoveringOverDrop = true;
 				this.overlay = overlay;
 				this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));

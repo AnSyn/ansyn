@@ -1,20 +1,35 @@
 import {
-	Component, ComponentFactoryResolver, ComponentRef, ElementRef, Inject, Input, OnInit, QueryList,
+	Component,
+	ComponentFactoryResolver,
+	ComponentRef,
+	ElementRef,
+	Inject,
+	Input, isDevMode,
+	OnInit,
 	Renderer2,
-	ViewChild, ViewContainerRef
+	ViewChild,
+	ViewContainerRef
 } from '@angular/core';
-import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
+import {
+	ContainerChangedTriggerAction,
+	SelectMenuItemAction,
+	ToggleIsPinnedAction,
+	UnSelectMenuItemAction
+} from '../actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
 import { IMenuState, menuStateSelector } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { ContainerChangedTriggerAction, ToggleIsPinnedAction } from '../actions/menu.actions';
 import { DOCUMENT } from '@angular/common';
 import { MenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
-import { MenuItems, selectMenuItems } from '@ansyn/menu/reducers/menu.reducer';
+import {
+	selectAllMenuItems, selectClickOutside, selectEntitiesMenuItems,
+	selectIsPinned, selectSelectedMenuItem
+} from '@ansyn/menu/reducers/menu.reducer';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 const animations: any[] = [
 	trigger(
@@ -64,27 +79,19 @@ export class MenuComponent implements OnInit {
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
 
-	menuState$: Observable<IMenuState> = this.store.select(menuStateSelector);
 
-	isPinned$ = this.menuState$
-		.pluck<IMenuState, boolean>('isPinned')
-		.distinctUntilChanged();
+	isPinned$ = this.store.select(selectIsPinned);
 
-	clickOutside$ = this.menuState$
-		.pluck<IMenuState, boolean>('clickOutside')
-		.distinctUntilChanged();
+	clickOutside$ = this.store.select(selectClickOutside);
 
-	menuItems$: Observable<MenuItems> = this.store.select(selectMenuItems)
+	entities$: Observable<Dictionary<MenuItem>> = this.store.select(selectEntitiesMenuItems);
+	menuItemsAsArray$: Observable<MenuItem[]> = this.store.select(selectAllMenuItems)
+		.map((menuItems: MenuItem[]) => menuItems.filter(this.isMenuItemShown));
 
-	menuItemsAsArray$: Observable<MenuItem[]> = this.menuItems$
-		.map((menuItems: MenuItems) => Array.from(Object.values(menuItems)));
-
-	selectedMenuItem$: Observable<string> = this.menuState$
-		.pluck <IMenuState, string>('selectedMenuItem')
-		.distinctUntilChanged();
+	selectedMenuItem$: Observable<string> = this.store.select(selectSelectedMenuItem);
 
 	selectedMenuItemName: string;
-	menuItems: MenuItems = {};
+	entities: Dictionary<MenuItem> = {};
 	isPinned: boolean;
 	pinText = 'Pin';
 	clickOutside: boolean;
@@ -101,7 +108,11 @@ export class MenuComponent implements OnInit {
 	}
 
 	get selectedMenuItem(): MenuItem {
-		return this.menuItems[this.selectedMenuItemName];
+		return this.entities[this.selectedMenuItemName];
+	}
+
+	isMenuItemShown(menuItem: MenuItem) {
+		return isDevMode() || menuItem.production;
 	}
 
 	forceRedraw() {
@@ -207,8 +218,8 @@ export class MenuComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.menuItems$.subscribe((_menuItems) => {
-			this.menuItems = _menuItems;
+		this.entities$.subscribe((_menuItems) => {
+			this.entities = _menuItems;
 		});
 
 		this.selectedMenuItem$.subscribe(this.setSelectedMenuItem.bind(this));
@@ -233,7 +244,7 @@ export class MenuComponent implements OnInit {
 			.fromEvent(this.document, 'click')
 			.filter((click: any) => {
 				const include = click.path.includes(this.elementRef.nativeElement);
-				return !include && this.clickOutside && this.anyMenuItemSelected()
+				return !include && this.clickOutside && this.anyMenuItemSelected();
 			})
 			.subscribe(this.closeMenu.bind(this));
 	}

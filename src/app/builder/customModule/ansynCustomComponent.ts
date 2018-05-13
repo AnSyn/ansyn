@@ -1,5 +1,5 @@
 import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
-import { selectLoading } from '@ansyn/overlays/reducers/overlays.reducer';
+import { selectDropMarkup, selectLoading } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
 import { ChangeDetectorRef, Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +16,13 @@ export class AnsynCustomComponent extends AnsynComponent implements OnInit {
 			}, 0);
 		});
 
+	hoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
+		.do(() => {
+			setTimeout(() => {
+				this.ref.detectChanges();
+			}, 0);
+		});
+
 	constructor(private store: Store<any>, private ref: ChangeDetectorRef) {
 		super(store);
 	}
@@ -23,6 +30,7 @@ export class AnsynCustomComponent extends AnsynComponent implements OnInit {
 	ngOnInit() {
 		super.ngOnInit();
 		this.isLoading$.subscribe();
+		this.hoveredOverlay$.subscribe();
 	}
 
 }

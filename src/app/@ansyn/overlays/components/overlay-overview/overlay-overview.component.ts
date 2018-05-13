@@ -1,20 +1,17 @@
-import { Component, HostBinding, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import {
 	IOverlaysState,
 	MarkUpClass,
 	MarkUpData,
-	overlaysStateSelector
+	overlaysStateSelector,
+	selectDropMarkup
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
-import { DOCUMENT } from '@angular/common';
-import {
-	DisplayOverlayFromStoreAction,
-	SetMarkUp
-} from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 
@@ -29,6 +26,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public formattedTime: string;
 	public overlayId: string;
 
+	protected topElement = this.el.nativeElement.parentElement;
+
 	public get const() {
 		return overlayOverviewComponentConstants
 	}
@@ -37,13 +36,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.bottom.px') bottom = 0;
 
-	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)
-		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
+	hoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck<IOverlaysState, Map<any, any>>('overlays')))
 		.map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
 			overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
-		)
-		.distinctUntilChanged();
+		);
 
 	// Mark the original overlay as un-hovered when mouse leaves
 	@HostListener('mouseleave')
@@ -53,7 +50,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public store$: Store<IOverlaysState>,
-		@Inject(DOCUMENT) protected document: Document
+		protected el: ElementRef
 	) {
 	}
 
@@ -70,11 +67,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	showOrHide(overlay: Overlay) {
 		if (overlay) {
 			this.overlayId = overlay.id;
-			const hoveredElement: Element = this.document.body.querySelector(`#dropId-${this.overlayId}`);
+			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);
 			if (hoveredElement) {
 				const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
 				this.left = hoveredElementBounds.left - 50;
-				this.bottom = this.document.body.offsetHeight - hoveredElementBounds.top;
+				this.bottom = this.topElement.offsetHeight - hoveredElementBounds.top;
 				this.isHoveringOverDrop = true;
 				this.overlay = overlay;
 				this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));

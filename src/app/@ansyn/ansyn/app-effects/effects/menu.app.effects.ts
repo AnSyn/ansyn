@@ -5,7 +5,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import { IAppState } from '../app.effects.module';
 import { Store } from '@ngrx/store';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
-import { MenuActionTypes, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
+import { MenuActionTypes, SetAutoClose } from '@ansyn/menu/actions/menu.actions';
 import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
 import { selectSubMenu } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
@@ -30,13 +30,13 @@ export class MenuAppEffects {
 	 * @type Effect
 	 * @name autoCloseMenu$
 	 * @ofType annotationFlag$
-	 * @action SetClickOutside
+	 * @action SetAutoClose
 	 */
 	@Effect()
-	autoCloseMenu$: Observable<SetClickOutside> = this.store$
+	autoCloseMenu$: Observable<SetAutoClose> = this.store$
 		.select(selectSubMenu)
 		.distinctUntilChanged()
-		.map((subMenu) => new SetClickOutside(typeof subMenu !== 'number'));
+		.map((subMenu) => new SetAutoClose(typeof subMenu !== 'number'));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

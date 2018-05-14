@@ -93,10 +93,6 @@ export class MenuComponent implements OnInit {
 	selectedMenuItemName: string;
 	entities: Dictionary<MenuItem> = {};
 	isPinned: boolean;
-	pinTextDic = {
-		true: 'Pin',
-		false: 'Unpin'
-	};
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
@@ -107,6 +103,10 @@ export class MenuComponent implements OnInit {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+	}
+
+	get pinText(): string {
+		return this.isPinned ? 'Pin' : 'Unpin';
 	}
 
 	get selectedMenuItem(): MenuItem {

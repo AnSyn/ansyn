@@ -3,70 +3,80 @@ import { CaseBooleanFilterMetadata } from '@ansyn/menu-items/cases/models/case.m
 import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '@ansyn/core/models/case.model';
 
-export interface BooleanProperties {
+export interface BooleanProperty {
+	name: 'true' | 'false';
+	displayName: string;
 	value: boolean;
 	filteredCount: number;
 	count: number;
 }
+export interface BooleanProperties {
+	true: BooleanProperty;
+	false: BooleanProperty;
+}
 
 export class BooleanFilterMetadata implements FilterMetadata {
 	type: FilterType = FilterType.Boolean;
-
-	trueProperties: BooleanProperties = {
-		value: true,
-		filteredCount: 0,
-		count: 0
-	};
-
-	falseProperties: BooleanProperties = {
-		value: true,
-		filteredCount: 0,
-		count: 0
+	properties: BooleanProperties = {
+		true: {
+			name: 'true',
+			displayName: 'true',
+			value: true,
+			filteredCount: 0,
+			count: 0
+		},
+		false: {
+			name: 'false',
+			displayName: 'false',
+			value: true,
+			filteredCount: 0,
+			count: 0
+		}
 	};
 
 	baseFilter: Filter;
 
 	updateMetadata({ key, value }): void {
-		this[key].value = value;
+		this.properties[key].value = value;
 	}
 
 	resetFilteredCount(): void {
-		this.trueProperties.filteredCount = 0;
-		this.falseProperties.filteredCount = 0;
+		this.properties.true.filteredCount = 0;
+		this.properties.false.filteredCount = 0;
 	}
 
 	selectOnly(key: string): void {
-		this.trueProperties.value = false;
-		this.falseProperties.value = false;
-		this[key].value = true;
+		this.properties.true.value = false;
+		this.properties.false.value = false;
+		this.properties[key].value = true;
 	}
 
 	accumulateData(value: boolean): void {
 		if (value) {
-			this.trueProperties.count += 1;
+			this.properties.true.count += 1;
 		} else {
-			this.falseProperties.count += 1;
+			this.properties.false.count += 1;
 		}
 	}
 
 	incrementFilteredCount(value: boolean): void {
 		if (value) {
-			this.trueProperties.filteredCount += 1;
+			this.properties.true.filteredCount += 1;
 		} else {
-			this.falseProperties.filteredCount += 1;
+			this.properties.false.filteredCount += 1;
 		}
 	}
 
 	initializeFilter(selectedValues: CaseBooleanFilterMetadata, filter: Filter): void {
-		this.trueProperties.count = 0;
-		this.trueProperties.value = true;
-		this.falseProperties.value = true;
-		this.falseProperties.count = 0;
+		this.properties.true.count = 0;
+		this.properties.true.value = true;
+		this.properties.false.value = true;
+		this.properties.false.count = 0;
 
 		this.baseFilter = filter;
 		if (selectedValues) {
-			this.falseProperties.value = selectedValues.displayFalse;
-			this.trueProperties.value = selectedValues.displayTrue;
+			this.properties.false.value = selectedValues.displayFalse;
+			this.properties.true.value = selectedValues.displayTrue;
 		}
 	}
 
@@ -74,31 +84,31 @@ export class BooleanFilterMetadata implements FilterMetadata {
 	}
 
 	filterFunc(overlay: any, key: string): boolean {
-		if (this.trueProperties.value && this.falseProperties.value) {
+		if (this.properties.true.value && this.properties.false.value) {
 			return true;
 		}
-		if (this.trueProperties.value && overlay[key]) {
+		if (this.properties.true.value && overlay[key]) {
 			return true;
 		}
-		if (this.falseProperties.value && !overlay[key]) {
+		if (this.properties.false.value && !overlay[key]) {
 			return true;
 		}
 		return false;
 	}
 
 	getMetadataForOuterState(): { displayTrue: boolean, displayFalse: boolean } {
-		const displayTrue = this.trueProperties.value;
-		const displayFalse = this.falseProperties.value;
+		const displayTrue = this.properties.true.value;
+		const displayFalse = this.properties.false.value;
 		return { displayTrue, displayFalse };
 	}
 
 	isFiltered(): boolean {
-		return (!this.trueProperties.value && this.trueProperties.count > 0) || (!this.falseProperties.value && this.falseProperties.count > 0);
+		return (!this.properties.true.value && this.properties.true.count > 0) || (!this.properties.false.value && this.properties.false.count > 0);
 	}
 
 	showAll(): void {
-		this.trueProperties.value = true;
-		this.falseProperties.value = true;
+		this.properties.true.value = true;
+		this.properties.false.value = true;
 	}
 
 

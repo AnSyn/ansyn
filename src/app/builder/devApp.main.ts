@@ -1,4 +1,4 @@
-import { AnsynBuilder, AnsynModulesNames } from './ansyn-builder';
+import { AnsynBuilder } from './ansyn-builder';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppAnsynModule } from '../app/app.module';
 
@@ -22,6 +22,14 @@ fetch('/assets/config/app.config.json')
 				sourceProviders: [],
 
 			});
+		const ansynBuilder2 = new AnsynBuilder('ansynMap2', config, (api) => {
+
+			},
+			{
+				sourceProviders: [],
+
+			});
+
 
 		});
 

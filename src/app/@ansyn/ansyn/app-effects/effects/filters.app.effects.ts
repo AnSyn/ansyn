@@ -147,24 +147,8 @@ export class FiltersAppEffects {
 			if (showOnlyFavorites) {
 				badge = '★';
 			} else {
-				const enumFilterValues = Array.from(filters.values());
-
-				badge = enumFilterValues.reduce((badgeNum: number, filterMetadata: FilterMetadata) => {
-					switch (filterMetadata.constructor) {
-						case EnumFilterMetadata:
-							const someUnchecked = Array.from((<EnumFilterMetadata>filterMetadata).enumsFields.values()).some(({ isChecked }) => !isChecked);
-							return someUnchecked ? badgeNum + 1 : badgeNum;
-						case SliderFilterMetadata:
-							const someNotInfinity = (<SliderFilterMetadata>filterMetadata).start !== -Infinity || (<SliderFilterMetadata>filterMetadata).end !== Infinity;
-							return someNotInfinity ? badgeNum + 1 : badgeNum;
-						case BooleanFilterMetadata: {
-							const someUnchecked = !(<BooleanFilterMetadata>filterMetadata).trueProperties.value || !(<BooleanFilterMetadata>filterMetadata).falseProperties.value;
-							return someUnchecked ? badgeNum + 1 : badgeNum;
-						}
-						default:
-							return badgeNum;
-					}
-				}, 0).toString();
+				const filterValues = Array.from(filters.values());
+				badge = filterValues.reduce((badgeNum: number, filterMetadata: FilterMetadata) => filterMetadata.isFiltered() ? badgeNum + 1 : badgeNum, 0).toString();
 			}
 
 			return new SetBadgeAction({ key: 'Filters', badge });

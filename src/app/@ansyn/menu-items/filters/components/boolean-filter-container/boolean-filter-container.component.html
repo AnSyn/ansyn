@@ -1,52 +1,28 @@
-<div class="enum-fields-enumerator" [hidden]="!metadata.trueProperties.count">
-	<div class="left-side">
-		<div class="checkbox">
-			<input type="checkbox"
-				   [id]="metadata?.baseFilter?.modelName + 'true'"
-				   class="regular-checkbox"
-				   [checked]="metadata.trueProperties.value"
-				   (change)="onInputClicked(booleanOptions.trueKey, $event.target.checked)"/>
-			<label [for]="metadata?.baseFilter?.modelName + 'true'"></label>
-		</div>
-		<div class="filter-row">
-			<div class="field-name-container">
-				<span class="field-name" [title]="true">{{customData.displayTrueName}}</span>
+<ng-container *ngFor="let properties of metadataValues">
+	<div class="enum-fields-enumerator" [hidden]="!properties.count">
+		<div class="left-side">
+			<div class="checkbox">
+				<input type="checkbox"
+					   [id]="metadata?.baseFilter?.modelName + properties.name"
+					   class="regular-checkbox"
+					   [checked]="properties.value"
+					   (change)="onInputClicked(properties.name, $event.target.checked)"/>
+				<label [for]="metadata?.baseFilter?.modelName + properties.name"></label>
 			</div>
-			<span class="only-filter" (click)="selectOnly(booleanOptions.trueKey)">only</span>
-		</div>
-	</div>
-
-	<div class="right-side">
-		<span>{{metadata.trueProperties.filteredCount}}</span>
-		/
-		<span>{{metadata.trueProperties.count}}</span>
-	</div>
-
-</div>
-
-<div class="enum-fields-enumerator" [hidden]="!metadata.falseProperties.count">
-
-	<div class="left-side">
-		<div class="checkbox">
-			<input type="checkbox"
-				   [id]="metadata?.baseFilter?.modelName + 'false'"
-				   class="regular-checkbox"
-				   [checked]="metadata.falseProperties.value"
-				   (change)="onInputClicked(booleanOptions.falseKey, $event.target.checked)"/>
-			<label [for]="metadata?.baseFilter?.modelName + 'false'"></label>
-		</div>
-		<div class="filter-row">
-			<div class="field-name-container">
-				<span class="field-name" [title]="false">{{customData.displayFalseName}}</span>
+			<div class="filter-row">
+				<div class="field-name-container">
+					<span class="field-name" [title]="true">{{properties.displayName}}</span>
+				</div>
+				<span class="only-filter" (click)="selectOnly(properties.name)">only</span>
 			</div>
-			<span class="only-filter" (click)="selectOnly(booleanOptions.falseKey)">only</span>
 		</div>
+
+		<div class="right-side">
+			<span>{{properties.filteredCount}}</span>
+			/
+			<span>{{properties.count}}</span>
+		</div>
+
 	</div>
 
-	<div class="right-side">
-		<span>{{metadata.falseProperties.filteredCount}}</span>
-		/
-		<span>{{metadata.falseProperties.count}}</span>
-	</div>
-
-</div>
+</ng-container>

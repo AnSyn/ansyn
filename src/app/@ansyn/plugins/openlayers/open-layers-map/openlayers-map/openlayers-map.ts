@@ -296,7 +296,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 				const geoJsonExtent = geoJsonFeature.features[0].geometry;
 
 				const center = ExtentCalculator.calcCenter(geoJsonExtent);
-				const rotation = ExtentCalculator.calcRotation(geoJsonExtent);
+				const rotation = (2 * Math.PI) - ExtentCalculator.calcRotation(geoJsonExtent);
 				const resolution = ExtentCalculator.calcResolution(geoJsonExtent, map.getSize(), rotation);
 
 				view.setCenter(center);

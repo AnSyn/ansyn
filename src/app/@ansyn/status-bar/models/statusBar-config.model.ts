@@ -1,3 +1,5 @@
+import { TreeviewItem } from 'ngx-treeview';
+
 export interface IToolTipsConfig {
 	orientation?: string,
 	geoFilter?: string,
@@ -13,6 +15,11 @@ export interface IToolTipsConfig {
 	enlarge?: string
 }
 
+export interface IDataInputFiltersConfig {
+	filters: TreeviewItem[];
+}
+
 export interface IStatusBarConfig {
-	toolTips: IToolTipsConfig
+	toolTips: IToolTipsConfig,
+	dataInputFiltersConfig: IDataInputFiltersConfig
 }

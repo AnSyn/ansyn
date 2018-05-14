@@ -89,4 +89,4 @@ export const getProviders = (conf): any[] => {
 
 export const fetchConfigProviders = () => fetch('/assets/config/app.config.json')
 	.then(response => response.json())
-	.then(getProviders)
+	.then(getProviders);

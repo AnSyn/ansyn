@@ -7,8 +7,14 @@ import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
-import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models/combo-boxes.model';
-import { TreeViewComponent } from '@ansyn/status-bar/components/tree-view/tree-view.component';
+import {
+	comboBoxesOptions,
+	DATA_INPUT_FILTERS,
+	GEO_FILTERS,
+	ORIENTATIONS,
+	TIME_FILTERS
+} from '@ansyn/status-bar/models/combo-boxes.model';
+import { TreeviewModule } from 'ngx-treeview';
 
 
 @NgModule({
@@ -16,10 +22,15 @@ import { TreeViewComponent } from '@ansyn/status-bar/components/tree-view/tree-v
 		FormsModule,
 		CommonModule,
 		CoreModule,
+		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent],
+	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent],
 	providers: [
+		{
+			provide: DATA_INPUT_FILTERS,
+			useValue: comboBoxesOptions.dataInputFilters
+		},
 		{
 			provide: ORIENTATIONS,
 			useValue: comboBoxesOptions.orientations

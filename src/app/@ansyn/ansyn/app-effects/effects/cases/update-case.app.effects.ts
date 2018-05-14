@@ -78,6 +78,7 @@ export class UpdateCaseAppEffects {
 					geoFilter,
 					timeFilter,
 					orientation,
+					dataInputFilter,
 					maps: {
 						layout,
 						data: mapsList,

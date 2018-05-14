@@ -11,6 +11,11 @@
 	display: flex;
 	transform: translate(0, -100%);
 
+	/deep/ .treeview-container .row-item {
+		display: flex;
+		color: ghostwhite;
+	}
+
 	ansyn-imagery-status {
 		position: relative;
 		align-items: center;
@@ -183,6 +188,14 @@
 			/deep/ i.block-icon {
 				font-size: 20px;
 				margin-right: 8px;
+			}
+
+			.data-input-filter {
+				min-height: 450px;
+				min-width: 220px;
+				padding: 10px;
+				background: rgba(0, 0, 0, 1);
+				background-clip: padding-box;
 			}
 
 			.time-selection {

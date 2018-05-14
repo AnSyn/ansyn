@@ -21,7 +21,25 @@
 		</div>
 	</div>
 	<div class="combo-boxes">
-	<!-- Orientation -->
+
+		<!-- data input filter-->
+		<div class="combo-box-container block with-buttons">
+			<ansyn-combo-box
+				class="combo-box-width"
+				[icon]="'icon-status-bar-time'"
+				[comboBoxToolTipDescription]="toolTips.timeFilter"
+				(click)="toggleDataInputFilterIcon()"
+				[selected]="'Data Input Filters'"
+				(selectedChange)="comboBoxesChange({ timeFilter: $event })">
+			</ansyn-combo-box>
+			<div class="pop-content data-input-filter" [class.visible]="dataInputFilterIcon">
+				<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"
+							  (selectedChange)="selectedFilters = $event">
+				</ngx-treeview>
+			</div>
+		</div>
+
+		<!-- Orientation -->
 		<div class="combo-box-container block">
 			<ansyn-combo-box
 				class="combo-box-width"

@@ -2,28 +2,44 @@ import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
-	CopySelectedCaseLinkAction, ExpandAction, SetComboBoxesProperties,
+	CopySelectedCaseLinkAction,
+	ExpandAction,
+	SetComboBoxesProperties,
 	UpdateStatusFlagsAction
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 
-import { ComboBoxesProperties, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import {
+	ComboBoxesProperties,
+	DATA_INPUT_FILTERS,
+	GEO_FILTERS,
+	ORIENTATIONS,
+	TIME_FILTERS
+} from '../../models/combo-boxes.model';
 import { Actions } from '@ngrx/effects';
 import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
-	CaseGeoFilter, CaseMapState, CaseOrientation, CaseTimeFilter,
+	CaseDataInputFilter,
+	CaseGeoFilter,
+	CaseMapState,
+	CaseOrientation,
+	CaseTimeFilter,
 	CaseTimeState
 } from '@ansyn/core/models/case.model';
 import {
 	BackToWorldView,
-	CoreActionTypes, GoAdjacentOverlay, SetLayoutAction, SetOverlaysCriteriaAction,
+	CoreActionTypes,
+	GoAdjacentOverlay,
+	SetLayoutAction,
+	SetOverlaysCriteriaAction,
 	UpdateOverlaysCountAction
 } from '@ansyn/core/actions/core.actions';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -63,10 +79,20 @@ export class StatusBarComponent implements OnInit {
 	flags: Map<statusBarFlagsItemsEnum, boolean> = new Map<statusBarFlagsItemsEnum, boolean>();
 	time: CaseTimeState;
 	timeSelectionEditIcon = false;
+	dataInputFilterIcon = false;
 	@Input() selectedCaseName: string;
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
+	_values: number[];
+
+	dataInputFiltersConfig = TreeviewConfig.create({
+		hasAllCheckBox: true,
+		hasFilter: false,
+		hasCollapseExpand: false, // Collapse (show all filters).
+		decoupleChildFromParent: false,
+		maxHeight: 400
+	});
 
 	get statusBarFlagsItemsEnum() {
 		return statusBarFlagsItemsEnum;
@@ -75,6 +101,16 @@ export class StatusBarComponent implements OnInit {
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
 	}
+
+	get dataFilters(): TreeviewItem[] {
+		return this.statusBarConfig.dataInputFiltersConfig.filters;
+	}
+
+	set selectedFilters(value) {
+		this._values = value;
+	}
+
+	dataInputFiltersItems: TreeviewItem[] = [];
 
 	get layouts(): LayoutKey[] {
 		return Array.from(layoutOptions.keys());
@@ -115,13 +151,15 @@ export class StatusBarComponent implements OnInit {
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				public store: Store<IStatusBarState>,
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
+				@Inject(DATA_INPUT_FILTERS) public dataInputFilters: CaseDataInputFilter[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
 				protected actions$: Actions) {
-
 	}
 
 	ngOnInit(): void {
+		this.dataFilters.forEach((f) =>
+			this.dataInputFiltersItems.push(new TreeviewItem(f)));
 
 		this.setSubscribers();
 
@@ -137,7 +175,7 @@ export class StatusBarComponent implements OnInit {
 		this.layout$.subscribe((layout: LayoutKey) => this.layout = layout);
 
 		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
-			this.comboBoxesProperties = comboBoxesProperties
+			this.comboBoxesProperties = comboBoxesProperties;
 		});
 
 		this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
@@ -149,6 +187,10 @@ export class StatusBarComponent implements OnInit {
 		});
 
 
+	}
+
+	toggleDataInputFilterIcon() {
+		this.dataInputFilterIcon = !this.dataInputFilterIcon;
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -171,7 +213,10 @@ export class StatusBarComponent implements OnInit {
 	comboBoxesChange(payload: ComboBoxesProperties) {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
 		if (payload.geoFilter) {
-			this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: true }));
+			this.store.dispatch(new UpdateStatusFlagsAction({
+				key: statusBarFlagsItemsEnum.geoFilterSearch,
+				value: true
+			}));
 		}
 	}
 

@@ -17,7 +17,7 @@ import {
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
-import { IMenuState, menuStateSelector } from '../reducers/menu.reducer';
+import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -26,7 +26,7 @@ import { MenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import {
-	selectAllMenuItems, selectClickOutside, selectEntitiesMenuItems,
+	selectAllMenuItems, selectAutoClose, selectEntitiesMenuItems,
 	selectIsPinned, selectSelectedMenuItem
 } from '@ansyn/menu/reducers/menu.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -82,7 +82,7 @@ export class MenuComponent implements OnInit {
 
 	isPinned$ = this.store.select(selectIsPinned);
 
-	clickOutside$ = this.store.select(selectClickOutside);
+	autoClose$ = this.store.select(selectAutoClose);
 
 	entities$: Observable<Dictionary<MenuItem>> = this.store.select(selectEntitiesMenuItems);
 	menuItemsAsArray$: Observable<MenuItem[]> = this.store.select(selectAllMenuItems)
@@ -93,8 +93,10 @@ export class MenuComponent implements OnInit {
 	selectedMenuItemName: string;
 	entities: Dictionary<MenuItem> = {};
 	isPinned: boolean;
-	pinText = 'Pin';
-	clickOutside: boolean;
+	pinTextDic = {
+		true: 'Pin',
+		false: 'Unpin'
+	};
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
@@ -131,10 +133,8 @@ export class MenuComponent implements OnInit {
 		}
 		if (this.isPinned) {
 			this.renderer.addClass(this.container.nativeElement, 'pinned');
-			this.pinText = 'Unpin';
 		} else {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
-			this.pinText = 'Pin';
 		}
 
 		this.forceRedraw()
@@ -229,10 +229,6 @@ export class MenuComponent implements OnInit {
 			this.onIsPinnedChange();
 		});
 
-		this.clickOutside$.subscribe((clickOutside: boolean) => {
-			this.clickOutside = clickOutside;
-		});
-
 		new MutationObserver(() => {
 			const conPosition = getComputedStyle(this.container.nativeElement).position;
 			if (conPosition !== 'absolute') {
@@ -242,11 +238,15 @@ export class MenuComponent implements OnInit {
 
 		Observable
 			.fromEvent(this.document, 'click')
-			.filter((click: any) => {
+			.filter(this.anyMenuItemSelected.bind(this))
+
+			.withLatestFrom(this.autoClose$)
+			.filter(([click, autoClose]: [any, boolean]) => {
 				const include = click.path.includes(this.elementRef.nativeElement);
-				return !include && this.clickOutside && this.anyMenuItemSelected();
+				return !include && !this.isPinned && autoClose;
 			})
-			.subscribe(this.closeMenu.bind(this));
+			.do(this.closeMenu.bind(this))
+			.subscribe()
 	}
 }
 

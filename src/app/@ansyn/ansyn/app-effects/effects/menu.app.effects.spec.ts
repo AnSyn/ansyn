@@ -6,7 +6,7 @@ import { MenuAppEffects } from './menu.app.effects';
 import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
-import { ContainerChangedTriggerAction, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
+import { ContainerChangedTriggerAction, SetAutoClose } from '@ansyn/menu/actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';

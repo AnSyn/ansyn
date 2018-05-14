@@ -16,13 +16,13 @@ export const menuItemsAdapter: EntityAdapter<MenuItem> = createEntityAdapter<Men
 export interface IMenuState extends EntityState<MenuItem> {
 	selectedMenuItem: string;
 	isPinned: boolean;
-	clickOutside: boolean;
+	autoClose: boolean;
 }
 
 export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
 	selectedMenuItem: sessionData().selectedMenuItem,
 	isPinned: sessionData().isPinned,
-	clickOutside: true
+	autoClose: true
 });
 
 export const menuFeatureKey = 'menu';
@@ -59,8 +59,8 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			updateSession({ isPinned: action.payload });
 			return { ...state, isPinned: action.payload, clickOutside: !action.payload };
 
-		case MenuActionTypes.SET_CLICK_OUTSIDE:
-			return { ...state, clickOutside: action.payload };
+		case MenuActionTypes.SET_AUTO_CLODE:
+			return { ...state, autoClose: action.payload };
 		default:
 			return state;
 	}
@@ -72,7 +72,7 @@ export const selectAllMenuItems: MemoizedSelector<IMenuState, MenuItem[]> = crea
 export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<MenuItem>> = createSelector(menuStateSelector, selectEntities);
 
 export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu.isPinned);
-export const selectClickOutside = createSelector(menuStateSelector, (menu) => menu.clickOutside);
+export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
 
 

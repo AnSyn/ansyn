@@ -104,11 +104,11 @@ describe('Filters app effects', () => {
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', { count: 10, filteredCount: 0, isChecked: true }); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', { count: 10, filteredCount: 0, isChecked: false }); // (!isChecked) => 2
 
-		(<SliderFilterMetadata>filterMetadata3).start = -Infinity;
-		(<SliderFilterMetadata>filterMetadata3).end = Infinity; // (start = -Infinity && end = Infinity ) => no changes
+		(<SliderFilterMetadata>filterMetadata3).min = -2;
+		(<SliderFilterMetadata>filterMetadata3).max = 2; // (start = -Infinity && end = Infinity ) => no changes
 
 		(<SliderFilterMetadata>filterMetadata3).start = -2;
-		(<SliderFilterMetadata>filterMetadata3).end = 2; // (start !== -Infinity || end !== Infinity ) => 3
+		(<SliderFilterMetadata>filterMetadata3).end = 1; // (start > -Infinity || end < Infinity ) => 3
 		store.dispatch(new InitializeFiltersSuccessAction(filters));
 		const expectedResults = cold('b', { b: new SetBadgeAction({ key: 'Filters', badge: '3' }) });
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);

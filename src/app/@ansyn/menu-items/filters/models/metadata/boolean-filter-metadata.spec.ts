@@ -14,16 +14,16 @@ describe('EnumFilterMetadata', () => {
 	describe('updateMetadata', () => {
 
 		it('updateMetadata shuold update true/false properties via key', () => {
-			booleanFilterMetadata.updateMetadata({ key: 'trueProperties', value: false });
-			expect(booleanFilterMetadata.trueProperties.value).toBeFalsy();
+			booleanFilterMetadata.updateMetadata({ key: 'true', value: false });
+			expect(booleanFilterMetadata.properties.true.value).toBeFalsy();
 		});
 	});
 
 	describe('selectOnly', () => {
 		it('selectOnly should set only true/false properties values', () => {
-			booleanFilterMetadata.selectOnly('falseProperties');
-			expect(booleanFilterMetadata.falseProperties.value).toBeTruthy();
-			expect(booleanFilterMetadata.trueProperties.value).toBeFalsy();
+			booleanFilterMetadata.selectOnly('false');
+			expect(booleanFilterMetadata.properties.false.value).toBeTruthy();
+			expect(booleanFilterMetadata.properties.true.value).toBeFalsy();
 		});
 	});
 
@@ -34,8 +34,8 @@ describe('EnumFilterMetadata', () => {
 			booleanFilterMetadata.accumulateData(true);
 			booleanFilterMetadata.accumulateData(false);
 			booleanFilterMetadata.accumulateData(false);
-			expect(booleanFilterMetadata.trueProperties.count).toEqual(3);
-			expect(booleanFilterMetadata.falseProperties.count).toEqual(2);
+			expect(booleanFilterMetadata.properties.true.count).toEqual(3);
+			expect(booleanFilterMetadata.properties.false.count).toEqual(2);
 		});
 	});
 

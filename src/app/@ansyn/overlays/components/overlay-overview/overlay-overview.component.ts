@@ -34,7 +34,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
 	@HostBinding('style.left.px') left = 0;
-	@HostBinding('style.bottom.px') bottom = 0;
+	@HostBinding('style.top.px') top = 0;
 
 	hoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck<IOverlaysState, Map<any, any>>('overlays')))
@@ -71,7 +71,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			if (hoveredElement) {
 				const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
 				this.left = hoveredElementBounds.left - 50;
-				this.bottom = this.topElement.offsetHeight - hoveredElementBounds.top + 15;
+				this.top = hoveredElementBounds.top;
 				this.isHoveringOverDrop = true;
 				this.overlay = overlay;
 				this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));

@@ -6,28 +6,35 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
-	LoadOverlaysSuccessAction,
 	SetFilteredOverlaysAction,
-	SetHoveredOverlayAction,
-	SetMarkUp
+	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
 import {
 	MarkUpClass,
-	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
-	overlaysStateSelector
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysInitialState,
+	overlaysStateSelector,
+	selectDropMarkup,
+	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs/Observable';
 import {
-	IToolsState, toolsFeatureKey, toolsInitialState, ToolsReducer,
+	IToolsState,
+	toolsFeatureKey,
+	toolsInitialState,
+	ToolsReducer,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
-	casesFeatureKey, CasesReducer, casesStateSelector,
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
@@ -39,11 +46,11 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { Case } from '@ansyn/core/models/case.model';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import {
-	RemovePendingOverlayAction, SetPendingOverlaysAction,
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -120,6 +127,8 @@ describe('OverlaysAppEffects', () => {
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
+	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
+
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -185,7 +194,9 @@ describe('OverlaysAppEffects', () => {
 			[toolsStateSelector, toolsState],
 			[mapStateSelector, mapState],
 			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState]
+			[coreStateSelector, coreState],
+			[selectDropMarkup, overlaysState.dropsMarkUp],
+			[selectOverlaysMap, overlaysState.overlays]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -347,19 +358,8 @@ describe('OverlaysAppEffects', () => {
 	});
 
 	describe('setHoveredOverlay$ effect', () => {
-		let overlayId = '234';
-		let overlays: Overlay[] = [{
-			id: overlayId,
-			name: 'bcd',
-			photoTime: 'ttt',
-			date: new Date(),
-			azimuth: 100,
-			isGeoRegistered: true
-		}];
 		it ('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
-			store.dispatch(new LoadOverlaysSuccessAction(overlays));
-			store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [overlayId] } }));
-			const expectedResults = cold('b', { b: new SetHoveredOverlayAction(overlays[0]) });
+			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction(overlaysState.overlays.get('first')) });
 			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});
 	});

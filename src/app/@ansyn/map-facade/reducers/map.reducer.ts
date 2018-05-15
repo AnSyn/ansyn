@@ -116,3 +116,4 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 }
 
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
+export const selectMapsList = createSelector(mapStateSelector, (map: IMapState) => map.mapsList);

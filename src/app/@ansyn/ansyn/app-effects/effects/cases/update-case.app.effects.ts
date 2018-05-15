@@ -13,21 +13,31 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
-
-export const UpdateCaseActionTypes = [
-	FiltersActionTypes.UPDATE_FACETS, // -> facets
-	CoreActionTypes.SET_FAVORITE_OVERLAYS, // -> favoriteOverlays
-	StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES, // -> geoFilter, timeFilter, orientation
-	...Object.values(LayersActionTypes.ANNOTATIONS), // -> annotationsLayer, displayAnnotationsLayer
-	MapActionTypes.STORE.SET_MAPS_DATA, // -> maps: activeMapId, data
-	CoreActionTypes.SET_LAYOUT, // -> maps: layoutIndex
-	CoreActionTypes.SET_OVERLAYS_CRITERIA, // -> time, region
-	ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS
-];
-
+import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
+import {
+	selectAnnotationLayer,
+	selectDisplayAnnotationsLayer
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class UpdateCaseAppEffects {
+	events: any[] = [
+		this.store$.select(selectFacets),
+		this.store$.select(selectFavoriteOverlays),
+		this.store$.select(selectComboBoxesProperties),
+		this.store$.select(selectAnnotationLayer),
+		this.store$.select(selectDisplayAnnotationsLayer),
+		this.store$.select(selectActiveMapId),
+		this.store$.select(selectMapsList),
+		this.store$.select(selectLayout),
+		this.store$.select(selectOverlaysCriteria),
+		this.store$.select(selectOverlaysManualProcessArgs)
+	];
 
 	/**
 	 * @type Effect
@@ -37,20 +47,25 @@ export class UpdateCaseAppEffects {
 	 * @dependencies cases, core, tools, statusBar, map, layers, filters
 	 */
 	@Effect()
-	caseCollection$: Observable<any> = this.actions$
-		.ofType<Action>(...UpdateCaseActionTypes)
-		.withLatestFrom(this.store$)
-		.map(([action, { cases, core, tools, statusBar, map, layers, filters }]: [Action, IAppState]) => {
-			// properties that should have been saved on another store ( not cases )
-			const { contextEntities } = cases.selectedCase.state;
-			const { id, name, lastModified, owner, creationTime, selectedContextId } = cases.selectedCase;
-			const { geoFilter, timeFilter, orientation } = statusBar.comboBoxesProperties;
-			const { activeMapId, mapsList } = map;
-			const { annotationsLayer, displayAnnotationsLayer } = layers;
-			const { favoriteOverlays, overlaysCriteria, layout } = core;
-			const { time, region } = overlaysCriteria;
-			const { overlaysManualProcessArgs } = tools;
-			const { facets } = filters;
+	shouldUpdateCase$ = Observable.combineLatest(this.events)
+		.withLatestFrom(this.store$.select(selectSelectedCase))
+		.filter(([events, selectedCase]) => Boolean(selectedCase))	/* SelectCaseAction(selectedCase) already triggered */
+		.map(([events, selectedCase]: [any, any]) => {
+			const [
+				facets,
+				favoriteOverlays,
+				{ geoFilter, timeFilter, orientation },	/* -> comboBoxesProperties */
+				annotationsLayer,
+				displayAnnotationsLayer,
+				activeMapId,
+				mapsList,
+				layout,
+				{ time, region },	/* overlaysCriteria */
+				overlaysManualProcessArgs
+			] = events;
+
+			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
+			const { contextEntities } = selectedCase.state;
 
 			const updatedCase: Case = {
 				id,
@@ -82,9 +97,8 @@ export class UpdateCaseAppEffects {
 			};
 
 			return new UpdateCaseAction(updatedCase);
-		}).share();
+		});
 
-	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>) {
+	constructor(protected store$: Store<IAppState>) {
 	}
 }

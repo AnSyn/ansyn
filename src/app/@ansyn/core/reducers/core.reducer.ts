@@ -110,3 +110,6 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 }
 
 export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
+export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
+export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
+

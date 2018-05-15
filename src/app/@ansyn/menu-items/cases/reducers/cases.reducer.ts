@@ -73,4 +73,4 @@ export const { selectEntities, selectAll, selectTotal, selectIds } = casesAdapte
 export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
 export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<CasePreview>>>createSelector(casesStateSelector, selectEntities);
 export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
-
+export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases.selectedCase);

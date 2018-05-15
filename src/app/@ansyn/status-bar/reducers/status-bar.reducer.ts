@@ -50,4 +50,5 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 
 	}
 }
-export const selectGeoFilter = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => <CaseGeoFilter>statusBar.comboBoxesProperties.geoFilter);
+export const selectComboBoxesProperties = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.comboBoxesProperties);
+export const selectGeoFilter = createSelector(selectComboBoxesProperties, (comboBoxesProperties: ComboBoxesProperties) => comboBoxesProperties.geoFilter);

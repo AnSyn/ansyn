@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import {
-	BaseOverlaySourceProvider, IFetchParams,
+	BaseOverlaySourceProvider,
+	IFetchParams,
 	StartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
@@ -15,6 +16,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import * as moment from 'moment';
+import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -30,7 +32,7 @@ export interface IPlanetOverlaySourceConfig {
 
 export interface IPlanetFilter {
 	type: string,
-	field_name: string,
+	field_name?: string,
 	config: object;
 }
 
@@ -53,8 +55,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				protected loggerService: LoggerService) {
 		super(loggerService);
 
-		this.httpHeaders = new HttpHeaders({ Authorization:
-				`basic ${btoa((this.planetOverlaysSourceConfig.apiKey + ':'))}` });
+		this.httpHeaders = new HttpHeaders({
+			Authorization:
+				`basic ${btoa((this.planetOverlaysSourceConfig.apiKey + ':'))}`
+		});
 	}
 
 	buildFilters(config: IPlanetFilter[]) {
@@ -64,7 +68,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				type: 'AndFilter',
 				config: config
 			}
-		}
+		};
 	}
 
 	appendApiKey(url: string) {
@@ -82,11 +86,30 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const limit = `${fetchParams.limit + 1}`;
 
 		const bboxFilter = { type: 'GeometryFilter', field_name: 'geometry', config: fetchParams.region };
-		const dateFilter = { type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: fetchParams.timeRange.start.toISOString(), lte: fetchParams.timeRange.end.toISOString()}};
+		const dateFilter = {
+			type: 'DateRangeFilter', field_name: 'acquired',
+			config: { gte: fetchParams.timeRange.start.toISOString(), lte: fetchParams.timeRange.end.toISOString() }
+		};
 
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([ bboxFilter, dateFilter ]),
-			{ headers: this.httpHeaders, params: { _page_size: limit }})
+		const filters: IPlanetFilter[] = [bboxFilter, dateFilter];
+
+		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
+			const configFilters = [];
+			const preFilter = { type: 'OrFilter', config: configFilters };
+			fetchParams.dataInputFilters.forEach((aFilter: DataInputFilterValue) => {
+				configFilters.push({
+					type: 'AndFilter', config: [
+						{ type: 'StringInFilter', field_name: 'item_type', config: [aFilter.sensorType] },
+						{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
+					]
+				});
+			});
+
+			filters.push(preFilter);
+		}
+
+		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters),
+			{ headers: this.httpHeaders, params: { _page_size: limit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
@@ -99,8 +122,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 	getById(id: string, sourceType: string): Observable<Overlay> {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
-		const body = this.buildFilters([{type: 'StringInFilter', field_name: 'id', config: [id]}]);
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders})
+		const body = this.buildFilters([{ type: 'StringInFilter', field_name: 'id', config: [id] }]);
+		return this.http.post<OverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders })
 			.map(data => this.extractData(data.features))
 			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
@@ -154,16 +177,24 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	public parsePlanetFilters(facets = {filters: []}): IPlanetFilter[] {
+	public parsePlanetFilters(facets = { filters: [] }): IPlanetFilter[] {
 		if (Object.getOwnPropertyNames(facets).length === 0) {
 			return [];
 		}
 
 		return facets.filters.map(filterObj => {
 			if (filterObj.fieldName === 'bestResolution') {
-				return { type: 'RangeFilter', field_name: this.planetDic[filterObj.fieldName], config: { lte: filterObj.metadata.end, gte: filterObj.metadata.start }};
+				return {
+					type: 'RangeFilter',
+					field_name: this.planetDic[filterObj.fieldName],
+					config: { lte: filterObj.metadata.end, gte: filterObj.metadata.start }
+				};
 			}
-			return { type: 'StringInFilter', field_name: this.planetDic[filterObj.fieldName], config: filterObj.metadata }
+			return {
+				type: 'StringInFilter',
+				field_name: this.planetDic[filterObj.fieldName],
+				config: filterObj.metadata
+			};
 		});
 	}
 

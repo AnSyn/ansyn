@@ -36,6 +36,10 @@
 				<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"
 							  (selectedChange)="selectedFilters = $event">
 				</ngx-treeview>
+				<div class="data-input-filters-buttons">
+					<a (click)="dataInputFiltersCancel()">Cancel</a>
+					<a (click)="dataInputFiltersOk()">Ok</a>
+				</div>
 			</div>
 		</div>
 

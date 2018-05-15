@@ -16,7 +16,9 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	MarkUpData,
-	overlaysStateSelector
+	overlaysStateSelector,
+	selectDropMarkup,
+	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import {
@@ -197,18 +199,13 @@ export class OverlaysAppEffects {
 	 * @type Effect
 	 * @name hoveredOverlay$
 	 */
-	@Effect({ dispatch: false })
-	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)
-		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
-		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck<IOverlaysState, Map<any, any>>('overlays')))
+	@Effect()
+	hoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
+		.withLatestFrom(this.store$.select(selectOverlaysMap))
 		.map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
 			overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 		)
-		.distinctUntilChanged()
-		.do((overlay: Overlay) => {
-				this.store$.dispatch(new SetHoveredOverlayAction(overlay))
-			}
-		);
+		.map((overlay: Overlay) => new SetHoveredOverlayAction(overlay));
 
 
 	constructor(public actions$: Actions,

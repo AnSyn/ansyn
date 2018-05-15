@@ -165,22 +165,6 @@ export class FiltersAppEffects {
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$
 		.map((favoriteOverlays: Overlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)));
 
-	/**
-	 * @type Effect
-	 * @name updateFacetFilters$
-	 * @ofType filters$
-	 * @action UpdateFacetsAction
-	 */
-	@Effect()
-	updateFacetFilters$ = this.filters$
-		.withLatestFrom(this.store$.select(overlaysStateSelector))
-		.filter(([filters, overlays]) => overlays.loaded)
-		.map(([filters, overlays]) => filters)
-		.map((filters: Filters) => {
-			const caseFilters = FiltersService.buildCaseFilters(filters);
-			return new UpdateFacetsAction({ filters: caseFilters });
-		});
-
 	@Effect({ dispatch: false })
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap))

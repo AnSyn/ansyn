@@ -54,7 +54,7 @@ export class OverlaysService {
 
 	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): OverlayDrop[] {
 		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
-		return [ ...overlaysData, ...Array.from(specialObjects.values()) ];
+		return [...overlaysData, ...Array.from(specialObjects.values())];
 	}
 
 	get fetchLimit() {
@@ -68,6 +68,7 @@ export class OverlaysService {
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
 		let feature = params.region;
 		return this._overlaySourceProvider.fetch({
+			dataInputFilters: Boolean(params.dataInputFilters) ? params.dataInputFilters : null,
 			limit: this.config.limit,
 			region: feature,
 			timeRange: <any> {

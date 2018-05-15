@@ -84,7 +84,7 @@ export class StatusBarComponent implements OnInit {
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
-	_values: number[];
+	_selectedFilters: any;
 
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: true,
@@ -107,7 +107,7 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	set selectedFilters(value) {
-		this._values = value;
+		this._selectedFilters = value;
 	}
 
 	dataInputFiltersItems: TreeviewItem[] = [];
@@ -245,5 +245,14 @@ export class StatusBarComponent implements OnInit {
 
 	clickBackToWorldView(): void {
 		this.store.dispatch(new BackToWorldView({ mapId: this.activeMap.id }));
+	}
+
+	dataInputFiltersOk(): void {
+		console.log(this._selectedFilters);
+		this.store.dispatch(new SetOverlaysCriteriaAction({ dataInputFilters: this._selectedFilters }));
+	}
+
+	dataInputFiltersCancel(): void {
+		console.log('Filter Cancel');
 	}
 }

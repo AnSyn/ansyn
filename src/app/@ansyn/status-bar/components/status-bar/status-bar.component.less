@@ -196,6 +196,8 @@
 				padding: 10px;
 				background: rgba(0, 0, 0, 1);
 				background-clip: padding-box;
+				flex-direction: column;
+				justify-content: space-between;
 			}
 
 			.time-selection {
@@ -243,6 +245,29 @@
 			}
 		}
 
+		div.data-input-filters-buttons {
+			margin-top: 10px;
+			display: flex;
+			justify-content: space-between;
+			color: @overlays-dots-color;
+			a {
+				cursor: pointer;
+				&:hover {
+					font-weight: bold;
+				}
+				&:first-child {
+					margin-right: 9px;
+					width: 42px;
+				}
+				&:last-child {
+					width: 17px;
+				}
+			}
+			.error {
+				color: crimson;
+			}
+
+		}
 	}
 }
 

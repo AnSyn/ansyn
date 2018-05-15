@@ -1,12 +1,13 @@
 import {
-	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction,
+	CoreActions,
+	CoreActionTypes,
+	SetFavoriteOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
-import { IOverlaysState, OverlayDrop } from '@ansyn/overlays/reducers/overlays.reducer';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -49,7 +50,7 @@ export const coreInitialState: ICoreState = {
 	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
-	windowLayout : {
+	windowLayout: {
 		menu: true,
 		statusBar: true,
 		timeLine: true,
@@ -101,8 +102,8 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		}
 
 		case CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
-			const payloadObj = {wasWelcomeNotificationShown: action.payload};
-			return {...state, ...payloadObj };
+			const payloadObj = { wasWelcomeNotificationShown: action.payload };
+			return { ...state, ...payloadObj };
 
 		default:
 			return state;

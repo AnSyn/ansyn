@@ -62,6 +62,20 @@ export interface CaseState {
 
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
 
+export interface DataInputFilterValue {
+	sensorType: string,
+	sensorName: string
+}
+
+export interface DataInputFilter {
+	text: string,
+	value: DataInputFilterValue
+}
+
+export interface CaseDataInputFiltersState {
+	filters: DataInputFilter[]
+}
+
 export interface CaseTimeState {
 	type: 'absolute',
 	from: Date,

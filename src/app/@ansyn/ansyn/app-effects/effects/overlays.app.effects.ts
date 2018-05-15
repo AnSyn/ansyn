@@ -197,10 +197,11 @@ export class OverlaysAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name hoveredOverlay$
+	 * @name setHoveredOverlay$
+	 * @action SetHoveredOverlayAction
 	 */
 	@Effect()
-	hoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
+	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.withLatestFrom(this.store$.select(selectOverlaysMap))
 		.map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
 			overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])

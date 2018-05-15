@@ -346,7 +346,7 @@ describe('OverlaysAppEffects', () => {
 
 	});
 
-	describe('hoveredOverlay$ effect', () => {
+	describe('setHoveredOverlay$ effect', () => {
 		let overlayId = '234';
 		let overlays: Overlay[] = [{
 			id: overlayId,
@@ -356,17 +356,12 @@ describe('OverlaysAppEffects', () => {
 			azimuth: 100,
 			isGeoRegistered: true
 		}];
-		it ('should get hovered overlay by tracking overlays.dropsMarkUp, and set overlays.hoveredOverlay', () => {
-			let spy = spyOn(store, 'dispatch');
-			actions = hot('--a--b--', {
-				a: new LoadOverlaysSuccessAction(overlays),
-				b: new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [overlayId] } })
-			});
-			expect(spy).toHaveBeenCalledWith(new SetHoveredOverlayAction(overlays[0]));
+		it ('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
+			store.dispatch(new LoadOverlaysSuccessAction(overlays));
+			store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [overlayId] } }));
+			const expectedResults = cold('b', { b: new SetHoveredOverlayAction(overlays[0]) });
+			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});
 	});
 
 });
-
-
-

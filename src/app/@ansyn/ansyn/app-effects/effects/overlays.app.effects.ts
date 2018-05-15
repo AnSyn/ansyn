@@ -1,5 +1,5 @@
 import { Actions, Effect } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
@@ -31,6 +31,8 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -206,13 +208,29 @@ export class OverlaysAppEffects {
 		.map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
 			overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 		)
+		// Get thumbnailUrl per source type and map type, possibly also per position
+		.mergeMap((overlay: Overlay) => {
+			if (!overlay) {
+				return [overlay];
+			}
+			const sourceLoader = this.getSourceLoader(overlay.sourceType, OpenlayersMapName);
+			return sourceLoader.getThumbnailUrl(overlay, null).map(thumbnailUrl => ({ ...overlay, thumbnailUrl}));
+		})
 		.map((overlay: Overlay) => new SetHoveredOverlayAction(overlay));
 
+	getSourceLoader(sourceType, mapType) {
+		return this.baseSourceProviders.find((baseSourceProvider: BaseMapSourceProvider) => {
+			const source = baseSourceProvider.sourceType === sourceType;
+			const supported = baseSourceProvider.supported.includes(mapType);
+			return source && supported;
+		});
+	}
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public casesService: CasesService,
-				public overlaysService: OverlaysService) {
+				public overlaysService: OverlaysService,
+				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[]) {
 	}
 
 }

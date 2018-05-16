@@ -4,7 +4,10 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import {
-	Filters, filtersStateSelector, IFiltersState, selectFacets,
+	Filters,
+	filtersStateSelector,
+	IFiltersState,
+	selectFacets,
 	selectFilters,
 	selectOldFilters,
 	selectShowOnlyFavorites
@@ -17,19 +20,22 @@ import {
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	overlaysStateSelector, overlaysStatusMessages, selectFilteredOveralys,
-	selectOverlaysArray, selectOverlaysMap
+	overlaysStateSelector,
+	overlaysStatusMessages,
+	selectFilteredOveralys,
+	selectOverlaysArray,
+	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction, UpdateFacetsAction
+	ResetFiltersAction,
+	UpdateFacetsAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
@@ -168,6 +174,9 @@ export class FiltersAppEffects {
 	@Effect({ dispatch: false })
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap))
+		.filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>]) => {
+			return overlays.size > 0;
+		})
 		.do(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>]) => {
 			Array.from(filterState.filters).forEach(([key, metadata]: [Filter, FilterMetadata]) => {
 				metadata.resetFilteredCount();

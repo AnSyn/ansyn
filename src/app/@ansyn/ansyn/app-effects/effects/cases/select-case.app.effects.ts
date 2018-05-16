@@ -132,7 +132,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId } = state.maps;
 		// core
-		const { favoriteOverlays, time, region } = state;
+		const { favoriteOverlays, time, region, dataInputFilters } = state;
 		const { layout } = state.maps;
 
 		if (typeof time.from === 'string') {
@@ -149,7 +149,7 @@ export class SelectCaseAppEffects {
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
-			new SetOverlaysCriteriaAction({ time, region }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction(),

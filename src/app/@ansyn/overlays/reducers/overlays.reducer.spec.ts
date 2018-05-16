@@ -101,11 +101,17 @@ describe('Overlay Reducer', () => {
 	});
 
 
-	it('Set Filters actions', () => {
-		const filteredOverlays = ['1', '2', '3', '4', '5'];
+	it('Set Filters actions, should filter only overlays from "overlays" Map', () => {
+		const filteredOverlays = ['1', '2', '3', '4', '5', '6']; /*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
-		const state = OverlayReducer(overlaysInitialState, setFilteredOverlaysAction);
-		expect(state.filteredOverlays).toEqual(filteredOverlays);
+		const overlays: any = new Map([
+			['1', { id: '1' }],
+			['2', { id: '1' }],
+			['3', { id: '1' }],
+			['4', { id: '1' }]
+		]);
+		const state = OverlayReducer({...overlaysInitialState, overlays }, setFilteredOverlaysAction);
+		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});
 
 	it('Set Special Objects', () => {

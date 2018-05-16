@@ -227,8 +227,8 @@ export class OverlaysAppEffects {
 			if (!overlay) {
 				return [overlay];
 			}
-			const sourceLoader = this.getOverlaySourceProvider(overlay.sourceType);
-			return sourceLoader.getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
+			const overlaySourceProvider = this.getOverlaySourceProvider(overlay.sourceType);
+			return overlaySourceProvider.getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
 		})
 		// Return an action with the updated overlay as payload
 		.map((overlay: Overlay) => new SetHoveredOverlayAction(overlay))

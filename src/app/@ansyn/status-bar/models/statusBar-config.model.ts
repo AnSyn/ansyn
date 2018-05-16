@@ -5,6 +5,7 @@ export interface IToolTipsConfig {
 	geoFilter?: string,
 	geoFilterEdit?: string,
 	geoFilterShow?: string,
+	dataInputFilter?: string,
 	timeFilter ?: string,
 	timeFilterEdit?: string,
 	screenNumber?: string,

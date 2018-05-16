@@ -31,12 +31,12 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { catchError } from 'rxjs/operators';
+import { MultipleOverlaysSource } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
+import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -227,7 +227,7 @@ export class OverlaysAppEffects {
 			if (!overlay) {
 				return [overlay];
 			}
-			const sourceLoader = this.getSourceLoader(overlay.sourceType, OpenlayersMapName);
+			const sourceLoader = this.getOverlaySourceProvider(overlay.sourceType);
 			return sourceLoader.getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
 		})
 		// Return an action with the updated overlay as payload
@@ -241,19 +241,15 @@ export class OverlaysAppEffects {
 		)
 	;
 
-	getSourceLoader(sourceType, mapType) {
-		return this.baseSourceProviders.find((baseSourceProvider: BaseMapSourceProvider) => {
-			const source = baseSourceProvider.sourceType === sourceType;
-			const supported = baseSourceProvider.supported.includes(mapType);
-			return source && supported;
-		});
+	getOverlaySourceProvider(sType) {
+		return this.multipleOverlaysSource.find(({ sourceType }) => sType === sourceType);
 	}
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public casesService: CasesService,
 				public overlaysService: OverlaysService,
-				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
+				@Inject(MultipleOverlaysSource) public multipleOverlaysSource: BaseOverlaySourceProvider[],
 				public imageryCommunicatorService: ImageryCommunicatorService
 	) {
 	}

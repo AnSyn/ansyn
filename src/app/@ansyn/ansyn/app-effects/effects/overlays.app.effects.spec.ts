@@ -10,8 +10,7 @@ import {
 	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import {
 	MarkUpClass,
 	OverlayReducer,
@@ -51,6 +50,11 @@ import {
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
+import { MultipleOverlaysSource } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
+import { Overlay } from '@ansyn/overlays/models/overlay.model';
+import { Injectable } from '@angular/core';
+import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -105,8 +109,8 @@ describe('OverlaysAppEffects', () => {
 		}
 	} as any;
 	const exampleOverlays: any = [
-		['first', { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') }],
-		['last', { id: 'last', 'photoTime': new Date() }]
+		['first', { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z'), 'sourceType': 'FIRST', 'thumbnailUrl': 'http://first' }],
+		['last', { id: 'last', 'photoTime': new Date(), 'sourceType': 'LAST', 'thumbnailUrl': 'http://last' }]
 	];
 
 	const toolsState: IToolsState = { ...toolsInitialState };
@@ -128,6 +132,27 @@ describe('OverlaysAppEffects', () => {
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
 	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
+
+	@Injectable()
+	class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
+		sourceType = 'FIRST';
+
+		public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+			return Observable.empty();
+		}
+
+		public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
+			return Observable.empty();
+		}
+
+		public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
+			return Observable.empty();
+		}
+
+		public getById(id: string, sourceType: string = null): Observable<Overlay> {
+			return Observable.empty();
+		}
+	}
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -178,6 +203,15 @@ describe('OverlaysAppEffects', () => {
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
+				},
+				{
+					provide: MultipleOverlaysSource,
+					useClass: OverlaySourceProviderMock,
+					multi: true
+				},
+				{
+					provide: LoggerService,
+					useClass: () => {}
 				}
 			]
 

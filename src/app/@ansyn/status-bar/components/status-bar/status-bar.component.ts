@@ -22,6 +22,7 @@ import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
 	CaseDataInputFilter,
+	CaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseMapState,
 	CaseOrientation,
@@ -69,6 +70,15 @@ export class StatusBarComponent implements OnInit {
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
+
+	preFilter$: Observable<CaseDataInputFiltersState> = this.overlaysCriteria$
+		.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters')
+		.distinctUntilChanged()
+		.do((inputFilterState: CaseDataInputFiltersState) => {
+			console.log('COOCOOCOO');
+			console.log(inputFilterState);
+			console.log('LOOLOOLOO');
+		});
 
 	overlaysCount$: Observable<number> = this.actions$
 		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
@@ -186,11 +196,28 @@ export class StatusBarComponent implements OnInit {
 			this.time = _time;
 		});
 
-
+		this.preFilter$.subscribe(_preFilter => {
+			this._selectedFilters = _preFilter;
+		});
 	}
 
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterIcon = !this.dataInputFilterIcon;
+		if (this.dataInputFilterIcon) {
+			this.dataInputFiltersItems.forEach((dataInputItem) => {
+				dataInputItem.children.forEach((sensor) => {
+					const filterChecked = this._selectedFilters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
+						selectedFilter.sensorType === sensor.value.sensorType);
+					sensor.checked = filterChecked.length > 0;
+				});
+				if (dataInputItem.children.some(child => child.checked)) {
+					dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
+				}
+				else {
+					dataInputItem.checked = false;
+				}
+			});
+		}
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -250,9 +277,11 @@ export class StatusBarComponent implements OnInit {
 	dataInputFiltersOk(): void {
 		console.log(this._selectedFilters);
 		this.store.dispatch(new SetOverlaysCriteriaAction({ dataInputFilters: this._selectedFilters }));
+		this.toggleDataInputFilterIcon();
 	}
 
 	dataInputFiltersCancel(): void {
 		console.log('Filter Cancel');
+		this.toggleDataInputFilterIcon();
 	}
 }

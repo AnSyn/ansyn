@@ -52,7 +52,7 @@ export interface CaseState {
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
-	dataInputFilter: CaseDataInputFilter,
+	dataInputFilters?: CaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
 	geoFilter: CaseGeoFilter,
 	favoriteOverlays?: Overlay[],

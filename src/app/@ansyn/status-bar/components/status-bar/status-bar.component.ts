@@ -90,6 +90,7 @@ export class StatusBarComponent implements OnInit {
 	goPrevActive = false;
 	goNextActive = false;
 	_selectedFilters: any;
+	_oldSelectedFilters: any;
 	dataInputSelectedName: string;
 
 	dataInputFiltersConfig = TreeviewConfig.create({
@@ -205,33 +206,33 @@ export class StatusBarComponent implements OnInit {
 		this.preFilter$.subscribe(_preFilter => {
 			this._selectedFilters = _preFilter;
 			if (Boolean(this._selectedFilters)) {
-				this.updateInputDataFilterMenu(true);
-				this.changeDataInputSelectName();
+				this.updateInputDataFilterMenu();
 			}
 		});
 	}
 
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterIcon = !this.dataInputFilterIcon;
-		// this.updateInputDataFilterMenu(this.dataInputFilterIcon);
+		if (this.dataInputFilterIcon) {
+			this._oldSelectedFilters = this._selectedFilters;
+		}
 	}
 
-	updateInputDataFilterMenu(dataInputFilterIcon: boolean): void {
-		if (dataInputFilterIcon) {
-			this.dataInputFiltersItems.forEach((dataInputItem) => {
-				dataInputItem.children.forEach((sensor) => {
-					const filterChecked = this._selectedFilters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
-						selectedFilter.sensorType === sensor.value.sensorType);
-					sensor.checked = filterChecked.length > 0;
-				});
-				if (dataInputItem.children.some(child => child.checked)) {
-					dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
-				}
-				else {
-					dataInputItem.checked = false;
-				}
+	updateInputDataFilterMenu(): void {
+		this.dataInputFiltersItems.forEach((dataInputItem) => {
+			dataInputItem.children.forEach((sensor) => {
+				const filterChecked = this._selectedFilters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
+					selectedFilter.sensorType === sensor.value.sensorType);
+				sensor.checked = filterChecked.length > 0;
 			});
-		}
+			if (dataInputItem.children.some(child => child.checked)) {
+				dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
+			}
+			else {
+				dataInputItem.checked = false;
+			}
+		});
+		this.changeDataInputSelectName();
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -294,6 +295,8 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	dataInputFiltersCancel(): void {
+		this._selectedFilters = this._oldSelectedFilters;
+		this.updateInputDataFilterMenu();
 		this.toggleDataInputFilterIcon();
 	}
 }

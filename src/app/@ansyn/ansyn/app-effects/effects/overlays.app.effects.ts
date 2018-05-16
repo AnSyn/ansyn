@@ -26,13 +26,17 @@ import {
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -204,19 +208,38 @@ export class OverlaysAppEffects {
 	 */
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
+		// Get the related overlay
 		.withLatestFrom(this.store$.select(selectOverlaysMap))
 		.map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
 			overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 		)
-		// Get thumbnailUrl per source type and map type, possibly also per position
-		.mergeMap((overlay: Overlay) => {
+		// Get also active map position, from communicator
+		.withLatestFrom(this.store$.select(selectActiveMapId))
+		.map(([overlay, activeMapId]: [Overlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)])
+		.mergeMap(([overlay, communicator]: [Overlay, CommunicatorEntity]) => {
+			if (!communicator) {
+				return Observable.of([overlay, null])
+			}
+			return communicator.getPosition().map((position) => [overlay, position])
+		})
+		// Get thumbnailUrl per source type, map type, and map position
+		.mergeMap(([overlay, position]: [Overlay, CaseMapPosition]) => {
 			if (!overlay) {
 				return [overlay];
 			}
 			const sourceLoader = this.getSourceLoader(overlay.sourceType, OpenlayersMapName);
-			return sourceLoader.getThumbnailUrl(overlay, null).map(thumbnailUrl => ({ ...overlay, thumbnailUrl}));
+			return sourceLoader.getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
 		})
-		.map((overlay: Overlay) => new SetHoveredOverlayAction(overlay));
+		// Return an action with the updated overlay as payload
+		.map((overlay: Overlay) => new SetHoveredOverlayAction(overlay))
+		// Catch errors
+		.pipe(
+			catchError(err => {
+				console.error(err);
+				return Observable.of(err);
+			})
+		)
+	;
 
 	getSourceLoader(sourceType, mapType) {
 		return this.baseSourceProviders.find((baseSourceProvider: BaseMapSourceProvider) => {
@@ -230,7 +253,9 @@ export class OverlaysAppEffects {
 				public store$: Store<IAppState>,
 				public casesService: CasesService,
 				public overlaysService: OverlaysService,
-				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[]) {
+				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
+				public imageryCommunicatorService: ImageryCommunicatorService
+	) {
 	}
 
 }

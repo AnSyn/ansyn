@@ -117,20 +117,21 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
-			const stateOverlays = new Map(state.overlays);
-
+			const overlays = new Map(state.overlays);
+			const filteredOverlays = [];
 			action.payload.forEach(overlay => {
-				if (!stateOverlays.has(overlay.id)) {
-					stateOverlays.set(overlay.id, overlay);
+				if (!overlays.has(overlay.id)) {
+					overlays.set(overlay.id, overlay);
 				}
 			});
-			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, overlays: stateOverlays });
+			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, overlays, filteredOverlays });
 			// we already initiliazing the state
 			return {
 				...state,
 				loading: false,
 				loaded: true,
-				overlays: stateOverlays,
+				overlays,
+				filteredOverlays,
 				drops
 			};
 		}
@@ -142,8 +143,9 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			});
 
 		case OverlaysActionTypes.SET_FILTERED_OVERLAYS: {
-			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, filteredOverlays: action.payload });
-			return { ...state, filteredOverlays: action.payload, drops };
+			const filteredOverlays = action.payload.filter((id) => state.overlays.get(id));
+			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, filteredOverlays });
+			return { ...state, filteredOverlays, drops };
 		}
 
 		case OverlaysActionTypes.SET_SPECIAL_OBJECTS: {

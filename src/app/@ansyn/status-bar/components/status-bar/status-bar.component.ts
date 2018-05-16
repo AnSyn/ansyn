@@ -73,12 +73,7 @@ export class StatusBarComponent implements OnInit {
 
 	preFilter$: Observable<CaseDataInputFiltersState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters')
-		.distinctUntilChanged()
-		.do((inputFilterState: CaseDataInputFiltersState) => {
-			console.log('COOCOOCOO');
-			console.log(inputFilterState);
-			console.log('LOOLOOLOO');
-		});
+		.distinctUntilChanged();
 
 	overlaysCount$: Observable<number> = this.actions$
 		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
@@ -95,6 +90,7 @@ export class StatusBarComponent implements OnInit {
 	goPrevActive = false;
 	goNextActive = false;
 	_selectedFilters: any;
+	dataInputSelectedName: string;
 
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: true,
@@ -118,6 +114,7 @@ export class StatusBarComponent implements OnInit {
 
 	set selectedFilters(value) {
 		this._selectedFilters = value;
+		this.changeDataInputSelectName();
 	}
 
 	dataInputFiltersItems: TreeviewItem[] = [];
@@ -168,18 +165,27 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.dataFilters.forEach((f) =>
-			this.dataInputFiltersItems.push(new TreeviewItem(f)));
+		this.dataFilters.forEach((f) => {
+			this.dataInputFiltersItems.push(new TreeviewItem(f));
+		});
 
 		this.setSubscribers();
 
-		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => this.comboBoxesProperties = comboBoxesProperties);
+		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
+			this.comboBoxesProperties = comboBoxesProperties;
+			this.changeDataInputSelectName();
+		});
 
 		this.store.dispatch(new UpdateStatusFlagsAction({
 			key: statusBarFlagsItemsEnum.geoFilterIndicator,
 			value: true
 		}));
 	}
+
+	changeDataInputSelectName(): void {
+		this.dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? 'All' : 'Partial';
+	}
+
 
 	setSubscribers() {
 		this.layout$.subscribe((layout: LayoutKey) => this.layout = layout);
@@ -198,12 +204,20 @@ export class StatusBarComponent implements OnInit {
 
 		this.preFilter$.subscribe(_preFilter => {
 			this._selectedFilters = _preFilter;
+			if (Boolean(this._selectedFilters)) {
+				this.updateInputDataFilterMenu(true);
+				this.changeDataInputSelectName();
+			}
 		});
 	}
 
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterIcon = !this.dataInputFilterIcon;
-		if (this.dataInputFilterIcon) {
+		// this.updateInputDataFilterMenu(this.dataInputFilterIcon);
+	}
+
+	updateInputDataFilterMenu(dataInputFilterIcon: boolean): void {
+		if (dataInputFilterIcon) {
 			this.dataInputFiltersItems.forEach((dataInputItem) => {
 				dataInputItem.children.forEach((sensor) => {
 					const filterChecked = this._selectedFilters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
@@ -275,13 +289,11 @@ export class StatusBarComponent implements OnInit {
 	}
 
 	dataInputFiltersOk(): void {
-		console.log(this._selectedFilters);
 		this.store.dispatch(new SetOverlaysCriteriaAction({ dataInputFilters: this._selectedFilters }));
 		this.toggleDataInputFilterIcon();
 	}
 
 	dataInputFiltersCancel(): void {
-		console.log('Filter Cancel');
 		this.toggleDataInputFilterIcon();
 	}
 }

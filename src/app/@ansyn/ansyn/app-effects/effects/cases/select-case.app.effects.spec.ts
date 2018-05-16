@@ -21,7 +21,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
-	Case, CaseFacetsState,
+	Case,
+	CaseDataInputFiltersState,
+	CaseFacetsState,
 	CaseGeoFilter,
 	CaseLayersState,
 	CaseMapsState,
@@ -99,6 +101,7 @@ describe('SelectCaseAppEffects', () => {
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
+				dataInputFilters: CaseDataInputFiltersState = { filters: [] },
 				favoriteOverlays: Overlay[] = [],
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} },
@@ -111,6 +114,7 @@ describe('SelectCaseAppEffects', () => {
 				timeFilter,
 				time,
 				region,
+				dataInputFilters,
 				favoriteOverlays,
 				maps,
 				layers,
@@ -132,7 +136,7 @@ describe('SelectCaseAppEffects', () => {
 			const expectedResult = cold('--(abcdefghij)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
-				c: new SetOverlaysCriteriaAction({ time, region }),
+				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
 				f: new BeginLayerCollectionLoadAction(),

@@ -2,7 +2,6 @@ import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
@@ -29,9 +28,5 @@ export abstract class BaseMapSourceProvider {
 	createAsync(metaData: any): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer);
-	}
-
-	getThumbnailUrl(overlay, position): Observable<string> {
-		return Observable.of(overlay.thumbnailUrl);
 	}
 }

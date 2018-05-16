@@ -143,4 +143,8 @@ export abstract class BaseOverlaySourceProvider {
 	abstract getById(id: string, sourceType: string): Observable<Overlay>;
 
 	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
+
+	getThumbnailUrl(overlay, position): Observable<string> {
+		return Observable.of(overlay.thumbnailUrl);
+	}
 }

@@ -190,7 +190,6 @@
 
 		.navigation {
 			background: white;
-			display: flex;
 			flex-shrink: 0;
 			align-self: flex-end;
 			align-items: center;
@@ -247,3 +246,40 @@
 }
 
 .screens(@screens-list);
+
+
+
+
+@media screen and (max-width: 959px) {
+	.navigation {
+		display: none;
+	}
+
+}
+
+@media screen and (min-width: 959px) {
+	.navigation {
+		display: flex;
+	}
+
+}
+
+@media screen and (max-width: 660px) {
+	#editGeoFilter {
+		display: none;
+	}
+	.geoFilter {
+		display: none !important;
+	}
+
+}
+
+@media screen and (min-width: 660px) {
+	#editGeoFilter {
+		display: flex;
+	}
+	.geoFilter {
+		display: flex;
+	}
+
+}

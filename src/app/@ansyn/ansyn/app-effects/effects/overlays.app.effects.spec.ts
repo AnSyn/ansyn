@@ -10,7 +10,6 @@ import {
 	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import {
 	MarkUpClass,
 	OverlayReducer,
@@ -50,11 +49,8 @@ import {
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
-import { MultipleOverlaysSource } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
-import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import { Injectable } from '@angular/core';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -133,24 +129,13 @@ describe('OverlaysAppEffects', () => {
 
 	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 
-	@Injectable()
-	class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
+	// @Injectable()
+	class MapSourceProviderMock extends BaseMapSourceProvider {
 		sourceType = 'FIRST';
+		supported = [];
 
-		public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
-			return Observable.empty();
-		}
-
-		public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-			return Observable.empty();
-		}
-
-		public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-			return Observable.empty();
-		}
-
-		public getById(id: string, sourceType: string = null): Observable<Overlay> {
-			return Observable.empty();
+		public create(metaData: any): any[] {
+			return [];
 		}
 	}
 
@@ -168,7 +153,7 @@ describe('OverlaysAppEffects', () => {
 			providers: [
 				OverlaysAppEffects,
 				provideMockActions(() => actions),
-				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
+				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: CasesService,
 					useValue: {
@@ -205,12 +190,12 @@ describe('OverlaysAppEffects', () => {
 					useValue: imageryCommunicatorServiceMock
 				},
 				{
-					provide: MultipleOverlaysSource,
-					useClass: OverlaySourceProviderMock,
+					provide: BaseMapSourceProvider,
+					useClass: MapSourceProviderMock,
 					multi: true
 				},
 				{
-					provide: LoggerService,
+					provide: CacheService,
 					useClass: () => {}
 				}
 			]

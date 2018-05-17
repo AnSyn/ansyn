@@ -35,8 +35,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { catchError } from 'rxjs/operators';
-import { MultipleOverlaysSource } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
-import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -242,14 +241,14 @@ export class OverlaysAppEffects {
 	;
 
 	getOverlaySourceProvider(sType) {
-		return this.multipleOverlaysSource.find(({ sourceType }) => sType === sourceType);
+		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
 	}
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public casesService: CasesService,
 				public overlaysService: OverlaysService,
-				@Inject(MultipleOverlaysSource) public multipleOverlaysSource: BaseOverlaySourceProvider[],
+				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
 				public imageryCommunicatorService: ImageryCommunicatorService
 	) {
 	}

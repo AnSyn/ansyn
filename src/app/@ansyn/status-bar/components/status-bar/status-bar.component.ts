@@ -94,7 +94,7 @@ export class StatusBarComponent implements OnInit {
 	dataInputSelectedName: string;
 
 	dataInputFiltersConfig = TreeviewConfig.create({
-		hasAllCheckBox: true,
+		hasAllCheckBox: false,
 		hasFilter: false,
 		hasCollapseExpand: false, // Collapse (show all filters).
 		decoupleChildFromParent: false,

@@ -15,6 +15,7 @@ import {
 	TIME_FILTERS
 } from '@ansyn/status-bar/models/combo-boxes.model';
 import { TreeviewModule } from 'ngx-treeview';
+import { TreeViewComponent } from '@ansyn/status-bar/components/tree-view/tree-view.component';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { TreeviewModule } from 'ngx-treeview';
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent],
+	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent],
 	providers: [
 		{
 			provide: DATA_INPUT_FILTERS,

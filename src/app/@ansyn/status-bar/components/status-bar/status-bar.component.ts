@@ -21,6 +21,7 @@ import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
+	Case,
 	CaseDataInputFilter,
 	CaseDataInputFiltersState,
 	CaseGeoFilter,
@@ -40,7 +41,8 @@ import {
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
-import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -51,9 +53,24 @@ import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 export class StatusBarComponent implements OnInit {
 
 
+	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
+		.pluck<ICasesState, Case>('selectedCase')
+		.filter(selectedCase => Boolean(selectedCase))
+		.distinctUntilChanged();
+
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged();
+
+	preFilter$: Observable<any> = Observable.combineLatest(this.overlaysCriteria$.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters'), this.selectedCase$)
+		.do(([caseDataInputFilter, selectedCase]: [CaseDataInputFiltersState, Case]) => {
+			if (!Boolean(caseDataInputFilter)) {
+				this.dataInputSelectedName = selectedCase.id === this.casesService.defaultCase.id ? 'All' : 'ERROR';
+			} else {
+				this.dataInputSelectedName = caseDataInputFilter.dataInputFiltersTitle;
+			}
+		});
+
 
 	layout$: Observable<LayoutKey> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, LayoutKey>('layout')
@@ -71,10 +88,6 @@ export class StatusBarComponent implements OnInit {
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
 
-	preFilter$: Observable<CaseDataInputFiltersState> = this.overlaysCriteria$
-		.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters')
-		.distinctUntilChanged();
-
 	overlaysCount$: Observable<number> = this.actions$
 		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
 		.map(({ payload }: UpdateOverlaysCountAction) => payload);
@@ -89,17 +102,8 @@ export class StatusBarComponent implements OnInit {
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
-	_selectedFilters: any;
-	_oldSelectedFilters: any;
 	dataInputSelectedName: string;
-
-	dataInputFiltersConfig = TreeviewConfig.create({
-		hasAllCheckBox: false,
-		hasFilter: false,
-		hasCollapseExpand: false, // Collapse (show all filters).
-		decoupleChildFromParent: false,
-		maxHeight: 400
-	});
+	_preFilters: any;
 
 	get statusBarFlagsItemsEnum() {
 		return statusBarFlagsItemsEnum;
@@ -108,17 +112,6 @@ export class StatusBarComponent implements OnInit {
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
 	}
-
-	get dataFilters(): TreeviewItem[] {
-		return this.statusBarConfig.dataInputFiltersConfig.filters;
-	}
-
-	set selectedFilters(value) {
-		this._selectedFilters = value;
-		this.changeDataInputSelectName();
-	}
-
-	dataInputFiltersItems: TreeviewItem[] = [];
 
 	get layouts(): LayoutKey[] {
 		return Array.from(layoutOptions.keys());
@@ -162,29 +155,22 @@ export class StatusBarComponent implements OnInit {
 				@Inject(DATA_INPUT_FILTERS) public dataInputFilters: CaseDataInputFilter[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
-				protected actions$: Actions) {
+				protected actions$: Actions,
+				protected casesService: CasesService) {
 	}
 
 	ngOnInit(): void {
-		this.dataFilters.forEach((f) => {
-			this.dataInputFiltersItems.push(new TreeviewItem(f));
-		});
-
 		this.setSubscribers();
-
+		this.preFilter$.subscribe();
 		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
 			this.comboBoxesProperties = comboBoxesProperties;
-			this.changeDataInputSelectName();
+			// this.changeDataInputSelectName();
 		});
 
 		this.store.dispatch(new UpdateStatusFlagsAction({
 			key: statusBarFlagsItemsEnum.geoFilterIndicator,
 			value: true
 		}));
-	}
-
-	changeDataInputSelectName(): void {
-		this.dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? 'All' : 'Partial';
 	}
 
 
@@ -203,36 +189,14 @@ export class StatusBarComponent implements OnInit {
 			this.time = _time;
 		});
 
-		this.preFilter$.subscribe(_preFilter => {
-			this._selectedFilters = _preFilter;
-			if (Boolean(this._selectedFilters)) {
-				this.updateInputDataFilterMenu();
-			}
-		});
+		this.selectedCase$.subscribe();
 	}
 
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterIcon = !this.dataInputFilterIcon;
-		if (this.dataInputFilterIcon) {
-			this._oldSelectedFilters = this._selectedFilters;
-		}
-	}
-
-	updateInputDataFilterMenu(): void {
-		this.dataInputFiltersItems.forEach((dataInputItem) => {
-			dataInputItem.children.forEach((sensor) => {
-				const filterChecked = this._selectedFilters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
-					selectedFilter.sensorType === sensor.value.sensorType);
-				sensor.checked = filterChecked.length > 0;
-			});
-			if (dataInputItem.children.some(child => child.checked)) {
-				dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
-			}
-			else {
-				dataInputItem.checked = false;
-			}
-		});
-		this.changeDataInputSelectName();
+		// if (this.dataInputFilterIcon) {
+		// 	this._oldSelectedFilters = this._selectedFilters;
+		// }
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -289,14 +253,13 @@ export class StatusBarComponent implements OnInit {
 		this.store.dispatch(new BackToWorldView({ mapId: this.activeMap.id }));
 	}
 
-	dataInputFiltersOk(): void {
-		this.store.dispatch(new SetOverlaysCriteriaAction({ dataInputFilters: this._selectedFilters }));
+	onCloseTreeView(): void {
 		this.toggleDataInputFilterIcon();
 	}
 
-	dataInputFiltersCancel(): void {
-		this._selectedFilters = this._oldSelectedFilters;
-		this.updateInputDataFilterMenu();
-		this.toggleDataInputFilterIcon();
+	onFiltersChanged(name: string): void {
+		if (this.dataInputSelectedName !== name) {
+			this.dataInputSelectedName = name;
+		}
 	}
 }

@@ -33,13 +33,11 @@
 				(selectedChange)="comboBoxesChange({ timeFilter: $event })">
 			</ansyn-combo-box>
 			<div class="pop-content data-input-filter" [class.visible]="dataInputFilterIcon">
-				<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"
-							  (selectedChange)="selectedFilters = $event">
-				</ngx-treeview>
-				<div class="data-input-filters-buttons">
-					<a (click)="dataInputFiltersCancel()">Cancel</a>
-					<a (click)="dataInputFiltersOk()">Ok</a>
-				</div>
+				<ansyn-tree-view (selectedFiltersChanged)="onFiltersChanged($event)" (closeTreeView)="onCloseTreeView()"
+								 class="ansyn-tree-view" *ngIf="dataInputFilterIcon"></ansyn-tree-view>
+				<!--<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"-->
+				<!--(selectedChange)="selectedFilters = $event">-->
+				<!--</ngx-treeview>-->
 			</div>
 		</div>
 

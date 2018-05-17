@@ -1,18 +1,11 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import {
-	IOverlaysState,
-	MarkUpClass,
-	overlaysStateSelector
-} from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
-import {
-	DisplayOverlayFromStoreAction,
-	SetMarkUp
-} from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 
 @Component({
@@ -36,9 +29,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
 
-	hoveredOverlay$: Observable<any> = this.store$.select(overlaysStateSelector)
-		.pluck <IOverlaysState, Overlay>('hoveredOverlay')
-		.distinctUntilChanged();
+	hoveredOverlay$: Observable<any> = this.store$.select(selectHoveredOverlay);
 
 	// Mark the original overlay as un-hovered when mouse leaves
 	@HostListener('mouseleave')
@@ -54,7 +45,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._subscriptions.push(
-			this.hoveredOverlay$.subscribe(this.showOrHide.bind(this))
+			this.hoveredOverlay$.subscribe(this.onHoveredOverlay.bind(this))
 		);
 	}
 
@@ -62,7 +53,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 
-	showOrHide(overlay: Overlay) {
+	onHoveredOverlay(overlay: Overlay) {
 		if (overlay) {
 			this.overlayId = overlay.id;
 			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);

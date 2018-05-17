@@ -73,6 +73,7 @@ export interface DataInputFilter {
 }
 
 export interface CaseDataInputFiltersState {
+	dataInputFiltersTitle: string,
 	filters: DataInputFilter[]
 }
 

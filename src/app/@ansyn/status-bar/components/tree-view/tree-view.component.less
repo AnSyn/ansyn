@@ -1,0 +1,42 @@
+@import "core/less/common";
+@import "core/less/z-index-globals";
+@import "core/less/tooltip";
+
+@popup-padding-bottom: 15px;
+
+:host {
+	/deep/ .treeview-container .row-item {
+		display: flex;
+		color: ghostwhite;
+	}
+
+	.tree-view-main {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	div.data-input-filters-buttons {
+		margin-top: 10px;
+		display: flex;
+		justify-content: flex-end;
+		color: @overlays-dots-color;
+		a {
+			cursor: pointer;
+			&:hover {
+				font-weight: bold;
+			}
+			&:first-child {
+				margin-right: 9px;
+				width: 42px;
+			}
+			&:last-child {
+				width: 17px;
+			}
+		}
+		.error {
+			color: crimson;
+		}
+	}
+}

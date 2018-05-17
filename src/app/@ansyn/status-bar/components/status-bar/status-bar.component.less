@@ -11,9 +11,8 @@
 	display: flex;
 	transform: translate(0, -100%);
 
-	/deep/ .treeview-container .row-item {
-		display: flex;
-		color: ghostwhite;
+	.ansyn-tree-view {
+		width: inherit;
 	}
 
 	ansyn-imagery-status {
@@ -191,13 +190,12 @@
 			}
 
 			.data-input-filter {
+				width: 100%;
 				min-height: 450px;
 				min-width: 220px;
 				padding: 10px;
 				background: rgba(0, 0, 0, 1);
 				background-clip: padding-box;
-				flex-direction: column;
-				justify-content: space-between;
 			}
 
 			.time-selection {
@@ -243,30 +241,6 @@
 					box-shadow: 0 0 2px 2px #666;
 				}
 			}
-		}
-
-		div.data-input-filters-buttons {
-			margin-top: 10px;
-			display: flex;
-			justify-content: flex-end;
-			color: @overlays-dots-color;
-			a {
-				cursor: pointer;
-				&:hover {
-					font-weight: bold;
-				}
-				&:first-child {
-					margin-right: 9px;
-					width: 42px;
-				}
-				&:last-child {
-					width: 17px;
-				}
-			}
-			.error {
-				color: crimson;
-			}
-
 		}
 	}
 }

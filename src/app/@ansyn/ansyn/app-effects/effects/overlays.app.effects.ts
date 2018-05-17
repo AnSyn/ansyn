@@ -220,8 +220,8 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
-		const overlaySourceProvider = this.getOverlaySourceProvider(overlay.sourceType);
-		return overlaySourceProvider.getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
+		const sourceProvider = this.getSourceProvider(overlay.sourceType);
+		return sourceProvider.getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
 	});
 	private getHoveredOverlayAction = map((overlay: Overlay) => new SetHoveredOverlayAction(overlay));
 
@@ -244,7 +244,7 @@ export class OverlaysAppEffects {
 		)
 	;
 
-	getOverlaySourceProvider(sType) {
+	getSourceProvider(sType) {
 		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
 	}
 

@@ -1,7 +1,8 @@
-import { Filter } from '../models/filter';
-import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
-import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
+import { Filter } from '@ansyn/menu-items/filters/models/filter';
+import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
+import { CaseFacetsState, CaseFilter } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { FiltersActions, FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CaseFacetsState, CaseFilter } from '@ansyn/core/models/case.model';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 

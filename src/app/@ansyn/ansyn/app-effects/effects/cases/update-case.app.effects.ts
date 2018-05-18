@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
-import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { StatusBarActionsTypes } from '@ansyn/status-bar/actions/status-bar.actions';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
 import {
@@ -49,18 +43,18 @@ export class UpdateCaseAppEffects {
 	@Effect()
 	shouldUpdateCase$ = Observable.combineLatest(this.events)
 		.withLatestFrom(this.store$.select(selectSelectedCase))
-		.filter(([events, selectedCase]) => Boolean(selectedCase))	/* SelectCaseAction(selectedCase) already triggered */
+		.filter(([events, selectedCase]) => Boolean(selectedCase))    /* SelectCaseAction(selectedCase) already triggered */
 		.map(([events, selectedCase]: [any, any]) => {
 			const [
 				facets,
 				favoriteOverlays,
-				{ geoFilter, timeFilter, orientation },	/* -> comboBoxesProperties */
+				{ geoFilter, timeFilter, orientation }, /* -> comboBoxesProperties */
 				annotationsLayer,
 				displayAnnotationsLayer,
 				activeMapId,
 				mapsList,
 				layout,
-				{ time, region, dataInputFilters },	/* overlaysCriteria */
+				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs
 			] = events;
 

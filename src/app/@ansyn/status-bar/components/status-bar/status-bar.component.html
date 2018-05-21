@@ -58,8 +58,8 @@
 						(click)="toggleMapSearch()"
 						[attr.tooltip-value]="toolTips.geoFilterEdit"
 						tooltip-class="top right"
-						class="edit-pinpoint toggle-icon"
-						[class.active2]="(flags.get(statusBarFlagsItemsEnum.geoFilterSearch))">
+						class="edit-pinpoint no-toggle-icon"
+						>
 					<i class="icon-edit"></i>
 				</button>
 			</div>
@@ -79,7 +79,7 @@
 				<button (click)="toggleTimelineStartEndSearch()"
 						[attr.tooltip-value]="toolTips.timeFilterEdit"
 						tooltip-class="top right"
-						class="toggle-icon" [class.active]="timeSelectionEditIcon">
+						class="no-toggle-icon">
 					<i class="icon-edit"></i>
 				</button>
 			</div>

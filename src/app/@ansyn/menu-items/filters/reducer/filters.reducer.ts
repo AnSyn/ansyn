@@ -2,7 +2,7 @@ import { Filter } from '../models/filter';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { CaseFacetsState } from '@ansyn/core/models/case.model';
+import { CaseFacetsState, CaseFilter, CaseFilters } from '@ansyn/core/models/case.model';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 
 export type Filters = Map<Filter, FilterMetadata>;
@@ -35,7 +35,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
 			const filters = action.payload;
-			const facets = { ...state.facets, filters: FiltersService.buildCaseFilters(filters) };
+			const facets = { ...state.facets, filters: <CaseFilters> FiltersService.buildCaseFilters(filters) };
 			return { ...state, filters, facets, isLoading: false };
 		}
 

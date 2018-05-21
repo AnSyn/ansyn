@@ -10,6 +10,8 @@ import { IFiltersConfig } from '@ansyn/menu-items/filters/models/filters-config'
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
 import { FilterType } from '@ansyn/core/models/case.model';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { clone } from 'lodash';
+import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -88,7 +90,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	}
 
 	onMetadataChange(metadata: any): void {
-		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: metadata }));
+		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata ) } ));
 	}
 
 	showAll(): void {

@@ -15,16 +15,10 @@ export class SliderFilterContainerComponent {
 	@Input()
 	set metadata(value: SliderFilterMetadata) {
 		this._metadata = value;
-
-		this.realRange = [this.factor * value.start, this.factor * value.end];
-
-		if (value.start <= value.min) {
-			value.start = value.min;
-		}
-		if (value.end >= value.max) {
-			value.end = value.max;
-		}
-		this.rangeValues = [this.factor * value.start, this.factor * value.end];
+		const rangeValuesStart = value.start <= value.min ? value.min : value.start;
+		const rangeValuesEnd = value.end >= value.max ? value.max : value.end;
+		this.realRange = [value.start, value.end];
+		this.rangeValues = [this.factor * rangeValuesStart, this.factor * rangeValuesEnd];
 	}
 
 	get metadata(): SliderFilterMetadata {
@@ -39,7 +33,7 @@ export class SliderFilterContainerComponent {
 
 	getMinRangeValue(number: number): string {
 		if (number === -Infinity) {
-			return "Min";
+			return 'Min';
 		} else {
 			return number.toString();
 		}
@@ -47,7 +41,7 @@ export class SliderFilterContainerComponent {
 
 	getMaxRangeValue(number: number): string {
 		if (number === Infinity) {
-			return "Max";
+			return 'Max';
 		} else {
 			return number.toString();
 		}
@@ -55,19 +49,14 @@ export class SliderFilterContainerComponent {
 
 	handleChange(event) {
 		const updateValue = {
-			start: this.realRange[0] / this.factor,
-			end: this.realRange[1] / this.factor
+			start: this.realRange[0],
+			end: this.realRange[1]
 		};
 
-		if (true) { // #TODO if left handler changed
-			const min = event.values[0] / this.factor;
-			updateValue.start = min === this._metadata.min ? -Infinity : min;
-		}
-
-		if (true) { // #TODO if right handler changed
-			const max = event.values[1] / this.factor;
-			updateValue.end = max === this._metadata.max ? Infinity : max;
-		}
+		const min = event.values[0] / this.factor;
+		updateValue.start = min === this._metadata.min ? -Infinity : min;
+		const max = event.values[1] / this.factor;
+		updateValue.end = max === this._metadata.max ? Infinity : max;
 
 		const clonedMetadata: SliderFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
 		clonedMetadata.updateMetadata(updateValue);

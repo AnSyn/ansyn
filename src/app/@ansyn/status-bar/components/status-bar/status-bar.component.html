@@ -45,7 +45,7 @@
 				(selectedChange)="comboBoxesChange({ geoFilter: $event })">
 			</ansyn-combo-box>
 
-			<div class="buttons">
+			<div class="buttons" [class.active]="(flags.get(statusBarFlagsItemsEnum.geoFilterSearch))">
 				<button (click)="toggleIndicatorView()"
 						[disabled]="flags.get(statusBarFlagsItemsEnum.geoFilterSearch)"
 						[attr.tooltip-value]="toolTips.geoFilterShow"
@@ -58,8 +58,7 @@
 						(click)="toggleMapSearch()"
 						[attr.tooltip-value]="toolTips.geoFilterEdit"
 						tooltip-class="top right"
-						class="edit-pinpoint no-toggle-icon"
-						>
+						class="edit-pinpoint">
 					<i class="icon-edit"></i>
 				</button>
 			</div>
@@ -75,11 +74,11 @@
 				[selected]="comboBoxesProperties.timeFilter"
 				(selectedChange)="comboBoxesChange({ timeFilter: $event })">
 			</ansyn-combo-box>
-			<div class="buttons">
+			<div class="buttons" [class.active]="timeSelectionEditIcon">
 				<button (click)="toggleTimelineStartEndSearch()"
 						[attr.tooltip-value]="toolTips.timeFilterEdit"
 						tooltip-class="top right"
-						class="no-toggle-icon">
+						class="relative">
 					<i class="icon-edit"></i>
 				</button>
 			</div>

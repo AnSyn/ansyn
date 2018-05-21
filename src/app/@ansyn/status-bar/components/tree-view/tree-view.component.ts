@@ -81,11 +81,12 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	updateInputDataFilterMenu(): void {
 		if (Boolean(this._selectedFilters)) {
 			this.dataInputFiltersItems.forEach((dataInputItem) => {
+				// first iterate the parents and update the their checkboxes.
 				dataInputItem.children.forEach((sensor) => {
-					const filterChecked = this._selectedFilters.filters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
+					sensor.checked  = this._selectedFilters.filters.some(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
 						selectedFilter.sensorType === sensor.value.sensorType);
-					sensor.checked = filterChecked.length > 0;
 				});
+				// then iterate all the children and update the their checkboxes.
 				if (dataInputItem.children.some(child => child.checked)) {
 					dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
 				}

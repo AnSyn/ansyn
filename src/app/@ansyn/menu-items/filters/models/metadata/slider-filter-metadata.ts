@@ -22,12 +22,12 @@ export class SliderFilterMetadata implements FilterMetadata {
 	}
 
 	updateMetadata(range: { start: number, end: number }): void {
-		if (!range || range.start > range.end) {
+		if (!range || (range.start && range.end && range.start > range.end) ) {
 			return;
 		}
 
-		this.start = range.start;
-		this.end = range.end;
+		this.start = range.start || -Infinity;
+		this.end = range.end || Infinity;
 	}
 
 	accumulateData(value: number): void {

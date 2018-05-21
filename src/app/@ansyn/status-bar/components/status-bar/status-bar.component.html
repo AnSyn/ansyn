@@ -35,9 +35,6 @@
 			<div class="pop-content data-input-filter" [class.visible]="dataInputFilterIcon">
 				<ansyn-tree-view (selectedFiltersChanged)="onFiltersChanged($event)" (closeTreeView)="onCloseTreeView()"
 								 class="ansyn-tree-view" *ngIf="dataInputFilterIcon"></ansyn-tree-view>
-				<!--<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"-->
-				<!--(selectedChange)="selectedFilters = $event">-->
-				<!--</ngx-treeview>-->
 			</div>
 		</div>
 

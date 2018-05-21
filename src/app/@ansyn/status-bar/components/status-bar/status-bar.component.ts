@@ -11,7 +11,6 @@ import { Observable } from 'rxjs/Observable';
 
 import {
 	ComboBoxesProperties,
-	DATA_INPUT_FILTERS,
 	GEO_FILTERS,
 	ORIENTATIONS,
 	TIME_FILTERS
@@ -21,8 +20,7 @@ import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
-	Case,
-	CaseDataInputFilter,
+	Case, CaseDataFilter,
 	CaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseMapState,
@@ -52,7 +50,6 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 export class StatusBarComponent implements OnInit {
 
-
 	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
 		.pluck<ICasesState, Case>('selectedCase')
 		.filter(selectedCase => Boolean(selectedCase))
@@ -65,12 +62,11 @@ export class StatusBarComponent implements OnInit {
 	preFilter$: Observable<any> = Observable.combineLatest(this.overlaysCriteria$.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters'), this.selectedCase$)
 		.do(([caseDataInputFilter, selectedCase]: [CaseDataInputFiltersState, Case]) => {
 			if (!Boolean(caseDataInputFilter)) {
-				this.dataInputSelectedName = selectedCase.id === this.casesService.defaultCase.id ? 'All' : 'ERROR';
+				this.dataInputSelectedName = selectedCase.id === this.casesService.defaultCase.id ? CaseDataFilter.Full : CaseDataFilter.Error;
 			} else {
 				this.dataInputSelectedName = caseDataInputFilter.dataInputFiltersTitle;
 			}
 		});
-
 
 	layout$: Observable<LayoutKey> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, LayoutKey>('layout')
@@ -102,8 +98,7 @@ export class StatusBarComponent implements OnInit {
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
-	dataInputSelectedName: string;
-	_preFilters: any;
+	dataInputSelectedName: CaseDataFilter;
 
 	get statusBarFlagsItemsEnum() {
 		return statusBarFlagsItemsEnum;
@@ -152,7 +147,6 @@ export class StatusBarComponent implements OnInit {
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				public store: Store<IStatusBarState>,
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
-				@Inject(DATA_INPUT_FILTERS) public dataInputFilters: CaseDataInputFilter[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
 				protected actions$: Actions,
@@ -194,9 +188,6 @@ export class StatusBarComponent implements OnInit {
 
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterIcon = !this.dataInputFilterIcon;
-		// if (this.dataInputFilterIcon) {
-		// 	this._oldSelectedFilters = this._selectedFilters;
-		// }
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -257,7 +248,7 @@ export class StatusBarComponent implements OnInit {
 		this.toggleDataInputFilterIcon();
 	}
 
-	onFiltersChanged(name: string): void {
+	onFiltersChanged(name: CaseDataFilter): void {
 		if (this.dataInputSelectedName !== name) {
 			this.dataInputSelectedName = name;
 		}

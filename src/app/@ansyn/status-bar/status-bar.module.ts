@@ -9,7 +9,6 @@ import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
 import {
 	comboBoxesOptions,
-	DATA_INPUT_FILTERS,
 	GEO_FILTERS,
 	ORIENTATIONS,
 	TIME_FILTERS
@@ -28,10 +27,6 @@ import { TreeViewComponent } from '@ansyn/status-bar/components/tree-view/tree-v
 	],
 	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent],
 	providers: [
-		{
-			provide: DATA_INPUT_FILTERS,
-			useValue: comboBoxesOptions.dataInputFilters
-		},
 		{
 			provide: ORIENTATIONS,
 			useValue: comboBoxesOptions.orientations

@@ -133,33 +133,33 @@
 					}
 				}
 
-				.buttons {
-					background-color: black;
-					height: 100%;
-					align-items: center;
-					display: flex;
+			.buttons {
+				background-color: black;
+				height: 100%;
+				align-items: center;
+				display: flex;
+				border: 1px solid white;
+				border-left: none;
+				box-sizing: border-box;
+				.icon-edit{
+					font-size: 17px;
+				}
+				&::before {
+					content: "";
+					display: block;
+					width: 10px;
+					height: 10px;
+					top: 12px;
+					background: black;
+					transform: translateX(-6px) rotate(45deg);
+					position: absolute;
 					border: 1px solid white;
-					border-left: none;
-					box-sizing: border-box;
-					.icon-edit {
-						font-size: 17px;
-					}
-					&::before {
-						content: "";
-						display: block;
-						width: 10px;
-						height: 10px;
-						top: 12px;
-						background-color: inherit;
-						transform: translateX(-6px) rotate(45deg);
-						position: absolute;
-						border: 1px solid white;
-						border-right: none;
-						border-top: none;
-					}
-					&.active {
-						background-color: #f32ee1;
-					}
+					border-right: none;
+					border-top: none;
+				}
+				&.active {
+					background-color: #f32ee1;
+				}
 
 					button {
 						background: transparent;
@@ -175,10 +175,6 @@
 							&.active2 {
 								color: rgba(255, 255, 255, 1);
 							}
-						}
-
-						&.relative {
-							position: relative;
 						}
 					}
 				}

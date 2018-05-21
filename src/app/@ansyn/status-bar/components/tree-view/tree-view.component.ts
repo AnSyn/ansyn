@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
+import { CaseDataFilter, CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -23,7 +23,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() selectedFiltersChanged = new EventEmitter<string>(true);
 
 	_selectedFilters: any;
-	_oldSelectedFilters: any;
 	dataInputFiltersItems: TreeviewItem[] = [];
 
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(coreStateSelector)
@@ -49,8 +48,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				public store: Store<IStatusBarState>,
 				protected actions$: Actions) {
-		const dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? 'All' : 'Partial';
-		this.selectedFiltersChanged.emit(dataInputSelectedName);
+		this.changeDataInputSelectName();
 	}
 
 	set selectedFilters(value) {
@@ -64,21 +62,19 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	changeDataInputSelectName(): void {
-		const dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? 'All' : 'Partial';
+		const dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? CaseDataFilter.Full : CaseDataFilter.Partial;
 		this.selectedFiltersChanged.emit(dataInputSelectedName);
 	}
 
 	setSubscribers() {
-		const dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? 'All' : 'Partial';
-		this.selectedFiltersChanged.emit(dataInputSelectedName);
+		this.changeDataInputSelectName();
 
 		this.dataFilters.forEach((f) => {
 			this.dataInputFiltersItems.push(new TreeviewItem(f));
 		});
 
 		this.comboBoxesProperties$.subscribe(() => {
-			const dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? 'All' : 'Partial';
-			this.selectedFiltersChanged.emit(dataInputSelectedName);
+			this.changeDataInputSelectName();
 		});
 
 		this.preFilter$.subscribe(_preFilter => {
@@ -90,37 +86,33 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	updateInputDataFilterMenu(): void {
-		this.dataInputFiltersItems.forEach((dataInputItem) => {
-			dataInputItem.children.forEach((sensor) => {
-				const filterChecked = this._selectedFilters.filters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
-					selectedFilter.sensorType === sensor.value.sensorType);
-				sensor.checked = filterChecked.length > 0;
+		if (Boolean(this._selectedFilters)) {
+			this.dataInputFiltersItems.forEach((dataInputItem) => {
+				dataInputItem.children.forEach((sensor) => {
+					const filterChecked = this._selectedFilters.filters.filter(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
+						selectedFilter.sensorType === sensor.value.sensorType);
+					sensor.checked = filterChecked.length > 0;
+				});
+				if (dataInputItem.children.some(child => child.checked)) {
+					dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
+				}
+				else {
+					dataInputItem.checked = false;
+				}
 			});
-			if (dataInputItem.children.some(child => child.checked)) {
-				dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
-			}
-			else {
-				dataInputItem.checked = false;
-			}
-		});
-		this.changeDataInputSelectName();
+			this.changeDataInputSelectName();
+		}
 	}
 
 
 	dataInputFiltersOk(): void {
 		this.store.dispatch(new SetOverlaysCriteriaAction({
 			dataInputFilters: {
-				dataInputFiltersTitle: this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? 'All' : 'Partial',
+				dataInputFiltersTitle: this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? CaseDataFilter.Full : CaseDataFilter.Partial,
 				filters: this._selectedFilters
 			}
 		}));
 		this.closeTreeView.emit();
-	}
-
-	dataInputFiltersCancel(): void {
-		this._selectedFilters = this._oldSelectedFilters;
-		this.updateInputDataFilterMenu();
-		// this.toggleDataInputFilterIcon();
 	}
 
 	ngOnInit(): void {

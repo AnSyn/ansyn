@@ -25,7 +25,6 @@ export interface IContextEntity extends IVisualizerEntity {
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
-export type CaseDataInputFilter = 'Data Input Filter';
 
 
 export enum CaseGeoFilter {
@@ -67,14 +66,20 @@ export interface DataInputFilterValue {
 	sensorName: string
 }
 
+export enum CaseDataFilter {
+	Error = 'Error',
+	Partial = 'Partial',
+	Full = 'Full'
+}
+
 export interface DataInputFilter {
-	text: string,
+	text: CaseDataFilter,
 	value: DataInputFilterValue
 }
 
 export interface CaseDataInputFiltersState {
-	dataInputFiltersTitle: string,
-	filters: DataInputFilter[]
+	dataInputFiltersTitle: CaseDataFilter,
+	filters: DataInputFilterValue[]
 }
 
 export interface CaseTimeState {

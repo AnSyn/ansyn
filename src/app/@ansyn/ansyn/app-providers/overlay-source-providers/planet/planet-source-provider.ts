@@ -16,7 +16,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import * as moment from 'moment';
-import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { DataInputFilter, DataInputFilterValue } from '@ansyn/core/models/case.model';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';

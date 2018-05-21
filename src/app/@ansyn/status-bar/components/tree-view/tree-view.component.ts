@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import { CaseDataFilter, CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
+import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -45,15 +45,18 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		maxHeight: 400
 	});
 
+	private subscribers = [];
+
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				public store: Store<IStatusBarState>,
 				protected actions$: Actions) {
-		this.changeDataInputSelectName();
+		this.dataFilters.forEach((f) => {
+			this.dataInputFiltersItems.push(new TreeviewItem(f));
+		});
 	}
 
 	set selectedFilters(value) {
 		this._selectedFilters = value;
-		this.changeDataInputSelectName();
 	}
 
 
@@ -61,28 +64,18 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		return this.statusBarConfig.dataInputFiltersConfig.filters;
 	}
 
-	changeDataInputSelectName(): void {
-		const dataInputSelectedName = this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? CaseDataFilter.Full : CaseDataFilter.Partial;
-		this.selectedFiltersChanged.emit(dataInputSelectedName);
-	}
-
 	setSubscribers() {
-		this.changeDataInputSelectName();
+		this.subscribers.push(
+			this.comboBoxesProperties$.subscribe(() => {
+			}),
 
-		this.dataFilters.forEach((f) => {
-			this.dataInputFiltersItems.push(new TreeviewItem(f));
-		});
-
-		this.comboBoxesProperties$.subscribe(() => {
-			this.changeDataInputSelectName();
-		});
-
-		this.preFilter$.subscribe(_preFilter => {
-			this._selectedFilters = _preFilter;
-			if (Boolean(this._selectedFilters)) {
-				this.updateInputDataFilterMenu();
-			}
-		});
+			this.preFilter$.subscribe(_preFilter => {
+				this._selectedFilters = _preFilter;
+				if (Boolean(this._selectedFilters)) {
+					this.updateInputDataFilterMenu();
+				}
+			})
+		);
 	}
 
 	updateInputDataFilterMenu(): void {
@@ -100,7 +93,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 					dataInputItem.checked = false;
 				}
 			});
-			this.changeDataInputSelectName();
 		}
 	}
 
@@ -108,7 +100,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	dataInputFiltersOk(): void {
 		this.store.dispatch(new SetOverlaysCriteriaAction({
 			dataInputFilters: {
-				dataInputFiltersTitle: this.dataInputFiltersItems.every((dataItem) => dataItem.checked) ? CaseDataFilter.Full : CaseDataFilter.Partial,
 				filters: this._selectedFilters
 			}
 		}));
@@ -117,10 +108,10 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.setSubscribers();
-		this.changeDataInputSelectName();
 	}
 
 	ngOnDestroy(): void {
+		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
 	onTreeViewClose(): void {

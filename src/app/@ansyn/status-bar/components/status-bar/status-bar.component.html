@@ -29,7 +29,7 @@
 				[icon]="'icon-status-bar-input-data'"
 				[comboBoxToolTipDescription]="toolTips.dataInputFilter"
 				(click)="toggleDataInputFilterIcon()"
-				[selected]="dataInputSelectedName"
+				[selected]="dataInputFiltersTitle"
 				(selectedChange)="comboBoxesChange({ timeFilter: $event })">
 			</ansyn-combo-box>
 			<div class="pop-content data-input-filter" [class.visible]="dataInputFilterIcon">

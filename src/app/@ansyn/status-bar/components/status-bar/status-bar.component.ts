@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import {
@@ -9,18 +9,13 @@ import {
 } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 
-import {
-	ComboBoxesProperties,
-	GEO_FILTERS,
-	ORIENTATIONS,
-	TIME_FILTERS
-} from '../../models/combo-boxes.model';
+import { ComboBoxesProperties, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Actions } from '@ngrx/effects';
 import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
-	Case, CaseDataFilter,
+	CaseDataFilterTitle,
 	CaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseMapState,
@@ -39,8 +34,6 @@ import {
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -48,25 +41,11 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 	styleUrls: ['./status-bar.component.less']
 })
 
-export class StatusBarComponent implements OnInit {
-
-	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
-		.pluck<ICasesState, Case>('selectedCase')
-		.filter(selectedCase => Boolean(selectedCase))
-		.distinctUntilChanged();
+export class StatusBarComponent implements OnInit, OnDestroy {
 
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
 		.distinctUntilChanged();
-
-	preFilter$: Observable<any> = Observable.combineLatest(this.overlaysCriteria$.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters'), this.selectedCase$)
-		.do(([caseDataInputFilter, selectedCase]: [CaseDataInputFiltersState, Case]) => {
-			if (!Boolean(caseDataInputFilter)) {
-				this.dataInputSelectedName = selectedCase.id === this.casesService.defaultCase.id ? CaseDataFilter.Full : CaseDataFilter.Error;
-			} else {
-				this.dataInputSelectedName = caseDataInputFilter.dataInputFiltersTitle;
-			}
-		});
 
 	layout$: Observable<LayoutKey> = this.store.select(coreStateSelector)
 		.pluck<ICoreState, LayoutKey>('layout')
@@ -84,6 +63,23 @@ export class StatusBarComponent implements OnInit {
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
 
+	dataInputFilters$ = this.overlaysCriteria$
+		.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters')
+		.distinctUntilChanged()
+		.filter((caseDataInputFiltersState: CaseDataInputFiltersState) => Boolean(caseDataInputFiltersState))
+		.do((caseDataInputFiltersState: CaseDataInputFiltersState) => {
+			const isFull = this.statusBarConfig.dataInputFiltersConfig.filters.every((filterConfig) => {
+				return filterConfig.children.every((sensorTypeAndName) => {
+					return caseDataInputFiltersState.filters.some((dataInputFilter) => {
+						return dataInputFilter.sensorName === sensorTypeAndName.value.sensorName &&
+							dataInputFilter.sensorType === sensorTypeAndName.value.sensorType;
+					});
+				});
+			});
+			this.dataInputFiltersTitle = isFull ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
+			this.dataInputFilters = caseDataInputFiltersState;
+		});
+
 	overlaysCount$: Observable<number> = this.actions$
 		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
 		.map(({ payload }: UpdateOverlaysCountAction) => payload);
@@ -98,7 +94,10 @@ export class StatusBarComponent implements OnInit {
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
 	goNextActive = false;
-	dataInputSelectedName: CaseDataFilter;
+	dataInputFilters: CaseDataInputFiltersState;
+	dataInputFiltersTitle: CaseDataFilterTitle;
+
+	private subscribers = [];
 
 	get statusBarFlagsItemsEnum() {
 		return statusBarFlagsItemsEnum;
@@ -149,17 +148,11 @@ export class StatusBarComponent implements OnInit {
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
-				protected actions$: Actions,
-				protected casesService: CasesService) {
+				protected actions$: Actions) {
 	}
 
 	ngOnInit(): void {
 		this.setSubscribers();
-		this.preFilter$.subscribe();
-		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
-			this.comboBoxesProperties = comboBoxesProperties;
-			// this.changeDataInputSelectName();
-		});
 
 		this.store.dispatch(new UpdateStatusFlagsAction({
 			key: statusBarFlagsItemsEnum.geoFilterIndicator,
@@ -167,23 +160,33 @@ export class StatusBarComponent implements OnInit {
 		}));
 	}
 
+	ngOnDestroy(): void {
+		this.subscribers.forEach(sub => sub.unsubscribe());
+	}
 
 	setSubscribers() {
-		this.layout$.subscribe((layout: LayoutKey) => this.layout = layout);
+		this.subscribers.push(
+			this.layout$.subscribe((layout: LayoutKey) => this.layout = layout),
 
-		this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
-			this.comboBoxesProperties = comboBoxesProperties;
-		});
+			this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
+				this.comboBoxesProperties = comboBoxesProperties;
+			}),
 
-		this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
-			this.flags = new Map(flags);
-		});
+			this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
+				this.flags = new Map(flags);
+			}),
 
-		this.time$.subscribe(_time => {
-			this.time = _time;
-		});
+			this.time$.subscribe(_time => {
+				this.time = _time;
+			}),
 
-		this.selectedCase$.subscribe();
+			this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
+				this.comboBoxesProperties = comboBoxesProperties;
+			}),
+
+			this.dataInputFilters$.subscribe()
+		);
+
 	}
 
 	toggleDataInputFilterIcon() {
@@ -248,9 +251,9 @@ export class StatusBarComponent implements OnInit {
 		this.toggleDataInputFilterIcon();
 	}
 
-	onFiltersChanged(name: CaseDataFilter): void {
-		if (this.dataInputSelectedName !== name) {
-			this.dataInputSelectedName = name;
+	onFiltersChanged(name: CaseDataFilterTitle): void {
+		if (this.dataInputFiltersTitle !== name) {
+			this.dataInputFiltersTitle = name;
 		}
 	}
 }

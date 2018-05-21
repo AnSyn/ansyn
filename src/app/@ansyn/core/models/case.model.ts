@@ -66,19 +66,17 @@ export interface DataInputFilterValue {
 	sensorName: string
 }
 
-export enum CaseDataFilter {
-	Error = 'Error',
+export enum CaseDataFilterTitle {
 	Partial = 'Partial',
 	Full = 'Full'
 }
 
 export interface DataInputFilter {
-	text: CaseDataFilter,
+	text: CaseDataFilterTitle,
 	value: DataInputFilterValue
 }
 
 export interface CaseDataInputFiltersState {
-	dataInputFiltersTitle: CaseDataFilter,
 	filters: DataInputFilterValue[]
 }
 

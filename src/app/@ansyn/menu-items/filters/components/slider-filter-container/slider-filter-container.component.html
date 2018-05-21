@@ -1,14 +1,26 @@
-<div class="upper-row">
-	<div class="min">
-		{{metadata.min}}
+<div class="slider-wrapper">
+
+	<div class="left-side">
+		<div class="upper-row">
+			<div class="min">
+				{{metadata.min}}
+			</div>
+			<div class="range">
+				{{getMinRangeValue(realRange[0])}} - {{getMaxRangeValue(realRange[1])}}
+			</div>
+			<div class="max">
+				{{metadata.max}}
+			</div>
+		</div>
+
+		<p-slider class='slider' [ngModel]="rangeValues" [range]="true" (onSlideEnd)="handleChange($event)"
+				  [min]="factor * metadata.min" [max]="factor * metadata.max" ></p-slider>
+
 	</div>
-	<div class="range">
-		{{getMinRangeValue(realRange[0])}} - {{getMaxRangeValue(realRange[1])}}
-	</div>
-	<div class="max">
-		{{metadata.max}}
+
+	<div class="right-side">
+		<span>100</span>
+		/
+		<span>200</span>
 	</div>
 </div>
-
-<p-slider class='slider' [ngModel]="rangeValues" [range]="true" (onSlideEnd)="handleChange($event)"
-		  [min]="factor * metadata.min" [max]="factor * metadata.max" ></p-slider>

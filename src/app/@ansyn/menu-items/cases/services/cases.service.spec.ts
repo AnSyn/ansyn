@@ -45,6 +45,7 @@ describe('CasesService', () => {
 				to: new Date()
 			},
 			orientation: 'Align North',
+			dataInputFilters: { filters: [] },
 			timeFilter: 'Start - End',
 			geoFilter: CaseGeoFilter.PinPoint,
 			region: {},

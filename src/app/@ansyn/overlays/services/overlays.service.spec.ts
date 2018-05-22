@@ -112,6 +112,9 @@ describe('OverlaysService', () => {
 			type: 'absolute',
 			from: new Date(2020),
 			to: new Date()
+		},
+		dataInputFilters: {
+			filters: []
 		}
 	};
 
@@ -293,6 +296,9 @@ describe('OverlaysService', () => {
 				type: 'absolute',
 				from: new Date(2020),
 				to: new Date()
+			},
+			dataInputFilters: {
+				filters: []
 			}
 		};
 		overlaysService.search(params).subscribe((result: any) => {

@@ -1,16 +1,13 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
-import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
+import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
-import { Actions } from '@ngrx/effects';
 import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
-import { ComboBoxesProperties } from '@ansyn/status-bar/models/combo-boxes.model';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -20,21 +17,11 @@ import { ComboBoxesProperties } from '@ansyn/status-bar/models/combo-boxes.model
 export class TreeViewComponent implements OnInit, OnDestroy {
 
 	@Output() closeTreeView = new EventEmitter<any>();
-	@Output() selectedFiltersChanged = new EventEmitter<string>(true);
 
 	_selectedFilters: any;
 	dataInputFiltersItems: TreeviewItem[] = [];
 
-	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(coreStateSelector)
-		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
-		.distinctUntilChanged();
-
-	preFilter$: Observable<CaseDataInputFiltersState> = this.overlaysCriteria$
-		.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters')
-		.distinctUntilChanged();
-
-	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(statusBarStateSelector)
-		.pluck<IStatusBarState, ComboBoxesProperties>('comboBoxesProperties')
+	preFilter$: Observable<CaseDataInputFiltersState> = this.store.select(selectDataInputFilter)
 		.distinctUntilChanged();
 
 	dataInputFiltersConfig = TreeviewConfig.create({
@@ -48,8 +35,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	private subscribers = [];
 
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				public store: Store<IStatusBarState>,
-				protected actions$: Actions) {
+				public store: Store<IStatusBarState>) {
 		this.dataFilters.forEach((f) => {
 			this.dataInputFiltersItems.push(new TreeviewItem(f));
 		});
@@ -66,9 +52,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	setSubscribers() {
 		this.subscribers.push(
-			this.comboBoxesProperties$.subscribe(() => {
-			}),
-
 			this.preFilter$.subscribe(_preFilter => {
 				this._selectedFilters = _preFilter;
 				if (Boolean(this._selectedFilters)) {
@@ -83,7 +66,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			this.dataInputFiltersItems.forEach((dataInputItem) => {
 				// first iterate the parents and update the their checkboxes.
 				dataInputItem.children.forEach((sensor) => {
-					sensor.checked  = this._selectedFilters.filters.some(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
+					sensor.checked = this._selectedFilters.filters.some(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
 						selectedFilter.sensorType === sensor.value.sensorType);
 				});
 				// then iterate all the children and update the their checkboxes.

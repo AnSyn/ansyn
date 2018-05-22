@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { IOverlaysConfig, KeyAndValue } from '@ansyn/overlays/models/overlays.config';
+import { IOverlaysConfig } from '@ansyn/overlays/models/overlays.config';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Component({
@@ -8,15 +8,10 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 	templateUrl: './overlay-source-type-notice.component.html',
 	styleUrls: ['./overlay-source-type-notice.component.less']
 })
-export class OverlaySourceTypeNoticeComponent implements OnChanges {
+export class OverlaySourceTypeNoticeComponent {
 
 	@Input()  set overlay(newOverlay: Overlay) {
-		if (newOverlay) {
-			const keyAndValue: KeyAndValue = this._config.sourceTypeNotices.find(keyAndValue => keyAndValue.key === newOverlay.sourceType);
-			if (keyAndValue) {
-				this._title = keyAndValue.value;
-			}
-		}
+		this._title = newOverlay && this._config.sourceTypeNotices[newOverlay.sourceType];
 	}
 
 	private _title: string = null;
@@ -28,10 +23,6 @@ export class OverlaySourceTypeNoticeComponent implements OnChanges {
 
 	constructor(overlaysService: OverlaysService) {
 		this._config = overlaysService.config;
-	}
-
-	ngOnChanges() {
-
 	}
 
 }

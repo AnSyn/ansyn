@@ -17,10 +17,10 @@
 		</div>
 	</div>
 
-	<div class="right-side">
-		<span>{{enumMetadata.value.filteredCount}}</span>
-		/
-		<span>{{enumMetadata.value.count}}</span>
-	</div>
+
+	<ansyn-filter-counter
+		[count]="enumMetadata.value.count"
+		[filteredCount]="enumMetadata.value.filteredCount">
+	</ansyn-filter-counter>
 
 </div>

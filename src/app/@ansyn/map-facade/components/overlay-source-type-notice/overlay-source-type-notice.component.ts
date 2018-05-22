@@ -11,7 +11,10 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 export class OverlaySourceTypeNoticeComponent {
 
 	@Input()  set overlay(newOverlay: Overlay) {
-		this._title = newOverlay && this._config.sourceTypeNotices[newOverlay.sourceType];
+		let sourceTypeConfig;
+		this._title = newOverlay
+			&& (sourceTypeConfig = this._config.sourceTypeNotices[newOverlay.sourceType])
+			&& (sourceTypeConfig[newOverlay.sensorType] || sourceTypeConfig.Default);
 	}
 
 	private _title: string = null;

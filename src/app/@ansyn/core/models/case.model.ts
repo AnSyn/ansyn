@@ -51,7 +51,7 @@ export interface CaseState {
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
-	dataInputFilters?: CaseDataInputFiltersState,
+	dataInputFilters: CaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
 	geoFilter: CaseGeoFilter,
 	favoriteOverlays?: Overlay[],
@@ -64,16 +64,6 @@ export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Positio
 export interface DataInputFilterValue {
 	sensorType: string,
 	sensorName: string
-}
-
-export enum CaseDataFilterTitle {
-	Partial = 'Partial',
-	Full = 'Full'
-}
-
-export interface DataInputFilter {
-	text: CaseDataFilterTitle,
-	value: DataInputFilterValue
 }
 
 export interface CaseDataInputFiltersState {

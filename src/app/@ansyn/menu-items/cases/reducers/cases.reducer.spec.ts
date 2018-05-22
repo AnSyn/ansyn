@@ -1,5 +1,8 @@
 import {
-	AddCaseAction, CloseModalAction, OpenModalAction, SelectCaseAction,
+	AddCaseAction,
+	CloseModalAction,
+	OpenModalAction,
+	SelectCaseAction,
 	UpdateCaseAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
@@ -22,6 +25,7 @@ describe('CasesReducer', () => {
 				to: new Date()
 			},
 			orientation: 'Align North',
+			dataInputFilters: { filters: [] },
 			timeFilter: 'Start - End',
 			geoFilter: CaseGeoFilter.PinPoint,
 			region: {},

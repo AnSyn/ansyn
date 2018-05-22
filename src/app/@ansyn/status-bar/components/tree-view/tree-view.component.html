@@ -1,11 +1,13 @@
-<div class="tree-view-main">
-	<div>
-		<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"
-					  (selectedChange)="selectedFilters = $event">
-		</ngx-treeview>
-	</div>
-	<div class="data-input-filters-buttons">
-		<a (click)="onTreeViewClose()">Cancel</a>
-		<a (click)="dataInputFiltersOk()">Ok</a>
+<div class="pop-content data-input-filter">
+	<div class="tree-view-main">
+		<div>
+			<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"
+						  (selectedChange)="selectedFilters = $event">
+			</ngx-treeview>
+		</div>
+		<div class="data-input-filters-buttons">
+			<a (click)="onTreeViewClose()">Cancel</a>
+			<a (click)="dataInputFiltersOk()">Ok</a>
+		</div>
 	</div>
 </div>

@@ -8,6 +8,8 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
+import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
+
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -47,7 +49,7 @@ export const coreInitialState: ICoreState = {
 		[AlertMsgTypes.OverlayIsNotPartOfCase, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
-	overlaysCriteria: {},
+	overlaysCriteria: { dataInputFilters: { filters: [] } },
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
 	windowLayout: {
@@ -113,4 +115,4 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
 export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
 export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
-
+export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);

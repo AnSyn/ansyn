@@ -12,16 +12,16 @@ import { Observable } from 'rxjs/Observable';
 import { ComboBoxesProperties, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Actions } from '@ngrx/effects';
 import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { coreStateSelector, ICoreState, selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
-	CaseDataFilterTitle,
 	CaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseMapState,
 	CaseOrientation,
 	CaseTimeFilter,
-	CaseTimeState
+	CaseTimeState,
+	DataInputFilterValue
 } from '@ansyn/core/models/case.model';
 import {
 	BackToWorldView,
@@ -34,6 +34,9 @@ import {
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+import { CaseDataFilterTitle } from '@ansyn/status-bar/models/data-input-filters.model';
+import { TreeviewItem } from 'ngx-treeview';
+import { isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -63,16 +66,14 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
 		.distinctUntilChanged();
 
-	dataInputFilters$ = this.overlaysCriteria$
-		.pluck<OverlaysCriteria, CaseDataInputFiltersState>('dataInputFilters')
+	dataInputFilters$ = this.store.select(selectDataInputFilter)
 		.distinctUntilChanged()
-		.filter((caseDataInputFiltersState: CaseDataInputFiltersState) => Boolean(caseDataInputFiltersState))
+		.filter(Boolean)
 		.do((caseDataInputFiltersState: CaseDataInputFiltersState) => {
-			const isFull = this.statusBarConfig.dataInputFiltersConfig.filters.every((filterConfig) => {
-				return filterConfig.children.every((sensorTypeAndName) => {
-					return caseDataInputFiltersState.filters.some((dataInputFilter) => {
-						return dataInputFilter.sensorName === sensorTypeAndName.value.sensorName &&
-							dataInputFilter.sensorType === sensorTypeAndName.value.sensorType;
+			const isFull = this.statusBarConfig.dataInputFiltersConfig.filters.every((filterConfig: TreeviewItem) => {
+				return filterConfig.children.every((sensorTypeAndName: TreeviewItem) => {
+					return caseDataInputFiltersState.filters.some((dataInputFilter: DataInputFilterValue) => {
+						return isEqual(dataInputFilter, sensorTypeAndName.value);
 					});
 				});
 			});
@@ -89,7 +90,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	flags: Map<statusBarFlagsItemsEnum, boolean> = new Map<statusBarFlagsItemsEnum, boolean>();
 	time: CaseTimeState;
 	timeSelectionEditIcon = false;
-	dataInputFilterIcon = false;
+	dataInputFilterExpand = false;
 	@Input() selectedCaseName: string;
 	@Input() activeMap: CaseMapState;
 	goPrevActive = false;
@@ -190,7 +191,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	}
 
 	toggleDataInputFilterIcon() {
-		this.dataInputFilterIcon = !this.dataInputFilterIcon;
+		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
 
 	toggleTimelineStartEndSearch() {
@@ -249,11 +250,5 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 
 	onCloseTreeView(): void {
 		this.toggleDataInputFilterIcon();
-	}
-
-	onFiltersChanged(name: CaseDataFilterTitle): void {
-		if (this.dataInputFiltersTitle !== name) {
-			this.dataInputFiltersTitle = name;
-		}
 	}
 }

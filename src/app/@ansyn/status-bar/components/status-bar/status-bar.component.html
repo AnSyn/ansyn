@@ -26,23 +26,21 @@
 		<div class="combo-box-container block with-buttons">
 			<ansyn-combo-box
 				class="combo-box-width"
-				[icon]="'icon-status-bar-input-data'"
+				icon="icon-status-bar-input-data"
 				[comboBoxToolTipDescription]="toolTips.dataInputFilter"
 				(click)="toggleDataInputFilterIcon()"
 				[selected]="dataInputFiltersTitle"
 				(selectedChange)="comboBoxesChange({ timeFilter: $event })">
 			</ansyn-combo-box>
-			<div class="pop-content data-input-filter" [class.visible]="dataInputFilterIcon">
-				<ansyn-tree-view (selectedFiltersChanged)="onFiltersChanged($event)" (closeTreeView)="onCloseTreeView()"
-								 class="ansyn-tree-view" *ngIf="dataInputFilterIcon"></ansyn-tree-view>
-			</div>
+			<ansyn-tree-view (closeTreeView)="onCloseTreeView()"
+							 class="ansyn-tree-view" *ngIf="dataInputFilterExpand"></ansyn-tree-view>
 		</div>
 
 		<!-- Orientation -->
 		<div class="combo-box-container block">
 			<ansyn-combo-box
 				class="combo-box-width"
-				[icon]="'icon-status-bar-orientation'"
+				icon="icon-status-bar-orientation"
 				[options]="orientations"
 				[selected]="comboBoxesProperties.orientation"
 				[comboBoxToolTipDescription]="toolTips.orientation"
@@ -56,7 +54,7 @@
 			<ansyn-combo-box
 				class="combo-box-width"
 				[comboBoxToolTipDescription]="toolTips.geoFilter"
-				[icon]="'icon-status-bar-geo'"
+				icon="icon-status-bar-geo"
 				[options]="geoFilters"
 				[selected]="comboBoxesProperties.geoFilter"
 				(selectedChange)="comboBoxesChange({ geoFilter: $event })">
@@ -72,10 +70,10 @@
 					<i class="icon-status-bar-show-pin-point"></i>
 				</button>
 				<button
-						(click)="toggleMapSearch()"
-						[attr.tooltip-value]="toolTips.geoFilterEdit"
-						tooltip-class="top right"
-						class="edit-pinpoint">
+					(click)="toggleMapSearch()"
+					[attr.tooltip-value]="toolTips.geoFilterEdit"
+					tooltip-class="top right"
+					class="edit-pinpoint">
 					<i class="icon-edit"></i>
 				</button>
 			</div>
@@ -85,7 +83,7 @@
 		<div class="combo-box-container block with-buttons">
 			<ansyn-combo-box
 				class="combo-box-width"
-				[icon]="'icon-status-bar-time'"
+				icon="icon-status-bar-time"
 				[comboBoxToolTipDescription]="toolTips.timeFilter"
 				[options]="timeFilters"
 				[selected]="comboBoxesProperties.timeFilter"

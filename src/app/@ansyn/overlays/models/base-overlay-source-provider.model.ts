@@ -6,7 +6,7 @@ import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { DataInputFilter, DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 
 export interface DateRange {
 	start: Date;
@@ -17,7 +17,7 @@ export interface IFetchParams {
 	limit: number;
 	region: GeoJsonObject;
 	sensors?: string[];
-	dataInputFilters?: DataInputFilterValue[];
+	dataInputFilters: DataInputFilterValue[];
 	timeRange: DateRange;
 }
 

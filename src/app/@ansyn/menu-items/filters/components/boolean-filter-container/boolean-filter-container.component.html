@@ -17,11 +17,10 @@
 			</div>
 		</div>
 
-		<div class="right-side">
-			<span>{{properties.filteredCount}}</span>
-			/
-			<span>{{properties.count}}</span>
-		</div>
+		<ansyn-filter-counter
+			[count]="properties.count"
+			[filteredCount]="properties.filteredCount">
+		</ansyn-filter-counter>
 
 	</div>
 

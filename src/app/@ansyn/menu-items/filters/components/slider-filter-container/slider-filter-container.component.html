@@ -15,12 +15,8 @@
 
 		<p-slider class='slider' [ngModel]="rangeValues" [range]="true" (onSlideEnd)="handleChange($event)"
 				  [min]="factor * metadata.min" [max]="factor * metadata.max" ></p-slider>
-
 	</div>
 
-	<div class="right-side">
-		<span>{{metadata.filteredCount}}</span>
-		/
-		<span>{{metadata.count}}</span>
-	</div>
+	<ansyn-filter-counter [count]="metadata.count" [filteredCount]="metadata.filteredCount"></ansyn-filter-counter>
+
 </div>

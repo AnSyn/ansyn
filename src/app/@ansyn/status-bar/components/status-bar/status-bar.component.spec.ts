@@ -2,10 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
-import {
-	ExpandAction,
-	UpdateStatusFlagsAction
-} from '../../actions/status-bar.actions';
+import { ExpandAction, UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
 import { StatusBarModule } from '../../status-bar.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
@@ -26,7 +23,7 @@ describe('StatusBarComponent', () => {
 			providers: [{ provide: LoggerConfig, useValue: {} },
 				{
 					provide: StatusBarConfig,
-					useValue: { toolTips: {} }
+					useValue: { toolTips: {}, dataInputFiltersConfig: { filters: [] } }
 				},
 				{
 					provide: ORIENTATIONS,
@@ -88,12 +85,12 @@ describe('StatusBarComponent', () => {
 		it('clickGoPrev should dispatch action GoPrevAction', () => {
 			spyOn(component.store, 'dispatch');
 			component.clickGoAdjacent(false);
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({isNext: false}));
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({ isNext: false }));
 		});
 		it('clickGoNext should dispatch action GoNextAction', () => {
 			spyOn(component.store, 'dispatch');
 			component.clickGoAdjacent(true);
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({isNext: true}));
+			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({ isNext: true }));
 		});
 		it('clickExpand should dispatch action ExpandAction', () => {
 			spyOn(component.store, 'dispatch');
@@ -102,7 +99,11 @@ describe('StatusBarComponent', () => {
 		});
 	});
 
-	[{ k: 39, n: 'goNextActive', f: 'clickGoAdjacent' }, { k: 37, n: 'goPrevActive', f: 'clickGoAdjacent' }].forEach(key => {
+	[{ k: 39, n: 'goNextActive', f: 'clickGoAdjacent' }, {
+		k: 37,
+		n: 'goPrevActive',
+		f: 'clickGoAdjacent'
+	}].forEach(key => {
 		it(`onkeyup should call ${key.n} when keycode = "${key.k}"`, () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);

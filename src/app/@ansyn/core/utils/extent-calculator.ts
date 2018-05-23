@@ -20,13 +20,20 @@ export class ExtentCalculator {
 		return polygon([coordinates]);
 	}
 
-	static calcRotation(extentPolygon: CaseMapExtentPolygon) {
-		// topLeft , topRight
-		const [[[x1, y1], [x2, y2]]] = extentPolygon.coordinates;
-		let theta = Math.atan2(x1 - x2, y1 - y2);
-		theta += Math.PI / 2.0;
-		const radRotate = toRadians(360);
-		return (radRotate - theta) % radRotate;
+	/*
+	Returns the counter clockwise angle in radians.
+	 */
+	static calcRotation(extentPolygon: CaseMapExtentPolygon): number {
+		const topLeft = extentPolygon.coordinates[0][0];
+		const bottomLeft = extentPolygon.coordinates[0][3];
+		const diffs = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]];
+		let rotation = Math.atan(diffs[0] / diffs[1]);
+		if (diffs[1] < 0) {
+			rotation += Math.PI;
+		} else if (diffs[0] < 0) {
+			rotation += (2 * Math.PI);
+		}
+		return rotation;
 	}
 
 	static calcCenter(extentPolygon: CaseMapExtentPolygon): ol.Coordinate {

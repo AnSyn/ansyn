@@ -16,6 +16,8 @@ import { cloneDeep } from 'lodash';
 import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { By } from '@angular/platform-browser';
+import { MockComponent } from '@ansyn/core/test/mock-component';
+import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -102,9 +104,12 @@ describe('TreeViewComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	fit('enable dataInputFilters shall enable all checkboxes', () => {
-		const element = fixture.debugElement.query(By.css('.activate-data-input-filters'));
-		element.triggerEventHandler('click', {});
-		expect(component.activateDataInputFilters).toHaveBeenCalled();
+	it('ok button shall invoke the dataInputFiltersOk function', () => {
+		const element = fixture.debugElement.query(By.css('.ok-button')).nativeElement;
+		spyOn(component, 'dataInputFiltersOk');
+		fixture.detectChanges();
+		element.click();
+		expect(component.dataInputFiltersOk).toHaveBeenCalled();
+		fixture.detectChanges();
 	});
 });

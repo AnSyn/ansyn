@@ -49,7 +49,7 @@ export const coreInitialState: ICoreState = {
 		[AlertMsgTypes.OverlayIsNotPartOfCase, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
-	overlaysCriteria: { dataInputFilters: { filters: [] } },
+	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
 	windowLayout: {

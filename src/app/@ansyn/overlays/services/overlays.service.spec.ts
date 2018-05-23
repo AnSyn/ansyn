@@ -114,7 +114,8 @@ describe('OverlaysService', () => {
 			to: new Date()
 		},
 		dataInputFilters: {
-			filters: []
+			filters: [],
+			active: true
 		}
 	};
 
@@ -298,7 +299,8 @@ describe('OverlaysService', () => {
 				to: new Date()
 			},
 			dataInputFilters: {
-				filters: []
+				filters: [],
+				active: true
 			}
 		};
 		overlaysService.search(params).subscribe((result: any) => {

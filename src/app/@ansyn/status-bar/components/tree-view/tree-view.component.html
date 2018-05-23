@@ -6,8 +6,16 @@
 			</ngx-treeview>
 		</div>
 		<div class="data-input-filters-buttons">
-			<a (click)="onTreeViewClose()">Cancel</a>
-			<a (click)="dataInputFiltersOk()">Ok</a>
+			<label class="switch">
+				<input id="activate-data-input-filters" [checked]="dataInputFiltersActive" type="checkbox"
+					   (click)="activateDataInputFilters($event)"/>
+				<span class="slider round"></span>
+				<span class="slider-text">&nbsp;</span>
+			</label>
+			<div>
+				<a (click)="onTreeViewClose()">Cancel</a>
+				<a (click)="dataInputFiltersOk()">Ok</a>
+			</div>
 		</div>
 	</div>
 </div>

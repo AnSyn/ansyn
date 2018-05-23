@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
-import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
-import { Observable } from 'rxjs/Observable';
 import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
+import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
+import { isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -21,8 +21,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	_selectedFilters: any;
 	dataInputFiltersItems: TreeviewItem[] = [];
 
-	preFilter$: Observable<CaseDataInputFiltersState> = this.store.select(selectDataInputFilter)
-		.distinctUntilChanged();
+	dataInputFilter$ = this.store.select(selectDataInputFilter);
 
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: false,
@@ -52,7 +51,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	setSubscribers() {
 		this.subscribers.push(
-			this.preFilter$.subscribe(_preFilter => {
+			this.dataInputFilter$.subscribe(_preFilter => {
 				this._selectedFilters = _preFilter;
 				if (Boolean(this._selectedFilters)) {
 					this.updateInputDataFilterMenu();
@@ -66,11 +65,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			this.dataInputFiltersItems.forEach((dataInputItem) => {
 				// first iterate the parents and update the their checkboxes.
 				dataInputItem.children.forEach((sensor) => {
-					sensor.checked = this._selectedFilters.filters.some(selectedFilter => selectedFilter.sensorName === sensor.value.sensorName &&
-						selectedFilter.sensorType === sensor.value.sensorType);
+					sensor.checked = this._selectedFilters.filters.some(selectedFilter => isEqual(selectedFilter, sensor.value));
 				});
 				// then iterate all the children and update the their checkboxes.
 				if (dataInputItem.children.some(child => child.checked)) {
+					// true = All / false = None / undefined = Partial
 					dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
 				}
 				else {

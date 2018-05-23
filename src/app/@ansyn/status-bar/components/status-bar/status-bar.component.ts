@@ -68,7 +68,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 
 	dataInputFilters$ = this.store.select(selectDataInputFilter)
 		.distinctUntilChanged()
-		.filter(Boolean)
+		.filter((caseDataInputFiltersState: CaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters))
 		.do((caseDataInputFiltersState: CaseDataInputFiltersState) => {
 			const isFull = this.statusBarConfig.dataInputFiltersConfig.filters.every((filterConfig: TreeviewItem) => {
 				return filterConfig.children.every((sensorTypeAndName: TreeviewItem) => {
@@ -77,7 +77,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 					});
 				});
 			});
-			this.dataInputFiltersTitle = isFull ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
+			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : isFull ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
 			this.dataInputFilters = caseDataInputFiltersState;
 		});
 
@@ -96,7 +96,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	goPrevActive = false;
 	goNextActive = false;
 	dataInputFilters: CaseDataInputFiltersState;
-	dataInputFiltersTitle: CaseDataFilterTitle;
+	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
 
 	private subscribers = [];
 

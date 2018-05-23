@@ -1,6 +1,7 @@
 @import "core/less/common";
 @import "core/less/z-index-globals";
 @import "core/less/tooltip";
+@import "core/less/slider-checkbox.less";
 
 @popup-padding-bottom: 15px;
 
@@ -13,7 +14,7 @@
 	.data-input-filter {
 		background: rgba(0, 0, 0, 1);
 		background-clip: padding-box;
-		padding: 20px;
+		padding: 4px 20px;
 		box-shadow: 0 0 2px 1px white;
 	}
 
@@ -36,7 +37,7 @@
 	div.data-input-filters-buttons {
 		margin-top: 10px;
 		display: flex;
-		justify-content: flex-end;
+		justify-content: space-between;
 		color: @overlays-dots-color;
 		a {
 			cursor: pointer;
@@ -54,5 +55,17 @@
 		.error {
 			color: crimson;
 		}
+	}
+
+	.switch {
+		margin-bottom: 5px;
+	}
+
+	.slider-text {
+		width: 0px;
+	}
+
+	.activate-data-input-filters {
+
 	}
 }

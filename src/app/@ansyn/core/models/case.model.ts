@@ -67,7 +67,8 @@ export interface DataInputFilterValue {
 }
 
 export interface CaseDataInputFiltersState {
-	filters: DataInputFilterValue[]
+	filters: DataInputFilterValue[],
+	active: boolean
 }
 
 export interface CaseTimeState {

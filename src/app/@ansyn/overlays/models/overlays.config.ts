@@ -1,5 +1,7 @@
 
 export interface IOverlaysConfig {
 	limit: number;
-	sourceTypeNotices: any;
+	sourceTypeNotices: {
+		[propName: string]: string
+	};
 }

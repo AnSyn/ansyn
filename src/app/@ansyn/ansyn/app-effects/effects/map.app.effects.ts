@@ -303,11 +303,8 @@ export class MapAppEffects {
 		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 
-		const geoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
-		const notGeoRegisteredMap = !overlay.isGeoRegistered && communicator.activeMapName === OpenlayersMapName;
-		const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
-		const mapType = newActiveMapName || communicator.ActiveMap.mapType;
+		const mapType = communicator.ActiveMap.mapType;
 		const { sourceType } = overlay;
 		const sourceLoader = communicator.getMapSourceProvider({ mapType, sourceType });
 
@@ -320,6 +317,10 @@ export class MapAppEffects {
 
 		const changeActiveMap = mergeMap((layer) => {
 			let observable = Observable.of(true);
+			const geoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
+			const notGeoRegisteredMap = !overlay.isGeoRegistered && communicator.activeMapName === OpenlayersMapName;
+			const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
+
 			if (newActiveMapName) {
 				observable = Observable.fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, layer));
 			}

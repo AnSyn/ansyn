@@ -29,6 +29,7 @@ export const MapActionTypes = {
 	},
 	VIEW: {
 		SET_IS_LOADING: 'SET_IS_LOADING',
+		SET_IS_VISIBLE: 'SET_IS_VISIBLE',
 		SET_PROGRESS_BAR: 'SET_PROGRESS_BAR'
 	},
 	TRIGGER: {
@@ -216,6 +217,13 @@ export class SetIsLoadingAcion implements Action {
 	}
 }
 
+export class SetIsVisibleAcion implements Action {
+	type = MapActionTypes.VIEW.SET_IS_VISIBLE;
+
+	constructor(public payload: { mapId: string, isVisible: boolean }) {
+
+	}
+}
 
 export class ClickOutsideMap implements Action  {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;

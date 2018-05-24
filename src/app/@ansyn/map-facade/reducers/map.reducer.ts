@@ -39,6 +39,7 @@ export interface IMapState {
 	activeMapId: string;
 	mapsList: CaseMapState[];
 	isLoadingMaps: Map<string, string>,
+	isHiddenMaps: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -48,6 +49,7 @@ export const initialMapState: IMapState = {
 	activeMapId: null,
 	mapsList: [],
 	isLoadingMaps: new Map<string, string>(),
+	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
 };

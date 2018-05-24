@@ -37,7 +37,7 @@ export class OpenLayersMousePositionControl extends MousePosition {
 		if (pixel && this.mapProjection_) {
 			const map = this.getMap();
 			const coordinate = map.getCoordinateFromPixel(pixel);
-			if (coordinate) {
+			if (coordinate && !isNaN(coordinate[0]) && !isNaN(coordinate[1])) {
 				this.positionToPoint(coordinate, (projectedPoint) => {
 					const coordinateFormat = this.getCoordinateFormat();
 					if (coordinateFormat) {

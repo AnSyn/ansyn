@@ -22,6 +22,7 @@ import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reduc
 import { CaseOrientation } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -82,10 +83,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			const mapObject = this.iMap.mapObject;
 			const size = mapObject.getSize();
 			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
-			if (!olCenterView) {
+			if (!olCenterView || isNaN(olCenterView[0] || isNaN(olCenterView[1]))) {
 				observer.error('no coordinate for pixel');
 			}
 			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
+			if (!olCenterViewWithOffset || isNaN(olCenterViewWithOffset[0] || isNaN(olCenterViewWithOffset[1]))) {
+				observer.error('no coordinate for pixel');
+			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
 			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
@@ -134,11 +138,16 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	pointNorth(): Observable<any> {
 		this.communicator.updateSize();
 		const currentRotation = this.iMap.mapObject.getView().getRotation();
-		return this.getCorrectedNorth()
-			.do(() => this.iMap.mapObject.getView().setRotation(currentRotation))
+		return Observable.of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false })))
+			.mergeMap(() => this.getCorrectedNorth())
+			.do(() => {
+				this.iMap.mapObject.getView().setRotation(currentRotation);
+				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
+			})
 			.catch(reason => {
 				const error = `setCorrectedNorth failed: ${reason}`;
 				this.loggerService.warn(error);
+				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
 				return Observable.throw(error);
 			});
 	}

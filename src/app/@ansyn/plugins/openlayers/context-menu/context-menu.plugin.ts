@@ -35,6 +35,10 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		this.containerElem.click();
 
 		let coordinate = this.iMap.mapObject.getCoordinateFromPixel([event.offsetX, event.offsetY]);
+		if (!coordinate || isNaN(coordinate[0] || isNaN(coordinate[1]))) {
+			console.warn('no coordinate for pixel');
+			return;
+		}
 		this.positionToPoint(coordinate)
 			.withLatestFrom(this.store$.select(overlaysStateSelector))
 			.do(([point, overlaysState]) => {

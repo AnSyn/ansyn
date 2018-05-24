@@ -3,6 +3,7 @@
 		<div class="left-side">
 			<div class="checkbox">
 				<input type="checkbox"
+					   [disabled]="properties.disabled"
 					   [id]="metadata?.baseFilter?.modelName + properties.name"
 					   class="regular-checkbox"
 					   [checked]="properties.value"
@@ -13,7 +14,8 @@
 				<div class="field-name-container">
 					<span class="field-name" [title]="true">{{properties.displayName}}</span>
 				</div>
-				<span class="only-filter" (click)="selectOnly(properties.name)">only</span>
+				<span class="only-filter" (click)="selectOnly(properties.name)"
+						[hidden]="properties.disabled">only</span>
 			</div>
 		</div>
 

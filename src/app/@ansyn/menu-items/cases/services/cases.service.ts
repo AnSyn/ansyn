@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import { StorageService, StoredEntity } from '@ansyn/core/services/storage/storage.service';
 import { CasePreview, CaseState, CaseTimeState } from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { cloneDeep } from 'lodash';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
@@ -94,10 +95,31 @@ export class CasesService {
 		return casePreview;
 	}
 
+	pluckIdSourceType(state: CaseState) {
+		let dilutedState: any = cloneDeep(state);
+
+		if (Array.isArray(dilutedState.favoriteOverlays)) {
+			dilutedState.favoriteOverlays = dilutedState.favoriteOverlays.map(overlay => ({
+				id: overlay.id,
+				sourceType: overlay.sourceType
+			}));
+		}
+
+		if (Array.isArray(dilutedState.maps.data)) {
+			dilutedState.maps.data.forEach((mapData: any) => {
+				if (Boolean(mapData.data.overlay)) {
+					mapData.data.overlay = { id: mapData.data.overlay.id, sourceType: mapData.data.overlay.sourceType };
+				}
+			});
+		}
+
+		return dilutedState;
+	}
+
 	convertToStoredEntity(caseValue: Case): StoredEntity<CasePreview, CaseState> {
 		return {
 			preview: this.getPreview(caseValue),
-			data: caseValue.state
+			data: this.pluckIdSourceType(caseValue.state)
 		};
 	}
 

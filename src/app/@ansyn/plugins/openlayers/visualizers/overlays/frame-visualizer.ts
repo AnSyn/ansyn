@@ -16,14 +16,15 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 })
 export class FrameVisualizer extends EntitiesVisualizer {
 	public isActive = false;
+	private overlay;
 
-	drawFrameToOverLay$ = this.store$.select(mapStateSelector)
+	overlay$ = this.store$.select(mapStateSelector)
 		.filter(() => Boolean(this.mapId))
 		.map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId))
 		.filter(Boolean)
 		.map((map) => map.data.overlay)
 		.distinctUntilChanged()
-		.switchMap(this.setOverlay.bind(this));
+		.do((overlay) => this.overlay = overlay);
 
 	isActive$: Observable<boolean> = this.store$
 		.select(mapStateSelector)
@@ -57,10 +58,8 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			const featureJson: GeoJSON.Feature<any> = { type: 'Feature', geometry: footprint, properties: {} };
 			const entityToDraw = { id, featureJson };
 			return this.setEntities([entityToDraw]);
-		} else {
-			this.clearEntities();
-			return Observable.of(true);
 		}
+		return Observable.of(true);
 	}
 
 	getStroke() {
@@ -78,10 +77,16 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		return;
 	}
 
+	onResetView(): Observable<any> {
+		this.clearEntities();
+		this.initLayers();
+		return this.setOverlay(this.overlay)
+	}
+
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.drawFrameToOverLay$.subscribe(),
+			this.overlay$.subscribe(),
 			this.isActive$.subscribe()
 		);
 	}

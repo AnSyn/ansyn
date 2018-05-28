@@ -38,7 +38,6 @@ export class FrameVisualizer extends EntitiesVisualizer {
 				public actions$: Actions,
 				@Inject(VisualizersConfig) config: IVisualizersConfig) {
 		super(config.FrameVisualizer);
-		this.type = 'Frame vis';
 		this.updateStyle({
 			opacity: 0.5,
 			initial: {

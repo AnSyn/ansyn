@@ -1,0 +1,84 @@
+@import "core/less/common";
+@import "core/less/z-index-globals";
+@import "core/less/tooltip";
+@popup-padding-bottom: 15px;
+
+:host {
+	.block {
+		padding: 3px;
+		box-sizing: border-box;
+		vertical-align: middle;
+		align-items: center;
+		position: relative;
+		display: flex;
+		height: 100%;
+		span {
+			margin-left: 5px;
+			line-height: 23px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.icon-status-bar-imagery-count {
+			font-size: 16px;
+		}
+	}
+
+	.pop-content {
+		visibility: hidden;
+		opacity: 0;
+		transition: .4s;
+		background: transparent;
+		position: absolute;
+		transform: translate(0, 0);
+		top: 0;
+		left: 0;
+		display: flex;
+	}
+
+	.pop-hover:hover .pop-content, .pop-content.visible {
+		visibility: visible;
+		opacity: 1;
+		padding-bottom: @popup-padding-bottom;
+		transform: translate(0, -100%);
+		&.time-selection {
+			transform: translateY(calc(~'-100% - @{popup-padding-bottom}'));
+		}
+	}
+
+	.selectedCase {
+		transform: translateX(calc(~'-50vw + (@{menu-width} / 2)'));
+		min-width: 0;
+		align-self: center;
+		box-sizing: border-box;
+		padding: 10px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		height: 100%;
+
+		button.share-link {
+			padding: 5px;
+			background: black;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			border: solid black 1px;
+			cursor: pointer;
+			transition: .3s;
+			display: flex;
+			align-items: center;
+
+			span.icon-status-bar-share-link {
+				margin-right: 3px;
+				font-size: 18px;
+			}
+
+			&:hover {
+				border-top-color: white;
+				border-bottom-color: white;
+			}
+		}
+	}
+
+}

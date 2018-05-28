@@ -1,0 +1,136 @@
+@popup-padding-bottom: 15px;
+
+:host {
+
+	.block {
+		padding: 3px;
+		box-sizing: border-box;
+		vertical-align: middle;
+		align-items: center;
+		position: relative;
+		display: flex;
+		height: 100%;
+		span {
+			margin-left: 5px;
+			line-height: 23px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.icon-status-bar-imagery-count {
+			font-size: 16px;
+		}
+	}
+
+	.pop-content {
+		visibility: hidden;
+		opacity: 0;
+		transition: .4s;
+		background: transparent;
+		position: absolute;
+		transform: translate(0, 0);
+		top: 0;
+		left: 0;
+		display: flex;
+	}
+
+	.pop-hover:hover .pop-content, .pop-content.visible {
+		visibility: visible;
+		opacity: 1;
+		padding-bottom: @popup-padding-bottom;
+		transform: translate(0, -100%);
+		&.time-selection {
+			transform: translateY(calc(~'-100% - @{popup-padding-bottom}'));
+		}
+	}
+
+	.combo-boxes {
+		display: flex;
+		padding: 0 10px;
+		justify-content: space-between;
+		flex: 1;
+		height: 100%;
+		position: relative;
+
+		.combo-box-container {
+			.combo-box-width {
+				width: 140px;
+			}
+			&.with-buttons {
+				/deep/ .trigger {
+					padding-right: 14px;
+				}
+			}
+
+			.buttons {
+				background-color: black;
+				height: 100%;
+				align-items: center;
+				display: flex;
+				border: 1px solid white;
+				border-left: none;
+				box-sizing: border-box;
+				.icon-edit{
+					font-size: 17px;
+				}
+				&::before {
+					content: "";
+					display: block;
+					width: 10px;
+					height: 10px;
+					top: 12px;
+					background: inherit;
+					transform: translateX(-6px) rotate(45deg);
+					position: absolute;
+					border: 1px solid white;
+					border-right: none;
+					border-top: none;
+				}
+				&.active {
+					background-color: #f32ee1;
+				}
+
+				button {
+					background: transparent;
+					outline: none;
+					color: white;
+					border: none;
+					font-size: 10px;
+
+					&.toggle-icon {
+						position: relative;
+						color: rgba(255, 255, 255, 0.5);
+
+						&.active2 {
+							color: rgba(255, 255, 255, 1);
+						}
+					}
+				}
+			}
+		}
+
+		/deep/ i.block-icon {
+			font-size: 20px;
+			margin-right: 8px;
+		}
+
+		.data-input-filter {
+			width: 100%;
+			min-height: 450px;
+			min-width: 220px;
+			padding: 10px;
+			background: rgba(0, 0, 0, 1);
+			background-clip: padding-box;
+		}
+
+		.time-selection {
+			background: white;
+			width: 230px;
+			height: 97px;
+			padding: 8px 12px 13px;
+			flex-direction: column;
+			border: 1px solid dimgray;
+		}
+	}
+}

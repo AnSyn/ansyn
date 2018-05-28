@@ -1,0 +1,109 @@
+<div class="combo-boxes">
+
+	<!-- data input filter-->
+	<div class="combo-box-container block with-buttons">
+		<ansyn-combo-box
+			class="combo-box-width"
+			icon="icon-status-bar-input-data"
+			[comboBoxToolTipDescription]="toolTips.dataInputFilter"
+			(click)="toggleDataInputFilterIcon()"
+			[selected]="dataInputFiltersTitle"
+			(selectedChange)="comboBoxesChange({ timeFilter: $event })">
+		</ansyn-combo-box>
+		<ansyn-tree-view (closeTreeView)="toggleDataInputFilterIcon()"
+						 class="ansyn-tree-view" *ngIf="dataInputFilterExpand"></ansyn-tree-view>
+	</div>
+
+	<!-- Orientation -->
+	<div class="combo-box-container block">
+		<ansyn-combo-box
+			class="combo-box-width"
+			icon="icon-status-bar-orientation"
+			[options]="orientations"
+			[selected]="comboBoxesProperties.orientation"
+			[comboBoxToolTipDescription]="toolTips.orientation"
+			(selectedChange)="comboBoxesChange({ orientation: $event })">
+		</ansyn-combo-box>
+	</div>
+
+	<!-- Geo filter -->
+	<div class="combo-box-container block with-buttons" id="editGeoFilter">
+
+		<ansyn-combo-box
+			class="combo-box-width"
+			[comboBoxToolTipDescription]="toolTips.geoFilter"
+			icon="icon-status-bar-geo"
+			[options]="geoFilters"
+			[selected]="comboBoxesProperties.geoFilter"
+			(selectedChange)="comboBoxesChange({ geoFilter: $event })">
+		</ansyn-combo-box>
+
+		<div class="buttons" [class.active]="(flags.get(statusBarFlagsItemsEnum.geoFilterSearch))">
+			<button (click)="toggleIndicatorView()"
+					[disabled]="flags.get(statusBarFlagsItemsEnum.geoFilterSearch)"
+					[attr.tooltip-value]="toolTips.geoFilterShow"
+					tooltip-class="top right"
+					class="eye-button toggle-icon"
+					[class.active2]="flags.get(statusBarFlagsItemsEnum.geoFilterIndicator)">
+				<i class="icon-status-bar-show-pin-point"></i>
+			</button>
+			<button
+				(click)="toggleMapSearch()"
+				[attr.tooltip-value]="toolTips.geoFilterEdit"
+				tooltip-class="top right"
+				class="edit-pinpoint">
+				<i class="icon-edit"></i>
+			</button>
+		</div>
+	</div>
+
+	<!-- Time -->
+	<div class="combo-box-container block with-buttons">
+		<ansyn-combo-box
+			class="combo-box-width"
+			icon="icon-status-bar-time"
+			[comboBoxToolTipDescription]="toolTips.timeFilter"
+			[options]="timeFilters"
+			[selected]="comboBoxesProperties.timeFilter"
+			(selectedChange)="comboBoxesChange({ timeFilter: $event })">
+		</ansyn-combo-box>
+		<div class="buttons" [class.active]="timeSelectionEditIcon">
+			<button (click)="toggleTimelineStartEndSearch()"
+					[attr.tooltip-value]="toolTips.timeFilterEdit"
+					tooltip-class="top right"
+					class="relative">
+				<i class="icon-edit"></i>
+			</button>
+		</div>
+		<div class="pop-content time-selection" [class.visible]="timeSelectionEditIcon">
+			<ansyn-timeline-timepicker
+				[startDatePickerValue]="(time)?.from"
+				[endDatePickerValue]="(time)?.to"
+				(closeComponent)="toggleTimelineStartEndSearch()"
+				(applyDate)="applyTimelinePickerResult($event)">
+			</ansyn-timeline-timepicker>
+		</div>
+	</div>
+
+	<!-- Layout -->
+	<div class="combo-box-container block">
+		<ansyn-combo-box
+			class="combo-center"
+			[comboBoxToolTipDescription]="toolTips.screenNumber"
+			[options]="layouts"
+			[renderFunction]="layoutRender.bind(this)"
+			[selected]="layout"
+			toolTipField="mapsCount"
+			(selectedChange)="layoutSelectChange($event)">
+		</ansyn-combo-box>
+	</div>
+
+	<!-- Overlays -->
+	<div class="block"
+		 [attr.tooltip-value]="toolTips.overlayCount"
+		 tooltip-class="top right">
+		<i class="block-icon icon-status-bar-imagery-count"></i>
+		<span>{{overlaysCount$ | async}}</span>
+	</div>
+
+</div>

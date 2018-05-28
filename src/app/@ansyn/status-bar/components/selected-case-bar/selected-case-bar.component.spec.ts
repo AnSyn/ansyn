@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SelectedCaseBarComponent } from './selected-case-bar.component';
+import { StoreModule } from '@ngrx/store';
 
 describe('SelectedCaseBarComponent', () => {
 	let component: SelectedCaseBarComponent;
@@ -8,7 +9,8 @@ describe('SelectedCaseBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [SelectedCaseBarComponent]
+			declarations: [SelectedCaseBarComponent],
+			imports: [StoreModule.forRoot({})]
 		})
 			.compileComponents();
 	}));

@@ -1,15 +1,15 @@
 <div class="combo-boxes">
 
 	<!-- data input filter-->
-	<div class="combo-box-container block with-buttons">
-		<ansyn-combo-box
-			class="combo-box-width"
-			icon="icon-status-bar-input-data"
-			[comboBoxToolTipDescription]="toolTips.dataInputFilter"
-			(click)="toggleDataInputFilterIcon()"
-			[selected]="dataInputFiltersTitle"
-			(selectedChange)="comboBoxesChange({ timeFilter: $event })">
-		</ansyn-combo-box>
+	<div class="combo-box-container block">
+			<ansyn-combo-box-trigger
+				class="combo-box-width"
+				(click)="toggleDataInputFilterIcon()"
+				icon="icon-status-bar-input-data"
+				[isActive]="dataInputFilterExpand"
+				[comboBoxToolTipDescription]="toolTips.dataInputFilter"
+				[render]="dataInputFiltersTitle">
+			</ansyn-combo-box-trigger>
 		<ansyn-tree-view (closeTreeView)="toggleDataInputFilterIcon()"
 						 class="ansyn-tree-view" *ngIf="dataInputFilterExpand"></ansyn-tree-view>
 	</div>

@@ -18,6 +18,7 @@ import { TreeViewComponent } from '@ansyn/status-bar/components/tree-view/tree-v
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { SelectedCaseBarComponent } from './components/selected-case-bar/selected-case-bar.component';
+import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 
 
 @NgModule({
@@ -28,7 +29,7 @@ import { SelectedCaseBarComponent } from './components/selected-case-bar/selecte
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, SelectedCaseBarComponent],
+	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, SelectedCaseBarComponent, ComboBoxTriggerComponent],
 	providers: [
 		{
 			provide: ORIENTATIONS,

@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ComboBoxTriggerComponent } from '@ansyn/status-bar/components/combo-box-trigger/combo-box-trigger.component';
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -6,7 +7,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 	styleUrls: ['./combo-box.component.less']
 })
 export class ComboBoxComponent {
-	@ViewChild('optionsTrigger') optionsTrigger: ElementRef;
+	@ViewChild(ComboBoxTriggerComponent) trigger: ComboBoxTriggerComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 
 	@Input() icon: string;
@@ -19,6 +20,10 @@ export class ComboBoxComponent {
 	@Output() selectedChange = new EventEmitter();
 
 	optionsVisible = false;
+
+	get optionsTrigger(): ElementRef {
+		return this.trigger.optionsTrigger;
+	}
 
 	toggleShow() {
 		this.optionsVisible = !this.optionsVisible;

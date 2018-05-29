@@ -23,6 +23,7 @@ import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-l
 import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { IMap } from '@ansyn/imagery/model/imap';
+import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -266,7 +267,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	public updateSize(): void {
 		const center = this._mapObject.getView().getCenter();
-		if (center || isNaN(center[0]) || isNaN(center[1])) {
+		if (!areCoordinatesNumeric(center)) {
 			return;
 		}
 		this._mapObject.updateSize();
@@ -279,7 +280,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 		const view = this._mapObject.getView();
 		const center = view.getCenter();
-		if (center || isNaN(center[0]) || isNaN(center[1])) {
+		if (!areCoordinatesNumeric(center)) {
 			return Observable.of(null);
 		}
 		const point = <GeoPoint> turf.geometry('Point', center);
@@ -297,7 +298,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const bottomRight = map.getCoordinateFromPixel([width, height]);
 		const bottomLeft = map.getCoordinateFromPixel([0, height]);
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
-		const someIsNaN = coordinates[0].some(([x, y]) => isNaN(x) || isNaN(y));
+		const someIsNaN = !coordinates[0].every(areCoordinatesNumeric);
 		if (someIsNaN) {
 			return Observable.of(null);
 		}

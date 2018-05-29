@@ -11,6 +11,7 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ContextMenuShowAction } from '@ansyn/map-facade/actions/map.actions';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
+import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -35,7 +36,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		this.containerElem.click();
 
 		let coordinate = this.iMap.mapObject.getCoordinateFromPixel([event.offsetX, event.offsetY]);
-		if (!coordinate || isNaN(coordinate[0] || isNaN(coordinate[1]))) {
+		if (!areCoordinatesNumeric(coordinate)) {
 			console.warn('no coordinate for pixel');
 			return;
 		}

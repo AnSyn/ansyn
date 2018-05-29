@@ -3,6 +3,7 @@
 	<!-- data input filter-->
 	<div class="combo-box-container block">
 			<ansyn-combo-box-trigger
+				id="trigger"
 				class="combo-box-width"
 				(click)="toggleDataInputFilterIcon()"
 				icon="icon-status-bar-input-data"
@@ -11,6 +12,7 @@
 				[render]="dataInputFiltersTitle">
 			</ansyn-combo-box-trigger>
 		<ansyn-tree-view (closeTreeView)="toggleDataInputFilterIcon()"
+						 triggerId="trigger"
 						 class="ansyn-tree-view" *ngIf="dataInputFilterExpand"></ansyn-tree-view>
 	</div>
 

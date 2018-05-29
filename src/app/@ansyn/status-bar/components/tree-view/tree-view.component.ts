@@ -1,14 +1,16 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+	Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, OnInit,
+	Output
+} from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Rx';
 import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 import { isEqual } from 'lodash';
-import { CaseDataInputFiltersState, DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 
 
 @Component({
@@ -19,6 +21,7 @@ import { CaseDataInputFiltersState, DataInputFilterValue } from '@ansyn/core/mod
 export class TreeViewComponent implements OnInit, OnDestroy {
 
 	@Output() closeTreeView = new EventEmitter<any>();
+	@Input() triggerId: string;
 
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
@@ -49,10 +52,20 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	public dataInputFiltersActive: boolean;
 
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+				public elementRef: ElementRef,
 				public store: Store<IStatusBarState>) {
 		this.dataFilters.forEach((f) => {
 			this.dataInputFiltersItems.push(new TreeviewItem(f));
 		});
+	}
+
+	@HostListener('document:click', ['$event']) onClickOutside($event) {
+		const notInclude = !$event.path.some((elem) => {
+			return elem === this.elementRef.nativeElement || elem.id === this.triggerId;
+		});
+		if (notInclude) {
+			this.closeTreeView.emit()
+		}
 	}
 
 	set selectedFilters(value) {

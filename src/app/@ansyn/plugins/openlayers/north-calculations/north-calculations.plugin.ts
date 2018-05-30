@@ -23,6 +23,7 @@ import { CaseOrientation } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
+import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -83,11 +84,11 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			const mapObject = this.iMap.mapObject;
 			const size = mapObject.getSize();
 			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
-			if (!olCenterView || isNaN(olCenterView[0] || isNaN(olCenterView[1]))) {
+			if (!areCoordinatesNumeric(olCenterView)) {
 				observer.error('no coordinate for pixel');
 			}
 			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
-			if (!olCenterViewWithOffset || isNaN(olCenterViewWithOffset[0] || isNaN(olCenterViewWithOffset[1]))) {
+			if (!areCoordinatesNumeric(olCenterViewWithOffset)) {
 				observer.error('no coordinate for pixel');
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);

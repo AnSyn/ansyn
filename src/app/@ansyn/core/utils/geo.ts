@@ -32,3 +32,7 @@ export function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygo
 export function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
 	return <MultiPolygon> geometry('MultiPolygon', [polygon.coordinates]);
 }
+
+export function areCoordinatesNumeric(coord) {
+	return coord && !isNaN(coord[0]) && !isNaN(coord[1]);
+}

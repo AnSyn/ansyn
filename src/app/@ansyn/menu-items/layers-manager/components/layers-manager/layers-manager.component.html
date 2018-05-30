@@ -12,7 +12,7 @@
 			(inputClicked)="annotationLayerClick()"></ansyn-checkbox>
 	</div>
 
-	<ng-container *ngFor="let collection of layersContainerForDisplay">
+	<ng-container *ngFor="let collection of LayersContainers$ | async">
 		<ansyn-layer-collection [collection]="collection"></ansyn-layer-collection>
 	</ng-container>
 </div>

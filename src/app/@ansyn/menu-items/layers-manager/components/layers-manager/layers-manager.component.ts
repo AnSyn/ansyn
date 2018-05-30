@@ -15,15 +15,13 @@ import { groupBy } from 'lodash';
 })
 
 export class LayersManagerComponent implements OnInit {
-	typeGroupedLayersContainer;
-	layersContainerForDisplay = [];
 	annotationLayerChecked;
 
 	public LayersContainers$: Observable<any> = this.store.select(selectLayersContainers)
 		.distinctUntilChanged()
-		.do((layersContainer: LayersContainer[]) => {
-			this.typeGroupedLayersContainer = groupBy(layersContainer, o => o.type);
-			this.layersContainerForDisplay = Object.keys(this.typeGroupedLayersContainer).map(layer => this.typeGroupedLayersContainer[layer]);
+		.map((layersContainer: LayersContainer[]) => {
+			const typeGroupedLayersContainer = groupBy(layersContainer, o => o.type);
+			return Object.keys(typeGroupedLayersContainer).map(layer => typeGroupedLayersContainer[layer]);
 		});
 
 	constructor(protected store: Store<ILayerState>) {

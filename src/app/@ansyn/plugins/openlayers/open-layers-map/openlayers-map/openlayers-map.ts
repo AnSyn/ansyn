@@ -297,7 +297,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		const bottomRight = map.getCoordinateFromPixel([width, height]);
 		const bottomLeft = map.getCoordinateFromPixel([0, height]);
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
-		const someIsNaN = coordinates[0].some(([x, y]) => isNaN(x) || isNaN(y));
+		const someIsNaN = coordinates[0].some((coords: number[]) => !coords || isNaN(coords[0]) || isNaN(coords[1]));
 		if (someIsNaN) {
 			return Observable.of(null);
 		}

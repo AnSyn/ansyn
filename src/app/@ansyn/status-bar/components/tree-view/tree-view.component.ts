@@ -3,13 +3,12 @@ import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Rx';
 import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 import { isEqual } from 'lodash';
-import { CaseDataInputFiltersState, DataInputFilterValue } from '@ansyn/core/models/case.model';
-
+import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -17,13 +16,12 @@ import { CaseDataInputFiltersState, DataInputFilterValue } from '@ansyn/core/mod
 	styleUrls: ['./tree-view.component.less']
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
-
 	@Output() closeTreeView = new EventEmitter<any>();
 
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 
-	dataInputFilter$ = this.store.select(selectDataInputFilter);
+	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
 
 	onDataInputFilterChange$ = this.dataInputFilter$
 		.distinctUntilChanged()

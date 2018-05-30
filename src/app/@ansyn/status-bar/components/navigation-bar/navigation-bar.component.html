@@ -1,0 +1,33 @@
+<div class="navigation">
+	<button (click)="clickGoAdjacent(false)"
+			[class.active]="goPrevActive"
+			[attr.tooltip-value]="toolTips.backwards"
+			tooltip-class="top left"
+	>
+		<i class="icon-status-bar-prev"></i>
+	</button>
+
+	<button (click)="clickGoAdjacent(true)"
+			[class.active]="goNextActive"
+			[attr.tooltip-value]="toolTips.forward"
+			tooltip-class="top left"
+	>
+		<i class="icon-status-bar-next"></i>
+	</button>
+	<!--unUsed stop button - future development -->
+	<button style="display: none" class="transparent"
+			(click)="clickTime()"
+			[attr.tooltip-value]="toolTips.reset"
+			tooltip-class="top left"
+	>
+		<i class="icon-annotation-square"></i>
+	</button>
+	<!--unUsed expand button - future development -->
+	<button style="display: none" class="transparent"
+			(click)="clickExpand()"
+			[attr.tooltip-value]="toolTips.enlarge"
+			tooltip-class="top left"
+	>
+		<i class="icon-status-bar-expand"></i>
+	</button>
+</div>

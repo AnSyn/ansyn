@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ComboBoxTriggerComponent } from '@ansyn/status-bar/components/combo-box-trigger/combo-box-trigger.component';
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -6,7 +7,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 	styleUrls: ['./combo-box.component.less']
 })
 export class ComboBoxComponent {
-	@ViewChild('optionsTrigger') optionsTrigger: ElementRef;
+	@ViewChild(ComboBoxTriggerComponent) trigger: ComboBoxTriggerComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 
 	@Input() icon: string;
@@ -20,15 +21,19 @@ export class ComboBoxComponent {
 
 	optionsVisible = false;
 
+	get optionsTrigger(): ElementRef {
+		return this.trigger && this.trigger.optionsTrigger;
+	}
+
 	toggleShow() {
 		this.optionsVisible = !this.optionsVisible;
 		if (this.optionsVisible) {
-			setTimeout(() => this.optionsContainer.nativeElement.focus(), 0);
+			setTimeout(() => this.optionsContainer && this.optionsContainer.nativeElement.focus(), 0);
 		}
 	}
 
 	onBlurOptionsContainer($event: FocusEvent) {
-		if ($event.relatedTarget !== this.optionsTrigger.nativeElement) {
+		if ($event.relatedTarget !== (this.optionsTrigger && this.optionsTrigger.nativeElement)) {
 			this.optionsVisible = false;
 		}
 	}

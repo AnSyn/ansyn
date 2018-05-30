@@ -5,11 +5,9 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
-	DeleteCaseAction,
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
-	OpenModalAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
@@ -19,21 +17,31 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { Case } from '../models/case.model';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { AddCasesAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCasesAction, LoadDefaultCaseIfNoActiveCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { Overlay } from '@ansyn/overlays/models/overlay.model';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
+	let loggerService: LoggerService;
 	let actions: Observable<any>;
 	let store: Store<any>;
+
+	const fakeOverlay = <Overlay> { id: 'test' };
+
 
 	const caseMock: Case = {
 		id: 'case1',
@@ -67,8 +75,8 @@ describe('CasesEffects', () => {
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer, [overlaysFeatureKey]: OverlayReducer }),
 				RouterTestingModule
 			],
-			providers: [CasesEffects,
-				{ provide: CoreConfig, useValue: {} },
+			providers: [
+				CasesEffects,
 				StorageService,
 				CasesService,
 				{
@@ -76,7 +84,11 @@ describe('CasesEffects', () => {
 					useValue: { httpErrorHandle: () => Observable.throw(null) }
 				},
 				provideMockActions(() => actions),
-				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } }]
+				{ provide: LoggerService, useValue: {} },
+				{ provide: CoreConfig, useValue: {} },
+				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
+				{ provide: OverlaysConfig, useValue: {} },
+			]
 		}).compileComponents();
 	}));
 
@@ -84,10 +96,13 @@ describe('CasesEffects', () => {
 		store = _store;
 	}));
 
+	beforeEach(inject([LoggerService], (_loggerService: LoggerService) => {
+		loggerService = _loggerService;
+	}));
+
 	beforeEach(inject([CasesEffects, CasesService], (_casesEffects: CasesEffects, _casesService: CasesService) => {
 		casesEffects = _casesEffects;
 		casesService = _casesService;
-
 	}));
 
 	it('should be defined', () => {
@@ -95,7 +110,10 @@ describe('CasesEffects', () => {
 	});
 
 	it('loadCases$ should call casesService.loadCases with case lastId from state, and return LoadCasesSuccessAction', () => {
-		let loadedCases: Case[] = [{ ...caseMock, id: 'loadedCase1' }, { ...caseMock, id: 'loadedCase2' }, { ...caseMock, id: 'loadedCase1' }];
+		let loadedCases: Case[] = [{ ...caseMock, id: 'loadedCase1' }, {
+			...caseMock,
+			id: 'loadedCase2'
+		}, { ...caseMock, id: 'loadedCase1' }];
 		spyOn(casesService, 'loadCases').and.callFake(() => Observable.of(loadedCases));
 		actions = hot('--a--', { a: new LoadCasesAction() });
 		const expectedResults = cold('--b--', { b: new AddCasesAction(loadedCases) });
@@ -129,40 +147,6 @@ describe('CasesEffects', () => {
 		actions = hot('--a--', { a: new UpdateCaseAction(updatedCase) });
 		const expectedResults = cold('--b--', { b: new UpdateCaseBackendAction(updatedCase) });
 		expect(casesEffects.onUpdateCase$).toBeObservable(expectedResults);
-	});
-
-	it('loadCase$ should select the case if exists', () => {
-		const caseItem: Case = { id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any;
-		store.dispatch(new AddCaseAction(caseItem));
-		spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
-		actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
-		const expectedResults = cold('--b--', {
-			b: new SelectCaseAction(caseItem)
-		});
-		expect(casesEffects.loadCase$).toBeObservable(expectedResults);
-	});
-
-	describe('loadCase$ ', () => {
-		it('loadCase$ should dispatch SelectCaseAction', () => {
-			const caseItem: Case = {
-				id: '31b33526-6447-495f-8b52-83be3f6b55bd'
-			} as any;
-			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
-			actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
-			const expectedResults = cold('--b--', { b: new SelectCaseAction(<any>caseItem) });
-			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
-		});
-
-		it('loadCase$ should dispatch LoadDefaultCaseAction if the case id is not valid ( throw 404 error )', () => {
-			const caseItem: Case = {
-				'id': '31b33526-6447-495f-8b52-83be3f6b55bd'
-			} as any;
-
-			spyOn(casesService, 'loadCase').and.callFake(() => Observable.throw({ error: 'not found' }));
-			actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
-			const expectedResults = cold('--b--', { b: new LoadDefaultCaseAction() });
-			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
-		});
 	});
 
 	it('loadDefaultCase$ should call updateCaseViaQueryParmas and dispatch SelectCaseAction ', () => {

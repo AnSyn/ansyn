@@ -5,7 +5,7 @@ import {
 	StartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from '@ansyn/core/utils/geo';
 import { limitArray } from '@ansyn/core/utils/limited-array';
@@ -124,9 +124,15 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
 		const body = this.buildFilters([{ type: 'StringInFilter', field_name: 'id', config: [id] }]);
 		return this.http.post<OverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders })
-			.map(data => this.extractData(data.features))
-			.catch((error: any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
+			.map(data => {
+				if (data.features.length <= 0) {
+					throw new HttpErrorResponse({ status: 404 });
+				}
+
+				return this.extractData(data.features);
+			})
+			.catch((error: HttpErrorResponse) => {
+				return Observable.throw(error);
 			});
 	}
 

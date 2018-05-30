@@ -12,6 +12,7 @@ import {
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
+	LoadDefaultCaseIfNoActiveCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
@@ -24,10 +25,12 @@ import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/ca
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { ContextActionTypes } from '@ansyn/context/actions/context.actions';
 import { Case } from '@ansyn/core/models/case.model';
-import { Context } from '@ansyn/core/models/context.model';
-import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { uniqBy } from 'lodash';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class CasesEffects {
@@ -140,21 +143,6 @@ export class CasesEffects {
 	closeModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.CLOSE_MODAL)
 		.share();
-
-	/**
-	 * @type Effect
-	 * @name loadCase$
-	 * @ofType LoadCaseAction
-	 * @action SelectCaseByIdAction?, SelectCaseAction?, LoadDefaultCaseAction?
-	 */
-	@Effect()
-	loadCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.LOAD_CASE)
-		.switchMap((action: LoadCaseAction) => {
-			return this.casesService.loadCase(action.payload)
-				.map((caseValue: Case) => new SelectCaseAction(caseValue))
-				.catch(() => Observable.of(new LoadDefaultCaseAction()));
-		}).share();
 
 	/**
 	 * @type Effect

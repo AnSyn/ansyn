@@ -2,6 +2,8 @@ import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '@ansyn/core/models/case.model';
 
 export class SliderFilterMetadata implements FilterMetadata {
+	count = 0;
+	filteredCount = 0;
 
 	min: number;
 	max: number;
@@ -22,12 +24,12 @@ export class SliderFilterMetadata implements FilterMetadata {
 	}
 
 	updateMetadata(range: { start: number, end: number }): void {
-		if (!range || range.start > range.end) {
+		if (!range || (range.start && range.end && range.start > range.end) ) {
 			return;
 		}
 
-		this.start = range.start;
-		this.end = range.end;
+		this.start = range.start || -Infinity;
+		this.end = range.end || Infinity;
 	}
 
 	accumulateData(value: number): void {
@@ -38,9 +40,19 @@ export class SliderFilterMetadata implements FilterMetadata {
 		if (value > this.max) {
 			this.max = value;
 		}
+		this.count++;
+	}
+
+	incrementFilteredCount(value: number): void {
+		this.filteredCount++;
+	}
+
+	resetFilteredCount(): void {
+		this.filteredCount = 0;
 	}
 
 	initializeFilter(range: { start: number, end: number }): void {
+		this.count = 0;
 		this.updateMetadata(range);
 	}
 

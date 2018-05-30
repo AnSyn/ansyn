@@ -2,25 +2,37 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
 import {
-	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, SetFilteredOverlaysAction
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	SetFilteredOverlaysAction,
+	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { OverlaySourceProviderMock } from '@ansyn/overlays/services/overlays.service.spec';
 import {
-	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
-	overlaysStateSelector
+	MarkUpClass,
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysInitialState,
+	overlaysStateSelector,
+	selectDropMarkup,
+	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs/Observable';
 import {
-	IToolsState, toolsFeatureKey, toolsInitialState, ToolsReducer,
+	IToolsState,
+	toolsFeatureKey,
+	toolsInitialState,
+	ToolsReducer,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
-	casesFeatureKey, CasesReducer, casesStateSelector,
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
@@ -32,10 +44,13 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { Case } from '@ansyn/core/models/case.model';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import {
-	RemovePendingOverlayAction, SetPendingOverlaysAction,
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -90,8 +105,8 @@ describe('OverlaysAppEffects', () => {
 		}
 	} as any;
 	const exampleOverlays: any = [
-		['first', { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') }],
-		['last', { id: 'last', 'photoTime': new Date() }]
+		['first', { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z'), 'sourceType': 'FIRST', 'thumbnailUrl': 'http://first' }],
+		['last', { id: 'last', 'photoTime': new Date(), 'sourceType': 'LAST', 'thumbnailUrl': 'http://last' }]
 	];
 
 	const toolsState: IToolsState = { ...toolsInitialState };
@@ -112,6 +127,18 @@ describe('OverlaysAppEffects', () => {
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
+	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
+
+	// @Injectable()
+	class MapSourceProviderMock extends BaseMapSourceProvider {
+		sourceType = 'FIRST';
+		supported = [];
+
+		public create(metaData: any): any[] {
+			return [];
+		}
+	}
+
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -126,7 +153,7 @@ describe('OverlaysAppEffects', () => {
 			providers: [
 				OverlaysAppEffects,
 				provideMockActions(() => actions),
-				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
+				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: CasesService,
 					useValue: {
@@ -161,6 +188,15 @@ describe('OverlaysAppEffects', () => {
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
+				},
+				{
+					provide: BaseMapSourceProvider,
+					useClass: MapSourceProviderMock,
+					multi: true
+				},
+				{
+					provide: CacheService,
+					useClass: () => {}
 				}
 			]
 
@@ -177,7 +213,9 @@ describe('OverlaysAppEffects', () => {
 			[toolsStateSelector, toolsState],
 			[mapStateSelector, mapState],
 			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState]
+			[coreStateSelector, coreState],
+			[selectDropMarkup, overlaysState.dropsMarkUp],
+			[selectOverlaysMap, overlaysState.overlays]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -338,7 +376,11 @@ describe('OverlaysAppEffects', () => {
 
 	});
 
+	describe('setHoveredOverlay$ effect', () => {
+		it ('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
+			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction(overlaysState.overlays.get('first')) });
+			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
+		});
+	});
+
 });
-
-
-

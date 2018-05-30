@@ -30,12 +30,17 @@ export const CasesActionTypes = {
 
 	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
 	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
-	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY'
+	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
 
+	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE'
 
 };
 
 export type CasesActions = any;
+
+export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
+	type = CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE;
+}
 
 export class LoadCasesAction implements Action {
 	type = CasesActionTypes.LOAD_CASES;

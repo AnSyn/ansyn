@@ -110,8 +110,12 @@ describe('OverlaysService', () => {
 		},
 		time: {
 			type: 'absolute',
-			from:  new Date(2020),
+			from: new Date(2020),
 			to: new Date()
+		},
+		dataInputFilters: {
+			filters: [],
+			active: true
 		}
 	};
 
@@ -162,20 +166,6 @@ describe('OverlaysService', () => {
 
 	}));
 
-	it('sortDropsByDates should get overlay array and sord by photoTime', () => {
-		let overlayArray: Overlay = <any>[
-			{ id: 'id1', date: new Date(1000) },
-			{ id: 'id2', date: new Date(3000) },
-			{ id: 'id3', date: new Date(7000) },
-			{ id: 'id4', date: new Date(2000) }
-		];
-		overlayArray = <any> OverlaysService.sort(<any>overlayArray);
-		expect(overlayArray[0]).toEqual({ id: 'id1', date: new Date(1000) });
-		expect(overlayArray[1]).toEqual({ id: 'id4', date: new Date(2000) });
-		expect(overlayArray[2]).toEqual({ id: 'id2', date: new Date(3000) });
-		expect(overlayArray[3]).toEqual({ id: 'id3', date: new Date(7000) });
-	});
-
 	it('pluck check that pluck function returns smaller object from overlays', () => {
 		const objectMap = new Map([
 			['1', { id: '1', name: 'tmp1', value: '2' }],
@@ -205,18 +195,25 @@ describe('OverlaysService', () => {
 
 	});
 
-	it('check Overlay service filters', () => {
+	it('buildFilteredOverlays should build filtered overlays', () => {
 
-		const mockData = {
-			filters: {},
-			overlays: new Map()
-		};
-		overlaysTmpData.forEach(item => {
-			mockData.overlays.set(item.id, item);
-		});
+		let o1 = { id: '1', date: new Date(0) },
+			o2 = { id: '2', date: new Date(1) },
+			o3 = { id: '3', date: new Date(2) },
+			o6 = { id: '6', date: new Date(3) },
+			parsedFilters = [ { key: 'fakeFilter', filterFunc: () => true } ],
+			overlays = <any> [o1, o2, o3],
+			favorites = <any> [o1, o6],
+			showOnlyFavorite = false;
 
-		const result = OverlaysService.filter(<any>mockData.overlays, <any>mockData.filters);
-		expect(result.length).toBe(overlaysTmpData.length);
+		let ids = OverlaysService.buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite);
+		expect(ids).toEqual(['1', '2', '3', '6']);
+
+		/* only favorite ids */
+		showOnlyFavorite = true;
+		ids = OverlaysService.buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite);
+		expect(ids).toEqual(['1', '6']);
+
 	});
 
 
@@ -233,12 +230,12 @@ describe('OverlaysService', () => {
 		});
 
 		const result = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result[0].data.length).toBe(1);
+		expect(result.length).toBe(1);
 
 		mockData.specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
 
 		const result2 = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result2[0].data.length).toBe(2);
+		expect(result2.length).toBe(2);
 	});
 
 	it('check the method fetchData with spyOn', () => {
@@ -300,6 +297,10 @@ describe('OverlaysService', () => {
 				type: 'absolute',
 				from: new Date(2020),
 				to: new Date()
+			},
+			dataInputFilters: {
+				filters: [],
+				active: true
 			}
 		};
 		overlaysService.search(params).subscribe((result: any) => {
@@ -330,7 +331,7 @@ describe('OverlaysService', () => {
 				start: new Date(1000),
 				end: new Date(5000) // delta tenth is 500 ms
 			};
-			const { start, end} = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
+			const { start, end } = overlaysService.getTimeStateByOverlay(displayedOverlay, timelineState);
 			expect(start.getTime()).toEqual(new Date(1000).getTime());
 			expect(end.getTime()).toEqual(new Date(6200).getTime());
 		});

@@ -79,6 +79,10 @@
                 33.812091224680195
           ]
         },
+        "dataInputFilters": {
+          "filters": [],
+          "active": false
+        },
         "time": null,
         "facets": {
           "showOnlyFavorites": false,
@@ -111,12 +115,16 @@
   },
   "overlaysConfig": {
     "limit": 249,
-    "sourceTypeNotices": [
-		{
-			"key": "PLANET",
-			"value": "Open California Satellite Imagery © 2016 Planet Labs Inc. licensed under CC BY-SA 4.0."
+    "sourceTypeNotices": {
+		"PLANET": {
+			"Default": "Open California Satellite Imagery © 2016 Planet Labs Inc. licensed under CC BY-SA 4.0.",
+			"Sentinel2L1C": "© Copernicus Sentinel data $year",
+			"Landsat8L1G": "© USGS/NASA Landsat Program"
+		},
+		"OPEN_AERIAL": {
+			"Default": "© Copyright 2010, OpenAerialMap contributors"
 		}
-    ]
+    }
   },
   "imageryConfig": {
     "geoMapsInitialMapSource": [
@@ -255,6 +263,7 @@
       "geoFilterEdit": "Edit Geo filter",
       "geoFilterShow": "Show/hide Geo filter",
       "timeFilter": "Time filter",
+      "dataInputFilter": "Data Input Filter",
       "timeFilterEdit": "Edit time filter",
       "screenNumber": "Screen number",
       "overlayCount": "Overlay count",
@@ -262,6 +271,30 @@
       "forward": "Next overlay",
       "reset": "Reset timeline (according to the time filter)",
       "enlarge": "Expand timeline"
+    },
+    "dataInputFiltersConfig": {
+      "filters": [
+      		{
+      			"text": "REScene",
+      			"value": 1,
+      			"collapsed": true,
+				"children": [
+					{ "text": "RapidEye-1", "value": { "sensorType": "REScene", "sensorName": "RapidEye-1" } },
+					{ "text": "RapidEye-2", "value": { "sensorType": "REScene", "sensorName": "RapidEye-2" } }
+				]
+			},
+			{
+				"text": "PSScene3Band",
+                "value": 1,
+                "collapsed": true,
+            	"children": [
+					{ "text": "103e", "value": { "sensorType": "PSScene3Band", "sensorName": "103e" } },
+					{ "text": "0f21", "value": { "sensorType": "PSScene3Band", "sensorName": "0f21" } },
+					{ "text": "RapidEye-2", "value": { "sensorType": "PSScene3Band", "sensorName": "RapidEye-2" } },
+					{ "text": "1042", "value": { "sensorType": "PSScene3Band", "sensorName": "1042" } }
+            	]
+            }
+		]
     }
   },
   "coreConfig": {
@@ -927,12 +960,58 @@
         }
       ],
       "blacklist": []
-    }
+    },
+    "OPEN_AERIAL": {
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": [
+					null
+				],
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": []
+	}
   },
   "idahoOverlaysSourceConfig": {
     "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
     "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
     "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
+  },
+  "openAerialOverlaysSourceConfig": {
+  	"baseUrl": "https://api.openaerialmap.org/meta"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",
@@ -946,7 +1025,7 @@
       "Landsat8L1G",
       "Sentinel2L1C"
     ],
-    "apiKey": "9f7afec0ebfb4e1ca0bf959a0050545b",
+    "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
     "tilesUrl": "https://tiles.planet.com/data/v1/"
   }
 }

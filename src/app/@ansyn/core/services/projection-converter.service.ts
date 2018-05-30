@@ -54,6 +54,7 @@ export class ProjectionConverterService {
 
 
 	convertByProjectionDatum(coords: number[], from: CoordinatesSystem, to: CoordinatesSystem) {
+
 		if (isEqual(from, to)) {
 			return [...coords];
 		}

@@ -4,13 +4,14 @@
 @animation-duration: 0.3s;
 
 :host {
-	position: absolute;
+	position: fixed;
 	z-index: @z-index-overlay-overview;
 	font-size: 12px;
 	min-width: 250px;
 	user-select: none;
 	visibility: hidden;
 	opacity: 0;
+	transform: translateY(calc(~"1px - 100%"));
 	transition: opacity @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
 
 	.overlay-overview {

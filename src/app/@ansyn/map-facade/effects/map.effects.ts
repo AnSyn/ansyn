@@ -153,7 +153,11 @@ export class MapEffects {
 			if (!isWorldView) {
 				const { extentPolygon } = map.data.position;
 				const { footprint } = map.data.overlay;
-				isInBound = Boolean(intersect(polygon(extentPolygon.coordinates), polygon(footprint.coordinates[0])));
+				try {
+					isInBound = Boolean(intersect(polygon(extentPolygon.coordinates), polygon(footprint.coordinates[0])));
+				} catch (e) {
+					console.warn('checkImageOutOfBounds$: turf exception', e)
+				}
 			}
 
 			if (isWorldView || isInBound) {

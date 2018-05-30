@@ -1,4 +1,4 @@
-import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, StartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
@@ -7,46 +7,23 @@ import { OverlaysCriteria, OverlaysFetchData } from '@ansyn/core/models/overlay.
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { union } from 'lodash';
+import { FilterModel } from '@ansyn/core/models/filter.model';
+import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 @Injectable()
 export class OverlaysService {
 
-	static filter(overlays: Map<string, Overlay>, filters: { key: any, filterFunc: (ovrelay: any, key: string) => boolean }[]): string[] {
-		if (!overlays) {
-			return [];
+	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: Overlay[], showOnlyFavorite: boolean): string[] {
+		let parsedOverlays: Overlay[] = favorites;
+		if (!showOnlyFavorite) {
+			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
+			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
 		}
-
-		const overlaysData = [];
-
-		if (!filters || !Array.isArray(filters)) {
-			return Array.from(overlays.keys());
-
-		}
-		overlays.forEach(overlay => {
-			if (filters.every(filter => filter.filterFunc(overlay, filter.key))) {
-				overlaysData.push(overlay.id);
-			}
-		});
-
-		return overlaysData;
-	}
-
-	static sort(overlays: any[]): Overlay[] {
-		if (!overlays) {
-			return [] as Overlay[];
-		}
-		return overlays
-			.sort((o1, o2) => {
-				if (o2.date < o1.date) {
-					return 1;
-				}
-				if (o1.date < o2.date) {
-					return -1;
-				}
-				return 0;
-			});
+		parsedOverlays.sort(sortByDateDesc);
+		return union(parsedOverlays.map(({ id }) => id));
 	}
 
 	static isFullOverlay(overlay: Overlay): boolean {
@@ -75,14 +52,9 @@ export class OverlaysService {
 	}
 
 
-	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): Array<any> {
+	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): OverlayDrop[] {
 		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
-
-		specialObjects.forEach((value) => {
-			overlaysData.push(value);
-		});
-
-		return [{ name: undefined, data: overlaysData }];
+		return [...overlaysData, ...Array.from(specialObjects.values())];
 	}
 
 	get fetchLimit() {
@@ -96,6 +68,7 @@ export class OverlaysService {
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
 		let feature = params.region;
 		return this._overlaySourceProvider.fetch({
+			dataInputFilters: Boolean(params.dataInputFilters) && params.dataInputFilters.active ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,
 			region: feature,
 			timeRange: <any> {
@@ -109,7 +82,7 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getById(id, sourceType);
 	}
 
-	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
+	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
 	}
 

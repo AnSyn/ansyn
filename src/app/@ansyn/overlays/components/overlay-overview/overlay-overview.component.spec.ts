@@ -3,15 +3,8 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { OverlayOverviewComponent } from './overlay-overview.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import {
-	IOverlaysState,
-	MarkUpClass,
-	OverlayReducer,
-	overlaysFeatureKey
-} from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	LoadOverlaysSuccessAction, SetMarkUp
-} from '@ansyn/overlays/actions/overlays.actions';
+import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { SetHoveredOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { By } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
@@ -70,11 +63,10 @@ describe('OverlayOverviewComponent', () => {
 			expect(classExists('show')).toBeFalsy();
 		});
 		it('should show or hide me according to store', () => {
-			store.dispatch(new LoadOverlaysSuccessAction(overlays));
-			store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [overlayId] } }));
+			store.dispatch(new SetHoveredOverlayAction(overlays[0]));
 			fixture.detectChanges();
 			expect(classExists('show')).toBeTruthy();
-			store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			store.dispatch(new SetHoveredOverlayAction(null));
 			fixture.detectChanges();
 			expect(classExists('show')).toBeFalsy();
 		});

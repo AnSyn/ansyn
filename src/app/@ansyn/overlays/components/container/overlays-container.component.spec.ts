@@ -54,19 +54,7 @@ describe('OverlayContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [
-				{ provide: LoggerService, useValue: { error: (some) => null } },
-				OverlaysService,
-				OverlaysEffects,
-				Actions,
-				{
-					provide: OverlaysConfig,
-					useValue: {
-						'limit': 500
-					}
-				},
-				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
-			],
+
 			declarations: [
 				OverlaysContainerComponent,
 				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'timeLineRange', 'redraw$', 'markup'] }),
@@ -90,12 +78,6 @@ describe('OverlayContainerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(OverlaysContainerComponent);
 		component = fixture.componentInstance;
-
-
-		it('check that we subscribing for both overlays and selected overlays', () => {
-			component.ngOnInit();
-			expect(Object.keys(component.subscribers).length).toEqual(8);
-		});
 
 		it('should distinguish between changed data', () => {
 			const overlays = < Overlay[] > [{

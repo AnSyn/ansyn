@@ -2,6 +2,7 @@ import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { Filter } from '../models/filter';
 import { Action } from '@ngrx/store';
 import { CaseFacetsState } from '@ansyn/core/models/case.model';
+import { Filters } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',
@@ -11,23 +12,21 @@ export const FiltersActionTypes = {
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
 
 	RESET_FILTERS: 'RESET_FILTERS',
-	TOGGLE_ONLY_FAVORITES: 'TOGGLE_ONLY_FAVORITES',
-	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION'
+	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION',
+	UPDATE_FACETS: 'UPDATE_FACETS'
 };
-
-export type FiltersActions = any;
 
 export class InitializeFiltersAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS;
 
-	constructor(public payload?: { overlays: any[], facets: CaseFacetsState }) {
+	constructor(public payload?: any) {
 	}
 }
 
 export class InitializeFiltersSuccessAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS;
 
-	constructor(public payload: { filters?: Map<Filter, FilterMetadata>, showOnlyFavorites?: boolean } ) {
+	constructor(public payload: Filters) {
 	}
 }
 
@@ -45,17 +44,22 @@ export class ResetFiltersAction implements Action {
 	}
 }
 
-export class ToggleOnlyFavoriteAction implements Action {
-	type = FiltersActionTypes.TOGGLE_ONLY_FAVORITES;
-
-	constructor(public payload?: any) {
-	}
-}
-
 export class EnableOnlyFavoritesSelectionAction implements Action {
 	type = FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION;
 
 	constructor(public payload?: any) {
 	}
 }
+export class UpdateFacetsAction implements Action {
+	readonly type = FiltersActionTypes.UPDATE_FACETS;
+	constructor(public payload: CaseFacetsState) {
 
+	}
+}
+
+export type FiltersActions = InitializeFiltersAction
+	| InitializeFiltersSuccessAction
+	| UpdateFilterAction
+	| ResetFiltersAction
+	| EnableOnlyFavoritesSelectionAction
+	| UpdateFacetsAction;

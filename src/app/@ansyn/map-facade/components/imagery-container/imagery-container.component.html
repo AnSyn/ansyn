@@ -1,4 +1,5 @@
-<div class="imagery" #imageryViewContainer (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()">
+<div class="imagery" #imageryViewContainer (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()"
+	 [style.visibility]="(isHidden$ | async) ? 'hidden' : 'visible'">
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
 						  [mapId]="mapState.id"

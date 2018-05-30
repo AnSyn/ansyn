@@ -1,23 +1,41 @@
 import { Actions, Effect } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import {
-	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction, DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, OverlaysActionTypes
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import {
+	IOverlaysState,
+	MarkUpClass,
+	MarkUpData,
+	overlaysStateSelector,
+	selectDropMarkup,
+	selectOverlaysMap
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import {
-	RemovePendingOverlayAction, SetPendingOverlaysAction,
+	RemovePendingOverlayAction, SetIsLoadingAcion,
+	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -182,10 +200,80 @@ export class OverlaysAppEffects {
 			return new DisplayOverlayAction({ overlay, mapId });
 		});
 
+	/**
+	 * @type Effect
+	 * @name setHoveredOverlay$
+	 * @action SetHoveredOverlayAction
+	 */
+
+	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, MarkUpData>, Map<any, any>]) =>
+		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
+	);
+	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [Overlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
+	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [Overlay, CommunicatorEntity]) => {
+		if (!communicator) {
+			return Observable.of([overlay, null])
+		}
+		return communicator.getPosition().map((position) => [overlay, position])
+	});
+	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [Overlay, CaseMapPosition]) => {
+		if (!overlay) {
+			return [overlay];
+		}
+		const sourceProvider = this.getSourceProvider(overlay.sourceType);
+		return sourceProvider.getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
+	});
+	private getHoveredOverlayAction = map((overlay: Overlay) => new SetHoveredOverlayAction(overlay));
+
+	@Effect()
+	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
+		.pipe(
+			withLatestFrom(this.store$.select(selectOverlaysMap)),
+			this.getOverlayFromDropMarkup,
+			withLatestFrom(this.store$.select(selectActiveMapId)),
+			this.getCommunicatorForActiveMap,
+			this.getPositionFromCommunicator,
+			this.getOverlayWithNewThumbnail,
+			this.getHoveredOverlayAction
+		)
+		.pipe(
+			catchError(err => {
+				console.error(err);
+				return Observable.of(err);
+			})
+		)
+	;
+
+	@Effect()
+	onDisplayOverlayShowLoader$ = this.actions$
+		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
+			mapId: payload.mapId, show: true, text: 'Loading Overlay'
+		}));
+
+
+	@Effect()
+	onDisplayOverlayHideLoader$ = this.actions$
+		.ofType<DisplayOverlayAction>(
+			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+			CoreActionTypes.BACK_TO_WORLD_VIEW
+		)
+		.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
+			mapId: payload.mapId, show: false
+		}));
+
+	getSourceProvider(sType) {
+		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
+	}
+
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public casesService: CasesService,
-				public overlaysService: OverlaysService) {
+				public overlaysService: OverlaysService,
+				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
+				public imageryCommunicatorService: ImageryCommunicatorService
+	) {
 	}
 
 }

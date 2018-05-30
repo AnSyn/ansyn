@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { IOverlaysConfig, KeyAndValue } from '@ansyn/overlays/models/overlays.config';
+import { IOverlaysConfig } from '@ansyn/overlays/models/overlays.config';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Component({
@@ -8,14 +8,17 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 	templateUrl: './overlay-source-type-notice.component.html',
 	styleUrls: ['./overlay-source-type-notice.component.less']
 })
-export class OverlaySourceTypeNoticeComponent implements OnChanges {
+export class OverlaySourceTypeNoticeComponent {
 
 	@Input()  set overlay(newOverlay: Overlay) {
-		if (newOverlay) {
-			const keyAndValue: KeyAndValue = this._config.sourceTypeNotices.find(keyAndValue => keyAndValue.key === newOverlay.sourceType);
-			if (keyAndValue) {
-				this._title = keyAndValue.value;
-			}
+		let sourceTypeConfig;
+		// Extract the title, according to the new overlay and the configuration
+		this._title = newOverlay
+			&& (sourceTypeConfig = this._config.sourceTypeNotices[newOverlay.sourceType])
+			&& (sourceTypeConfig[newOverlay.sensorType] || sourceTypeConfig.Default);
+		// Insert the photo year into the title, if requested
+		if (this._title && newOverlay.date) {
+			this._title = this._title.replace('$year', newOverlay.date.getFullYear().toString())
 		}
 	}
 
@@ -28,10 +31,6 @@ export class OverlaySourceTypeNoticeComponent implements OnChanges {
 
 	constructor(overlaysService: OverlaysService) {
 		this._config = overlaysService.config;
-	}
-
-	ngOnChanges() {
-
 	}
 
 }

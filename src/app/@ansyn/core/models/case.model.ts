@@ -26,6 +26,7 @@ export interface IContextEntity extends IVisualizerEntity {
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
 
+
 export enum CaseGeoFilter {
 	PinPoint = 'Point',
 	Polygon = 'Polygon'
@@ -50,6 +51,7 @@ export interface CaseState {
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
+	dataInputFilters: CaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
 	geoFilter: CaseGeoFilter,
 	favoriteOverlays?: Overlay[],
@@ -58,6 +60,16 @@ export interface CaseState {
 }
 
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
+
+export interface DataInputFilterValue {
+	sensorType: string,
+	sensorName: string
+}
+
+export interface CaseDataInputFiltersState {
+	filters: DataInputFilterValue[],
+	active: boolean
+}
 
 export interface CaseTimeState {
 	type: 'absolute',

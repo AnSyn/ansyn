@@ -6,6 +6,7 @@ import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 
 export interface DateRange {
 	start: Date;
@@ -16,6 +17,7 @@ export interface IFetchParams {
 	limit: number;
 	region: GeoJsonObject;
 	sensors?: string[];
+	dataInputFilters: DataInputFilterValue[];
 	timeRange: DateRange;
 }
 
@@ -78,10 +80,10 @@ export abstract class BaseOverlaySourceProvider {
 			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
 			.map(f => {
 				// Create new filters, by the common region and time
-				let newFetchParams: IFetchParams = {
-					limit: fetchParams.limit,
+				let newFetchParams: IFetchParams = <any> {
+					...fetchParams,
 					region: intersect(f.coverage, regionFeature).geometry,
-					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
+					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange),
 				};
 
 				// Add sensor if exists on the filter

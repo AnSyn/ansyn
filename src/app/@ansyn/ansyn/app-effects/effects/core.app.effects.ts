@@ -12,11 +12,12 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import { DisplayOverlayFromStoreAction, LoadOverlaysAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 
 @Injectable()
 export class CoreAppEffects {
@@ -95,8 +96,8 @@ export class CoreAppEffects {
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$
 		.ofType<GoAdjacentOverlay>(CoreActionTypes.GO_ADJACENT_OVERLAY)
-		.withLatestFrom(this.store$.select(casesStateSelector), ({ payload }, casesState: ICasesState): { isNext, overlayId } => {
-			const activeMap = casesState.selectedCase.state.maps.data.find(map => casesState.selectedCase.state.maps.activeMapId === map.id);
+		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, mapState: IMapState): { isNext, overlayId } => {
+			const activeMap = MapFacadeService.activeMap(mapState);
 			const overlayId = activeMap.data.overlay && activeMap.data.overlay.id;
 			const { isNext } = payload;
 			return { isNext, overlayId };
@@ -107,8 +108,8 @@ export class CoreAppEffects {
 			const adjacent = isNext ? 1 : -1;
 			return filteredOverlays[index + adjacent];
 		})
-		.filter(nextOverlayId => Boolean(nextOverlayId))
-		.map(nextOverlayId => new DisplayOverlayFromStoreAction({ id: nextOverlayId }));
+		.filter(Boolean)
+		.map(id => new DisplayOverlayFromStoreAction({ id }));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

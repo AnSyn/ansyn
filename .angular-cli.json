@@ -41,7 +41,7 @@
 		{
 			"name": "builder",
 			"root": "src",
-			"outDir": "src/app/builder/dist",
+			"outDir": "build/buildBundle/dist",
 			"assets": [
 				{
 					"glob": "**/*",
@@ -54,7 +54,41 @@
 			"main": "app/builder/main.builder.ts",
 			"polyfills": "polyfills.ts",
 			"test": "test.ts",
-			"tsconfig": "tsconfig.app.json",
+			"tsconfig": "tsconfig.builder.json",
+			"testTsconfig": "tsconfig.spec.json",
+			"prefix": "ansyn",
+			"styles": [
+				"./styles/styles.less"
+			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/@ansyn"
+				]
+			},
+			"scripts": [
+			],
+			"environmentSource": "configuration/configuration.ts",
+			"environments": {
+				"dev": "configuration/configuration.dev.ts",
+				"prod": "configuration/configuration.prod.ts"
+			}
+		},
+		{
+			"name": "devApp",
+			"root": "src",
+			"outDir": "build/buildBundle/dist",
+			"assets": [
+				{
+					"glob": "**/*",
+					"input": "./app/@ansyn/assets",
+					"output": "./assets/"
+				},
+				"favicon.ico"
+			],
+			"index": "app/builder/index.html",
+			"main": "app/builder/devApp.main.ts",
+			"polyfills": "polyfills.ts",
+			"tsconfig": "tsconfig.builder.json",
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [
@@ -73,6 +107,7 @@
 				"prod": "configuration/configuration.prod.ts"
 			}
 		}
+
 	],
 	"e2e": {
 		"protractor": {

@@ -4,7 +4,9 @@ import { FilterType } from '@ansyn/core/models/case.model';
 
 export interface EnumFiled {
 	count: number;
+	filteredCount: number;
 	isChecked: boolean;
+	disabled?: boolean;
 }
 
 export class EnumFilterMetadata implements FilterMetadata {
@@ -29,19 +31,29 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	accumulateData(value: any): void {
+	accumulateData(value: string): void {
 		if (!this.enumsFields.get(value)) {
-			this.enumsFields.set(value, { count: 1, isChecked: false });
+			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: false });
 		} else {
 			this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
 		}
 	}
 
+	incrementFilteredCount(value: any): void {
+		this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
+	}
+
+	resetFilteredCount(): void {
+		this.enumsFields.forEach((val, key) => {
+			val.filteredCount = 0;
+		});
+	}
+
 	initializeFilter(selectedValues: string[]): void {
-		this.enumsFields = new Map<string, { count: number, isChecked: boolean }>();
+		this.enumsFields = new Map<string, { count: number, filteredCount: number, isChecked: boolean }>();
 		if (selectedValues) {
 			for (let key of selectedValues) {
-				this.enumsFields.set(key, { count: 0, isChecked: true });
+				this.enumsFields.set(key, { count: 0, filteredCount: 0, isChecked: true });
 			}
 		}
 	}

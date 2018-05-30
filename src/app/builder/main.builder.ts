@@ -6,3 +6,4 @@ if (Boolean(0)) {
 	platformBrowserDynamic().bootstrapModule(AppAnsynModule);
 }
 window['Ansyn'] = AnsynBuilder;
+

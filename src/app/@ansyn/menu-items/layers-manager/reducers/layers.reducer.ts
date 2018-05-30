@@ -50,3 +50,5 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 }
 
 export const selectLayersContainers = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.layersContainers);
+export const selectAnnotationLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.annotationsLayer);
+export const selectDisplayAnnotationsLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.displayAnnotationsLayer);

@@ -1,14 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/pluck';
 import '@ansyn/core/utils/store-element';
 import { Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector } from '../../reducers/overlays.reducer';
+import { IOverlaysState, selectLoading } from '../../reducers/overlays.reducer';
 import { Observable } from 'rxjs/Observable';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Actions } from '@ngrx/effects';
 
 const animations: any[] = [
 	trigger('timeline-status', [
@@ -30,38 +29,10 @@ const animations: any[] = [
 	animations
 })
 
-export class OverlaysContainerComponent implements OnInit, OnDestroy {
-	drops: any[] = [];
-	selectedOverlays: Array<string> = [];
-	subscribers: any = {};
-	loading: boolean;
+export class OverlaysContainerComponent {
+	overlaysLoader$: Observable<any> = this.store$.select(selectLoading);
 
-	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
-
-	overlaysLoader$: Observable<any> = this.overlaysState$
-		.pluck <IOverlaysState, boolean>('loading')
-		.distinctUntilChanged();
-
-	constructor(protected store$: Store<IOverlaysState>,
-				protected actions$: Actions) {
-	}
-
-	ngOnInit(): void {
-		this.setStoreSubscribers();
-	}
-
-
-	setStoreSubscribers(): void {
-
-		this.subscribers.overlaysLoader = this.overlaysLoader$.subscribe(loading => {
-			this.loading = loading;
-		});
-
-	}
-
-
-	ngOnDestroy(): void {
-		Object.keys(this.subscribers).forEach((s) => this.subscribers[s].unsubscribe());
+	constructor(protected store$: Store<IOverlaysState>) {
 	}
 }
 

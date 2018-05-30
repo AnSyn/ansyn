@@ -1,13 +1,17 @@
-import { Filter } from '../models/filter';
-import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
-import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { Filter } from '@ansyn/menu-items/filters/models/filter';
+import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { FiltersActions, FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { CaseFacetsState, CaseFilter } from '@ansyn/core/models/case.model';
+import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
+
+export type Filters = Map<Filter, FilterMetadata>;
 
 export interface IFiltersState {
-	filters: Map<Filter, FilterMetadata>;
+	filters: Filters;
 	oldFilters: Map<Filter, FilterMetadata>;
 	isLoading: boolean;
-	showOnlyFavorites: boolean;
+	facets: CaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
 }
 
@@ -15,46 +19,59 @@ export const initialFiltersState: IFiltersState = {
 	filters: new Map<Filter, FilterMetadata>(),
 	oldFilters: null,
 	isLoading: true,
-	showOnlyFavorites: false,
+	facets: {
+		showOnlyFavorites: false,
+		filters: []
+	},
 	enableOnlyFavoritesSelection: false
 };
 
 export const filtersFeatureKey = 'filters';
 
-export const filtersStateSelector: MemoizedSelector<any, IFiltersState> = createFeatureSelector<IFiltersState>('filters');
+export const filtersStateSelector: MemoizedSelector<any, IFiltersState> = createFeatureSelector<IFiltersState>(filtersFeatureKey);
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
 	switch (action.type) {
 
-		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS:
-			return { ...state, ...action.payload, isLoading: false };
+		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
+			const filters = action.payload;
+			const facets = { ...state.facets, filters: <CaseFilter[]> FiltersService.buildCaseFilters(filters) };
+			return { ...state, filters, facets, isLoading: false };
+		}
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
-			return Object.assign({}, state, { isLoading: true });
+			return { ...state, isLoading: true };
 
-		case FiltersActionTypes.UPDATE_FILTER_METADATA:
+		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
 			const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
 			const clonedFilters = new Map(state.filters);
 
 			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
+			const facets = { ...state.facets, filters: <CaseFilter[]> FiltersService.buildCaseFilters(clonedFilters) };
+			return { ...state, filters: clonedFilters, facets };
+		}
 
-			return Object.assign({}, state, { filters: clonedFilters });
-
-		case FiltersActionTypes.RESET_FILTERS:
+		case FiltersActionTypes.RESET_FILTERS: {
 			return {
 				...state,
 				oldFilters: state.filters,
 				filters: new Map<Filter, FilterMetadata>(),
 				isLoading: true
 			};
-
-		case FiltersActionTypes.TOGGLE_ONLY_FAVORITES:
-			return Object.assign({}, state, { showOnlyFavorites: !state.showOnlyFavorites });
+		}
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
 			return Object.assign({}, state, { enableOnlyFavoritesSelection: action.payload });
 
+		case FiltersActionTypes.UPDATE_FACETS:
+			return { ...state, facets: { ...state.facets, ...action.payload } };
+
 		default:
-			return state; // Object.assign({},state);
+			return state;
 	}
 }
+
+export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
+export const selectOldFilters = createSelector(filtersStateSelector, ({ oldFilters }) => oldFilters);
+export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
+export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: CaseFacetsState) => showOnlyFavorites);

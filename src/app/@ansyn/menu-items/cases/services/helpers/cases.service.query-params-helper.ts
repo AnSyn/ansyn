@@ -4,8 +4,7 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { centroid } from '@turf/turf';
+import { centroid, geometry } from '@turf/turf';
 import {
 	CaseGeoFilter, CaseMapsState, CaseMapState, CaseState, ImageManualProcessArgs,
 	OverlaysManualProcessArgs
@@ -61,7 +60,7 @@ export class QueryParamsHelper {
 						const geopointStr = qParams.geopoint;
 						if (geopointStr) {
 							const coordinates = geopointStr.split(',').map(Number).reverse();
-							const region = getPolygonByPointAndRadius(coordinates).geometry;
+							const region = geometry('Point', coordinates);
 							updatedCaseModel.state.region = region;
 						}
 						break;

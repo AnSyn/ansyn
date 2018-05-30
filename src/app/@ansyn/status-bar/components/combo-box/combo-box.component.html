@@ -1,15 +1,12 @@
 <div class="combo-container">
-	<button
-		class="trigger" #optionsTrigger (click)="toggleShow()"
-		[attr.tooltip-value]="comboBoxToolTipDescription || null" tooltip-class="top"
-		[class.active]="optionsVisible"
-	>
-		<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
-		<div class="rander" [innerHTML]="render(selected)"></div>
-		<span class="arrow">
-			{{ !optionsVisible ? '▼' : '▲'}}
-		</span>
-	</button>
+
+	<ansyn-combo-box-trigger
+		[isActive]="optionsVisible"
+		[comboBoxToolTipDescription]="comboBoxToolTipDescription"
+		[render]="render(selected)"
+		[icon]="icon"
+		(click)="toggleShow()">
+	</ansyn-combo-box-trigger>
 
 	<div class="options-container"
 		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"

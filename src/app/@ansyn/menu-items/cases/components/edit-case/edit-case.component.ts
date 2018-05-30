@@ -66,7 +66,7 @@ export class EditCaseComponent implements OnInit {
 
 	addDefaultContext(context: Context[]): Context[] {
 		return [
-			{ id: 'default', name: 'Default Case' },
+			{ id: 'default', name: 'Default Case', creationTime: new Date()},
 			...context
 		];
 	}

@@ -23,6 +23,8 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map/projection/open-layers-projection.service';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { OpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
+import { OpenLayerOpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-open-aerial-source-provider';
 
 export const appProviders = [
 	// Source provider for overlays
@@ -36,6 +38,7 @@ export const appProviders = [
 		useClass: NotGeoRegisteredPlaneSourceProvider,
 		multi: true
 	},
+	{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 
 	// Map tiling source services
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
@@ -47,6 +50,7 @@ export const appProviders = [
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerNotGeoRegisteredPlanetSourceProvider, multi: true },
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
+	{ provide: BaseMapSourceProvider, useClass: OpenLayerOpenAerialSourceProvider, multi: true },
 
 	// Source provider for filters
 	{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },

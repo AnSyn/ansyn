@@ -80,7 +80,7 @@ export abstract class BaseOverlaySourceProvider {
 			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
 			.map(f => {
 				// Create new filters, by the common region and time
-				let newFetchParams: IFetchParams = {
+				let newFetchParams: IFetchParams = <any> {
 					...fetchParams,
 					region: intersect(f.coverage, regionFeature).geometry,
 					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange),

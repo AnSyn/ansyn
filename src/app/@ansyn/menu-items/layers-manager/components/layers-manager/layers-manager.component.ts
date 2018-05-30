@@ -21,11 +21,9 @@ export class LayersManagerComponent implements OnInit {
 
 	public LayersContainers$: Observable<any> = this.store.select(selectLayersContainers)
 		.distinctUntilChanged()
-		.filter(() => this.typeGroupedLayersContainer !== {})
 		.do((layersContainer: LayersContainer[]) => {
-			this.layersContainerForDisplay = [];
 			this.typeGroupedLayersContainer = groupBy(layersContainer, o => o.type);
-			Object.keys(this.typeGroupedLayersContainer).forEach(layer => this.layersContainerForDisplay.push(this.typeGroupedLayersContainer[layer]));
+			this.layersContainerForDisplay = Object.keys(this.typeGroupedLayersContainer).map(layer => this.typeGroupedLayersContainer[layer]);
 		});
 
 	constructor(protected store: Store<ILayerState>) {

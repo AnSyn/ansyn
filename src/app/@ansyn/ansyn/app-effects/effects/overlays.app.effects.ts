@@ -22,7 +22,7 @@ import {
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import {
-	RemovePendingOverlayAction,
+	RemovePendingOverlayAction, SetIsLoadingAcion,
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
@@ -243,6 +243,25 @@ export class OverlaysAppEffects {
 			})
 		)
 	;
+
+	@Effect()
+	onDisplayOverlayShowLoader$ = this.actions$
+		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
+			mapId: payload.mapId, show: true, text: 'Loading Overlay'
+		}));
+
+
+	@Effect()
+	onDisplayOverlayHideLoader$ = this.actions$
+		.ofType<DisplayOverlayAction>(
+			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+			CoreActionTypes.BACK_TO_WORLD_VIEW
+		)
+		.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
+			mapId: payload.mapId, show: false
+		}));
 
 	getSourceProvider(sType) {
 		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);

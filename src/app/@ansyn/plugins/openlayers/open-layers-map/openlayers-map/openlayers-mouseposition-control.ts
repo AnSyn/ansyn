@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import * as turf from '@turf/turf';
 import { Subscription } from 'rxjs/Subscription';
 import Projection from 'ol/proj/projection';
+import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 
 export class OpenLayersMousePositionControl extends MousePosition {
 	private approximateProjectionSubscription: Subscription;
@@ -37,7 +38,7 @@ export class OpenLayersMousePositionControl extends MousePosition {
 		if (pixel && this.mapProjection_) {
 			const map = this.getMap();
 			const coordinate = map.getCoordinateFromPixel(pixel);
-			if (coordinate) {
+			if (areCoordinatesNumeric(coordinate)) {
 				this.positionToPoint(coordinate, (projectedPoint) => {
 					const coordinateFormat = this.getCoordinateFormat();
 					if (coordinateFormat) {

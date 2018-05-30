@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -47,20 +47,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	public dataInputFiltersActive: boolean;
 
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				public elementRef: ElementRef,
 				public store: Store<IStatusBarState>) {
 		this.dataFilters.forEach((f) => {
 			this.dataInputFiltersItems.push(new TreeviewItem(f));
 		});
 	}
-
-	// @HostListener('document:click', ['$event']) onClickOutside($event) {
-	// 	const self = $event.path.includes(this.elementRef.nativeElement);
-	// 	const trigger = $event.path.includes(this.trigger.nativeElement);
-	// 	if (!self && !trigger) {
-	// 		this.closeTreeView.emit()
-	// 	}
-	// }
 
 	set selectedFilters(value) {
 		this._selectedFilters = value;

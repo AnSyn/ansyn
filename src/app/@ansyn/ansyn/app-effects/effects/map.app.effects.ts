@@ -55,23 +55,26 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { map, mergeMap } from 'rxjs/operators';
+import 'rxjs/add/operator/pairwise';
+import 'rxjs/add/operator/startWith';
 
 @Injectable()
 export class MapAppEffects {
-
-	/**
-	 * @type Effect
-	 * @name onDisplayOverlay$
-	 * @ofType DisplayOverlayAction
-	 * @dependencies map
-	 * @filter There is a full overlay
-	 * @action DisplayOverlayFailedAction?, DisplayOverlaySuccessAction?, SetToastMessageAction?
-	 */
-	@Effect()
-	onDisplayOverlay$: ObservableInput<any> = this.actions$
+	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.startWith(null)
+		.pairwise()
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(this.onDisplayOverlayFilter.bind(this))
+		.filter(this.onDisplayOverlayFilter.bind(this));
+
+	@Effect()
+	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
+		.filter((data) => this.displayShouldSwitch(data))
+		.switchMap(this.onDisplayOverlay.bind(this));
+
+	@Effect()
+	onDisplayOverlayMergeMap$ = this.onDisplayOverlay$
+		.filter((data) => !this.displayShouldSwitch(data))
 		.mergeMap(this.onDisplayOverlay.bind(this));
 
 	/**
@@ -295,7 +298,7 @@ export class MapAppEffects {
 			return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
 		});
 
-	onDisplayOverlay([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) {
+	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
 		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
@@ -339,12 +342,16 @@ export class MapAppEffects {
 			]));
 	}
 
-	onDisplayOverlayFilter([{ payload }, mapState]: [DisplayOverlayAction, IMapState]) {
+	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const isFull = OverlaysService.isFullOverlay(payload.overlay);
 		const { overlay } = payload;
 		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
 		const isNotDisplayed = !(OverlaysService.isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
 		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
+	}
+
+	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]){
+		return (action && prevAction) && (prevAction.payload.mapId === action.payload.mapId);
 	}
 
 	constructor(protected actions$: Actions,

@@ -121,9 +121,11 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 			this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {
 				this.comboBoxesProperties = comboBoxesProperties;
 			}),
+
 			this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
 				this.flags = new Map(flags);
 			}),
+
 			this.dataInputFilters$.subscribe()
 		);
 

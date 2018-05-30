@@ -1,14 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComboBoxComponent } from './combo-box.component';
+import { MockComponent } from '@ansyn/core/test/mock-component';
 
 describe('ComboBoxComponent', () => {
 	let component: ComboBoxComponent;
 	let fixture: ComponentFixture<ComboBoxComponent>;
+	const mockTrigger = MockComponent({ selector: 'ansyn-combo-box-trigger', inputs: ['icon', 'isActive', 'comboBoxToolTipDescription', 'render'] });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ComboBoxComponent]
+			declarations: [ComboBoxComponent, mockTrigger]
 		})
 			.compileComponents();
 	}));
@@ -44,14 +46,16 @@ describe('ComboBoxComponent', () => {
 			const $event = { relatedTarget: null } as any;
 			component.optionsVisible = true;
 			component.onBlurOptionsContainer($event);
-			expect(component.optionsVisible).toEqual(false);
+			expect(component.optionsVisible).toBeFalsy();
 		});
 
 		it('"trigger" button', () => {
-			const $event: FocusEvent = { relatedTarget: component.optionsTrigger.nativeElement } as any;
+			const trigger = 'trigger';
+			spyOnProperty(component, 'optionsTrigger', 'get').and.returnValue({ nativeElement: trigger });
+			const $event: FocusEvent = { relatedTarget: trigger } as any;
 			component.optionsVisible = true;
 			component.onBlurOptionsContainer($event);
-			expect(component.optionsVisible).toEqual(true);
+			expect(component.optionsVisible).toBeTruthy();
 		});
 	});
 

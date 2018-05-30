@@ -11,8 +11,9 @@ import { coreFeatureKey, CoreReducer } from '../../../core/reducers/core.reducer
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ClickOutsideDirective } from '@ansyn/status-bar/directives/click-outside.directive';
 
-fdescribe('ComboBoxesComponent', () => {
+describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
 	let fixture: ComponentFixture<ComboBoxesComponent>;
 	const mockComboBoxComponent = MockComponent({ selector: 'ansyn-combo-box', inputs: ['options', 'selected', 'renderFunction', 'comboBoxToolTipDescription'], outputs: ['comboBoxToolTipDescription', 'selectedChange'] });
@@ -22,7 +23,7 @@ fdescribe('ComboBoxesComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ComboBoxesComponent, mockComboBoxComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger],
+			declarations: [ComboBoxesComponent, mockComboBoxComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
 			imports: [StoreModule.forRoot({ [coreFeatureKey]: CoreReducer, [statusBarFeatureKey]: StatusBarReducer }), EffectsModule.forRoot([])],
 			providers: [
 				{
@@ -58,6 +59,8 @@ fdescribe('ComboBoxesComponent', () => {
 	});
 
 	it('eye indicator should be active', () => {
+		component.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
+		fixture.detectChanges();
 		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(true);
 		component.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, false);

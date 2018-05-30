@@ -22,18 +22,18 @@ export class ComboBoxComponent {
 	optionsVisible = false;
 
 	get optionsTrigger(): ElementRef {
-		return this.trigger.optionsTrigger;
+		return this.trigger && this.trigger.optionsTrigger;
 	}
 
 	toggleShow() {
 		this.optionsVisible = !this.optionsVisible;
 		if (this.optionsVisible) {
-			setTimeout(() => this.optionsContainer.nativeElement.focus(), 0);
+			setTimeout(() => this.optionsContainer && this.optionsContainer.nativeElement.focus(), 0);
 		}
 	}
 
 	onBlurOptionsContainer($event: FocusEvent) {
-		if ($event.relatedTarget !== this.optionsTrigger.nativeElement) {
+		if ($event.relatedTarget !== (this.optionsTrigger && this.optionsTrigger.nativeElement)) {
 			this.optionsVisible = false;
 		}
 	}

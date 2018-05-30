@@ -350,7 +350,7 @@ export class MapAppEffects {
 		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
 	}
 
-	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]){
+	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		return (action && prevAction) && (prevAction.payload.mapId === action.payload.mapId);
 	}
 

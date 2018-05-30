@@ -10,6 +10,8 @@ export abstract class FilterMetadata {
 
 	abstract incrementFilteredCount(value: any): void;
 
+	abstract incrementUnFilteredCount(value: any): void;
+
 	abstract postInitializeFilter(value: any): void;
 
 	abstract updateMetadata(value: any): void;

@@ -23,7 +23,7 @@
 
 	<ansyn-filter-counter
 		[count]="enumMetadata.value.count"
-		[filteredCount]="enumMetadata.value.filteredCount">
+		[filteredCount]="enumMetadata.value.isChecked ? enumMetadata.value.filteredCount: enumMetadata.value.unfilteredCount">
 	</ansyn-filter-counter>
 
 </div>

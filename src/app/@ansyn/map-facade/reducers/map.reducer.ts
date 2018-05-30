@@ -39,6 +39,7 @@ export interface IMapState {
 	activeMapId: string;
 	mapsList: CaseMapState[];
 	isLoadingMaps: Map<string, string>,
+	isHiddenMaps: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -48,6 +49,7 @@ export const initialMapState: IMapState = {
 	activeMapId: null,
 	mapsList: [],
 	isLoadingMaps: new Map<string, string>(),
+	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
 };
@@ -63,7 +65,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.IMAGERY_REMOVED: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
 			isLoadingMaps.delete(action.payload.id);
-			return { ...state, isLoadingMaps };
+
+			const isHiddenMaps = new Set(state.isHiddenMaps);
+			isHiddenMaps.delete(action.payload.id);
+
+			return { ...state, isLoadingMaps, isHiddenMaps };
 		}
 
 		case MapActionTypes.VIEW.SET_IS_LOADING: {
@@ -76,6 +82,18 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}
 			return { ...state, isLoadingMaps };
 		}
+
+		case MapActionTypes.VIEW.SET_IS_VISIBLE: {
+			const isHiddenMaps = new Set(state.isHiddenMaps);
+			const { mapId, isVisible } = action.payload;
+			if (!isVisible) {
+				isHiddenMaps.add(mapId);
+			} else {
+				isHiddenMaps.delete(mapId);
+			}
+			return { ...state, ...action.payload };
+		}
+
 		case MapActionTypes.STORE.SET_MAPS_DATA:
 			return { ...state, ...action.payload };
 

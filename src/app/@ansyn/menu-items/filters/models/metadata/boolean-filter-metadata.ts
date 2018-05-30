@@ -9,6 +9,7 @@ export interface BooleanProperty {
 	value: boolean;
 	filteredCount: number;
 	count: number;
+	disabled?: boolean;
 }
 export interface BooleanProperties {
 	true: BooleanProperty;
@@ -23,14 +24,16 @@ export class BooleanFilterMetadata implements FilterMetadata {
 			displayName: 'true',
 			value: true,
 			filteredCount: 0,
-			count: 0
+			count: 0,
+			disabled: false
 		},
 		false: {
 			name: 'false',
 			displayName: 'false',
 			value: true,
 			filteredCount: 0,
-			count: 0
+			count: 0,
+			disabled: false
 		}
 	};
 

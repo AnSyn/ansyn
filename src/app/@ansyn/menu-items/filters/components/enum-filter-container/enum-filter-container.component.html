@@ -3,6 +3,7 @@
 	<div class="left-side">
 		<div class="checkbox">
 			<input type="checkbox"
+				   [disabled]="enumMetadata.value.disabled"
 				   id="checkbox{{ enumMetadata.key }}"
 				   class="regular-checkbox"
 				   [checked]="enumMetadata.value.isChecked ? 'checked' : ''"
@@ -13,7 +14,9 @@
 			<div class="field-name-container">
 				<span class="field-name" [title]="enumMetadata.key">{{enumMetadata.key}}</span>
 			</div>
-			<span class="only-filter" (click)="selectOnly(enumMetadata.key)">only</span>
+			<span class="only-filter"
+				  [hidden]="enumMetadata.value.disabled"
+				  (click)="selectOnly(enumMetadata.key)">only</span>
 		</div>
 	</div>
 

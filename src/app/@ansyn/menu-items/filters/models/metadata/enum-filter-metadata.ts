@@ -6,6 +6,7 @@ export interface EnumFiled {
 	count: number;
 	filteredCount: number;
 	isChecked: boolean;
+	disabled?: boolean;
 }
 
 export class EnumFilterMetadata implements FilterMetadata {

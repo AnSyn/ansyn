@@ -23,6 +23,7 @@ import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-l
 import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { IMap } from '@ansyn/imagery/model/imap';
+import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -39,6 +40,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
+	public isValidPosition;
 
 	static addGroupLayer(layer: any, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
@@ -132,16 +134,23 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+		this.isValidPosition = false;
 		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		this.setMainLayer(layer);
 		this._mapObject.setView(view);
+
+		// set default values to prevent map Assertion error's
+		view.setCenter([0, 0]);
+		view.setRotation(rotation ? rotation : 0);
+		view.setResolution(1);
 
 		if (extent) {
 			this.fitToExtent(extent);
 			if (rotation) {
 				this.mapObject.getView().setRotation(rotation);
 			}
+			this.isValidPosition = true;
 		} else if (position) {
 			return this.setPosition(position);
 		}
@@ -257,26 +266,39 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public updateSize(): void {
+		const center = this._mapObject.getView().getCenter();
+		if (!areCoordinatesNumeric(center)) {
+			return;
+		}
 		this._mapObject.updateSize();
 		this._mapObject.renderSync();
 	}
 
 	public getCenter(): Observable<GeoPoint> {
+		if (!this.isValidPosition) {
+			return Observable.of(null);
+		}
 		const view = this._mapObject.getView();
 		const center = view.getCenter();
+		if (!areCoordinatesNumeric(center)) {
+			return Observable.of(null);
+		}
 		const point = <GeoPoint> turf.geometry('Point', center);
 
 		return this.projectionService.projectAccurately(point, this);
 	}
 
 	calculateRotateExtent(map: OLMap): Observable<CaseMapExtentPolygon> {
+		if (!this.isValidPosition) {
+			return Observable.of(null);
+		}
 		const [width, height] = map.getSize();
 		const topLeft = map.getCoordinateFromPixel([0, 0]);
 		const topRight = map.getCoordinateFromPixel([width, 0]);
 		const bottomRight = map.getCoordinateFromPixel([width, height]);
 		const bottomLeft = map.getCoordinateFromPixel([0, height]);
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
-		const someIsNaN = coordinates[0].some((coords: number[]) => !coords || isNaN(coords[0]) || isNaN(coords[1]));
+		const someIsNaN = !coordinates[0].every(areCoordinatesNumeric);
 		if (someIsNaN) {
 			return Observable.of(null);
 		}
@@ -302,11 +324,17 @@ export class OpenLayersMap extends IMap<OLMap> {
 				view.setCenter(center);
 				view.setRotation(rotation);
 				view.setResolution(resolution);
+				this.isValidPosition = true;
 				return true;
 			});
 	}
 
 	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
+		const rotation = this._mapObject.getView().getRotation();
+		view.setCenter([0, 0]);
+		view.setRotation(rotation ? rotation : 0);
+		view.setResolution(1);
+
 		const { extentPolygon, projectedState } = position;
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = viewProjection.getCode() === projectedState.projection.code;
@@ -315,6 +343,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 			view.setCenter(center);
 			view.setZoom(zoom);
 			view.setRotation(rotation);
+			this.isValidPosition = true;
 			return Observable.of(true);
 		} else {
 			return this.fitRotateExtent(this.mapObject, extentPolygon);

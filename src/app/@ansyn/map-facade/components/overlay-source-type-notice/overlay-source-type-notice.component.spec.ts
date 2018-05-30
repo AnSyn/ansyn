@@ -22,7 +22,8 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 							sourceTypeNotices: {
 								'SRC_TYPE_1': {
 									Default: 'DDD',
-									'SENSOR_TYPE_1': 'blublublu'
+									'SENSOR_TYPE_1': 'blublublu',
+									'SENSOR_TYPE_2': 'My year is $year'
 								}
 							}
 						}
@@ -65,6 +66,16 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 		} as any;
 		fixture.detectChanges();
 		expect(component.title).toEqual('blublublu');
+	});
+
+	it('should find the title for the overlay, value for sensor type, plus year', () => {
+		component.overlay = {
+			sourceType: 'SRC_TYPE_1',
+			sensorType: 'SENSOR_TYPE_2',
+			date: new Date('July 20, 69 00:20:18')
+		} as any;
+		fixture.detectChanges();
+		expect(component.title).toEqual('My year is 1969');
 	});
 
 });

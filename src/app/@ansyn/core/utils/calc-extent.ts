@@ -1,5 +1,5 @@
 import { Feature, MultiPolygon, Polygon as geoPolygon } from 'geojson';
-import { area, intersect, bbox, polygon } from '@turf/turf';
+import { area, intersect, bbox, polygon, unkinkPolygon } from '@turf/turf';
 import { CaseMapExtent } from '../models/case-map-position.model';
 
 export function extentFromGeojson(footprint: MultiPolygon | geoPolygon): CaseMapExtent {
@@ -13,16 +13,22 @@ export function extentFromGeojson(footprint: MultiPolygon | geoPolygon): CaseMap
 }
 
 export function getFootprintIntersectionRatioInExtent(extent: geoPolygon, footprint: MultiPolygon): number {
-	const extentPolygon = polygon(extent.coordinates);
-	const extentArea = area(extentPolygon);
-
 	let intersectionArea = 0;
-	footprint.coordinates.forEach(coordinates => {
-		const intersection = intersect(extentPolygon, polygon(coordinates));
-		if (intersection) {
-			intersectionArea += area(intersection);
-		}
-	});
+	let extentArea = 1;
+	try {
+		const extentPolygon = polygon(extent.coordinates);
+		const extentPolygons = unkinkPolygon(extentPolygon);
+		extentArea = area(extentPolygons);
+
+		footprint.coordinates.forEach(coordinates => {
+			const intersection = intersect(extentPolygon, polygon(coordinates));
+			if (intersection) {
+				intersectionArea += area(intersection);
+			}
+		});
+	} catch (e) {
+		console.warn('getFootprintIntersectionRatioInExtent: turf exception', e);
+	}
 
 	return intersectionArea / extentArea;
 }

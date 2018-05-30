@@ -50,6 +50,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resolver';
 import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
+import { difference } from 'lodash';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -183,6 +184,11 @@ export class FiltersAppEffects {
 				filteredOverlays.forEach((id: string) => {
 					const overlay = overlays.get(id);
 					metadata.incrementFilteredCount(overlay[key.modelName]);
+				});
+				const diffecyea = difference(Array.from(overlays.keys()), filteredOverlays);
+				diffecyea.forEach((id: string) => {
+					const overlay = overlays.get(id);
+					metadata.incrementUnFilteredCount(overlay[key.modelName]);
 				});
 			});
 		});

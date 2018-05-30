@@ -21,7 +21,7 @@
 
 		<ansyn-filter-counter
 			[count]="properties.count"
-			[filteredCount]="properties.filteredCount">
+			[filteredCount]=" properties.value ? properties.filteredCount: properties.unfilteredCount">
 		</ansyn-filter-counter>
 
 	</div>

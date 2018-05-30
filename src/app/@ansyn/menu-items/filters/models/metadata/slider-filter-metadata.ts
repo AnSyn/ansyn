@@ -47,6 +47,9 @@ export class SliderFilterMetadata implements FilterMetadata {
 		this.filteredCount++;
 	}
 
+	incrementUnFilteredCount(value: number): void {
+	}
+
 	resetFilteredCount(): void {
 		this.filteredCount = 0;
 	}

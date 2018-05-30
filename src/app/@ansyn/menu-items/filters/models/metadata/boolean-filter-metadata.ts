@@ -8,6 +8,7 @@ export interface BooleanProperty {
 	displayName: string;
 	value: boolean;
 	filteredCount: number;
+	unfilteredCount: number;
 	count: number;
 	disabled?: boolean;
 }
@@ -24,6 +25,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 			displayName: 'true',
 			value: true,
 			filteredCount: 0,
+			unfilteredCount: 0,
 			count: 0,
 			disabled: false
 		},
@@ -32,6 +34,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 			displayName: 'false',
 			value: true,
 			filteredCount: 0,
+			unfilteredCount: 0,
 			count: 0,
 			disabled: false
 		}
@@ -59,6 +62,14 @@ export class BooleanFilterMetadata implements FilterMetadata {
 			this.properties.true.count += 1;
 		} else {
 			this.properties.false.count += 1;
+		}
+	}
+
+	incrementUnFilteredCount(value: boolean): void {
+		if (value) {
+			this.properties.true.unfilteredCount += 1;
+		} else {
+			this.properties.false.unfilteredCount += 1;
 		}
 	}
 

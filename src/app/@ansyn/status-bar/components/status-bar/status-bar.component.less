@@ -33,7 +33,7 @@
 			width: 100%;
 			border-color: white;
 			justify-content: space-around;
-			.selectedCase {
+			/deep/ .selectedCase {
 				transform: translateX(0);
 			}
 		}
@@ -115,129 +115,6 @@
 			}
 		}
 
-		.combo-boxes {
-			display: flex;
-			padding: 0 10px;
-			justify-content: space-between;
-			flex: 1;
-			height: 100%;
-			position: relative;
-
-			.combo-box-container {
-				.combo-box-width {
-					width: 140px;
-				}
-				&.with-buttons {
-					/deep/ .trigger {
-						padding-right: 14px;
-					}
-				}
-
-			.buttons {
-				background-color: black;
-				height: 100%;
-				align-items: center;
-				display: flex;
-				border: 1px solid white;
-				border-left: none;
-				box-sizing: border-box;
-				.icon-edit{
-					font-size: 17px;
-				}
-				&::before {
-					content: "";
-					display: block;
-					width: 10px;
-					height: 10px;
-					top: 12px;
-					background: inherit;
-					transform: translateX(-6px) rotate(45deg);
-					position: absolute;
-					border: 1px solid white;
-					border-right: none;
-					border-top: none;
-				}
-				&.active {
-					background-color: #f32ee1;
-				}
-
-					button {
-						background: transparent;
-						outline: none;
-						color: white;
-						border: none;
-						font-size: 10px;
-
-						&.toggle-icon {
-							position: relative;
-							color: rgba(255, 255, 255, 0.5);
-
-							&.active2 {
-								color: rgba(255, 255, 255, 1);
-							}
-						}
-					}
-				}
-			}
-
-			/deep/ i.block-icon {
-				font-size: 20px;
-				margin-right: 8px;
-			}
-
-			.data-input-filter {
-				width: 100%;
-				min-height: 450px;
-				min-width: 220px;
-				padding: 10px;
-				background: rgba(0, 0, 0, 1);
-				background-clip: padding-box;
-			}
-
-			.time-selection {
-				background: white;
-				width: 230px;
-				height: 97px;
-				padding: 8px 12px 13px;
-				flex-direction: column;
-				border: 1px solid dimgray;
-			}
-		}
-
-		.navigation {
-			background: white;
-			display: flex;
-			flex-shrink: 0;
-			align-self: flex-end;
-			align-items: center;
-			height: 100%;
-			padding: 0 10px;
-			box-sizing: border-box;
-			z-index: @z-index-status-bar-navigation-area;
-
-			i {
-				font-size: 25px;
-			}
-
-			button {
-				position: relative;
-				outline: none;
-				width: 24px;
-				height: 24px;
-				border: none;
-				padding: 0;
-				margin: 2px;
-				background: #D8D8D8;
-
-				&.transparent {
-					background: transparent;
-				}
-
-				&.active {
-					box-shadow: 0 0 2px 2px #666;
-				}
-			}
-		}
 	}
 }
 
@@ -250,11 +127,12 @@
 	@media screen and (max-width: @screen-size) {
 		:host {
 			.status-bar {
-				.selectedCase {
+				/deep/ .selectedCase {
 					font-size: 12px;
 				}
-				.combo-boxes .combo-box-container .combo-box-width {
-					width: extract(@screen-list-width, @i);
+
+				/deep/ .combo-box-width {
+					width: extract(@screen-list-width, @i) !important;
 				}
 			}
 		}

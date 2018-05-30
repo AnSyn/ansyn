@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { ExpandAction, UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
 import { StatusBarModule } from '../../status-bar.module';
 import { EffectsModule } from '@ngrx/effects';
@@ -11,33 +11,28 @@ import { statusBarFlagsItemsEnum } from '../../models/status-bar-flag-items.mode
 import { GoAdjacentOverlay } from '@ansyn/core/actions/core.actions';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { ALERTS } from '@ansyn/core/alerts/alerts.model';
+import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
+import { MockComponent } from '@ansyn/core/test/mock-component';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
 	let fixture: ComponentFixture<StatusBarComponent>;
 	let store: Store<IStatusBarState>;
+	const mockImageryStatusComponent = MockComponent({ selector: 'ansyn-imagery-status', inputs: ['overlay', 'active', 'mapId'], outputs: ['backToWorldView']})
+	const mockSelectedCaseBarComponent = MockComponent({ selector: 'ansyn-selected-case-bar', inputs: ['selectedCaseName'] });
+	const mockComboBoxes = MockComponent({ selector: 'ansyn-combo-boxes' });
+	const mockNavigationBar = MockComponent({ selector: 'ansyn-navigation-bar' });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), StatusBarModule],
-			providers: [{ provide: LoggerConfig, useValue: {} },
-				{
-					provide: StatusBarConfig,
-					useValue: { toolTips: {}, dataInputFiltersConfig: { filters: [] } }
-				},
-				{
-					provide: ORIENTATIONS,
-					useValue: comboBoxesOptions.orientations
-				},
-				{
-					provide: TIME_FILTERS,
-					useValue: comboBoxesOptions.timeFilters
-				},
-				{
-					provide: GEO_FILTERS,
-					useValue: comboBoxesOptions.geoFilters
-				},
-				{ provide: ALERTS, useValue: [] }
+			imports: [StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer, [coreFeatureKey]: CoreReducer }), EffectsModule.forRoot([])],
+			declarations: [StatusBarComponent,
+				/* mock */
+				mockImageryStatusComponent,
+				mockSelectedCaseBarComponent,
+				mockComboBoxes,
+				mockNavigationBar
 			]
 		})
 			.compileComponents();
@@ -54,71 +49,6 @@ describe('StatusBarComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-
-	it('eye indicator should be active', () => {
-		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
-		expect(result).toBe(true);
-		component.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, false);
-		fixture.detectChanges();
-		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
-		expect(result).toBe(false);
-	});
-
-	describe('check click on pinPoint flags', () => {
-		beforeEach(() => {
-			spyOn(store, 'dispatch');
-		});
-
-		it('edit-pinpoint', () => {
-			fixture.nativeElement.querySelector('.edit-pinpoint').click();
-			fixture.detectChanges();
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch }));
-		});
-		it('button-eye', () => {
-			fixture.nativeElement.querySelector('.eye-button').click();
-			fixture.detectChanges();
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
-		});
-	});
-
-	describe('clicks', () => {
-		it('clickGoPrev should dispatch action GoPrevAction', () => {
-			spyOn(component.store, 'dispatch');
-			component.clickGoAdjacent(false);
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({ isNext: false }));
-		});
-		it('clickGoNext should dispatch action GoNextAction', () => {
-			spyOn(component.store, 'dispatch');
-			component.clickGoAdjacent(true);
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({ isNext: true }));
-		});
-		it('clickExpand should dispatch action ExpandAction', () => {
-			spyOn(component.store, 'dispatch');
-			component.clickExpand();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new ExpandAction());
-		});
-	});
-
-	[{ k: 39, n: 'goNextActive', f: 'clickGoAdjacent' }, {
-		k: 37,
-		n: 'goPrevActive',
-		f: 'clickGoAdjacent'
-	}].forEach(key => {
-		it(`onkeyup should call ${key.n} when keycode = "${key.k}"`, () => {
-			spyOn(component, <'clickGoAdjacent'>key.f);
-			expect(component[key.n]).toEqual(false);
-			const $event = {
-				which: key.k,
-				currentTarget: { document: { activeElement: {} } }
-			};
-			component.onkeydown(<any>$event);
-			expect(component[key.n]).toEqual(true);
-
-			component.onkeyup(<any>$event);
-			expect(component[key.n]).toEqual(false);
-			expect(component[key.f]).toHaveBeenCalled();
-		});
-	});
 });
 
 

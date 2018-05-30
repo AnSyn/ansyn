@@ -15,12 +15,17 @@ import { CoreConfig } from '@ansyn/core/models/core.config';
 import { PlanetOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet-source-provider';
 import { ContextConfig } from '@ansyn/context/models/context.config';
 import { LoginConfig } from '@ansyn/login/services/login-config.service';
+import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
 
 export const getProviders = (conf): any[] => {
 	return [
 		{
 			provide: IdahoOverlaysSourceConfig,
 			useValue: conf.idahoOverlaysSourceConfig
+		},
+		{
+			provide: OpenAerialOverlaysSourceConfig,
+			useValue: conf.openAerialOverlaysSourceConfig
 		},
 		{
 			provide: PlanetOverlaysSourceConfig,

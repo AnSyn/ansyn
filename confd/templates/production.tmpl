@@ -120,6 +120,9 @@
 			"Default": "Open California Satellite Imagery © 2016 Planet Labs Inc. licensed under CC BY-SA 4.0.",
 			"Sentinel2L1C": "© Copernicus Sentinel data $year",
 			"Landsat8L1G": "© USGS/NASA Landsat Program"
+		},
+		"OPEN_AERIAL": {
+			"Default": "© Copyright 2010, OpenAerialMap contributors"
 		}
     }
   },
@@ -957,12 +960,58 @@
         }
       ],
       "blacklist": []
-    }
+    },
+    "OPEN_AERIAL": {
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": [
+					null
+				],
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": []
+	}
   },
   "idahoOverlaysSourceConfig": {
     "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
     "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
     "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
+  },
+  "openAerialOverlaysSourceConfig": {
+  	"baseUrl": "https://api.openaerialmap.org/meta"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",

@@ -117,7 +117,6 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.bestResolution = openAerialElement.gsd;
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms;
-		overlay.imageUrl = openAerialElement.properties.tms.replace(/access_token=*./, 'access_token=pk.eyJ1IjoieWFpcnRhd2lsIiwiYSI6ImNqaHQzNHNncjA2MXkzcWxtMGhwM3gxODUifQ.rgJCy_46ybMl5MFPfsyTLw');
 		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;
 		overlay.date = new Date(openAerialElement.acquisition_end);
 		overlay.photoTime = openAerialElement.acquisition_end;

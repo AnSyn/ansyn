@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { layersStateSelector } from '../../reducers/layers.reducer';
 import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { groupBy } from 'lodash';
+
 
 @Component({
 	selector: 'ansyn-layer-managers',
@@ -13,9 +15,14 @@ import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/
 })
 
 export class LayersManagerComponent implements OnInit {
-
-	LayersContainers$: Observable<LayersContainer[]> = this.store.select(selectLayersContainers);
 	annotationLayerChecked;
+
+	public LayersContainers$: Observable<any> = this.store.select(selectLayersContainers)
+		.distinctUntilChanged()
+		.map((layersContainer: LayersContainer[]) => {
+			const typeGroupedLayersContainer = groupBy(layersContainer, o => o.type);
+			return Object.keys(typeGroupedLayersContainer).map(layer => typeGroupedLayersContainer[layer]);
+		});
 
 	constructor(protected store: Store<ILayerState>) {
 	}
@@ -26,11 +33,11 @@ export class LayersManagerComponent implements OnInit {
 			.subscribe(result => {
 				this.annotationLayerChecked = result;
 			});
+		this.LayersContainers$.subscribe();
 	}
 
 	annotationLayerClick() {
 		this.store.dispatch(new ToggleDisplayAnnotationsLayer(!this.annotationLayerChecked));
 	}
-
 
 }

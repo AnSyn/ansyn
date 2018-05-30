@@ -1,13 +1,13 @@
 <div class="container">
 
 	<div class="title-row">
-		<span class="title">{{ collection.type }} Layers</span>
+		<span class="title">{{ collection[0].type }} Layers</span>
 		<button [@rotateArrow]="show" #downArrow class="down-arrow"
 				(click)="show = !show">
 		</button>
 	</div>
 
-	<div class="layers" *ngFor="let layer of collection.dataLayers" [@layersTrigger]="show">
+	<div class="layers" *ngFor="let layer of collection" [@layersTrigger]="show">
 		<div class="left-side">
 			<div class="checkbox">
 				<ansyn-checkbox

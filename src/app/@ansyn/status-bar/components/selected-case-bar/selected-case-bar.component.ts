@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CopySelectedCaseLinkAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 	templateUrl: './selected-case-bar.component.html',
 	styleUrls: ['./selected-case-bar.component.less']
 })
-export class SelectedCaseBarComponent implements OnInit {
+export class SelectedCaseBarComponent {
 	@Input() selectedCaseName;
 
 	constructor(public store: Store<IStatusBarState>) {
@@ -16,9 +16,6 @@ export class SelectedCaseBarComponent implements OnInit {
 
 	copyLink(): void {
 		this.store.dispatch(new CopySelectedCaseLinkAction());
-	}
-
-	ngOnInit() {
 	}
 
 }

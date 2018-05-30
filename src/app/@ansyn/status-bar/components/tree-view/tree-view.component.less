@@ -3,9 +3,12 @@
 @import "core/less/tooltip";
 @import "core/less/slider-checkbox.less";
 
-@popup-padding-bottom: 15px;
-
 :host {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translateY(calc(~'-100% - 15px'));
+
 	/deep/ .treeview-container .row-item {
 		display: flex;
 		color: ghostwhite;
@@ -14,17 +17,8 @@
 	.data-input-filter {
 		background: rgba(0, 0, 0, 1);
 		background-clip: padding-box;
-		padding: 4px 20px;
+		padding: 10px 20px;
 		box-shadow: 0 0 2px 1px white;
-	}
-
-	.pop-content {
-		background: black;
-		position: absolute;
-		transform: translate(0, -100%);
-		top: 0;
-		left: 4px;
-		display: flex;
 	}
 
 	.tree-view-main {

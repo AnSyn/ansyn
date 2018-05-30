@@ -1,5 +1,3 @@
-@popup-padding-bottom: 15px;
-
 :host {
 
 	.block {
@@ -20,28 +18,6 @@
 
 		.icon-status-bar-imagery-count {
 			font-size: 16px;
-		}
-	}
-
-	.pop-content {
-		visibility: hidden;
-		opacity: 0;
-		transition: .4s;
-		background: transparent;
-		position: absolute;
-		transform: translate(0, 0);
-		top: 0;
-		left: 0;
-		display: flex;
-	}
-
-	.pop-hover:hover .pop-content, .pop-content.visible {
-		visibility: visible;
-		opacity: 1;
-		padding-bottom: @popup-padding-bottom;
-		transform: translate(0, -100%);
-		&.time-selection {
-			transform: translateY(calc(~'-100% - @{popup-padding-bottom}'));
 		}
 	}
 
@@ -122,15 +98,6 @@
 			padding: 10px;
 			background: rgba(0, 0, 0, 1);
 			background-clip: padding-box;
-		}
-
-		.time-selection {
-			background: white;
-			width: 230px;
-			height: 97px;
-			padding: 8px 12px 13px;
-			flex-direction: column;
-			border: 1px solid dimgray;
 		}
 	}
 }

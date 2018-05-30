@@ -11,4 +11,7 @@ export class ComboBoxTriggerComponent {
 	@Input() comboBoxToolTipDescription;
 	@Input() render;
 	@ViewChild('optionsTrigger') optionsTrigger: ElementRef;
+
+	constructor(public elementRef: ElementRef) {
+	}
 }

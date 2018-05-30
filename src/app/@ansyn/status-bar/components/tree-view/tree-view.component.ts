@@ -1,7 +1,4 @@
-import {
-	Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, OnInit,
-	Output
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -11,7 +8,7 @@ import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 import { isEqual } from 'lodash';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
-
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -19,14 +16,12 @@ import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 	styleUrls: ['./tree-view.component.less']
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
-
 	@Output() closeTreeView = new EventEmitter<any>();
-	@Input() triggerId: string;
 
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 
-	dataInputFilter$ = this.store.select(selectDataInputFilter);
+	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
 
 	onDataInputFilterChange$ = this.dataInputFilter$
 		.distinctUntilChanged()
@@ -59,14 +54,13 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	@HostListener('document:click', ['$event']) onClickOutside($event) {
-		const notInclude = !$event.path.some((elem) => {
-			return elem === this.elementRef.nativeElement || elem.id === this.triggerId;
-		});
-		if (notInclude) {
-			this.closeTreeView.emit()
-		}
-	}
+	// @HostListener('document:click', ['$event']) onClickOutside($event) {
+	// 	const self = $event.path.includes(this.elementRef.nativeElement);
+	// 	const trigger = $event.path.includes(this.trigger.nativeElement);
+	// 	if (!self && !trigger) {
+	// 		this.closeTreeView.emit()
+	// 	}
+	// }
 
 	set selectedFilters(value) {
 		this._selectedFilters = value;

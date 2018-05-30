@@ -3,7 +3,7 @@
 	<!-- data input filter-->
 	<div class="combo-box-container block">
 			<ansyn-combo-box-trigger
-				id="trigger"
+				#trigger
 				class="combo-box-width"
 				(click)="toggleDataInputFilterIcon()"
 				icon="icon-status-bar-input-data"
@@ -11,9 +11,14 @@
 				[comboBoxToolTipDescription]="toolTips.dataInputFilter"
 				[render]="dataInputFiltersTitle">
 			</ansyn-combo-box-trigger>
-		<ansyn-tree-view (closeTreeView)="toggleDataInputFilterIcon()"
-						 triggerId="trigger"
-						 class="ansyn-tree-view" *ngIf="dataInputFilterExpand"></ansyn-tree-view>
+
+		<ansyn-tree-view [@fade]
+						 *ngIf="dataInputFilterExpand"
+						 (ansynClickOutside)="toggleDataInputFilterIcon()"
+						 [trigger]="trigger.elementRef.nativeElement"
+
+						 (closeTreeView)="toggleDataInputFilterIcon()"
+						 class="ansyn-tree-view" ></ansyn-tree-view>
 	</div>
 
 	<!-- Orientation -->
@@ -73,18 +78,23 @@
 			<button (click)="toggleTimelineStartEndSearch()"
 					[attr.tooltip-value]="toolTips.timeFilterEdit"
 					tooltip-class="top right"
+					#timePickerTrigger
 					class="relative">
 				<i class="icon-edit"></i>
 			</button>
 		</div>
-		<div class="pop-content time-selection" [class.visible]="timeSelectionEditIcon">
-			<ansyn-timeline-timepicker
-				[startDatePickerValue]="(time)?.from"
-				[endDatePickerValue]="(time)?.to"
-				(closeComponent)="toggleTimelineStartEndSearch()"
-				(applyDate)="applyTimelinePickerResult($event)">
-			</ansyn-timeline-timepicker>
-		</div>
+
+		<ansyn-timeline-timepicker
+			[@fade]
+			*ngIf="timeSelectionEditIcon"
+			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
+			[trigger]="timePickerTrigger"
+
+			[startDatePickerValue]="(time)?.from"
+			[endDatePickerValue]="(time)?.to"
+			(closeComponent)="toggleTimelineStartEndSearch()"
+			(applyDate)="applyTimelinePickerResult($event)">
+		</ansyn-timeline-timepicker>
 	</div>
 
 	<!-- Layout -->

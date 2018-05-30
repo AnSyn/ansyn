@@ -31,11 +31,25 @@ import { isEqual } from 'lodash';
 import { TreeviewItem } from 'ngx-treeview';
 import { Actions } from '@ngrx/effects';
 import { SetComboBoxesProperties, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
+
+const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
+	transition(':enter', [
+		style({ opacity: 0, transform: 'translateY(-100%)' }),
+		animate('0.2s', style({ opacity: 1, transform: 'translateY(calc(-100% - 15px))' }))
+	]),
+	transition(':leave', [
+		style({ opacity: 1, transform: 'translateY(calc(-100% - 15px))'  }),
+		animate('0.2s', style({ opacity: 0, transform: 'translateY(-100%)' }))
+	])
+]);
 
 @Component({
 	selector: 'ansyn-combo-boxes',
 	templateUrl: './combo-boxes.component.html',
-	styleUrls: ['./combo-boxes.component.less']
+	styleUrls: ['./combo-boxes.component.less'],
+	animations: [fadeAnimations]
 })
 export class ComboBoxesComponent implements OnInit, OnDestroy {
 	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
@@ -47,7 +61,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout);
 
 	dataInputFilters$ = this.store.select(selectDataInputFilter)
-		.distinctUntilChanged()
 		.filter((caseDataInputFiltersState: CaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters))
 		.do((caseDataInputFiltersState: CaseDataInputFiltersState) => {
 			const isFull = this.statusBarConfig.dataInputFiltersConfig.filters.every((filterConfig: TreeviewItem) => {
@@ -120,8 +133,10 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
 
-	toggleTimelineStartEndSearch() {
-		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
+	toggleTimelineStartEndSearch($event?: any) {
+		if (!$event || !$event.path.map(({ classList }) => classList).filter(Boolean).some((classList) => classList.contains('flatpickr-calendar'))) {
+			this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
+		}
 	}
 
 	applyTimelinePickerResult(time: CaseTimeState) {

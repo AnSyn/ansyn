@@ -19,6 +19,7 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { SelectedCaseBarComponent } from './components/selected-case-bar/selected-case-bar.component';
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-b
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, SelectedCaseBarComponent, ComboBoxTriggerComponent],
+	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, SelectedCaseBarComponent, ComboBoxTriggerComponent, ClickOutsideDirective],
 	providers: [
 		{
 			provide: ORIENTATIONS,

@@ -1,25 +1,27 @@
-<div class="time-row" tabindex="0">
-	<span>Start time:</span>
-	<label class="time-row-button">
-		<input type="date" #startDatePicker>
-		<i class="icon-status-bar-time"></i>
-	</label>
-</div>
-
-<div class="time-row">
-	<span>End time:</span>
-	<label class="time-row-button">
-		<input type="date" #endDatePicker>
-		<i class="icon-status-bar-time"></i>
-	</label>
-</div>
-
-<div class="control-buttons">
-	<div class="error">
-		{{error}}
+<div class="pop-content time-selection" [class.visible]="timeSelectionEditIcon">
+	<div class="time-row" tabindex="0">
+		<span>Start time:</span>
+		<label class="time-row-button">
+			<input type="date" #startDatePicker>
+			<i class="icon-status-bar-time"></i>
+		</label>
 	</div>
-	<div>
-		<a (click)="closeComponent.emit()" class="timelinepicker-cancel">Cancel</a>
-		<a (click)="applyTimepickerEvent()" class="timelinepicker-apply">Ok</a>
+
+	<div class="time-row">
+		<span>End time:</span>
+		<label class="time-row-button">
+			<input type="date" #endDatePicker>
+			<i class="icon-status-bar-time"></i>
+		</label>
+	</div>
+
+	<div class="control-buttons">
+		<div class="error">
+			{{error}}
+		</div>
+		<div>
+			<a (click)="closeComponent.emit()" class="timelinepicker-cancel">Cancel</a>
+			<a (click)="applyTimepickerEvent()" class="timelinepicker-apply">Ok</a>
+		</div>
 	</div>
 </div>

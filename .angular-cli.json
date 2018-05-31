@@ -23,7 +23,7 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less"
+				"./app/@ansyn/assets/styles/styles.less"
 			],
 			"stylePreprocessorOptions": {
 				"includePaths": [
@@ -58,7 +58,7 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less"
+				"./app/@ansyn/assets/styles/styles.less"
 			],
 			"stylePreprocessorOptions": {
 				"includePaths": [
@@ -92,7 +92,7 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less"
+				"./app/@ansyn/assets/styles/styles.less"
 			],
 			"stylePreprocessorOptions": {
 				"includePaths": [

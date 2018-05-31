@@ -16,6 +16,7 @@ import { PlanetOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-s
 import { ContextConfig } from '@ansyn/context/models/context.config';
 import { LoginConfig } from '@ansyn/login/services/login-config.service';
 import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
+import { configuration } from '../../../../configuration/configuration';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -92,6 +93,6 @@ export const getProviders = (conf): any[] => {
 	];
 };
 
-export const fetchConfigProviders = () => fetch('/assets/config/app.config.json')
+export const fetchConfigProviders = () => fetch(configuration.configPath)
 	.then(response => response.json())
 	.then(getProviders);

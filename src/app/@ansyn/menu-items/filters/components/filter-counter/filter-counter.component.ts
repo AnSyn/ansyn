@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class FilterCounterComponent {
 	@Input() count = 0;
 	@Input() filteredCount = 0;
+	@Input() isChecked = true;
 }

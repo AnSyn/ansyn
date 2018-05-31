@@ -20,7 +20,6 @@ import {
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
 import {
-	overlaysStateSelector,
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
@@ -31,16 +30,12 @@ import {
 	FiltersActionTypes,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction,
-	UpdateFacetsAction
+	ResetFiltersAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { selectFavoriteOverlays } from '@ansyn/core/reducers/core.reducer';
-import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { CaseFacetsState, CaseFilter, FilterType } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
@@ -173,19 +168,22 @@ export class FiltersAppEffects {
 
 	@Effect({ dispatch: false })
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys)
-		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap))
-		.filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>]) => {
+		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays))
+		.filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>, Overlay[]]) => {
 			return overlays.size > 0;
 		})
-		.do(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>]) => {
-			Array.from(filterState.filters).forEach(([key, metadata]: [Filter, FilterMetadata]) => {
+		.do(([filteredOverlays, filterState, overlays, favoriteOverlays]: [string[], IFiltersState, Map<string, Overlay>, Overlay[]]) => {
+
+			Array.from(filterState.filters).forEach(([metadataKey, metadata]: [Filter, FilterMetadata]) => {
 				metadata.resetFilteredCount();
 				filteredOverlays.forEach((id: string) => {
 					const overlay = overlays.get(id);
-					metadata.incrementFilteredCount(overlay[key.modelName]);
+					metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
 				});
+				this.filtersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState);
 			});
 		});
+
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

@@ -11,7 +11,7 @@ export const MenuActionTypes = {
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
-	SET_CLICK_OUTSIDE: 'SET_CLICK_OUTSIDE'
+	SET_AUTO_CLODE: 'SET_AUTO_CLODE'
 };
 
 export class InitializeMenuItemsAction implements Action {
@@ -63,8 +63,8 @@ export class ContainerChangedTriggerAction implements Action {
 	}
 }
 
-export class SetClickOutside implements Action {
-	type = MenuActionTypes.SET_CLICK_OUTSIDE;
+export class SetAutoClose implements Action {
+	type = MenuActionTypes.SET_AUTO_CLODE;
 
 	constructor(public payload: boolean) {
 	}

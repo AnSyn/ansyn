@@ -1,17 +1,16 @@
-import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu';
-import { CasesReducer } from '@ansyn/menu-items/cases';
+import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
+import { CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
-import { ContainerChangedTriggerAction, SetClickOutside } from '@ansyn/menu/actions/menu.actions';
+import { ContainerChangedTriggerAction, SetAutoClose } from '@ansyn/menu/actions/menu.actions';
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { casesFeatureKey } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { SetAutoCloseMenu } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -54,19 +53,8 @@ describe('MenuAppEffects', () => {
 
 	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {
 		actions = hot('--a--', { a: new ContainerChangedTriggerAction() });
-		const expectedResults = cold('--(ab)--', { a: new UpdateMapSizeAction(), b: new RedrawTimelineAction(true) });
+		const expectedResults = cold('--(ab)--', { a: new UpdateMapSizeAction(), b: new RedrawTimelineAction() });
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
-	});
-
-	it('@Effect autoCloseMenu$', () => {
-		const payload = true;
-		actions = hot('--a--', {
-			a: new SetAutoCloseMenu(payload)
-		});
-		const expectedResult = cold('--b--', {
-			b: new SetClickOutside(payload)
-		});
-		expect(menuAppEffects.autoCloseMenu$).toBeObservable(expectedResult);
 	});
 
 });

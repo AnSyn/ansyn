@@ -13,14 +13,45 @@ import VectorSource from 'ol/source/vector';
 import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
-import { VisualizerStateStyle } from '../models/visualizer-state';
-import { IVisualizerEntity } from '@ansyn/imagery/model';
-import { getPointByGeometry } from '@ansyn/core/utils';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import {
+	ImageryVisualizer, IVisualizerEntity,
+	VisualizerInteractions
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs/Observable';
+import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { Actions } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { getPointByGeometry } from '@ansyn/core/utils/geo';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
+@ImageryVisualizer({
+	supported: [OpenLayersMap],
+	deps: [Store]
+})
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
+
+	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId)
+		.map((activeMapId) => activeMapId === this.mapId)
+		.distinctUntilChanged();
+
+	isMeasureToolActive$: Observable<boolean> = this.store$.select(toolsStateSelector)
+		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
+		.map((flags) => flags.get(toolsFlags.isMeasureToolActive))
+		.distinctUntilChanged();
+
+	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
+		.do(([isActiveMap, isMeasureToolActive]) => {
+			if (isActiveMap && isMeasureToolActive) {
+				this.createInteraction();
+			} else {
+				this.clearInteractionAndEntities();
+			}
+		});
+
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
 		fill: new Fill({
@@ -75,7 +106,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor() {
+	constructor(protected store$: Store<any>) {
 		super(null, {
 			initial: {
 				stroke: {
@@ -96,6 +127,13 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 
 		this.geoJsonFormat = new GeoJSON();
+	}
+
+	onInit() {
+		super.onInit();
+		this.subscriptions.push(
+			this.onChanges$.subscribe()
+		);
 	}
 
 	onResetView(): Observable<boolean> {

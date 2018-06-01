@@ -1,20 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
-	ContextMenuShowAction,
 	MapInstanceChangedAction,
-	MapSingleClickAction,
 	PositionChangedAction,
-	ImageryPluginsInitialized
-} from '../actions';
-import { range } from 'lodash';
-import { UUID } from 'angular2-uuid';
-import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
+} from '../actions/map.actions';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
 import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { Observable } from 'rxjs/Observable';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 @Injectable()
 export class MapFacadeService {
@@ -30,35 +26,6 @@ export class MapFacadeService {
 		return overlay.isGeoRegistered;
 	}
 
-	static setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
-		const mapsList: CaseMapState[] = [];
-		const activeMap = MapFacadeService.mapById(oldMapsList, oldActiveMapId);
-
-		range(layout.mapsCount).forEach((index) => {
-			if (oldMapsList[index]) {
-				mapsList.push(oldMapsList[index]);
-			} else {
-				const mapStateCopy: CaseMapState = {
-					id: UUID.UUID(),
-					data: { position: null },
-					mapType: defaultMapType,
-					flags: {}
-				};
-				mapsList.push(mapStateCopy);
-			}
-		});
-
-		const mapsListChange = { mapsList };
-
-		/* activeMapId */
-		const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
-		if (notExist) {
-			mapsList[mapsList.length - 1] = activeMap;
-		}
-
-		return { ...mapsListChange };
-	}
-
 	static activeMap(mapState: IMapState): CaseMapState {
 		return MapFacadeService.mapById(mapState.mapsList, mapState.activeMapId);
 	}
@@ -68,7 +35,7 @@ export class MapFacadeService {
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
-		this.mapsList$.subscribe((mapsList) => this.mapsList = mapsList);
+		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
 	}
 
 	initEmitters(id: string) {
@@ -76,10 +43,7 @@ export class MapFacadeService {
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
 			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
-			communicator.singleClick.subscribe(this.singleClick.bind(this)),
-			communicator.contextMenu.subscribe(this.contextMenu.bind(this)),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
-			communicator.imageryPluginsInitialized.subscribe(this.imageryPluginsInitialized.bind(this))
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}
@@ -96,18 +60,5 @@ export class MapFacadeService {
 	positionChanged($event: { id: string, position: CaseMapPosition }) {
 		const mapInstance = <CaseMapState> MapFacadeService.mapById(this.mapsList, $event.id);
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
-	}
-
-
-	singleClick(event) {
-		this.store.dispatch(new MapSingleClickAction(event));
-	}
-
-	contextMenu(event) {
-		this.store.dispatch(new ContextMenuShowAction(event));
-	}
-
-	imageryPluginsInitialized(event) {
-		this.store.dispatch(new ImageryPluginsInitialized(event));
 	}
 }

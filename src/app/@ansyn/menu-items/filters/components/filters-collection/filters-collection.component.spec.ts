@@ -5,10 +5,10 @@ import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { filtersConfig } from '../../services/filters.service';
 import { MockComponent } from '@ansyn/core/test/mock-component';
-import { ToggleOnlyFavoriteAction } from '../../actions/filters.actions';
 import { Subject } from 'rxjs/Subject';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -58,10 +58,10 @@ describe('FiltersCollectionComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('showOnlyFavorites call to Action ToggleOnlyFavoriteAction', () => {
+	it('showOnlyFavorites call to Action UpdateFacetsAction', () => {
 		spyOn(store, 'dispatch');
 		component.showOnlyFavorites({});
-		const result = new ToggleOnlyFavoriteAction();
+		const result = new UpdateFacetsAction({ showOnlyFavorites: !component.onlyFavorite });
 		expect(store.dispatch).toHaveBeenCalledWith(result);
 	});
 
@@ -69,13 +69,13 @@ describe('FiltersCollectionComponent', () => {
 		expect(component.disableShowOnlyFavoritesSelection).toBeFalsy();
 
 		handler.next({
-			showOnlyFavorites: false,
+			facets: { showOnlyFavorites: false },
 			enableOnlyFavoritesSelection: true
 		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
 
 		handler.next({
-			showOnlyFavorites: true,
+			facets: { showOnlyFavorites: true },
 			enableOnlyFavoritesSelection: true
 		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
@@ -83,20 +83,20 @@ describe('FiltersCollectionComponent', () => {
 		// we don't want disableShowOnlyFavoritesSelection to change
 		component.disableShowOnlyFavoritesSelection = false;
 		handler.next({
-			showOnlyFavorites: true,
+			facets: { showOnlyFavorites: true },
 			enableOnlyFavoritesSelection: false
 		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(false);
 
 		component.disableShowOnlyFavoritesSelection = true;
 		handler.next({
-			showOnlyFavorites: true,
+			facets: { showOnlyFavorites: true },
 			enableOnlyFavoritesSelection: false
 		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(true);
 
 		handler.next({
-			showOnlyFavorites: false,
+			facets: { showOnlyFavorites: false },
 			enableOnlyFavoritesSelection: false
 		});
 		expect(component.disableShowOnlyFavoritesSelection).toBe(true);

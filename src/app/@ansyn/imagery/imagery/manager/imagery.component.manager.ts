@@ -2,15 +2,15 @@ import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
 import { ImageryMapComponent } from '../../model/imagery-map-component';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
-import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
+import { BaseMapSourceProvider } from '../../model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
-import { CaseMapPosition } from '@ansyn/core';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/fromPromise';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { Point } from 'geojson';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export interface MapInstanceChanged {
 	id: string;
@@ -22,10 +22,7 @@ export class ImageryComponentManager {
 
 	private _activeMap: IMap;
 	private _subscriptions = [];
-	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	public singleClick: EventEmitter<any> = new EventEmitter<any>();
-	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged> = new EventEmitter<MapInstanceChanged>();
 	public activeMapName: string;
 
@@ -71,7 +68,7 @@ export class ImageryComponentManager {
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this._activeMap) {
-			return this._activeMap.resetView(layer, position, extent).switchMap(() => this.resetPlugins());
+			return this._activeMap.resetView(layer, position, extent).mergeMap(() => this.resetPlugins());
 		}
 
 		return Observable.of(true);
@@ -88,17 +85,20 @@ export class ImageryComponentManager {
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
-		let relevantMapConfig: IMapConfig = null;
-		this.config.geoMapsInitialMapSource.forEach((mapConfig) => {
-			if (mapConfig.mapType === mapType) {
-				relevantMapConfig = mapConfig;
-			}
-		});
+		const relevantMapConfig: IMapConfig = this.config.geoMapsInitialMapSource.find((mapConfig) => mapConfig.mapType === mapType);
 		if (!relevantMapConfig) {
 			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
 		}
-		const sourceProvider = this._baseSourceProviders.find((item) => item.mapType === relevantMapConfig.mapType && item.sourceType === relevantMapConfig.mapSource);
-		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata, this.id);
+		const sourceProvider = this.getMapSourceProvider({mapType: relevantMapConfig.mapType, sourceType: relevantMapConfig.mapSource});
+		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata);
+	}
+
+	getMapSourceProvider({ mapType, sourceType }): BaseMapSourceProvider {
+		return this._baseSourceProviders.find((baseSourceProvider: BaseMapSourceProvider) => {
+			const source = baseSourceProvider.sourceType === sourceType;
+			const supported = baseSourceProvider.supported.includes(mapType);
+			return source && supported;
+		});
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
@@ -159,23 +159,9 @@ export class ImageryComponentManager {
 	}
 
 	private registerToActiveMapEvents() {
-
-		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
-			this.centerChanged.emit(center);
-		}));
-
 		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit(position);
 		}));
-
-		this._subscriptions.push(this._activeMap.singleClick.subscribe((event: Array<any>) => {
-			this.singleClick.emit(event);
-		}));
-
-		this._subscriptions.push(this._activeMap.contextMenu.subscribe((event: Array<any>) => {
-			this.contextMenu.emit(event);
-		}));
-
 	}
 
 	public get ActiveMap(): IMap {

@@ -3,7 +3,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { coreStateSelector, ICoreState, IToastMessage } from '../../reducers/core.reducer';
 import { SetToastMessageAction } from '../../actions/core.actions';
-
+import { Observable } from 'rxjs/Observable';
 const animations: any[] = [
 	trigger('toastAnimation', [
 		transition(':enter', [style({
@@ -35,7 +35,7 @@ export class ToastComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.toastMessage$.subscribe((toastMessage: IToastMessage) => {
+		(<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
 			if (toastMessage) { // Hide toast in duration time
 				const duration = this.duration * 1000;
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);

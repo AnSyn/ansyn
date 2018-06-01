@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { Observable } from 'rxjs/Observable';
 import { LoggerService } from './logger.service';
-
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 @Injectable()
 export class ErrorHandlerService {
 

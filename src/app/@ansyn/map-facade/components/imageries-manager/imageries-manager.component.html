@@ -1,6 +1,6 @@
 <div class="imageries-container"
 	 #imageriesContainer
-	 [ngClass]="{'pin-location': pinLocationMode, 'pin-point': pinPointMode}">
+	 [ngClass]="{'pin-location': pinLocationMode}">
 
 	<ng-template [ngIf]="mapsList">
 		<div *ngFor="let mapData of mapsList; count as count"
@@ -24,6 +24,8 @@
 </div>
 
 <ansyn-context-menu></ansyn-context-menu>
+
+<ansyn-welcome-notification *ngIf="showWelcomeNotification$ | async"></ansyn-welcome-notification>
 
 
 

@@ -2,20 +2,34 @@ import { Inject, Injectable } from '@angular/core';
 import { ContextConfig } from '../models/context.config';
 import { IContextConfig } from '../models/context.config.model';
 import { Observable } from 'rxjs/Observable';
-import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { Context } from '@ansyn/core/models/context.model';
 
 @Injectable()
 export class ContextService {
 
 	constructor(@Inject(ContextConfig) public config: IContextConfig,
-				public httpClient: HttpClient,
+				public storageService: StorageService,
 				public errorHandlerService: ErrorHandlerService) {
 	}
 
 	loadContexts(): Observable<any> {
-		const url = `${this.config.baseUrl}/contexts?from=0&limit=100`;
-		return this.httpClient.get(url)
+		return this.storageService.getPage<any>(this.config.schema, 0, 100)
 			.catch(err => this.errorHandlerService.httpErrorHandle(err));
+	}
+
+	loadContext(selectedContextId: string): Observable<Context> {
+		return this.storageService.get<Context, Context>(this.config.schema, selectedContextId)
+			.map(storedEntity =>
+				this.parseContext({...storedEntity.preview, ...storedEntity.data}))
+			.catch(err => this.errorHandlerService.httpErrorHandle(err));
+	}
+
+	private parseContext(contextValue: Context) {
+		return {
+			...contextValue,
+			creationTime: new Date(contextValue.creationTime)
+		};
 	}
 }

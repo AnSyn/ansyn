@@ -2,6 +2,14 @@ import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
+import {
+	BaseOverlaySourceProvider, DateRange, IFetchParams, OverlayFilter,
+	StartAndEndDate
+} from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { Feature, Polygon } from 'geojson';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { area, intersect, difference } from '@turf/turf';
 import * as intersect from '@turf/intersect';
 import * as area from '@turf/area';
 import * as difference from '@turf/difference';
@@ -11,21 +19,21 @@ import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { IDateRange } from '@ansyn/core/models/time.model';
 
-interface FiltersList {
+export interface FiltersList {
 	name: string,
 	dates: IDateRange[]
 	sensorNames: string[],
 	coverage: number[][][][]
 }
 
-interface IMultipleOverlaysSourceConfig {
+export interface IMultipleOverlaysSourceConfig {
 	[key: string]: {
 		whitelist: FiltersList[],
 		blacklist: FiltersList[]
 	}
 }
 
-type IMultipleOverlaysSources = BaseOverlaySourceProvider;
+export type IMultipleOverlaysSources = BaseOverlaySourceProvider;
 
 export const MultipleOverlaysSourceConfig: InjectionToken<IMultipleOverlaysSourceConfig> = new InjectionToken('multiple-overlays-source-config');
 export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = new InjectionToken('multiple-overlays-sources');
@@ -36,13 +44,14 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	private sourceConfigs: Array<{ filters: OverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[]) {
-		super();
+				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[],
+				protected loggerService: LoggerService) {
+		super(loggerService);
 
 		this.prepareWhitelist();
 	}
 
-	private coverageToFeature(coordinates: number[][][]): GeoJSON.Feature<GeoJSON.Polygon> {
+	private coverageToFeature(coordinates: number[][][]): Feature<Polygon> {
 		return {
 			type: 'Feature',
 			properties: {},
@@ -130,14 +139,24 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
-		const mergedSortedOverlays: Promise<OverlaysFetchData> = Promise.all(this.sourceConfigs
-			.map(s => s.provider.fetchMultiple(fetchParams, s.filters).toPromise()))
-			.then(overlays => mergeLimitedArrays(overlays, fetchParams.limit, {
-				sortFn: sortByDateDesc,
-				uniqueBy: o => o.id
-			})); // merge the overlays
+		const mergedSortedOverlays: Observable<OverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
+			.map(s => s.provider.fetchMultiple(fetchParams, s.filters)))
+			.map(overlays => {
+				const allFailed = overlays.every(overlay => this.isFaulty(overlay));
+				const errors = this.mergeErrors(overlays);
 
-		return Observable.from(mergedSortedOverlays);
+				if (allFailed) {
+					return {
+						errors,
+						data: null,
+						limited: -1
+					}
+				}
+
+				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
+			}); // merge the overlays
+
+		return mergedSortedOverlays;
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {

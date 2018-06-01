@@ -2,10 +2,8 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
-import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
+import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
-import { SubMenuEnum } from '@ansyn/menu-items/tools/tools/tools.component';
-import { toolsFlags } from '@ansyn/menu-items';
 
 
 describe('ToolsComponent', () => {
@@ -42,7 +40,6 @@ describe('ToolsComponent', () => {
 		fixture = TestBed.createComponent(ToolsComponent);
 		// Add manualProcessingControls function: resetAllParams (accessible from ToolsComponent)
 		component = fixture.componentInstance;
-		component.imageProcessInitParams = null;
 		fixture.detectChanges();
 	});
 
@@ -68,12 +65,6 @@ describe('ToolsComponent', () => {
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
 	});
-	it('on toggleAutoImageProcessing should nullify imageProcessInitParams', () => {
-		component.flags.set(toolsFlags.autoImageProcessing, false);
-		const button = fixture.debugElement.nativeElement.querySelector('div.image-auto-processing button');
-		button.click();
-		expect(component.imageProcessInitParams).toBeNull();
-	});
 
 	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {
 		const displayOverlayButton: HTMLButtonElement = fixture.nativeElement.querySelector('.display-overlay-visualizer button');
@@ -85,26 +76,10 @@ describe('ToolsComponent', () => {
 		expect(displayOverlayButton.classList.contains('mode-on')).toBeFalsy();
 	});
 
-	it('toogle annotation menu open', () => {
-		component.userAnnotationsToolOpen = false;
-		component.toggleAnnotationMenu(true);
-		const args = store.dispatch['calls'].mostRecent();
-		expect(store.dispatch).toHaveBeenCalledTimes(3);
-		expect(args.args[0].payload.operation).toBe('show');
-	});
-
-	it('toogle annotation menu close', () => {
-		component.userAnnotationsToolOpen = true;
-		component.toggleAnnotationMenu(false);
-		const args = store.dispatch['calls'].mostRecent();
-		expect(store.dispatch).toHaveBeenCalledTimes(4);
-		expect(args.args[0].payload.operation).toBe('hide');
-	});
-
 	it('isExpand should compare between expandedSubMenu to input', () => {
-		component.expandedSubMenu = SubMenuEnum.annotations;
+		component.subMenu = SubMenuEnum.annotations;
 		expect(component.isExpand(SubMenuEnum.annotations)).toBeTruthy();
 		expect(component.isExpand(SubMenuEnum.goTo)).toBeFalsy();
-		component.expandedSubMenu = null;
+		component.subMenu = null;
 	});
 });

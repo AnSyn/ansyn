@@ -31,8 +31,10 @@ export class OpenLayersImageProcessing {
 		this._raster = layerRaster;
 		// register pixelOperations to raster event
 		this._raster.on('beforeoperations', (event) => {
-			event.data.pixelOperations = this._raster.get('pixelOperations');
-			event.data.imageOperations = this._raster.get('imageOperations');
+			const eve = <any>event;
+			// to hack compile error
+			eve.data.pixelOperations = this._raster.get('pixelOperations');
+			eve.data.imageOperations = this._raster.get('imageOperations');
 		});
 		// set a raster operation
 		this._raster.setOperation(cascadeOperations, this._libs);

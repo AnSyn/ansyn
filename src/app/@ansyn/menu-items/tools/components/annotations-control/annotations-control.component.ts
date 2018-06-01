@@ -1,16 +1,16 @@
-import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import {
-	AnnotationSetProperties, AnnotationVisualizerAgentAction,
+	AnnotationSetProperties,
 	SetAnnotationMode
 } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
 export interface ModeList {
 	mode: AnnotationMode;
@@ -24,7 +24,7 @@ export type SelectionBoxTypes = 'lineWidth' | 'colorPicker' | undefined;
 	templateUrl: './annotations-control.component.html',
 	styleUrls: ['./annotations-control.component.less']
 })
-export class AnnotationsControlComponent implements OnInit, OnDestroy {
+export class AnnotationsControlComponent implements OnInit {
 	private _expand: boolean;
 	SelectionBoxes: {[key: string]: SelectionBoxTypes} = { lineWidth: 'lineWidth', colorPicker: 'colorPicker' };
 	public selectedBox: SelectionBoxTypes;
@@ -96,11 +96,4 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new AnnotationSetProperties({ fillColor }));
 	}
 
-	ngOnDestroy(): void {
-		this.setAnnotationMode();
-		this.store.dispatch(new AnnotationVisualizerAgentAction({
-			operation: 'hide',
-			relevantMaps: 'all'
-		}));
-	}
 }

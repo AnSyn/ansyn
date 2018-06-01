@@ -6,7 +6,6 @@ import { ImageriesManagerComponent } from './components/imageries-manager/imager
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { CommonModule } from '@angular/common';
 import { ImageryContainerComponent } from './components/imagery-container/imagery-container.component';
-import { CoreModule } from '@ansyn/core';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { FormsModule } from '@angular/forms';
 import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
@@ -15,6 +14,8 @@ import { AnnotationContextMenuComponent } from './components/annotation-context-
 import { ImageryRotationComponent } from './components/imagery-rotation/imagery-rotation.component';
 import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
 import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/imagery-tile-progress/imagery-tile-progress.component';
+import { OverlaySourceTypeNoticeComponent } from '@ansyn/map-facade/components/overlay-source-type-notice/overlay-source-type-notice.component';
+import { CoreModule } from '@ansyn/core/core.module';
 
 @NgModule({
 	imports: [
@@ -33,7 +34,8 @@ import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/image
 		ContextMenuComponent,
 		AnnotationContextMenuComponent,
 		ImageryLoaderComponent,
-		ImageryTileProgressComponent
+		ImageryTileProgressComponent,
+		OverlaySourceTypeNoticeComponent
 	],
 	exports: [ImageriesManagerComponent]
 })

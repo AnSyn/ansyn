@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { loginRoutes } from '@ansyn/login';
-import { ansynRoutes } from '@ansyn/ansyn';
+import { loginRoutes } from '@ansyn/login/login.routes';
+import { ansynRoutes } from '@ansyn/ansyn/ansyn.routes';
 
 export const routes: Routes = [
 	...ansynRoutes,

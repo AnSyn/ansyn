@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryContainerComponent } from './imagery-container.component';
-import { MockComponent } from '@ansyn/core/test';
+import { MockComponent } from '@ansyn/core/test/mock-component';
 import { CoreModule } from '@ansyn/core/core.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -14,7 +15,7 @@ describe('ImageryContainerComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])
 			],
 			providers: [{ provide: LoggerConfig, useValue: {} }],
@@ -36,6 +37,9 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-imagery-tile-progress', inputs: ['mapId', 'lowered']
+				}),
+				MockComponent({
+					selector: 'ansyn-overlay-source-type-notice', inputs: ['overlay']
 				})
 			]
 		}).compileComponents();
@@ -44,7 +48,7 @@ describe('ImageryContainerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageryContainerComponent);
 		component = fixture.componentInstance;
-		component.mapState = {} as any;
+		component.mapState = {data: {}} as any;
 		fixture.detectChanges();
 	});
 

@@ -4,22 +4,20 @@ import { EffectsModule } from '@ngrx/effects';
 import { DataLayersService, layersConfig } from './services/data-layers.service';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TreeModule } from 'angular-tree-component';
 import { LayersManagerComponent } from './components/layers-manager/layers-manager.component';
-import { LayerTreeComponent } from './components/layer-tree/layer-tree.component';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
-import { CoreModule } from '@ansyn/core/index';
+import { LayerCollectionComponent } from '@ansyn/menu-items/layers-manager/components/layers-collection/layer-collection.component';
+import { CoreModule } from '@ansyn/core/core.module';
 
 @NgModule({
 	imports: [
 		CoreModule,
 		CommonModule,
-		TreeModule,
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
 		EffectsModule.forFeature([LayersEffects])
 	],
-	declarations: [LayersManagerComponent, LayerTreeComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })
@@ -34,5 +32,4 @@ export class LayersManagerModule {
 			]
 		};
 	}
-
 }

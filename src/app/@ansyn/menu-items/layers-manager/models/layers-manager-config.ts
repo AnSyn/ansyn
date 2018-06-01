@@ -1,3 +1,3 @@
 export interface ILayersManagerConfig {
-	layersByCaseIdUrl: string;
+	schema: string;
 }

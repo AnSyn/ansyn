@@ -2,12 +2,11 @@ import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, View
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs/Observable';
-import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
+import { CaseModal, casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 
 import 'rxjs/add/operator/distinctUntilChanged';
-import { CaseModal } from '@ansyn/menu-items';
 
 const animationsDuring = '0.2s';
 

@@ -1,5 +1,3 @@
-import { BaseImageryVisualizer, CommunicatorEntity, IMap, IVisualizerEntity } from '@ansyn/imagery';
-import { EventEmitter } from '@angular/core';
 import { merge } from 'lodash';
 import SourceVector from 'ol/source/vector';
 import Feature from 'ol/feature';
@@ -10,14 +8,15 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { Subscriber } from 'rxjs/Subscriber';
 import { VisualizerStyle } from './models/visualizer-style';
 import { VisualizerStateStyle } from './models/visualizer-state';
-import { VisualizerInteractionTypes } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Subscription } from 'rxjs/src/Subscription';
+import {
+	BaseImageryVisualizer, BaseImageryVisualizerClass, IVisualizerEntity,
+	VisualizerInteractionTypes
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -30,10 +29,7 @@ export const VisualizerStates = {
 };
 
 
-
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
-	static supported = [OpenlayersMapName];
-	isHideable = false;
 	isHidden = false;
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
@@ -61,13 +57,12 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
 	}
 
-	private getEntity(feature: Feature): IVisualizerEntity {
+	getEntity(feature: Feature): IVisualizerEntity {
 		const entity = this.idToEntity.get(<string>feature.getId());
 		return entity && entity.originalEntity;
 	}
 
-	init(communicator: CommunicatorEntity) {
-		super.init(communicator);
+	onInit() {
 		this.initLayers();
 	}
 
@@ -96,7 +91,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	toggleVisibility() {
-		if (!this.isHideable) {
+		if (!(<BaseImageryVisualizerClass>this.constructor).isHideable) {
 			return;
 		}
 
@@ -202,7 +197,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			return Observable.of(true);
 		}
 
-		const featuresCollectionToAdd: GeoJSON.FeatureCollection<any> = <any> {
+		const featuresCollectionToAdd = <FeatureCollection<any>> {
 			type: 'FeatureCollection',
 			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};
@@ -245,13 +240,19 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		const entityToRemove = this.idToEntity.get(logicalEntityId);
 		if (entityToRemove) {
 			this.idToEntity.delete(logicalEntityId);
-			this.source.removeFeature(entityToRemove.feature);
+			if (entityToRemove.feature && this.source.getFeatureById(entityToRemove.feature.getId())) {
+				this.source.removeFeature(entityToRemove.feature);
+			}
 		}
 	}
 
 	clearEntities() {
-		this.idToEntity.clear();
-		this.source.clear(true);
+		if (this.idToEntity) {
+			this.idToEntity.clear();
+		}
+		if (this.source) {
+			this.source.clear(true);
+		}
 	}
 
 	getEntities(): IVisualizerEntity[] {

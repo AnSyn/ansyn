@@ -1,3 +1,3 @@
 export interface IContextConfig {
-	baseUrl: string;
+	schema: string;
 }

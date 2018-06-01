@@ -8,21 +8,19 @@ import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
 import { mapFacadeConfig,  } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
+import { statusBarFeatureKey, StatusBarReducer } from "@ansyn/status-bar/reducers/status-bar.reducer";
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
 	let fixture: ComponentFixture<ContextMenuComponent>;
 	let store: Store<any>;
-	const mockMapEffects = {
-		onContextMenuShow$: new EventEmitter<void>(),
-		getFilteredOverlays$: new EventEmitter<void>()
-	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [statusBarFeatureKey]: StatusBarReducer }), EffectsModule.forRoot([])],
 			declarations: [ContextMenuComponent],
-			providers: [{ provide: MapEffects, useValue: mockMapEffects }, {
+			providers: [{
 				provide: mapFacadeConfig,
 				useValue: <IMapFacadeConfig> { sensorTypeShortcuts: {}, contextMenu: { filterField: 'filterField'} }
 			}]
@@ -70,7 +68,7 @@ describe('ContextMenuComponent', () => {
 		spyOn(elem, 'focus');
 		expect(elem.style.top).not.toEqual('2px');
 		expect(elem.style.left).not.toEqual('1px');
-		const action = <ContextMenuShowAction> { payload: { e: { x: 1, y: 2 } } };
+		const action: ContextMenuShowAction = <any> { payload: { event: { x: 1, y: 2 } } };
 		component.show(action);
 		expect(elem.focus).toHaveBeenCalled();
 		expect(elem.style.top).toEqual('2px');

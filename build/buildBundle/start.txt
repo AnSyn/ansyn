@@ -1,0 +1,12 @@
+(function(ansynGlobal, factory){
+
+
+	console.log("start ansyn");
+
+    // if (typeof exports === 'object' && typeof module !== 'undefined')
+        // return factory(ansynGlobal);
+    // if (typeof define === 'function' && define.amd) return define([], factory);
+
+    factory(ansynGlobal);
+})(this,
+    function app(ansynGlobal){

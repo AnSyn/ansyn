@@ -12,7 +12,7 @@ export class AnsynCheckboxComponent implements OnInit {
 
 
 	@Output() inputClicked = new EventEmitter<any>();
-	@Input('id') id;
+	@Input() id;
 
 	@Input()
 	set checked(value) {

@@ -3,16 +3,17 @@ import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
-import { IVisualizerEntity } from '@ansyn/imagery';
 import { IContextEntity } from '@ansyn/core/models/case.model';
-import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/visualizers/models/visualizer-state';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs/Observable';
+import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
+@ImageryVisualizer({
+	supported: [OpenLayersMap],
+	deps: []
+})
 export class ContextEntityVisualizer extends EntitiesVisualizer {
-
-	isHideable = true;
-
 	referenceDate: Date;
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;

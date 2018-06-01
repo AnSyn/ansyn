@@ -1,0 +1,65 @@
+@import "core/less/common";
+@import "core/less/z-index-globals";
+@import "core/less/tooltip";
+@import "core/less/slider-checkbox.less";
+
+:host {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translateY(calc(~'-100% - 15px'));
+
+	/deep/ .treeview-container .row-item {
+		display: flex;
+		color: ghostwhite;
+	}
+
+	.data-input-filter {
+		background: rgba(0, 0, 0, 1);
+		background-clip: padding-box;
+		padding: 10px 20px;
+		box-shadow: 0 0 2px 1px white;
+	}
+
+	.tree-view-main {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	div.data-input-filters-buttons {
+		margin-top: 10px;
+		display: flex;
+		justify-content: space-between;
+		color: @overlays-dots-color;
+		a {
+			cursor: pointer;
+			&:hover {
+				font-weight: bold;
+			}
+			&:first-child {
+				margin-right: 9px;
+				width: 42px;
+			}
+			&:last-child {
+				width: 17px;
+			}
+		}
+		.error {
+			color: crimson;
+		}
+	}
+
+	.switch {
+		margin-bottom: 5px;
+	}
+
+	.slider-text {
+		width: 0px;
+	}
+
+	.ok-button {
+
+	}
+}

@@ -1,24 +1,42 @@
 import {
+	AddCaseAction,
 	CloseModalAction,
 	OpenModalAction,
 	SelectCaseAction,
-	UpdateCaseAction,
+	UpdateCaseAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
-import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
-import { AddCaseAction, casesAdapter, CasesService } from '@ansyn/menu-items';
+import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 
 describe('CasesReducer', () => {
+	const caseMock: Case = {
+		id: 'fakeId',
+		name: 'fakeName',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
+		state: {
+			time: {
+				type: 'absolute',
+				from: new Date(),
+				to: new Date()
+			},
+			orientation: 'Align North',
+			dataInputFilters: { filters: [], active: true },
+			timeFilter: 'Start - End',
+			geoFilter: CaseGeoFilter.PinPoint,
+			region: {},
+			overlaysManualProcessArgs: {}
+		}
+	};
 
 	it('ADD_CASE action should add new case to state', () => {
-		let newCase: Case = {
-			id: 'fakeId',
-			name: 'fakeName'
-		};
-		let action = new AddCaseAction(newCase);
+		let action = new AddCaseAction(caseMock);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.entities['fakeId']).toEqual(newCase);
+		expect(result.entities['fakeId']).toEqual(caseMock);
 	});
 
 	it('OPEN_MODAL action should set modalCaseId from payload and change modal to true', () => {
@@ -50,10 +68,10 @@ describe('CasesReducer', () => {
 		], state);
 
 		state.modal.id = 'id2';
-		state.selectedCase = {};
+		state.selectedCase = { ...caseMock, id: 'id2' };
 
 		let newCase: Case = {
-			id: 'id2', name: 'name2 lastname2'
+			...caseMock, id: 'id2', name: 'name2 lastname2'
 		};
 
 		let action: UpdateCaseAction = new UpdateCaseAction(newCase);

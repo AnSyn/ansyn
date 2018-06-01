@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/router",
-	"version": "0.2.8",
+	"version": "0.2.81",
 	"description": "Ansyn router create connections between: router, store and cases",
 	"main": "index.ts",
 	"scripts": {
@@ -9,7 +9,7 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@ansyn/core": "0.2.8"
+		"@ansyn/core": "0.2.81"
 	},
 	"typings": "index.d.ts"
 }

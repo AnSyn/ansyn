@@ -6,7 +6,6 @@ import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	ContextMenuDisplayAction,
-	ContextMenuGetFilteredOverlaysAction,
 	ContextMenuShowAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -63,20 +62,6 @@ describe('ContextMenuAppEffects', () => {
 		actions = hot('--a--', { a: new ContextMenuDisplayAction('fakeId') });
 		const expectedResults = cold('--b--', { b: new DisplayOverlayFromStoreAction({ id: 'fakeId' }) });
 		expect(contextMenuAppEffects.onContextMenuDisplayAction$).toBeObservable(expectedResults);
-	});
-
-	it('setContextFilter$ should get point and filter filteredOverlays by footprint', () => {
-		const showAction = new ContextMenuShowAction({
-			point: {
-				type: 'Point',
-				coordinates: [0, 0]
-			},
-			e: new MouseEvent(null, null)
-		});
-		spyOnProperty(turf, 'inside', 'get').and.returnValue((point, footprint) => footprint === 'in');
-		actions = hot('--a--', { a: showAction });
-		const expectedResults = cold('--b--', { b: new ContextMenuGetFilteredOverlaysAction(fakeOverlays.filter((o) => o.footprint === 'in')) });
-		expect(contextMenuAppEffects.setContextFilter$).toBeObservable(expectedResults);
 	});
 
 });

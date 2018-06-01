@@ -1,7 +1,5 @@
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { ImageriesManagerComponent } from './imageries-manager.component';
-import { MockComponent } from '@ansyn/core/test';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MapEffects } from '../../effects/map.effects';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
@@ -10,7 +8,11 @@ import { Observable } from 'rxjs/Observable';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
-import { coreFeatureKey, CoreReducer, SetLayoutAction } from '@ansyn/core';
+import { AlertComponentDirective } from '@ansyn/core/alerts/alert-component.directive';
+import { MockComponent } from '@ansyn/core/test/mock-component';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
+import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -23,6 +25,9 @@ const mockAnsynImageryContainer = MockComponent({
 });
 const mockAnnotationContextMenu = MockComponent({
 	selector: 'ansyn-annotations-context-menu', inputs: ['mapId']
+});
+const mockAnsynWelcomeNotification = MockComponent({
+	selector: 'ansyn-welcome-notification'
 });
 
 describe('ImageriesManagerComponent', () => {
@@ -42,14 +47,16 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports: [
-				StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer })
+				StoreModule.forRoot({[mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer})
 			],
 			declarations: [
 				ImageriesManagerComponent,
 				mockAnsynContextMenu,
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,
-				ImageryStatusComponent
+				mockAnsynWelcomeNotification,
+				ImageryStatusComponent,
+				AlertComponentDirective
 			]
 
 		}).compileComponents();
@@ -66,12 +73,12 @@ describe('ImageriesManagerComponent', () => {
 		fixture = TestBed.createComponent(ImageriesManagerComponent);
 		component = fixture.componentInstance;
 		const mapsList = <any> [
-			{ id: 'imagery1', data: { overlay: {} } },
-			{ id: 'imagery2', data: { overlay: {} } }
+			{id: 'imagery1', data: {overlay: {}}},
+			{id: 'imagery2', data: {overlay: {}}}
 		];
 		const activeMapId = 'imagery1';
 		store.dispatch(new SetLayoutAction('layout2'));
-		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
+		store.dispatch(new SetMapsDataActionStore({mapsList, activeMapId}));
 		fixture.detectChanges();
 	});
 

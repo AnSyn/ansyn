@@ -2,7 +2,7 @@ import { ICasesConfig } from './models/cases-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/core/core.module';
 import { CasesTableComponent } from './components/cases-table/cases-table.component';
 import { EditCaseComponent } from './components/edit-case/edit-case.component';
 import { FormsModule } from '@angular/forms';

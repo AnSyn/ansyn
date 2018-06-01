@@ -1,22 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-	AnnotationClose,
-	AnnotationOpen,
-	AnnotationVisualizerAgentAction,
-	GoToExpandAction,
-	SetAnnotationMode,
-	SetAutoCloseMenu,
 	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
+	SetSubMenu,
 	StartMouseShadow,
 	StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { IToolsState, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
-
-export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
+import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -24,23 +17,29 @@ export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 	styleUrls: ['./tools.component.less']
 })
 export class ToolsComponent implements OnInit, OnDestroy {
-
-	public gotoExpand$: Observable<boolean> = this.store.select(toolsStateSelector)
-		.pluck<IToolsState, boolean>('gotoExpand')
-		.distinctUntilChanged();
-	imageProcessInitParams = null;
 	isImageControlActive = false;
-	public subMenuEnum = SubMenuEnum;
-	public expandedSubMenu: SubMenuEnum = null;
 	public displayModeOn = false;
-	public userAnnotationsToolOpen = false;
 	public flags: Map<toolsFlags, boolean>;
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
 		.map((tools: IToolsState) => tools.flags)
 		.distinctUntilChanged();
-	public manualImageProcessingParams$: Observable<Object> = this.store.select(toolsStateSelector)
-		.map((tools: IToolsState) => tools.manualImageProcessingParams)
-		.distinctUntilChanged();
+
+	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector)
+		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
+		.distinctUntilChanged()
+		.map((flags) => flags.get(toolsFlags.imageProcessingDisabled))
+		.distinctUntilChanged()
+		.filter(Boolean)
+		.do(this.closeManualProcessingMenu.bind(this));
+
+	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
+	subMenu: SubMenuEnum;
+
+	subscribers = [];
+
+	get subMenuEnum() {
+		return SubMenuEnum;
+	}
 
 	get isGeoOptionsDisabled() {
 		return !this.flags.get(toolsFlags.geoRegisteredOptionsEnabled);
@@ -62,6 +61,10 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return this.flags.get(toolsFlags.autoImageProcessing);
 	}
 
+	get imageManualProcessingDisabled() {
+		return this.imageProcessingDisabled || this.onAutoImageProcessing;
+	}
+
 	get onMeasureTool() {
 		return this.flags.get(toolsFlags.isMeasureToolActive);
 	}
@@ -72,21 +75,18 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.flags$.subscribe(_flags => {
-			this.flags = _flags;
-		});
-		this.gotoExpand$.subscribe(_gotoExpand => {
-			if (_gotoExpand) {
-				this.expandedSubMenu = SubMenuEnum.goTo;
-			}
-		});
-		this.manualImageProcessingParams$.subscribe((processParams) => {
-			this.imageProcessInitParams = processParams;
-		});
+		this.subscribers.push(
+			this.subMenu$.subscribe(),
+			this.flags$.subscribe(_flags => {
+				this.flags = _flags;
+			}),
+			this.imageProcessingDisabled$.subscribe()
+		);
 	}
 
 	ngOnDestroy() {
-		this.store.dispatch(new AnnotationClose(false));
+		this.toggleSubMenu(null);
+		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
 	toggleShadowMouse() {
@@ -107,50 +107,25 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleAutoImageProcessing() {
 		this.store.dispatch(new SetAutoImageProcessing());
-		this.imageProcessInitParams = null;
+		this.closeManualProcessingMenu();
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {
-		// update new state of expandedSubMenu;
-		const lastExpandedSubMenu = this.expandedSubMenu;
-		this.expandedSubMenu = (subMenu !== this.expandedSubMenu) ? subMenu : null;
-		// if toggle goto - dispatch;
-		if (subMenu === SubMenuEnum.goTo || lastExpandedSubMenu === SubMenuEnum.goTo) {
-			this.store.dispatch(new GoToExpandAction(this.expandedSubMenu === SubMenuEnum.goTo));
-		}
-		// if toggle annotations - treat annotations toggle
-		if (subMenu === SubMenuEnum.annotations || lastExpandedSubMenu === SubMenuEnum.annotations) {
-			this.toggleAnnotationMenu(this.expandedSubMenu === SubMenuEnum.annotations);
-		}
+		const value = (subMenu !== this.subMenu) ? subMenu : null;
+		this.store.dispatch(new SetSubMenu(value));
 	}
 
 	onAnimation() {
-		this.store.dispatch(new GoToExpandAction(false));
-		this.expandedSubMenu = null;
-	}
-
-	toggleAnnotationMenu(subMenuOpen) {
-
-		// send event to the store that saying the annotation option is enabled
-		if (subMenuOpen) {
-			this.store.dispatch(new AnnotationOpen(true));
-			this.store.dispatch(new SetAutoCloseMenu(false));
-			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'show',
-				relevantMaps: 'active'
-			}));
-		} else {
-			this.store.dispatch(new AnnotationClose(false));
-			this.store.dispatch(new SetAutoCloseMenu(true));
-			this.store.dispatch(new SetAnnotationMode());
-			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'hide',
-				relevantMaps: 'active'
-			}));
-		}
+		this.store.dispatch(new SetSubMenu(null));
 	}
 
 	isExpand(subMenu: SubMenuEnum): boolean {
-		return this.expandedSubMenu === subMenu;
+		return this.subMenu === subMenu;
+	}
+
+	closeManualProcessingMenu() {
+		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
+			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
+		}
 	}
 }

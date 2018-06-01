@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { CasesActionTypes } from '@ansyn/menu-items/cases';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import '@ansyn/core/utils/debug';
-import { IAppState } from '../';
 import '@ansyn/core/utils/clone-deep';
-import { CoreActionTypes, SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
-	import { CoreService } from '@ansyn/core/services/core.service';
-import { OverlaysMarkupAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	CoreActionTypes, GoAdjacentOverlay, SetFavoriteOverlaysAction, SetOverlaysCriteriaAction,
+	ToggleFavoriteAction
+} from '@ansyn/core/actions/core.actions';
+import { DisplayOverlayFromStoreAction, LoadOverlaysAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { LoggerService, SetOverlaysCriteriaAction } from '@ansyn/core';
-import { LoadOverlaysAction } from '@ansyn/overlays';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 
 @Injectable()
 export class CoreAppEffects {
@@ -51,11 +53,14 @@ export class CoreAppEffects {
 	@Effect()
 	setFavoriteOverlaysUpdateCase$: Observable<any> = this.actions$
 		.ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.map(([{ payload }, cases, map]: [SetFavoriteOverlaysAction, ICasesState, IMapState]) => {
-			const overlaysMarkup = CoreService.getOverlaysMarkup(map.mapsList, map.activeMapId, payload);
-			return new OverlaysMarkupAction(overlaysMarkup);
-		});
+		.map(({ payload }: SetFavoriteOverlaysAction) => payload.map(overlay => overlay.id))
+		.map((overlayIds) => new SetMarkUp({
+				classToSet: MarkUpClass.favorites,
+				dataToSet: {
+					overlaysIds: overlayIds
+				}
+			}
+		));
 
 	@Effect({ dispatch: false })
 	actionsLogger$ = this.actions$
@@ -68,8 +73,7 @@ export class CoreAppEffects {
 			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
 			CasesActionTypes.UPDATE_CASE,
 			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
-			CasesActionTypes.SELECT_CASE,
-			CasesActionTypes.SELECT_CASE_BY_ID,
+			CasesActionTypes.SELECT_CASE
 			)
 		.do((action) => {
 			this.loggerService.info(JSON.stringify(action));
@@ -81,10 +85,35 @@ export class CoreAppEffects {
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria));
 
+	/**
+	 * @type Effect
+	 * @name onGoPrevNext$
+	 * @ofType GoNextAction, GoPrevAction
+	 * @dependencies cases
+	 * @filter There is an active map overlay
+	 * @action GoNextDisplayAction?, GoadjacentDisplayAction?
+	 */
+	@Effect()
+	onAdjacentOverlay$: Observable<any> = this.actions$
+		.ofType<GoAdjacentOverlay>(CoreActionTypes.GO_ADJACENT_OVERLAY)
+		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, mapState: IMapState): { isNext, overlayId } => {
+			const activeMap = MapFacadeService.activeMap(mapState);
+			const overlayId = activeMap.data.overlay && activeMap.data.overlay.id;
+			const { isNext } = payload;
+			return { isNext, overlayId };
+		})
+		.filter(({ isNext, overlayId }) => Boolean(overlayId))
+		.withLatestFrom((this.store$.select(overlaysStateSelector).pluck('filteredOverlays')), ({ isNext, overlayId }, filteredOverlays: string[]): string => {
+			const index = filteredOverlays.indexOf(overlayId);
+			const adjacent = isNext ? 1 : -1;
+			return filteredOverlays[index + adjacent];
+		})
+		.filter(Boolean)
+		.map(id => new DisplayOverlayFromStoreAction({ id }));
+
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				protected loggerService: LoggerService
-				) {
+				protected loggerService: LoggerService) {
 	}
 }
 

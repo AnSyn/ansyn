@@ -3,8 +3,9 @@
 @import 'core/less/tooltip';
 
 div.menu-wrapper {
-	height: 100vh;
+	height: 100%;
 	display: flex;
+	position: relative;
 
 	.menu:not(.expanded), .container {
 		box-shadow: 0 0 10px black;
@@ -62,7 +63,7 @@ div.menu-wrapper {
 
 		left: 90px;
 		z-index: @z-index-menu-container;
-		height: 100vh;
+		height: 100%;
 		background: rgba(red(@application-main-color), green(@application-main-color), blue(@application-main-color), .9);
 
 		&.pinned {
@@ -123,3 +124,10 @@ div.menu-wrapper {
 
 	}
 }
+
+@media screen and (max-width: 1400px) {
+	.pin {
+		display: none;
+	}
+}
+

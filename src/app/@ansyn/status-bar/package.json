@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/status-bar",
-	"version": "0.2.8",
+	"version": "0.2.81",
 	"description": "status-bar",
 	"main": "index.ts",
 	"scripts": {
@@ -9,9 +9,9 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/core": "5.1.2",
-		"@angular/common": "5.1.2",
-		"@ansyn/core": "0.2.8"
+		"@angular/core": "^5.2.0",
+		"@angular/common": "^5.2.0",
+		"@ansyn/core": "0.2.81"
 	},
 	"typings": "index.d.ts"
 }

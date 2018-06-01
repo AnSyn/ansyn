@@ -10,7 +10,6 @@ import {
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { OverlaysCriteria } from '@ansyn/core';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
@@ -95,18 +94,24 @@ describe('Overlay Reducer', () => {
 		const action = new LoadOverlaysSuccessAction(overlays);
 		const result = OverlayReducer(overlaysInitialState, action);
 
-		expect(Array.from(result.overlays.keys())[0]).toBe('13');
+		expect(Array.from(result.overlays.keys())[0]).toBe('12');
 		expect(result.overlays.size).toBe(2);
 		expect(result.loading).toBe(false);
 		expect(result.loaded).toBe(true);
 	});
 
 
-	it('Set Filters actions', () => {
-		const filteredOverlays = ['1', '2', '3', '4', '5'];
+	it('Set Filters actions, should filter only overlays from "overlays" Map', () => {
+		const filteredOverlays = ['1', '2', '3', '4', '5', '6']; /*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
-		const state = OverlayReducer(overlaysInitialState, setFilteredOverlaysAction);
-		expect(state.filteredOverlays).toEqual(filteredOverlays);
+		const overlays: any = new Map([
+			['1', { id: '1' }],
+			['2', { id: '1' }],
+			['3', { id: '1' }],
+			['4', { id: '1' }]
+		]);
+		const state = OverlayReducer({...overlaysInitialState, overlays }, setFilteredOverlaysAction);
+		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});
 
 	it('Set Special Objects', () => {
@@ -120,21 +125,13 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('set timeline state action should update the store', () => {
-		const data1 = { to: new Date(), from: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
-
-		const action = new SetTimelineStateAction({ state: data1 });
+		const data1 = {
+			start: new Date(Date.now() - (1000 * 60 * 60 * 24 * 30)),
+			end: new Date(Date.now())
+		}
+		const action = new SetTimelineStateAction({ timeLineRange: data1 });
 		const result = OverlayReducer(overlaysInitialState, action);
-		expect(result.timelineState.from.getTime()).toBe(data1.from.getTime());
-		expect(result.timelineState.to.getTime()).toBe(data1.to.getTime());
+		expect(result.timeLineRange.start.getTime()).toBe(data1.start.getTime());
+		expect(result.timeLineRange.end.getTime()).toBe(data1.end.getTime());
 	});
-
-	it('set timeline state action should fail and not update the store', () => {
-		const data1 = { from: new Date(), to: new Date((new Date()).getTime() - (1000 * 60 * 60 * 24 * 30)) };
-
-		const action = new SetTimelineStateAction({ state: data1 });
-		const result = OverlayReducer(overlaysInitialState, action);
-		expect(result.timelineState.from.getTime()).not.toBe(data1.from.getTime());
-		expect(result.timelineState.to.getTime()).not.toBe(data1.to.getTime());
-	});
-
 });

@@ -1,13 +1,11 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OpenlayersMapComponent } from './openlayers-map.component';
-import TileLayer from 'ol/layer/tile';
-import OSM from 'ol/source/osm';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersProjectionService } from '../projection/open-layers-projection.service';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery';
 import { cold } from 'jasmine-marbles';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map';
 import { Observable } from 'rxjs/Observable';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
 
 describe('OpenlayersMapComponent', () => {
 	let component: OpenlayersMapComponent;
@@ -53,7 +51,7 @@ describe('OpenlayersMapComponent', () => {
 			success = false;
 			const expectedResult = cold('|');
 			expect(component.createMap([])).toBeObservable(expectedResult);
-		})
+		});
 
 	});
 });

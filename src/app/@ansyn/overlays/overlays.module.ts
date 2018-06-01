@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimelineComponent } from './components/timeline/timeline.component';
-import { TimelineEmitterService } from './services/timeline-emitter.service';
 import { OverlayStatusComponent } from './components/overlay-status/overlay-status.component';
 import { OverlaysContainerComponent } from './components/container/overlays-container.component';
 import { OverlaysService } from './services/overlays.service';
@@ -10,6 +9,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
+import { OverlayOverviewComponent } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component';
 
 @NgModule({
 	imports: [
@@ -22,12 +22,16 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 	declarations: [
 		TimelineComponent,
 		OverlaysContainerComponent,
-		OverlayStatusComponent
+		OverlayStatusComponent,
+		OverlayOverviewComponent
 	],
-	exports: [OverlaysContainerComponent, TimelineComponent],
+	exports: [
+		OverlaysContainerComponent,
+		TimelineComponent,
+		OverlayOverviewComponent
+	],
 	providers: [
-		OverlaysService,
-		TimelineEmitterService
+		OverlaysService
 	]
 
 })

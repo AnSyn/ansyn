@@ -1,0 +1,50 @@
+@import "core/less/common";
+@import "core/less/z-index-globals";
+
+:host {
+	position: absolute;
+	bottom: calc(@status-bar-height + 10px);
+	/* horizontally  centered */
+	left: calc((100% - @welcome-notification-width) / 2);
+	width: @welcome-notification-width;
+	z-index: -1;
+	transition: z-index 1s;
+	// Prevent outline when in focus
+	outline: none;
+	animation: moveIntoView 1s;
+
+	&:focus {
+		z-index: @z-index-welcome-notification;
+
+		.welcome-notification {
+			opacity: 1;
+		}
+	}
+
+	.welcome-notification {
+		opacity: 0;
+		transition: opacity 1s;
+		background-color: white;
+		color: black;
+		padding: 1rem;
+		font-size: 1rem;
+		border-radius: 4px;
+
+		header {
+			margin-bottom: 1rem;
+		}
+		span.icon-map-Point {
+			color: #30A2C6;
+		}
+	}
+}
+
+@keyframes moveIntoView {
+	from {
+		transform: translateY(100px);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+

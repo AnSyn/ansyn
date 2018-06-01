@@ -1,0 +1,28 @@
+<div class="container">
+
+	<div class="title-row">
+		<span class="title">{{ collection[0].type }} Layers</span>
+		<button [@rotateArrow]="show" #downArrow class="down-arrow"
+				(click)="show = !show">
+		</button>
+	</div>
+
+	<div class="layers" *ngFor="let layer of collection" [@layersTrigger]="show">
+		<div class="left-side">
+			<div class="checkbox">
+				<ansyn-checkbox
+					id="checkbox{{ layer.id }}"
+					class="regular-checkbox"
+					(change)="onCheckboxClicked($event,layer)"
+					[checked]="layer.isChecked"></ansyn-checkbox>
+				<label for="checkbox{{ layer.id }}"></label>
+			</div>
+			<div class="layer-row">
+				<div class="field-name-container">
+					<span class="field-name" [title]="layer.name">{{layer.name}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

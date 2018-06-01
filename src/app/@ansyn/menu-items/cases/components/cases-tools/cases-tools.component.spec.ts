@@ -6,11 +6,12 @@ import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
-import { casesConfig } from '@ansyn/menu-items/cases';
+import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -23,10 +24,14 @@ describe('CasesToolsComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
+				StoreModule.forRoot({[casesFeatureKey]: CasesReducer}),
 				RouterTestingModule
 			],
-			providers: [{ provide: casesConfig, useValue: { baseUrl: null } },  { provide: LoggerConfig, useValue: {} }]
+			providers: [
+				{ provide: casesConfig, useValue: {schema: null} },
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

@@ -10,6 +10,7 @@ import { initialMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.r
 import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -26,9 +27,15 @@ describe('AnsynComponent', () => {
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
+	const ansynTools = MockComponent({ selector: 'ansyn-tools' });
+	const mockOverlayOverviewComponent = MockComponent({selector: 'ansyn-overlay-overview'});
 
 	const cases: Case[] = [{
 		id: 'tmp',
+		creationTime: new Date(),
+		lastModified: new Date(),
+		owner: 'owner',
+		name: 'name',
 		state: {
 			favoriteOverlays: [],
 			time: { type: '', from: new Date(), to: new Date() },
@@ -75,7 +82,9 @@ describe('AnsynComponent', () => {
 				mockOverlaysContainer,
 				mockStatus,
 				mockImageryView,
-				mockEmptyComponent
+				mockEmptyComponent,
+				mockOverlayOverviewComponent,
+				ansynTools
 			],
 			imports: [
 				RouterTestingModule,
@@ -89,6 +98,9 @@ describe('AnsynComponent', () => {
 		const mockStore = new Map<any, any>([
 
 			[casesStateSelector, handler],
+			[coreStateSelector, Observable.of({
+				...coreInitialState
+			})],
 			[toolsStateSelector, Observable.of({
 				flags: new Map<string, any>()
 			})],

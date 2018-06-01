@@ -3,45 +3,30 @@ import { Actions, Effect } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import * as intersect from '@turf/intersect';
-import { OverlaysService } from '@ansyn/overlays';
-import { polygon } from '@turf/helpers';
-import {
-	AlertMsgTypes,
-	BackToWorldSuccess,
-	BackToWorldView,
-	CaseMapPosition,
-	CoreActionTypes,
-	coreStateSelector,
-	ICoreState,
-	SetLayoutSuccessAction,
-	UpdateAlertMsg
-} from '@ansyn/core';
+import { intersect, polygon } from '@turf/turf';
+
+import 'rxjs/add/observable/forkJoin';
 import {
 	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
-	DecreasePendingMapsCountAction,
-	ImageryCreatedAction,
-	ImageryRemovedAction,
-	MapActionTypes,
-	MapsListChangedAction,
-	PinLocationModeTriggerAction,
-	PinPointModeTriggerAction,
-	PositionChangedAction,
-	SetMapsDataActionStore,
+	AnnotationContextMenuTriggerAction, DecreasePendingMapsCountAction,
+	ImageryCreatedAction, ImageryRemovedAction,
+	MapActionTypes, MapsListChangedAction, PinLocationModeTriggerAction, PositionChangedAction, SetMapsDataActionStore,
 	SynchronizeMapsAction
-} from '../actions/map.actions';
-
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
-
-import { ContextMenuGetFilteredOverlaysAction } from '@ansyn/map-facade';
-import 'rxjs/add/observable/forkJoin';
+} from '@ansyn/map-facade/actions/map.actions';
+import {
+	AddAlertMsg, BackToWorldSuccess, BackToWorldView, CoreActionTypes, RemoveAlertMsg,
+	SetLayoutSuccessAction
+} from '@ansyn/core/actions/core.actions';
+import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 @Injectable()
 export class MapEffects {
@@ -154,30 +139,33 @@ export class MapEffects {
 	 * @ofType PositionChangedAction
 	 * @dependencies map
 	 * @filter There is a selected map
-	 * @action UpdateAlertMsg
+	 * @action RemoveAlertMsg?, AddAlertMsg?
 	 */
 	@Effect()
-	checkImageOutOfBounds$: Observable<UpdateAlertMsg> = this.actions$
+	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
-		.filter(map => Boolean(map))
-		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([map, { alertMsg }]: [CaseMapState, ICoreState]) => {
-			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
+		.filter(Boolean)
+		.map((map: CaseMapState) => {
+			const key = AlertMsgTypes.OverlaysOutOfBounds;
 			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
 			let isInBound;
 			if (!isWorldView) {
 				const { extentPolygon } = map.data.position;
 				const { footprint } = map.data.overlay;
-				isInBound = Boolean(intersect(polygon(extentPolygon.coordinates), polygon(footprint.coordinates[0])));
+				try {
+					isInBound = Boolean(intersect(polygon(extentPolygon.coordinates), polygon(footprint.coordinates[0])));
+				} catch (e) {
+					console.warn('checkImageOutOfBounds$: turf exception', e)
+				}
 			}
+
 			if (isWorldView || isInBound) {
-				updatedOverlaysOutOfBounds.delete(map.id);
+				return new RemoveAlertMsg({ key, value: map.id });
 			}
-			else {
-				updatedOverlaysOutOfBounds.add(map.id);
-			}
-			return new UpdateAlertMsg({ value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds });
+
+			return new AddAlertMsg({ key, value: map.id });
+
 		});
 
 	/**
@@ -186,16 +174,13 @@ export class MapEffects {
 	 * @ofType PositionChangedAction
 	 * @dependencies map
 	 * @filter There is a selected map
-	 * @action UpdateAlertMsg
+	 * @action RemoveAlertMsg
 	 */
 	@Effect()
-	updateOutOfBoundList: Observable<UpdateAlertMsg> = this.actions$
+	updateOutOfBoundList: Observable<RemoveAlertMsg> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_REMOVED)
-		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([action, { alertMsg }]: [ImageryRemovedAction, ICoreState]) => {
-			const updatedOverlaysOutOfBounds = new Set(alertMsg.get(AlertMsgTypes.OverlaysOutOfBounds));
-			updatedOverlaysOutOfBounds.delete(action.payload.id);
-			return new UpdateAlertMsg({ value: updatedOverlaysOutOfBounds, key: AlertMsgTypes.OverlaysOutOfBounds });
+		.map((action: ImageryRemovedAction) => {
+			return new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: action.payload.id });
 		});
 
 
@@ -259,16 +244,6 @@ export class MapEffects {
 
 	/**
 	 * @type Effect
-	 * @name pinPointModeTriggerAction$
-	 * @ofType PinPointModeTriggerAction
-	 */
-	@Effect({ dispatch: false })
-	pinPointModeTriggerAction$: Observable<boolean> = this.actions$
-		.ofType<PinPointModeTriggerAction>(MapActionTypes.TRIGGER.PIN_POINT_MODE)
-		.map(({ payload }) => payload);
-
-	/**
-	 * @type Effect
 	 * @name pinLocationModeTriggerAction$
 	 * @ofType PinLocationModeTriggerAction
 	 */
@@ -276,16 +251,6 @@ export class MapEffects {
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$
 		.ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
 		.map(({ payload }) => payload);
-
-	/**
-	 * @type Effect
-	 * @name getFilteredOverlays$
-	 * @ofType ContextMenuGetFilteredOverlaysAction
-	 */
-	@Effect({ dispatch: false })
-	getFilteredOverlays$: Observable<ContextMenuGetFilteredOverlaysAction> = this.actions$
-		.ofType<ContextMenuGetFilteredOverlaysAction>(MapActionTypes.CONTEXT_MENU.GET_FILTERED_OVERLAYS)
-		.share();
 
 	/**
 	 * @type Effect

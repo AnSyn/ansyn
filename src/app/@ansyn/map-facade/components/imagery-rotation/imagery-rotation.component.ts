@@ -1,7 +1,8 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';

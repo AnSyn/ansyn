@@ -10,7 +10,8 @@ import { mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/r
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { ImageryCreatedAction } from '@ansyn/map-facade';
+import { Feature } from 'geojson';
+import { ImageryCreatedAction } from '@ansyn/map-facade/actions/map.actions';
 
 describe('ContextEntityAppEffects', () => {
 	let contextEntityAppEffects: ContextEntityAppEffects;
@@ -32,7 +33,7 @@ describe('ContextEntityAppEffects', () => {
 		}
 	};
 
-	const feature: GeoJSON.Feature<any> = {
+	const feature: Feature<any> = {
 		'type': 'Feature',
 		'properties': {},
 		'geometry': {
@@ -43,6 +44,11 @@ describe('ContextEntityAppEffects', () => {
 
 	const fakeContextEntities = [{ id: '1', date: new Date('2015-04-17T03:55:12.129Z'), featureJson: feature }];
 	const cases: Case[] = [{
+		id: '1',
+		name: 'name',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
 		state: {
 			contextEntities: fakeContextEntities,
 			time: { type: '', from: new Date(), to: new Date() },

@@ -2,15 +2,15 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { ImageryProviderService } from '../provider-service/imagery-provider.service';
-import { BaseMapSourceProvider } from '../model/base-source-provider.model';
+import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { ConfigurationToken } from '../model/configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	mapType = 'mapType1';
+	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';
 
 	create(metaData: any): any {

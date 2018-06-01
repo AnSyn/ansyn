@@ -1,13 +1,9 @@
-export interface ICoreConfigAlert {
-	key: string;
-	background: string;
-	text: string;
-}
+import { IStorageConfig } from "../services/storage/config";
 
 export interface ICoreConfig {
-	alerts: ICoreConfigAlert [];
-	colors: {
-		active: string,
-		inactive: string
-	}
+	storageService: IStorageConfig;
+	welcomeNotification: {
+		headerText: string;
+		mainText: string;
+	};
 }

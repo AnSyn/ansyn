@@ -3,6 +3,7 @@
 :host {
 	&.combo-center .combo-container .options-container .option {
 		justify-content: center;
+		text-align: center;
 	}
 	position: relative;
 	display: block;
@@ -13,37 +14,10 @@
 		width: 100%;
 		position: relative;
 
-		button.trigger {
-			overflow: hidden;
-			width: 100%;
-			outline: none;
-			background: black;
-			color: white;
-			border: 1px solid;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 0 6px;
-			cursor: default;
-			height: 100%;
-			white-space: nowrap;
-
-			span.arrow {
-				margin-left: 5px;
-				font-size: 7px;
-			}
-
-			div.rander {
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-
-		}
 		.options-container {
 			border: 1px solid;
 			border-bottom: none;
-			width: 100%;
+			// width: 100%;
 			background: black;
 
 			&.show {
@@ -74,7 +48,7 @@
 				border: none;
 				text-align: left;
 				height: 29px;
-				display: flex;
+				display: block;
 				align-items: center;
 				i {
 					align-text: center;
@@ -99,5 +73,16 @@
 				}
 			}
 		}
+	}
+}
+@media screen and (max-width: 1400px) {
+	.options-container {
+		width: 200%;
+	}
+}
+@media screen and (min-width: 1400px) {
+	.options-container {
+		width: 100%;
+
 	}
 }

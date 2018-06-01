@@ -23,7 +23,76 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "ansyn",
 			"styles": [
-				"./styles/styles.less"
+				"./app/@ansyn/assets/styles/styles.less"
+			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/@ansyn"
+				]
+			},
+			"scripts": [
+			],
+			"environmentSource": "configuration/configuration.ts",
+			"environments": {
+				"dev": "configuration/configuration.dev.ts",
+				"prod": "configuration/configuration.prod.ts"
+			}
+		},
+		{
+			"name": "builder",
+			"root": "src",
+			"outDir": "build/buildBundle/dist",
+			"assets": [
+				{
+					"glob": "**/*",
+					"input": "./app/@ansyn/assets",
+					"output": "./assets/"
+				},
+				"favicon.ico"
+			],
+			"index": "index.html",
+			"main": "app/builder/main.builder.ts",
+			"polyfills": "polyfills.ts",
+			"test": "test.ts",
+			"tsconfig": "tsconfig.builder.json",
+			"testTsconfig": "tsconfig.spec.json",
+			"prefix": "ansyn",
+			"styles": [
+				"./app/@ansyn/assets/styles/styles.less"
+			],
+			"stylePreprocessorOptions": {
+				"includePaths": [
+					"./app/@ansyn"
+				]
+			},
+			"scripts": [
+			],
+			"environmentSource": "configuration/configuration.ts",
+			"environments": {
+				"dev": "configuration/configuration.dev.ts",
+				"prod": "configuration/configuration.prod.ts"
+			}
+		},
+		{
+			"name": "devApp",
+			"root": "src",
+			"outDir": "build/buildBundle/dist",
+			"assets": [
+				{
+					"glob": "**/*",
+					"input": "./app/@ansyn/assets",
+					"output": "./assets/"
+				},
+				"favicon.ico"
+			],
+			"index": "app/builder/index.html",
+			"main": "app/builder/devApp.main.ts",
+			"polyfills": "polyfills.ts",
+			"tsconfig": "tsconfig.builder.json",
+			"testTsconfig": "tsconfig.spec.json",
+			"prefix": "ansyn",
+			"styles": [
+				"./app/@ansyn/assets/styles/styles.less"
 			],
 			"stylePreprocessorOptions": {
 				"includePaths": [
@@ -38,6 +107,7 @@
 				"prod": "configuration/configuration.prod.ts"
 			}
 		}
+
 	],
 	"e2e": {
 		"protractor": {
@@ -46,7 +116,7 @@
 	},
 	"lint": [
 		{
-			"project": "tsconfig.app.json",
+			"project": "src/tsconfig.app.json",
 			"exclude": "**/node_modules/**/*"
 		},
 		{
@@ -67,7 +137,7 @@
 		"styleExt": "less",
 		"component": {},
 		"build": {
-			"showCircularDependencies": false
+			"showCircularDependencies": true
 		}
 	}
 }

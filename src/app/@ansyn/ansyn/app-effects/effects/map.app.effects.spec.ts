@@ -1,20 +1,14 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { CasesReducer, CasesService, ICasesState } from '@ansyn/menu-items/cases';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { BaseMapSourceProvider, ConfigurationToken, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
-import { StartMouseShadow } from '@ansyn/menu-items/tools';
 import {
 	ActiveMapChangedAction,
-	DrawPinPointAction,
 	ImageryCreatedAction,
 	MapInstanceChangedAction,
-	MapSingleClickAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
@@ -22,11 +16,9 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
-import * as utils from '@ansyn/core/utils';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	IMapState,
@@ -35,7 +27,7 @@ import {
 	MapReducer,
 	mapStateSelector
 } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeToolsActionStore, StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -43,14 +35,18 @@ import {
 	overlaysInitialState,
 	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { PinPointTriggerAction } from '@ansyn/map-facade/actions';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { casesFeatureKey, casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import {
+	casesFeatureKey, CasesReducer, casesStateSelector,
+	ICasesState
+} from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { IToolsState, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import {
+	IToolsState, toolsFlags, toolsInitialState,
+	toolsStateSelector
+} from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	ILayerState,
 	initialLayersState,
@@ -59,14 +55,16 @@ import {
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { statusBarFlagsItems } from '@ansyn/status-bar';
-import { SetOverlaysCriteriaAction } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { ImageryPluginsInitialized } from '@ansyn/map-facade';
-import { toolsFlags } from '@ansyn/menu-items';
-
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
+import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	mapType = 'mapType1';
+	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';
 
 	create(metaData: any): any {
@@ -129,6 +127,11 @@ describe('MapAppEffects', () => {
 	const imagery1PositionBoundingBox = {test: 1};
 
 	const cases: Case[] = [{
+		id: '1',
+		name: 'name',
+		owner: 'owner',
+		creationTime: new Date(),
+		lastModified: new Date(),
 		state: {
 			time: {type: '', from: new Date(), to: new Date()},
 			region: {
@@ -169,6 +172,7 @@ describe('MapAppEffects', () => {
 				})
 			],
 			providers: [
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{ provide: CacheService, useClass: CacheService, deps: [VisualizersConfig, ImageryCommunicatorService] },
 				ImageryCommunicatorService,
 				ImageryProviderService,
@@ -256,83 +260,6 @@ describe('MapAppEffects', () => {
 		baseSourceProviders = _baseSourceProviders;
 	}));
 
-
-	it('onMapSingleClick$ effect', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		const imagery1 = {
-			removeSingleClickEvent: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'removeSingleClickEvent');
-		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', {a: new MapSingleClickAction({lonLat})});
-		const a = new UpdateStatusFlagsAction({key: statusBarFlagsItems.pinPointSearch, value: false});
-		const b = new PinPointTriggerAction(lonLat);
-		const expectedResults = cold('--(ab)--', {a, b});
-		expect(mapAppEffects.onMapSingleClick$).toBeObservable(expectedResults);
-		expect(imagery1.removeSingleClickEvent).toHaveBeenCalledTimes(3);
-	});
-
-	it('onPinPointTrigger$ effect', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		const imagery1 = {
-			addPinPointIndicator: () => {
-			}
-		};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		spyOn(imagery1, 'addPinPointIndicator');
-		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', {a: new PinPointTriggerAction(lonLat)});
-		const region = getPolygonByPointAndRadius(lonLat).geometry;
-
-		const a = new DrawPinPointAction(lonLat);
-		const b = new SetOverlaysCriteriaAction({region});
-
-		const expectedResults = cold('--(ab)--', {a, b});
-		expect(mapAppEffects.onPinPointTrigger$).toBeObservable(expectedResults);
-	});
-
-	it('onAddCommunicatorDoPinpointSearch$ on add communicator search pinpoint', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointSearch, true);
-		const communicator = {
-			createMapSingleClickEvent: () => {
-			}
-		};
-		// this.imageryCommunicatorService.provide
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-		spyOn(communicator, 'createMapSingleClickEvent');
-
-		const action = new ImageryCreatedAction({id: 'tmpId1'});
-		actions = hot('--a--', {a: action});
-
-		// no need to check observable itself
-		mapAppEffects.onAddCommunicatorDoPinpointSearch$.subscribe(() => {
-			expect(communicator.createMapSingleClickEvent).toHaveBeenCalled();
-		});
-	});
-
-	it('onAddCommunicatorShowPinPointIndicator$ on add communicator show pinpoint', () => {
-		statusBarState.flags.set(statusBarFlagsItems.pinPointIndicator, true);
-		const action = new ImageryPluginsInitialized('tmpId2');
-		const lonLat = [-70.33666666666667, 25.5];
-		actions = hot('--a--', {a: action});
-		const expectedResults = cold('--a--', {a: new DrawPinPointAction(lonLat)});
-
-		expect(mapAppEffects.onAddCommunicatorShowPinPointIndicator$).toBeObservable(expectedResults);
-	});
-
-	it('onAddCommunicatorShowShadowMouse$ on add communicator start shadow mouse', () => {
-		toolsState.flags.set(toolsFlags.shadowMouse, true);
-		const action = new MapInstanceChangedAction(<any> {id: 'tmpId2'});
-		actions = hot('--a--', {a: action});
-		const expectedResults = cold('--a--', {a: new StartMouseShadow()});
-
-		expect(mapAppEffects.onAddCommunicatorShowShadowMouse$).toBeObservable(expectedResults);
-	});
-
 	describe('onDisplayOverlay$ communicator should set Layer on map, by getFootprintIntersectionRatioInExtent', () => {
 		const fakeLayer = {};
 		const fakeExtent = [1, 2, 3, 4];
@@ -354,14 +281,14 @@ describe('MapAppEffects', () => {
 			};
 
 
-			Object.defineProperty(utils, 'extentFromGeojson', {
+			Object.defineProperty(extentFromGeojson, 'extentFromGeojson', {
 				writable: true,
 				configurable: true,
 				value: () => {
 				}
 			});
 
-			spyOn(utils, 'extentFromGeojson').and.returnValue(fakeExtent);
+			spyOn(extentFromGeojson, 'extentFromGeojson').and.returnValue(fakeExtent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');
@@ -465,7 +392,7 @@ describe('MapAppEffects', () => {
 				b: new DisplayOverlayAction({
 					overlay,
 					mapId: 'imagery1',
-					ignoreRotation: true
+					forceFirstDisplay: true
 				})
 			});
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);

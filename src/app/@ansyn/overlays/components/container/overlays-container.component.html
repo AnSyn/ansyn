@@ -2,7 +2,7 @@
 
 	<ansyn-overlay-status></ansyn-overlay-status>
 
-	<div class="overlays-dots" *ngIf="loading" [@timeline-status]>
+	<div class="overlays-dots" *ngIf="overlaysLoader$ | async" [@timeline-status]>
 		<div class="loading-container">
 			<div></div>
 			<div></div>
@@ -11,6 +11,5 @@
 		</div>
 	</div>
 
-	<ansyn-timeline [drops]="drops" [configuration]="configuration" [redraw$]="redraw$"
-					[markup]="overlaysMarkup"></ansyn-timeline>
+	<ansyn-timeline></ansyn-timeline>
 </div>

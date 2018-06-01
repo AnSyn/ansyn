@@ -18,9 +18,8 @@ services:
 before_install:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 
-# Use yarn for faster installs
 install:
-  - npm install
+  - yarn install
 
 # Init GUI
 before_script:
@@ -32,7 +31,7 @@ before_script:
 script:
   - npm run test:single-run
   - npm run test:e2e
-  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT
+  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
 
 cache:
   yarn: true

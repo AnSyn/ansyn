@@ -1,13 +1,17 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CaseMapState } from '@ansyn/core/models';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import { coreStateSelector, ICoreState, LayoutKey, layoutOptions, MapsLayout } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../actions/map.actions';
+import { SetMapsDataActionStore, UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
+import { DOCUMENT } from '@angular/common';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { MapsLayout } from '@ansyn/core/models/maps-layout';
+import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -32,6 +36,12 @@ export class ImageriesManagerComponent implements OnInit {
 		.pluck<IMapState, CaseMapState[]>('mapsList')
 		.distinctUntilChanged();
 
+	public showWelcomeNotification$ = this.store.select(coreStateSelector)
+		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
+		.distinctUntilChanged()
+		.map(bool => !bool)
+	;
+
 	public selectedLayout;
 
 	clickTimeout: number;
@@ -41,16 +51,24 @@ export class ImageriesManagerComponent implements OnInit {
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
-	pinPointMode: boolean;
 	mapsList: CaseMapState[];
 	activeMapId: string;
 
-	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>) {
+	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>, @Inject(DOCUMENT) protected document: Document) {
 	}
 
 	ngOnInit() {
 		this.initListeners();
 		this.initSubscribers();
+		this.initClickOutside();
+	}
+
+	initClickOutside() {
+		Observable
+			.fromEvent(this.document, 'click')
+			.filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element))
+			.do((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
+			.subscribe()
 	}
 
 	initSubscribers() {
@@ -74,10 +92,6 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 	initListeners() {
-		this.mapEffects.pinPointModeTriggerAction$.subscribe((_pinPointMode: boolean) => {
-			this.pinPointMode = _pinPointMode;
-		});
-
 		this.mapEffects.pinLocationModeTriggerAction$.subscribe((_pinLocationMode: boolean) => {
 			this.pinLocationMode = _pinLocationMode;
 		});
@@ -95,6 +109,7 @@ export class ImageriesManagerComponent implements OnInit {
 	changeActiveImagery(value) {
 		if (this.activeMapId !== value) {
 			this.store.dispatch(new SetMapsDataActionStore({ activeMapId: value }));
+			this.store.dispatch(new ActiveImageryMouseEnter());
 		}
 	}
 

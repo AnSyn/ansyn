@@ -1,11 +1,11 @@
 import {
-	ILayerState, initialLayersState, layersFeatureKey, LayersReducer,
+	ILayerState,
+	initialLayersState,
+	layersFeatureKey,
+	LayersReducer,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import {
-	BeginLayerTreeLoadAction, SetAnnotationsLayer,
-	ToggleDisplayAnnotationsLayer
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { BeginLayerCollectionLoadAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
@@ -14,9 +14,11 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { Observable } from 'rxjs/Observable';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
-	casesFeatureKey, CasesReducer, casesStateSelector, ICasesState,
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	ICasesState,
 	initialCasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
@@ -52,40 +54,19 @@ describe('LayersAppEffects', () => {
 			[casesStateSelector, casesState],
 			[layersStateSelector, layerState]
 		]);
-		casesState.selectedCase = <any> { state: { layers: { displayAnnotationsLayer: false, annotationsLayer: <any>'' } } };
+		casesState.selectedCase = <any> {
+			state: {
+				layers: {
+					displayAnnotationsLayer: false,
+					annotationsLayer: <any>''
+				}
+			}
+		};
 		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
 	}));
 
 	beforeEach(inject([LayersAppEffects], (_layersAppEffects: LayersAppEffects) => {
 		layersAppEffects = _layersAppEffects;
 	}));
-
-
-	it('selectCase$', () => {
-		let selectedCase = <any> { id: 'id' };
-		actions = hot('--a--', { a: new SelectCaseAction(selectedCase) });
-		const expectedResults = cold('--b--', {
-			b: new BeginLayerTreeLoadAction()
-		});
-		expect(layersAppEffects.selectCase$).toBeObservable(expectedResults);
-	});
-
-	describe('toggleAnnotationsLayer$ should check hide show annotaion layers', () => {
-		it('displayAnnotationLayer - true', () => {
-			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(true) });
-			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({ operation: 'show', relevantMaps: 'all' })
-			});
-			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
-		});
-
-		it('displayAnnotationLayer - false', () => {
-			actions = hot('--a--', { a: new ToggleDisplayAnnotationsLayer(false) });
-			const expectedResults = cold('--(b)--', {
-				b: new AnnotationVisualizerAgentAction({ operation: 'hide', relevantMaps: 'all' })
-			});
-			expect(layersAppEffects.toggleAnnotationsLayer$).toBeObservable(expectedResults);
-		});
-	});
 
 });

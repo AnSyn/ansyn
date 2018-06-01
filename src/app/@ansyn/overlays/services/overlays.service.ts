@@ -1,56 +1,40 @@
-import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, StartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Overlay } from '../models/overlay.model';
-import { IOverlaysState, TimelineState } from '../reducers/overlays.reducer';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysState, OverlayDrop, TimelineRange } from '../reducers/overlays.reducer';
+import { OverlaysCriteria, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
-import * as bbox from '@turf/bbox';
-import * as bboxPolygon from '@turf/bbox-polygon';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { times as doNTimes } from 'lodash';
-import { CaseIntervalCriteria, CaseTimeState, OverlaysCriteria } from '@ansyn/core';
-import { sortByDateAsc, sortByDateDesc, sortByResolutionDesc } from '@ansyn/core/utils/sorting';
+import { union } from 'lodash';
+import { FilterModel } from '@ansyn/core/models/filter.model';
+import { sortByDate, sortByDateDesc, sortByResolutionDesc } from '@ansyn/core/utils/sorting';
+import { CaseIntervalCriteria, CaseTimeState } from '@ansyn/core/models/case.model';
 import { Interval, IntervalTimeFrame } from '@ansyn/core/models/intervals.model';
-import { IDateRange } from '@ansyn/core/models/time.model';
+import { times as doNTimes } from 'lodash';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
 @Injectable()
 export class OverlaysService {
-
-	static filter(
-		overlays: Map<string, Overlay>,
-		filters: { key: any, filterFunc: (ovrelay: any, key: string) => boolean }[],
-		timeState: CaseTimeState
-	): string[] {
-		if (!overlays) {
-			return [];
-		}
-
-		let overlaysArray;
-		if (!filters || !Array.isArray(filters)) {
-			// no - filters
-			overlaysArray = Array.from( overlays.values() );
-		} else {
-			// filters active
-			overlaysArray = [];
-			overlays.forEach(overlay => {
-				if (filters.every(filter => filter.filterFunc(overlay, filter.key))) {
-					overlaysArray.push(overlay);
-				}
-			});
+	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: Overlay[], showOnlyFavorite: boolean, timeState: CaseTimeState): string[] {
+		let parsedOverlays: Overlay[] = favorites;
+		if (!showOnlyFavorite) {
+			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
+			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
 		}
 
 		if (timeState.intervals) {
 			// interval  mode - limit overlays to be 1 per interval scope
-			overlaysArray = OverlaysService.intervalFilter(overlaysArray, timeState);
+			parsedOverlays = OverlaysService.intervalFilter(parsedOverlays, timeState);
 		}
 
-		return overlaysArray.length > 0 ? overlaysArray.map(o => o.id) : [];
+		parsedOverlays.sort(sortByDateDesc);
+		return union(parsedOverlays.map(({ id }) => id));
 	}
 
+	/* start */
 	// limit overlays to be 1 per interval scope
 	static intervalFilter(overlays: Overlay[], timeState: CaseTimeState): Overlay[] {
 		const tf: IntervalTimeFrame = OverlaysService.calculateTimeFrame(timeState);
@@ -58,7 +42,7 @@ export class OverlaysService {
 		const intervalsArrays: Array<Interval> = OverlaysService.createIntervalsArray(tf, timeState);
 
 		// put each overlay in the right interval
-		overlays = overlays.sort(sortByDateAsc);
+		overlays = overlays.sort(sortByDate);
 		let intervalIndex = 0;
 		overlays.forEach(o => {
 			// advance index until date is not exceeding interval end time
@@ -126,7 +110,6 @@ export class OverlaysService {
 			let intervalStartMs = startTime + intervalIndex * intervalSize;
 			let intervalEndTimeMs = intervalStartMs + intervalSize - 1;
 			const intervalPivotTimeMs = intervalStartMs + intervalSize - 1;	// pivot is always the end of the original scope
-
 			// manipulate interval according to criteria
 			switch (timeState.intervals.criteria.type) {
 				case 'best':
@@ -181,7 +164,7 @@ export class OverlaysService {
 						break;
 					case 'closest-after':
 						overlays = overlays.filter(o => o.date.getTime() >= interval.pivot.getTime())	// remove overlays before pivot
-							.sort(sortByDateAsc);	// sort - earliest first
+							.sort(sortByDate);	// sort - earliest first
 						break;
 					case 'closest-both':
 						overlays = overlays.sort((o1, o2) => // sort - closest
@@ -196,22 +179,7 @@ export class OverlaysService {
 
 		return result;
 	}
-
-	static sort(overlays: any[]): Overlay[] {
-		if (!overlays) {
-			return [] as Overlay[];
-		}
-		return overlays
-			.sort((o1, o2) => {
-				if (o2.date < o1.date) {
-					return 1;
-				}
-				if (o1.date < o2.date) {
-					return -1;
-				}
-				return 0;
-			});
-	}
+	/* end */
 
 	static isFullOverlay(overlay: Overlay): boolean {
 		return Boolean(overlay && overlay.date);
@@ -235,67 +203,41 @@ export class OverlaysService {
 					obj[property] = item[property];
 					return obj;
 				}, {});
-		});
+			});
 	}
 
 
-	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): Array<any> {
+	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): OverlayDrop[] {
 		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
-
-		specialObjects.forEach((value) => {
-			overlaysData.push(value);
-		});
-
-		return [{ name: undefined, data: overlaysData }];
+		return [...overlaysData, ...Array.from(specialObjects.values())];
 	}
 
 	get fetchLimit() {
 		return (this.config) ? this.config.limit : null;
 	}
 
-	constructor(@Inject(OverlaysConfig) protected config: IOverlaysConfig,
+	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
 				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
-		let tBbox = bbox(params.region);
-		let tBboxFeature = bboxPolygon(tBbox);
-		const timeRangeArray: Array<IDateRange> = this.getSearchTimeRange(params.time);
-
+		let feature = params.region;
 		return this._overlaySourceProvider.fetch({
+			dataInputFilters: Boolean(params.dataInputFilters) && params.dataInputFilters.active ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,
-			region: tBboxFeature.geometry,
-			timeRange: timeRangeArray
+			region: feature,
+			timeRange: <any> {
+				start: params.time.from,
+				end: params.time.to
+			}
 		});
-	}
-
-	getSearchTimeRange(timeState: CaseTimeState): Array<IDateRange> {
-		const searchTimeRange = new Array<IDateRange>();
-
-		if (!timeState.intervals) {
-			searchTimeRange.push({
-				start: timeState.from,
-				end: timeState.to
-			});
-		} else {
-			const tf: IntervalTimeFrame = OverlaysService.calculateTimeFrame(timeState);
-			// create array of intervals (see Interval interface)
-			const intervalsArrays: Array<Interval> = OverlaysService.createIntervalsArray(tf, timeState);
-			intervalsArrays.forEach(interval => {
-				searchTimeRange.push({
-					start: interval.startTime,
-					end: interval.endTime
-				});
-			});
-		}
-		return searchTimeRange;
 	}
 
 	getOverlayById(id: string, sourceType: string): Observable<Overlay> {
 		return this._overlaySourceProvider.getById(id, sourceType);
 	}
 
-	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
+	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
 	}
 
@@ -303,17 +245,47 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
 	}
 
-	getTimeStateByOverlay(displayedOverlay: Overlay, timelineState: TimelineState): TimelineState {
-		const delta: number = timelineState.to.getTime() - timelineState.from.getTime();
-		const deltaTenth: number = (delta) * 0.1;
-		let from: Date, to: Date;
-		if (displayedOverlay.date < timelineState.from) {
-			from = new Date(displayedOverlay.date.getTime() - deltaTenth);
-			to = new Date(from.getTime() + delta);
-		} else if (timelineState.to < displayedOverlay.date) {
-			to = new Date(displayedOverlay.date.getTime() + deltaTenth);
-			from = new Date(to.getTime() - delta);
+	getTimeStateByOverlay(displayedOverlay: OverlayDrop, timeLineRange: TimelineRange): TimelineRange {
+		let { start, end } = timeLineRange;
+		const startTime = start.getTime();
+		const endTime = end.getTime();
+		const dropTime = displayedOverlay.date.getTime();
+		const deltaTenth = this.getTenth(timeLineRange);
+		const dropTimeMarging = {
+			start: dropTime - deltaTenth,
+			end: dropTime + deltaTenth
+		};
+		if (dropTimeMarging.start < startTime) {
+			start = new Date(dropTimeMarging.start);
+		} else if (dropTimeMarging.end > endTime) {
+			end = new Date(dropTimeMarging.end);
 		}
-		return { from, to };
+		return { start, end };
+	}
+
+	private getTenth(timeLineRange: TimelineRange): number {
+		let { start, end } = timeLineRange;
+		const delta: number = end.getTime() - start.getTime();
+		return delta === 0 ? 5000 : (delta) * 0.05;
+	}
+
+	private expendByTenth(timeLineRange: TimelineRange) {
+		const tenth = this.getTenth(timeLineRange);
+		return {
+			start: new Date(timeLineRange.start.getTime() - tenth),
+			end: new Date(timeLineRange.end.getTime() + tenth)
+		};
+	}
+
+
+	getTimeRangeFromDrops(drops: Array<OverlayDrop>): TimelineRange {
+		let start = drops[0].date;
+		let end = drops[0].date;
+		drops.forEach(drop => {
+			start = drop.date < start ? drop.date : start;
+			end = drop.date > end ? drop.date : end;
+		});
+		return this.expendByTenth({ start, end });
+
 	}
 }

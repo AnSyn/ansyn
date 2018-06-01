@@ -1,48 +1,38 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState } from '../../reducers/status-bar.reducer';
-import {
-	ExpandAction, GoNextAction, GoPrevAction,
-	UpdateStatusFlagsAction
-} from '../../actions/status-bar.actions';
+import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
+import { ExpandAction, UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
 import { StatusBarModule } from '../../status-bar.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { StatusBarConfig } from '../../models/index';
-import { statusBarFlagsItems } from '@ansyn/status-bar';
-import { CoreConfig } from '@ansyn/core';
-import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models';
+import { StatusBarConfig } from '../../models/statusBar.config';
+import { statusBarFlagsItemsEnum } from '../../models/status-bar-flag-items.model';
+import { GoAdjacentOverlay } from '@ansyn/core/actions/core.actions';
+import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { ALERTS } from '@ansyn/core/alerts/alerts.model';
+import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
+import { MockComponent } from '@ansyn/core/test/mock-component';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
 	let fixture: ComponentFixture<StatusBarComponent>;
 	let store: Store<IStatusBarState>;
+	const mockImageryStatusComponent = MockComponent({ selector: 'ansyn-imagery-status', inputs: ['overlay', 'active', 'mapId'], outputs: ['backToWorldView']})
+	const mockSelectedCaseBarComponent = MockComponent({ selector: 'ansyn-selected-case-bar', inputs: ['selectedCaseName'] });
+	const mockComboBoxes = MockComponent({ selector: 'ansyn-combo-boxes' });
+	const mockNavigationBar = MockComponent({ selector: 'ansyn-navigation-bar' });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), StatusBarModule],
-			providers: [{ provide: LoggerConfig, useValue: {} },
-				{
-					provide: StatusBarConfig,
-					useValue: { toolTips: {} }
-				},
-				{
-					provide: CoreConfig,
-					useValue: { errors: {} }
-				},
-				{
-					provide: ORIENTATIONS,
-					useValue: comboBoxesOptions.orientations
-				},
-				{
-					provide: TIME_FILTERS,
-					useValue: comboBoxesOptions.timeFilters
-				},
-				{
-					provide: GEO_FILTERS,
-					useValue: comboBoxesOptions.geoFilters
-				}
+			imports: [StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer, [coreFeatureKey]: CoreReducer }), EffectsModule.forRoot([])],
+			declarations: [StatusBarComponent,
+				/* mock */
+				mockImageryStatusComponent,
+				mockSelectedCaseBarComponent,
+				mockComboBoxes,
+				mockNavigationBar
 			]
 		})
 			.compileComponents();
@@ -59,63 +49,6 @@ describe('StatusBarComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	// it('layoutSelectChange call store.dispatch with ChangeLayoutAction', () => {
-	// 	spyOn(store, 'dispatch');
-	// 	component.layoutSelectChange(5);
-	// 	expect(store.dispatch).toHaveBeenCalledWith(new SetLayoutAction(5));
-	// });
-
-
-	it('eye indicator should be active', () => {
-		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
-		expect(result).toBe(true);
-		component.flags.set(statusBarFlagsItems.pinPointIndicator, false);
-		fixture.detectChanges();
-		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
-		expect(result).toBe(false);
-	});
-
-	it('check click on pinPoint flags', () => {
-		spyOn(store, 'dispatch');
-		fixture.nativeElement.querySelector('.edit-pinpoint').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch }));
-
-		fixture.nativeElement.querySelector('.eye-button').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointIndicator }));
-	});
-
-	describe('clicks', () => {
-		it('clickGoPrev should dispatch action GoPrevAction', () => {
-			spyOn(component.store, 'dispatch');
-			component.clickGoPrev();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoPrevAction());
-		});
-		it('clickGoNext should dispatch action GoNextAction', () => {
-			spyOn(component.store, 'dispatch');
-			component.clickGoNext();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new GoNextAction());
-		});
-		it('clickExpand should dispatch action ExpandAction', () => {
-			spyOn(component.store, 'dispatch');
-			component.clickExpand();
-			expect(component.store.dispatch).toHaveBeenCalledWith(new ExpandAction());
-		});
-	});
-
-	[{ k: 39, n: 'goNextActive', f: 'clickGoNext' }, { k: 37, n: 'goPrevActive', f: 'clickGoPrev' }].forEach(key => {
-		it(`onkeyup should call ${key.n} when keycode = "${key.k}"`, () => {
-			spyOn(component, <'clickGoNext' | 'clickGoPrev'>key.f);
-			expect(component[key.n]).toEqual(false);
-			const $event = {
-				which: key.k,
-				currentTarget: { document: { activeElement: {} } }
-			};
-			component.onkeydown(<any>$event);
-			expect(component[key.n]).toEqual(true);
-
-			component.onkeyup(<any>$event);
-			expect(component[key.n]).toEqual(false);
-			expect(component[key.f]).toHaveBeenCalled();
-		});
-	});
 });
+
+

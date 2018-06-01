@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { MenuActionTypes } from '@ansyn/menu';
-import { UpdateMapSizeAction } from '@ansyn/map-facade';
-import { RedrawTimelineAction } from '@ansyn/overlays';
 import 'rxjs/add/operator/withLatestFrom';
-import { GoToExpandAction, SetAutoCloseMenu, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { SetClickOutside } from '@ansyn/menu/actions/menu.actions';
 import { IAppState } from '../app.effects.module';
 import { Store } from '@ngrx/store';
+import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
+import { MenuActionTypes, SetAutoClose } from '@ansyn/menu/actions/menu.actions';
+import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
+import { selectSubMenu } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
 @Injectable()
 export class MenuAppEffects {
@@ -24,30 +23,20 @@ export class MenuAppEffects {
 		.ofType(MenuActionTypes.TRIGGER.CONTAINER_CHANGED)
 		.mergeMap(() => [
 			new UpdateMapSizeAction(),
-			new RedrawTimelineAction(true)
+			new RedrawTimelineAction()
 		]);
 
 	/**
 	 * @type Effect
-	 * @name onGoToExpand$
-	 * @ofType GoToExpandAction
-	 * @action SetClickOutside
-	 */
-	@Effect()
-	onGoToExpand$: Observable<SetClickOutside> = this.actions$
-		.ofType<GoToExpandAction>(ToolsActionsTypes.GO_TO_EXPAND)
-		.map(({ payload }) => new SetClickOutside(!payload));
-
-	/**
-	 * @type Effect
 	 * @name autoCloseMenu$
-	 * @ofType SetAutoCloseMenu
-	 * @action SetClickOutside
+	 * @ofType annotationFlag$
+	 * @action SetAutoClose
 	 */
 	@Effect()
-	autoCloseMenu$: Observable<SetClickOutside> = this.actions$
-		.ofType<SetAutoCloseMenu>(ToolsActionsTypes.SET_AUTOCLOSE_MENU)
-		.map(({ payload }) => new SetClickOutside(payload));
+	autoCloseMenu$: Observable<SetAutoClose> = this.store$
+		.select(selectSubMenu)
+		.distinctUntilChanged()
+		.map((subMenu) => new SetAutoClose(typeof subMenu !== 'number'));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
 	}

@@ -5,11 +5,11 @@ import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
 import { Observable } from 'rxjs/Observable';
-import { AlertMsg } from '../../reducers';
-import { CoreConfig, ICoreConfig } from '../../models/index';
+import { AlertMsg } from '../../reducers/core.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '@ansyn/core/utils/time';
+import { ALERTS, IAlert } from '@ansyn/core/alerts/alerts.model';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -62,7 +62,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
 	}
 
-	constructor(protected store$: Store<any>, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	constructor(protected store$: Store<any>, @Inject(ALERTS) public alerts: IAlert[]) {
 	}
 
 	ngOnInit(): void {
@@ -84,7 +84,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (ids) {
 			return ids.has(this.mapId);
 		} else {
-			return this[alertKey]
+			return this[alertKey];
 		}
 	}
 

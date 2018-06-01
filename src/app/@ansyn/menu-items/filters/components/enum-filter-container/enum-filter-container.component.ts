@@ -9,6 +9,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class EnumFilterContainerComponent {
 
 	@Input() metadata: EnumFilterMetadata;
+	@Input() isLongFiltersList: boolean;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
 
 	onInputClicked(key: string) {

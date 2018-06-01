@@ -2,6 +2,7 @@ import { VisualizerStateStyle } from '@ansyn/plugins/openlayers/visualizers/mode
 import { Feature } from 'geojson';
 import { Observable } from 'rxjs/Observable';
 import { BaseImageryPlugin } from './base-imagery-plugin';
+import { ImageryPlugin, ImageryPluginMetaData } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export interface IVisualizerEntity {
 	id: string;
@@ -10,8 +11,6 @@ export interface IVisualizerEntity {
 	type?: string,
 	style?: Partial<VisualizerStateStyle>
 }
-
-export type IMarkupEvent = { id: string, class: boolean }[];
 
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
@@ -29,7 +28,6 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	type: string;
 	source: any;
 	vector: any;
-	isHideable: boolean;
 	isHidden: boolean;
 	interactions: Map<VisualizerInteractionTypes, any>;
 
@@ -83,4 +81,18 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	 */
 
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
+}
+
+export interface ImageryVisualizerMetaData extends ImageryPluginMetaData {
+	isHideable?: boolean;
+}
+
+export interface BaseImageryVisualizerClass extends ImageryVisualizerMetaData {
+	new(...args): BaseImageryVisualizer;
+}
+
+export function ImageryVisualizer(metaData: ImageryVisualizerMetaData) {
+	return function (constructor: BaseImageryVisualizerClass) {
+		ImageryPlugin(metaData)(constructor);
+	}
 }

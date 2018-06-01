@@ -2,10 +2,9 @@ import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { IMap } from '@ansyn/imagery';
+import { IMap } from '@ansyn/imagery/model/imap';
 
 export class BaseImageryPlugin {
-	static supported = [];
 	subscriptions: Subscription[] = [];
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
@@ -27,6 +26,7 @@ export class BaseImageryPlugin {
 		this.onDisposedEvent.emit();
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 		this.subscriptions = [];
+		this.onDispose()
 	}
 
 	init(communicator: CommunicatorEntity) {
@@ -36,5 +36,26 @@ export class BaseImageryPlugin {
 
 	onInit(): void {
 
+	}
+
+	onDispose() {
+
+	}
+}
+
+export interface ImageryPluginMetaData {
+	supported?: { new(...args): IMap }[];
+	deps?: any[];
+}
+
+export interface BaseImageryPluginClass extends ImageryPluginMetaData {
+	new(...args): BaseImageryPlugin;
+}
+
+export function ImageryPlugin(metaData: ImageryPluginMetaData) {
+	return function (constructor: BaseImageryPluginClass) {
+		Object.keys(metaData).forEach((key) => {
+			constructor[key] = metaData[key];
+		});
 	}
 }

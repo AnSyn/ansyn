@@ -1,20 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
-import { AnnotationProperties } from '../reducers/tools.reducer';
+import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
+import { AnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ImageManualProcessArgs } from '@ansyn/core';
-
-export type AnnotationAgentOperation = 'show'| 'hide' | 'toggleDrawInteraction';
-
-export type AnnotationAgentRelevantMap = 'all' | 'active' | 'others';
-
-export interface AnnotationVisualizerAgentPayload {
-	operation: AnnotationAgentOperation;
-	relevantMaps: AnnotationAgentRelevantMap;
-	mode?: AnnotationMode;
-}
-
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -26,35 +14,28 @@ export const ToolsActionsTypes = {
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'), // Give better name
 	GO_TO_INPUT_CHANGED: type('GO_TO_INPUT_CHANGED'),
-	GO_TO_EXPAND: type('GO_TO_EXPAND'),
 	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
-	SET_MANUAL_IMAGE_PROCESSING_SUCCESS: type('SET_MANUAL_IMAGE_PROCESSING_SUCCESS'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
-	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
-	ANNOTATION_VISUALIZER_AGENT: type('ANNOTATION_VISUALIZER_AGENT'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
-	SET_AUTOCLOSE_MENU: type('SET_AUTOCLOSE_MENU'),
-	FLAGS: {
-		ANNOTATION_OPEN: type('ANNOTATION_OPEN'),
-		ANNOTATION_CLOSE: type('ANNOTATION_CLOSE')
-	},
+	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
+	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
 	}
 
 };
 
-export class SetManualImageProcessingSuccess implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS
+export class UpdateOverlaysManualProcessArgs implements Action {
+	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
 
-	constructor(public payload?: any) {
+	constructor(public payload: { override?: boolean, data: OverlaysManualProcessArgs }) {
 
 	}
 }
@@ -125,13 +106,6 @@ export class GoToAction implements Action {
 	};
 }
 
-export class GoToExpandAction implements Action {
-	type = ToolsActionsTypes.GO_TO_EXPAND;
-
-	constructor(public payload: boolean) {
-	}
-}
-
 export class GoToInputChangeAction implements Action {
 	type = ToolsActionsTypes.GO_TO_INPUT_CHANGED;
 
@@ -200,45 +174,8 @@ export class EnableImageProcessing implements Action {
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
+	constructor(public payload: ImageManualProcessArgs ) {
 	};
-}
-
-export class SetManualImageProcessingArguments implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS;
-
-	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
-	};
-}
-
-export class AnnotationVisualizerAgentAction implements Action {
-	type = ToolsActionsTypes.ANNOTATION_VISUALIZER_AGENT;
-
-	constructor(public payload: AnnotationVisualizerAgentPayload) {
-	}
-}
-
-export class SetAutoCloseMenu implements Action {
-	type = ToolsActionsTypes.SET_AUTOCLOSE_MENU;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class AnnotationOpen implements Action {
-	type = ToolsActionsTypes.FLAGS.ANNOTATION_OPEN;
-
-	constructor(public payload: boolean) {
-
-	}
-}
-
-export class AnnotationClose implements Action {
-	type = ToolsActionsTypes.FLAGS.ANNOTATION_CLOSE;
-
-	constructor(public payload: boolean) {
-
-	}
 }
 
 export class AnnotationSetProperties implements Action {
@@ -249,8 +186,17 @@ export class AnnotationSetProperties implements Action {
 	}
 }
 
+export class SetSubMenu implements Action {
+	type = ToolsActionsTypes.SET_SUB_MENU;
+
+	constructor(public payload: SubMenuEnum) {
+
+	}
+}
+
 export type ToolsActions =
-	StartMouseShadow
+	UpdateOverlaysManualProcessArgs
+	| StartMouseShadow
 	| StopMouseShadow
 	| DisableMouseShadow
 	| EnableMouseShadow
@@ -265,11 +211,7 @@ export type ToolsActions =
 	| EnableImageProcessing
 	| SetAutoImageProcessingSuccess
 	| SetMapGeoEnabledModeToolsActionStore
-	| SetManualImageProcessingArguments
-	| AnnotationVisualizerAgentAction
-	| AnnotationOpen
-	| AnnotationClose
-	| SetAutoCloseMenu
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
-	| SetMeasureDistanceToolState;
+	| SetMeasureDistanceToolState
+	| SetSubMenu;

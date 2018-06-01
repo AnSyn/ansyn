@@ -1,5 +1,5 @@
 div.container {
-	padding: 0 0 10px 0;
+	padding: 0 0 20px 0;
 	// margin-top: 25px;
 	// margin-left: 10px;
 	div.title-row {
@@ -12,6 +12,11 @@ div.container {
 			font-size: 14px;
 			line-height: 100%;
 			color: #FFFFFF;
+			opacity: 1;
+
+			&.title-disabled {
+				opacity: 0.5
+			}
 		}
 
 		span.filtered {
@@ -52,7 +57,16 @@ div.container {
 		}
 	}
 
+	div.show-more-less {
+		font-size: 12px;
+		font-style: normal;
+		color: rgba(255, 255, 255, 0.75);
+		margin-right: 7px;
+		cursor: pointer;
+	}
+
 	div.fields {
 		overflow: hidden;
+
 	}
 }

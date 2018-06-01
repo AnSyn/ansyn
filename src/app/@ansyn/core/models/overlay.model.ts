@@ -1,9 +1,10 @@
-import { CaseRegionState, CaseTimeState } from '@ansyn/core';
+import { CaseDataInputFiltersState, CaseRegionState, CaseTimeState } from '@ansyn/core/models/case.model';
 
 export interface OverlaysFetchData {
 	data: Overlay[],
 	// number of overlays removed from total overlays (according to config)
-	limited: number
+	limited: number,
+	errors?: Error[]
 }
 
 export class Overlay {
@@ -29,6 +30,7 @@ export class Overlay {
 export interface OverlaysCriteria {
 	time?: CaseTimeState;
 	region?: CaseRegionState;
+	dataInputFilters?: CaseDataInputFiltersState;
 }
 
 export interface OverlaySpecialObject {

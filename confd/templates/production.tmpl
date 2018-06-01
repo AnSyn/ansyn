@@ -1,13 +1,13 @@
 {
   "casesConfig": {
-    "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}",
+    "schema": "cases",
     "paginationLimit": 16,
     "defaultCase": {
       "id": "4df64c1a-330b-1332-c286-7d73754bd001",
       "name": "Default case",
       "lastModified": "2018-04-04T13:21:45.616Z",
       "state": {
-        "geoFilter": "Pin-Point",
+        "geoFilter": "Point",
         "timeFilter": "Start - End",
         "orientation": "Align North",
         "maps": {
@@ -73,31 +73,15 @@
         },
         "favoriteOverlays": [],
         "region": {
-          "type": "Polygon",
+          "type": "Point",
           "coordinates": [
-            [
-              [
                 -117.9189835710201,
                 33.812091224680195
-              ],
-              [
-                -117.91896193002552,
-                33.812091224680195
-              ],
-              [
-                -117.91896193002552,
-                33.81210920546774
-              ],
-              [
-                -117.9189835710201,
-                33.81210920546774
-              ],
-              [
-                -117.9189835710201,
-                33.812091224680195
-              ]
-            ]
           ]
+        },
+        "dataInputFilters": {
+          "filters": [],
+          "active": false
         },
         "time": null,
         "facets": {
@@ -127,16 +111,26 @@
     "useHash": true
   },
   "layersManagerConfig": {
-    "layersByCaseIdUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    "schema": "layers"
   },
   "overlaysConfig": {
-    "limit": 249
+    "limit": 249,
+    "sourceTypeNotices": {
+		"PLANET": {
+			"Default": "Open California Satellite Imagery © 2016 Planet Labs Inc. licensed under CC BY-SA 4.0.",
+			"Sentinel2L1C": "© Copernicus Sentinel data $year",
+			"Landsat8L1G": "© USGS/NASA Landsat Program"
+		},
+		"OPEN_AERIAL": {
+			"Default": "© Copyright 2010, OpenAerialMap contributors"
+		}
+    }
   },
   "imageryConfig": {
     "geoMapsInitialMapSource": [
       {
         "mapType": "openLayersMap",
-        "mapSource": "BING",
+        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
         "mapSourceMetadata": {
           "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
           "styles": [
@@ -151,7 +145,7 @@
       },
       {
         "mapType": "disabledOpenLayersMap",
-        "mapSource": "BING",
+        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
         "mapSourceMetadata": {
           "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
           "styles": [
@@ -174,6 +168,7 @@
     }
   },
   "filtersConfig": {
+  	"shortFilterListLength": 8,
     "filters": [
       {
         "modelName": "sensorType",
@@ -207,7 +202,7 @@
     ]
   },
   "contextConfig": {
-    "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    "schema": "contexts"
   },
   "toolsConfig": {
     "GoTo": {
@@ -268,6 +263,7 @@
       "geoFilterEdit": "Edit Geo filter",
       "geoFilterShow": "Show/hide Geo filter",
       "timeFilter": "Time filter",
+      "dataInputFilter": "Data Input Filter",
       "timeFilterEdit": "Edit time filter",
       "screenNumber": "Screen number",
       "overlayCount": "Overlay count",
@@ -275,26 +271,40 @@
       "forward": "Next overlay",
       "reset": "Reset timeline (according to the time filter)",
       "enlarge": "Expand timeline"
+    },
+    "dataInputFiltersConfig": {
+      "filters": [
+      		{
+      			"text": "REScene",
+      			"value": 1,
+      			"collapsed": true,
+				"children": [
+					{ "text": "RapidEye-1", "value": { "sensorType": "REScene", "sensorName": "RapidEye-1" } },
+					{ "text": "RapidEye-2", "value": { "sensorType": "REScene", "sensorName": "RapidEye-2" } }
+				]
+			},
+			{
+				"text": "PSScene3Band",
+                "value": 1,
+                "collapsed": true,
+            	"children": [
+					{ "text": "103e", "value": { "sensorType": "PSScene3Band", "sensorName": "103e" } },
+					{ "text": "0f21", "value": { "sensorType": "PSScene3Band", "sensorName": "0f21" } },
+					{ "text": "RapidEye-2", "value": { "sensorType": "PSScene3Band", "sensorName": "RapidEye-2" } },
+					{ "text": "1042", "value": { "sensorType": "PSScene3Band", "sensorName": "1042" } }
+            	]
+            }
+		]
     }
   },
   "coreConfig": {
-    "alerts": [
-      {
-        "key": "noGeoRegistration",
-        "background": "#a70b0b",
-        "text": "This Image Has No Geo-Registration"
-      },
-      {
-        "key": "overlayIsNotPartOfCase",
-        "background": "#27B2CF",
-        "text": "This Overlay Is Not a Part of the Case"
-      },
-      {
-        "key": "overlaysOutOfBounds",
-        "background": "#80c5d4",
-        "text": "Image is out of bounds"
-      }
-    ]
+	"welcomeNotification": {
+		"headerText": "Welcome to AnSyn!",
+		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
+	},
+    "storageService": {
+      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    }
   },
   "loginConfig": {
     "baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
@@ -950,12 +960,58 @@
         }
       ],
       "blacklist": []
-    }
+    },
+    "OPEN_AERIAL": {
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": [
+					null
+				],
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": []
+	}
   },
   "idahoOverlaysSourceConfig": {
     "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
     "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
     "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
+  },
+  "openAerialOverlaysSourceConfig": {
+  	"baseUrl": "https://api.openaerialmap.org/meta"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",
@@ -969,7 +1025,7 @@
       "Landsat8L1G",
       "Sentinel2L1C"
     ],
-    "apiKey": "9f7afec0ebfb4e1ca0bf959a0050545b",
+    "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
     "tilesUrl": "https://tiles.planet.com/data/v1/"
   }
 }

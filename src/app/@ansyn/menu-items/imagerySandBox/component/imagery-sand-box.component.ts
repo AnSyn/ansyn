@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ImageryCommunicatorService, BaseImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoadOverlaysAction, SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
-import { Case } from '@ansyn/menu-items/cases';
 import { OverlaysCriteria } from '@ansyn/overlays/models/overlay.model';
 import { ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { AnnotationVisualizerAgentAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { casesStateSelector } from '../../cases/reducers/cases.reducer';
+import { Feature, Point } from 'geojson';
 import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
+import { Case } from '@ansyn/core/models/case.model';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 @Component({
 	selector: 'ansyn-map-sand-box',
@@ -26,7 +26,6 @@ export class ImagerySandBoxComponent implements OnInit {
 	public selectedCase: Case;
 	public overlaysCriteria: OverlaysCriteria;
 	public isSpecialDisplayed = false;
-	private _isMouseShadowEnabled = false;
 	@ViewChild('showAnnotations') showAnnotations;
 
 	constructor(public imageryCommunicatorService: ImageryCommunicatorService, public store: Store<ICasesState>) {
@@ -45,10 +44,6 @@ export class ImagerySandBoxComponent implements OnInit {
 
 	public showAnnotationsChange($event) {
 		if (this.showAnnotations.nativeElement.checked) {
-			this.store.dispatch(new AnnotationVisualizerAgentAction({
-				operation: 'show',
-				relevantMaps: 'all'
-			}));
 		}
 	}
 
@@ -59,7 +54,7 @@ export class ImagerySandBoxComponent implements OnInit {
 			const lat = parseFloat(coordinate.lat);
 			const long = parseFloat(coordinate.long);
 
-			const geoPoint: GeoJSON.Point = {
+			const geoPoint: Point = {
 				type: 'Point',
 				coordinates: [long, lat]
 			};
@@ -98,7 +93,7 @@ export class ImagerySandBoxComponent implements OnInit {
 			time: {
 				type: 'absolute',
 				to: this.selectedCase.state.time.to,
-				from: this.selectedCase.state.time.from,
+				from: this.selectedCase.state.time.from
 			},
 			region: this.selectedCase.state.region
 		};
@@ -119,7 +114,7 @@ export class ImagerySandBoxComponent implements OnInit {
 
 		clonedCase.state.contextEntities = [];
 
-		const feature: GeoJSON.Feature<any> = {
+		const feature: Feature<any> = {
 			'type': 'Feature',
 			'properties': {},
 			'geometry': {

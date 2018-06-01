@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider } from '../model/base-source-provider.model';
+import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import {
 	Component,
 	ComponentFactoryResolver,

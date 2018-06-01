@@ -2,8 +2,8 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
-import { OverlayDisplayMode } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
+import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-overlays-display-mode',

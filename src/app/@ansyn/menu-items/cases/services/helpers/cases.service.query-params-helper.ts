@@ -4,13 +4,15 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
-import { CaseMapsState, CaseMapState } from '@ansyn/core/models';
-import { Context } from '../../models/context.model';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import * as centroid from '@turf/centroid';
-import { CaseState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { centroid, geometry } from '@turf/turf';
+import {
+	CaseGeoFilter, CaseMapsState, CaseMapState, CaseState, ImageManualProcessArgs,
+	OverlaysManualProcessArgs
+} from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
+import { Context } from '@ansyn/core/models/context.model';
 
 export class QueryParamsHelper {
 
@@ -23,6 +25,8 @@ export class QueryParamsHelper {
 
 	updateCaseViaQueryParmas(qParams: Params = {}, defaultCase: Case = this.defaultCase) {
 		const sCase = cloneDeep(defaultCase);
+		sCase.state.overlaysManualProcessArgs = <OverlaysManualProcessArgs>sCase.state.overlaysManualProcessArgs;
+		// needed for ngc
 		const qParamsKeys = Object.keys(qParams);
 		qParamsKeys.forEach((key) => {
 			sCase.state[key] = this.decodeCaseObjects(key, qParams[key]);
@@ -35,7 +39,9 @@ export class QueryParamsHelper {
 			return { ...this.defaultCase, name: caseModel.name };
 		}
 		let updatedCaseModel = cloneDeep(caseModel);
-		updatedCaseModel.state.selectedContextId = selectedContext.id;
+		updatedCaseModel.state.geoFilter = <CaseGeoFilter>updatedCaseModel.state.geoFilter;
+		// needed for ngc
+		updatedCaseModel.selectedContextId = selectedContext.id;
 		['region', 'facets', 'time', 'layoutIndex', 'geoFilter', 'orientation'].forEach(key => {
 			if (selectedContext[key]) {
 				updatedCaseModel.state[key] = selectedContext[key];
@@ -54,24 +60,24 @@ export class QueryParamsHelper {
 						const geopointStr = qParams.geopoint;
 						if (geopointStr) {
 							const coordinates = geopointStr.split(',').map(Number).reverse();
-							const region = getPolygonByPointAndRadius(coordinates).geometry;
+							const region = geometry('Point', coordinates);
 							updatedCaseModel.state.region = region;
 						}
 						break;
 					case 'geometry':
 						const geometryString = qParams.geometry;
 						if (geometryString) {
-							const geoJsonGeomtry: GeoJSON.GeoJsonObject = <GeoJSON.GeoJsonObject>wellknown.parse(geometryString);
+							const geoJsonGeomtry: GeoJsonObject = <GeoJsonObject>wellknown.parse(geometryString);
 
 							if (geoJsonGeomtry.type === 'Point') {
-								const geoPoint: GeoJSON.Point = <any>geoJsonGeomtry;
+								const geoPoint: Point = <any>geoJsonGeomtry;
 								geoPoint.coordinates = geoPoint.coordinates.reverse();
 
-								updatedCaseModel.state.region = getPolygonByPointAndRadius(geoPoint.coordinates).geometry;
+								updatedCaseModel.state.region = geoPoint;
 
 								updatedCaseModel.state.contextEntities = [];
 
-								const feature: GeoJSON.Feature<any> = {
+								const feature: Feature<any> = {
 									'type': 'Feature',
 									'properties': {},
 									'geometry': geoPoint
@@ -83,10 +89,10 @@ export class QueryParamsHelper {
 									featureJson: feature
 								});
 							} else if (geoJsonGeomtry.type === 'Polygon') {
-								const geoPolygon: GeoJSON.Polygon = <GeoJSON.Polygon>geoJsonGeomtry;
+								const geoPolygon: Polygon = <Polygon>geoJsonGeomtry;
 								geoPolygon.coordinates[0] = geoPolygon.coordinates[0].map((pair) => pair.reverse());
 
-								const feature: GeoJSON.Feature<any> = {
+								const feature: Feature<any> = {
 									'type': 'Feature',
 									'geometry': geoPolygon,
 									'properties': {}

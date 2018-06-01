@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/overlays",
-	"version": "0.2.8",
+	"version": "0.2.81",
 	"description": "overlays component to show data with graphic touch",
 	"main": "index.ts",
 	"scripts": {
@@ -9,7 +9,7 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@ansyn/core": "0.2.8",
+		"@ansyn/core": "0.2.81",
 		"ansyn-event-drops": "0.4.12"
 	},
 	"typings": "index.d.ts"

@@ -1,8 +1,8 @@
 import { ElementRef, OnDestroy } from '@angular/core';
 import { IMap } from './imap';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { BaseImageryPlugin } from '@ansyn/imagery';
 import { Observable } from 'rxjs/Observable';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export class ImageryMapComponent implements OnDestroy{
 	protected map: IMap;

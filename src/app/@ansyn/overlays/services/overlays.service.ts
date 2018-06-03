@@ -13,6 +13,7 @@ import { sortByDate, sortByDateDesc, sortByResolutionDesc } from '@ansyn/core/ut
 import { CaseIntervalCriteria, CaseTimeState } from '@ansyn/core/models/case.model';
 import { Interval, IntervalTimeFrame } from '@ansyn/core/models/intervals.model';
 import { times as doNTimes } from 'lodash';
+import { IDateRange } from '@ansyn/core/models/time.model';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
@@ -222,15 +223,35 @@ export class OverlaysService {
 
 	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
 		let feature = params.region;
+		const timeRange: Array<IDateRange> = this.getSearchTimeRange(params.time);
 		return this._overlaySourceProvider.fetch({
 			dataInputFilters: Boolean(params.dataInputFilters) && params.dataInputFilters.active ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,
 			region: feature,
-			timeRange: <any> {
-				start: params.time.from,
-				end: params.time.to
-			}
+			timeRange
 		});
+	}
+
+	getSearchTimeRange(timeState: CaseTimeState): Array<IDateRange> {
+		const searchTimeRange = new Array<IDateRange>();
+
+		if (!timeState.intervals) {
+			searchTimeRange.push({
+				start: timeState.from,
+				end: timeState.to
+			});
+		} else {
+			const tf: IntervalTimeFrame = OverlaysService.calculateTimeFrame(timeState);
+			// create array of intervals (see Interval interface)
+			const intervalsArrays: Array<Interval> = OverlaysService.createIntervalsArray(tf, timeState);
+			intervalsArrays.forEach(interval => {
+				searchTimeRange.push({
+					start: interval.startTime,
+					end: interval.endTime
+				});
+			});
+		}
+		return searchTimeRange;
 	}
 
 	getOverlayById(id: string, sourceType: string): Observable<Overlay> {

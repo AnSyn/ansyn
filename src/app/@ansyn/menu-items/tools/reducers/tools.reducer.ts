@@ -84,17 +84,13 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.shadowMouse, false);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.DISABLE_MOUSE_SHADOW:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.shadowMouseDisabled, true);
-			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.ENABLE_MOUSE_SHADOW:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.shadowMouseDisabled, false);
-			return { ...state, flags: tmpMap };
+		case ToolsActionsTypes.UPDATE_TOOLS_FLAGS: {
+			const flags = new Map(state.flags);
+			action.payload.forEach(({ key, value }) => {
+				flags.set(key, value);
+			});
+			return { ...state, flags };
+		}
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
 			return { ...state, activeCenter: action.payload };

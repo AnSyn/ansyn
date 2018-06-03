@@ -5,7 +5,7 @@ import Style from 'ol/style/style';
 import { Observable } from 'rxjs/Observable';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
 import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { Action, Store } from '@ngrx/store';
@@ -23,10 +23,7 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
 
-	isActive$ = this.store$
-		.select(mapStateSelector)
-		.pluck<IMapState, string>('activeMapId')
-		.distinctUntilChanged()
+	isActive$ = this.store$.select(selectActiveMapId)
 		.map((activeMapId: string): boolean => this.mapId === activeMapId);
 
 	mouseShadowProducer$ = this.actions$

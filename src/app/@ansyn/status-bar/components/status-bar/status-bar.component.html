@@ -8,9 +8,12 @@
 </ansyn-imagery-status>
 
 <div class="status-bar" [class.separated-state]="!hideOverlay">
-
-	<ansyn-selected-case-bar [selectedCaseName]="selectedCaseName"></ansyn-selected-case-bar>
-	<ansyn-combo-boxes></ansyn-combo-boxes>
-	<ansyn-navigation-bar></ansyn-navigation-bar>
+	<div class="selected-case">
+		<ansyn-selected-case-bar [selectedCaseName]="selectedCaseName"></ansyn-selected-case-bar>
+	</div>
+	<div class="status">
+		<ansyn-combo-boxes></ansyn-combo-boxes>
+		<ansyn-navigation-bar></ansyn-navigation-bar>
+	</div>
 
 </div>

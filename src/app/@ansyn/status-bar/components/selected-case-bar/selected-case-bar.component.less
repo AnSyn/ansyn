@@ -4,6 +4,7 @@
 @popup-padding-bottom: 15px;
 
 :host {
+	display: inherit;
 	.block {
 		padding: 3px;
 		box-sizing: border-box;
@@ -42,13 +43,9 @@
 		opacity: 1;
 		padding-bottom: @popup-padding-bottom;
 		transform: translate(0, -100%);
-		&.time-selection {
-			transform: translateY(calc(~'-100% - @{popup-padding-bottom}'));
-		}
 	}
 
 	.selectedCase {
-		transform: translateX(calc(~'-50vw + (@{menu-width} / 2)'));
 		min-width: 0;
 		align-self: center;
 		box-sizing: border-box;

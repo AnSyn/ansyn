@@ -20,7 +20,10 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { ImageryCreatedAction, MapActionTypes, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
+import {
+	ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion,
+	SetMapsDataActionStore
+} from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
@@ -76,6 +79,24 @@ export class MapAppEffects {
 	onDisplayOverlayMergeMap$ = this.onDisplayOverlay$
 		.filter((data) => !this.displayShouldSwitch(data))
 		.mergeMap(this.onDisplayOverlay.bind(this));
+
+	@Effect()
+	onDisplayOverlayShowLoader$ = this.onDisplayOverlay$
+		.map(([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) => action)
+		.map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
+			mapId: payload.mapId, show: true, text: 'Loading Overlay'
+		}));
+
+	@Effect()
+		onDisplayOverlayHideLoader$ = this.actions$
+			.ofType<DisplayOverlayAction>(
+				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+				CoreActionTypes.BACK_TO_WORLD_VIEW
+			)
+			.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
+				mapId: payload.mapId, show: false
+			}));
 
 	/**
 	 * @type Effect

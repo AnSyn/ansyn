@@ -1,4 +1,4 @@
-import { Overlay } from '@ansyn/core';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 export interface IntervalTimeFrame {
 	startDate: Date;

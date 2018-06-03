@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CaseIntervalCriteria, CaseIntervalCriteriaType, CaseTimeState } from '@ansyn/core';
 import { IDateRange } from '@ansyn/core/models/time.model';
+import { CaseIntervalCriteria, CaseIntervalCriteriaType, CaseTimeState } from '@ansyn/core/models/case.model';
 
 
 

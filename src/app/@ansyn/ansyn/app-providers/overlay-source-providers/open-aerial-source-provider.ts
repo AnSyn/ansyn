@@ -56,8 +56,8 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		const params = {
 			limit: `${fetchParams.limit + 1}`,
 			bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`,
-			acquisition_from: fetchParams.timeRange.start.toISOString(),
-			acquisition_to: fetchParams.timeRange.end.toISOString()
+			acquisition_from: fetchParams.timeRange[0].start.toISOString(),
+			acquisition_to: fetchParams.timeRange[0].end.toISOString()
 		};
 
 		return this.http.get<any>(baseUrl, { params: params })

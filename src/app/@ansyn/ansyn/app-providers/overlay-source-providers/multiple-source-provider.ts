@@ -1,22 +1,13 @@
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { Overlay } from '@ansyn/core';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
-	BaseOverlaySourceProvider, DateRange, IFetchParams, OverlayFilter,
+	BaseOverlaySourceProvider, IFetchParams, OverlayFilter,
 	StartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, intersect, difference } from '@turf/turf';
-import * as intersect from '@turf/intersect';
-import * as area from '@turf/area';
-import * as difference from '@turf/difference';
-import { OverlayFilter, StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { IDateRange } from '@ansyn/core/models/time.model';
 
 export interface FiltersList {
@@ -150,7 +141,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 						errors,
 						data: null,
 						limited: -1
-					}
+					};
 				}
 
 				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);

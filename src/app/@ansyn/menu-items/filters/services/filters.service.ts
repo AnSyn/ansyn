@@ -44,31 +44,26 @@ export class FiltersService {
 		}));
 	}
 
-	calculatePotentialOverlaysCount(metadataKey: Filter, metadata: FilterMetadata,
-									overlays: Map<string, Overlay>, favoriteOverlays: Overlay[],
-									filterState: IFiltersState): void {
-		if (metadata instanceof EnumFilterMetadata) {
-			const cloneMetadata = cloneDeep(metadata);
+	static calculatePotentialOverlaysCount(metadataKey: Filter, metadata: FilterMetadata, overlays: Map<string, Overlay>, favoriteOverlays: Overlay[], filterState: IFiltersState): void {
+		const cloneMetadata = cloneDeep(metadata);
 
+		if (metadata instanceof EnumFilterMetadata) {
 			Array.from(metadata.enumsFields)
 				.filter(([enumFiledKey, { isChecked }]: [any, EnumFiled]) => !isChecked)
 				.forEach(([enumFiledKey, value]: [any, EnumFiled]) => {
-					cloneMetadata.enumsFields.set(enumFiledKey, { ...value, isChecked: true });
-					this.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, cloneMetadata);
+					(<EnumFilterMetadata>cloneMetadata).enumsFields.set(enumFiledKey, { ...value, isChecked: true });
+					FiltersService.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, (<EnumFilterMetadata>cloneMetadata));
 				});
 		} else {
-			if (metadata instanceof BooleanFilterMetadata) {
-				const cloneMetadata = cloneDeep(metadata);
-				if (metadata.properties.true.value === false || metadata.properties.false.value === false) {
-					cloneMetadata.properties.true.value = true;
-					cloneMetadata.properties.false.value = true;
-					this.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, cloneMetadata);
-				}
+			if ((<BooleanFilterMetadata>metadata).properties.true.value === false || (<BooleanFilterMetadata>metadata).properties.false.value === false) {
+				(<BooleanFilterMetadata>cloneMetadata).properties.true.value = true;
+				(<BooleanFilterMetadata>cloneMetadata).properties.false.value = true;
+				FiltersService.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, cloneMetadata);
 			}
 		}
 	}
 
-	private calculateOverlaysCount(metadataKey: Filter, metadata: FilterMetadata, overlays: Map<string, Overlay>, favoriteOverlays: Overlay[], filterState: IFiltersState, cloneMetadata: FilterMetadata): void {
+	static calculateOverlaysCount(metadataKey: Filter, metadata: FilterMetadata, overlays: Map<string, Overlay>, favoriteOverlays: Overlay[], filterState: IFiltersState, cloneMetadata: FilterMetadata): void {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: FilterModel[] = FiltersService.pluckFilterModels(cloneFilters);

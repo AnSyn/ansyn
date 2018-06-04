@@ -45,6 +45,8 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resolver';
 import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
+import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -180,7 +182,9 @@ export class FiltersAppEffects {
 					const overlay = overlays.get(id);
 					metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
 				});
-				this.filtersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState);
+				if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
+					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState);
+				}
 			});
 		});
 

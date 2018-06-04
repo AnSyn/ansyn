@@ -1,0 +1,5 @@
+*
+!.gitignore
+!end.txt
+!start.txt
+!gulpfile.js

@@ -70,7 +70,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		this._iconSrc = new Style({
 			image: new Icon({
 				scale: 1,
-				src: '/assets/icons/tools/mouse-shadow.svg'
+				src: 'assets/icons/tools/mouse-shadow.svg'
 			}),
 			zIndex: 200
 		});

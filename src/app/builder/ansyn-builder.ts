@@ -158,8 +158,8 @@ export class AnsynBuilder {
 		const configProviders = getProviders(this.config);
 		this.setImports();
 		this.setAppProviders();
-		const AnsynCustomComponenet = Component({ ...ansynComponentMeta, selector: this.id })(AnsynCustomComponent);
-		const options: NgModule = {
+		const AnsynCustomComponenet = Component({ ...ansynComponentMeta, templateUrl: './customModule/ansyn.custom.component.html', selector: this.id })(AnsynCustomComponent);
+		const options: NgModule = <any> {
 			imports: [
 				...Array.from(this.ansynModulesMap.values()),
 				StoreModule.forRoot({}, { metaReducers }),

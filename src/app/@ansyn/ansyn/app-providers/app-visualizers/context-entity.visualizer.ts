@@ -28,7 +28,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 				},
 				icon: {
 					scale: 1,
-					src: '/assets/icons/map/entity-marker.svg'
+					src: 'assets/icons/map/entity-marker.svg'
 				},
 				geometry: this.getGeometry.bind(this),
 				label: {

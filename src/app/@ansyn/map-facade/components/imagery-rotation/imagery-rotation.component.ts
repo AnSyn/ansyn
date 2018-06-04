@@ -9,7 +9,7 @@ export interface IsGeoRegisteredProperties {
 	color: '#6e6e7f' | 'red';
 	tooltipNorth: 'Drag to Change Orientation' | 'Press Alt+Shift and drag to rotate';
 	tooltip: 'Click once to face north, twice for image perspective' | null;
-	compass: '/assets/icons/map/compass.svg' | '/assets/icons/map/compass_disabled.svg';
+	compass: 'assets/icons/map/compass.svg' | 'assets/icons/map/compass_disabled.svg';
 	rotatePointer: 'rotationAngle' | 'notGeoRegitredNorthAngle';
 }
 
@@ -26,7 +26,7 @@ export class ImageryRotationComponent {
 		color: 'red',
 		tooltipNorth: 'Drag to Change Orientation',
 		tooltip: 'Click once to face north, twice for image perspective',
-		compass: '/assets/icons/map/compass.svg',
+		compass: 'assets/icons/map/compass.svg',
 		rotatePointer: 'rotationAngle'
 	};
 
@@ -35,7 +35,7 @@ export class ImageryRotationComponent {
 		color: '#6e6e7f',
 		tooltipNorth: 'Press Alt+Shift and drag to rotate',
 		tooltip: null,
-		compass: '/assets/icons/map/compass_disabled.svg',
+		compass: 'assets/icons/map/compass_disabled.svg',
 		rotatePointer: 'notGeoRegitredNorthAngle'
 	};
 

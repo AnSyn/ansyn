@@ -49,7 +49,7 @@ export class OverlaysAppEffects {
 	 * @dependencies overlays
 	 */
 	@Effect({ dispatch: false })
-	initTimelineState$ = this.actions$
+	initTimelineState$: any = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 || this.casesService.contextValues.imageryCountAfter !== -1)
 		.do(() => {

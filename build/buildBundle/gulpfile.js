@@ -54,7 +54,10 @@ gulp.task('addZone', function (done) {
 });
 
 gulp.task('webPackcompile', function (done) {
-	exec('cd ../../ && npm run build:builder', function (err, stdout, stderr) {
+	const baseHref = process.argv[4];
+	const commend = `npm run build:builder --prefix ../../ -- ${ baseHref ? '--base-href ' + baseHref : ''}`;
+	console.log(commend);
+	exec(commend, function (err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
 		done(err);

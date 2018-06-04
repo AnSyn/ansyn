@@ -27,7 +27,8 @@
 			],
 			"stylePreprocessorOptions": {
 				"includePaths": [
-					"./app/@ansyn"
+					"./app/@ansyn",
+					"assets"
 				]
 			},
 			"scripts": [

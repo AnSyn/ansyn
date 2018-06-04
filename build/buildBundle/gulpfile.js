@@ -55,7 +55,7 @@ gulp.task('addZone', function (done) {
 
 gulp.task('webPackcompile', function (done) {
 	const baseHref = process.argv[4];
-	const commend = `npm run build:builder --prefix ../../ -- ${ baseHref ? '--base-href ' + baseHref : ''}`;
+	const commend = `npm run build:builder --prefix ../../ ${ baseHref ? '-- --base-href ' + baseHref : ''}`;
 	console.log(commend);
 	exec(commend, function (err, stdout, stderr) {
 		console.log(stdout);
@@ -81,6 +81,6 @@ gulp.task('concat', function () {
 
 gulp.task('sequenceWithZone', gulpSequence('addZone', 'webPackcompile', 'concat'));
 
-gulp.task('sequenceNoZone', gulpSequence('removeZone', 'webPackcompile', 'concat'));
+gulp.task('sequenceNoZone', gulpSequence('removeZone', 'webPackcompile', 'concat', 'addZone'));
 
 gulp.task('createCdn', gulpSequence('clean', 'sequenceWithZone', 'sequenceNoZone'));

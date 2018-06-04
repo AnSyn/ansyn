@@ -106,8 +106,8 @@ export class ImageryRotationComponent {
 
 		const mouseMoveListener = (event) => {
 			const mouse = {
-				x: event.pageX,
-				y: event.pageY
+				x: event.clientX,
+				y: event.clientY
 			};
 
 			let radians = Math.atan2(mouse.y - center.y, mouse.x - center.x) + Math.PI / 2;

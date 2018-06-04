@@ -9,7 +9,7 @@ import {
 	OverlaysActionTypes,
 	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
@@ -22,7 +22,7 @@ import {
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import {
-	RemovePendingOverlayAction, SetIsLoadingAcion,
+	RemovePendingOverlayAction,
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
@@ -49,7 +49,7 @@ export class OverlaysAppEffects {
 	 * @dependencies overlays
 	 */
 	@Effect({ dispatch: false })
-	initTimelineState$ = this.actions$
+	initTimelineState$: any = this.actions$
 		.ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(() => this.casesService.contextValues.imageryCountBefore !== -1 || this.casesService.contextValues.imageryCountAfter !== -1)
 		.do(() => {
@@ -212,9 +212,9 @@ export class OverlaysAppEffects {
 	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [Overlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
 	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [Overlay, CommunicatorEntity]) => {
 		if (!communicator) {
-			return Observable.of([overlay, null])
+			return Observable.of([overlay, null]);
 		}
-		return communicator.getPosition().map((position) => [overlay, position])
+		return communicator.getPosition().map((position) => [overlay, position]);
 	});
 	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [Overlay, CaseMapPosition]) => {
 		if (!overlay) {
@@ -241,27 +241,7 @@ export class OverlaysAppEffects {
 				console.error(err);
 				return Observable.of(err);
 			})
-		)
-	;
-
-	@Effect()
-	onDisplayOverlayShowLoader$ = this.actions$
-		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
-			mapId: payload.mapId, show: true, text: 'Loading Overlay'
-		}));
-
-
-	@Effect()
-	onDisplayOverlayHideLoader$ = this.actions$
-		.ofType<DisplayOverlayAction>(
-			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-			CoreActionTypes.BACK_TO_WORLD_VIEW
-		)
-		.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
-			mapId: payload.mapId, show: false
-		}));
+		);
 
 	getSourceProvider(sType) {
 		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
@@ -272,8 +252,7 @@ export class OverlaysAppEffects {
 				public casesService: CasesService,
 				public overlaysService: OverlaysService,
 				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
-				public imageryCommunicatorService: ImageryCommunicatorService
-	) {
+				public imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
 }

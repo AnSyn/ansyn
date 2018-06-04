@@ -64,7 +64,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({
 			scale: 1,
-			src: '/assets/icons/tools/go-to-map-marker.svg'
+			src: 'assets/icons/tools/go-to-map-marker.svg'
 		}),
 		zIndex: 100
 	});

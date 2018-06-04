@@ -4,9 +4,7 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
 	DisableImageProcessing,
-	DisableMouseShadow,
 	EnableImageProcessing,
-	EnableMouseShadow,
 	GoToAction,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
@@ -16,7 +14,7 @@ import {
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow,
-	ToolsActionsTypes
+	ToolsActionsTypes, UpdateToolsFlags
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -29,7 +27,7 @@ import {
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 
@@ -45,7 +43,7 @@ import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-fla
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
@@ -266,17 +264,18 @@ export class ToolsAppEffects {
 	 * @action DisableMouseShadow?, StopMouseShadow?, EnableMouseShadow?
 	 */
 	@Effect()
-	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$
-		.ofType<SetLayoutAction>(CoreActionTypes.SET_LAYOUT)
-		.mergeMap(({ payload }) => {
-			const { mapsCount } = layoutOptions.get(payload);
-			if (mapsCount === 1) {
+	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = Observable.combineLatest(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId))
+		.mergeMap(([mapsList, activeMapId]) => {
+			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
+			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
+			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
+			if ( registredMapsCount < 2 || isActiveMapRegistred) {
 				return [
-					new DisableMouseShadow(),
-					new StopMouseShadow()
+					new StopMouseShadow(),
+					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])
 				];
 			}
-			return [new EnableMouseShadow()];
+			return [new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }])];
 		});
 
 	/**

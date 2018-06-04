@@ -45,6 +45,8 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { Filter } from '@ansyn/menu-items/filters/models/filter';
 import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resolver';
 import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
+import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -169,19 +171,24 @@ export class FiltersAppEffects {
 
 	@Effect({ dispatch: false })
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys)
-		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap))
-		.filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>]) => {
+		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays))
+		.filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>, Overlay[]]) => {
 			return overlays.size > 0;
 		})
-		.do(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>]) => {
-			Array.from(filterState.filters).forEach(([key, metadata]: [Filter, FilterMetadata]) => {
+		.do(([filteredOverlays, filterState, overlays, favoriteOverlays]: [string[], IFiltersState, Map<string, Overlay>, Overlay[]]) => {
+
+			Array.from(filterState.filters).forEach(([metadataKey, metadata]: [Filter, FilterMetadata]) => {
 				metadata.resetFilteredCount();
 				filteredOverlays.forEach((id: string) => {
 					const overlay = overlays.get(id);
-					metadata.incrementFilteredCount(overlay[key.modelName]);
+					metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
 				});
+				if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
+					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState);
+				}
 			});
 		});
+
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

@@ -45,7 +45,7 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 				anchor: [0.5, 46],
 				anchorXUnits: 'fraction',
 				anchorYUnits: 'pixels',
-				src: '/assets/icons/filters.svg'
+				src: 'assets/icons/filters.svg'
 			}))
 		});
 

@@ -21,16 +21,26 @@
 	}
 
 	.status-bar {
-		width: 50%;
+		flex: 1;
 		height: 100%;
 		color: white;
 		display: flex;
 		margin-left: auto;
 		justify-content: space-between;
 		border-left: 2px solid transparent;
-
-		&.separated-state {
+		.selected-case, .status {
 			width: 100%;
+			height: 100%;
+			display: flex;
+		}
+		.status  {
+			justify-content: flex-end;
+		}
+		&.separated-state {
+			.selected-case, .status {
+				display: inherit;
+			}
+			flex: inherit;
 			border-color: white;
 			justify-content: space-around;
 			/deep/ .selectedCase {

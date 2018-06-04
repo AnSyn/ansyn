@@ -3,12 +3,12 @@ import { type } from '@ansyn/core/utils/type';
 import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
 import { AnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
+import { toolsFlags } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
 	STOP_MOUSE_SHADOW: type('[Tools] stop mouse shadow'),
-	DISABLE_MOUSE_SHADOW: type('DISABLE_MOUSE_SHADOW'),
-	ENABLE_MOUSE_SHADOW: type('ENABLE_MOUSE_SHADOW'),
+	UPDATE_TOOLS_FLAGS: type('UPDATE_TOOLS_FLAGS'),
 	PULL_ACTIVE_CENTER: type('PULL_ACTIVE_CENTER'),
 	SET_ACTIVE_CENTER: type('SET_ACTIVE_CENTER'),
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
@@ -64,17 +64,10 @@ export class StopMouseShadow implements Action {
 	}
 }
 
-export class DisableMouseShadow implements Action {
-	type = ToolsActionsTypes.DISABLE_MOUSE_SHADOW;
+export class UpdateToolsFlags implements Action {
+	type = ToolsActionsTypes.UPDATE_TOOLS_FLAGS;
 
-	constructor(public payload?: any) {
-	};
-}
-
-export class EnableMouseShadow implements Action {
-	type = ToolsActionsTypes.ENABLE_MOUSE_SHADOW;
-
-	constructor(public payload?: any) {
+	constructor(public payload: { key: toolsFlags, value: boolean }[]) {
 	};
 }
 
@@ -198,8 +191,7 @@ export type ToolsActions =
 	UpdateOverlaysManualProcessArgs
 	| StartMouseShadow
 	| StopMouseShadow
-	| DisableMouseShadow
-	| EnableMouseShadow
+	| UpdateToolsFlags
 	| PullActiveCenter
 	| SetActiveCenter
 	| SetPinLocationModeAction

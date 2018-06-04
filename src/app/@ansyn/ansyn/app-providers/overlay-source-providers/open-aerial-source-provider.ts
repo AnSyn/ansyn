@@ -112,8 +112,8 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);
-		overlay.sensorType = openAerialElement.properties.sensor;
-		overlay.sensorName = openAerialElement.platform;
+		overlay.sensorType = openAerialElement.platform;
+		overlay.sensorName = openAerialElement.properties.sensor;
 		overlay.bestResolution = openAerialElement.gsd;
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms;

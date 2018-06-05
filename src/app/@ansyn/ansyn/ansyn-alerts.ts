@@ -7,9 +7,9 @@ export const ansynAlerts: IAlert[] = [
 		text: 'This Image Has No Geo-Registration'
 	},
 	{
-		key: 'overlayIsNotPartOfCase',
+		key: 'overlayIsNotPartOfQuery',
 		background: '#27B2CF',
-		text: 'This Overlay Is Not a Part of the Case'
+		text: 'This Overlay Is Not a Part of the Query'
 	},
 	{
 		key: 'overlaysOutOfBounds',

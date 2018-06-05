@@ -233,7 +233,7 @@ export class MapAppEffects {
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
 		.mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {
-			const key = AlertMsgTypes.OverlayIsNotPartOfCase;
+			const key = AlertMsgTypes.overlayIsNotPartOfQuery;
 			return mapsList.map(({ data, id }) => {
 				const { overlay } = data;
 				const shouldRemoved = !overlay || filteredOverlays.includes(overlay.id);

@@ -5,18 +5,20 @@ import { AnsynApi } from './ansyn-api.service';
 import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
 import { WindowLayout } from '@ansyn/core/reducers/core.reducer';
 import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
 import { AnsynCustomComponent } from '@builder/customModule/ansynCustomComponent';
 import { ansynComponentMeta } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { ansynImports } from '@ansyn/ansyn/ansyn.module';
 import { ContextService } from '@ansyn/context/services/context.service';
+import { Observable } from 'rxjs/Observable';
+import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];
 	windowLayout?: WindowLayout,
 	importsToExclude?: string[],
+	customModules?: any[],
 	sourceProviders?: Array<{ provide: any, useClass: any, multi: true }>
 }
 
@@ -27,11 +29,8 @@ export interface AnsynBuilderConstructor {
 	callback: any;
 }
 
-const AnsynModulesNames = {};
-Object.keys(ansynImports).forEach((key) => AnsynModulesNames[key] = key);
-
 export class AnsynBuilder {
-	static Modules = AnsynModulesNames;
+	static Modules = ansynImports;
 
 	static Providers = {
 		ContextService
@@ -55,7 +54,7 @@ export class AnsynBuilder {
 		}
 		this.id = id;
 		this.config = config;
-		this.options = options;
+		this.options = options || {};
 		this.callback = callback;
 		this.bootStrapplatformWithAnsyn();
 	}
@@ -76,15 +75,16 @@ export class AnsynBuilder {
 
 	getImports() {
 		const importsToExclude = this.options.importsToExclude || [];
-		return Object.entries(ansynImports)
-			.filter(([name]) => !importsToExclude.includes(name))
-			.map(([name, module]) => module);
+		return Object.values(ansynImports)
+			.filter((module) => !importsToExclude.includes(module))
 	}
 
 	buildModule(): any {
 		const configProviders = getProviders(this.config);
 		const imports = [...this.getImports()];
 		const customProviders = this.options.sourceProviders || [];
+		const customModules = this.options.customModules || [];
+
 		const AnsynCustomComponenet = Component({
 			...ansynComponentMeta,
 			templateUrl: './customModule/ansyn.custom.component.html',
@@ -94,10 +94,18 @@ export class AnsynBuilder {
 		const options: NgModule = <any> {
 			imports: [
 				...imports,
+				...customModules,
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([AnsynApi])
 			],
-			providers: [AnsynApi, { provide: UrlSerializer, useClass: DefaultUrlSerializer }, ...configProviders, customProviders],
+			providers: [
+				AnsynApi,
+				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },
+				...configProviders,
+				customProviders,
+				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
+				{ provide: DataLayersService, useValue: { getAllLayersInATree: () => Observable.of([]) } },
+			],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],
 			exports: [AnsynCustomComponenet]

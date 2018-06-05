@@ -59,7 +59,7 @@ Object.keys(MarkUpClass).forEach(key => {
 
 export const overlaysInitialState: IOverlaysState = {
 	loaded: false,
-	loading: false,
+	loading: true,
 	overlays: new Map(),
 	selectedOverlays: [],
 	specialObjects: new Map<string, OverlaySpecialObject>(),

@@ -28,7 +28,7 @@ import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { AnsynRouterModule } from '@ansyn/router/router.module';
 import { ContextModule } from '@ansyn/context/context.module';
 
-export const ansynImports = {
+export const ansynImports: any = {
 	CommonModule,
 	AppProvidersModule,
 	CasesModule,

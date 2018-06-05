@@ -11,6 +11,7 @@ import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers'
 import { AnsynCustomComponent } from '@builder/customModule/ansynCustomComponent';
 import { ansynComponentMeta } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { ansynImports } from '@ansyn/ansyn/ansyn.module';
+import { ContextService } from '@ansyn/context/services/context.service';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];
@@ -19,12 +20,28 @@ export interface AnsynBuilderOptions {
 	sourceProviders?: Array<{ provide: any, useClass: any, multi: true }>
 }
 
-const AnsynModulesNames = {};
+export interface AnsynBuilderConstructor {
+	id: string;
+	config: any;
+	options: AnsynBuilderOptions;
+	callback: any;
+}
 
+const AnsynModulesNames = {};
 Object.keys(ansynImports).forEach((key) => AnsynModulesNames[key] = key);
 
 export class AnsynBuilder {
-	static AnsynModulesNames = AnsynModulesNames;
+	static Modules = AnsynModulesNames;
+
+	static Providers = {
+		ContextService
+	};
+
+	id: string;
+	config: any;
+	options: AnsynBuilderOptions;
+	callback: any;
+
 	moduleRef: NgModuleRef<DynamicsAnsynModule>;
 	appSelector = 'ansyn-app2';
 
@@ -32,10 +49,14 @@ export class AnsynBuilder {
 		return this.moduleRef && this.moduleRef.instance.api;
 	}
 
-	constructor(public id: string, public config: any, public callback: any, public options?: AnsynBuilderOptions) {
+	constructor({ id, config, options, callback }) {
 		if (!id || !config) {
 			throw new Error('Ansyn waiting for params');
 		}
+		this.id = id;
+		this.config = config;
+		this.options = options;
+		this.callback = callback;
 		this.bootStrapplatformWithAnsyn();
 	}
 
@@ -54,21 +75,16 @@ export class AnsynBuilder {
 	}
 
 	getImports() {
-		const importsToExclude = (this.options && this.options.importsToExclude) || [];
+		const importsToExclude = this.options.importsToExclude || [];
 		return Object.entries(ansynImports)
 			.filter(([name]) => !importsToExclude.includes(name))
 			.map(([name, module]) => module);
 	}
 
-	getAppProviders() {
-		const sourceProviders = (this.options && this.options.sourceProviders) || [];
-		return AppProvidersModule.forRoot(sourceProviders);
-	}
-
-
 	buildModule(): any {
 		const configProviders = getProviders(this.config);
-		const imports = [...this.getImports(), this.getAppProviders()];
+		const imports = [...this.getImports()];
+		const customProviders = this.options.sourceProviders || [];
 		const AnsynCustomComponenet = Component({
 			...ansynComponentMeta,
 			templateUrl: './customModule/ansyn.custom.component.html',
@@ -81,7 +97,7 @@ export class AnsynBuilder {
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([AnsynApi])
 			],
-			providers: [AnsynApi, { provide: UrlSerializer, useClass: DefaultUrlSerializer }, ...configProviders],
+			providers: [AnsynApi, { provide: UrlSerializer, useClass: DefaultUrlSerializer }, ...configProviders, customProviders],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],
 			exports: [AnsynCustomComponenet]

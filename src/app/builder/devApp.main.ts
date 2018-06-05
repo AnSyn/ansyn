@@ -11,8 +11,7 @@ if (Boolean(0)) {
 fetch(configuration.configPath)
 	.then(response => response.json())
 	.then(config => {
-		const ansynBuilder = new AnsynBuilder('ansynMap', config, (api) => {}, { sourceProviders: [] });
-
+		const ansynBuilder = new AnsynBuilder({ id: 'ansynMap', config: {}, callback: (api) => {}, options: { sourceProviders: [] } });
 	});
 
 

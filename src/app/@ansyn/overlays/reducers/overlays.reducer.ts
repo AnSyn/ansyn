@@ -60,7 +60,7 @@ Object.keys(MarkUpClass).forEach(key => {
 export const overlaysInitialState: IOverlaysState = {
 	loaded: false,
 	loading: true,
-	// Setting loading: true, to prevent a "no overlays found" message, when starting the app with a context
+	// "loading: true" prevents a "no overlays found" message, when starting the app with a context
 	overlays: new Map(),
 	selectedOverlays: [],
 	specialObjects: new Map<string, OverlaySpecialObject>(),

@@ -153,8 +153,8 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise()))
 			.then(dates => dates.filter(Boolean)
-				.map(d => (
-					{ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
+				// filter(Boolean) prevents crash from providers that do not yet support this function
+				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {
 					return d2;
@@ -173,8 +173,8 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise()))
 			.then(dates => dates.filter(Boolean)
-				.map(d => (
-					{ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
+				// filter(Boolean) prevents crash from providers that do not yet support this function
+				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {
 					return d2;

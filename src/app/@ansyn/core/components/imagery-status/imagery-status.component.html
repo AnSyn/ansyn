@@ -58,7 +58,7 @@
 				<div
 					[style.background]="alert.background"
 					[attr.tooltip-value]="alert.text"
-					tooltip-class="top left">
+					[attr.tooltip-class]="mapsAmount === 1 ? 'top left': 'bottom left'">
 					{{ alert.text }}
 				</div>
 			</ng-template>

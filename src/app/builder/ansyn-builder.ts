@@ -48,7 +48,7 @@ export class AnsynBuilder {
 		return this.moduleRef && this.moduleRef.instance.api;
 	}
 
-	constructor({ id, config, options, callback }) {
+	constructor({ id, config, options, callback }: AnsynBuilderConstructor) {
 		if (!id || !config) {
 			throw new Error('Ansyn waiting for params');
 		}
@@ -121,10 +121,14 @@ export class AnsynBuilder {
 			.then((moduleRef: NgModuleRef<DynamicsAnsynModule>) => {
 				this.moduleRef = moduleRef;
 				this.api.loadDefaultCase();
+
 				if (this.options && this.options.windowLayout) {
 					this.api.changeWindowLayout(this.options.windowLayout);
 				}
-				this.callback(moduleRef.instance.api);
+
+				if (this.callback) {
+					this.callback(moduleRef.instance.api);
+				}
 			});
 	}
 

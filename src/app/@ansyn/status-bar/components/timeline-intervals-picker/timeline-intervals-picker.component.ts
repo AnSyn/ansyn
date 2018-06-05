@@ -71,7 +71,7 @@ export class TimelineIntervalsPickerComponent {
 		}
 	};
 	@Output() applyDate = new EventEmitter<CaseTimeState>();
-	@Output('closeComponent') closeComponent = new EventEmitter();
+	@Output() closeComponent = new EventEmitter();
 
 	constructor() {
 		// init map for easy search in timeFilterUnits.options

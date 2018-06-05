@@ -21,6 +21,8 @@ import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.compon
 import { SelectedCaseBarComponent } from './components/selected-case-bar/selected-case-bar.component';
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { TimeOptionsPipe } from './components/timeline-intervals-picker/time-options.pipe';
+import { TimeOptionsIntervalPipe } from './components/timeline-intervals-picker/time-options-interval.pipe';
 
 
 @NgModule({
@@ -41,7 +43,9 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 		SelectedCaseBarComponent,
 		ComboBoxTriggerComponent,
 		ClickOutsideDirective,
-		TimelineIntervalsPickerComponent
+		TimelineIntervalsPickerComponent,
+		TimeOptionsPipe,
+		TimeOptionsIntervalPipe
 	],
 	providers: [
 		{

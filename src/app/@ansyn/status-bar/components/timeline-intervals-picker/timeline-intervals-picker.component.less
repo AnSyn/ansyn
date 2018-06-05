@@ -4,9 +4,17 @@
 @row-bottom-margin: 5px;
 
 :host {
-	span:first-child {
-		margin-left: 0;
-	}
+	color: white;
+	position: absolute;
+	display: flex;
+	box-shadow: 0 0 2px 1px white;
+	background: black;
+	padding: 5px 25px;
+	flex-direction: column;
+	top: 0;
+	right: 0;
+	transform: translate(0, calc(~'-100% - 15px'));
+
 	label, input[type=radio], select {
 		cursor: pointer;
 		padding: 2px;
@@ -35,17 +43,35 @@
 		margin-bottom: 0;
 	}
 
-	.advance-options-button {
-		display: block;
+	div.basic-options-container {
+		.select-box {
+			display: flex;
+			align-items: center;
+			margin: 6px 0;
+			.text {
+				color: white;
+				margin-right: 10px;
+				width: 50px;
+				display: inline-block;
+				white-space: pre;
+			}
+			select {
+				width: 70px;
+			}
+		}
+	}
+
+	button.advance-options-button {
+		color: white;
 		background: none;
 		border: 0;
 		outline: 0;
 		padding: 0;
-		margin: @vertical-section-margin;
+		display: flex;
+		justify-content: flex-end;
 		.chevron {
-			margin-left: 8px;
+			margin-left: 4px;
 			display: inline-block;
-			float: right;
 			font-size: 22px;
 			line-height: 14px;
 			transition: transform .3s linear;
@@ -55,6 +81,7 @@
 			transform: rotate(90deg);
 		}
 	}
+
 	.advance-options-container {
 		max-height: 0;
 		overflow: hidden;
@@ -109,9 +136,10 @@
 	}
 
 	div.control-buttons {
+		margin-top: 10px;
 		display: flex;
 		justify-content: space-between;
-		color: @application-main-color;
+		color: @overlays-dots-color;
 		a {
 			cursor: pointer;
 			&:hover {
@@ -128,107 +156,9 @@
 		.error {
 			color: crimson;
 		}
-	}
-	.error-message-wrapper {
-		height: 15px;
-		.error-message {
-			height: 15px;
-			color: #d50000;
-			font-size: 12px;
-			margin: 0;
-			padding: 0;
-		}
+
 	}
 }
 
 
 
-@import "core/less/common";
-
-:host {
-	color: white;
-	transition: .4s;
-	position: absolute;
-	display: flex;
-	box-shadow: 0 0 2px 1px white;
-	background: black;
-	width: 230px;
-	height: 97px;
-	padding: 6px 12px;
-	flex-direction: column;
-	top: 0;
-	right: 0;
-	transform: translate(0, calc(~'-100% - 15px'));
-}
-
-.time-row {
-	display: flex;
-	align-items: center;
-	margin: 6px 0;
-	span {
-		color: white;
-		margin-right: 10px;
-		width: 75px;
-		display: inline-block;
-		white-space: pre;
-	}
-	button {
-		display: none;
-	}
-	label.time-row-button {
-		position: relative;
-		width: 155px;
-		height: 22px;
-		padding: 0 10px;
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		background: white;
-		border: 1px solid dimgrey;
-		font-size: 12px;
-		color: white;
-	}
-	input {
-		background: black;
-		color: white;
-		width: 100%;
-		border: none;
-		padding: 0 10px;
-		left: 0;
-		box-sizing: border-box;
-		margin: 0;
-		position: absolute;
-		display: inline-block;
-		height: 100%;
-	}
-	i {
-		color: white;
-		position: absolute;
-		right: 10px;
-		top: 5px;
-	}
-}
-
-div.control-buttons {
-	margin-top: 10px;
-	display: flex;
-	justify-content: space-between;
-	color: @overlays-dots-color;
-	a {
-		cursor: pointer;
-		&:hover {
-			font-weight: bold;
-		}
-		&:first-child {
-			margin-right: 9px;
-			width: 42px;
-		}
-		&:last-child {
-			width: 17px;
-		}
-	}
-	.error {
-		color: crimson;
-	}
-
-}

@@ -1,21 +1,39 @@
-<div class="basic-options-container" [class.disabled]="timeIntervalAdvancedOptions">
-	<span>Each:</span>
-	<select [disabled]="timeIntervalAdvancedOptions" [(ngModel)]="basicOptionInterval">
-		<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
-			{{timeUnit.textSingular}}
-		</option>
-	</select>
-	<span>For last:</span>
-	<select [disabled]="timeIntervalAdvancedOptions" [(ngModel)]="basicOptionTimeFrame">
-		<option *ngFor="let timeUnit of timeFilterUnits.options" [value]="timeUnit.value">
-			{{timeUnit.textSingular}}
-		</option>
-	</select>
+<div class="basic-options-container" [hidden]="timeIntervalAdvancedOptions">
+
+	<div class="select-box">
+		<div class="text">Each:</div>
+		<select [disabled]="timeIntervalAdvancedOptions" [(ngModel)]="basicOptionInterval">
+			<option *ngFor="let timeUnit of timeFilterUnits.options | timeOptionsInterval : basicOptionTimeFrame" [value]="timeUnit.value">
+				{{timeUnit.textSingular}}
+			</option>
+		</select>
+	</div>
+
+	<div class="select-box">
+		<div class="text">For last:</div>
+		<select [disabled]="timeIntervalAdvancedOptions" [(ngModel)]="basicOptionTimeFrame">
+			<option *ngFor="let timeUnit of timeFilterUnits.options | timeOptions : basicOptionInterval " [value]="timeUnit.value">
+				{{timeUnit.textSingular}}
+			</option>
+		</select>
+	</div>
+
 </div>
 
-<div class="error-message-wrapper no-bottom-margin">
-	<p *ngIf="!timeIntervalAdvancedOptions && validation.timeFrameErr" class="error-message">{{validation.timeFrameErr}}</p>
-</div>
+<!--<div class="error-message-wrapper no-bottom-margin">-->
+	<!--<p *ngIf="validation.timeFrameErr" class="error-message">{{validation.timeFrameErr}}</p>-->
+<!--</div>-->
+
+<!--//.error-message-wrapper {-->
+<!--//	height: 15px;-->
+<!--//	.error-message {-->
+<!--//		height: 15px;-->
+<!--//		color: #d50000;-->
+<!--//		font-size: 12px;-->
+<!--//		margin: 0;-->
+<!--//		padding: 0;-->
+<!--//	}-->
+<!--//}-->
 
 <button class="advance-options-button" (click)="toggleIntervalAdvancedOptions()"
 		[class.active]="timeIntervalAdvancedOptions">
@@ -23,7 +41,7 @@
 	<span class="chevron">&#8250;</span>
 </button>
 
-<div class="advance-options-container" [class.active]="timeIntervalAdvancedOptions">
+<div class="advance-options-container" *ngIf="timeIntervalAdvancedOptions" [class.active]="timeIntervalAdvancedOptions">
 	<div class="advance-options-time">
 		<div>
 			<b>Time Settings</b>

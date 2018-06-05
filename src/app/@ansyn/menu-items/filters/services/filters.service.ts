@@ -67,7 +67,7 @@ export class FiltersService {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: FilterModel[] = FiltersService.pluckFilterModels(cloneFilters);
-		const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites);
+		const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites, <any> { time: null });
 		metadata.resetFilteredCount();
 		filteredOverlays.forEach((id: string) => {
 			const overlay = overlays.get(id);

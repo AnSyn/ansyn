@@ -24,8 +24,11 @@ export interface IContextEntity extends IVisualizerEntity {
 }
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
-export type CaseTimeFilter = 'Start - End' | 'Intervals';
 
+export enum CaseTimeFilter {
+	'Start - End' = 'Start - End',
+	'Intervals' = 'Intervals'
+}
 
 export enum CaseGeoFilter {
 	PinPoint = 'Point',

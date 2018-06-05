@@ -1,8 +1,8 @@
 import { CaseGeoFilter, CaseOrientation, CaseTimeFilter } from '@ansyn/core/models/case.model';
 import { InjectionToken } from '@angular/core';
 
-export const geoFilters: CaseGeoFilter[] = <any>Object.values(CaseGeoFilter);
-export const timeFilters: CaseTimeFilter[] = ['Start - End', 'Intervals'];
+export const geoFilters: CaseGeoFilter[] = <any> Object.values(CaseGeoFilter);
+export const timeFilters: CaseTimeFilter[] = <any> Object.values(CaseTimeFilter);
 export const orientations: CaseOrientation[] = ['Align North', 'User Perspective', 'Imagery Perspective'];
 
 export const ORIENTATIONS = new InjectionToken<CaseOrientation[]>('ORIENTATIONS');

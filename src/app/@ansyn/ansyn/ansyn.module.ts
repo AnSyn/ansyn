@@ -26,36 +26,36 @@ import { MenuModule } from '@ansyn/menu/menu.module';
 import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { AnsynRouterModule } from '@ansyn/router/router.module';
+import { ContextModule } from '@ansyn/context/context.module';
 
-const MenuItemsModules = [
+export const ansynImports = {
+	CommonModule,
+	AppProvidersModule,
 	CasesModule,
 	FiltersModule,
 	LayersManagerModule,
 	ToolsModule,
 	AlgorithmsModule,
 	SettingsModule,
-	ImagerySandBoxModule
-];
+	ImagerySandBoxModule,
+	OverlaysModule,
+	FormsModule,
+	HttpClientModule,
+	BrowserAnimationsModule,
+	AnsynPluginsModule,
+	CoreModule,
+	ContextModule,
+	MenuModule: MenuModule.provideMenuItems(ansynMenuItems),
+	AlertsModule: AlertsModule.provideAlerts(ansynAlerts),
+	AppEffectsModule,
+	MapFacadeModule,
+	ImageryModule,
+	StatusBarModule,
+	AnsynRouterModule
+};
 
 @NgModule({
-	imports: [
-		CommonModule,
-		AppProvidersModule,
-		...MenuItemsModules,
-		OverlaysModule,
-		FormsModule,
-		HttpClientModule,
-		BrowserAnimationsModule,
-		AnsynPluginsModule,
-		CoreModule,
-		MenuModule.provideMenuItems(ansynMenuItems),
-		AlertsModule.provideAlerts(ansynAlerts),
-		AppEffectsModule,
-		MapFacadeModule,
-		ImageryModule,
-		StatusBarModule,
-		AnsynRouterModule
-	],
+	imports: [ ...Object.values(ansynImports) ],
 	declarations: [AnsynComponent],
 	exports: [AnsynComponent]
 })

@@ -8,6 +8,7 @@ import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, intersect, difference } from '@turf/turf';
+import { compact } from 'lodash';
 
 export interface FiltersList {
 	name: string,
@@ -152,7 +153,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise()))
-			.then(dates => dates.map(d =>
+			.then(dates => compact(dates).map(d =>
 				({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {
@@ -171,7 +172,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise()))
-			.then(dates => dates.map(d =>
+			.then(dates => compact(dates).map(d =>
 				({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {

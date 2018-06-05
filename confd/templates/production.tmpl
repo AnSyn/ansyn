@@ -273,28 +273,39 @@
       "enlarge": "Expand timeline"
     },
     "dataInputFiltersConfig": {
-      "filters": [
-      		{
-      			"text": "REScene",
-      			"value": 1,
-      			"collapsed": true,
-				"children": [
-					{ "text": "RapidEye-1", "value": { "sensorType": "REScene", "sensorName": "RapidEye-1" } },
-					{ "text": "RapidEye-2", "value": { "sensorType": "REScene", "sensorName": "RapidEye-2" } }
-				]
-			},
-			{
-				"text": "PSScene3Band",
-                "value": 1,
-                "collapsed": true,
-            	"children": [
-					{ "text": "103e", "value": { "sensorType": "PSScene3Band", "sensorName": "103e" } },
-					{ "text": "0f21", "value": { "sensorType": "PSScene3Band", "sensorName": "0f21" } },
-					{ "text": "RapidEye-2", "value": { "sensorType": "PSScene3Band", "sensorName": "RapidEye-2" } },
-					{ "text": "1042", "value": { "sensorType": "PSScene3Band", "sensorName": "1042" } }
-            	]
-            }
-		]
+	  "filters": [{
+	  	"text": "Planet",
+	  	"value": 1,
+	  	"collapsed": true,
+	  	"children": [{
+	  			"text": "REScene",
+	  			"value": {
+	  				"providerName": "PLANET",
+                    "sensorType": "REScene"
+                }
+	  		},
+	  		{
+	  			"text": "PSScene3Band",
+	  			"value": {
+	  				"providerName": "PLANET",
+                     "sensorType": "PSScene3Band"
+                }
+	  		}
+	  	]
+	  },
+	  {
+        "text": "OpenAerial",
+        "value": 1,
+        "collapsed": true,
+        "children": [{
+        		  "text": "UAV",
+            	  "value": {
+            	  	  "providerName": "OPEN_AERIAL",
+            	  	  "sensorType": "UAV",
+                      "sensorName": "UAV1"
+            	  }
+        }]
+      }]
     }
   },
   "coreConfig": {

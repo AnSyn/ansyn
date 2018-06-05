@@ -62,6 +62,7 @@ export interface CaseState {
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
 
 export interface DataInputFilterValue {
+	providerName: string,
 	sensorType: string,
 	sensorName: string
 }

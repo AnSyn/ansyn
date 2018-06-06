@@ -1,6 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { DynamicsAnsynModule } from '../dynamic-ansyn/dynamic-ansyn.module';
-import { NgModule, NgModuleRef } from '@angular/core';
+import { NgModule, NgModuleRef, Provider } from '@angular/core';
 import { AnsynApi } from './ansyn-api.service';
 import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
@@ -13,13 +13,16 @@ import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/dat
 import { AnsynBuilderModule } from '@builder/api/ansyn-builder.module';
 import { WindowLayout } from '@builder/reducers/builder.reducer';
 import { buildAnsynCustomComponent } from '@builder/dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
+import { AnsynRouterModule } from '@ansyn/router/router.module';
+import { MenuModule } from '@ansyn/menu/menu.module';
+import { CasesModule } from '@ansyn/menu-items/cases/cases.module';
+import { ContextModule } from '@ansyn/context/context.module';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];
 	windowLayout?: WindowLayout,
-	importsToExclude?: string[],
 	customModules?: any[],
-	sourceProviders?: Array<{ provide: any, useClass: any, multi: true }>
+	sourceProviders?: Array<Provider>
 }
 
 export interface AnsynBuilderConstructor {
@@ -30,15 +33,14 @@ export interface AnsynBuilderConstructor {
 }
 
 export class AnsynBuilder {
-	static CommonModule = ansynImports;
 	static Providers = { ContextService };
-	private builderExcludeModules = [
-		ansynImports.AnsynRouterModule,
-		ansynImports.MenuModule,
-		ansynImports.CasesModule,
-		ansynImports.ContextModule
-	];
 
+	private builderExcludeModules = [
+		AnsynRouterModule,
+		MenuModule,
+		CasesModule,
+		ContextModule
+	];
 
 	id: string;
 	config: any;
@@ -76,10 +78,8 @@ export class AnsynBuilder {
 	}
 
 	getImports() {
-		const importsToExclude = this.options.importsToExclude || [];
-		return Object.values(ansynImports)
+		return ansynImports
 			.filter((module) => !this.builderExcludeModules.includes(module))
-			.filter((module) => !importsToExclude.includes(module))
 	}
 
 	buildModule(): any {

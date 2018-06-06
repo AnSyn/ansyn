@@ -71,7 +71,7 @@ export const { selectAll, selectEntities }: EntitySelectors<MenuItem, IMenuState
 export const selectAllMenuItems: MemoizedSelector<IMenuState, MenuItem[]> = createSelector(menuStateSelector, selectAll);
 export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<MenuItem>> = createSelector(menuStateSelector, selectEntities);
 
-export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu.isPinned);
+export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
 

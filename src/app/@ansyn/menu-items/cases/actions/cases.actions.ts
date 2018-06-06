@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Case } from '../models/case.model';
 import { Params } from '@angular/router';
+import { DilutedCase } from '@ansyn/core/models/case.model';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -19,6 +20,7 @@ export const CasesActionTypes = {
 	CLOSE_MODAL: 'CLOSE_MODAL',
 
 	SELECT_CASE: 'SELECT_CASE',
+	SELECT_DILUTED_CASE: 'SELECT_DILUTED_CASE',
 	SELECT_CASE_BY_ID: 'SELECT_CASE_BY_ID',
 
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
@@ -109,6 +111,13 @@ export class SelectCaseAction implements Action {
 	type = CasesActionTypes.SELECT_CASE;
 
 	constructor(public payload: Case) {
+	}
+}
+
+export class SelectDilutedCaseAction implements Action {
+	type = CasesActionTypes.SELECT_DILUTED_CASE;
+
+	constructor(public payload: DilutedCase) {
 	}
 }
 

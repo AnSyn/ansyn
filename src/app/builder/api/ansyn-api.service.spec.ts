@@ -1,6 +1,6 @@
-import { AnsynApi } from '@builder/ansyn-api.service';
+import { AnsynApi } from '@builder/api/ansyn-api.service';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { coreFeatureKey, CoreReducer, coreStateSelector, WindowLayout } from '@ansyn/core/reducers/core.reducer';
+import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
@@ -13,6 +13,7 @@ import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.act
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { WindowLayout } from 'app/builder/reducers/builder.reducer';
 
 
 describe('apiService', () => {

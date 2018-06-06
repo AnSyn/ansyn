@@ -9,9 +9,8 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { SetLayoutAction, SetWindowLayout } from '@ansyn/core/actions/core.actions';
+import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { WindowLayout } from '@ansyn/core/reducers/core.reducer';
 import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
@@ -19,6 +18,8 @@ import { IMap } from '@ansyn/imagery/model/imap';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { WindowLayout } from 'app/builder/reducers/builder.reducer';
+import { SetWindowLayout } from 'app/builder/actions/builder.actions';
 
 @Injectable()
 export class AnsynApi {
@@ -90,7 +91,7 @@ export class AnsynApi {
 
 
 	changeWindowLayout(windowLayout: WindowLayout) {
-		this.store.dispatch(new SetWindowLayout({ windowLayout }));
+		this.store.dispatch(new SetWindowLayout(windowLayout));
 	}
 
 	transfromHelper(position, convertMethodFrom: CoordinatesSystem, convertMethodTo: CoordinatesSystem) {

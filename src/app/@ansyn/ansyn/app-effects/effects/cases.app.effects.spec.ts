@@ -91,7 +91,7 @@ describe('CasesAppEffects', () => {
 					useValue: {
 						getOverlayById: (id: string) => {
 							if (['uuu', 'eee'].includes(id)) {
-								const overlay = new Overlay();
+								const overlay = <Overlay> {};
 								overlay.id = id;
 
 								return Observable.of(overlay);

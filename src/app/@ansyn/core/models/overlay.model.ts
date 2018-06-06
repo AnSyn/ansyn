@@ -7,8 +7,12 @@ export interface OverlaysFetchData {
 	errors?: Error[]
 }
 
-export class Overlay {
+export interface DilutedOverlay {
 	id: string;
+	sourceType?: string;
+}
+
+export interface Overlay extends DilutedOverlay {
 	footprint?: any; // @TODO add type geojson multipoligon,
 	sensorType?: string;
 	sensorName?: string;
@@ -23,7 +27,6 @@ export class Overlay {
 	azimuth: number; // radians
 	approximateTransform?: any;
 	csmState?: string;
-	sourceType?: string;
 	isGeoRegistered: boolean;
 }
 

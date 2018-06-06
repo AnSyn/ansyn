@@ -13,7 +13,7 @@ import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
-	OverlayIsNotPartOfCase = 'overlayIsNotPartOfCase'
+	overlayIsNotPartOfQuery = 'overlayIsNotPartOfQuery'
 }
 
 export type AlertMsg = Map<AlertMsgTypes, Set<string>>;
@@ -36,7 +36,7 @@ export const coreInitialState: ICoreState = {
 	toastMessage: null,
 	favoriteOverlays: [],
 	alertMsg: new Map([
-		[AlertMsgTypes.OverlayIsNotPartOfCase, new Set()],
+		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
 	overlaysCriteria: {},

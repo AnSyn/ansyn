@@ -23,6 +23,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -49,8 +50,13 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId } = state.maps;
 		// core
-		const { favoriteOverlays, time, region, dataInputFilters } = state;
+		const { favoriteOverlays, region, dataInputFilters } = state;
+		let {  time } = state;
 		const { layout } = state.maps;
+
+		if (!time) {
+			time = CasesService.defaultTime;
+		}
 
 		if (typeof time.from === 'string') {
 			time.from = new Date(time.from);

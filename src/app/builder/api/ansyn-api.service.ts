@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
@@ -10,7 +10,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
-import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
@@ -18,8 +18,10 @@ import { IMap } from '@ansyn/imagery/model/imap';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { WindowLayout } from 'app/builder/reducers/builder.reducer';
-import { SetWindowLayout } from 'app/builder/actions/builder.actions';
+import { WindowLayout } from '@builder/reducers/builder.reducer';
+import { SetWindowLayout } from '@builder/actions/builder.actions';
+import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
+import { ICasesConfig } from '@ansyn/menu-items/cases/models/cases-config';
 
 @Injectable()
 export class AnsynApi {
@@ -43,7 +45,8 @@ export class AnsynApi {
 				protected actions$: Actions,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected projectionService: ProjectionService,
-				protected projectionConverterService: ProjectionConverterService) {
+				protected projectionConverterService: ProjectionConverterService,
+				@Inject(casesConfig) public casesConfig: ICasesConfig) {
 
 		this.subscriptions.push(
 			this.activateMap$.subscribe()
@@ -86,7 +89,7 @@ export class AnsynApi {
 	}
 
 	loadDefaultCase() {
-		this.store.dispatch(new LoadDefaultCaseAction());
+		this.store.dispatch(new SelectCaseAction(this.casesConfig.defaultCase));
 	}
 
 

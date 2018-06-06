@@ -13,7 +13,7 @@ import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.act
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { WindowLayout } from 'app/builder/reducers/builder.reducer';
+import { WindowLayout } from '@builder/reducers/builder.reducer';
 
 
 describe('apiService', () => {

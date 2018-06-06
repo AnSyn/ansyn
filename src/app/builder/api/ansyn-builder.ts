@@ -6,13 +6,13 @@ import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
-import { buildAnsynCustomComponent } from 'app/builder/dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 import { ansynImports } from '@ansyn/ansyn/ansyn.module';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { Observable } from 'rxjs/Observable';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { AnsynBuilderModule } from '@builder/api/ansyn-builder.module';
-import { WindowLayout } from 'app/builder/reducers/builder.reducer';
+import { WindowLayout } from '@builder/reducers/builder.reducer';
+import { buildAnsynCustomComponent } from '@builder/dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];

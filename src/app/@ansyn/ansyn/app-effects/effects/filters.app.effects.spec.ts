@@ -48,7 +48,7 @@ describe('Filters app effects', () => {
 	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
-	const favoriteOver =  <Overlay> {};;
+	const favoriteOver =  <Overlay> {};
 	favoriteOver.id = '2';
 
 	beforeEach(async(() => {

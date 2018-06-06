@@ -27,7 +27,6 @@ import {
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
@@ -227,7 +226,6 @@ export class OverlaysAppEffects {
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
-				public casesService: CasesService,
 				public overlaysService: OverlaysService,
 				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
 				public imageryCommunicatorService: ImageryCommunicatorService) {

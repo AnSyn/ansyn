@@ -58,11 +58,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return { ...state, modal: { id: null, show: false } };
 
 		case CasesActionTypes.SELECT_CASE:
-			const selectedCase: Case = action.payload;
-			if (!selectedCase.state.time) {
-				selectedCase.state.time = CasesService.defaultTime;
-			}
-			return { ...state, selectedCase };
+			return { ...state, selectedCase: action.payload };
 
 		default:
 			return state;

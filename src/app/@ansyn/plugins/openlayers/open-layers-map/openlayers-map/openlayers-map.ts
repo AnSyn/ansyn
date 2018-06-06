@@ -13,6 +13,7 @@ import TileLayer from 'ol/layer/tile';
 import VectorLayer from 'ol/layer/vector';
 import olFeature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
+import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { Subscription } from 'rxjs/Subscription';
@@ -100,6 +101,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this._mapLayers = [...layers];
 		const controls = [
 			new ScaleLine(),
+			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
 					coordinateFormat: (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString()
@@ -107,7 +109,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
 		const renderer = 'canvas';
-		this._mapObject = new OLMap({ target, renderer, controls });
+		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true });
 		this.initListeners();
 		this.setGroupLayers();
 		return this.resetView(layers[0], position);

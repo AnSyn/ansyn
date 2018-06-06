@@ -36,6 +36,7 @@ import { ContextService } from '@ansyn/context/services/context.service';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class CasesEffects {
@@ -181,7 +182,6 @@ export class CasesEffects {
 		});
 
 	/* contexts */
-
 	loadDefaultCaseContext$: Observable<any> = this.actions$
 		.ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.filter((action: LoadDefaultCaseAction) => action.payload.context)
@@ -190,6 +190,23 @@ export class CasesEffects {
 			const context = contexts.find(({ id }) => action.payload.context === id);
 			return [action, context];
 		});
+
+	setContext = mergeMap(([action, context]: [LoadDefaultCaseAction, any]) => {
+		const paramsPayload: ContextParams = {};
+		if (context.defaultOverlay) {
+			paramsPayload.defaultOverlay = context.defaultOverlay;
+		}
+		if (context.requirements && context.requirements.includes('time')) {
+			paramsPayload.time = action.payload.time;
+		}
+		const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
+		return this.getContextTimes(defaultCaseQueryParams, context)
+			.mergeMap((selectedCase) => [
+					new SetContextParamsAction(paramsPayload),
+					new SelectCaseAction(selectedCase)
+				]
+			);
+	});
 
 	/**
 	 * @type Effect
@@ -202,22 +219,7 @@ export class CasesEffects {
 	loadExistingDefaultCaseContext$: Observable<SetContextParamsAction | SelectCaseAction> =
 		this.loadDefaultCaseContext$
 			.filter(([action, context]: [LoadDefaultCaseAction, any]) => Boolean(context))
-			.mergeMap(([action, context]: [LoadDefaultCaseAction, any]) => {
-				const paramsPayload: ContextParams = {};
-				if (context.defaultOverlay) {
-					paramsPayload.defaultOverlay = context.defaultOverlay;
-				}
-				if (context.requirements && context.requirements.includes('time')) {
-					paramsPayload.time = action.payload.time;
-				}
-				const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
-				return this.getContextTimes(defaultCaseQueryParams, context)
-					.mergeMap((selectedCase) => [
-						new SetContextParamsAction(paramsPayload),
-						new SelectCaseAction(selectedCase)
-					]
-				);
-			});
+			.pipe(this.setContext);
 
 	/**
 	 * @type Effect
@@ -231,13 +233,10 @@ export class CasesEffects {
 		this.loadDefaultCaseContext$
 			.filter(([action, context]: [LoadDefaultCaseAction, any]) => !(Boolean(context)))
 			.mergeMap(([action, context]: [LoadDefaultCaseAction, any]) => {
-				return this.contextService.loadContext(action.payload.context)
-					.mergeMap((context: Context) => {
-						const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
-						return this.getContextTimes(defaultCaseQueryParams, context).map((selectedCase) => {
-							return new SelectCaseAction(selectedCase);
-						});
-					});
+				return this.contextService
+					.loadContext(action.payload.context)
+					.map((context: Context) => [action, context])
+					.pipe(this.setContext)
 			})
 			.catch(() => {
 				const defaultCaseParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);

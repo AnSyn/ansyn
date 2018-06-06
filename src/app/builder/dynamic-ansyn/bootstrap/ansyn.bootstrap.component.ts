@@ -44,6 +44,6 @@ export const buildAnsynCustomComponent = (selector) => (
 	Component({
 		selector,
 		templateUrl: './ansyn.bootstrap.component.html',
-		styleUrls: ['../../../@ansyn/ansyn/ansyn/ansyn.component.less']
+		styleUrls: ['../../../@ansyn/ansyn/ansyn/ansyn.component.less', './ansyn.bootstrap.component.less']
 	})(AnsynCustomComponent)
 );

@@ -9,7 +9,7 @@ import {
 	OverlaysActionTypes, SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
 } from '@ansyn/overlays/actions/overlays.actions';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {

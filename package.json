@@ -19,6 +19,7 @@
 		"ng": "ng",
 		"start": "node scripts/generate-config.js && ng serve --sourcemaps --extract-css",
 		"start:aot": "ng serve --aot true",
+		"start:builder-dev": "ng s --app builder-dev",
 		"test": "ng test",
 		"test:e2e": "node scripts/generate-config.js && ng e2e",
 		"test:single-run": "ng test --single-run",

@@ -1,14 +1,15 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
-import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
+import { TreeviewConfig, TreeviewItem, TreeviewHelper } from 'ngx-treeview';
 import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { isEqual } from 'lodash';
+import { isEqual, isNil } from 'lodash';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -59,8 +60,23 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 
 	get dataFilters(): TreeviewItem[] {
-		return this.statusBarConfig.dataInputFiltersConfig.filters;
+		Object.keys(this.statusBarConfig.dataInputFiltersConfig)
+			.forEach(providerName => this.updateLeafsWithSourceProviders(
+				this.statusBarConfig.dataInputFiltersConfig[providerName],
+				providerName)
+			);
+		return Object.values(this.statusBarConfig.dataInputFiltersConfig);
 	}
+
+	updateLeafsWithSourceProviders(dataFiltersTree: TreeviewItem, providerName: string) {
+		if (Boolean(dataFiltersTree.children)) {
+			dataFiltersTree.children.forEach(c => this.updateLeafsWithSourceProviders(c, providerName));
+		} else {
+			dataFiltersTree.value.providerName = providerName;
+		}
+	}
+
+
 
 	updateFiltersTreeActivation(activate: boolean): void {
 		this.dataInputFiltersItems.forEach((dataInputItem) => {
@@ -107,7 +123,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			});
 		}
 	}
-
 	treeViewLeafStatus(child: TreeviewItem): boolean {
 		return this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, child.value));
 	}

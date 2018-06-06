@@ -63,13 +63,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	dataInputFilters$ = this.store.select(selectDataInputFilter)
 		.filter((caseDataInputFiltersState: CaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters))
 		.do((caseDataInputFiltersState: CaseDataInputFiltersState) => {
-			const isFull = this.statusBarConfig.dataInputFiltersConfig.filters.every((filterConfig: TreeviewItem) => {
-				return filterConfig.children.every((sensorTypeAndName: TreeviewItem) => {
-					return caseDataInputFiltersState.filters.some((dataInputFilter: DataInputFilterValue) => {
-						return isEqual(dataInputFilter, sensorTypeAndName.value);
-					});
-				});
-			});
+			const isFull = Object.values(this.statusBarConfig.dataInputFiltersConfig).length === caseDataInputFiltersState.filters.length;
 			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : isFull ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
 			this.dataInputFilters = caseDataInputFiltersState;
 		});

@@ -273,40 +273,40 @@
       "enlarge": "Expand timeline"
     },
     "dataInputFiltersConfig": {
-	  "filters": [{
-	  	"text": "Planet",
-	  	"value": 1,
-	  	"collapsed": true,
-	  	"children": [{
-	  			"text": "REScene",
-	  			"value": {
-	  				"providerName": "PLANET",
-                    "sensorType": "REScene"
-                }
-	  		},
-	  		{
-	  			"text": "PSScene3Band",
-	  			"value": {
-	  				"providerName": "PLANET",
-                     "sensorType": "PSScene3Band"
-                }
-	  		}
-	  	]
-	  },
-	  {
-        "text": "OpenAerial",
+      "PLANET": {
+        "text": "Planet",
+        "value": 1,
+        "collapsed":true,
+        "children": [
+          {
+            "text":"REScene",
+            "value": {
+              "sensorType": "REScene"
+            }
+          },
+          {
+            "text": "PSScene3Band",
+            "value": {
+              "sensorType": "PSScene3Band"
+            }
+          }
+        ]
+      },
+      "OPEN_AERIAL": {
+        "text":"OpenAerial",
         "value": 1,
         "collapsed": true,
-        "children": [{
-        		  "text": "UAV",
-            	  "value": {
-            	  	  "providerName": "OPEN_AERIAL",
-            	  	  "sensorType": "UAV",
-                      "sensorName": "UAV1"
-            	  }
-        }]
-      }]
+        "children": [
+          {
+            "text": "UAV",
+            "value": {
+              "sensorType": "UAV"
+            }
+          }
+        ]
+      }
     }
+
   },
   "coreConfig": {
 	"welcomeNotification": {

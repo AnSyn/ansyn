@@ -17,7 +17,7 @@ import {
 	MarkUpClass,
 	MarkUpData,
 	overlaysStateSelector,
-	selectDropMarkup, selectFilteredOveralys,
+	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -52,9 +52,9 @@ export class OverlaysAppEffects {
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$
 		.ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS)
-		.withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(selectFilteredOveralys))
-		.filter(([action, params, filteredOverlays]: [SetFilteredOverlaysAction, ContextParams, string[]]) => params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0)
-		.mergeMap(([action, params, filteredOverlays]: [SetFilteredOverlaysAction, ContextParams, string[]]) => {
+		.withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector))
+		.filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, ContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0)
+		.mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, ContextParams, IOverlaysState]) => {
 			const id = filteredOverlays[filteredOverlays.length - 1];
 			return [
 				new SetContextParamsAction({ defaultOverlay: null }),
@@ -75,9 +75,9 @@ export class OverlaysAppEffects {
 	@Effect()
 	displayTwoNearestOverlay$: Observable<any> = this.actions$
 		.ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS)
-		.withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(selectOverlaysMap), this.store$.select(selectFilteredOveralys))
-		.filter(([action, params, overlays, filteredOverlays]: [SetFilteredOverlaysAction, ContextParams, Map<any, any>, string[]]) => params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0)
-		.map(([action, params, overlays, filteredOverlays]: [SetFilteredOverlaysAction, ContextParams, Map<any, any>, string[]]) => {
+		.withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector))
+		.filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, ContextParams, IOverlaysState]) => params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0)
+		.map(([action, params, { overlays, filteredOverlays }]: [SetFilteredOverlaysAction, ContextParams, IOverlaysState]) => {
 			const overlaysBefore = [...filteredOverlays].reverse().find(overlay => overlays.get(overlay).photoTime < params.time);
 			const overlaysAfter = filteredOverlays.find(overlay => overlays.get(overlay).photoTime > params.time);
 			return new DisplayMultipleOverlaysFromStoreAction([overlaysBefore, overlaysAfter].filter(overlay => overlay));

@@ -32,7 +32,12 @@ export interface AnsynBuilderConstructor {
 export class AnsynBuilder {
 	static CommonModule = ansynImports;
 	static Providers = { ContextService };
-	private builderExcludeModules = [ansynImports.AnsynRouterModule, ansynImports.MenuModule, ansynImports.CasesModule];
+	private builderExcludeModules = [
+		ansynImports.AnsynRouterModule,
+		ansynImports.MenuModule,
+		ansynImports.CasesModule,
+		ansynImports.ContextModule
+	];
 
 
 	id: string;

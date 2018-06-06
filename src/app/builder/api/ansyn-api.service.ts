@@ -25,10 +25,6 @@ import { ICasesConfig } from '@ansyn/menu-items/cases/models/cases-config';
 
 @Injectable()
 export class AnsynApi {
-
-
-	mapPosition$ = this.actions$.ofType<Action>(MapActionTypes.POSITION_CHANGED);
-
 	activeMapId;
 	activateMap$ = <Observable<string>>this.store.select(mapStateSelector)
 		.pluck<IMapState, string>('activeMapId')

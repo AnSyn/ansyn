@@ -16,7 +16,7 @@ import {
 	overlaysFeatureKey,
 	overlaysInitialState,
 	overlaysStateSelector,
-	selectDropMarkup,
+	selectDropMarkup, selectFilteredOveralys,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs/Observable';
@@ -51,6 +51,11 @@ import {
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import {
+	contextFeatureSelector, contextInitialState, DisplayedOverlay,
+	selectContextsParams
+} from '@ansyn/context/reducers/context.reducer';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -104,12 +109,14 @@ describe('OverlaysAppEffects', () => {
 			}
 		}
 	} as any;
+
 	const exampleOverlays: any = [
 		['first', { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z'), 'sourceType': 'FIRST', 'thumbnailUrl': 'http://first' }],
 		['last', { id: 'last', 'photoTime': new Date(), 'sourceType': 'LAST', 'thumbnailUrl': 'http://last' }]
 	];
 
 	const toolsState: IToolsState = { ...toolsInitialState };
+
 	const overlaysState = {
 		...overlaysInitialState,
 		filteredOverlays: ['first', 'last'],
@@ -122,14 +129,17 @@ describe('OverlaysAppEffects', () => {
 	};
 
 	const coreState = { ...coreInitialState };
+
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
+
 	const mapState = { ...initialMapState, mapsList: [{ 'id': '1' }, { 'id': '2' }] };
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
+	const contextState: any = { ...contextInitialState };
+
 	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 
-	// @Injectable()
 	class MapSourceProviderMock extends BaseMapSourceProvider {
 		sourceType = 'FIRST';
 		supported = [];
@@ -147,7 +157,7 @@ describe('OverlaysAppEffects', () => {
 					[casesFeatureKey]: CasesReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[toolsFeatureKey]: ToolsReducer,
-					[mapFeatureKey]: MapReducer
+					[mapFeatureKey]: MapReducer,
 				})
 			],
 			providers: [
@@ -158,12 +168,6 @@ describe('OverlaysAppEffects', () => {
 					provide: CasesService,
 					useValue: {
 						getOverlaysMarkup: () => null,
-						'contextValues': {
-							'imageryCountBefore': -1,
-							'imageryCountAfter': -1,
-							'defaultOverlay': '',
-							'time': new Date()
-						}
 					}
 				},
 				{
@@ -215,7 +219,9 @@ describe('OverlaysAppEffects', () => {
 			[statusBarStateSelector, statusBarState],
 			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
-			[selectOverlaysMap, overlaysState.overlays]
+			[selectOverlaysMap, overlaysState.overlays],
+			[contextFeatureSelector, contextState],
+			[selectContextsParams, contextState.params]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -235,20 +241,19 @@ describe('OverlaysAppEffects', () => {
 
 
 	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
-		casesService.contextValues.defaultOverlay = 'latest';
+		contextState.params.defaultOverlay = DisplayedOverlay.latest;
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--b--', {
-			b: new DisplayOverlayFromStoreAction({
-				id: 'last'
-			})
+		const expectedResults = cold('--(ab)--', {
+			a: new SetContextParamsAction({ defaultOverlay: null }),
+			b: new DisplayOverlayFromStoreAction({ id: 'last' })
 		});
 		expect(overlaysAppEffects.displayLatestOverlay$).toBeObservable(expectedResults);
 	});
 
 	it(`displayTwoNearestOverlay$ effect with one overlay before and one date after 
 	should call DisplayMultipleOverlaysFromStoreAction with those two overlays`, () => {
-		casesService.contextValues.defaultOverlay = 'nearest';
-		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
+		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
@@ -262,8 +267,8 @@ describe('OverlaysAppEffects', () => {
 		overlaysState.overlays = new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }]]);
 		overlaysState.filteredOverlays = ['first'];
 
-		casesService.contextValues.defaultOverlay = 'nearest';
-		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
+		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
@@ -277,8 +282,8 @@ describe('OverlaysAppEffects', () => {
 		overlaysState.overlays = new Map<string, any>([['last', { 'photoTime': new Date('2016-06-27T08:43:03.624Z') }]]);
 		overlaysState.filteredOverlays = ['last'];
 
-		casesService.contextValues.defaultOverlay = 'nearest';
-		casesService.contextValues.time = new Date('2015-06-27T08:43:03.624Z');
+		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {

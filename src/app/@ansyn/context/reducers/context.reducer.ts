@@ -31,7 +31,7 @@ export const contextInitialState: IContextState = contextAdapter.getInitialState
 export function ContextReducer(state: IContextState = contextInitialState, action: ContextActions) {
 	switch (action.type) {
 		case ContextActionTypes.ADD_ALL_CONTEXT:
-			return contextAdapter.addAll(action.payload, state);
+			return contextAdapter.addAll(<Context[]>action.payload, state);
 
 		case ContextActionTypes.SET_CONTEXT_PARAMS:
 			return { ...state, params: { ...state.params, ...action.payload } };

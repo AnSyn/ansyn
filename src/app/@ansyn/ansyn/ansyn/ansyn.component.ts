@@ -25,6 +25,7 @@ export class AnsynComponent {
 		.map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned');
 
 	activeMap$: Observable<CaseMapState> = this.store$.select(mapStateSelector)
+		.filter(Boolean)
 		.map(MapFacadeService.activeMap)
 		.filter(Boolean);
 

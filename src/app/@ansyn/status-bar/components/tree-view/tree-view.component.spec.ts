@@ -33,7 +33,7 @@ describe('TreeViewComponent', () => {
 			providers: [
 				{
 					provide: StatusBarConfig,
-					useValue: { toolTips: {}, dataInputFiltersConfig: { filters: [] } }
+					useValue: { toolTips: {}, dataInputFiltersConfig: { } }
 				},
 				provideMockActions(() => actions),
 				{

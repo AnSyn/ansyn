@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { AlertMsgTypes, IToastMessage, WindowLayout } from '../reducers/core.reducer';
+import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 
@@ -19,8 +19,7 @@ export const CoreActionTypes = {
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
-	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
-	SET_WINDOW_LAYOUT : 'SET_WINDOW_LAYOUT'
+	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT'
 };
 
 export type CoreActions =
@@ -148,13 +147,3 @@ export class UpdateOverlaysCountAction {
 
 	}
 }
-
-export class SetWindowLayout implements Action {
-	type = CoreActionTypes.SET_WINDOW_LAYOUT;
-
-	constructor(public payload: { windowLayout: WindowLayout }) {
-	}
-}
-
-
-

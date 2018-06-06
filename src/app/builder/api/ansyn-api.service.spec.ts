@@ -1,6 +1,6 @@
-import { AnsynApi } from '@builder/ansyn-api.service';
+import { AnsynApi } from '@builder/api/ansyn-api.service';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { coreFeatureKey, CoreReducer, coreStateSelector, WindowLayout } from '@ansyn/core/reducers/core.reducer';
+import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
@@ -9,10 +9,15 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	builderFeatureKey, BuilderReducer, builderStateSelector,
+	WindowLayout
+} from '@builder/reducers/builder.reducer';
+import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 
 
 describe('apiService', () => {
@@ -42,7 +47,7 @@ describe('apiService', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [],
-			imports: [StoreModule.forRoot({ [coreFeatureKey]: CoreReducer, [mapFeatureKey]: MapReducer })],
+			imports: [StoreModule.forRoot({ [coreFeatureKey]: CoreReducer, [mapFeatureKey]: MapReducer, [builderFeatureKey]: BuilderReducer })],
 			providers: [
 				AnsynApi, Actions, ProjectionConverterService, ProjectionService, ImageryCommunicatorService,
 				{
@@ -52,6 +57,10 @@ describe('apiService', () => {
 							ed50Customized: ''
 						}
 					}
+				},
+				{
+					provide: casesConfig,
+					useValue: { defaultCase : {} }
 				}
 			]
 		}).compileComponents();
@@ -82,7 +91,7 @@ describe('apiService', () => {
 	it('should loadDefaultCase', () => {
 		spyOn(store, 'dispatch');
 		ansynApi.loadDefaultCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new LoadDefaultCaseAction());
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectCaseAction(<any> {}));
 	});
 
 	it('should changeMapLayout', (done) => {
@@ -133,8 +142,8 @@ describe('apiService', () => {
 			toolsOverMenu: true
 		};
 		ansynApi.changeWindowLayout(windowLayout);
-		store.select(coreStateSelector).subscribe((coreState) => {
-			expect(coreState.windowLayout).toEqual(windowLayout);
+		store.select(builderStateSelector).subscribe((builderState) => {
+			expect(builderState.windowLayout).toEqual(windowLayout);
 			done();
 		});
 	});

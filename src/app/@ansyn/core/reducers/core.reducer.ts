@@ -23,22 +23,12 @@ export interface IToastMessage {
 	showWarningIcon?: boolean;
 }
 
-
-export interface WindowLayout {
-	menu: boolean,
-	statusBar: boolean,
-	timeLine: boolean,
-	contextSun: boolean,
-	toolsOverMenu: boolean
-}
-
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: Overlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: OverlaysCriteria;
 	layout: LayoutKey;
-	windowLayout: WindowLayout;
 	wasWelcomeNotificationShown: boolean;
 }
 
@@ -52,13 +42,6 @@ export const coreInitialState: ICoreState = {
 	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
-	windowLayout: {
-		menu: true,
-		statusBar: true,
-		timeLine: true,
-		contextSun: true,
-		toolsOverMenu: false
-	}
 };
 
 export const coreFeatureKey = 'core';
@@ -98,10 +81,6 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 
 		case CoreActionTypes.SET_LAYOUT:
 			return { ...state, layout: action.payload };
-
-		case CoreActionTypes.SET_WINDOW_LAYOUT: {
-			return { ...state, windowLayout: action.payload.windowLayout };
-		}
 
 		case CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
 			const payloadObj = { wasWelcomeNotificationShown: action.payload };

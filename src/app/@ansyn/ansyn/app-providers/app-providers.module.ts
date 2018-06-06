@@ -68,13 +68,4 @@ export const appProviders = [
 })
 export class AppProvidersModule {
 
-	static forRoot(providers: Array<{ provide: any, useClass: any, multi: true }>): ModuleWithProviders {
-		return {
-			ngModule: AppProvidersModule,
-			providers: [
-				...appProviders,
-				...providers
-			]
-		};
-	}
 }

@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ContextModule } from '@ansyn/context/context.module';
 
 @NgModule({
-	imports: [CommonModule, CoreModule, FormsModule, ContextModule],
+	imports: [CommonModule, CoreModule, FormsModule],
 	declarations: [ImagerySandBoxComponent],
 	entryComponents: [ImagerySandBoxComponent]
 })

@@ -108,7 +108,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(openAerialElement: any): Overlay {
-		let overlay: Overlay = new Overlay();
+		let overlay: Overlay = <Overlay> {};
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);

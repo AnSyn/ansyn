@@ -74,7 +74,7 @@
 			}
 		},
 		{
-			"name": "devApp",
+			"name": "builder-dev",
 			"root": "src",
 			"outDir": "build/buildBundle/dist",
 			"assets": [
@@ -85,8 +85,8 @@
 				},
 				"favicon.ico"
 			],
-			"index": "app/builder/index.html",
-			"main": "app/builder/devApp.main.ts",
+			"index": "app/builder/dev/index.html",
+			"main": "app/builder/dev/devApp.main.ts",
 			"polyfills": "polyfills.ts",
 			"tsconfig": "tsconfig.builder.json",
 			"testTsconfig": "tsconfig.spec.json",

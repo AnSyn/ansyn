@@ -68,8 +68,7 @@ export class StatusBarAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>,
-				public overlaysService: OverlaysService,
-				public casesService: CasesService) {
+				public overlaysService: OverlaysService) {
 	}
 
 }

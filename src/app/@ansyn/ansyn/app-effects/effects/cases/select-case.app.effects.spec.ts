@@ -44,13 +44,6 @@ describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
-	let mockCasesService = {
-		contextValues: {
-			imageryCountBefore: -1,
-			imageryCountAfter: -1
-		}
-	};
-
 	let mockOverlaysService = {
 		getStartDateViaLimitFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() }),
 		getStartAndEndDateViaRangeFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() })
@@ -64,18 +57,6 @@ describe('SelectCaseAppEffects', () => {
 			],
 			providers: [
 				SelectCaseAppEffects,
-				{
-					provide: CasesService,
-					useValue: mockCasesService
-				},
-				{
-					provide: ContextService,
-					useValue: {}
-				},
-				{
-					provide: OverlaysService,
-					useValue: mockOverlaysService
-				},
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();

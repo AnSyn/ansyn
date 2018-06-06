@@ -15,7 +15,7 @@ import { SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
 
 function mockOverlay(id: string): Overlay {
-	const overlay = new Overlay();
+	const overlay = <Overlay> {};
 	overlay.id = id;
 	return overlay;
 }

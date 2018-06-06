@@ -5,7 +5,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
-	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
@@ -17,21 +16,18 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { Case } from '../models/case.model';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { AddCasesAction, LoadDefaultCaseIfNoActiveCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { AddCasesAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -87,7 +83,7 @@ describe('CasesEffects', () => {
 				{ provide: LoggerService, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
-				{ provide: OverlaysConfig, useValue: {} },
+				{ provide: OverlaysConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));

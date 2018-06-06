@@ -1,11 +1,14 @@
 import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { selectDropMarkup, selectLoading } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
-import { ChangeDetectorRef, Injectable, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { selectWindowLayout, WindowLayout } from '@builder/reducers/builder.reducer';
 
 @Injectable()
 export class AnsynCustomComponent extends AnsynComponent implements OnInit {
+	windowLayout$: Observable<WindowLayout> = this.store$.select(selectWindowLayout);
+
 	isLoading$: Observable<boolean> = this.store$.select(selectLoading)
 		.skip(1)
 		.filter(loading => !loading)
@@ -28,7 +31,6 @@ export class AnsynCustomComponent extends AnsynComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		super.ngOnInit();
 		this.isLoading$.subscribe();
 		this.hoveredOverlay$.subscribe();
 	}
@@ -38,3 +40,10 @@ export class AnsynCustomComponent extends AnsynComponent implements OnInit {
 
 
 
+export const buildAnsynCustomComponent = (selector) => (
+	Component({
+		selector,
+		templateUrl: './ansyn.bootstrap.component.html',
+		styleUrls: ['../../../@ansyn/ansyn/ansyn/ansyn.component.less', './ansyn.bootstrap.component.less']
+	})(AnsynCustomComponent)
+);

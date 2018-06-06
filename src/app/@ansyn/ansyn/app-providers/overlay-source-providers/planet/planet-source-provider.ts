@@ -224,7 +224,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(element: PlanetOverlay): Overlay {
-		const overlay: Overlay = new Overlay();
+		const overlay: Overlay = <Overlay> {};
 
 		overlay.id = element.id;
 		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);

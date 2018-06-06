@@ -9,20 +9,15 @@ import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	CasesActionTypes,
-	CopyCaseLinkAction,
-	LoadCaseAction,
-	LoadDefaultCaseAction, LoadDefaultCaseIfNoActiveCaseAction, SelectCaseAction
+	LoadDefaultCaseIfNoActiveCaseAction,
+	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { Case } from '@ansyn/core/models/case.model';
+import { DilutedCase } from '@ansyn/core/models/case.model';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -57,71 +52,15 @@ export class CasesAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onCopyShareCaseLink$
-	 * @ofType CopyCaseLinkAction
-	 * @filter shareCaseAsQueryParams is true
-	 * @action SetToastMessageAction
-	 * @dependencies cases
-	 */
-	@Effect()
-	onCopyShareCaseLink$ = this.actions$
-		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
-		.filter(action => Boolean(action.payload.shareCaseAsQueryParams))
-		.withLatestFrom(this.store$.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
-			let sCase = state.entities[action.payload.caseId];
-			if (!sCase) {
-				if (state.selectedCase.id === action.payload.caseId) {
-					sCase = state.selectedCase;
-				}
-			}
-			return sCase;
-		})
-		.map((sCase: Case) => {
-			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
-			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
-		});
-
-	/**
-	 * @type Effect
-	 * @name onCopyShareCaseIdLink$
-	 * @ofType CopyCaseLinkAction
-	 * @filter shareCaseAsQueryParams is false
-	 * @action SetToastMessageAction
-	 */
-	@Effect()
-	onCopyShareCaseIdLink$ = this.actions$
-		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
-		.filter(action => !Boolean(action.payload.shareCaseAsQueryParams))
-		.map((action) => {
-			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
-			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
-		});
-
-	/**
-	 * @type Effect
-	 * @name loadDefaultCaseIfNoActiveCase$
-	 * @ofType LoadDefaultCaseIfNoActiveCaseAction
-	 */
-	@Effect()
-	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE)
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, casesState]: [LoadDefaultCaseAction, ICasesState]) => !Boolean(casesState.selectedCase))
-		.map(() => new LoadDefaultCaseAction());
-
-	/**
-	 * @type Effect
 	 * @name loadCase$
-	 * @ofType LoadCaseAction
+	 * @ofType SelectDilutedCaseAction
 	 * @action SelectCaseAction?, SetToastMessageAction?, LoadDefaultCaseIfNoActiveCaseAction?
 	 */
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.LOAD_CASE)
-		.switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload))
-		.mergeMap((caseValue: Case) => {
+		.ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE)
+		.map(({ payload }: SelectDilutedCaseAction) => payload)
+		.mergeMap((caseValue: DilutedCase) => {
 			let resultObservable = Observable.of([]);
 
 			const observablesArray = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
@@ -146,13 +85,15 @@ export class CasesAppEffects {
 					return new SelectCaseAction(caseValue);
 				});
 		}).catch((result: HttpErrorResponse) => {
-			return [new SetToastMessageAction({ toastText: `Failed to load case (${result.status})`, showWarningIcon: true }),
+			return [new SetToastMessageAction({
+				toastText: `Failed to load case (${result.status})`,
+				showWarningIcon: true
+			}),
 				new LoadDefaultCaseIfNoActiveCaseAction()];
 		});
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				protected casesService: CasesService,
 				protected overlaysService: OverlaysService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}

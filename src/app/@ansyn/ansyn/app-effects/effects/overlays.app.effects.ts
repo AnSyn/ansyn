@@ -76,7 +76,7 @@ export class OverlaysAppEffects {
 	displayTwoNearestOverlay$: Observable<any> = this.actions$
 		.ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector))
-		.filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, ContextParams, IOverlaysState]) => params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0)
+		.filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, ContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0)
 		.map(([action, params, { overlays, filteredOverlays }]: [SetFilteredOverlaysAction, ContextParams, IOverlaysState]) => {
 			const overlaysBefore = [...filteredOverlays].reverse().find(overlay => overlays.get(overlay).photoTime < params.time);
 			const overlaysAfter = filteredOverlays.find(overlay => overlays.get(overlay).photoTime > params.time);

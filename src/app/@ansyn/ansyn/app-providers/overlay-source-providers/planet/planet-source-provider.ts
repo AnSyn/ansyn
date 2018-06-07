@@ -97,12 +97,21 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			const configFilters = [];
 			const preFilter = { type: 'OrFilter', config: configFilters };
 			fetchParams.dataInputFilters.forEach((aFilter: DataInputFilterValue) => {
-				configFilters.push({
-					type: 'AndFilter', config: [
-						{ type: 'StringInFilter', field_name: 'item_type', config: [aFilter.sensorType] },
-						{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
-					]
-				});
+				const sensorTypeFilter = {
+					type: 'StringInFilter',
+					field_name: 'item_type',
+					config: [aFilter.sensorType]
+				};
+				if (Boolean(aFilter.sensorName)) {
+					configFilters.push({
+						type: 'AndFilter', config: [
+							sensorTypeFilter,
+							{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
+						]
+					});
+				} else {
+					configFilters.push(sensorTypeFilter);
+				}
 			});
 
 			filters.push(preFilter);

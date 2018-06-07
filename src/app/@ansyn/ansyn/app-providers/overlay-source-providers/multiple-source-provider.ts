@@ -130,6 +130,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		const mergedSortedOverlays: Observable<OverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
+			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => s.provider.fetchMultiple(fetchParams, s.filters)))
 			.map(overlays => {
 				const allFailed = overlays.every(overlay => this.isFaulty(overlay));

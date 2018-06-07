@@ -72,11 +72,13 @@ export interface CaseState extends DilutedCaseState {
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
 
 export interface DataInputFilterValue {
+	providerName: string,
 	sensorType: string,
 	sensorName: string
 }
 
 export interface CaseDataInputFiltersState {
+	fullyChecked: boolean,
 	filters: DataInputFilterValue[],
 	active: boolean
 }

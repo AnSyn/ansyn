@@ -5,7 +5,7 @@ import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
-import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
+import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { isEqual } from 'lodash';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs/Observable';
@@ -20,6 +20,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
+	leavesCount: number;
 
 	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
 
@@ -30,7 +31,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			this._selectedFilters = _preFilter.filters;
 			this.dataInputFiltersActive = _preFilter.active;
 			if (Boolean(this._selectedFilters)) {
-				this.updateInputDataFilterMenu();
+				this.dataInputFiltersItems.forEach(root => this.updateInputDataFilterMenu(root));
 			}
 		});
 
@@ -57,9 +58,26 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		this._selectedFilters = value;
 	}
 
-
 	get dataFilters(): TreeviewItem[] {
-		return this.statusBarConfig.dataInputFiltersConfig.filters;
+		this.leavesCount = 0;
+		Object.keys(this.statusBarConfig.dataInputFiltersConfig)
+			.forEach(providerName => {
+					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
+						this.leavesCount++;
+						leaf.value.providerName = providerName;
+					});
+				}
+			);
+
+		return Object.values(this.statusBarConfig.dataInputFiltersConfig);
+	}
+
+	visitLeaves(curr: TreeviewItem, cb: (leaf: TreeviewItem) => void) {
+		if (Boolean(curr.children)) {
+			curr.children.forEach(c => this.visitLeaves(c, cb));
+			return;
+		}
+		cb(curr);
 	}
 
 	updateFiltersTreeActivation(activate: boolean): void {
@@ -79,34 +97,42 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	updateInputDataFilterMenu(): void {
-		if (Boolean(this._selectedFilters)) {
-			this.dataInputFiltersItems.forEach((dataInputItem) => {
-				// first iterate the parents and update the their checkboxes.
-				dataInputItem.children.forEach((sensor) => {
-					sensor.checked = this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, sensor.value));
-				});
-				// then iterate all the children and update the their checkboxes.
-				if (dataInputItem.children.some(child => child.checked)) {
-					// true = All / false = None / undefined = Partial
-					dataInputItem.checked = dataInputItem.children.every(child => child.checked) ? true : undefined;
-				}
-				else {
-					dataInputItem.checked = false;
-				}
-			});
+	updateInputDataFilterMenu(curr: TreeviewItem): void {
+		if (!Boolean(this._selectedFilters)) {
+			return;
 		}
+
+		if (this.isLeaf(curr)) {
+			curr.checked = this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, curr.value));
+			return;
+		}
+		curr.children.forEach(c => this.updateInputDataFilterMenu(c));
+		curr.checked = this.treeViewNodeStatus(curr);
 	}
 
+	isLeaf(node: TreeviewItem) {
+		return !(Array.isArray(node.children) && node.children.length > 0);
+	}
+
+	treeViewNodeStatus(node: TreeviewItem): boolean {
+		return node.children.every(child => child.checked) ? true : node.children.some(child => child.checked || child.checked === undefined) ? undefined : false;
+	}
 
 	dataInputFiltersOk(): void {
-		this.store.dispatch(new SetOverlaysCriteriaAction({
-			dataInputFilters: {
-				filters: this._selectedFilters,
-				active: this.dataInputFiltersActive
-			}
-		}));
-		this.closeTreeView.emit();
+		if (this._selectedFilters.length === 0 && this.dataInputFiltersActive) {
+			this.store.dispatch(new SetToastMessageAction({
+				toastText: 'Please select at least one sensor'
+			}));
+		} else {
+			this.store.dispatch(new SetOverlaysCriteriaAction({
+				dataInputFilters: {
+					fullyChecked: this.leavesCount <= this._selectedFilters.length,
+					filters: this._selectedFilters,
+					active: this.dataInputFiltersActive
+				}
+			}));
+			this.closeTreeView.emit();
+		}
 	}
 
 	ngOnInit(): void {

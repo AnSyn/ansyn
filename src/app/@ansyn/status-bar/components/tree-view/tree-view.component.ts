@@ -126,7 +126,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	treeViewNodeStatus(node: TreeviewItem): boolean {
-		return node.children.every(child => child.checked) ? true : node.children.some(child => child.checked) ? undefined : false;
+		return node.children.every(child => child.checked) ? true : node.children.some(child => child.checked || child.checked === undefined) ? undefined : false;
 	}
 
 	dataInputFiltersOk(): void {

@@ -50,9 +50,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				public store: Store<IStatusBarState>) {
 		this.dataFilters.forEach((f) => {
-			const tree = new TreeviewItem(f);
-			this.dataInputFiltersItems.push(tree);
-
+			this.dataInputFiltersItems.push(new TreeviewItem(f));
 		});
 	}
 
@@ -121,7 +119,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	dataInputFiltersOk(): void {
-		if (this.dataInputFiltersItems.some((provider) => provider.checked || provider.checked === undefined) || !this.dataInputFiltersActive) {
+		if (this._selectedFilters.length === 0 && this.dataInputFiltersActive) {
+			this.store.dispatch(new SetToastMessageAction({
+				toastText: 'Please select at least one sensor'
+			}));
+		} else {
 			this.store.dispatch(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: this.leavesCount <= this._selectedFilters.length,
@@ -130,10 +132,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 				}
 			}));
 			this.closeTreeView.emit();
-		} else {
-			this.store.dispatch(new SetToastMessageAction({
-				toastText: 'Please select at least one sensor'
-			}));
 		}
 	}
 

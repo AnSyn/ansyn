@@ -51,18 +51,9 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 				public store: Store<IStatusBarState>) {
 		this.dataFilters.forEach((f) => {
 			const tree = new TreeviewItem(f);
-			this.uncheckAll(tree);
 			this.dataInputFiltersItems.push(tree);
 
 		});
-	}
-
-	uncheckAll(node: TreeviewItem) {
-		node.checked = false;
-
-		if (!this.isLeaf(node)) {
-			node.children.forEach(c => this.uncheckAll(c));
-		}
 	}
 
 	set selectedFilters(value) {

@@ -1,4 +1,3 @@
-import { toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
 import { Observable } from 'rxjs/Observable';
@@ -10,15 +9,14 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	SetAnnotationMode,
-	SetMeasureDistanceToolState, SetPinLocationModeAction,
+	SetMeasureDistanceToolState,
+	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
-	StartMouseShadow,
-	StopMouseShadow,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
+import { ContextEntityVisualizer } from '../../../../plugins/openlayers/visualizers/contexts/context-entity.visualizer';
 import {
 	DrawOverlaysOnMapTriggerAction,
 	MapActionTypes,

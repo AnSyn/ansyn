@@ -10,7 +10,7 @@ import { ContextMenuPlugin } from '@ansyn/plugins/openlayers/context-menu/contex
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
 import { PolygonSearchVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/polygon-search.visualizer';
 import { GoToVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/goto.visualizer';
-import { ContextEntityVisualizer } from '@ansyn/ansyn/app-providers/app-visualizers/context-entity.visualizer';
+import { ContextEntityVisualizer } from '@ansyn/plugins/openlayers/visualizers/contexts/context-entity.visualizer';
 import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
 import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/polyline-visualizer';
 import { PinPointVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/pin-point.visualizer';

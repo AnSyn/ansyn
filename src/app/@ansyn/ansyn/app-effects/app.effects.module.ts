@@ -15,7 +15,6 @@ import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
-import { ContextEntityAppEffects } from './effects/context/context-entity.app.effect';
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
 import { IRouterState } from '@ansyn/router/reducers/router.reducer';
 import { CoreAppEffects } from './effects/core.app.effects';
@@ -50,7 +49,6 @@ export interface IAppState {
 			FiltersAppEffects,
 			ToolsAppEffects,
 			ContextMenuAppEffects,
-			ContextEntityAppEffects,
 			VisualizersAppEffects,
 			CoreAppEffects,
 			UpdateCaseAppEffects,

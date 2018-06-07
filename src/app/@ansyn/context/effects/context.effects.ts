@@ -20,6 +20,8 @@ import { mergeMap } from 'rxjs/operators';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { Store } from '@ngrx/store';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 @Injectable()
 export class ContextEffects {
@@ -128,6 +130,20 @@ export class ContextEffects {
 		.ofType(CasesActionTypes.LOAD_CASE)
 		.switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload))
 		.map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase));
+
+	@Effect()
+	setSpecialObjectsFromSelectedCase$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.filter(({ payload }: SelectCaseAction) => Boolean(payload.state.contextEntities))
+		.mergeMap(({ payload }: SelectCaseAction): any => (
+			payload.state.contextEntities.map(contextEntity => {
+				const specialObject: OverlaySpecialObject = {
+					id: contextEntity.id,
+					date: contextEntity.date,
+					shape: 'star'
+				} as OverlaySpecialObject;
+				return new SetSpecialObjectsActionStore([specialObject]);
+			})));
 
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,

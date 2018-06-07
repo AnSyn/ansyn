@@ -68,6 +68,7 @@ export interface DataInputFilterValue {
 }
 
 export interface CaseDataInputFiltersState {
+	fullyChecked: boolean,
 	filters: DataInputFilterValue[],
 	active: boolean
 }

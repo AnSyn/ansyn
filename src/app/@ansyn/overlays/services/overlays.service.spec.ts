@@ -114,6 +114,7 @@ describe('OverlaysService', () => {
 			to: new Date()
 		},
 		dataInputFilters: {
+			fullyChecked: true,
 			filters: [],
 			active: true
 		}
@@ -299,6 +300,7 @@ describe('OverlaysService', () => {
 				to: new Date()
 			},
 			dataInputFilters: {
+				fullyChecked: true,
 				filters: [],
 				active: true
 			}

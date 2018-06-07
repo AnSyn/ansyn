@@ -1,8 +1,4 @@
-import {
-	BeginLayerCollectionLoadAction, LayersActionTypes, SetAnnotationsLayer,
-	ToggleDisplayAnnotationsLayer
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';

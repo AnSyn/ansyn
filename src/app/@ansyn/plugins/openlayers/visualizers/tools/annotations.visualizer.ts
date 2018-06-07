@@ -26,19 +26,19 @@ import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
 	AnnotationProperties,
-	IToolsState,
+	IToolsState, selectAnnotationLayer,
 	selectSubMenu,
 	SubMenuEnum,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/Observable';
-import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { selectDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
-import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { SetAnnotationMode, SetAnnotationsLayer } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { Actions } from '@ngrx/effects';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -51,24 +51,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	public mode: AnnotationMode;
 
-	mapState$ = this.store$.select(mapStateSelector);
-	layersState$ = this.store$.select(layersStateSelector);
 	toolsState$ = this.store$.select(toolsStateSelector);
 	/* data */
-	annotationsLayer$: Observable<any> = this.layersState$
-		.pluck<ILayerState, FeatureCollection<any>>('annotationsLayer')
-		.distinctUntilChanged();
+	annotationsLayer$: Observable<any> = this.store$.select(selectAnnotationLayer);
 
-	displayAnnotationsLayer$: Observable<any> = this.layersState$
-		.pluck<ILayerState, boolean>('displayAnnotationsLayer')
-		.distinctUntilChanged();
+	displayAnnotationsLayer$: Observable<any> = this.store$.select(selectDisplayAnnotationsLayer);
 
 	annotationFlag$ = this.store$.select(selectSubMenu)
 		.map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations)
 		.distinctUntilChanged();
 
-	isActiveMap$ = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
+	isActiveMap$ = this.store$.select(selectActiveMapId)
 		.map((activeMapId: string): boolean => activeMapId === this.mapId)
 		.distinctUntilChanged();
 
@@ -158,7 +151,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		);
 	}
 
-	constructor(public store$: Store<any>) {
+	constructor(public store$: Store<any>, public actions$: Actions) {
 
 		super(null, {
 			initial: {

@@ -12,7 +12,6 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
-	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -21,7 +20,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.ac
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 

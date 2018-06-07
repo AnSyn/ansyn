@@ -17,6 +17,27 @@ import { AnsynRouterModule } from '@ansyn/router/router.module';
 import { MenuModule } from '@ansyn/menu/menu.module';
 import { CasesModule } from '@ansyn/menu-items/cases/cases.module';
 import { ContextModule } from '@ansyn/context/context.module';
+import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
+import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
+import { CommonModule } from '@angular/common';
+import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
+import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
+import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
+import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagery-sand-box.module';
+import { AlgorithmsModule } from '@ansyn/menu-items/algorithms/algorithms.module';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { SettingsModule } from '@ansyn/menu-items/settings/settings.module';
+import { FiltersModule } from '@ansyn/menu-items/filters/filters.module';
+import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
+import { AppEffectsModule } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { CoreModule } from '@ansyn/core/core.module';
+import { OverlaysModule } from '@ansyn/overlays/overlays.module';
+import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
+import { ansynMenuItems } from '@ansyn/ansyn/ansyn.menu-items';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];
@@ -91,11 +112,36 @@ export class AnsynBuilder {
 
 		const options: NgModule = <any> {
 			imports: [
-				AnsynBuilderModule,
-				...imports,
-				...customModules,
+				CommonModule,
+				FormsModule,
+				HttpClientModule,
+				BrowserAnimationsModule,
 				StoreModule.forRoot({}),
-				EffectsModule.forRoot([AnsynApi])
+				EffectsModule.forRoot([]),
+
+				AppProvidersModule,
+				OverlaysModule,
+				AnsynPluginsModule,
+				ToolsModule,
+				CoreModule,
+				AlertsModule.provideAlerts(ansynAlerts),
+				AppEffectsModule,
+				MapFacadeModule,
+				ImageryModule,
+				StatusBarModule,
+
+				// CasesModule,
+				// ContextModule,
+				// AnsynRouterModule,
+				// MenuModule.provideMenuItems(ansynMenuItems),
+
+				// ImagerySandBoxModule,
+				FiltersModule,
+				// LayersManagerModule,
+				// AlgorithmsModule,
+				// SettingsModule,
+				AnsynBuilderModule,
+				...customModules,
 			],
 			providers: [
 				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },

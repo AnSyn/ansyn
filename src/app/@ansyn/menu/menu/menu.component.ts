@@ -79,7 +79,6 @@ export class MenuComponent implements OnInit {
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
 
-
 	isPinned$ = this.store.select(selectIsPinned);
 
 	autoClose$ = this.store.select(selectAutoClose);

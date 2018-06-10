@@ -362,7 +362,13 @@
     "path": "/assets/logo.svg",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
-    "mode": "{{ getv "/ansyn/menu/mode" "" }}"
+    "mode": "{{ getv "/ansyn/menu/mode" "" }}",
+    "forkMe": {
+    	"active": "{{ getv "/ansyn/menu/forkme" "true" }}",
+    	"image": "assets/icons/forkme.svg",
+    	"title": "Fork me on github",
+		"href": "https://github.com/ansyn/ansyn"
+    }
   },
   "visualizersConfig": {
     "FrameVisualizer": {

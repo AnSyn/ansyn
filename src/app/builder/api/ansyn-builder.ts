@@ -27,6 +27,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
+import { AnsynApi } from '@builder/api/ansyn-api.service';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];
@@ -51,7 +52,7 @@ export class AnsynBuilder {
 	callback: any;
 	moduleRef: NgModuleRef<DynamicsAnsynModule>;
 
-	get api() {
+	get api(): AnsynApi {
 		return this.moduleRef && this.moduleRef.instance.api;
 	}
 

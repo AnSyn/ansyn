@@ -2,7 +2,6 @@ import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/too
 import { inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import olColor from 'ol/color';
-import { EffectsModule } from '@ngrx/effects';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
@@ -10,7 +9,7 @@ describe('AnnotationsVisualizer', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [AnnotationsVisualizer],
-			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([])]
+			imports: [StoreModule.forRoot({})]
 		});
 	});
 

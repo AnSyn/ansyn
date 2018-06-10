@@ -38,7 +38,6 @@ import { SetAnnotationMode, SetAnnotationsLayer } from '@ansyn/menu-items/tools/
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Actions } from '@ngrx/effects';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -151,7 +150,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		);
 	}
 
-	constructor(public store$: Store<any>, public actions$: Actions) {
+	constructor(public store$: Store<any>) {
 
 		super(null, {
 			initial: {

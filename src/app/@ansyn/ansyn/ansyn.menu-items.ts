@@ -5,7 +5,6 @@ import { LayersManagerComponent } from '@ansyn/menu-items/layers-manager/compone
 import { ToolsComponent } from '@ansyn/menu-items/tools/tools/tools.component';
 import { AlgorithmsComponent } from '@ansyn/menu-items/algorithms/algorithms/algorithms.component';
 import { SettingsComponent } from '@ansyn/menu-items/settings/settings/settings.component';
-import { ImagerySandBoxComponent } from '@ansyn/menu-items/imagerySandBox/component/imagery-sand-box.component';
 
 export const ansynMenuItems: MenuItem[] = [
 	{
@@ -42,12 +41,6 @@ export const ansynMenuItems: MenuItem[] = [
 		name: 'Settings',
 		component: SettingsComponent,
 		iconClass: 'icon-main-settings',
-		production: false
-	},
-	{
-		name: 'Imagery SandBox',
-		component: ImagerySandBoxComponent,
-		iconClass: 'icon-main-tools',
 		production: false
 	}
 ];

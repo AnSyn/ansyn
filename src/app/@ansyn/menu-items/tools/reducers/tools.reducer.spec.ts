@@ -1,6 +1,10 @@
 import { AnnotationProperties, toolsInitialState, ToolsReducer, toolsFlags } from './tools.reducer';
-import { AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
+import { AnnotationSetProperties, SetAnnotationMode, SetAnnotationsLayer } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
+import {
+	ILayerState, initialLayersState,
+	LayersReducer
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
 describe('ToolsReducer', () => {
 
@@ -39,5 +43,10 @@ describe('ToolsReducer', () => {
 		});
 	});
 
+	it('SET_LAYER', () => {
+		const action = new SetAnnotationsLayer(<any>'some geoJSON Object');
+		const result = ToolsReducer(toolsInitialState, action);
+		expect(result.annotationsLayer).toEqual(<any>'some geoJSON Object');
+	});
 
 });

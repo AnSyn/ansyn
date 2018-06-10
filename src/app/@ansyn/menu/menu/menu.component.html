@@ -16,10 +16,6 @@
 
 		</ng-container>
 
-		<!--<div class="logo">-->
-			<!---->
-		<!--</div>-->
-
 		<div class="logo">
 
 			<ng-container *ngIf="menuConfig?.forkMe?.active === 'true'">
@@ -28,7 +24,6 @@
 				</a>
 			</ng-container>
 
-
 			<div class="mode"
 				 *ngIf="menuConfig?.mode"
 				 [style.color]="menuConfig.color"
@@ -36,7 +31,6 @@
 				 [style.border]="'1px sollid' + menuConfig.color"
 			>{{menuConfig.mode}}
 			</div>
-
 			<img [src]="menuConfig.path" [alt]="version" [title]="version">
 		</div>
 	</div>

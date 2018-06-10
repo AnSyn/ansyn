@@ -8,6 +8,7 @@ import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, intersect, difference } from '@turf/turf';
+import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 
 export interface FiltersList {
 	name: string,
@@ -130,7 +131,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		const mergedSortedOverlays: Observable<OverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
-			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter) => dataInputFilter.providerName === s.provider.sourceType))
+			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: DataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => s.provider.fetchMultiple(fetchParams, s.filters)))
 			.map(overlays => {
 				const allFailed = overlays.every(overlay => this.isFaulty(overlay));

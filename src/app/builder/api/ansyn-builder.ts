@@ -89,17 +89,32 @@ export class AnsynBuilder {
 
 		const options: NgModule = <any> {
 			imports: [
+				CommonModule,
+				FormsModule,
+				HttpClientModule,
+				BrowserAnimationsModule,
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([]),
+				AppProvidersModule,
+				OverlaysModule,
+				AnsynPluginsModule,
+				ToolsModule,
+				CoreModule,
+				AlertsModule.provideAlerts(ansynAlerts),
+				AppEffectsModule,
+				MapFacadeModule,
+				ImageryModule,
+				StatusBarModule,
+				FiltersModule,
 				AnsynBuilderModule,
-				...customModules
+				...customModules,
 			],
 			providers: [
 				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },
 				...configProviders,
 				customProviders,
 				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
-				{ provide: DataLayersService, useValue: { getAllLayersInATree: () => Observable.of([]) } }
+				{ provide: DataLayersService, useValue: { getAllLayersInATree: () => Observable.of([]) } },
 			],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],

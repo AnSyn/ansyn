@@ -205,7 +205,9 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return Observable.empty();
+		const year = 365 * 24 * 3600 * 1000;
+		return Observable.of({startDate: Date.now() - year, endDate: Date.now()})
+		// return Observable.empty();
 	}
 
 	private extractArrayData(overlays: PlanetOverlay[]): Overlay[] {

@@ -86,7 +86,8 @@ export class ContextEffects {
 					.map((context: Context) => [action, context, params])
 					.pipe(this.setContext)
 			})
-			.catch(() => {
+			.catch((err) => {
+				console.warn('Error loading context as case', err);
 				const defaultCaseParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
 				return Observable.from([new SelectCaseAction(defaultCaseParams),
 					new SetToastMessageAction({

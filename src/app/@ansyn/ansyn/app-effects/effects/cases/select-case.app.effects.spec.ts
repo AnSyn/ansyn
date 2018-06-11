@@ -7,7 +7,6 @@ import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/sel
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
-	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
@@ -36,7 +35,7 @@ import {
 } from '@ansyn/core/models/case.model';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { ContextService } from '@ansyn/context/services/context.service';
 
@@ -44,13 +43,6 @@ describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
-	let mockCasesService = {
-		contextValues: {
-			imageryCountBefore: -1,
-			imageryCountAfter: -1
-		}
-	};
-
 	let mockOverlaysService = {
 		getStartDateViaLimitFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() }),
 		getStartAndEndDateViaRangeFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() })
@@ -64,18 +56,6 @@ describe('SelectCaseAppEffects', () => {
 			],
 			providers: [
 				SelectCaseAppEffects,
-				{
-					provide: CasesService,
-					useValue: mockCasesService
-				},
-				{
-					provide: ContextService,
-					useValue: {}
-				},
-				{
-					provide: OverlaysService,
-					useValue: mockOverlaysService
-				},
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();
@@ -101,7 +81,7 @@ describe('SelectCaseAppEffects', () => {
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
-				dataInputFilters: CaseDataInputFiltersState = { filters: [], active: true },
+				dataInputFilters: CaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: Overlay[] = [],
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} },

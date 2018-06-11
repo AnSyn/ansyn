@@ -61,9 +61,9 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	buildFilters(config: IPlanetFilter[], filterType = 'AndFilter') {
+	buildFilters(config: IPlanetFilter[], sensors?: string[], filterType = 'AndFilter') {
 		return {
-			item_types: this.planetOverlaysSourceConfig.itemTypes,
+			item_types: Array.isArray(sensors) ? sensors : this.planetOverlaysSourceConfig.itemTypes,
 			filter: {
 				type: filterType,
 				config: config
@@ -94,18 +94,27 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			const configFilters = [];
 			const preFilter = { type: 'OrFilter', config: configFilters };
 			fetchParams.dataInputFilters.forEach((aFilter: DataInputFilterValue) => {
-				configFilters.push({
-					type: 'AndFilter', config: [
-						{ type: 'StringInFilter', field_name: 'item_type', config: [aFilter.sensorType] },
-						{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
-					]
-				});
+				const sensorTypeFilter = {
+					type: 'StringInFilter',
+					field_name: 'item_type',
+					config: [aFilter.sensorType]
+				};
+				if (Boolean(aFilter.sensorName)) {
+					configFilters.push({
+						type: 'AndFilter', config: [
+							sensorTypeFilter,
+							{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
+						]
+					});
+				} else {
+					configFilters.push(sensorTypeFilter);
+				}
 			});
 
 			filters.push(preFilter);
 		}
 
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters),
+		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
 			{ headers: this.httpHeaders, params: { _page_size: limit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
@@ -254,7 +263,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(element: PlanetOverlay): Overlay {
-		const overlay: Overlay = new Overlay();
+		const overlay: Overlay = <Overlay> {};
 
 		overlay.id = element.id;
 		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);

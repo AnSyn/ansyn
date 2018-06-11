@@ -7,7 +7,7 @@ import {
 	EnableImageProcessing,
 	GoToAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
+	SetActiveOverlaysFootprintModeAction, SetAnnotationsLayer,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	SetManualImageProcessing,
@@ -33,7 +33,6 @@ import { CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.mo
 
 import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Feature, FeatureCollection, Point } from 'geojson';
-import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import {
 	IStatusBarState,
 	selectGeoFilter,
@@ -42,9 +41,11 @@ import {
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CoreActionTypes, SetLayoutAction } from '@ansyn/core/actions/core.actions';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import {
+	IToolsState, selectAnnotationLayer, toolsFlags,
+	toolsStateSelector
+} from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { isEqual } from 'lodash';
@@ -288,9 +289,9 @@ export class ToolsAppEffects {
 	@Effect()
 	removeAnnotationFeature$: Observable<SetAnnotationsLayer> = this.actions$
 		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
-		.withLatestFrom(this.layersState$)
-		.map(([action, layerState]: [AnnotationRemoveFeature, ILayerState]) => {
-			const updatedAnnotationsLayer = <FeatureCollection<any>> { ...layerState.annotationsLayer };
+		.withLatestFrom(this.store$.select(selectAnnotationLayer))
+		.map(([action, annotationsLayer]: [AnnotationRemoveFeature, any]) => {
+			const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
 			const featureIndex = updatedAnnotationsLayer.features.findIndex((feature: Feature<any>) => {
 				return feature.properties.id === action.payload;
 			});

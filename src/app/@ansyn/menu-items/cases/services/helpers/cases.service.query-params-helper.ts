@@ -48,11 +48,6 @@ export class QueryParamsHelper {
 			}
 		});
 
-		['defaultOverlay', 'imageryCountBefore', 'imageryCountAfter'].forEach(key => {
-			if (selectedContext[key]) {
-				this.casesService.contextValues[key] = selectedContext[key];
-			}
-		});
 		if (selectedContext.requirements && Boolean(qParams)) {
 			selectedContext.requirements.forEach((requireKey: string) => {
 				switch (requireKey) {
@@ -131,9 +126,6 @@ export class QueryParamsHelper {
 								);
 							}
 						}
-						break;
-					case 'time':
-						this.casesService.contextValues['time'] = qParams.time;
 						break;
 				}
 			});

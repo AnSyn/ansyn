@@ -18,14 +18,12 @@ import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
 import { ContextEntityAppEffects } from './effects/context/context-entity.app.effect';
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
 import { IRouterState } from '@ansyn/router/reducers/router.reducer';
-import { RouterAppEffects } from './effects/router.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-
 
 export interface IAppState {
 	core: ICoreState;
@@ -53,7 +51,6 @@ export interface IAppState {
 			ToolsAppEffects,
 			ContextMenuAppEffects,
 			ContextEntityAppEffects,
-			RouterAppEffects,
 			VisualizersAppEffects,
 			CoreAppEffects,
 			UpdateCaseAppEffects,

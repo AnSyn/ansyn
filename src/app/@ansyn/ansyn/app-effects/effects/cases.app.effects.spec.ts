@@ -12,7 +12,7 @@ import {
 	AddCaseAction,
 	LoadCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
-	SelectCaseAction
+	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -76,8 +76,7 @@ describe('CasesAppEffects', () => {
 					[contextFeatureKey]: ContextReducer,
 					[mapFeatureKey]: MapReducer
 				}),
-				RouterTestingModule,
-				ContextModule
+				RouterTestingModule
 			],
 			providers: [
 				{
@@ -91,7 +90,7 @@ describe('CasesAppEffects', () => {
 					useValue: {
 						getOverlayById: (id: string) => {
 							if (['uuu', 'eee'].includes(id)) {
-								const overlay = new Overlay();
+								const overlay = <Overlay> {};
 								overlay.id = id;
 
 								return Observable.of(overlay);
@@ -204,7 +203,7 @@ describe('CasesAppEffects', () => {
 			const caseItem: any = { ...caseMock2, state: { ...caseMock2.state, favoriteOverlays: [ { id: 'blabla', sourceType: 'PLANET' } ] } };
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
-			actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
+			actions = hot('--a--', { a: new SelectDilutedCaseAction( <any> caseItem) });
 			const expectedResults = cold('--(bc|)', {
 				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
 				c: new LoadDefaultCaseIfNoActiveCaseAction()
@@ -216,7 +215,7 @@ describe('CasesAppEffects', () => {
 			const caseItem: Case = caseMock2;
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
-			actions = hot('--a--', { a: new LoadCaseAction(caseItem.id) });
+			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });
 			const expectedResults = cold('--(b)--', {
 				b: new SelectCaseAction(caseItem)
 			});

@@ -11,5 +11,6 @@ keys = [
     "/ansyn/menu/background",
     "/ansyn/menu/color",
     "/ansyn/menu/mode",
+    "/ansyn/menu/forkme",
     "/ansyn/imagery/mapsource"
 ]

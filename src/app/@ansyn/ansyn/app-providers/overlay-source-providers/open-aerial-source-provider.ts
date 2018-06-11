@@ -54,6 +54,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const params = {
+			platform: 'uav',
 			limit: `${fetchParams.limit + 1}`,
 			bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`,
 			acquisition_from: fetchParams.timeRange[0].start.toISOString(),
@@ -108,7 +109,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(openAerialElement: any): Overlay {
-		let overlay: Overlay = new Overlay();
+		let overlay: Overlay = <Overlay> {};
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);

@@ -3,6 +3,10 @@
 	"version": "0.2.81",
 	"private": true,
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ansyn/ansyn"
+	},
 	"scripts": {
 		"build": "ng build",
 		"build:aot": "ng build --aot true",
@@ -19,6 +23,7 @@
 		"ng": "ng",
 		"start": "node scripts/generate-config.js && ng serve --sourcemaps --extract-css",
 		"start:aot": "ng serve --aot true",
+		"start:builder-dev": "ng s --app builder-dev",
 		"test": "ng test",
 		"test:e2e": "node scripts/generate-config.js && ng e2e",
 		"test:single-run": "ng test --single-run",
@@ -53,7 +58,7 @@
 		"lodash": "4.17.4",
 		"lodash-decorators": "4.5.0",
 		"moment": "^2.21.0",
-		"new-ansyn-event-drops": "^1.0.4",
+		"new-ansyn-event-drops": "1.0.5",
 		"ng-infinitescroll": "1.0.12",
 		"ngx-treeview": "^2.0.6",
 		"ol": "4.6.3",

@@ -9,10 +9,9 @@ import {
 	AddCaseAction,
 	AddCasesAction,
 	CasesActionTypes,
-	LoadCaseAction,
+	CopyCaseLinkAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
-	LoadDefaultCaseIfNoActiveCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
@@ -28,9 +27,8 @@ import { ICasesConfig } from '../models/cases-config';
 import { Case } from '@ansyn/core/models/case.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
-import { uniqBy } from 'lodash';
-import { HttpErrorResponse } from '@angular/common/http';
+import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { copyFromContent } from '@ansyn/core/utils/clipboard';
 
 @Injectable()
 export class CasesEffects {
@@ -175,6 +173,34 @@ export class CasesEffects {
 				.map((addedCase: Case) => new SaveCaseAsSuccessAction(addedCase));
 		});
 
+	/**
+	 * @type Effect
+	 * @name onCopyShareCaseIdLink$
+	 * @ofType CopyCaseLinkAction
+	 * @filter shareCaseAsQueryParams is false
+	 * @action SetToastMessageAction
+	 */
+	@Effect()
+	onCopyShareCaseIdLink$ = this.actions$
+		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
+		.filter(action => !Boolean(action.payload.shareCaseAsQueryParams))
+		.map((action) => {
+			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
+			copyFromContent(shareLink);
+			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
+		});
+
+	/**
+	 * @type Effect
+	 * @name loadDefaultCaseIfNoActiveCase$
+	 * @ofType LoadDefaultCaseIfNoActiveCaseAction
+	 */
+	@Effect()
+	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE)
+		.withLatestFrom(this.store.select(casesStateSelector))
+		.filter(([action, casesState]: [LoadDefaultCaseAction, ICasesState]) => !Boolean(casesState.selectedCase))
+		.map(() => new LoadDefaultCaseAction());
 
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,

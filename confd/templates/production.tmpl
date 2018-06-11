@@ -273,29 +273,76 @@
       "enlarge": "Expand timeline"
     },
     "dataInputFiltersConfig": {
-      "filters": [
-      		{
-      			"text": "REScene",
-      			"value": 1,
-      			"collapsed": true,
-				"children": [
-					{ "text": "RapidEye-1", "value": { "sensorType": "REScene", "sensorName": "RapidEye-1" } },
-					{ "text": "RapidEye-2", "value": { "sensorType": "REScene", "sensorName": "RapidEye-2" } }
-				]
-			},
-			{
-				"text": "PSScene3Band",
-                "value": 1,
-                "collapsed": true,
-            	"children": [
-					{ "text": "103e", "value": { "sensorType": "PSScene3Band", "sensorName": "103e" } },
-					{ "text": "0f21", "value": { "sensorType": "PSScene3Band", "sensorName": "0f21" } },
-					{ "text": "RapidEye-2", "value": { "sensorType": "PSScene3Band", "sensorName": "RapidEye-2" } },
-					{ "text": "1042", "value": { "sensorType": "PSScene3Band", "sensorName": "1042" } }
-            	]
+      "PLANET": {
+        "text": "Planet",
+        "value": 1,
+        "collapsed":true,
+        "children": [
+          {
+            "text":"REScene",
+            "value": {
+              "sensorType": "REScene"
             }
-		]
+          },
+          {
+            "text": "PSScene3Band",
+            "value": {
+              "sensorType": "PSScene3Band"
+            }
+          },
+		  {
+            "text": "PSScene4Band",
+            "value": {
+              "sensorType": "PSScene4Band"
+            }
+          },
+		  {
+            "text": "PSOrthoTile",
+            "value": {
+              "sensorType": "PSOrthoTile"
+            }
+          },
+		  {
+            "text": "REOrthoTile",
+            "value": {
+              "sensorType": "REOrthoTile"
+            }
+          },
+		  {
+            "text": "SkySatScene",
+            "value": {
+              "sensorType": "SkySatScene"
+            }
+          },
+		  {
+            "text": "Landsat8L1G",
+            "value": {
+              "sensorType": "Landsat8L1G"
+            }
+          },
+		  {
+            "text": "Sentinel2L1C",
+            "value": {
+              "sensorType": "Sentinel2L1C"
+            }
+          }
+        ]
+      },
+      "OPEN_AERIAL": {
+        "text":"OpenAerial",
+        "value": 1,
+        "collapsed": true,
+        "children": [
+          {
+            "text": "UAV",
+            "value": {
+              "sensorType": "UAV"
+            }
+          }
+        ]
+      }
     }
+
   },
   "coreConfig": {
 	"welcomeNotification": {
@@ -315,7 +362,13 @@
     "path": "/assets/logo.svg",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
-    "mode": "{{ getv "/ansyn/menu/mode" "" }}"
+    "mode": "{{ getv "/ansyn/menu/mode" "" }}",
+    "forkMe": {
+    	"active": "{{ getv "/ansyn/menu/forkme" "true" }}",
+    	"image": "assets/icons/forkme.svg",
+    	"title": "Fork me on github",
+		"href": "https://github.com/ansyn/ansyn"
+    }
   },
   "visualizersConfig": {
     "FrameVisualizer": {
@@ -470,6 +523,44 @@
     },
     "PLANET": {
       "whitelist": [
+        {
+          "name": "Entire Earth",
+          "dates": [
+            {
+              "start": null,
+              "end": null
+            }
+          ],
+          "sensorNames": [
+            "Landsat8L1G", "Sentinel2L1C"
+          ],
+          "coverage": [
+            [
+              [
+                [
+                  -180,
+                  -90
+                ],
+                [
+                  -180,
+                  90
+                ],
+                [
+                  180,
+                  90
+                ],
+                [
+                  180,
+                  -90
+                ],
+                [
+                  -180,
+                  -90
+                ]
+              ]
+            ]
+          ]
+        },
         {
           "name": "California",
           "dates": [

@@ -8,6 +8,7 @@ import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, intersect, difference } from '@turf/turf';
+import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 import { IDateRange } from '@ansyn/core/models/time.model';
 
 export interface FiltersList {
@@ -131,6 +132,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		const mergedSortedOverlays: Observable<OverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
+			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: DataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => s.provider.fetchMultiple(fetchParams, s.filters)))
 			.map(overlays => {
 				const allFailed = overlays.every(overlay => this.isFaulty(overlay));
@@ -153,8 +155,9 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise()))
-			.then(dates => dates.map(d =>
-				({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
+			.then(dates => dates.filter(Boolean)
+				// filter(Boolean) prevents crash from providers that do not yet implement the current function
+				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {
 					return d2;
@@ -172,8 +175,9 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise()))
-			.then(dates => dates.map(d =>
-				({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
+			.then(dates => dates.filter(Boolean)
+				// filter(Boolean) prevents crash from providers that do not yet implement the current function
+				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {
 					return d2;

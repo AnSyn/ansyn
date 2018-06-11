@@ -66,7 +66,7 @@ export class ContextEntityAppEffects {
 	displayEntityFromNewMap$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.withLatestFrom(this.store$.select(casesStateSelector), this.store$.select(mapStateSelector))
-		.filter(([action, caseState]: [ImageryCreatedAction, ICasesState, IMapState]) => Boolean(caseState.selectedCase.state.contextEntities))
+		.filter(([action, caseState]: [ImageryCreatedAction, ICasesState, IMapState]) => Boolean(caseState && caseState.selectedCase.state.contextEntities))
 		.switchMap(([action, caseState, mapStore]: [ImageryCreatedAction, ICasesState, IMapState]) => {
 			const mapState: CaseMapState = MapFacadeService.mapById(mapStore.mapsList, action.payload.id);
 			const overlayDate = mapState.data.overlay ? mapState.data.overlay.date : null;

@@ -58,11 +58,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return { ...state, modal: { id: null, show: false } };
 
 		case CasesActionTypes.SELECT_CASE:
-			const selectedCase: Case = action.payload;
-			if (!selectedCase.state.time) {
-				selectedCase.state.time = CasesService.defaultTime;
-			}
-			return { ...state, selectedCase };
+			return { ...state, selectedCase: action.payload };
 
 		default:
 			return state;
@@ -73,4 +69,4 @@ export const { selectEntities, selectAll, selectTotal, selectIds } = casesAdapte
 export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
 export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<CasePreview>>>createSelector(casesStateSelector, selectEntities);
 export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
-export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases.selectedCase);
+export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);

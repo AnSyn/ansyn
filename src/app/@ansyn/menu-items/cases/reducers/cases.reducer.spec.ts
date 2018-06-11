@@ -25,7 +25,7 @@ describe('CasesReducer', () => {
 				to: new Date()
 			},
 			orientation: 'Align North',
-			dataInputFilters: { filters: [], active: true },
+			dataInputFilters: { fullyChecked: true, filters: [], active: true },
 			timeFilter: 'Start - End',
 			geoFilter: CaseGeoFilter.PinPoint,
 			region: {},
@@ -56,7 +56,7 @@ describe('CasesReducer', () => {
 
 		let action: SelectCaseAction = new SelectCaseAction(fakeCase);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selectedCase).toEqual(<any>{ ...fakeCase, state: { time: CasesService.defaultTime } });
+		expect(result.selectedCase).toEqual(<any>fakeCase);
 	});
 
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {

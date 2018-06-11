@@ -30,13 +30,6 @@ export class CasesService {
 	paginationLimit = 15;
 	queryParamsKeys;
 
-	public contextValues = {
-		imageryCountBefore: -1,
-		imageryCountAfter: -1,
-		defaultOverlay: '',
-		time: undefined
-	};
-
 	get defaultCase() {
 		return this.config.defaultCase;
 	}

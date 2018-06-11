@@ -11,7 +11,8 @@ export const LayersActionTypes = {
 	ANNOTATIONS: {
 		SET_LAYER: 'SET_LAYER',
 		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER'
-	}
+	},
+	UPDATE_SELECTED_LAYERS_FROM_CASE: 'UPDATE_SELECTED_LAYERS_FROM_CASE'
 };
 
 export type LayersActions =
@@ -58,6 +59,13 @@ export class UnselectLayerAction implements Action {
 	type = LayersActionTypes.UNSELECT_LAYER;
 
 	constructor(public payload: Layer) {
+	}
+}
+
+export class UpdateSelectedLayersFromCaseAction implements Action {
+	type = LayersActionTypes.UPDATE_SELECTED_LAYERS_FROM_CASE;
+
+	constructor(public payload: LayersContainer[]) {
 	}
 }
 

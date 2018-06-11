@@ -13,7 +13,8 @@ import {
 import {
 	BeginLayerCollectionLoadAction,
 	SetAnnotationsLayer,
-	ToggleDisplayAnnotationsLayer
+	ToggleDisplayAnnotationsLayer,
+	UpdateSelectedLayersFromCaseAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
@@ -24,9 +25,12 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 @Injectable()
 export class SelectCaseAppEffects {
+	_allLayrs: LayersContainer[] = [];
 
 	/**
 	 * @type Effect
@@ -40,7 +44,10 @@ export class SelectCaseAppEffects {
 		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>) {
+				protected store$: Store<IAppState>,
+				protected dataLayersService: DataLayersService
+	) {
+		this.dataLayersService.getAllLayersInATree().subscribe((layersContainers) => this._allLayrs = layersContainers);
 	}
 
 	selectCaseActions(payload: Case): Action[] {
@@ -51,7 +58,7 @@ export class SelectCaseAppEffects {
 		const { data, activeMapId } = state.maps;
 		// core
 		const { favoriteOverlays, region, dataInputFilters } = state;
-		let {  time } = state;
+		let { time } = state;
 		const { layout } = state.maps;
 
 		if (!time) {
@@ -66,7 +73,7 @@ export class SelectCaseAppEffects {
 		}
 
 		// layers
-		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
+		const { annotationsLayer, displayAnnotationsLayer, activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
 		return [
@@ -79,7 +86,8 @@ export class SelectCaseAppEffects {
 			new SetAnnotationsLayer(annotationsLayer),
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-			new UpdateFacetsAction(facets)
+			new UpdateFacetsAction(facets),
+			new UpdateSelectedLayersFromCaseAction(this.parseLayers(activeLayersIds))
 		];
 	}
 
@@ -92,5 +100,11 @@ export class SelectCaseAppEffects {
 
 	parseOverlay(overlay: Overlay): Overlay {
 		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
+	}
+
+	parseLayers(activeLayersIds: string[]): LayersContainer[] {
+		return this._allLayrs.map((layer) => {
+			return { ...layer, isChecked: activeLayersIds.some(id => id === layer.id) };
+		});
 	}
 }

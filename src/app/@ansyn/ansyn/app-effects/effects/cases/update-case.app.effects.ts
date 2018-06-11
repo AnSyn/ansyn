@@ -11,7 +11,7 @@ import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer'
 import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
 import {
 	selectAnnotationLayer,
-	selectDisplayAnnotationsLayer
+	selectDisplayAnnotationsLayer, selectLayersContainers, selectSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
@@ -21,6 +21,7 @@ import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reduc
 @Injectable()
 export class UpdateCaseAppEffects {
 	events: any[] = [
+		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectComboBoxesProperties),
@@ -46,6 +47,7 @@ export class UpdateCaseAppEffects {
 		.filter(([events, selectedCase]) => Boolean(selectedCase))    /* SelectCaseAction(selectedCase) already triggered */
 		.map(([events, selectedCase]: [any, any]) => {
 			const [
+				activeLayersIds,
 				facets,
 				favoriteOverlays,
 				{ geoFilter, timeFilter, orientation }, /* -> comboBoxesProperties */
@@ -78,6 +80,7 @@ export class UpdateCaseAppEffects {
 						activeMapId
 					},
 					layers: {
+						activeLayersIds,
 						annotationsLayer,
 						displayAnnotationsLayer
 					},

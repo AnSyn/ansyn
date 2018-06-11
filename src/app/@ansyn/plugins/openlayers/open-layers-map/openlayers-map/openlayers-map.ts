@@ -5,7 +5,6 @@ import ScaleLine from 'ol/control/scaleline';
 import Group from 'ol/layer/group';
 import olGeoJSON from 'ol/format/geojson';
 import OLGeoJSON from 'ol/format/geojson';
-import Point from 'ol/geom/point';
 import Vector from 'ol/source/vector';
 import OSM from 'ol/source/osm';
 import Layer from 'ol/layer/layer';
@@ -59,8 +58,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 
 		const layersArray: any[] = group.getLayers().getArray();
-		let removeLayer = layersArray.indexOf(layersArray.filter(l => l.id === layer.id));
-		group.getLayers().getArray().splice(removeLayer, 1);
+		let removeLayer = layersArray.indexOf(layersArray.find(l => l.id === layer.id));
+		if (removeLayer >= 0) {
+			group.getLayers().getArray().splice(removeLayer, 1);
+		}
 	}
 
 	static addGroupVectorLayer(layer: any, groupName: string) {
@@ -131,7 +132,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	createView(layer): View {
 		return new View({
-			projection: layer.getSource().getProjection(),
+			projection: layer.getSource().getProjection()
 		});
 	}
 

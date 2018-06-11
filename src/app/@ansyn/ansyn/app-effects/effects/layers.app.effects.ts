@@ -1,8 +1,8 @@
 import {
-	BeginLayerCollectionLoadAction, LayersActionTypes, SetAnnotationsLayer,
-	ToggleDisplayAnnotationsLayer
+	LayerCollectionLoadedAction,
+	LayersActionTypes,
+	SelectLayerAction, UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -25,6 +25,27 @@ export class LayersAppEffects {
 	redrawMaps$: Observable<any> = this.actions$
 		.ofType<any>(LayersActionTypes.SELECT_LAYER, LayersActionTypes.UNSELECT_LAYER)
 		.map(() => new ContainerChangedTriggerAction());
+
+	/**
+	 * @type Effect
+	 * @name layerCollectionLoaded$,
+	 * @ofType LayerCollectionLoadedAction
+	 * @action SelectLayerAction?, UnselectLayerAction?
+	 */
+	@Effect()
+	layerCollectionLoaded$: Observable<any> = this.actions$
+		.ofType<any>(LayersActionTypes.LAYER_COLLECTION_LOADED)
+		.mergeMap((action: any) => {
+			let results = [];
+			action.payload.forEach((layerCollection: any) => {
+				if (layerCollection.isChecked) {
+					results.push(new SelectLayerAction(layerCollection));
+				} else {
+					results.push(new UnselectLayerAction(layerCollection));
+				}
+			});
+			return results;
+		});
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

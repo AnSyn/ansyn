@@ -70,7 +70,6 @@ export class FiltersAppEffects {
 	@Effect()
 	updateOverlayFilters$ = this.onFiltersChanges$
 		.withLatestFrom(this.overlaysArray$, this.store$.select(selectOverlaysCriteria))
-		.filter(([[filters, showOnlyFavorite, favoriteOverlays], overlaysArray, { time }]) => Boolean(time) )
 		.mergeMap(([[filters, showOnlyFavorite, favoriteOverlays], overlaysArray, { time }]: [[Filters, boolean, Overlay[]], Overlay[], OverlaysCriteria]) => {
 			const filterModels: FilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite, time);

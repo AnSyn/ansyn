@@ -19,14 +19,14 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 
 @Injectable()
 export class OverlaysService {
-	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: Overlay[], showOnlyFavorite: boolean, timeState: CaseTimeState): string[] {
+	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: Overlay[], showOnlyFavorite: boolean, timeState?: CaseTimeState): string[] {
 		let parsedOverlays: Overlay[] = favorites;
 		if (!showOnlyFavorite) {
 			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
 			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
 		}
 
-		if (timeState.intervals) {
+		if (timeState && timeState.intervals) {
 			// interval  mode - limit overlays to be 1 per interval scope
 			parsedOverlays = OverlaysService.intervalFilter(parsedOverlays, timeState);
 		}
@@ -232,8 +232,8 @@ export class OverlaysService {
 		});
 	}
 
-	getSearchTimeRange(timeState: CaseTimeState): Array<IDateRange> {
-		const searchTimeRange = new Array<IDateRange>();
+	getSearchTimeRange(timeState: CaseTimeState): IDateRange[] {
+		const searchTimeRange: IDateRange[] = [];
 
 		if (!timeState.intervals) {
 			searchTimeRange.push({

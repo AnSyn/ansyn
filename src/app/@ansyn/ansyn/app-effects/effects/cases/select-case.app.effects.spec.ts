@@ -78,7 +78,7 @@ describe('SelectCaseAppEffects', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
 				geoFilter: CaseGeoFilter = CaseGeoFilter.PinPoint,
-				timeFilter: CaseTimeFilter = 'Start - End',
+				timeFilter: CaseTimeFilter = CaseTimeFilter.StartEnd,
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
 				dataInputFilters: CaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },

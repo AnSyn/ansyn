@@ -12,6 +12,8 @@ import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../re
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { ClickOutsideDirective } from '@ansyn/status-bar/directives/click-outside.directive';
+import { TimelineIntervalsPickerComponent } from '@ansyn/status-bar/components/timeline-intervals-picker/timeline-intervals-picker.component';
+import { DatePickerComponent } from '@ansyn/core/components/ansyn-date-picker/ansyn-date-picker.component';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
@@ -19,11 +21,13 @@ describe('ComboBoxesComponent', () => {
 	const mockComboBoxComponent = MockComponent({ selector: 'ansyn-combo-box', inputs: ['options', 'selected', 'renderFunction', 'comboBoxToolTipDescription'], outputs: ['comboBoxToolTipDescription', 'selectedChange'] });
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({ selector: 'ansyn-combo-box-trigger', inputs: ['isActive', 'comboBoxToolTipDescription', 'render'] });
+	const mockTimelineIntervalsPickerComponent = MockComponent({ selector: 'ansyn-timeline-intervals-picker', inputs: ['currentTimeState'] });
+
 	let store: Store<IStatusBarState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ComboBoxesComponent, mockComboBoxComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
+			declarations: [ComboBoxesComponent, mockComboBoxComponent, TimelineTimepickerComponent, mockTimelineIntervalsPickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
 			imports: [StoreModule.forRoot({ [coreFeatureKey]: CoreReducer, [statusBarFeatureKey]: StatusBarReducer }), EffectsModule.forRoot([])],
 			providers: [
 				{

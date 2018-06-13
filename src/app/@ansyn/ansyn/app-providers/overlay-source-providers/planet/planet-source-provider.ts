@@ -61,11 +61,11 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	buildFilters(config: IPlanetFilter[], sensors?: string[]) {
+	buildFilters(config: IPlanetFilter[], sensors?: string[], filterType = 'AndFilter') {
 		return {
 			item_types: Array.isArray(sensors) ? sensors : this.planetOverlaysSourceConfig.itemTypes,
 			filter: {
-				type: 'AndFilter',
+				type: filterType,
 				config: config
 			}
 		};
@@ -86,10 +86,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const limit = `${fetchParams.limit + 1}`;
 
 		const bboxFilter = { type: 'GeometryFilter', field_name: 'geometry', config: fetchParams.region };
-		const dateFilter = {
-			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: fetchParams.timeRange.start.toISOString(), lte: fetchParams.timeRange.end.toISOString() }
-		};
+		const dateFilter = this.buildDateFilter(fetchParams);
 
 		const filters: IPlanetFilter[] = [bboxFilter, dateFilter];
 
@@ -127,6 +124,39 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			.catch((error: HttpResponseBase | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
+	}
+
+	// build date filter for single / multiple time ranges
+	buildDateFilter(fetchParams: IFetchParams) {
+		let dateFilter;
+		if (fetchParams.timeRange.length === 1) {
+			// single time range (like in start-end)
+			dateFilter = {
+				type: 'DateRangeFilter',
+				field_name: 'acquired',
+				config: {
+					gte: fetchParams.timeRange[0].start.toISOString(),
+					lte: fetchParams.timeRange[0].end.toISOString()
+				}
+			}
+		} else {
+			// multiple time ranges (like in intervals)
+			const dateRangeFilters = fetchParams.timeRange.map(tr => {
+				return {
+					type: 'DateRangeFilter',
+					field_name: 'acquired',
+					config: {
+						gte: tr.start.toISOString(),
+						lte: tr.end.toISOString()
+					}
+				}
+			});
+			dateFilter = {
+				type: 'OrFilter',
+				config: dateRangeFilters
+			};
+		}
+		return dateFilter;
 	}
 
 	getById(id: string, sourceType: string): Observable<Overlay> {

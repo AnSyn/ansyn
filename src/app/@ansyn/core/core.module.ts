@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
+import { DatePickerComponent } from './components/ansyn-date-picker/ansyn-date-picker.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { StoreModule } from '@ngrx/store';
@@ -18,6 +19,7 @@ import { StorageService } from '@ansyn/core/services/storage/storage.service';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
+	DatePickerComponent,
 	ImageryStatusComponent,
 	PlaceholderComponent,
 	ToastComponent,

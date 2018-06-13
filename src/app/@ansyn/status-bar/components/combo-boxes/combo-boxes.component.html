@@ -86,7 +86,7 @@
 
 		<ansyn-timeline-timepicker
 			[@fade]
-			*ngIf="timeSelectionEditIcon"
+			*ngIf="timeSelectionEditIcon && comboBoxesProperties.timeFilter === 'Start - End'"
 			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
 			[trigger]="timePickerTrigger"
 
@@ -95,6 +95,18 @@
 			(closeComponent)="toggleTimelineStartEndSearch()"
 			(applyDate)="applyTimelinePickerResult($event)">
 		</ansyn-timeline-timepicker>
+
+		<ansyn-timeline-intervals-picker
+			[@fade]
+			*ngIf="timeSelectionEditIcon && comboBoxesProperties.timeFilter === 'Intervals'"
+			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
+			[trigger]="timePickerTrigger"
+
+			[currentTimeState]="time"
+			(closeComponent)="toggleTimelineStartEndSearch()"
+			(applyDate)="applyTimelinePickerResult($event)">
+		</ansyn-timeline-intervals-picker>
+
 	</div>
 
 	<!-- Layout -->

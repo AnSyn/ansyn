@@ -1,0 +1,164 @@
+@import "core/less/common";
+
+@vertical-section-margin: 8px 0;
+@row-bottom-margin: 5px;
+
+:host {
+	color: white;
+	position: absolute;
+	display: flex;
+	box-shadow: 0 0 2px 1px white;
+	background: black;
+	padding: 5px 25px;
+	flex-direction: column;
+	top: 0;
+	right: 0;
+	transform: translate(0, calc(~'-100% - 15px'));
+
+	label, input[type=radio], select {
+		cursor: pointer;
+		padding: 2px;
+	}
+	input[type=number] {
+		width: 35px;
+		padding: 2px;
+	}
+	ul {
+		padding: 0;
+		margin: 0;
+		li {
+			list-style-type: none;
+			margin-bottom: 5px;
+		}
+	}
+	.disabled, input:disabled, input:disabled + label, select:disabled {
+		color: @text-disabled-color;
+		cursor: auto;
+	}
+	.row {
+		margin-bottom: @row-bottom-margin;
+		display: flex;
+	}
+	.no-bottom-margin {
+		margin-bottom: 0;
+	}
+
+	div.basic-options-container {
+		.select-box {
+			display: flex;
+			align-items: center;
+			margin: 6px 0;
+			.text {
+				color: white;
+				margin-right: 10px;
+				width: 50px;
+				display: inline-block;
+				white-space: pre;
+			}
+			select {
+				width: 70px;
+			}
+		}
+	}
+
+	button.advance-options-button {
+		color: white;
+		background: none;
+		border: 0;
+		outline: 0;
+		padding: 0;
+		display: flex;
+		justify-content: flex-end;
+		.chevron {
+			margin-left: 4px;
+			display: inline-block;
+			font-size: 22px;
+			line-height: 14px;
+			transition: transform .3s linear;
+
+		}
+		&.active .chevron {
+			transform: rotate(90deg);
+		}
+	}
+
+	.advance-options-container {
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height .4s linear 0s;
+		&.active {
+				max-height: 500px;
+		}
+
+		.advance-options-time {
+			.advance-options-time-intervals {
+				margin: @vertical-section-margin;
+				label {
+					white-space: nowrap;
+				}
+				ul {
+					display: flex;
+					li {
+						display: flex;
+						flex-direction: column;
+						margin: 0 5px;
+						text-align: center;
+					}
+				}
+			}
+			.advance-options-time-frame {
+				margin: @vertical-section-margin;
+				label {
+					min-width: 50px;
+				}
+			}
+		}
+		.advance-options-strategies {
+			> div {
+				margin: @vertical-section-margin;
+				&:first-child {
+					margin-bottom: 10px;
+				}
+			}
+			label {
+				min-width: 80px;
+			}
+			input[type=radio] {
+				margin-left: 0;
+			}
+			select {
+				min-width: 90px;
+			}
+			.filter-strategy-best span {
+				margin-left: 5px;
+			}
+		}
+	}
+
+	div.control-buttons {
+		margin-top: 10px;
+		display: flex;
+		justify-content: space-between;
+		color: @overlays-dots-color;
+		a {
+			cursor: pointer;
+			&:hover {
+				font-weight: bold;
+			}
+			&:first-child {
+				margin-right: 9px;
+				width: 42px;
+			}
+			&:last-child {
+				width: 17px;
+			}
+		}
+		.error {
+			color: crimson;
+		}
+
+	}
+}
+
+
+

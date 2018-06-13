@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core/core.module';
 import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
+import { TimelineIntervalsPickerComponent } from './components/timeline-intervals-picker/timeline-intervals-picker.component';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
 import {
@@ -20,6 +21,8 @@ import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.compon
 import { SelectedCaseBarComponent } from './components/selected-case-bar/selected-case-bar.component';
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { TimeOptionsPipe } from './components/timeline-intervals-picker/time-options.pipe';
+import { TimeOptionsIntervalPipe } from './components/timeline-intervals-picker/time-options-interval.pipe';
 
 
 @NgModule({
@@ -30,7 +33,20 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, SelectedCaseBarComponent, ComboBoxTriggerComponent, ClickOutsideDirective],
+	declarations: [
+		StatusBarComponent,
+		ComboBoxComponent,
+		TimelineTimepickerComponent,
+		TreeViewComponent,
+		NavigationBarComponent,
+		ComboBoxesComponent,
+		SelectedCaseBarComponent,
+		ComboBoxTriggerComponent,
+		ClickOutsideDirective,
+		TimelineIntervalsPickerComponent,
+		TimeOptionsPipe,
+		TimeOptionsIntervalPipe
+	],
 	providers: [
 		{
 			provide: ORIENTATIONS,

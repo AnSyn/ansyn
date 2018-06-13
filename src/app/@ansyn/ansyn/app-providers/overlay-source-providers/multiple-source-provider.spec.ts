@@ -110,7 +110,7 @@ const regionCoordinates = [
 const fetchParams: any = {
 	limit: 250,
 	region: turf.geometry('Polygon', regionCoordinates),
-	timeRange: {start: new Date().toISOString(), end: new Date().toISOString()}
+	timeRange: [{start: new Date().toISOString(), end: new Date().toISOString()}]
 };
 
 const fetchParamsWithLimitZero: any = { ...fetchParams, limit: 0};

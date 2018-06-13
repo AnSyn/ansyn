@@ -29,8 +29,11 @@ export interface IContextEntity extends IVisualizerEntity {
 }
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
-export type CaseTimeFilter = 'Start - End';
 
+export enum CaseTimeFilter {
+	'StartEnd' = 'Start - End',
+	'Intervals' = 'Intervals'
+}
 
 export enum CaseGeoFilter {
 	PinPoint = 'Point',
@@ -83,10 +86,24 @@ export interface CaseDataInputFiltersState {
 	active: boolean
 }
 
+export interface TimeIntervals {
+	interval: number	// in milliseconds
+	criteria: CaseIntervalCriteria
+}
+
 export interface CaseTimeState {
 	type: 'absolute',
 	from: Date,
 	to: Date
+	intervals?: TimeIntervals;
+}
+
+export type CaseIntervalCriteriaType = 'best' | 'closest-before' | 'closest-after' | 'closest-both';
+
+export interface CaseIntervalCriteria {
+	type: CaseIntervalCriteriaType,
+	before?: number,
+	after?: number,
 }
 
 export interface CaseBooleanFilterMetadata {

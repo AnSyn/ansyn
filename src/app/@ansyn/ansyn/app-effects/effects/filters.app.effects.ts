@@ -35,9 +35,9 @@ import {
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
-import { selectFavoriteOverlays } from '@ansyn/core/reducers/core.reducer';
+import { selectFavoriteOverlays, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
 import { CaseFacetsState, CaseFilter, FilterType } from '@ansyn/core/models/case.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 import { FilterModel } from '@ansyn/core/models/filter.model';
@@ -69,10 +69,10 @@ export class FiltersAppEffects {
 	 */
 	@Effect()
 	updateOverlayFilters$ = this.onFiltersChanges$
-		.withLatestFrom(this.overlaysArray$)
-		.mergeMap(([[filters, showOnlyFavorite, favoriteOverlays], overlaysArray]: [[Filters, boolean, Overlay[]], Overlay[]]) => {
+		.withLatestFrom(this.overlaysArray$, this.store$.select(selectOverlaysCriteria))
+		.mergeMap(([[filters, showOnlyFavorite, favoriteOverlays], overlaysArray, { time }]: [[Filters, boolean, Overlay[]], Overlay[], OverlaysCriteria]) => {
 			const filterModels: FilterModel[] = FiltersService.pluckFilterModels(filters);
-			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite);
+			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite, time);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),

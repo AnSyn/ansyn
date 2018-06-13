@@ -7,8 +7,7 @@ import {
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { CaseGeoFilter, CaseTimeFilter } from '@ansyn/core/models/case.model';
 
 
 describe('CasesReducer', () => {
@@ -26,7 +25,7 @@ describe('CasesReducer', () => {
 			},
 			orientation: 'Align North',
 			dataInputFilters: { fullyChecked: true, filters: [], active: true },
-			timeFilter: 'Start - End',
+			timeFilter: CaseTimeFilter.StartEnd,
 			geoFilter: CaseGeoFilter.PinPoint,
 			region: {},
 			overlaysManualProcessArgs: {}

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
-	BaseOverlaySourceProvider, DateRange, IFetchParams, OverlayFilter,
+	BaseOverlaySourceProvider, IFetchParams, OverlayFilter,
 	StartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
@@ -9,10 +9,11 @@ import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, intersect, difference } from '@turf/turf';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDateRange } from '@ansyn/core/models/time.model';
 
 export interface FiltersList {
 	name: string,
-	dates: DateRange[]
+	dates: IDateRange[]
 	sensorNames: string[],
 	coverage: number[][][][]
 }
@@ -142,7 +143,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 						errors,
 						data: null,
 						limited: -1
-					}
+					};
 				}
 
 				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);

@@ -20,6 +20,5 @@ export const comboBoxesOptions: ComboBoxesOptions = { timeFilters, orientations,
 
 export interface ComboBoxesProperties {
 	orientation?: CaseOrientation;
-	geoFilter?: CaseGeoFilter;
 	timeFilter?: CaseTimeFilter;
 }

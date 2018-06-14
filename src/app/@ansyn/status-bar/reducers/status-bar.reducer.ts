@@ -4,20 +4,21 @@ import { ComboBoxesProperties } from '../models/combo-boxes.model';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { isNil } from 'lodash';
 import { StatusBarActions } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',
 	showOverlayErrorToast: 'Failed to load overlay'
 };
 
+export type StatusBarFlags = Map<statusBarFlagsItemsEnum, boolean | string>
+
 export interface IStatusBarState {
-	flags: Map<statusBarFlagsItemsEnum, boolean>;
+	flags: StatusBarFlags;
 	comboBoxesProperties: ComboBoxesProperties
 }
 
 export const StatusBarInitialState: IStatusBarState = {
-	flags: new Map<statusBarFlagsItemsEnum, boolean>(),
+	flags: new Map<statusBarFlagsItemsEnum, boolean | string>(),
 	comboBoxesProperties: {}
 };
 
@@ -51,5 +52,5 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 	}
 }
 export const selectComboBoxesProperties = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.comboBoxesProperties);
-export const selectGeoFilter = createSelector(selectComboBoxesProperties, (comboBoxesProperties: ComboBoxesProperties) => comboBoxesProperties.geoFilter);
-export const selectFlags = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.flags);
+export const selectStatusBarFlags = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.flags);
+export const selectGeoFilterSearch = createSelector(selectStatusBarFlags, (flags: StatusBarFlags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch));

@@ -5,14 +5,14 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import Draw from 'ol/interaction/draw';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { coreStateSelector, ICoreState, selectRegion } from '@ansyn/core/reducers/core.reducer';
 import {
-	IStatusBarState,
-	selectGeoFilter,
+	selectGeoFilterSearch,
+	selectStatusBarFlags, StatusBarFlags,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
@@ -24,39 +24,37 @@ import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/ac
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
-	core$ = this.store$.select(coreStateSelector);
-	mapState$ = this.store$.select(mapStateSelector);
+	region$ = this.store$.select(selectRegion);
 
-	geoFilter$: Observable<any> = this.store$.select(selectGeoFilter)
+	geoFilter$: Observable<any> = this.region$.map((region) => region.type)
 		.distinctUntilChanged();
 
-	isActiveMap$ = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
+	isActiveMap$ = this.store$.select(selectActiveMapId)
 		.map((activeMapId: string): boolean => activeMapId === this.mapId)
 		.distinctUntilChanged();
 
 	isActiveGeoFilter$ = this.geoFilter$
 		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
 
-	statusBarFlags$ = this.store$.select(statusBarStateSelector)
-		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
-		.distinctUntilChanged();
+	statusBarFlags$ = this.store$.select(selectStatusBarFlags);
 
-	geoFilterSearch$ = this.statusBarFlags$
-		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
-		.distinctUntilChanged();
+	geoFilterSearch$ = this.store$.select(selectGeoFilterSearch);
 
-	onSearchMode$ = Observable.combineLatest(this.geoFilterSearch$, this.isActiveGeoFilter$)
-		.map(([geoFilterSearch, isActiveGeoFilter]) => geoFilterSearch && isActiveGeoFilter)
-		.distinctUntilChanged();
+	toggleOpacity$ = this.geoFilterSearch$
+		.do((geoFilterSearch) => {
+			if (geoFilterSearch) {
+				this.vector.setOpacity(0)
+			} else {
+				this.vector.setOpacity(1)
+			}
+		});
 
-	region$ = this.core$
-		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
-		.distinctUntilChanged()
-		.pluck<OverlaysCriteria, CaseRegionState>('region');
+	onSearchMode$ = this.geoFilterSearch$
+		.map((geoFilterSearch) => geoFilterSearch === this.geoFilter)
+		.distinctUntilChanged();
 
 	geoFilterIndicator$ = this.statusBarFlags$
-		.map((flags: Map<statusBarFlagsItemsEnum, boolean>) => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
+		.map((flags: StatusBarFlags) => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
 		.distinctUntilChanged();
 
 	onContextMenu$: Observable<any> = this.actions$
@@ -82,6 +80,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		this.subscriptions.push(
 			this.drawChanges$.subscribe(),
 			this.onContextMenu$.subscribe(),
+			this.toggleOpacity$.subscribe(),
 			this.interactionChanges$.subscribe()
 		);
 	}
@@ -123,7 +122,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	createDrawInteraction() {
-		this.vector.setOpacity(0);
 		const drawInteractionHandler = new Draw({
 			type: this.geoFilter,
 			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
@@ -136,7 +134,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	public removeDrawInteraction() {
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
-		this.vector.setOpacity(1);
 	}
 
 	resetInteractions() {

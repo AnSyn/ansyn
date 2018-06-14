@@ -7,14 +7,16 @@ import {
 	EnableImageProcessing,
 	GoToAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction, SetAnnotationsLayer,
+	SetActiveOverlaysFootprintModeAction,
+	SetAnnotationsLayer,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	SetManualImageProcessing,
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow,
-	ToolsActionsTypes, UpdateToolsFlags
+	ToolsActionsTypes,
+	UpdateToolsFlags
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -30,20 +32,16 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
-
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Feature, FeatureCollection, Point } from 'geojson';
-import {
-	IStatusBarState,
-	selectGeoFilter,
-	statusBarStateSelector
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterSearch, selectStatusBarFlags } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import {
-	IToolsState, selectAnnotationLayer, toolsFlags,
+	IToolsState,
+	selectAnnotationLayer,
+	toolsFlags,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
@@ -53,19 +51,8 @@ import { isEqual } from 'lodash';
 
 @Injectable()
 export class ToolsAppEffects {
-	layersState$ = this.store$.select(layersStateSelector);
-
-	flags$ = this.store$.select(statusBarStateSelector)
-		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
-		.distinctUntilChanged();
-
-	isPolygonSearch$ = this.flags$
-		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
-		.distinctUntilChanged();
-
-	isPolygonGeoFilter$ = this.store$.select(selectGeoFilter)
-		.map((geoFilter) => geoFilter === 'Polygon')
-		.distinctUntilChanged();
+	isPolygonSearch$ = this.store$.select(selectGeoFilterSearch)
+		.map((geoFilterSearch) => geoFilterSearch === 'Polygon');
 
 	activeMap$ = this.store$.select(mapStateSelector)
 		.map((mapState) => MapFacadeService.activeMap(mapState))
@@ -96,8 +83,8 @@ export class ToolsAppEffects {
 			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
 			CoreActionTypes.SET_LAYOUT,
 			ToolsActionsTypes.SET_SUB_MENU)
-		.withLatestFrom(this.isPolygonSearch$, this.isPolygonGeoFilter$)
-		.filter(([action, isPolygonSearch, isPolygonGeoFilter]: [SelectMenuItemAction, boolean, boolean]) => isPolygonSearch && isPolygonGeoFilter)
+		.withLatestFrom(this.isPolygonSearch$)
+		.filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch)
 		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
 
 	/**
@@ -270,7 +257,7 @@ export class ToolsAppEffects {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
 			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
-			if ( registredMapsCount < 2 || isActiveMapRegistred) {
+			if (registredMapsCount < 2 || isActiveMapRegistred) {
 				return [
 					new StopMouseShadow(),
 					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])

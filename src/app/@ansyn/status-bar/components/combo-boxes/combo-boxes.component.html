@@ -41,8 +41,8 @@
 			[comboBoxToolTipDescription]="toolTips.geoFilter"
 			icon="icon-status-bar-geo"
 			[options]="geoFilters"
-			[selected]="comboBoxesProperties.geoFilter"
-			(selectedChange)="comboBoxesChange({ geoFilter: $event })">
+			[selected]="geoFilter"
+			(selectedChange)="geoFilterChanged($event)">
 		</ansyn-combo-box>
 
 		<div class="buttons" [class.active]="(flags.get(statusBarFlagsItemsEnum.geoFilterSearch))">

@@ -47,7 +47,7 @@ export class UpdateCaseAppEffects {
 			const [
 				facets,
 				favoriteOverlays,
-				{ geoFilter, timeFilter, orientation }, /* -> comboBoxesProperties */
+				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				annotationsLayer,
 				displayAnnotationsLayer,
 				activeMapId,
@@ -68,7 +68,6 @@ export class UpdateCaseAppEffects {
 				owner,
 				selectedContextId,
 				state: {
-					geoFilter,
 					timeFilter,
 					orientation,
 					maps: {

@@ -42,7 +42,6 @@ export class ComboBoxComponent {
 		this.optionsVisible = false;
 
 		if (selected !== this.selected) {
-			this.selected = selected;
 			this.selectedChange.emit(selected);
 		}
 	}

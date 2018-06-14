@@ -42,7 +42,7 @@ describe('PolygonSearchVisualizer', () => {
 		polygonSearchVisualizer.onContextMenu(fakePoint);
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({
 			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: true
+			value: polygonSearchVisualizer.geoFilter
 		}));
 	});
 

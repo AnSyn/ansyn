@@ -77,7 +77,7 @@ describe('ComboBoxesComponent', () => {
 		it('edit-pinpoint', () => {
 			fixture.nativeElement.querySelector('.edit-pinpoint').click();
 			fixture.detectChanges();
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch }));
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: undefined }));
 		});
 		it('button-eye', () => {
 			fixture.nativeElement.querySelector('.eye-button').click();

@@ -45,6 +45,7 @@ export class ContextMenuComponent implements OnInit {
 		.distinctUntilChanged();
 
 	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectRegion)
+		.filter(Boolean)
 		.do((region) => this.geoFilter = region.type);
 
 	geoFilter;

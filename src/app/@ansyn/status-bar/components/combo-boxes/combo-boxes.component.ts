@@ -62,13 +62,8 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 })
 export class ComboBoxesComponent implements OnInit, OnDestroy {
 	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
-
 	geoFilterSearch$ = this.store.select(selectGeoFilterSearch).do((geoFilterSearch) => this.geoFilterSearch = geoFilterSearch);
-	regionType$ = this.store.select(selectRegion).map((region) => region.type).do((regionType) => this.regionType = regionType);
-
-	// geoFilter$ = combineLatest(this.regionType$, this.geoFilterSearch$)
-	// 	.map(([regionType, geoFilterSearch]) => geoFilterSearch || regionType)
-	// 	.do(());
+	regionType$ = this.store.select(selectRegion).filter(Boolean).map((region) => region.type).do((regionType) => this.regionType = regionType);
 
 	flags$ = this.store.select(selectStatusBarFlags);
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(selectOverlaysCriteria);

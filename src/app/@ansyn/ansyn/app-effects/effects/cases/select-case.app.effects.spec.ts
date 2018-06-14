@@ -8,7 +8,7 @@ import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
 	SetAnnotationsLayer,
-	ToggleDisplayAnnotationsLayer
+	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersFromCaseAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -39,9 +39,12 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.ac
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { ContextService } from '@ansyn/context/services/context.service';
+import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
+	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
 	let mockOverlaysService = {
@@ -57,7 +60,14 @@ describe('SelectCaseAppEffects', () => {
 			],
 			providers: [
 				SelectCaseAppEffects,
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{
+					provide: DataLayersService,
+					useValue: {
+						getAllLayersInATree: () => Observable.of([])
+					}
+				}
+
 			]
 		}).compileComponents();
 	}));
@@ -68,6 +78,10 @@ describe('SelectCaseAppEffects', () => {
 
 	beforeEach(inject([SelectCaseAppEffects], (_selectCaseAppEffects: SelectCaseAppEffects) => {
 		selectCaseAppEffects = _selectCaseAppEffects;
+	}));
+
+	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
+		dataLayersService = _dataLayersService;
 	}));
 
 	it('should be defined', () => {
@@ -85,7 +99,7 @@ describe('SelectCaseAppEffects', () => {
 				dataInputFilters: CaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: Overlay[] = [],
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} },
+				layers: CaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
 				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
 				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] };
 
@@ -114,7 +128,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghij)--', {
+			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
@@ -124,7 +138,8 @@ describe('SelectCaseAppEffects', () => {
 				g: new SetAnnotationsLayer(layers.annotationsLayer),
 				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				j: new UpdateFacetsAction(facets)
+				j: new UpdateFacetsAction(facets),
+				k: new UpdateSelectedLayersFromCaseAction([])
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

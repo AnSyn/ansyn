@@ -83,7 +83,8 @@ describe('LayersEffects', () => {
 				id: '',
 				name: 'FakeName',
 				creationTime: new Date(),
-				dataLayerContainers: []
+				dataLayerContainers: [],
+				isChecked: false
 			}
 		];
 

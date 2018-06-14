@@ -10,10 +10,10 @@ describe('Status Bar Reducer', () => {
 	});
 
 	it('update status flags - \'good\' value', () => {
-		const action = new UpdateStatusFlagsAction({
+		const action = new UpdateStatusFlagsAction([{
 			key: statusBarFlagsItemsEnum.geoFilterIndicator,
 			value: true
-		});
+		}]);
 
 		const newState = StatusBarReducer(_reducerState, action);
 		expect(newState.flags.get(statusBarFlagsItemsEnum.geoFilterIndicator)).toBe(true);

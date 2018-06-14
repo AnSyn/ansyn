@@ -51,10 +51,10 @@ export class PinPointVisualizer extends RegionVisualizer {
 
 	onContextMenu(coordinates: Position): void {
 		const region = turf.geometry('Point', coordinates);
-		this.store$.dispatch(new UpdateStatusFlagsAction({
+		this.store$.dispatch(new UpdateStatusFlagsAction([{
 			key: statusBarFlagsItemsEnum.geoFilterSearch,
 			value: false
-		}));
+		}]));
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

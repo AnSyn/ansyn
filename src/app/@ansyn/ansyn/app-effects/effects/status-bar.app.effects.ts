@@ -64,7 +64,7 @@ export class StatusBarAppEffects {
 		.withLatestFrom(this.store.select(statusBarStateSelector).pluck<IStatusBarState, any>('flags'))
 		.filter(([action, flags]) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
 		.filter(([{ payload }]) => !payload.path.some((element) => element.id === 'editGeoFilter' || element.id  === 'contextGeoFilter'))
-		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
+		.map(() => new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }]));
 
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>,

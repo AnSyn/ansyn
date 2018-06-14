@@ -98,7 +98,7 @@ export class VisualizersAppEffects {
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
-				new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }),
+				new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }]),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor

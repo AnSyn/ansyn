@@ -40,10 +40,10 @@ describe('PolygonSearchVisualizer', () => {
 		const fakePoint = [0, 0];
 		spyOn(store, 'dispatch');
 		polygonSearchVisualizer.onContextMenu(fakePoint);
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction([{
 			key: statusBarFlagsItemsEnum.geoFilterSearch,
 			value: polygonSearchVisualizer.geoFilter
-		}));
+		}]));
 	});
 
 	it('drawRegionOnMap calls setEntities with Feature', () => {

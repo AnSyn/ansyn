@@ -98,10 +98,10 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new UpdateStatusFlagsAction({
+		this.store$.dispatch(new UpdateStatusFlagsAction([{
 			key: statusBarFlagsItemsEnum.geoFilterSearch,
 			value: false
-		}));
+		}]));
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
@@ -138,10 +138,10 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateStatusFlagsAction({
+		this.store$.dispatch(new UpdateStatusFlagsAction([{
 			key: statusBarFlagsItemsEnum.geoFilterSearch,
 			value: false
-		}));
+		}]));
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {

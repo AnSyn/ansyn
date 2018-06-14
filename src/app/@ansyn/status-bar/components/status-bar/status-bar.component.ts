@@ -31,10 +31,10 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.store.dispatch(new UpdateStatusFlagsAction({
+		this.store.dispatch(new UpdateStatusFlagsAction([{
 			key: statusBarFlagsItemsEnum.geoFilterIndicator,
 			value: true
-		}));
+		}]));
 
 		this.subscribers.push(this.layout$.subscribe());
 	}

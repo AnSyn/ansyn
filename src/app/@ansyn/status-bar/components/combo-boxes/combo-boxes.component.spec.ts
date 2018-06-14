@@ -75,14 +75,16 @@ describe('ComboBoxesComponent', () => {
 		});
 
 		it('edit-pinpoint', () => {
+			spyOn(component, 'geoFilterChanged');
 			fixture.nativeElement.querySelector('.edit-pinpoint').click();
 			fixture.detectChanges();
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: undefined }));
+			expect(component.geoFilterChanged).toHaveBeenCalled();
 		});
 		it('button-eye', () => {
 			fixture.nativeElement.querySelector('.eye-button').click();
 			fixture.detectChanges();
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
+			const value = !component.flags.get(statusBarFlagsItemsEnum.geoFilterIndicator);
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterIndicator, value }]));
 		});
 	});
 

@@ -85,7 +85,7 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.SET_SUB_MENU)
 		.withLatestFrom(this.isPolygonSearch$)
 		.filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch)
-		.map(() => new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }));
+		.map(() => new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }]));
 
 	/**
 	 * @type Effect

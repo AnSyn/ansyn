@@ -53,9 +53,9 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(point: Position): void {
-		this.store$.dispatch(new UpdateStatusFlagsAction({
+		this.store$.dispatch(new UpdateStatusFlagsAction([{
 			key: statusBarFlagsItemsEnum.geoFilterSearch,
 			value: this.geoFilter
-		}));
+		}]));
 	}
 }

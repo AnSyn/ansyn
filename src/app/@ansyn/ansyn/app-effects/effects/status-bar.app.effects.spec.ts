@@ -122,7 +122,7 @@ describe('StatusBarAppEffects', () => {
 
 	it('updategeoFilterIndicatorAction$ - add', () => {
 
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true });
+		const action = new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true }]);
 		store.dispatch(action);
 		const imagery1 = {};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);

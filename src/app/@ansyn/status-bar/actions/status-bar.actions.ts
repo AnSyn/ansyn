@@ -22,7 +22,7 @@ export class CopySelectedCaseLinkAction implements Action {
 export class UpdateStatusFlagsAction implements Action {
 	type = StatusBarActionsTypes.UPDATE_STATUS_FLAGS;
 
-	constructor(public payload: { key: statusBarFlagsItemsEnum, value?: boolean | string }) {
+	constructor(public payload: [{ key: statusBarFlagsItemsEnum, value: boolean | string }]) {
 	}
 }
 

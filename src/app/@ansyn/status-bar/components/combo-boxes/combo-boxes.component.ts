@@ -170,25 +170,31 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new SetLayoutAction(layout));
 	}
 
-	toggleMapSearch(geoFilterSearch, regionType) {
+	toggleMapSearch() {
 		const value = this.geoFilterSearch ? false : this.regionType;
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value }));
+		this.geoFilterChanged(value);
 	}
 
 	toggleIndicatorView() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
+		const value = !this.flags.get(statusBarFlagsItemsEnum.geoFilterIndicator);
+		this.store.dispatch(new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterIndicator, value }]));
 	}
 
 	comboBoxesChange(payload: ComboBoxesProperties) {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
 	}
 
-	geoFilterChanged(geoFilter: CaseGeoFilter) {
-		this.store.dispatch(new UpdateStatusFlagsAction({
-			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: geoFilter.toString()
-		}));
+	geoFilterChanged(geoFilter?: CaseGeoFilter | boolean) {
+		const payload: any = [{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: geoFilter }];
 
+		if (geoFilter) {
+			payload.push({
+				key: statusBarFlagsItemsEnum.geoFilterIndicator,
+				value: true
+			})
+		}
+
+		this.store.dispatch(new UpdateStatusFlagsAction(payload));
 	}
 
 	ngOnDestroy() {

@@ -160,7 +160,7 @@ describe('VisualizersAppEffects', () => {
 		const expectedResult = cold('--(abcd)--', {
 			a: new SetMeasureDistanceToolState(false),
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}),
+			c: new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}]),
 			d: new SetPinLocationModeAction(false)
 		});
 
@@ -176,7 +176,7 @@ describe('VisualizersAppEffects', () => {
 
 		const expectedResult = cold('--(bce)--', {
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}),
+			c: new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}]),
 			e: new SetPinLocationModeAction(false)
 		});
 

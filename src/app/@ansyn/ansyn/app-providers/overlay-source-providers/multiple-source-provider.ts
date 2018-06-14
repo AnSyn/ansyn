@@ -13,7 +13,7 @@ import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 export interface FiltersList {
 	name: string,
 	dates: DateRange[]
-	sensorNames: string[],
+	sensorNames: string,
 	coverage: number[][][][]
 }
 
@@ -67,7 +67,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 			// Separate all sensors, date ranges, and polygons
 			config.whitelist.forEach(filter => {
-				filter.sensorNames.forEach(sensor => {
+				JSON.parse(filter.sensorNames).forEach(sensor => {
 					filter.coverage.forEach(polygon => {
 						filter.dates.forEach(date => {
 							const dateObj = {
@@ -89,7 +89,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 				// Separate all sensors, date ranges, and polygons
 				config.blacklist.forEach(filter => {
-					filter.sensorNames.forEach(sensor => {
+					JSON.parse(filter.sensorNames).forEach(sensor => {
 						filter.coverage.forEach(polygon => {
 							filter.dates.forEach(date => {
 								const dateObj = {

@@ -34,10 +34,7 @@ export class LayersEffects {
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.ofType(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD)
 		.mergeMap(() => this.dataLayersService.getAllLayersInATree())
-		.withLatestFrom(this.store.select(selectSelectedLayersIds))
-		.map(([layersContainer, ids]: [LayersContainer[], string[]]) => new LayerCollectionLoadedAction(layersContainer.map((layersContainer) => {
-			return { ...layersContainer, isChecked: ids.some(id => id === layersContainer.id) };
-		})))
+		.map((layersContainer: LayersContainer[]) => new LayerCollectionLoadedAction(layersContainer))
 		.catch(error => Observable.of(new ErrorLoadingLayersAction(error)));
 
 	constructor(protected actions$: Actions,

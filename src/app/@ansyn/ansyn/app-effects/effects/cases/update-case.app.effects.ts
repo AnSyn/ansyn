@@ -31,7 +31,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectMapsList),
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
-		this.store$.select(selectOverlaysManualProcessArgs)
+		this.store$.select(selectOverlaysManualProcessArgs),
 	];
 
 	/**
@@ -57,7 +57,7 @@ export class UpdateCaseAppEffects {
 				mapsList,
 				layout,
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
-				overlaysManualProcessArgs
+				overlaysManualProcessArgs,
 			] = events;
 
 			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;

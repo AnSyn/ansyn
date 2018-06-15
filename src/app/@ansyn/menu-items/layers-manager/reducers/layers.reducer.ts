@@ -8,13 +8,14 @@ export interface ILayerState {
 	layersContainers: LayersContainer[];
 	displayAnnotationsLayer: boolean;
 	annotationsLayer: FeatureCollection<any>;
+	selectedLayersIds: string[];
 }
 
 export const initialLayersState: ILayerState = {
 	layersContainers: [],
 	displayAnnotationsLayer: false,
-	annotationsLayer: null
-
+	annotationsLayer: null,
+	selectedLayersIds: []
 };
 
 export const layersFeatureKey = 'layers';
@@ -27,11 +28,9 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			return { ...state, layersContainers: action.payload };
 
 		case LayersActionTypes.SELECT_LAYER:
-			action.payload.isChecked = true;
 			return { ...state, layersContainers: [...state.layersContainers] };
 
 		case LayersActionTypes.UNSELECT_LAYER:
-			action.payload.isChecked = false;
 			return { ...state, layersContainers: [...state.layersContainers] };
 
 		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:
@@ -41,7 +40,10 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			return { ...state, annotationsLayer: action.payload };
 
 		case LayersActionTypes.UPDATE_SELECTED_LAYERS_FROM_CASE:
-			return { ...state, layersContainers: action.payload };
+			return { ...state, selectedLayersIds: action.payload };
+
+		case LayersActionTypes.UPDATE_SELECTED_LAYERS_TO_CASE:
+			return { ...state, selectedLayersIds: action.payload}
 
 		case LayersActionTypes.ERROR_LOADING_LAYERS:
 			return state;
@@ -55,5 +57,4 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 export const selectLayersContainers = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.layersContainers);
 export const selectAnnotationLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.annotationsLayer);
 export const selectDisplayAnnotationsLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.displayAnnotationsLayer);
-export const selectSelectedLayersIds = createSelector(selectLayersContainers, (layersContainers: LayersContainer[]) =>
-	layersContainers.filter((container: any) => container.isChecked).map(container => container.id));
+export const selectSelectedLayersIds = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.selectedLayersIds);

@@ -11,6 +11,9 @@ import 'rxjs/add/operator/withLatestFrom';
 import { IAppState } from '../app.effects.module';
 import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 
 @Injectable()
@@ -35,10 +38,12 @@ export class LayersAppEffects {
 	@Effect()
 	layerCollectionLoaded$: Observable<any> = this.actions$
 		.ofType<any>(LayersActionTypes.LAYER_COLLECTION_LOADED)
-		.mergeMap((action: any) => {
+		.mergeMap(() => this.dataLayersService.getAllLayersInATree())
+		.withLatestFrom(this.store$.select(selectSelectedLayersIds))
+		.mergeMap(([layersContainer, ids]: [LayersContainer[], string[]]) => {
 			let results = [];
-			action.payload.forEach((layerCollection: any) => {
-				if (layerCollection.isChecked) {
+			layersContainer.forEach((layerCollection: any) => {
+				if (ids.includes(layerCollection.id)) {
 					results.push(new SelectLayerAction(layerCollection));
 				} else {
 					results.push(new UnselectLayerAction(layerCollection));
@@ -49,6 +54,7 @@ export class LayersAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
+				protected dataLayersService: DataLayersService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

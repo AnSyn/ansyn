@@ -87,7 +87,7 @@ export class SelectCaseAppEffects {
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
-			new UpdateSelectedLayersFromCaseAction(this.parseLayers(activeLayersIds))
+			new UpdateSelectedLayersFromCaseAction(activeLayersIds)
 		];
 	}
 
@@ -100,11 +100,5 @@ export class SelectCaseAppEffects {
 
 	parseOverlay(overlay: Overlay): Overlay {
 		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
-	}
-
-	parseLayers(activeLayersIds: string[]): LayersContainer[] {
-		return this._allLayrs.map((layer) => {
-			return { ...layer, isChecked: activeLayersIds.some(id => id === layer.id) };
-		});
 	}
 }

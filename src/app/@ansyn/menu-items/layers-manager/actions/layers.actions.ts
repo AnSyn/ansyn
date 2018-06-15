@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
-import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export const LayersActionTypes = {
 	BEGIN_LAYER_COLLECTION_LOAD: 'BEGIN_LAYER_COLLECTION_LOAD',
@@ -12,7 +12,8 @@ export const LayersActionTypes = {
 		SET_LAYER: 'SET_LAYER',
 		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER'
 	},
-	UPDATE_SELECTED_LAYERS_FROM_CASE: 'UPDATE_SELECTED_LAYERS_FROM_CASE'
+	UPDATE_SELECTED_LAYERS_FROM_CASE: 'UPDATE_SELECTED_LAYERS_FROM_CASE',
+	UPDATE_SELECTED_LAYERS_TO_CASE: 'UPDATE_SELECTED_LAYERS_TO_CASE'
 };
 
 export type LayersActions =
@@ -21,7 +22,8 @@ export type LayersActions =
 	| LayerCollectionLoadedAction
 	| SelectLayerAction
 	| UnselectLayerAction
-	| ErrorLoadingLayersAction;
+	| ErrorLoadingLayersAction
+	| UpdateSelectedLayersToCaseAction;
 
 export class ToggleDisplayAnnotationsLayer implements Action {
 	type = LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER;
@@ -51,21 +53,21 @@ export class LayerCollectionLoadedAction implements Action {
 export class SelectLayerAction implements Action {
 	type = LayersActionTypes.SELECT_LAYER;
 
-	constructor(public payload: Layer) {
+	constructor(public payload: string) {
 	}
 }
 
 export class UnselectLayerAction implements Action {
 	type = LayersActionTypes.UNSELECT_LAYER;
 
-	constructor(public payload: Layer) {
+	constructor(public payload: string) {
 	}
 }
 
 export class UpdateSelectedLayersFromCaseAction implements Action {
 	type = LayersActionTypes.UPDATE_SELECTED_LAYERS_FROM_CASE;
 
-	constructor(public payload: LayersContainer[]) {
+	constructor(public payload: string[]) {
 	}
 }
 
@@ -73,5 +75,12 @@ export class ErrorLoadingLayersAction implements Action {
 	type = LayersActionTypes.ERROR_LOADING_LAYERS;
 
 	constructor(public payload: string) {
+	}
+}
+
+export class UpdateSelectedLayersToCaseAction implements Action {
+	type = LayersActionTypes.UPDATE_SELECTED_LAYERS_TO_CASE;
+
+	constructor(public payload: string[]) {
 	}
 }

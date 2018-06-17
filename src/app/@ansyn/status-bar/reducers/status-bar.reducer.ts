@@ -50,7 +50,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 
 	}
 }
-export const selectComboBoxesProperties = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.comboBoxesProperties);
-export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar.geoFilterStatus);
+export const selectComboBoxesProperties = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.comboBoxesProperties : StatusBarInitialState.comboBoxesProperties);
+export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
 export const selectGeoFilterIndicator = createSelector(selectGeoFilterStatus, (geoFilterStatus: GeoFilterStatus) => geoFilterStatus.indicator);
 export const selectGeoFilterSearchMode = createSelector(selectGeoFilterStatus, (geoFilterStatus: GeoFilterStatus) => geoFilterStatus.searchMode);

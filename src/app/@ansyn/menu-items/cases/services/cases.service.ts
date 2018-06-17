@@ -11,7 +11,7 @@ import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import * as moment from 'moment';
 import { StorageService, StoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { CasePreview, CaseState, CaseTimeState } from '@ansyn/core/models/case.model';
+import { CasePreview, CaseState, CaseTimeState, IContextEntity } from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
 
@@ -67,7 +67,12 @@ export class CasesService {
 					...caseValue.state.time,
 					from: new Date(caseValue.state.time.from),
 					to: new Date(caseValue.state.time.to)
-				} : null
+				} : null,
+				contextEntities: caseValue.state.contextEntities ?
+					caseValue.state.contextEntities.map((contextEntity: IContextEntity) => ({
+						...contextEntity,
+						date: new Date(contextEntity.date)
+					})) : null
 			}
 		};
 	}

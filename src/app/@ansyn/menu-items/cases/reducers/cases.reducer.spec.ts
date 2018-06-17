@@ -27,7 +27,6 @@ describe('CasesReducer', () => {
 			orientation: 'Align North',
 			dataInputFilters: { fullyChecked: true, filters: [], active: true },
 			timeFilter: 'Start - End',
-			geoFilter: CaseGeoFilter.PinPoint,
 			region: {},
 			overlaysManualProcessArgs: {}
 		}

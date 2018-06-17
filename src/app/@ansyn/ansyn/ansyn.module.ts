@@ -15,7 +15,6 @@ import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-man
 import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
 import { AlgorithmsModule } from '@ansyn/menu-items/algorithms/algorithms.module';
 import { SettingsModule } from '@ansyn/menu-items/settings/settings.module';
-import { ImagerySandBoxModule } from '@ansyn/menu-items/imagerySandBox/imagery-sand-box.module';
 import { MenuModule } from '@ansyn/menu/menu.module';
 import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
@@ -26,34 +25,31 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@ansyn/core/core.module';
 
-export const ansynImports: any = [
-	CommonModule,
-	AppProvidersModule,
-	CasesModule,
-	FiltersModule,
-	LayersManagerModule,
-	ToolsModule,
-	AlgorithmsModule,
-	SettingsModule,
-	ImagerySandBoxModule,
-	OverlaysModule,
-	FormsModule,
-	HttpClientModule,
-	BrowserAnimationsModule,
-	AnsynPluginsModule,
-	CoreModule,
-	ContextModule,
-	MenuModule.provideMenuItems(ansynMenuItems),
-	AlertsModule.provideAlerts(ansynAlerts),
-	AppEffectsModule,
-	MapFacadeModule,
-	ImageryModule,
-	StatusBarModule,
-	AnsynRouterModule
-];
-
 @NgModule({
-	imports: ansynImports,
+	imports: [
+		CommonModule,
+		AppProvidersModule,
+		CasesModule,
+		FiltersModule,
+		LayersManagerModule,
+		ToolsModule,
+		AlgorithmsModule,
+		SettingsModule,
+		OverlaysModule,
+		FormsModule,
+		HttpClientModule,
+		BrowserAnimationsModule,
+		AnsynPluginsModule,
+		CoreModule,
+		ContextModule,
+		MenuModule.provideMenuItems(ansynMenuItems),
+		AlertsModule.provideAlerts(ansynAlerts),
+		AppEffectsModule,
+		MapFacadeModule,
+		ImageryModule,
+		StatusBarModule,
+		AnsynRouterModule
+	],
 	declarations: [AnsynComponent],
 	exports: [AnsynComponent]
 })

@@ -17,8 +17,8 @@ import { CaseGeoFilter, CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
-import { selectGeoFilter } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Actions } from '@ngrx/effects';
+import { selectRegion } from '@ansyn/core/reducers/core.reducer';
 
 export interface OverlayButton {
 	name: string;
@@ -44,8 +44,9 @@ export class ContextMenuComponent implements OnInit {
 		.map((activeMap: CaseMapState) => activeMap.data.overlay)
 		.distinctUntilChanged();
 
-	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectGeoFilter)
-		.do((geoFilter) => this.geoFilter = geoFilter);
+	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectRegion)
+		.filter(Boolean)
+		.do((region) => this.geoFilter = region.type);
 
 	geoFilter;
 

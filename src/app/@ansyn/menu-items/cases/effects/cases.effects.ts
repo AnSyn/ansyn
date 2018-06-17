@@ -25,7 +25,6 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
 import { Case } from '@ansyn/core/models/case.model';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
@@ -41,12 +40,13 @@ export class CasesEffects {
 	 * @action LoadCasesSuccessAction
 	 */
 	@Effect()
-	loadCases$: Observable<AddCasesAction> = this.actions$
+	loadCases$: Observable<AddCasesAction | {}> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
 		.withLatestFrom(this.store.select(selectCaseTotal), (action, total) => total)
 		.switchMap((total: number) => {
 			return this.casesService.loadCases(total)
-				.map(cases => new AddCasesAction(cases));
+				.map(cases => new AddCasesAction(cases))
+				.catch(() => Observable.empty());
 		}).share();
 
 	/**

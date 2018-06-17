@@ -1,22 +1,33 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { DynamicsAnsynModule } from '../dynamic-ansyn/dynamic-ansyn.module';
 import { NgModule, NgModuleRef, Provider } from '@angular/core';
-import { AnsynApi } from './ansyn-api.service';
 import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
-import { ansynImports } from '@ansyn/ansyn/ansyn.module';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { Observable } from 'rxjs/Observable';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { AnsynBuilderModule } from '@builder/api/ansyn-builder.module';
 import { WindowLayout } from '@builder/reducers/builder.reducer';
 import { buildAnsynCustomComponent } from '@builder/dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
-import { AnsynRouterModule } from '@ansyn/router/router.module';
-import { MenuModule } from '@ansyn/menu/menu.module';
-import { CasesModule } from '@ansyn/menu-items/cases/cases.module';
-import { ContextModule } from '@ansyn/context/context.module';
+import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
+import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
+import { CommonModule } from '@angular/common';
+import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
+import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { FiltersModule } from '@ansyn/menu-items/filters/filters.module';
+import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
+import { AppEffectsModule } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { CoreModule } from '@ansyn/core/core.module';
+import { OverlaysModule } from '@ansyn/overlays/overlays.module';
+import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
+import { AnsynApi } from '@builder/api/ansyn-api.service';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];
@@ -35,20 +46,13 @@ export interface AnsynBuilderConstructor {
 export class AnsynBuilder {
 	static Providers = { ContextService };
 
-	private builderExcludeModules = [
-		AnsynRouterModule,
-		MenuModule,
-		CasesModule,
-		ContextModule
-	];
-
 	id: string;
 	config: any;
 	options: AnsynBuilderOptions;
 	callback: any;
 	moduleRef: NgModuleRef<DynamicsAnsynModule>;
 
-	get api() {
+	get api(): AnsynApi {
 		return this.moduleRef && this.moduleRef.instance.api;
 	}
 
@@ -77,25 +81,44 @@ export class AnsynBuilder {
 		elem.appendChild(document.createElement(this.id));
 	}
 
-	getImports() {
-		return ansynImports
-			.filter((module) => !this.builderExcludeModules.includes(module))
-	}
-
 	buildModule(): any {
 		const AnsynCustomComponenet = buildAnsynCustomComponent(this.id);
 		const configProviders = getProviders(this.config);
-		const imports = [...this.getImports()];
 		const customProviders = this.options.sourceProviders || [];
 		const customModules = this.options.customModules || [];
 
 		const options: NgModule = <any> {
 			imports: [
 				AnsynBuilderModule,
-				...imports,
+				CommonModule,
+				AppProvidersModule,
+				FiltersModule,
+				ToolsModule,
+				OverlaysModule,
+				FormsModule,
+				HttpClientModule,
+				BrowserAnimationsModule,
+				AnsynPluginsModule,
+				CoreModule,
+				FormsModule,
+				HttpClientModule,
+				BrowserAnimationsModule,
+				OverlaysModule,
+				AnsynPluginsModule,
+				CoreModule,
+				AlertsModule.provideAlerts(ansynAlerts),
+				AppEffectsModule,
+				MapFacadeModule,
+				ImageryModule,
+				StatusBarModule,
+				AlertsModule.provideAlerts(ansynAlerts),
+				AppEffectsModule,
+				MapFacadeModule,
+				ImageryModule,
+				StatusBarModule,
 				...customModules,
 				StoreModule.forRoot({}),
-				EffectsModule.forRoot([AnsynApi])
+				EffectsModule.forRoot([])
 			],
 			providers: [
 				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },

@@ -10,11 +10,10 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
 import {
-	selectAnnotationLayer,
-	selectDisplayAnnotationsLayer, selectLayers, selectSelectedLayersIds
+	selectDisplayAnnotationsLayer, selectSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { selectAnnotationLayer, selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
@@ -50,7 +49,7 @@ export class UpdateCaseAppEffects {
 				activeLayersIds,
 				facets,
 				favoriteOverlays,
-				{ geoFilter, timeFilter, orientation }, /* -> comboBoxesProperties */
+				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				annotationsLayer,
 				displayAnnotationsLayer,
 				activeMapId,
@@ -71,7 +70,6 @@ export class UpdateCaseAppEffects {
 				owner,
 				selectedContextId,
 				state: {
-					geoFilter,
 					timeFilter,
 					orientation,
 					maps: {

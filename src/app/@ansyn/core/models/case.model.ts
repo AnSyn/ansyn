@@ -59,7 +59,6 @@ export interface DilutedCaseState {
 	orientation: CaseOrientation,
 	dataInputFilters: CaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
-	geoFilter: CaseGeoFilter,
 	favoriteOverlays?: DilutedOverlay[],
 	overlaysManualProcessArgs: OverlaysManualProcessArgs,
 	layers?: CaseLayersState

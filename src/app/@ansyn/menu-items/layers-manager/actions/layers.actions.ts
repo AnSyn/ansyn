@@ -9,7 +9,6 @@ export const LayersActionTypes = {
 	UNSELECT_LAYER: 'UNSELECT_LAYER',
 	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
 	ANNOTATIONS: {
-		SET_LAYER: 'SET_LAYER',
 		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER'
 	},
 	UPDATE_SELECTED_LAYERS_FROM_CASE: 'UPDATE_SELECTED_LAYERS_FROM_CASE',
@@ -29,13 +28,6 @@ export class ToggleDisplayAnnotationsLayer implements Action {
 	type = LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-export class SetAnnotationsLayer implements Action {
-	type = LayersActionTypes.ANNOTATIONS.SET_LAYER;
-
-	constructor(public payload: FeatureCollection<any>) {
 	}
 }
 

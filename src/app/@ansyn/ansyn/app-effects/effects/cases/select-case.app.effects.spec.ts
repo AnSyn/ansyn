@@ -7,7 +7,6 @@ import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/sel
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
-	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersFromCaseAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
@@ -36,7 +35,7 @@ import {
 } from '@ansyn/core/models/case.model';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
@@ -92,7 +91,6 @@ describe('SelectCaseAppEffects', () => {
 		it('should set all feature stores properties', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
-				geoFilter: CaseGeoFilter = CaseGeoFilter.PinPoint,
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
@@ -105,7 +103,6 @@ describe('SelectCaseAppEffects', () => {
 
 			const state: CaseState = <any> {
 				orientation,
-				geoFilter,
 				timeFilter,
 				time,
 				region,
@@ -130,7 +127,7 @@ describe('SelectCaseAppEffects', () => {
 
 			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
-				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
+				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),

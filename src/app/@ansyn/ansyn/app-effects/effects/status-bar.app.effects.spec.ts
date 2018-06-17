@@ -1,7 +1,7 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ExpandAction, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ExpandAction, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { Case } from '@ansyn/menu-items/cases/models/case.model';
@@ -17,7 +17,6 @@ import { cold, hot } from 'jasmine-marbles';
 import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -121,13 +120,11 @@ describe('StatusBarAppEffects', () => {
 	}));
 
 	it('updategeoFilterIndicatorAction$ - add', () => {
-
-		const action = new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator, value: true });
+		const action = new UpdateGeoFilterStatus({ indicator: true });
 		store.dispatch(action);
 		const imagery1 = {};
 		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
 		actions = hot('--a--', { a: action });
-
 	});
 
 

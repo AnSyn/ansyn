@@ -1,6 +1,5 @@
 import {
 	LayerCollectionLoadedAction,
-	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '../actions/layers.actions';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
@@ -52,12 +51,6 @@ describe('LayersReducer', () => {
 			action = new ToggleDisplayAnnotationsLayer(false);
 			result = LayersReducer(initialLayersState, action);
 			expect(result.displayAnnotationsLayer).toBeFalsy();
-		});
-
-		it('SET_LAYER', () => {
-			const action = new SetAnnotationsLayer(<any>'some geoJSON Object');
-			const result: ILayerState = LayersReducer(initialLayersState, action);
-			expect(result.annotationsLayer).toEqual(<any>'some geoJSON Object');
 		});
 	});
 

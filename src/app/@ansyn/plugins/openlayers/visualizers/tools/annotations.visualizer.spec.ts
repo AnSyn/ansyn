@@ -2,7 +2,6 @@ import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/too
 import { inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import olColor from 'ol/color';
-import { Observable } from 'rxjs/Observable';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;

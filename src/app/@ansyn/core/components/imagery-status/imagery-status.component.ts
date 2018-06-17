@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
-import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
+import { BackToWorldView, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
 import { Observable } from 'rxjs/Observable';
@@ -31,7 +31,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return this._overlay;
 	}
 
-	@Output() backToWorldView = new EventEmitter<void>();
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 
 	private _subscriptions: Subscription[] = [];
@@ -103,5 +102,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleMapLayers() {
 		this.layerFlag = !this.layerFlag;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
+	}
+
+	backToWorldView() {
+		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }))
 	}
 }

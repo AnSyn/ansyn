@@ -2,6 +2,13 @@ import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
+import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import {
+	ILayerState, initialLayersState,
+	layersStateSelector
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { FeatureCollection } from 'geojson';
+import * as turf from '@turf/turf';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -30,6 +37,7 @@ export interface IToolsState {
 	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysManualProcessArgs: OverlaysManualProcessArgs;
+	annotationsLayer: FeatureCollection<any>
 }
 
 export const toolsInitialState: IToolsState = {
@@ -45,7 +53,8 @@ export const toolsInitialState: IToolsState = {
 		fillColor: '#ffffff'
 	},
 	manualImageProcessingParams: undefined,
-	overlaysManualProcessArgs: {}
+	overlaysManualProcessArgs: {},
+	annotationsLayer: <FeatureCollection<any>> turf.featureCollection([])
 };
 
 export const toolsFeatureKey = 'tools';
@@ -138,6 +147,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_SUB_MENU:
 			return { ...state, subMenu: action.payload };
 
+		case ToolsActionsTypes.ANNOTATIONS_SET_LAYER:
+			return { ...state, annotationsLayer: action.payload };
+
 		default:
 			return state;
 
@@ -146,3 +158,4 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
 export const selectOverlaysManualProcessArgs = createSelector(toolsStateSelector, (tools: IToolsState) => tools.overlaysManualProcessArgs);
+export const selectAnnotationLayer = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationsLayer );

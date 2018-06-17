@@ -1,13 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
-import { UpdateStatusFlagsAction } from '../../actions/status-bar.actions';
 import { Observable } from 'rxjs/Observable';
 import { selectLayout } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { BackToWorldView } from '@ansyn/core/actions/core.actions';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -31,11 +29,6 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.store.dispatch(new UpdateStatusFlagsAction({
-			key: statusBarFlagsItemsEnum.geoFilterIndicator,
-			value: true
-		}));
-
 		this.subscribers.push(this.layout$.subscribe());
 	}
 
@@ -43,7 +36,4 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
-	clickBackToWorldView(): void {
-		this.store.dispatch(new BackToWorldView({ mapId: this.activeMap.id }));
-	}
 }

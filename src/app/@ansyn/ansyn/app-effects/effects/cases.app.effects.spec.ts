@@ -178,7 +178,6 @@ describe('CasesAppEffects', () => {
 				orientation: 'Align North',
 				dataInputFilters: { filters: [], active: true },
 				timeFilter: 'Start - End',
-				geoFilter: CaseGeoFilter.PinPoint,
 				region: {},
 				maps: {
 					layout: 'layout1',

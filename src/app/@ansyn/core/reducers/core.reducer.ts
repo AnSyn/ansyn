@@ -95,3 +95,4 @@ export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) =
 export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
 export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
 export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
+export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);

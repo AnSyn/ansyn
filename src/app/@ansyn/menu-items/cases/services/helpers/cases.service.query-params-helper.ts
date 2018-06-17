@@ -13,6 +13,7 @@ import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { Context } from '@ansyn/core/models/context.model';
+import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 export class QueryParamsHelper {
 
@@ -57,6 +58,9 @@ export class QueryParamsHelper {
 							const coordinates = geopointStr.split(',').map(Number).reverse();
 							const region = geometry('Point', coordinates);
 							updatedCaseModel.state.region = region;
+							// Put the requested position in the case. This is needed in order to set correct map position, when no overlays are found
+							updatedCaseModel.state.maps.data[0].data.position.projectedState = null;
+							updatedCaseModel.state.maps.data[0].data.position.extentPolygon = getPolygonByPointAndRadius(coordinates, 1).geometry;
 						}
 						break;
 					case 'geometry':

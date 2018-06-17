@@ -339,7 +339,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 		const { extentPolygon, projectedState } = position;
 		const viewProjection = view.getProjection();
-		const isProjectedPosition = viewProjection.getCode() === projectedState.projection.code;
+		const isProjectedPosition = projectedState && viewProjection.getCode() === projectedState.projection.code;
 		if (isProjectedPosition) {
 			const { center, zoom, rotation } = projectedState;
 			view.setCenter(center);

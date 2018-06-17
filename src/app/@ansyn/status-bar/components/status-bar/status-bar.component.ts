@@ -36,7 +36,4 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
-	clickBackToWorldView(): void {
-		this.store.dispatch(new BackToWorldView({ mapId: this.activeMap.id }));
-	}
 }

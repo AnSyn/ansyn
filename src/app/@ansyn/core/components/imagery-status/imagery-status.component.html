@@ -1,5 +1,5 @@
 <div class="buttons">
-	<button (click)="backToWorldView.emit()"
+	<button (click)="backToWorldView()"
 			class="back-to-world-view"
 			*ngIf="overlay"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"

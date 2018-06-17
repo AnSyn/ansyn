@@ -3,9 +3,7 @@ import { Store } from '@ngrx/store';
 import { ActiveImageryMouseEnter, ActiveImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { BackToWorldView } from '@ansyn/core/actions/core.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -28,10 +26,6 @@ export class ImageryContainerComponent {
 	}
 
 	constructor(protected store: Store<any>) {
-	}
-
-	backToWorldView() {
-		this.store.dispatch(new BackToWorldView({ mapId: this.mapState.id }));
 	}
 
 	toggleMapSynchronization() {

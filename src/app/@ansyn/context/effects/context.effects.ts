@@ -48,7 +48,6 @@ export class ContextEffects {
 		}
 		const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
 		return this.getCaseForContext(defaultCaseQueryParams, context, paramsPayload)
-			.do(x => console.log(11, x))
 			.mergeMap((selectedCase) => [
 					new SetContextParamsAction(paramsPayload),
 					new SelectCaseAction(selectedCase)

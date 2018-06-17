@@ -3,6 +3,10 @@
 	"version": "0.2.81",
 	"private": true,
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ansyn/ansyn"
+	},
 	"scripts": {
 		"build": "ng build",
 		"build:aot": "ng build --aot true",

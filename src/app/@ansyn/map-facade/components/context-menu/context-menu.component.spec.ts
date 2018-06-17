@@ -10,6 +10,7 @@ import { mapFacadeConfig,  } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { statusBarFeatureKey, StatusBarReducer } from "@ansyn/status-bar/reducers/status-bar.reducer";
 import { EffectsModule } from '@ngrx/effects';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -18,7 +19,7 @@ describe('ContextMenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [statusBarFeatureKey]: StatusBarReducer }), EffectsModule.forRoot([])],
+			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [statusBarFeatureKey]: StatusBarReducer, [coreFeatureKey]: CoreReducer }), EffectsModule.forRoot([])],
 			declarations: [ContextMenuComponent],
 			providers: [{
 				provide: mapFacadeConfig,

@@ -33,9 +33,9 @@ describe('ImageryStatusComponent', () => {
 	});
 
 	it('check click on backToWorldView', () => {
-		spyOn(component.backToWorldView, 'emit');
+		spyOn(component, 'backToWorldView');
 		fixture.nativeElement.querySelector('.back-to-world-view').click();
-		expect(component.backToWorldView.emit).toHaveBeenCalled();
+		expect(component.backToWorldView).toHaveBeenCalled();
 	});
 
 	it('check click on toggleMapSynchronization', () => {

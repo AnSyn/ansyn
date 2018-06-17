@@ -45,7 +45,7 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: Case): Action[] {
 		const { state } = payload;
 		// status-bar
-		const { orientation, geoFilter, timeFilter, overlaysManualProcessArgs } = state;
+		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
 		// core
@@ -70,7 +70,7 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 		return [
 			new SetLayoutAction(<any>layout),
-			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
+			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),

@@ -9,9 +9,8 @@ import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-tim
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { coreFeatureKey, CoreReducer } from '../../../core/reducers/core.reducer';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { ClickOutsideDirective } from '@ansyn/status-bar/directives/click-outside.directive';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
@@ -59,11 +58,11 @@ describe('ComboBoxesComponent', () => {
 	});
 
 	it('eye indicator should be active', () => {
-		component.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, true);
+		component.geoFilterStatus.indicator = true;
 		fixture.detectChanges();
 		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(true);
-		component.flags.set(statusBarFlagsItemsEnum.geoFilterIndicator, false);
+		component.geoFilterStatus.indicator = false;
 		fixture.detectChanges();
 		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
 		expect(result).toBe(false);
@@ -75,14 +74,17 @@ describe('ComboBoxesComponent', () => {
 		});
 
 		it('edit-pinpoint', () => {
+			spyOn(component, 'geoFilterChanged');
 			fixture.nativeElement.querySelector('.edit-pinpoint').click();
 			fixture.detectChanges();
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch }));
+			expect(component.geoFilterChanged).toHaveBeenCalled();
 		});
 		it('button-eye', () => {
 			fixture.nativeElement.querySelector('.eye-button').click();
 			fixture.detectChanges();
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
+
+			const indicator = !component.geoFilterStatus.indicator;
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateGeoFilterStatus({ indicator }));
 		});
 	});
 

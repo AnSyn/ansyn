@@ -77,7 +77,6 @@ describe('SelectCaseAppEffects', () => {
 		it('should set all feature stores properties', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
-				geoFilter: CaseGeoFilter = CaseGeoFilter.PinPoint,
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
@@ -90,7 +89,6 @@ describe('SelectCaseAppEffects', () => {
 
 			const state: CaseState = <any> {
 				orientation,
-				geoFilter,
 				timeFilter,
 				time,
 				region,
@@ -115,7 +113,7 @@ describe('SelectCaseAppEffects', () => {
 
 			const expectedResult = cold('--(abcdefghij)--', {
 				a: new SetLayoutAction(<any>maps.layout),
-				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
+				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),

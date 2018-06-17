@@ -20,7 +20,7 @@ import {
 	AddCaseAction,
 	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case } from '@ansyn/core/models/case.model';
+import { Case, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState, SetPinLocationModeAction,
@@ -44,9 +44,8 @@ import {
 import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
-
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -160,7 +159,7 @@ describe('VisualizersAppEffects', () => {
 		const expectedResult = cold('--(abcd)--', {
 			a: new SetMeasureDistanceToolState(false),
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}),
+			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false)
 		});
 
@@ -176,7 +175,7 @@ describe('VisualizersAppEffects', () => {
 
 		const expectedResult = cold('--(bce)--', {
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false}),
+			c: new UpdateGeoFilterStatus(),
 			e: new SetPinLocationModeAction(false)
 		});
 

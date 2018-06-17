@@ -53,14 +53,14 @@ export class LayerCollectionLoadedAction implements Action {
 export class SelectLayerAction implements Action {
 	type = LayersActionTypes.SELECT_LAYER;
 
-	constructor(public payload: string) {
+	constructor(public payload: Layer) {
 	}
 }
 
 export class UnselectLayerAction implements Action {
 	type = LayersActionTypes.UNSELECT_LAYER;
 
-	constructor(public payload: string) {
+	constructor(public payload: Layer) {
 	}
 }
 

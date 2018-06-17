@@ -9,7 +9,6 @@ export enum LayerType {
 
 export interface Layer extends Entity {
 	url: string;
-	id: string;
 	name: string;
 	type: LayerType;
 	dataLayerContainers: any[];

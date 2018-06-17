@@ -48,19 +48,19 @@ export class OpenLayersMap extends IMap<OLMap> {
 			throw new Error('Tried to add a layer to a non-existent group');
 		}
 
-		group.getLayers().getArray().push(layer);
+		group.getLayers().push(layer);
 	}
 
 	static removeGroupLayer(layer: any, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (!group) {
-			throw new Error('Tried to add a layer to a non-existent group');
+			throw new Error('Tried to remove a layer to a non-existent group');
 		}
 
 		const layersArray: any[] = group.getLayers().getArray();
-		let removeLayer = layersArray.indexOf(layersArray.find(l => l.id === layer.id));
-		if (removeLayer >= 0) {
-			group.getLayers().getArray().splice(removeLayer, 1);
+		let removeIdx = layersArray.indexOf(layersArray.find(l => l.id === layer.id));
+		if (removeIdx >= 0) {
+			group.getLayers().removeAt(removeIdx);
 		}
 	}
 

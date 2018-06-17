@@ -27,12 +27,6 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			return { ...state, layers: action.payload };
 
-		case LayersActionTypes.SELECT_LAYER:
-			return { ...state, layers: [...state.layers] };
-
-		case LayersActionTypes.UNSELECT_LAYER:
-			return { ...state, layers: [...state.layers] };
-
 		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:
 			return { ...state, displayAnnotationsLayer: action.payload };
 
@@ -40,10 +34,8 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			return { ...state, annotationsLayer: action.payload };
 
 		case LayersActionTypes.UPDATE_SELECTED_LAYERS_FROM_CASE:
-			return { ...state, selectedLayersIds: action.payload };
-
 		case LayersActionTypes.UPDATE_SELECTED_LAYERS_TO_CASE:
-			return { ...state, selectedLayersIds: action.payload}
+			return { ...state, selectedLayersIds: action.payload };
 
 		case LayersActionTypes.ERROR_LOADING_LAYERS:
 			return state;

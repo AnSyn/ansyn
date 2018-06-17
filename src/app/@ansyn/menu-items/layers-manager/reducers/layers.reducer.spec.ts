@@ -11,38 +11,35 @@ describe('LayersReducer', () => {
 	it('LAYER_COLLECTION_LOADED action should add the new tree to the state', () => {
 		let staticLayer: Layer = {
 			url: 'fakeStaticUrl',
-			name: 'staticLayer',
 			id: 'staticLayerId',
-			isChecked: false
+			name: 'staticLayer',
+			type: LayerType.static,
+			dataLayerContainers: [],
+			creationTime: new Date()
 		};
+
 		let dynamicLayer: Layer = {
 			url: 'fakeDynamicUrl',
-			name: 'dynamicLayer',
 			id: 'dynamicLayerId',
-			isChecked: false
+			name: 'dynamicLayer',
+			type: LayerType.dynamic,
+			dataLayerContainers: [],
+			creationTime: new Date()
 		};
 		let complexLayer: Layer = {
 			url: 'fakeComplexUrl',
-			name: 'complexLayers',
 			id: 'complexLayersId',
-			isChecked: false
+			name: 'complexLayers',
+			type: LayerType.complex,
+			dataLayerContainers: [],
+			creationTime: new Date()
 		};
 
 		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
-		const payload = [
-			{
-				type: LayerType.static,
-				dataLayers: layers,
-				id: '',
-				name: 'FakeName',
-				creationTime: new Date(),
-				dataLayerContainers: []
-			}
-		];
-		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction(payload);
+		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);
-		expect(result.layers).toEqual(payload);
+		expect(result.layers).toEqual([staticLayer]);
 	});
 
 	describe('ANNOTATIONS', () => {

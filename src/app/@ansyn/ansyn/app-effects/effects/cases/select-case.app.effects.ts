@@ -25,12 +25,9 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 @Injectable()
 export class SelectCaseAppEffects {
-	_allLayrs: Layer[] = [];
 
 	/**
 	 * @type Effect
@@ -44,10 +41,7 @@ export class SelectCaseAppEffects {
 		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				protected dataLayersService: DataLayersService
-	) {
-		this.dataLayersService.getAllLayersInATree().subscribe((layers) => this._allLayrs = layers);
+				protected store$: Store<IAppState>) {
 	}
 
 	selectCaseActions(payload: Case): Action[] {

@@ -18,13 +18,14 @@ import {
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { Overlay, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -40,6 +41,20 @@ export class SelectCaseAppEffects {
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
 		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
 
+	@Effect()
+	setSpecialObjectsFromSelectedCase$: Observable<any> = this.actions$
+		.ofType(CasesActionTypes.SELECT_CASE)
+		.filter(({ payload }: SelectCaseAction) => Boolean(payload.state.contextEntities))
+		.mergeMap(({ payload }: SelectCaseAction): any => (
+			payload.state.contextEntities.map(contextEntity => {
+				const specialObject: OverlaySpecialObject = {
+					id: contextEntity.id,
+					date: contextEntity.date,
+					shape: 'star'
+				} as OverlaySpecialObject;
+				return new SetSpecialObjectsActionStore([specialObject]);
+			})));
+
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>) {
 	}
@@ -50,7 +65,7 @@ export class SelectCaseAppEffects {
 		const { orientation, geoFilter, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
-		// core
+		// context
 		const { favoriteOverlays, region, dataInputFilters, contextEntities } = state;
 		let {  time } = state;
 		const { layout } = state.maps;

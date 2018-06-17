@@ -16,7 +16,6 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { ContextEntityVisualizer } from '../../../../plugins/openlayers/visualizers/contexts/context-entity.visualizer';
 import {
 	DrawOverlaysOnMapTriggerAction,
 	MapActionTypes,
@@ -26,6 +25,7 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ContextEntityVisualizer } from '@ansyn/plugins/openlayers/visualizers/contexts/context-entity.visualizer';
 
 @Injectable()
 export class VisualizersAppEffects {

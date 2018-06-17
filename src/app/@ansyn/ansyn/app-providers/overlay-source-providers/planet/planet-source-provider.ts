@@ -17,6 +17,7 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import * as moment from 'moment';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -247,8 +248,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 
-		return startDate$
-			.withLatestFrom(endDate$)
+		return forkJoin(startDate$, endDate$)
 			.map(([start, end]: [Date, Date]) => ({startDate: start.toISOString(), endDate: end.toString()}));
 	}
 

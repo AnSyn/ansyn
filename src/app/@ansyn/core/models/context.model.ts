@@ -1,5 +1,6 @@
 import { CaseFacetsState, CaseRegionState, CaseTimeState } from './case.model';
 import { Entity } from '@ansyn/core/services/storage/storage.service';
+import { DisplayedOverlay } from '@ansyn/context/reducers/context.reducer';
 
 export interface Context extends Entity{
 	id: string;
@@ -18,6 +19,6 @@ export interface Context extends Entity{
 	facets?: CaseFacetsState;
 	region?: CaseRegionState;
 	requires?: string[]
-	defaultOverlay?: string;
+	defaultOverlay?: DisplayedOverlay;
 	requirements?: string[];
 }

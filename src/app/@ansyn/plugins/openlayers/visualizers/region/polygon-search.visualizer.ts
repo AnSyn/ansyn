@@ -1,4 +1,3 @@
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { UUID } from 'angular2-uuid';
@@ -9,10 +8,10 @@ import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -53,9 +52,6 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(point: Position): void {
-		this.store$.dispatch(new UpdateStatusFlagsAction([{
-			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: this.geoFilter
-		}]));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: this.geoFilter }));
 	}
 }

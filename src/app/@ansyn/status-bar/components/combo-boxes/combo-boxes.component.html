@@ -45,13 +45,13 @@
 			(selectedChange)="geoFilterChanged($event)">
 		</ansyn-combo-box>
 
-		<div class="buttons" [class.active]="(flags.get(statusBarFlagsItemsEnum.geoFilterSearch))">
+		<div class="buttons" [class.active]="geoFilterStatus.searchMode">
 			<button (click)="toggleIndicatorView()"
-					[disabled]="flags.get(statusBarFlagsItemsEnum.geoFilterSearch)"
+					[disabled]="geoFilterStatus.searchMode"
 					[attr.tooltip-value]="toolTips.geoFilterShow"
 					tooltip-class="top right"
 					class="eye-button toggle-icon"
-					[class.active2]="flags.get(statusBarFlagsItemsEnum.geoFilterIndicator)">
+					[class.active2]="geoFilterStatus.indicator">
 				<i class="icon-status-bar-show-pin-point"></i>
 			</button>
 			<button

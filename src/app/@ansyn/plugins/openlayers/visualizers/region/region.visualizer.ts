@@ -1,26 +1,19 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
-
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import Draw from 'ol/interaction/draw';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { coreStateSelector, ICoreState, selectRegion } from '@ansyn/core/reducers/core.reducer';
-import {
-	selectGeoFilterSearch,
-	selectStatusBarFlags, StatusBarFlags,
-	statusBarStateSelector
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { selectRegion } from '@ansyn/core/reducers/core.reducer';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -36,16 +29,14 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	isActiveGeoFilter$ = this.geoFilter$
 		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
 
-	statusBarFlags$ = this.store$.select(selectStatusBarFlags);
-
-	geoFilterSearch$ = this.store$.select(selectGeoFilterSearch);
+	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
 
 	toggleOpacity$ = this.geoFilterSearch$
 		.do((geoFilterSearch) => {
 			if (geoFilterSearch) {
-				this.vector.setOpacity(0)
+				this.vector.setOpacity(0);
 			} else {
-				this.vector.setOpacity(1)
+				this.vector.setOpacity(1);
 			}
 		});
 
@@ -53,9 +44,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.map((geoFilterSearch) => geoFilterSearch === this.geoFilter)
 		.distinctUntilChanged();
 
-	geoFilterIndicator$ = this.statusBarFlags$
-		.map((flags: StatusBarFlags) => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
-		.distinctUntilChanged();
+	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 
 	onContextMenu$: Observable<any> = this.actions$
 		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
@@ -98,10 +87,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new UpdateStatusFlagsAction([{
-			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: false
-		}]));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }));
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
@@ -122,7 +108,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	createDrawInteraction() {
-		const drawInteractionHandler = new Draw({
+		const drawInteractionHandler = new Draw(<any>{
 			type: this.geoFilter,
 			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
 			style: this.featureStyle.bind(this)
@@ -138,10 +124,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateStatusFlagsAction([{
-			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: false
-		}]));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }));
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {

@@ -1,9 +1,10 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import {
+	GeoFilterStatus,
 	IStatusBarState,
 	selectComboBoxesProperties,
-	selectStatusBarFlags, selectGeoFilterSearch, StatusBarFlags
+	selectGeoFilterStatus
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { Store } from '@ngrx/store';
@@ -14,7 +15,6 @@ import {
 	ORIENTATIONS,
 	TIME_FILTERS
 } from '@ansyn/status-bar/models/combo-boxes.model';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import {
 	CoreActionTypes,
 	SetLayoutAction,
@@ -38,10 +38,9 @@ import {
 } from '@ansyn/core/reducers/core.reducer';
 import { CaseDataFilterTitle } from '@ansyn/status-bar/models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';
-import { SetComboBoxesProperties, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -62,10 +61,9 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 })
 export class ComboBoxesComponent implements OnInit, OnDestroy {
 	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
-	geoFilterSearch$ = this.store.select(selectGeoFilterSearch).do((geoFilterSearch) => this.geoFilterSearch = geoFilterSearch);
-	regionType$ = this.store.select(selectRegion).filter(Boolean).map((region) => region.type).do((regionType) => this.regionType = regionType);
+	geoFilterStatus$ = this.store.select(selectGeoFilterStatus).do((geoFilterStatus: GeoFilterStatus) => this.geoFilterStatus = geoFilterStatus);
 
-	flags$ = this.store.select(selectStatusBarFlags);
+	regionType$ = this.store.select(selectRegion).filter(Boolean).map((region) => region.type).do((regionType) => this.regionType = regionType);
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(selectOverlaysCriteria);
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
@@ -83,7 +81,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
 		.map(({ payload }: UpdateOverlaysCountAction) => payload);
 
-	geoFilterSearch: boolean | string;
+	geoFilterStatus: GeoFilterStatus;
 	regionType: CaseGeoFilter;
 
 	comboBoxesProperties: ComboBoxesProperties;
@@ -91,7 +89,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	timeSelectionEditIcon: boolean;
 	favoriteOverlays: Overlay[];
 	layout: LayoutKey;
-	flags: StatusBarFlags = new Map<statusBarFlagsItemsEnum, boolean>();
 	time: CaseTimeState;
 
 	dataInputFilters: CaseDataInputFiltersState;
@@ -99,15 +96,11 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	private subscriptions = [];
 
 	get geoFilter() {
-		return this.geoFilterSearch || this.regionType;
+		return this.geoFilterStatus.searchMode || this.regionType;
 	}
 
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
-	}
-
-	get statusBarFlagsItemsEnum() {
-		return statusBarFlagsItemsEnum;
 	}
 
 	get layouts(): LayoutKey[] {
@@ -134,13 +127,9 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 				this.comboBoxesProperties = comboBoxesProperties;
 			}),
 
-			this.flags$.subscribe((flags: StatusBarFlags) => {
-				this.flags = new Map(flags);
-			}),
-
 			this.dataInputFilters$.subscribe(),
 
-			this.geoFilterSearch$.subscribe(),
+			this.geoFilterStatus$.subscribe(),
 
 			this.regionType$.subscribe()
 		);
@@ -171,30 +160,26 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapSearch() {
-		const value = this.geoFilterSearch ? false : this.regionType;
+		const value = this.geoFilterStatus.searchMode ? CaseGeoFilter.none : this.regionType;
 		this.geoFilterChanged(value);
 	}
 
 	toggleIndicatorView() {
-		const value = !this.flags.get(statusBarFlagsItemsEnum.geoFilterIndicator);
-		this.store.dispatch(new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterIndicator, value }]));
+		this.store.dispatch(new UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
 	}
 
 	comboBoxesChange(payload: ComboBoxesProperties) {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
 	}
 
-	geoFilterChanged(geoFilter?: CaseGeoFilter | boolean) {
-		const payload: any = [{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: geoFilter }];
+	geoFilterChanged(geoFilter?: CaseGeoFilter) {
+		const payload: Partial<GeoFilterStatus> = { searchMode: geoFilter };
 
-		if (geoFilter) {
-			payload.push({
-				key: statusBarFlagsItemsEnum.geoFilterIndicator,
-				value: true
-			})
+		if (Boolean(geoFilter)) {
+			payload.indicator = true;
 		}
 
-		this.store.dispatch(new UpdateStatusFlagsAction(payload));
+		this.store.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
 	}
 
 	ngOnDestroy() {

@@ -1,19 +1,17 @@
-import { toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { CaseGeoFilter, CaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	SetAnnotationMode,
-	SetMeasureDistanceToolState, SetPinLocationModeAction,
+	SetMeasureDistanceToolState,
+	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
-	StartMouseShadow,
-	StopMouseShadow,
 	ToolsActionsTypes
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
@@ -26,8 +24,7 @@ import {
 } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class VisualizersAppEffects {
@@ -98,7 +95,7 @@ export class VisualizersAppEffects {
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
-				new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }]),
+				new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor

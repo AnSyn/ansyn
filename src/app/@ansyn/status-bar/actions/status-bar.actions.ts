@@ -1,15 +1,13 @@
 import { Action } from '@ngrx/store';
 import { ComboBoxesProperties } from '../models/combo-boxes.model';
-import { statusBarFlagsItemsEnum } from '../models/status-bar-flag-items.model';
+import { GeoFilterStatus } from '@ansyn/status-bar/reducers/status-bar.reducer';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
-	UPDATE_STATUS_FLAGS: 'UPDATE_STATUS_FLAGS',
-	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
-	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	EXPAND: 'EXPAND',
-	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES'
+	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES',
+	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS'
 };
 
 export class CopySelectedCaseLinkAction implements Action {
@@ -18,14 +16,6 @@ export class CopySelectedCaseLinkAction implements Action {
 	constructor() {
 	}
 }
-
-export class UpdateStatusFlagsAction implements Action {
-	type = StatusBarActionsTypes.UPDATE_STATUS_FLAGS;
-
-	constructor(public payload: [{ key: statusBarFlagsItemsEnum, value: boolean | string }]) {
-	}
-}
-
 
 export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
@@ -42,4 +32,10 @@ export class SetComboBoxesProperties implements Action {
 	}
 }
 
-export type StatusBarActions = CopySelectedCaseLinkAction | UpdateStatusFlagsAction | ExpandAction | SetComboBoxesProperties;
+export class UpdateGeoFilterStatus implements Action {
+	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
+	constructor(public payload: Partial<GeoFilterStatus>) {
+	}
+}
+
+export type StatusBarActions = CopySelectedCaseLinkAction | UpdateGeoFilterStatus | ExpandAction | SetComboBoxesProperties;

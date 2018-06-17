@@ -31,12 +31,10 @@ import {
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { CaseGeoFilter, CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import { Feature, FeatureCollection, Point } from 'geojson';
-import { selectGeoFilterSearch, selectStatusBarFlags } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
-import { StatusBarActionsTypes, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import {
 	IToolsState,
@@ -47,12 +45,13 @@ import {
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { isEqual } from 'lodash';
+import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 
 
 @Injectable()
 export class ToolsAppEffects {
-	isPolygonSearch$ = this.store$.select(selectGeoFilterSearch)
-		.map((geoFilterSearch) => geoFilterSearch === 'Polygon');
+	isPolygonSearch$ = this.store$.select(selectGeoFilterSearchMode)
+		.map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon );
 
 	activeMap$ = this.store$.select(mapStateSelector)
 		.map((mapState) => MapFacadeService.activeMap(mapState))
@@ -85,7 +84,7 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.SET_SUB_MENU)
 		.withLatestFrom(this.isPolygonSearch$)
 		.filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch)
-		.map(() => new UpdateStatusFlagsAction([{ key: statusBarFlagsItemsEnum.geoFilterSearch, value: false }]));
+		.map(() => new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none}));
 
 	/**
 	 * @type Effect

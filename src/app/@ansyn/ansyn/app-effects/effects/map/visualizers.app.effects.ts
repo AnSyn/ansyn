@@ -95,7 +95,7 @@ export class VisualizersAppEffects {
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(),
-				new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }),
+				new UpdateGeoFilterStatus(),
 				new SetPinLocationModeAction(false)
 			];
 			// return defaultClearActions without skipClearFor

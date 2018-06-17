@@ -14,6 +14,7 @@ import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/acti
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -33,7 +34,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	toggleOpacity$ = this.geoFilterSearch$
 		.do((geoFilterSearch) => {
-			if (geoFilterSearch) {
+			if (geoFilterSearch !== SearchModeEnum.none) {
 				this.vector.setOpacity(0);
 			} else {
 				this.vector.setOpacity(1);
@@ -87,7 +88,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }));
+		this.store$.dispatch(new UpdateGeoFilterStatus());
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
@@ -124,7 +125,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }));
+		this.store$.dispatch(new UpdateGeoFilterStatus());
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {

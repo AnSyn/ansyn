@@ -16,7 +16,7 @@ import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducer
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ClickOutsideMap, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 
 @Injectable()
@@ -62,9 +62,9 @@ export class StatusBarAppEffects {
 	onClickOutsideMap$ = this.actions$
 		.ofType<ClickOutsideMap>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP)
 		.withLatestFrom(this.store.select(selectGeoFilterSearchMode))
-		.filter(([action, searchMode]) => searchMode !== CaseGeoFilter.none)
+		.filter(([action, searchMode]) => searchMode !== SearchModeEnum.none)
 		.filter(([{ payload }]) => !payload.path.some((element) => element.id === 'editGeoFilter' || element.id === 'contextGeoFilter'))
-		.map(() => new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }));
+		.map(() => new UpdateGeoFilterStatus());
 
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>,

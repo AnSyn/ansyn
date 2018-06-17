@@ -41,6 +41,7 @@ import { Actions } from '@ngrx/effects';
 import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
+import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -95,8 +96,12 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
 	private subscriptions = [];
 
+	get SearchModeEnum() {
+		return SearchModeEnum;
+	}
+
 	get geoFilter() {
-		return this.geoFilterStatus.searchMode || this.regionType;
+		return this.geoFilterStatus.searchMode !== SearchModeEnum.none ? this.geoFilterStatus.searchMode : this.regionType;
 	}
 
 	get toolTips(): IToolTipsConfig {
@@ -160,7 +165,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapSearch() {
-		const value = this.geoFilterStatus.searchMode ? CaseGeoFilter.none : this.regionType;
+		const value = this.geoFilterStatus.searchMode !== SearchModeEnum.none ? SearchModeEnum.none : this.regionType;
 		this.geoFilterChanged(value);
 	}
 
@@ -172,7 +177,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
 	}
 
-	geoFilterChanged(geoFilter?: CaseGeoFilter) {
+	geoFilterChanged(geoFilter?: SearchMode) {
 		const payload: Partial<GeoFilterStatus> = { searchMode: geoFilter };
 
 		if (Boolean(geoFilter)) {

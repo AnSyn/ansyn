@@ -45,7 +45,7 @@ import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -159,7 +159,7 @@ describe('VisualizersAppEffects', () => {
 		const expectedResult = cold('--(abcd)--', {
 			a: new SetMeasureDistanceToolState(false),
 			b: new SetAnnotationMode(),
-			c: new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }),
+			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false)
 		});
 
@@ -175,7 +175,7 @@ describe('VisualizersAppEffects', () => {
 
 		const expectedResult = cold('--(bce)--', {
 			b: new SetAnnotationMode(),
-			c: new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }),
+			c: new UpdateGeoFilterStatus(),
 			e: new SetPinLocationModeAction(false)
 		});
 

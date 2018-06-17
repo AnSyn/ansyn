@@ -14,6 +14,7 @@ import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -50,7 +51,7 @@ export class PinPointVisualizer extends RegionVisualizer {
 
 	onContextMenu(coordinates: Position): void {
 		const region = turf.geometry('Point', coordinates);
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.none }));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: SearchModeEnum.none, indicator: true }));
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

@@ -2,21 +2,15 @@ import { StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { ComboBoxesProperties } from '../models/combo-boxes.model';
 import { StatusBarActions } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',
 	showOverlayErrorToast: 'Failed to load overlay'
 };
 
-declare module '@ansyn/core/models/case.model' {
-	export enum CaseGeoFilter {
-		none = ''
-	}
-}
-
 export interface GeoFilterStatus {
-	searchMode: CaseGeoFilter;
+	searchMode: SearchMode;
 	indicator: boolean;
 }
 
@@ -27,7 +21,7 @@ export interface IStatusBarState {
 
 export const StatusBarInitialState: IStatusBarState = {
 	geoFilterStatus: {
-		searchMode: CaseGeoFilter.none,
+		searchMode: SearchModeEnum.none,
 		indicator: true
 	},
 	comboBoxesProperties: {}
@@ -42,7 +36,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
 
 		case StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS:
-			// const indicator = Boolean(action.payload.hasOwnProperty('searchMode') && action.payload.searchMode) || ;
 			return { ...state, geoFilterStatus: { ...state.geoFilterStatus, ...action.payload } };
 
 		default:

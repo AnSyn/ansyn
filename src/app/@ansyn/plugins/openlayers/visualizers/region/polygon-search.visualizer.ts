@@ -52,6 +52,6 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(point: Position): void {
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: this.geoFilter }));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: this.geoFilter, indicator: true }));
 	}
 }

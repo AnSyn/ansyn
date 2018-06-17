@@ -6,8 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { UUID } from 'angular2-uuid';
 import { Observable } from 'rxjs/Observable';
 import { Feature, Polygon } from 'geojson';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 
 describe('PolygonSearchVisualizer', () => {
 	let polygonSearchVisualizer: PolygonSearchVisualizer;
@@ -40,10 +39,7 @@ describe('PolygonSearchVisualizer', () => {
 		const fakePoint = [0, 0];
 		spyOn(store, 'dispatch');
 		polygonSearchVisualizer.onContextMenu(fakePoint);
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateStatusFlagsAction([{
-			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: polygonSearchVisualizer.geoFilter
-		}]));
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateGeoFilterStatus({ searchMode: polygonSearchVisualizer.geoFilter }));
 	});
 
 	it('drawRegionOnMap calls setEntities with Feature', () => {

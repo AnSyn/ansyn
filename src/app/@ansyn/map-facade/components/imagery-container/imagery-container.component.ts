@@ -4,6 +4,7 @@ import { ActiveImageryMouseEnter, ActiveImageryMouseLeave, SynchronizeMapsAction
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -16,10 +17,8 @@ export class ImageryContainerComponent {
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
 
-	isHidden$ = this.store.select(mapStateSelector)
-		.map((mapState: IMapState) => {
-			return mapState.isHiddenMaps.has(this.mapState.id);
-		});
+	isHidden$: Observable<boolean> = this.store.select(mapStateSelector)
+		.map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id));
 
 	get overlay(): Overlay {
 		return this.mapState.data.overlay;

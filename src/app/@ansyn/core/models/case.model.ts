@@ -58,7 +58,6 @@ export interface DilutedCaseState {
 	orientation: CaseOrientation,
 	dataInputFilters: CaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
-	geoFilter: CaseGeoFilter,
 	favoriteOverlays?: DilutedOverlay[],
 	overlaysManualProcessArgs: OverlaysManualProcessArgs,
 	layers?: CaseLayersState
@@ -72,11 +71,13 @@ export interface CaseState extends DilutedCaseState {
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
 
 export interface DataInputFilterValue {
+	providerName: string,
 	sensorType: string,
 	sensorName: string
 }
 
 export interface CaseDataInputFiltersState {
+	fullyChecked: boolean,
 	filters: DataInputFilterValue[],
 	active: boolean
 }

@@ -45,7 +45,7 @@ export class CasesService {
 	loadCases(casesOffset: number = 0): Observable<any> {
 		return this.storageService.getPage<CasePreview>(this.config.schema, casesOffset, this.paginationLimit)
 			.map(previews => previews.map(preview => this.parseCasePreview(preview)))
-			.catch(err => this.errorHandlerService.httpErrorHandle(err));
+			.catch(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'));
 	}
 
 	parseCasePreview(casePreview: CasePreview): CasePreview {

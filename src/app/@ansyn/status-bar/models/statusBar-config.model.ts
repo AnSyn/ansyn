@@ -17,7 +17,7 @@ export interface IToolTipsConfig {
 }
 
 export interface IDataInputFiltersConfig {
-	filters: TreeviewItem[];
+	[providerName: string]: TreeviewItem;
 }
 
 export interface IStatusBarConfig {

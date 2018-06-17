@@ -12,7 +12,6 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
-	SetAnnotationsLayer,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -21,7 +20,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.ac
 import { Overlay, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
@@ -62,7 +61,7 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: Case): Action[] {
 		const { state } = payload;
 		// status-bar
-		const { orientation, geoFilter, timeFilter, overlaysManualProcessArgs } = state;
+		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
@@ -87,7 +86,7 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 		return [
 			new SetLayoutAction(<any>layout),
-			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
+			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),

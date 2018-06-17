@@ -1,63 +1,51 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
-
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import Draw from 'ol/interaction/draw';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import {
-	IStatusBarState,
-	selectGeoFilter,
-	statusBarStateSelector
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { selectRegion } from '@ansyn/core/reducers/core.reducer';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
-import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
-	core$ = this.store$.select(coreStateSelector);
-	mapState$ = this.store$.select(mapStateSelector);
+	region$ = this.store$.select(selectRegion);
 
-	geoFilter$: Observable<any> = this.store$.select(selectGeoFilter)
+	geoFilter$: Observable<any> = this.region$.map((region) => region.type)
 		.distinctUntilChanged();
 
-	isActiveMap$ = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
+	isActiveMap$ = this.store$.select(selectActiveMapId)
 		.map((activeMapId: string): boolean => activeMapId === this.mapId)
 		.distinctUntilChanged();
 
 	isActiveGeoFilter$ = this.geoFilter$
 		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
 
-	statusBarFlags$ = this.store$.select(statusBarStateSelector)
-		.pluck<IStatusBarState, Map<statusBarFlagsItemsEnum, boolean>>('flags')
+	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
+
+	toggleOpacity$ = this.geoFilterSearch$
+		.do((geoFilterSearch) => {
+			if (geoFilterSearch !== SearchModeEnum.none) {
+				this.vector.setOpacity(0);
+			} else {
+				this.vector.setOpacity(1);
+			}
+		});
+
+	onSearchMode$ = this.geoFilterSearch$
+		.map((geoFilterSearch) => geoFilterSearch === this.geoFilter)
 		.distinctUntilChanged();
 
-	geoFilterSearch$ = this.statusBarFlags$
-		.map((flags) => flags.get(statusBarFlagsItemsEnum.geoFilterSearch))
-		.distinctUntilChanged();
-
-	onSearchMode$ = Observable.combineLatest(this.geoFilterSearch$, this.isActiveGeoFilter$)
-		.map(([geoFilterSearch, isActiveGeoFilter]) => geoFilterSearch && isActiveGeoFilter)
-		.distinctUntilChanged();
-
-	region$ = this.core$
-		.pluck<ICoreState, OverlaysCriteria>('overlaysCriteria')
-		.distinctUntilChanged()
-		.pluck<OverlaysCriteria, CaseRegionState>('region');
-
-	geoFilterIndicator$ = this.statusBarFlags$
-		.map((flags: Map<statusBarFlagsItemsEnum, boolean>) => flags.get(statusBarFlagsItemsEnum.geoFilterIndicator))
-		.distinctUntilChanged();
+	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 
 	onContextMenu$: Observable<any> = this.actions$
 		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
@@ -82,6 +70,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		this.subscriptions.push(
 			this.drawChanges$.subscribe(),
 			this.onContextMenu$.subscribe(),
+			this.toggleOpacity$.subscribe(),
 			this.interactionChanges$.subscribe()
 		);
 	}
@@ -99,10 +88,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new UpdateStatusFlagsAction({
-			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: false
-		}));
+		this.store$.dispatch(new UpdateGeoFilterStatus());
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
@@ -123,8 +109,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	createDrawInteraction() {
-		this.vector.setOpacity(0);
-		const drawInteractionHandler = new Draw({
+		const drawInteractionHandler = new Draw(<any>{
 			type: this.geoFilter,
 			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
 			style: this.featureStyle.bind(this)
@@ -136,15 +121,11 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	public removeDrawInteraction() {
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
-		this.vector.setOpacity(1);
 	}
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateStatusFlagsAction({
-			key: statusBarFlagsItemsEnum.geoFilterSearch,
-			value: false
-		}));
+		this.store$.dispatch(new UpdateGeoFilterStatus());
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {

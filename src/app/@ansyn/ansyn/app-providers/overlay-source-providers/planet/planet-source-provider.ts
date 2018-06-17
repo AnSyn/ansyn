@@ -62,9 +62,9 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	buildFilters(config: IPlanetFilter[]) {
+	buildFilters(config: IPlanetFilter[], sensors?: string[]) {
 		return {
-			item_types: this.planetOverlaysSourceConfig.itemTypes,
+			item_types: Array.isArray(sensors) ? sensors : this.planetOverlaysSourceConfig.itemTypes,
 			filter: {
 				type: 'AndFilter',
 				config: config
@@ -98,18 +98,27 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			const configFilters = [];
 			const preFilter = { type: 'OrFilter', config: configFilters };
 			fetchParams.dataInputFilters.forEach((aFilter: DataInputFilterValue) => {
-				configFilters.push({
-					type: 'AndFilter', config: [
-						{ type: 'StringInFilter', field_name: 'item_type', config: [aFilter.sensorType] },
-						{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
-					]
-				});
+				const sensorTypeFilter = {
+					type: 'StringInFilter',
+					field_name: 'item_type',
+					config: [aFilter.sensorType]
+				};
+				if (Boolean(aFilter.sensorName)) {
+					configFilters.push({
+						type: 'AndFilter', config: [
+							sensorTypeFilter,
+							{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
+						]
+					});
+				} else {
+					configFilters.push(sensorTypeFilter);
+				}
 			});
 
 			filters.push(preFilter);
 		}
 
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters),
+		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
 			{ headers: this.httpHeaders, params: { _page_size: limit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {

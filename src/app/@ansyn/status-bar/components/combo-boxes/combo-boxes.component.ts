@@ -1,18 +1,20 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import {
+	GeoFilterStatus,
 	IStatusBarState,
 	selectComboBoxesProperties,
-	selectFlags
+	selectGeoFilterStatus
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import {
-	ComboBoxesProperties, GEO_FILTERS, ORIENTATIONS,
+	ComboBoxesProperties,
+	GEO_FILTERS,
+	ORIENTATIONS,
 	TIME_FILTERS
 } from '@ansyn/status-bar/models/combo-boxes.model';
-import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import {
 	CoreActionTypes,
 	SetLayoutAction,
@@ -20,19 +22,26 @@ import {
 	UpdateOverlaysCountAction
 } from '@ansyn/core/actions/core.actions';
 import {
-	CaseDataInputFiltersState, CaseGeoFilter, CaseOrientation, CaseTimeFilter, CaseTimeState,
-	DataInputFilterValue
+	CaseDataInputFiltersState,
+	CaseGeoFilter,
+	CaseOrientation,
+	CaseTimeFilter,
+	CaseTimeState
 } from '@ansyn/core/models/case.model';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import { selectDataInputFilter, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
+import {
+	selectDataInputFilter,
+	selectLayout,
+	selectOverlaysCriteria,
+	selectRegion
+} from '@ansyn/core/reducers/core.reducer';
 import { CaseDataFilterTitle } from '@ansyn/status-bar/models/data-input-filters.model';
-import { isEqual } from 'lodash';
-import { TreeviewItem } from 'ngx-treeview';
 import { Actions } from '@ngrx/effects';
-import { SetComboBoxesProperties, UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
+import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -40,7 +49,7 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 		animate('0.2s', style({ opacity: 1, transform: 'translateY(calc(-100% - 15px))' }))
 	]),
 	transition(':leave', [
-		style({ opacity: 1, transform: 'translateY(calc(-100% - 15px))'  }),
+		style({ opacity: 1, transform: 'translateY(calc(-100% - 15px))' }),
 		animate('0.2s', style({ opacity: 0, transform: 'translateY(-100%)' }))
 	])
 ]);
@@ -53,7 +62,9 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 })
 export class ComboBoxesComponent implements OnInit, OnDestroy {
 	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
-	flags$ = this.store.select(selectFlags);
+	geoFilterStatus$ = this.store.select(selectGeoFilterStatus).do((geoFilterStatus: GeoFilterStatus) => this.geoFilterStatus = geoFilterStatus);
+
+	regionType$ = this.store.select(selectRegion).filter(Boolean).map((region) => region.type).do((regionType) => this.regionType = regionType);
 	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(selectOverlaysCriteria);
 	time$: Observable<CaseTimeState> = this.overlaysCriteria$
 		.pluck<OverlaysCriteria, CaseTimeState>('time')
@@ -63,14 +74,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	dataInputFilters$ = this.store.select(selectDataInputFilter)
 		.filter((caseDataInputFiltersState: CaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters))
 		.do((caseDataInputFiltersState: CaseDataInputFiltersState) => {
-			const isFull = this.statusBarConfig.dataInputFiltersConfig.filters.every((filterConfig: TreeviewItem) => {
-				return filterConfig.children.every((sensorTypeAndName: TreeviewItem) => {
-					return caseDataInputFiltersState.filters.some((dataInputFilter: DataInputFilterValue) => {
-						return isEqual(dataInputFilter, sensorTypeAndName.value);
-					});
-				});
-			});
-			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : isFull ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
+			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : caseDataInputFiltersState.fullyChecked ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
 			this.dataInputFilters = caseDataInputFiltersState;
 		});
 
@@ -78,24 +82,30 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
 		.map(({ payload }: UpdateOverlaysCountAction) => payload);
 
+	geoFilterStatus: GeoFilterStatus;
+	regionType: CaseGeoFilter;
+
 	comboBoxesProperties: ComboBoxesProperties;
 	dataInputFilterExpand: boolean;
 	timeSelectionEditIcon: boolean;
 	favoriteOverlays: Overlay[];
 	layout: LayoutKey;
-	flags: Map<statusBarFlagsItemsEnum, boolean> = new Map<statusBarFlagsItemsEnum, boolean>();
 	time: CaseTimeState;
 
 	dataInputFilters: CaseDataInputFiltersState;
 	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
 	private subscriptions = [];
 
-	get toolTips(): IToolTipsConfig {
-		return this.statusBarConfig.toolTips || {};
+	get SearchModeEnum() {
+		return SearchModeEnum;
 	}
 
-	get statusBarFlagsItemsEnum() {
-		return statusBarFlagsItemsEnum;
+	get geoFilter() {
+		return this.geoFilterStatus.searchMode !== SearchModeEnum.none ? this.geoFilterStatus.searchMode : this.regionType;
+	}
+
+	get toolTips(): IToolTipsConfig {
+		return this.statusBarConfig.toolTips || {};
 	}
 
 	get layouts(): LayoutKey[] {
@@ -122,11 +132,11 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 				this.comboBoxesProperties = comboBoxesProperties;
 			}),
 
-			this.flags$.subscribe((flags: Map<statusBarFlagsItemsEnum, boolean>) => {
-				this.flags = new Map(flags);
-			}),
+			this.dataInputFilters$.subscribe(),
 
-			this.dataInputFilters$.subscribe()
+			this.geoFilterStatus$.subscribe(),
+
+			this.regionType$.subscribe()
 		);
 
 	}
@@ -155,21 +165,26 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapSearch() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterSearch }));
+		const value = this.geoFilterStatus.searchMode !== SearchModeEnum.none ? SearchModeEnum.none : this.regionType;
+		this.geoFilterChanged(value);
 	}
 
 	toggleIndicatorView() {
-		this.store.dispatch(new UpdateStatusFlagsAction({ key: statusBarFlagsItemsEnum.geoFilterIndicator }));
+		this.store.dispatch(new UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
 	}
 
 	comboBoxesChange(payload: ComboBoxesProperties) {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
-		if (payload.geoFilter) {
-			this.store.dispatch(new UpdateStatusFlagsAction({
-				key: statusBarFlagsItemsEnum.geoFilterSearch,
-				value: true
-			}));
+	}
+
+	geoFilterChanged(geoFilter?: SearchMode) {
+		const payload: Partial<GeoFilterStatus> = { searchMode: geoFilter };
+
+		if (Boolean(geoFilter)) {
+			payload.indicator = true;
 		}
+
+		this.store.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
 	}
 
 	ngOnDestroy() {

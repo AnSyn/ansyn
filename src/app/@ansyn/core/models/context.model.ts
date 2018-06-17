@@ -13,7 +13,6 @@ export interface Context extends Entity{
 	imageryCountBefore?: number;
 	imageryCountAfter?: number;
 	timeFilter?: string;
-	geoFilter?: string;
 	orientation?: string;
 	time?: CaseTimeState;
 	facets?: CaseFacetsState;

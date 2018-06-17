@@ -3,18 +3,16 @@ import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
 import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import * as turf from '@turf/turf';
 
 export interface ILayerState {
 	layersContainers: LayersContainer[];
 	displayAnnotationsLayer: boolean;
-	annotationsLayer: FeatureCollection<any>;
 }
 
 export const initialLayersState: ILayerState = {
 	layersContainers: [],
-	displayAnnotationsLayer: false,
-	annotationsLayer: null
-
+	displayAnnotationsLayer: false
 };
 
 export const layersFeatureKey = 'layers';
@@ -37,9 +35,6 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:
 			return { ...state, displayAnnotationsLayer: action.payload };
 
-		case LayersActionTypes.ANNOTATIONS.SET_LAYER:
-			return { ...state, annotationsLayer: action.payload };
-
 		case LayersActionTypes.ERROR_LOADING_LAYERS:
 			return state;
 
@@ -50,5 +45,4 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 }
 
 export const selectLayersContainers = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.layersContainers);
-export const selectAnnotationLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.annotationsLayer);
-export const selectDisplayAnnotationsLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.displayAnnotationsLayer);
+export const selectDisplayAnnotationsLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState ? layersState.displayAnnotationsLayer : true);

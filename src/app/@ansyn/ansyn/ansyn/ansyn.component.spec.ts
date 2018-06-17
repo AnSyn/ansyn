@@ -6,7 +6,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('AnsynComponent', () => {
@@ -70,7 +69,6 @@ describe('AnsynComponent', () => {
 		handler = new Subject();
 		const mockStore = new Map<any, any>([
 			[mapStateSelector, mapState],
-			[selectSelectedCase, { name: 'Case name' }],
 			[selectIsPinned, true]
 		]);
 		spyOn(store, 'select').and.callFake(type => Observable.of(mockStore.get(type)));

@@ -16,7 +16,6 @@ import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-fla
 })
 
 export class StatusBarComponent implements OnInit, OnDestroy {
-	@Input() selectedCaseName: string;
 	@Input() activeMap: CaseMapState;
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout)
 		.do((layout) => this.layout = layout);

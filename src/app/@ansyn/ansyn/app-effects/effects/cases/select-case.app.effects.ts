@@ -6,6 +6,7 @@ import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs/Observable';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	CoreActionTypes, SelectCaseAction,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction
@@ -14,7 +15,6 @@ import {
 	BeginLayerCollectionLoadAction,
 	ToggleDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -35,7 +35,7 @@ export class SelectCaseAppEffects {
 	 */
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
-		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
+		.ofType<SelectCaseAction>(CoreActionTypes.SELECT_CASE)
 		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
 
 	constructor(protected actions$: Actions,

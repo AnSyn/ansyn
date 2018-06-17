@@ -8,14 +8,16 @@ import { Observable } from 'rxjs/Observable';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '../actions/router.actions';
 import { Router } from '@angular/router';
 import { ISetStatePayload, SetStateAction } from '@ansyn/router/actions/router.actions';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IRouterState, routerStateSelector } from '@ansyn/router/reducers/router.reducer';
 import {
 	CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction,
-	SaveCaseAsSuccessAction, SelectCaseAction
+	SaveCaseAsSuccessAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Store } from '@ngrx/store';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { CoreActionTypes, SelectCaseAction } from '@ansyn/core/actions/core.actions';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
+import { CasePreview } from '@ansyn/core/models/case.model';
 
 @Injectable()
 export class RouterEffects {
@@ -48,8 +50,8 @@ export class RouterEffects {
 	onUpdateLocationDefaultCase$: Observable<LoadDefaultCaseAction> = this.actions$
 		.ofType<SetStateAction>(RouterActionTypes.SET_STATE)
 		.filter((action) => !(action.payload.caseId))
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([action, cases]: [SetStateAction, ICasesState]) => (!cases.selectedCase || cases.selectedCase.id !== this.casesService.defaultCase.id))
+		.withLatestFrom(this.store$.select(selectSelectedCase))
+		.filter(([action, selectedCase]: [SetStateAction, CasePreview]) => (!selectedCase || selectedCase.id !== this.casesService.defaultCase.id))
 		.map(([action, cases]) => new LoadDefaultCaseAction(action.payload.queryParams));
 
 	/**
@@ -65,8 +67,8 @@ export class RouterEffects {
 		.ofType<SetStateAction>(RouterActionTypes.SET_STATE)
 		.map(({ payload }): ISetStatePayload => payload)
 		.filter(({ caseId }) => Boolean(caseId))
-		.withLatestFrom(this.store$.select(casesStateSelector))
-		.filter(([{ caseId }, cases]) => !cases.selectedCase || caseId !== cases.selectedCase.id)
+		.withLatestFrom(this.store$.select(selectSelectedCase))
+		.filter(([{ caseId }, selectedCase]) => !selectedCase || caseId !== selectedCase.id)
 		.map(([{ caseId }]) => new LoadCaseAction(caseId));
 
 	/**
@@ -79,7 +81,7 @@ export class RouterEffects {
 	 */
 	@Effect()
 	selectCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE, CasesActionTypes.SAVE_CASE_AS_SUCCESS)
+		.ofType(CoreActionTypes.SELECT_CASE, CasesActionTypes.SAVE_CASE_AS_SUCCESS)
 		.withLatestFrom(this.store$.select(routerStateSelector))
 		.filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => Boolean(router))
 		.filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId)
@@ -95,7 +97,7 @@ export class RouterEffects {
 	 */
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
+		.ofType(CoreActionTypes.SELECT_CASE)
 		.filter((action: SelectCaseAction) => action.payload.id === this.casesService.defaultCase.id)
 		.map(() => new NavigateCaseTriggerAction());
 

@@ -18,7 +18,6 @@ import {
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
 	AddCaseAction,
-	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import {
@@ -42,8 +41,8 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { coreInitialState, coreStateSelector, selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
+import { ClearActiveInteractionsAction, SelectCaseAction } from '@ansyn/core/actions/core.actions';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
@@ -112,12 +111,13 @@ describe('VisualizersAppEffects', () => {
 			activeMapId: selectedCase.state.maps.activeMapId
 		}));
 
-		caseState.selectedCase = selectedCase;
+		coreState.selectedCase = selectedCase;
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, caseState],
 			[layersStateSelector, layersState],
 			[mapStateSelector, mapState],
-			[coreStateSelector, coreState]
+			[coreStateSelector, coreState],
+			[selectSelectedCase, coreState.selectedCase]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));

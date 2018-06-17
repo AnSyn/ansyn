@@ -17,6 +17,8 @@ import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.action
 import { ClickOutsideMap, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
+import { CasePreview } from '@ansyn/core/models/case.model';
 
 
 @Injectable()
@@ -33,8 +35,8 @@ export class StatusBarAppEffects {
 	@Effect()
 	onCopySelectedCaseLink$ = this.actions$
 		.ofType<CopySelectedCaseLinkAction>(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
-		.withLatestFrom(this.store.select(casesStateSelector), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
-			return state.selectedCase.id;
+		.withLatestFrom(this.store.select(selectSelectedCase), (action: CopySelectedCaseLinkAction, selectedCase: CasePreview) => {
+			return selectedCase.id;
 		})
 		.map((caseId: string) => {
 			return new CopyCaseLinkAction({ caseId: caseId, shareCaseAsQueryParams: true });

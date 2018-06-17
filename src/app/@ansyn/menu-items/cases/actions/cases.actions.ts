@@ -19,10 +19,6 @@ export const CasesActionTypes = {
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
 
-	SELECT_CASE: 'SELECT_CASE',
-	SELECT_DILUTED_CASE: 'SELECT_DILUTED_CASE',
-	SELECT_CASE_BY_ID: 'SELECT_CASE_BY_ID',
-
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
 
 	SAVE_CASE_AS: 'SAVE_CASE_AS',
@@ -104,20 +100,6 @@ export class CloseModalAction implements Action {
 	type = CasesActionTypes.CLOSE_MODAL;
 
 	constructor(public payload?: any) {
-	}
-}
-
-export class SelectCaseAction implements Action {
-	type = CasesActionTypes.SELECT_CASE;
-
-	constructor(public payload: Case) {
-	}
-}
-
-export class SelectDilutedCaseAction implements Action {
-	type = CasesActionTypes.SELECT_DILUTED_CASE;
-
-	constructor(public payload: DilutedCase) {
 	}
 }
 

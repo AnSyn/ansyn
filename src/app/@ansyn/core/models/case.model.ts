@@ -54,7 +54,7 @@ export interface DilutedCaseState {
 	time: CaseTimeState,
 	facets?: CaseFacetsState,
 	region: CaseRegionState,
-	contextEntities?: IContextEntity[],
+	// contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
 	dataInputFilters: CaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,

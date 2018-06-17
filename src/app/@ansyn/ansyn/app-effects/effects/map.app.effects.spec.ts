@@ -3,11 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { Observable } from 'rxjs/Observable';
 import { cloneDeep } from 'lodash';
-import {
-	ActiveMapChangedAction,
-	ImageryCreatedAction,
-	MapInstanceChangedAction,
-} from '@ansyn/map-facade/actions/map.actions';
+import { ActiveMapChangedAction, ImageryCreatedAction } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	IStatusBarState,
@@ -27,7 +23,7 @@ import {
 	MapReducer,
 	mapStateSelector
 } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetMapGeoEnabledModeToolsActionStore, StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -39,14 +35,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
-	casesFeatureKey, CasesReducer, casesStateSelector,
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
 	ICasesState
 } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import {
-	IToolsState, toolsFlags, toolsInitialState,
-	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, toolsInitialState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import {
 	ILayerState,
 	initialLayersState,
@@ -63,8 +58,10 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
+
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	public supported =  ['mapType1'];
+	public supported = ['mapType1'];
 	sourceType = 'sourceType1';
 
 	create(metaData: any): any {
@@ -124,7 +121,7 @@ describe('MapAppEffects', () => {
 	};
 	let fakeOverlay: Overlay;
 
-	const imagery1PositionBoundingBox = {test: 1};
+	const imagery1PositionBoundingBox = { test: 1 };
 
 	const cases: Case[] = [{
 		id: '1',
@@ -133,7 +130,7 @@ describe('MapAppEffects', () => {
 		creationTime: new Date(),
 		lastModified: new Date(),
 		state: {
-			time: {type: '', from: new Date(), to: new Date()},
+			time: { type: '', from: new Date(), to: new Date() },
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -149,16 +146,18 @@ describe('MapAppEffects', () => {
 				data: [
 					{
 						id: 'imagery1',
-						data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}
+						data: { position: { zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox } }
 					},
-					{id: 'imagery2', data: {position: {zoom: 3, center: 4}, overlayDisplayMode: 'Heatmap'}},
-					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
+					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Heatmap' } },
+					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
 				],
 				activeMapId: 'imagery1'
 			}
 		} as any
 	}
 	];
+
+	const selectedCase = cases[0];
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -173,13 +172,17 @@ describe('MapAppEffects', () => {
 			],
 			providers: [
 				{ provide: LoggerService, useValue: { error: (some) => null } },
-				{ provide: CacheService, useClass: CacheService, deps: [VisualizersConfig, ImageryCommunicatorService] },
+				{
+					provide: CacheService,
+					useClass: CacheService,
+					deps: [VisualizersConfig, ImageryCommunicatorService]
+				},
 				ImageryCommunicatorService,
 				ImageryProviderService,
-				{provide: VisualizersConfig, useValue: {}},
+				{ provide: VisualizersConfig, useValue: {} },
 				MapAppEffects,
 				OverlaysService,
-				{provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true},
+				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{
 					provide: mapFacadeConfig,
 					useValue: {}
@@ -202,7 +205,7 @@ describe('MapAppEffects', () => {
 						'maxCachedLayers': 100
 					}
 				},
-				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock},
+				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
@@ -224,8 +227,7 @@ describe('MapAppEffects', () => {
 	/* store data mock */
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		const selectedCase = cases[0];
-		icaseState = {cases, selectedCase} as any;
+		icaseState = { cases } as any;
 
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
@@ -233,10 +235,10 @@ describe('MapAppEffects', () => {
 		layerState = cloneDeep(initialLayersState);
 
 		toolsState = cloneDeep(toolsInitialState);
-		fakeOverlay = <any>{id: 'overlayId', date: new Date(), isGeoRegistered: true};
+		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: true };
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
-		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
-		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
+		mapState.mapsList = <any> [...selectedCase.state.maps.data];
+		mapState.activeMapId = selectedCase.state.maps.activeMapId;
 
 
 		const fakeStore = new Map<any, any>([
@@ -245,8 +247,8 @@ describe('MapAppEffects', () => {
 			[overlaysStateSelector, overlaysState],
 			[mapStateSelector, mapState],
 			[layersStateSelector, layerState],
-			[mapStateSelector, mapState],
-			[toolsStateSelector, toolsState]
+			[toolsStateSelector, toolsState],
+			[selectSelectedCase, selectedCase]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
@@ -267,7 +269,7 @@ describe('MapAppEffects', () => {
 
 		beforeEach(() => {
 			fakeCommunicator = <any> {
-				ActiveMap: {MapType: 'ol'},
+				ActiveMap: { MapType: 'ol' },
 				resetView: () => {
 				}
 			};
@@ -302,7 +304,7 @@ describe('MapAppEffects', () => {
 				azimuth: 0,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 			const expectedResults = cold('-');
 			expect(mapAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 		});
@@ -318,7 +320,7 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true,
 				sourceType: 'IDAHO'
 			};
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 
 			const expectedResults = cold('--b--', {
 				b: new RequestOverlayByIDFromBackendAction({
@@ -341,8 +343,8 @@ describe('MapAppEffects', () => {
 				azimuth: 0,
 				isGeoRegistered: true
 			};
-			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			selectedCase.state.maps.data[0].data.overlay = testOverlay;
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 			const expectedResults = cold('-');
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
 		});
@@ -358,7 +360,7 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true,
 				sourceType: 'PLANET'
 			};
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 
 			const expectedResults = cold('--b--', {
 				b: new RequestOverlayByIDFromBackendAction({
@@ -382,11 +384,11 @@ describe('MapAppEffects', () => {
 				azimuth: 0,
 				isGeoRegistered: true
 			};
-			icaseState.selectedCase.state.maps.data[0].data.overlay = overlay;
+			selectedCase.state.maps.data[0].data.overlay = overlay;
 
 			const communicators: Array<string> = ['imagery1'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({id: 'imagery1'})
+				a: new ImageryCreatedAction({ id: 'imagery1' })
 			});
 			const expectedResults = cold('--b--', {
 				b: new DisplayOverlayAction({
@@ -399,10 +401,10 @@ describe('MapAppEffects', () => {
 		});
 
 		it('should not dispatch DisplayOverlayAction when communicator added that doesnt contain overlay', () => {
-			icaseState.selectedCase.state.maps.data[1].data.overlay = null;
+			selectedCase.state.maps.data[1].data.overlay = null;
 			const communicators: Array<string> = ['imagery2'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({id: 'imagery2'})
+				a: new ImageryCreatedAction({ id: 'imagery2' })
 			});
 			const expectedResults = cold('-');
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
@@ -411,15 +413,15 @@ describe('MapAppEffects', () => {
 
 	describe('activeMapGeoRegistrationChanged$', () => {
 		it('After active map is changed should dispatch "SetMapGeoEnabledModeToolsActionStore" geoOpertions state', () => {
-			const testOverlay: Overlay = {id: 'testOverlayId1', isGeoRegistered: false} as Overlay;
+			const testOverlay: Overlay = { id: 'testOverlayId1', isGeoRegistered: false } as Overlay;
 			mapState.mapsList = <any> [
-				{id: 'imagery1', data: {overlay: testOverlay}},
-				{id: 'imagery2', data: {overlay: testOverlay}}
+				{ id: 'imagery1', data: { overlay: testOverlay } },
+				{ id: 'imagery2', data: { overlay: testOverlay } }
 			];
 			mapState.activeMapId = 'imagery1';
-			actions = hot('--a--', {a: new ActiveMapChangedAction('')});
+			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 			const b = new SetMapGeoEnabledModeToolsActionStore(testOverlay.isGeoRegistered);
-			const expectedResults = cold('--b--', {b});
+			const expectedResults = cold('--b--', { b });
 			expect(mapAppEffects.activeMapGeoRegistrationChanged$).toBeObservable(expectedResults);
 		});
 	});

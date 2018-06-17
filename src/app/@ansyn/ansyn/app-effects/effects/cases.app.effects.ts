@@ -10,11 +10,13 @@ import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actio
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
-	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import {
+	CoreActionTypes, SelectCaseAction, SelectDilutedCaseAction,
+	SetToastMessageAction
+} from '@ansyn/core/actions/core.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { DilutedCase } from '@ansyn/core/models/case.model';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
@@ -58,7 +60,7 @@ export class CasesAppEffects {
 	 */
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
-		.ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE)
+		.ofType<SelectDilutedCaseAction>(CoreActionTypes.SELECT_DILUTED_CASE)
 		.map(({ payload }: SelectDilutedCaseAction) => payload)
 		.mergeMap((caseValue: DilutedCase) => {
 			let resultObservable = Observable.of([]);

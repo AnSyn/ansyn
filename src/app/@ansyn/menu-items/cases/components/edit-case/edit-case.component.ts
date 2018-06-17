@@ -11,6 +11,7 @@ import { CasesService } from '../../services/cases.service';
 import { CasePreview } from '../../models/case.model';
 import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
 import { Context } from '@ansyn/core/models/context.model';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
 
 const animationsDuring = '0.2s';
 
@@ -44,6 +45,7 @@ export class EditCaseComponent implements OnInit {
 	casesState$: Observable<ICasesState> = this.store.select(casesStateSelector);
 
 	activeCase$: Observable<Case> = this.casesState$
+		.withLatestFrom(this.store.select(selectSelectedCase))
 		.distinctUntilChanged()
 		.map(this.getCloneActiveCase.bind(this));
 
@@ -71,14 +73,14 @@ export class EditCaseComponent implements OnInit {
 		];
 	}
 
-	getCloneActiveCase(caseState: ICasesState): CasePreview {
+	getCloneActiveCase([caseState, selectedCase]: [ICasesState, CasePreview]): CasePreview {
 		let sCase: CasePreview = caseState.entities[caseState.modal.id];
 		if (sCase) {
 			this.editMode = true;
 			sCase = cloneDeep(sCase);
 		} else {
-			const selectedCase = cloneDeep(caseState.selectedCase);
-			sCase = this.getEmptyCase(selectedCase);
+			const cloneSelectedCase = cloneDeep(selectedCase);
+			sCase = this.getEmptyCase(<any> cloneSelectedCase);
 		}
 
 		return sCase;

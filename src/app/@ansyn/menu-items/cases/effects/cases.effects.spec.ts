@@ -9,7 +9,6 @@ import {
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
@@ -28,6 +27,7 @@ import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service'
 import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
 import { Overlay } from '@ansyn/overlays/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { SelectCaseAction } from '@ansyn/core/actions/core.actions';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;

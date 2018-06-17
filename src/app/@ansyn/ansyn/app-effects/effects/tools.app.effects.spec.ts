@@ -39,9 +39,8 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { BackToWorldView } from '@ansyn/core/actions/core.actions';
+import { BackToWorldView, SelectCaseAction } from '@ansyn/core/actions/core.actions';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

@@ -8,14 +8,16 @@ import { Case } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
+import {
+	selectFavoriteOverlays, selectLayout, selectOverlaysCriteria,
+	selectSelectedCase
+} from '@ansyn/core/reducers/core.reducer';
 import {
 	selectDisplayAnnotationsLayer
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectAnnotationLayer, selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -58,7 +60,7 @@ export class UpdateCaseAppEffects {
 			] = events;
 
 			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
-			const { contextEntities } = selectedCase.state;
+			// const { contextEntities } = selectedCase.state;
 
 			const updatedCase: Case = {
 				id,
@@ -85,7 +87,7 @@ export class UpdateCaseAppEffects {
 					dataInputFilters,
 					time,
 					facets,
-					contextEntities,
+					// contextEntities,
 					overlaysManualProcessArgs
 				}
 			};

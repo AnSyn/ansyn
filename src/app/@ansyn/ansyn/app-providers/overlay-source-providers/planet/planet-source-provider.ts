@@ -203,7 +203,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 		let dateFilter = {
 			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: new Date(0).toISOString(), lte: params.date }
+			config: { gte: new Date(0).toISOString(), lte: new Date(params.date).toISOString() }
 		};
 		let pageLimit: any = params.limitBefore ? params.limitBefore : DEFAULT_OVERLAYS_LIMIT / 2;
 
@@ -226,7 +226,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 		dateFilter = {
 			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: params.date, lte: new Date().toISOString() }
+			config: { gte: new Date(params.date).toISOString(), lte: new Date().toISOString() }
 		};
 		pageLimit = params.limitAfter ? params.limitAfter : DEFAULT_OVERLAYS_LIMIT / 2;
 

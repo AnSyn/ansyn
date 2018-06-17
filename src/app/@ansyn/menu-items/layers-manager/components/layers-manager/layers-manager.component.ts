@@ -1,9 +1,9 @@
-import { ILayerState, selectLayersContainers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayerState, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { layersStateSelector } from '../../reducers/layers.reducer';
-import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { groupBy } from 'lodash';
 
@@ -17,9 +17,9 @@ import { groupBy } from 'lodash';
 export class LayersManagerComponent implements OnInit {
 	annotationLayerChecked;
 
-	public LayersContainers$: Observable<any> = this.store.select(selectLayersContainers)
+	public layers$: Observable<any> = this.store.select(selectLayers)
 		.distinctUntilChanged()
-		.map((layersContainer: LayersContainer[]) => {
+		.map((layersContainer: Layer[]) => {
 			const typeGroupedLayersContainer = groupBy(layersContainer, o => o.type);
 			return Object.keys(typeGroupedLayersContainer).map(layer => typeGroupedLayersContainer[layer]);
 		});
@@ -33,7 +33,7 @@ export class LayersManagerComponent implements OnInit {
 			.subscribe(result => {
 				this.annotationLayerChecked = result;
 			});
-		this.LayersContainers$.subscribe();
+		this.layers$.subscribe();
 	}
 
 	annotationLayerClick() {

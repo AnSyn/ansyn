@@ -2,17 +2,17 @@ import { ILayerState } from './layers.reducer';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
-import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export interface ILayerState {
-	layersContainers: LayersContainer[];
+	layers: Layer[];
 	displayAnnotationsLayer: boolean;
 	annotationsLayer: FeatureCollection<any>;
 	selectedLayersIds: string[];
 }
 
 export const initialLayersState: ILayerState = {
-	layersContainers: [],
+	layers: [],
 	displayAnnotationsLayer: false,
 	annotationsLayer: null,
 	selectedLayersIds: []
@@ -25,13 +25,13 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 	switch (action.type) {
 
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
-			return { ...state, layersContainers: action.payload };
+			return { ...state, layers: action.payload };
 
 		case LayersActionTypes.SELECT_LAYER:
-			return { ...state, layersContainers: [...state.layersContainers] };
+			return { ...state, layers: [...state.layers] };
 
 		case LayersActionTypes.UNSELECT_LAYER:
-			return { ...state, layersContainers: [...state.layersContainers] };
+			return { ...state, layers: [...state.layers] };
 
 		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:
 			return { ...state, displayAnnotationsLayer: action.payload };
@@ -54,7 +54,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 }
 
-export const selectLayersContainers = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.layersContainers);
+export const selectLayers = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.layers);
 export const selectAnnotationLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.annotationsLayer);
 export const selectDisplayAnnotationsLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.displayAnnotationsLayer);
 export const selectSelectedLayersIds = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.selectedLayersIds);

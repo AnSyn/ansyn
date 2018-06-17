@@ -42,7 +42,7 @@ describe('LayersReducer', () => {
 		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction(payload);
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);
-		expect(result.layersContainers).toEqual(payload);
+		expect(result.layers).toEqual(payload);
 	});
 
 	describe('ANNOTATIONS', () => {

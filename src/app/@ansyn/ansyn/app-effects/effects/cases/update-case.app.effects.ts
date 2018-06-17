@@ -11,7 +11,7 @@ import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer'
 import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
 import {
 	selectAnnotationLayer,
-	selectDisplayAnnotationsLayer, selectLayersContainers, selectSelectedLayersIds
+	selectDisplayAnnotationsLayer, selectLayers, selectSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';

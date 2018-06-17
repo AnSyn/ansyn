@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { SelectLayerAction, UnselectLayerAction, UpdateSelectedLayersFromCaseAction, UpdateSelectedLayersToCaseAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { selectedLayersIds } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
@@ -39,7 +39,7 @@ import { Observable } from 'rxjs/Observable';
 })
 
 export class LayerCollectionComponent implements OnInit{
-	@Input() collection: LayersContainer[];
+	@Input() collection: Layer[];
 	_selectedLayers = [];
 	selectedLayers$: Observable<any> = this.store.select(selectedLayersIds)
 	.distinctUntilChanged()
@@ -57,7 +57,7 @@ export class LayerCollectionComponent implements OnInit{
 
 
 	ngOnInit() {
-		this.dataLayersService.getAllLayersInATree().subscribe((layersContainers) => this._allLayers = layersContainers);
+		this.dataLayersService.getAllLayersInATree().subscribe((layers) => this._allLayers = layers);
 
 		this.collectionWithIsChecked = cloneDeep(this.collection);
 
@@ -71,7 +71,7 @@ export class LayerCollectionComponent implements OnInit{
 				protected imageryProviderService: ImageryProviderService) {
 	}
 
-	public onCheckboxClicked(event, layersContainer: LayersContainer): void {
+	public onCheckboxClicked(event, layersContainer: Layer): void {
 		if (event.target.checked) {
 			this.store.dispatch(new SelectLayerAction(this._allLayers.find(layer => layer.id === layersContainer.id)))
 		} else {

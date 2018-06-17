@@ -19,9 +19,6 @@ const packageJson = require('../../../../../package.json');
 })
 
 export class AnsynComponent {
-	selectedCaseName$: Observable<string> = this.store$.select(selectSelectedCase)
-		.map((selectSelected: Case) => selectSelected ? selectSelected.name : 'Default Case');
-
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned)
 		.skip(1)
 		.map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned');

@@ -3,7 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreInitialState, coreStateSelector, selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -85,7 +85,6 @@ describe('CoreAppEffects', () => {
 	});
 
 	it('setFavoriteOverlaysUpdateCase$ should update selected case and overlay markup', () => {
-		casesState.selectedCase = <Case> { state: { favoriteOverlays: overlays1to3 } };
 		const markupsResult = {
 			classToSet: MarkUpClass.favorites,
 			dataToSet: {

@@ -1,7 +1,7 @@
 <!-- Selected Case -->
 <div class="selectedCase block pop-hover">
 	<i class="block-icon icon-status-bar-case"></i>
-	<span>{{selectedCaseName}}</span>
+	<span>{{selectedCaseName$ | async}}</span>
 
 	<div class="pop-content">
 		<button class="share-link" (click)="copyLink()">

@@ -18,7 +18,6 @@ import {
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
 	AddCaseAction,
-	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import {
@@ -43,7 +42,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { ClearActiveInteractionsAction, SelectCaseAction } from '@ansyn/core/actions/core.actions';
 import { statusBarFlagsItemsEnum } from '@ansyn/status-bar/models/status-bar-flag-items.model';
 import { UpdateStatusFlagsAction } from '@ansyn/status-bar/actions/status-bar.actions';
 

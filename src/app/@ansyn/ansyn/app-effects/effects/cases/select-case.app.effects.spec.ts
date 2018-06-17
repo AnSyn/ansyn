@@ -33,7 +33,7 @@ import {
 	CaseTimeState,
 	OverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '@ansyn/core/actions/core.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';

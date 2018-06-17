@@ -17,6 +17,7 @@ import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer
 import { Dictionary } from '@ngrx/entity/src/models';
 import { CaseModal } from '../../reducers/cases.reducer';
 import { CasePreview } from '@ansyn/core/models/case.model';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -44,8 +45,8 @@ export class CasesTableComponent implements OnInit {
 		.distinctUntilChanged()
 		.pluck<CaseModal, string>('id');
 
-	selectedCaseId$: Observable<string> = this.caseState$
-		.map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null)
+	selectedCaseId$: Observable<string> = this.store$.select(selectSelectedCase)
+		.map((selectedCase: CasePreview) => selectedCase ? selectedCase.id : null)
 		.distinctUntilChanged();
 
 	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {

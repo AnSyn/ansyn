@@ -12,7 +12,6 @@ import {
 	AddCaseAction,
 	LoadCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
-	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -28,7 +27,7 @@ import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { ContextConfig } from '@ansyn/context/models/context.config';
 import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SelectCaseAction, SelectDilutedCaseAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CasesEffects } from '@ansyn/menu-items/cases/effects/cases.effects';
 

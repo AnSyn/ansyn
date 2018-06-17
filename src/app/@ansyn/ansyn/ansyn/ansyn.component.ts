@@ -7,7 +7,7 @@ import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
 declare function require(name: string);
 const packageJson = require('../../../../../package.json');

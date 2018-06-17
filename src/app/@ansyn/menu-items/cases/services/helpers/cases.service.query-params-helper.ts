@@ -70,7 +70,7 @@ export class QueryParamsHelper {
 
 								updatedCaseModel.state.region = geoPoint;
 
-								updatedCaseModel.state.contextEntities = [];
+								// updatedCaseModel.state.contextEntities = [];
 
 								const feature: Feature<any> = {
 									'type': 'Feature',
@@ -78,11 +78,11 @@ export class QueryParamsHelper {
 									'geometry': geoPoint
 								};
 
-								updatedCaseModel.state.contextEntities.push({
-									id: '1',
-									date: qParams.time ? new Date(qParams.time) : new Date(),
-									featureJson: feature
-								});
+								// updatedCaseModel.state.contextEntities.push({
+								// 	id: '1',
+								// 	date: qParams.time ? new Date(qParams.time) : new Date(),
+								// 	featureJson: feature
+								// });
 							} else if (geoJsonGeomtry.type === 'Polygon') {
 								const geoPolygon: Polygon = <Polygon>geoJsonGeomtry;
 								geoPolygon.coordinates[0] = geoPolygon.coordinates[0].map((pair) => pair.reverse());
@@ -110,20 +110,20 @@ export class QueryParamsHelper {
 
 								updatedCaseModel.state.region = geoPolygon;
 
-								updatedCaseModel.state.contextEntities = [];
-
-								updatedCaseModel.state.contextEntities.push(
-									{
-										id: '1',
-										date: qParams.time ? new Date(qParams.time) : new Date(),
-										featureJson: feature
-									},
-									{
-										id: '2',
-										date: qParams.time ? new Date(qParams.time) : new Date(),
-										featureJson: centroidOfGeometry
-									}
-								);
+								// updatedCaseModel.state.contextEntities = [];
+								//
+								// updatedCaseModel.state.contextEntities.push(
+								// 	{
+								// 		id: '1',
+								// 		date: qParams.time ? new Date(qParams.time) : new Date(),
+								// 		featureJson: feature
+								// 	},
+								// 	{
+								// 		id: '2',
+								// 		date: qParams.time ? new Date(qParams.time) : new Date(),
+								// 		featureJson: centroidOfGeometry
+								// 	}
+								// );
 							}
 						}
 						break;

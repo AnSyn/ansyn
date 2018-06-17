@@ -9,8 +9,8 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
-import { LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction, SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { LoadDefaultCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';

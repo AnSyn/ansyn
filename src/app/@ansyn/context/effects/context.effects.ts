@@ -4,13 +4,12 @@ import { ContextParams, selectContextsArray } from '@ansyn/context/reducers/cont
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	CasesActionTypes, CopyCaseLinkAction,
-	LoadCaseAction, LoadDefaultCaseAction, SelectCaseAction,
-	SelectDilutedCaseAction
+	LoadCaseAction, LoadDefaultCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SelectCaseAction, SelectDilutedCaseAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { Context } from '@ansyn/core/models/context.model';
-import { Case } from '@ansyn/core/models/case.model';
+import { Case, CasePreview } from '@ansyn/core/models/case.model';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
@@ -20,6 +19,7 @@ import { mergeMap } from 'rxjs/operators';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { Store } from '@ngrx/store';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class ContextEffects {
@@ -102,11 +102,11 @@ export class ContextEffects {
 	onCopyShareCaseLink$ = this.actions$
 		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
 		.filter(action => Boolean(action.payload.shareCaseAsQueryParams))
-		.withLatestFrom(this.store.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
+		.withLatestFrom(this.store.select(casesStateSelector), this.store.select(selectSelectedCase),  (action: CopyCaseLinkAction, state: ICasesState, selectedCase: CasePreview) => {
 			let sCase = state.entities[action.payload.caseId];
 			if (!sCase) {
-				if (state.selectedCase.id === action.payload.caseId) {
-					sCase = state.selectedCase;
+				if (selectedCase.id === action.payload.caseId) {
+					sCase = selectedCase;
 				}
 			}
 			return sCase;

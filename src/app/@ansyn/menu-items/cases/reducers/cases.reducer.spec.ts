@@ -2,13 +2,13 @@ import {
 	AddCaseAction,
 	CloseModalAction,
 	OpenModalAction,
-	SelectCaseAction,
 	UpdateCaseAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { SelectCaseAction } from '@ansyn/core/actions/core.actions';
 
 
 describe('CasesReducer', () => {
@@ -68,7 +68,7 @@ describe('CasesReducer', () => {
 		], state);
 
 		state.modal.id = 'id2';
-		state.selectedCase = { ...caseMock, id: 'id2' };
+		state.selectedCase = <any> { ...caseMock, id: 'id2' };
 
 		let newCase: Case = {
 			...caseMock, id: 'id2', name: 'name2 lastname2'

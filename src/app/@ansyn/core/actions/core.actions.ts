@@ -3,6 +3,9 @@ import { type } from '@ansyn/core/utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { DilutedCase } from '@ansyn/core/models/case.model';
+import { Case } from '@ansyn/menu-items/cases/models/case.model';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -19,7 +22,9 @@ export const CoreActionTypes = {
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
-	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT'
+	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
+	SELECT_CASE: 'SELECT_CASE',
+	SELECT_DILUTED_CASE: 'SELECT_DILUTED_CASE',
 };
 
 export type CoreActions =
@@ -139,11 +144,24 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 	}
 }
 
-
-
 export class UpdateOverlaysCountAction {
 	type = CoreActionTypes.UPDATE_OVERLAY_COUNT;
 	constructor(public payload: number) {
 
 	}
 }
+
+export class SelectCaseAction implements Action {
+	type = CoreActionTypes.SELECT_CASE;
+
+	constructor(public payload: Case) {
+	}
+}
+
+export class SelectDilutedCaseAction implements Action {
+	type = CoreActionTypes.SELECT_DILUTED_CASE;
+
+	constructor(public payload: DilutedCase) {
+	}
+}
+

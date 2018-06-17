@@ -9,7 +9,6 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -18,6 +17,7 @@ import {
 	WindowLayout
 } from '@builder/reducers/builder.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
+import { SelectCaseAction } from '@ansyn/core/actions/core.actions';
 
 
 describe('apiService', () => {

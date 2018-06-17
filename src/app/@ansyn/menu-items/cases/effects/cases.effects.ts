@@ -14,7 +14,6 @@ import {
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
 	UpdateCaseBackendSuccessAction
@@ -24,11 +23,12 @@ import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/ca
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { Case } from '@ansyn/core/models/case.model';
+import { Case, CasePreview } from '@ansyn/core/models/case.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SelectCaseAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
+import { selectSelectedCase } from '@ansyn/core/reducers/core.reducer';
 
 @Injectable()
 export class CasesEffects {
@@ -71,7 +71,7 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id])
+		.withLatestFrom(this.store.select(casesStateSelector), this.store.select(selectSelectedCase), (action, state: ICasesState, selectedCase: CasePreview) => [state.modal.id, selectedCase.id])
 		.filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId)
 		.map(() => new LoadDefaultCaseAction());
 
@@ -198,8 +198,8 @@ export class CasesEffects {
 	@Effect()
 	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.filter(([action, casesState]: [LoadDefaultCaseAction, ICasesState]) => !Boolean(casesState.selectedCase))
+		.withLatestFrom(this.store.select(casesStateSelector), this.store.select(selectSelectedCase))
+		.filter(([action, casesState, selectedCase]: [LoadDefaultCaseAction, ICasesState, CasePreview]) => !Boolean(selectedCase))
 		.map(() => new LoadDefaultCaseAction());
 
 	constructor(protected actions$: Actions,

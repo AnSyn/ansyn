@@ -16,7 +16,7 @@ import { limitArray } from '@ansyn/core/utils/limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import * as wellknown from "wellknown";
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';

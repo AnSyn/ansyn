@@ -8,8 +8,8 @@ import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-posi
 import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { map, mergeMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export interface MapInstanceChanged {

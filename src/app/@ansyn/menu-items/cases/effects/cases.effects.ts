@@ -28,7 +28,7 @@ import { Case } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 
 @Injectable()
 export class CasesEffects {

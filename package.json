@@ -116,18 +116,14 @@
 		"gulp-replace": "^0.6.1",
 		"gulp-sequence": "^1.0.0",
 		"gulp-shell": "^0.6.3",
-		"jasmine": "latest",
-		"jasmine-marbles": "0.2.0",
+		"jasmine-marbles": "0.3.1",
 		"jsdoc": "3.5.5",
-		"karma-cli": "1.0.1",
-		"lesshint": "4.4.0",
 		"pre-commit": "1.2.2",
 		"protractor-screenshoter-plugin": "^0.5.0",
 		"replace": "0.3.0"
 	},
 	"precommit": [
 		"fix-all",
-		"lint",
-		"testCompile"
+		"lint"
 	]
 }

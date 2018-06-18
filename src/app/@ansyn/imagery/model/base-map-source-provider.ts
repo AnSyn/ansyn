@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable } from 'rxjs';
-import { of } from 'rxjs/observable/of';
+import { of } from 'rxjs';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {

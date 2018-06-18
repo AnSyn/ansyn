@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginConfigService } from './login-config.service';
 import { ILoginConfig } from '../models/login.config';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/throw';
 
@@ -53,7 +52,7 @@ export class AuthService {
 		return this.httpClient.post(url, body, options);
 	}
 
-	isLoggedIn(): Observable<any> | ErrorObservable {
+	isLoggedIn(): Observable<any> {
 		if (!this.config.active) {
 			return Observable.of(true);
 		}

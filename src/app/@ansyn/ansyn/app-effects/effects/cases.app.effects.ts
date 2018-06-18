@@ -4,8 +4,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import '@ansyn/core/utils/debug';
-import '@ansyn/core/utils/clone-deep';
 import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	CasesActionTypes,

@@ -27,6 +27,9 @@ export class LoggerService implements ErrorHandler {
 
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
+		window.onerror = function (e) {
+			this.error(e.toString());
+		};
 	}
 
 	get standardPrefix() {

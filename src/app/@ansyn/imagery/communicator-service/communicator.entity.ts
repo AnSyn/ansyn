@@ -9,7 +9,7 @@ import 'rxjs/add/observable/merge';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { filter } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { of } from 'rxjs';
 
 export class CommunicatorEntity {
 	private _managerSubscriptions = [];

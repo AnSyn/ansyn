@@ -10,7 +10,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, empty } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
@@ -17,7 +17,6 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import * as moment from 'moment';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
-import { empty } from 'rxjs/observable/empty';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -118,7 +117,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			filters.push(preFilter);
 		}
 
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
+		return <any> this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
 			{ headers: this.httpHeaders, params: { _page_size: limit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
@@ -162,7 +161,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const filters = this.parsePlanetFilters(params.facets);
 
 		const pageLimit: any = params.limit ? params.limit : DEFAULT_OVERLAYS_LIMIT;
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		return <any> this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: Overlay[]) => {

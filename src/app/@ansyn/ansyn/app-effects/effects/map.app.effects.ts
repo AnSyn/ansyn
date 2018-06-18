@@ -15,7 +15,6 @@ import {
 	SelectLayerAction,
 	UnselectLayerAction
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';

@@ -139,7 +139,7 @@ export class CasesService {
 	}
 
 	updateCase(selectedCase: Case): Observable<Case> {
-		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase)).catch(err => {
+		return <any> this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase)).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
 	}

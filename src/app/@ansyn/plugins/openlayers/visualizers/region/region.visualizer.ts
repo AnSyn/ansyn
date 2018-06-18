@@ -15,7 +15,7 @@ import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/ac
 import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';

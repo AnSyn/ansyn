@@ -3,10 +3,7 @@ import { NgModule } from '@angular/core';
 import { loginRoutes } from '@ansyn/login/login.routes';
 import { ansynRoutes } from '@ansyn/ansyn/ansyn.routes';
 
-export const routes: Routes = [
-	...ansynRoutes,
-	...loginRoutes
-];
+export const routes: Routes = ansynRoutes.concat(loginRoutes);
 
 @NgModule({
 	imports: [RouterModule.forRoot(routes, { useHash: true })],

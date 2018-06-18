@@ -32,7 +32,7 @@ import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { empty } from 'rxjs/observable/empty';
+import { empty } from 'rxjs';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

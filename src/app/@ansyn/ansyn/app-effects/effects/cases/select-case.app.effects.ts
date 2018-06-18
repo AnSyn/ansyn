@@ -17,14 +17,13 @@ import {
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { Overlay, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
-import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -38,7 +37,7 @@ export class SelectCaseAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.mergeMap(({ payload }: SelectCaseAction) => [...this.selectCaseActions(payload), ...this.setSpecialObjectsFromSelectedCase(payload)]);
+		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>) {
@@ -95,20 +94,4 @@ export class SelectCaseAppEffects {
 	parseOverlay(overlay: Overlay): Overlay {
 		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
-
-	setSpecialObjectsFromSelectedCase({state}): Action[] {
-		if (!state.contextEntities) {
-			return []
-		} else {
-			return state.contextEntities.map(contextEntity => {
-				const specialObject: OverlaySpecialObject = {
-					id: contextEntity.id,
-					date: contextEntity.date,
-					shape: 'star'
-				} as OverlaySpecialObject;
-				return new SetSpecialObjectsActionStore([specialObject]);
-			})
-		}
-	}
-
 }

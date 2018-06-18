@@ -1,0 +1,10 @@
+{
+	"preview":{
+		"id": "1e2a8166-37a4-485f-8bdd-4f92e675ca35",
+		"name": "Biking Trails",
+		"url": "https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png",
+		"type": "Static"
+	},
+	"data":{
+	}
+}

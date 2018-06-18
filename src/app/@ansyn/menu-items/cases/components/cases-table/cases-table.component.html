@@ -38,12 +38,12 @@
 			<div class="cases-table-body-row-data">
 				<hr>
 
-				<div class="cases-table-body-col">
+				<div class="cases-table-case-name-col">
 					{{entities[id].name}}
 				</div>
 
-				<div class="cases-table-body-col">
-					<ansyn-cases-auto-save></ansyn-cases-auto-save>
+				<div class="cases-table-auto-save-col">
+					<ansyn-cases-auto-save [currentCase]="entities[id]"></ansyn-cases-auto-save>
 				</div>
 
 				<div class="cases-table-body-col">

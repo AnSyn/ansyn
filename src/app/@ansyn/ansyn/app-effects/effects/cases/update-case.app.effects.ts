@@ -57,7 +57,7 @@ export class UpdateCaseAppEffects {
 				overlaysManualProcessArgs
 			] = events;
 
-			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
+			const { id, name, lastModified, owner, creationTime, selectedContextId, autoSave } = selectedCase;
 			const { contextEntities } = selectedCase.state;
 
 			const updatedCase: Case = {
@@ -67,6 +67,7 @@ export class UpdateCaseAppEffects {
 				lastModified,
 				owner,
 				selectedContextId,
+				autoSave,
 				state: {
 					timeFilter,
 					orientation,

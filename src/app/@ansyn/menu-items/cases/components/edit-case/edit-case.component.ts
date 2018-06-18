@@ -91,6 +91,7 @@ export class EditCaseComponent implements OnInit {
 			name: '',
 			owner: '',
 			id: '',
+			autoSave: true,
 			lastModified: new Date(),
 			creationTime: new Date(),
 			state: {

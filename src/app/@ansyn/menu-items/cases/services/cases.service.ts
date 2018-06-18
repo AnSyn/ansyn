@@ -76,6 +76,7 @@ export class CasesService {
 		const casePreview: CasePreview = {
 			id: caseValue.id,
 			name: caseValue.name,
+			autoSave: caseValue.autoSave,
 			creationTime: caseValue.creationTime,
 			owner: caseValue.owner,
 			lastModified: caseValue.lastModified

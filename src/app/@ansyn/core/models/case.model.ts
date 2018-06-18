@@ -14,6 +14,7 @@ export interface CasePreview extends Entity {
 	owner: string;
 	lastModified: Date;
 	selectedContextId?: string;
+	autoSave: boolean;
 }
 
 export interface Case extends CasePreview {
@@ -60,7 +61,7 @@ export interface DilutedCaseState {
 	timeFilter: CaseTimeFilter,
 	favoriteOverlays?: DilutedOverlay[],
 	overlaysManualProcessArgs: OverlaysManualProcessArgs,
-	layers?: CaseLayersState
+	layers?: CaseLayersState,
 }
 
 export interface CaseState extends DilutedCaseState {

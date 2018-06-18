@@ -1,3 +1,5 @@
-<p>
-  cases-auto-save works!
-</p>
+<label class="switch">
+	<span class="slider-text">Auto Save</span>
+	<input id="show-only-favorites" [checked]="onlyFavorite"  type="checkbox" (click)="toggleAutoSave($event)"/>
+	<span class="slider round"></span>
+</label>

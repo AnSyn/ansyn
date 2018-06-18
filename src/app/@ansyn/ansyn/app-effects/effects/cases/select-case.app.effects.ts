@@ -24,6 +24,7 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -49,9 +50,9 @@ export class SelectCaseAppEffects {
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
-		// core
-		const { favoriteOverlays, region, dataInputFilters } = state;
-		let { time } = state;
+		// context
+		const { favoriteOverlays, region, dataInputFilters, contextEntities } = state;
+		let {  time } = state;
 		const { layout } = state.maps;
 
 		if (!time) {
@@ -80,7 +81,8 @@ export class SelectCaseAppEffects {
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
-			new UpdateSelectedLayersFromCaseAction(activeLayersIds)
+			new UpdateSelectedLayersFromCaseAction(activeLayersIds),
+			new SetContextParamsAction({ contextEntities })
 		];
 	}
 

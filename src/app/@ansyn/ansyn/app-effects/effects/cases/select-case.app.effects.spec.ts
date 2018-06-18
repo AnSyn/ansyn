@@ -17,13 +17,10 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	Case,
 	CaseDataInputFiltersState,
 	CaseFacetsState,
-	CaseGeoFilter,
 	CaseLayersState,
 	CaseMapsState,
 	CaseOrientation,
@@ -31,6 +28,7 @@ import {
 	CaseState,
 	CaseTimeFilter,
 	CaseTimeState,
+	IContextEntity,
 	OverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -40,16 +38,13 @@ import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.ac
 import { ContextService } from '@ansyn/context/services/context.service';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
-	let mockOverlaysService = {
-		getStartDateViaLimitFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() }),
-		getStartAndEndDateViaRangeFacets: () => Observable.of({ startDate: new Date(), endDate: new Date() })
-	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -99,7 +94,8 @@ describe('SelectCaseAppEffects', () => {
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: CaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
 				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
-				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] };
+				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] },
+				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
 
 			const state: CaseState = <any> {
 				orientation,
@@ -111,7 +107,8 @@ describe('SelectCaseAppEffects', () => {
 				maps,
 				layers,
 				overlaysManualProcessArgs,
-				facets
+				facets,
+				contextEntities
 			};
 
 			const payload: Case = {
@@ -125,7 +122,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijk)--', {
+			const expectedResult = cold('--(abcdefghijkl)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
@@ -137,6 +134,7 @@ describe('SelectCaseAppEffects', () => {
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				j: new UpdateFacetsAction(facets),
 				k: new UpdateSelectedLayersFromCaseAction([])
+				l: new SetContextParamsAction({ contextEntities })
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

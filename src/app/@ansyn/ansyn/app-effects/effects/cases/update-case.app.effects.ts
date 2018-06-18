@@ -16,6 +16,7 @@ import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/ma
 import { selectAnnotationLayer, selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -31,6 +32,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
+		this.store$.select(selectContextEntities)
 	];
 
 	/**
@@ -57,10 +59,10 @@ export class UpdateCaseAppEffects {
 				layout,
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
+				contextEntities
 			] = events;
 
 			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
-			const { contextEntities } = selectedCase.state;
 
 			const updatedCase: Case = {
 				id,

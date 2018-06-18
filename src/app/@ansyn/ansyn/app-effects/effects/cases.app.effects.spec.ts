@@ -17,7 +17,7 @@ import {
 import { Case, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { contextFeatureKey, ContextReducer } from '@ansyn/context/reducers/context.reducer';

@@ -2,7 +2,8 @@ import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
@@ -32,6 +33,6 @@ export abstract class BaseMapSourceProvider {
 	}
 
 	getThumbnailUrl(overlay, position): Observable<string> {
-		return Observable.of(overlay.thumbnailUrl);
+		return of(overlay.thumbnailUrl);
 	}
 }

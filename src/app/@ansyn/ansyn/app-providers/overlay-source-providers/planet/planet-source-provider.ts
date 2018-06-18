@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
@@ -17,6 +17,7 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import * as moment from 'moment';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { empty } from 'rxjs/observable/empty';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -214,7 +215,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return Observable.empty();
+		return empty();
 	}
 
 	private extractArrayData(overlays: PlanetOverlay[]): Overlay[] {

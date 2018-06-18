@@ -5,7 +5,7 @@ import {
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	bboxFromGeoJson, geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius
@@ -16,6 +16,7 @@ import { limitArray } from '@ansyn/core/utils/limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import * as wellknown from "wellknown";
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { empty } from 'rxjs/observable/empty';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';
@@ -86,11 +87,11 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<StartAndEndDate> {
-		return Observable.empty();
+		return empty();
 	}
 
 	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return Observable.empty();
+		return empty();
 	}
 
 	private extractArrayData(overlays: Array<any>): Array<Overlay> {

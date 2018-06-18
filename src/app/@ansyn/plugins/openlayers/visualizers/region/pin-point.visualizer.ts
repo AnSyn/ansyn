@@ -1,7 +1,7 @@
 import Feature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';

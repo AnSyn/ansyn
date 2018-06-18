@@ -1,6 +1,6 @@
 import { Store } from '@ngrx/store';
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';

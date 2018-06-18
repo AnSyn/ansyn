@@ -1,6 +1,6 @@
 import { Actions, Effect } from '@ngrx/effects';
 import { ContextMenuDisplayAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';

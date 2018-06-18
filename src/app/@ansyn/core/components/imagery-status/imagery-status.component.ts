@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { BackToWorldView, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import 'rxjs/add/operator/pluck';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AlertMsg } from '../../reducers/core.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Subscription } from 'rxjs/Subscription';

@@ -1,16 +1,16 @@
-import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
-import { IMap } from '../../model/imap';
-import { ImageryMapComponent } from '../../model/imagery-map-component';
-import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
-import { BaseMapSourceProvider } from '../../model/base-map-source-provider';
+import { IImageryConfig, IMapConfig } from '@ansyn/imagery/model/iimagery-config';
+import { IMap } from '@ansyn/imagery/model/imap';
+import { ImageryMapComponent } from '@ansyn/imagery/model/imagery-map-component';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
+import { ImageryProviderService, IProvidedMap } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/observable/fromPromise';
-import { Point } from 'geojson';
+import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { map, mergeMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export interface MapInstanceChanged {
 	id: string;
@@ -68,20 +68,15 @@ export class ImageryComponentManager {
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this._activeMap) {
-			return this._activeMap.resetView(layer, position, extent).mergeMap(() => this.resetPlugins());
+			return this._activeMap.resetView(layer, position, extent).pipe(mergeMap(() => this.resetPlugins()));
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	private resetPlugins(): Observable<boolean> {
-		let resetObservables = [];
-
-		this.plugins.forEach((plugin: BaseImageryPlugin) => {
-			resetObservables.push(plugin.onResetView());
-		});
-
-		return Observable.forkJoin(resetObservables).map(results => results.every(b => b === true));
+		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
+		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
@@ -109,8 +104,11 @@ export class ImageryComponentManager {
 		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(providedMap.mapType);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
-				.do((map) => this.onMapCreated(map, activeMapName, oldMapName))
+				.pipe(
+					tap((map) => this.onMapCreated(map, activeMapName, oldMapName)),
+				)
 				.toPromise()
+
 		});
 	}
 
@@ -148,9 +146,7 @@ export class ImageryComponentManager {
 	}
 
 	destroyPlugins() {
-		this.plugins.forEach((plugin: BaseImageryPlugin) => {
-			plugin.dispose();
-		});
+		this.plugins.forEach((plugin) => plugin.dispose());
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {

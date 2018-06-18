@@ -11,7 +11,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import {

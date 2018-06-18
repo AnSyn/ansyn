@@ -1,0 +1,30 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"paths": {
+			"@ansyn/*": ["../../../@ansyn/*"]
+		},
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"outDir": "./dist",
+		"baseUrl": "./",
+		"sourceMap": true,
+		"declaration": true,
+		"inlineSources": true,
+		"module": "es2015",
+		"target": "es2015",
+		"lib": [
+			"es2015",
+			"dom",
+			"es2017",
+			"es2017.object"
+		]
+	},
+	"files": ["src/imagery.module.ts"],
+	"angularCompilerOptions": {
+		"annotateForClosureCompiler": false,
+		"strictMetadataEmit": false,
+		"skipTemplateCodegen": true
+	}
+}

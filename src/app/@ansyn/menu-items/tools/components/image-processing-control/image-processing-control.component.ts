@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
 

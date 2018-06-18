@@ -3,7 +3,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetFavoriteOverlaysAction,
@@ -63,7 +63,6 @@ export class SelectCaseAppEffects {
 		if (typeof time.to === 'string') {
 			time.to = new Date(time.to);
 		}
-
 		// layers
 		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
 		// filters

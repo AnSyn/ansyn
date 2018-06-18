@@ -2,7 +2,7 @@ import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { selectDropMarkup, selectLoading } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
 import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { selectWindowLayout, WindowLayout } from '@builder/reducers/builder.reducer';
 
 @Injectable()

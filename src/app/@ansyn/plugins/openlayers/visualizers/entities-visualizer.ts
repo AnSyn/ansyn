@@ -8,10 +8,10 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { VisualizerStyle } from './models/visualizer-style';
-import { VisualizerStateStyle } from './models/visualizer-state';
+import { VisualizerStyle } from '@ansyn/imagery/model/visualizer-style';
+import { VisualizerStateStyle } from '@ansyn/imagery/model/visualizer-state';
 import { FeatureCollection } from 'geojson';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import {
 	BaseImageryVisualizer, BaseImageryVisualizerClass, IVisualizerEntity,

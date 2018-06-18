@@ -9,6 +9,7 @@
 	},
 	"exclude": [
 		"test.ts",
+		"**/public_api.ts",
 		"**/*.spec.ts",
 		"./app/builder/**/*"
 	]

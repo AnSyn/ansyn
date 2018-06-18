@@ -1,6 +1,6 @@
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';

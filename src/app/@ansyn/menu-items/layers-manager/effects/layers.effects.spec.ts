@@ -4,7 +4,7 @@ import { DataLayersService, layersConfig } from '../services/data-layers.service
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerCollectionLoadAction, LayerCollectionLoadedAction, SelectLayerAction } from '../actions/layers.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';

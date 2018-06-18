@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable, ObservableInput } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -378,7 +378,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected imageryProviderService: ImageryProviderService,
+				public imageryProviderService: ImageryProviderService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}

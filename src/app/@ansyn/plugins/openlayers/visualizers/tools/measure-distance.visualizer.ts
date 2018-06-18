@@ -18,7 +18,7 @@ import {
 	VisualizerInteractions
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';

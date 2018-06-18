@@ -1,4 +1,4 @@
-import { VisualizerStyle } from './visualizer-style';
+import { VisualizerStyle } from '@ansyn/imagery/model/visualizer-style';
 
 export interface VisualizerStateStyle {
 	opacity: number;

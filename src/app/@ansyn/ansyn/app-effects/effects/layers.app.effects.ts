@@ -2,7 +2,7 @@ import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/laye
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import { IAppState } from '../app.effects.module';
 import { ContainerChangedTriggerAction } from '@ansyn/menu/actions/menu.actions';

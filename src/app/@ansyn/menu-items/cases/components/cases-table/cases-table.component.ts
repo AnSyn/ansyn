@@ -9,7 +9,7 @@ import {
 	LoadCaseAction
 } from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';

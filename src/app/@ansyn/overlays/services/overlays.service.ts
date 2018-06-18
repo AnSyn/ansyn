@@ -1,6 +1,6 @@
 import { BaseOverlaySourceProvider, StartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Overlay } from '../models/overlay.model';
 import { IOverlaysState, OverlayDrop, TimelineRange } from '../reducers/overlays.reducer';
 import { OverlaysCriteria, OverlaysFetchData } from '@ansyn/core/models/overlay.model';

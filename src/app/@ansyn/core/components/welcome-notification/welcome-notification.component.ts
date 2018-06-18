@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/core.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 

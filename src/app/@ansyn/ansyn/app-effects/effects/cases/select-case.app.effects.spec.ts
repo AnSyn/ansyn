@@ -21,7 +21,6 @@ import {
 	Case,
 	CaseDataInputFiltersState,
 	CaseFacetsState,
-	CaseGeoFilter,
 	CaseLayersState,
 	CaseMapsState,
 	CaseOrientation,
@@ -37,6 +36,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.ac
 import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { SetSpecialObjectsActionStore } from '@ansyn/overlays/actions/overlays.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -70,6 +70,7 @@ describe('SelectCaseAppEffects', () => {
 
 	describe('selectCase$', () => {
 		it('should set all feature stores properties', () => {
+			const thisDate = new Date();
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
 				timeFilter: CaseTimeFilter = 'Start - End',
@@ -81,7 +82,7 @@ describe('SelectCaseAppEffects', () => {
 				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} },
 				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
 				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
+				contextEntities: IContextEntity[] = [{id: '234', date: thisDate, featureJson: null}];
 
 			const state: CaseState = <any> {
 				orientation,
@@ -108,7 +109,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijk)--', {
+			const expectedResult = cold('--(abcdefghijkl)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
@@ -119,7 +120,8 @@ describe('SelectCaseAppEffects', () => {
 				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				j: new UpdateFacetsAction(facets),
-				k: new SetContextParamsAction({ contextEntities })
+				k: new SetContextParamsAction({ contextEntities }),
+				l: new SetSpecialObjectsActionStore([{ id: '234', date: thisDate, shape: 'star' }])
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

@@ -38,21 +38,7 @@ export class SelectCaseAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
-
-	@Effect()
-	setSpecialObjectsFromSelectedCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(({ payload }: SelectCaseAction) => Boolean(payload.state.contextEntities))
-		.mergeMap(({ payload }: SelectCaseAction): any => (
-			payload.state.contextEntities.map(contextEntity => {
-				const specialObject: OverlaySpecialObject = {
-					id: contextEntity.id,
-					date: contextEntity.date,
-					shape: 'star'
-				} as OverlaySpecialObject;
-				return new SetSpecialObjectsActionStore([specialObject]);
-			})));
+		.mergeMap(({ payload }: SelectCaseAction) => [...this.selectCaseActions(payload), ...this.setSpecialObjectsFromSelectedCase(payload)]);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>) {
@@ -109,4 +95,20 @@ export class SelectCaseAppEffects {
 	parseOverlay(overlay: Overlay): Overlay {
 		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
+
+	setSpecialObjectsFromSelectedCase({state}): Action[] {
+		if (!state.contextEntities) {
+			return []
+		} else {
+			return state.contextEntities.map(contextEntity => {
+				const specialObject: OverlaySpecialObject = {
+					id: contextEntity.id,
+					date: contextEntity.date,
+					shape: 'star'
+				} as OverlaySpecialObject;
+				return new SetSpecialObjectsActionStore([specialObject]);
+			})
+		}
+	}
+
 }

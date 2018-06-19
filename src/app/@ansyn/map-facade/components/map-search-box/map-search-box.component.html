@@ -1,4 +1,4 @@
-<form>
-	<input type="text" placeholder="Search">
+<form (submit)="onSubmit()">
+	<input type="text" placeholder="Search" [(ngModel)]="searchString" name="searchString">
 	<button type="submit"><i class="fa fa-search"></i></button>
 </form>

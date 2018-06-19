@@ -272,10 +272,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	/**
 	 * Format length output.
-	 * @param {ol.geom.LineString} line The line.
-	 * @return {string} The formatted length.
+	 * @param line The line.
+	 * @param projection The Projection.
 	 */
-	formatLength(line, projection) {
+	formatLength(line, projection): string {
 		const length = Sphere.getLength(line, { projection: projection });
 		let output;
 		if (length >= 1000) {

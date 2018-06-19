@@ -54,11 +54,11 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	constructor(public imageryCommunicatorService: ImageryCommunicatorService,
-				public componentFactoryResolver: ComponentFactoryResolver,
-				public imageryProviderService: ImageryProviderService,
-				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
-				@Inject(ConfigurationToken) public config: IImageryConfig) {
+	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected componentFactoryResolver: ComponentFactoryResolver,
+				protected imageryProviderService: ImageryProviderService,
+				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
+				@Inject(ConfigurationToken) protected config: IImageryConfig) {
 	}
 
 	ngOnDestroy() {

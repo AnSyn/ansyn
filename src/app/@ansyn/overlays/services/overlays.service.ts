@@ -32,9 +32,9 @@ export class OverlaysService {
 
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
-	 * @param {Map<string, T>} items
-	 * @param {string[]} ids
-	 * @param {string[]} properties
+	 * @param items
+	 * @param ids
+	 * @param properties
 	 */
 	static pluck<T>(items: Map<string, T>, ids: string[], properties: string[]) {
 		return ids

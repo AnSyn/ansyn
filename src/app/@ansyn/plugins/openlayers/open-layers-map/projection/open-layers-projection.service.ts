@@ -23,13 +23,13 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectApproximatelyToImage<olGeometry>(point: Point, map: IMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
-		point.coordinates = proj.fromLonLat(<any> point.coordinates, projection);
+		point.coordinates = proj.fromLonLat(<[number, number]>point.coordinates, projection);
 		return Observable.of(point);
 	}
 
 	projectApproximately(point: Point, map: IMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
-		point.coordinates = proj.toLonLat(<any> point.coordinates, projection);
+		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
 		return Observable.of(point);
 	}
 

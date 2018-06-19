@@ -119,10 +119,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			filters.push(preFilter);
 		}
 
-		return <any> this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
+		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
 			{ headers: this.httpHeaders, params: { _page_size: limit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: Overlay[]) => <OverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))

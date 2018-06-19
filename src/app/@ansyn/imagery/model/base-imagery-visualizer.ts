@@ -1,4 +1,4 @@
-import { VisualizerStateStyle } from '@ansyn/imagery/model/visualizer-state';
+import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { Feature } from 'geojson';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
@@ -33,19 +33,19 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 
 	/**
 	 * @description Replace all existing entities (CRUD)
-	 * @param {IVisualizerEntity[]} logicalEntities
+	 * @param logicalEntities
 	 */
 	abstract setEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean>;
 
 	/**
 	 * @description ADD Or Update Entities (CRU)
-	 * @param {IVisualizerEntity[]} logicalEntities
+	 * @param logicalEntities
 	 */
 	abstract addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean>
 
 	/**
 	 * @description Delete Single Entity (D)
-	 * @param {string} logicalEntityId
+	 * @param logicalEntityId
 	 */
 	abstract removeEntity(logicalEntityId: string);
 
@@ -56,28 +56,27 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 
 	/**
 	 * @description Get All Entities
-	 * @returns {IVisualizerEntity[]}
 	 */
 	abstract getEntities(): IVisualizerEntity[];
 
 	/**
 	 * @description This function is called for Manually hover
-	 *  @param {string} id
 	 */
 
 	abstract toggleVisibility(): void;
 
 	/**
 	 * @description This function is called for adding interactions ( mapObject and interactions )
-	 * @param {VisualizerInteractionTypes} type
-	 * @param {any} interactionInstance
+	 * @param type
+	 * @param interactionInstance
 	 */
 
 	abstract addInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
 
 	/**
 	 * @description This function is called for removing interactions ( mapObject and interactions )
-	 * @param {VisualizerInteractionTypes} type
+	 * @param type
+	 * @param interactionInstance
 	 */
 
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;

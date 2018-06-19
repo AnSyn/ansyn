@@ -1,5 +1,4 @@
 import { Entity } from '@ansyn/core/services/storage/storage.service';
-import { Overlay } from '@ansyn/core/models/overlay.model';
 
 export enum LayerType {
 	static = 'Static',
@@ -11,5 +10,4 @@ export interface Layer extends Entity {
 	url: string;
 	name: string;
 	type: LayerType;
-	dataLayerContainers: any[];
 }

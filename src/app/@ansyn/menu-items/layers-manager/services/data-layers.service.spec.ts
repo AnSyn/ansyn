@@ -59,20 +59,6 @@ describe('DataLayersService', () => {
 					'id': 'layersContainerId_1234',
 					'name': 'Roads',
 					'type': 'Static',
-					'dataLayerContainers': [
-						{
-							'id': 'layersContainerId_1234',
-							'name': 'New York Roads',
-							'dataLayerContainers': [],
-							'dataLayers': [
-								{
-									'id': 'layerId_1234',
-									'name': 'Upper east side roads',
-									'isChecked': true
-								}
-							]
-						}
-					],
 					'dataLayers': [
 						{
 							'id': 'layerId_1234',

@@ -13,7 +13,6 @@ import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { Layer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -56,42 +55,21 @@ describe('LayersEffects', () => {
 		expect(layersEffects).toBeDefined();
 	});
 
-	it('beginLayerTreeLoad$ should call dataLayersService.getAllLayersInATree with case id from state, and return LayerCollectionLoadedAction', () => {
+	it('beginLayerTreeLoad$ should dispatch LayerCollectionLoadedAction', () => {
 		let staticLayer: Layer = {
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
 			name: 'staticLayer',
 			type: LayerType.static,
-			dataLayerContainers: [],
 			creationTime: new Date()
 		};
-
-		let dynamicLayer: Layer = {
-			url: 'fakeDynamicUrl',
-			id: 'dynamicLayerId',
-			name: 'dynamicLayer',
-			type: LayerType.dynamic,
-			dataLayerContainers: [],
-			creationTime: new Date()
-		};
-		let complexLayer: Layer = {
-			url: 'fakeComplexUrl',
-			id: 'complexLayersId',
-			name: 'complexLayers',
-			type: LayerType.complex,
-			dataLayerContainers: [],
-			creationTime: new Date()
-		};
-
-		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
 
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of([staticLayer]));
 		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction() });
 		const expectedResults = cold('--a--', {
-			a: new UnselectLayerAction(staticLayer)
-	});
+			a: new LayerCollectionLoadedAction([staticLayer])
+		});
 		expect(layersEffects.beginLayerTreeLoad$).toBeObservable(expectedResults);
-
 	});
 
 });

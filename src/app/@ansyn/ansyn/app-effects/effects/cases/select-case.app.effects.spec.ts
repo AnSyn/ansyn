@@ -35,14 +35,10 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { ContextService } from '@ansyn/context/services/context.service';
-import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
-	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
 
@@ -54,14 +50,7 @@ describe('SelectCaseAppEffects', () => {
 			],
 			providers: [
 				SelectCaseAppEffects,
-				provideMockActions(() => actions),
-				{
-					provide: DataLayersService,
-					useValue: {
-						getAllLayersInATree: () => Observable.of([])
-					}
-				}
-
+				provideMockActions(() => actions)
 			]
 		}).compileComponents();
 	}));
@@ -72,10 +61,6 @@ describe('SelectCaseAppEffects', () => {
 
 	beforeEach(inject([SelectCaseAppEffects], (_selectCaseAppEffects: SelectCaseAppEffects) => {
 		selectCaseAppEffects = _selectCaseAppEffects;
-	}));
-
-	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
-		dataLayersService = _dataLayersService;
 	}));
 
 	it('should be defined', () => {
@@ -133,9 +118,10 @@ describe('SelectCaseAppEffects', () => {
 				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				j: new UpdateFacetsAction(facets),
-				k: new UpdateSelectedLayersFromCaseAction([])
+				k: new UpdateSelectedLayersFromCaseAction([]),
 				l: new SetContextParamsAction({ contextEntities })
-			});
+
+		});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);
 		});

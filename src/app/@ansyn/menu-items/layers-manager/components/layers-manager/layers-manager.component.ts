@@ -19,9 +19,9 @@ export class LayersManagerComponent implements OnInit {
 
 	public layers$: Observable<any> = this.store.select(selectLayers)
 		.distinctUntilChanged()
-		.map((layersContainer: Layer[]) => {
-			const typeGroupedLayersContainer = groupBy(layersContainer, o => o.type);
-			return Object.keys(typeGroupedLayersContainer).map(layer => typeGroupedLayersContainer[layer]);
+		.map((layers: Layer[]) => {
+			const typeGroupedLayers = groupBy(layers, l => l.type);
+			return Object.keys(typeGroupedLayers).map(layer => typeGroupedLayers[layer]);
 		});
 
 	constructor(protected store: Store<ILayerState>) {

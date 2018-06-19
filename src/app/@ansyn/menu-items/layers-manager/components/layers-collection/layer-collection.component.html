@@ -7,14 +7,14 @@
 		</button>
 	</div>
 
-	<div class="layers" *ngFor="let layer of collectionWithIsChecked" [@layersTrigger]="show">
+	<div class="layers" *ngFor="let layer of collection" [@layersTrigger]="show">
 		<div class="left-side">
 			<div class="checkbox">
 				<ansyn-checkbox
 					id="checkbox{{ layer.id }}"
 					class="regular-checkbox"
 					(change)="onCheckboxClicked($event,layer)"
-					[checked]="layer.isChecked"></ansyn-checkbox>
+					[checked]="activeLayersIds.includes(layer.id)"></ansyn-checkbox>
 				<label for="checkbox{{ layer.id }}"></label>
 			</div>
 			<div class="layer-row">

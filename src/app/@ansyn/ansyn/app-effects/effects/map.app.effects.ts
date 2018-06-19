@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable, ObservableInput } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -10,29 +10,24 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	LayersActionTypes,
-	SelectLayerAction,
-	UnselectLayerAction
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import '@ansyn/core/utils/clone-deep';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import {
-	ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion,
+	ImageryCreatedAction,
+	MapActionTypes,
+	SetIsLoadingAcion,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
-	StartMouseShadow,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
@@ -57,9 +52,12 @@ import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import 'rxjs/add/operator/pairwise';
 import 'rxjs/add/operator/startWith';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 @Injectable()
 export class MapAppEffects {
@@ -88,15 +86,15 @@ export class MapAppEffects {
 		}));
 
 	@Effect()
-		onDisplayOverlayHideLoader$ = this.actions$
-			.ofType<DisplayOverlayAction>(
-				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-				CoreActionTypes.BACK_TO_WORLD_VIEW
-			)
-			.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
-				mapId: payload.mapId, show: false
-			}));
+	onDisplayOverlayHideLoader$ = this.actions$
+		.ofType<DisplayOverlayAction>(
+			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+			CoreActionTypes.BACK_TO_WORLD_VIEW
+		)
+		.map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
+			mapId: payload.mapId, show: false
+		}));
 
 	/**
 	 * @type Effect
@@ -184,42 +182,41 @@ export class MapAppEffects {
 			showWarningIcon: true
 		}));
 
-	/**
-	 * @type Effect
-	 * @name addGroupLayer$
-	 * @ofType SelectLayerAction
-	 */
-	@Effect({ dispatch: false })
-	addGroupLayer$: Observable<SelectLayerAction> = this.actions$
-		.ofType<SelectLayerAction>(LayersActionTypes.SELECT_LAYER)
-		.map((action: SelectLayerAction) => {
-			const providers = this.imageryProviderService.mapProviders;
-			Object.keys(providers).forEach(pName => {
-				const provider = providers[pName];
-				provider.mapComponent.mapClass.addGroupVectorLayer(action.payload, 'layers');
-			});
-
-			return action;
-		});
 
 	/**
 	 * @type Effect
-	 * @name removeVectorLayer$
-	 * @ofType UnselectLayerAction
-	 * @dependencies map
+	 * @name updateSelectedLayers$
+	 * @ofType combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)
 	 */
 	@Effect({ dispatch: false })
-	removeVectorLayer$: Observable<UnselectLayerAction> = this.actions$
-		.ofType(LayersActionTypes.UNSELECT_LAYER)
-		.map((action: UnselectLayerAction) => {
-			const providers = this.imageryProviderService.mapProviders;
-			Object.keys(providers).forEach(pName => {
-				const provider = providers[pName];
-				provider.mapComponent.mapClass.removeGroupLayer(action.payload, 'layers');
-			});
+	updateSelectedLayers$: Observable<[Layer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
+		.pipe(
+			tap(([layers, selectedLayersIds]: [Layer[], string[]]): void => {
+				const providers = this.imageryProviderService.mapProviders;
+				Object.values(providers)
+					.filter((provider) => provider.mapComponent.mapClass.groupLayers.get('layers'))
+					.forEach((provider) => {
+						const displayedLayers: any = provider.mapComponent.mapClass.groupLayers.get('layers').getLayers().getArray();
 
-			return action;
-		});
+						/* remove layer if layerId not includes on selectLayers */
+						displayedLayers.forEach((layer) => {
+							const id = layer.get('id');
+							if (!selectedLayersIds.includes(id)) {
+								provider.mapComponent.mapClass.removeGroupLayer(id, 'layers');
+							}
+						});
+
+						/* add layer if id includes on selectLayers but not on map */
+						selectedLayersIds.forEach((layerId) => {
+							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
+							if (!layer) {
+								const addLayer = layers.find(({ id }) => id === layerId);
+								provider.mapComponent.mapClass.addGroupVectorLayer(addLayer, 'layers');
+							}
+						});
+					});
+			})
+		);
 
 	/**
 	 * @type Effect

@@ -1,40 +1,18 @@
-import {
-	LayerCollectionLoadedAction,
-	ToggleDisplayAnnotationsLayer
-} from '../actions/layers.actions';
+import { LayerCollectionLoadedAction, ToggleDisplayAnnotationsLayer } from '../actions/layers.actions';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
 import { Layer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('LayersReducer', () => {
 
-	it('LAYER_COLLECTION_LOADED action should add the new tree to the state', () => {
+	it('LAYER_COLLECTION_LOADED action should add the new layers to the state', () => {
 		let staticLayer: Layer = {
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
 			name: 'staticLayer',
 			type: LayerType.static,
-			dataLayerContainers: [],
 			creationTime: new Date()
 		};
 
-		let dynamicLayer: Layer = {
-			url: 'fakeDynamicUrl',
-			id: 'dynamicLayerId',
-			name: 'dynamicLayer',
-			type: LayerType.dynamic,
-			dataLayerContainers: [],
-			creationTime: new Date()
-		};
-		let complexLayer: Layer = {
-			url: 'fakeComplexUrl',
-			id: 'complexLayersId',
-			name: 'complexLayers',
-			type: LayerType.complex,
-			dataLayerContainers: [],
-			creationTime: new Date()
-		};
-
-		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
 		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);

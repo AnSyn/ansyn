@@ -6,7 +6,6 @@ import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer'
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { DilutedOverlay } from '@ansyn/core/models/overlay.model';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export interface CasePreview extends Entity {
 	creationTime: Date;

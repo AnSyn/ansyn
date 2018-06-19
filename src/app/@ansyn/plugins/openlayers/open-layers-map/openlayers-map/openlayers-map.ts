@@ -24,6 +24,7 @@ import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { IMap } from '@ansyn/imagery/model/imap';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import { Layer as ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -51,20 +52,20 @@ export class OpenLayersMap extends IMap<OLMap> {
 		group.getLayers().push(layer);
 	}
 
-	static removeGroupLayer(layer: any, groupName: string) {
+	static removeGroupLayer(id: string, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (!group) {
 			throw new Error('Tried to remove a layer to a non-existent group');
 		}
 
 		const layersArray: any[] = group.getLayers().getArray();
-		let removeIdx = layersArray.indexOf(layersArray.find(l => l.id === layer.id));
+		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
 		if (removeIdx >= 0) {
 			group.getLayers().removeAt(removeIdx);
 		}
 	}
 
-	static addGroupVectorLayer(layer: any, groupName: string) {
+	static addGroupVectorLayer(layer: ILayer, groupName: string) {
 		const vectorLayer = new TileLayer({
 			zIndex: 1,
 			source: new OSM({
@@ -76,8 +77,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 				crossOrigin: null
 			})
 		});
-		(<any>vectorLayer).id = layer.id;
-
+		vectorLayer.set('id', layer.id);
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 

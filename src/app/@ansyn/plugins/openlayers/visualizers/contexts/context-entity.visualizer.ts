@@ -8,17 +8,26 @@ import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs/Observable';
 import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { Actions } from '@ngrx/effects';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { Store } from '@ngrx/store';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: []
+	deps: [Actions, Store, ImageryCommunicatorService]
 })
 export class ContextEntityVisualizer extends EntitiesVisualizer {
 	referenceDate: Date;
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;
+	contextEntites$ = this.store$.select(selectContextEntities)
+		.filter(Boolean)
+		.mergeMap(this.setEntities.bind(this));
 
-	constructor() {
+	constructor(protected actions$: Actions,
+				protected store$: Store<IAppState>) {
 		super();
 
 		this.updateStyle({
@@ -47,6 +56,12 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		});
 
 		this.geoJsonFormat = new GeoJSON();
+	}
+
+	public onInit(): void {
+		super.onInit();
+		this.subscriptions.push(
+			this.contextEntites$.subscribe())
 	}
 
 	private getText(feature) {
@@ -97,4 +112,5 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	setReferenceDate(date: Date) {
 		this.referenceDate = date;
 	}
+
 }

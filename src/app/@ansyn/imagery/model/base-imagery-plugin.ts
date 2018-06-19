@@ -11,7 +11,7 @@ export class BaseImageryPlugin {
 	onDisposedEvent: EventEmitter<any> = new EventEmitter<any>();
 
 	get iMap(): IMap {
-		return this.communicator.ActiveMap;
+		return this.communicator && this.communicator.ActiveMap;
 	}
 
 	get mapId(): string {

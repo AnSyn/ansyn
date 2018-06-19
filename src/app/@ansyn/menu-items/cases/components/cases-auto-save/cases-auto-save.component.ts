@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
 	styleUrls: ['./cases-auto-save.component.less']
 })
 export class CasesAutoSaveComponent implements OnInit {
-	@Input() trigger: any;
+	@Input() currentCase: any;
 	public isAutoSave = false;
 
 	constructor() {

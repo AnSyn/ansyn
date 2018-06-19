@@ -34,7 +34,9 @@ export const CasesActionTypes = {
 	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
 	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
 
-	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE'
+	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
+
+	AUTO_SAVE_CHANGED: 'AUTO_SAVE_CHANGED'
 
 };
 
@@ -153,5 +155,12 @@ export class CopyCaseLinkAction implements Action {
 	type = CasesActionTypes.COPY_CASE_LINK;
 
 	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean }) {
+	}
+}
+
+export class AutoSaveChanged implements Action {
+	type = CasesActionTypes.AUTO_SAVE_CHANGED;
+
+	constructor(public payload: boolean) {
 	}
 }

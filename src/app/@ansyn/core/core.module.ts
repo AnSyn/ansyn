@@ -15,6 +15,7 @@ import { ProjectionConverterService } from '@ansyn/core/services/projection-conv
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { GeocoderService } from '@ansyn/core/services/geocoder.service';
 
 const coreComponents = [
 	AnsynCheckboxComponent,
@@ -34,6 +35,7 @@ const coreComponents = [
 	providers: [
 		GenericTypeResolverService,
 		ProjectionConverterService,
+		GeocoderService,
 		LoggerService,
 		ErrorHandlerService,
 		StorageService

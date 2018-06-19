@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { GeocoderService } from '@ansyn/core/services/geocoder.service';
 
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -13,7 +14,8 @@ export class MapSearchBoxComponent implements OnInit {
 	searchString: string;
 	communicator: CommunicatorEntity;
 
-	constructor(protected imageryCommunicatorService: ImageryCommunicatorService) {
+	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected geocoderService: GeocoderService) {
 		this.reset();
 	}
 
@@ -27,6 +29,10 @@ export class MapSearchBoxComponent implements OnInit {
 
 	onSubmit() {
 		console.log(this.searchString);
+		this.geocoderService.getLocation$(this.searchString)
+			// .do(x => console.log(x))
+			// .map(res => res.json().results)
+			.do(x => console.log(x));
 		this.reset();
 	}
 

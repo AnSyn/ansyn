@@ -30,8 +30,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER:
 			return { ...state, displayAnnotationsLayer: action.payload };
 
-		case LayersActionTypes.UPDATE_SELECTED_LAYERS_FROM_CASE:
-		case LayersActionTypes.UPDATE_SELECTED_LAYERS_TO_CASE:
+		case LayersActionTypes.UPDATE_SELECTED_LAYERS_IDS:
 			return { ...state, selectedLayersIds: action.payload };
 
 		case LayersActionTypes.ERROR_LOADING_LAYERS:

@@ -7,7 +7,7 @@ import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/sel
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersFromCaseAction
+	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -118,7 +118,7 @@ describe('SelectCaseAppEffects', () => {
 				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				j: new UpdateFacetsAction(facets),
-				k: new UpdateSelectedLayersFromCaseAction([]),
+				k: new UpdateSelectedLayersIds([]),
 				l: new SetContextParamsAction({ contextEntities })
 
 		});

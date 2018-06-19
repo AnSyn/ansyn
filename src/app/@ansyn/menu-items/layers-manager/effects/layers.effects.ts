@@ -6,13 +6,15 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { map, mergeMap } from 'rxjs/operators';
+
+
 
 @Injectable()
 export class LayersEffects {
@@ -27,8 +29,10 @@ export class LayersEffects {
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.ofType(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD)
-		.mergeMap(() => this.dataLayersService.getAllLayersInATree())
-		.map((layers: Layer[]) => new LayerCollectionLoadedAction(layers));
+		.pipe(
+			mergeMap(() => this.dataLayersService.getAllLayersInATree()),
+			map((layers: Layer[]) => new LayerCollectionLoadedAction(layers))
+		);
 
 
 	constructor(protected actions$: Actions,

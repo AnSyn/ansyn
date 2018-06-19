@@ -8,8 +8,7 @@ export const LayersActionTypes = {
 	ANNOTATIONS: {
 		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER'
 	},
-	UPDATE_SELECTED_LAYERS_FROM_CASE: 'UPDATE_SELECTED_LAYERS_FROM_CASE',
-	UPDATE_SELECTED_LAYERS_TO_CASE: 'UPDATE_SELECTED_LAYERS_TO_CASE'
+	UPDATE_SELECTED_LAYERS_IDS: 'UPDATE_SELECTED_LAYERS_IDS',
 };
 
 export type LayersActions =
@@ -17,7 +16,7 @@ export type LayersActions =
 	| BeginLayerCollectionLoadAction
 	| LayerCollectionLoadedAction
 	| ErrorLoadingLayersAction
-	| UpdateSelectedLayersToCaseAction;
+	| UpdateSelectedLayersIds;
 
 export class ToggleDisplayAnnotationsLayer implements Action {
 	type = LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER;
@@ -37,8 +36,8 @@ export class LayerCollectionLoadedAction implements Action {
 	}
 }
 
-export class UpdateSelectedLayersFromCaseAction implements Action {
-	type = LayersActionTypes.UPDATE_SELECTED_LAYERS_FROM_CASE;
+export class UpdateSelectedLayersIds implements Action {
+	type = LayersActionTypes.UPDATE_SELECTED_LAYERS_IDS;
 
 	constructor(public payload: string[]) {
 	}
@@ -51,9 +50,3 @@ export class ErrorLoadingLayersAction implements Action {
 	}
 }
 
-export class UpdateSelectedLayersToCaseAction implements Action {
-	type = LayersActionTypes.UPDATE_SELECTED_LAYERS_TO_CASE;
-
-	constructor(public payload: string[]) {
-	}
-}

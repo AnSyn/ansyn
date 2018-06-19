@@ -13,7 +13,7 @@ import {
 import {
 	BeginLayerCollectionLoadAction,
 	ToggleDisplayAnnotationsLayer,
-	UpdateSelectedLayersFromCaseAction
+	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
@@ -81,7 +81,7 @@ export class SelectCaseAppEffects {
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
-			new UpdateSelectedLayersFromCaseAction(activeLayersIds),
+			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetContextParamsAction({ contextEntities })
 		];
 	}

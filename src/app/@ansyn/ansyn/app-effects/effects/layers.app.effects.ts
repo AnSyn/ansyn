@@ -5,6 +5,4 @@ import 'rxjs/add/operator/withLatestFrom';
 @Injectable()
 export class LayersAppEffects {
 
-	constructor() {
-	}
 }

@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayerState, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import {
-	UpdateSelectedLayersToCaseAction
+	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { selectedLayersIds } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -40,7 +39,7 @@ import { Observable } from 'rxjs/Observable';
 export class LayerCollectionComponent implements OnInit {
 	@Input() collection: Layer[];
 	activeLayersIds = [];
-	selectedLayers$: Observable<any> = this.store.select(selectedLayersIds)
+	selectedLayers$: Observable<any> = this.store.select(selectSelectedLayersIds)
 		.distinctUntilChanged()
 		.do((selectedLayers) => {
 			this.activeLayersIds = selectedLayers;
@@ -61,9 +60,9 @@ export class LayerCollectionComponent implements OnInit {
 
 	public onCheckboxClicked(event, layer: Layer): void {
 		if (event.target.checked) {
-			this.store.dispatch(new UpdateSelectedLayersToCaseAction([...this.activeLayersIds, layer.id]));
+			this.store.dispatch(new UpdateSelectedLayersIds([...this.activeLayersIds, layer.id]));
 		} else {
-			this.store.dispatch(new UpdateSelectedLayersToCaseAction(this.activeLayersIds.filter((id) => id !== layer.id)));
+			this.store.dispatch(new UpdateSelectedLayersIds(this.activeLayersIds.filter((id) => id !== layer.id)));
 		}
 	}
 }

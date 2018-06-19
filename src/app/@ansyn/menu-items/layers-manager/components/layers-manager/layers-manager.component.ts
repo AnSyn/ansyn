@@ -18,7 +18,6 @@ export class LayersManagerComponent implements OnInit {
 	annotationLayerChecked;
 
 	public layers$: Observable<any> = this.store.select(selectLayers)
-		.distinctUntilChanged()
 		.map((layers: Layer[]) => {
 			const typeGroupedLayers = groupBy(layers, l => l.type);
 			return Object.keys(typeGroupedLayers).map(layer => typeGroupedLayers[layer]);

@@ -7,7 +7,7 @@ import {
 	OpenLayersDisabledMap
 } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import TileSource from 'ol/source/tile';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import {
 	OpenLayersMap,

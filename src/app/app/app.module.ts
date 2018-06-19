@@ -10,34 +10,16 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { configuration } from '../../configuration/configuration';
 import { LoginModule } from '@ansyn/login/login.module';
 
-export function MetaReducer(reducer) {
-	return function (state, action) {
-		return reducer(state, action);
-	};
-}
-
-export const metaReducers = [MetaReducer];
-
-const imports = [
-	BrowserModule,
-	StoreModule.forRoot({}, { metaReducers }),
-	EffectsModule.forRoot([]),
-	LoginModule,
-	AnsynModule,
-	AppRoutingModule
-];
-if (configuration.production) {
-	enableProdMode();
-} else {
-	// For help on dev-tools see: https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
-	imports.push(StoreDevtoolsModule.instrument({
-		maxAge: 25 //  Retains last 25 states.
-	}));
-	console.log('NGRX Store Dev-tools Module enabled');
-}
-
 @NgModule({
-	imports,
+	imports: [
+		BrowserModule,
+		StoreModule.forRoot({}),
+		EffectsModule.forRoot([]),
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),
+		AnsynModule,
+		LoginModule,
+		AppRoutingModule
+	],
 	providers: [
 		{
 			provide: ErrorHandler,
@@ -50,9 +32,4 @@ if (configuration.production) {
 })
 
 export class AppAnsynModule {
-	constructor(protected loggerService: LoggerService) {
-		window.onerror = function (e) {
-			loggerService.error(e.toString());
-		};
-	}
 }

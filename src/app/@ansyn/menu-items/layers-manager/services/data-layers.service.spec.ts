@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { DataLayersService, layersConfig } from './data-layers.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';

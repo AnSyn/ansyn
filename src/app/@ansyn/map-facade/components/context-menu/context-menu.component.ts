@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostBinding, HostListener, Inject, OnInit, Renderer2 } from '@angular/core';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	ContextMenuDisplayAction,
 	ContextMenuShowAction,

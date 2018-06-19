@@ -11,9 +11,10 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/core.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { ICoreConfig } from '@ansyn/core/models/core.config.model';
+import { pluck, take } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-welcome-notification',
@@ -27,8 +28,10 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 	public config: any = {};
 
 	wasWelcomeNotificationShown$: Observable<boolean> = this.store$.select(coreStateSelector)
-		.take(1)
-		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown');
+		.pipe(
+			take(1),
+			pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
+		)
 
 	// Make the DOM element focusable
 	@HostBinding('attr.tabindex')

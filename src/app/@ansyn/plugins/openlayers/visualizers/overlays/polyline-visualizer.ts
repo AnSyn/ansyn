@@ -13,7 +13,7 @@ import Select from 'ol/interaction/select';
 import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { Inject } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
@@ -32,6 +32,7 @@ import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { empty } from 'rxjs';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -57,7 +58,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			} else if (this.getEntities().length > 0) {
 				this.clearEntities();
 			}
-			return Observable.empty();
+			return empty();
 		});
 
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);

@@ -2,7 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { casesConfig, CasesService } from './cases.service';
 import { Case } from '../models/case.model';
 import { UrlSerializer } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import 'rxjs/add/observable/of';
 import { UUID } from 'angular2-uuid';

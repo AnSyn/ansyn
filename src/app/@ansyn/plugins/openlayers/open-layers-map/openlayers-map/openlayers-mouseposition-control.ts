@@ -1,6 +1,6 @@
 import MousePosition from 'ol/control/mouseposition';
 import { Point } from 'geojson';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as turf from '@turf/turf';
 import { Subscription } from 'rxjs/Subscription';
 import Projection from 'ol/proj/projection';

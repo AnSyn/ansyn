@@ -7,7 +7,7 @@ import {
 	PullActiveCenter,
 	SetPinLocationModeAction
 } from '../../actions/tools.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';

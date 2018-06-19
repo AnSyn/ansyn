@@ -8,7 +8,7 @@ import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { isEqual } from 'lodash';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-tree-view',

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -10,7 +10,6 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
-import '@ansyn/core/utils/clone-deep';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import {
 	ImageryCreatedAction,

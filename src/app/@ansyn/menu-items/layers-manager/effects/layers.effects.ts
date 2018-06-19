@@ -9,7 +9,7 @@ import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { map, mergeMap } from 'rxjs/operators';

@@ -1,0 +1,10 @@
+{
+	"preview":{
+		"id": "fe8e6a07-b96a-42a3-b146-c348a0615965",
+		"name": "Hiking Trails",
+		"url": "https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png",
+		"type": "Static"
+	},
+	"data":{
+	}
+}

@@ -2,10 +2,10 @@ import { ILayerState } from './layers.reducer';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { FeatureCollection } from 'geojson';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export interface ILayerState {
-	layers: Layer[];
+	layers: ILayer[];
 	displayAnnotationsLayer: boolean;
 	annotationsLayer: FeatureCollection<any>;
 	selectedLayersIds: string[];

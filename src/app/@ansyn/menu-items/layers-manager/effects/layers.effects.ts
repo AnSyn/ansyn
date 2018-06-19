@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { map, mergeMap } from 'rxjs/operators';
 
 
@@ -31,7 +31,7 @@ export class LayersEffects {
 		.ofType(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD)
 		.pipe(
 			mergeMap(() => this.dataLayersService.getAllLayersInATree()),
-			map((layers: Layer[]) => new LayerCollectionLoadedAction(layers))
+			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
 		);
 
 

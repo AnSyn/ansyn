@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ILayerState, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import {
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
@@ -37,7 +37,7 @@ import { Observable } from 'rxjs/Observable';
 })
 
 export class LayerCollectionComponent implements OnInit {
-	@Input() collection: Layer[];
+	@Input() collection: ILayer[];
 	activeLayersIds = [];
 	selectedLayers$: Observable<any> = this.store.select(selectSelectedLayersIds)
 		.distinctUntilChanged()
@@ -58,7 +58,7 @@ export class LayerCollectionComponent implements OnInit {
 	constructor(public store: Store<ILayerState>) {
 	}
 
-	public onCheckboxClicked(event, layer: Layer): void {
+	public onCheckboxClicked(event, layer: ILayer): void {
 		if (event.target.checked) {
 			this.store.dispatch(new UpdateSelectedLayersIds([...this.activeLayersIds, layer.id]));
 		} else {

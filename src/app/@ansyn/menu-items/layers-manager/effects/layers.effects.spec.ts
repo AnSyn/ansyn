@@ -12,7 +12,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { Layer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -56,7 +56,7 @@ describe('LayersEffects', () => {
 	});
 
 	it('beginLayerTreeLoad$ should dispatch LayerCollectionLoadedAction', () => {
-		let staticLayer: Layer = {
+		let staticLayer: ILayer = {
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
 			name: 'staticLayer',

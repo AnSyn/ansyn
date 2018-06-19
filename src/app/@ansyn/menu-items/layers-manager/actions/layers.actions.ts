@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export const LayersActionTypes = {
 	BEGIN_LAYER_COLLECTION_LOAD: 'BEGIN_LAYER_COLLECTION_LOAD',
@@ -32,7 +32,7 @@ export class BeginLayerCollectionLoadAction implements Action {
 export class LayerCollectionLoadedAction implements Action {
 	type = LayersActionTypes.LAYER_COLLECTION_LOADED;
 
-	constructor(public payload: Layer[]) {
+	constructor(public payload: ILayer[]) {
 	}
 }
 

@@ -6,7 +6,7 @@ export enum LayerType {
 	complex = 'Complex'
 }
 
-export interface Layer extends Entity {
+export interface ILayer extends Entity {
 	url: string;
 	name: string;
 	type: LayerType;

@@ -52,7 +52,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 @Injectable()
 export class MapAppEffects {
@@ -202,9 +202,9 @@ export class MapAppEffects {
 	 * @ofType combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)
 	 */
 	@Effect({ dispatch: false })
-	updateSelectedLayers$: Observable<[Layer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
+	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
-			tap(([layers, selectedLayersIds]: [Layer[], string[]]): void => {
+			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
 				const providers = this.imageryProviderService.mapProviders;
 				Object.values(providers)
 					.filter((provider) => provider.mapComponent.mapClass.groupLayers.get('layers'))

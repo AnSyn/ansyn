@@ -26,7 +26,7 @@
 		"start:builder-dev": "ng s --app builder-dev",
 		"test": "ng test",
 		"test:e2e": "node scripts/generate-config.js && ng e2e",
-		"test:single-run": "ng test --single-run",
+		"test:single-run": "ng test --watch=false",
 		"testCompile": "cd build && gulp testCompile"
 	},
 	"dependencies": {

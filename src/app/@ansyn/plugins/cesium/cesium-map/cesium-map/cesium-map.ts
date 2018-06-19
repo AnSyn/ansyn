@@ -1,7 +1,7 @@
 import { IMap } from '@ansyn/imagery/model/imap';
 import { EventEmitter, Injectable } from '@angular/core';
 import { GeoJsonObject, Point } from 'geojson';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 export const CesiumMapName = 'cesium';
 

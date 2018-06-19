@@ -8,7 +8,7 @@ import {
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	ComboBoxesProperties,
 	GEO_FILTERS,

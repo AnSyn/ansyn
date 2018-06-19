@@ -53,8 +53,8 @@ Thumbs.db
 /out/chrome/*
 
 yarn-error.log
-package-lock.json
-
+#package-lock.json
+yarn.lock
 /e2e/REPORTS
 *.patch
 

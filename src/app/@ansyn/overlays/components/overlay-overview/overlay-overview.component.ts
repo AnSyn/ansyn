@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } f
 import { Subscription } from 'rxjs/Subscription';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';

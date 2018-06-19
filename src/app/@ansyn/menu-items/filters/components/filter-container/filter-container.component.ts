@@ -1,7 +1,7 @@
 import { UpdateFilterAction } from '../../actions/filters.actions';
 import { Store } from '@ngrx/store';
 import { Filters, IFiltersState, selectFilters, selectShowOnlyFavorites } from '../../reducer/filters.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';

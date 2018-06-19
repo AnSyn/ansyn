@@ -4,7 +4,6 @@ import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { Entity } from '@ansyn/core/services/storage/storage.service';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { DilutedOverlay } from '@ansyn/core/models/overlay.model';
 
 export interface CasePreview extends Entity {
@@ -154,4 +153,4 @@ export interface CaseMapState extends DilutedCaseMapState {
 	data: CaseMapData;
 }
 
-export const defaultMapType = OpenlayersMapName;
+export const defaultMapType = 'openLayersMap';

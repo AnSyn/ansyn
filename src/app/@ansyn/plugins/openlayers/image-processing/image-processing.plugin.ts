@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import ImageLayer from 'ol/layer/image';
 import { OpenLayersImageProcessing } from '@ansyn/plugins/openlayers/image-processing/image-processing';
 import Raster from 'ol/source/raster';

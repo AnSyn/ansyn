@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
 import { UUID } from 'angular2-uuid';
 

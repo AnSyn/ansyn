@@ -1,6 +1,6 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';

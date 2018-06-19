@@ -15,7 +15,7 @@ import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 

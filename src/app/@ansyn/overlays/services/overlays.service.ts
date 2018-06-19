@@ -1,6 +1,6 @@
 import { BaseOverlaySourceProvider, StartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Overlay } from '../models/overlay.model';
 import { IOverlaysState, OverlayDrop, TimelineRange } from '../reducers/overlays.reducer';
 import { OverlaysCriteria, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
@@ -32,9 +32,9 @@ export class OverlaysService {
 
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
-	 * @param {Map<string, T>} items
-	 * @param {string[]} ids
-	 * @param {string[]} properties
+	 * @param items
+	 * @param ids
+	 * @param properties
 	 */
 	static pluck<T>(items: Map<string, T>, ids: string[], properties: string[]) {
 		return ids

@@ -3,7 +3,7 @@ import { OpenlayersMapComponent } from './openlayers-map.component';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersProjectionService } from '../projection/open-layers-projection.service';
 import { cold } from 'jasmine-marbles';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
 

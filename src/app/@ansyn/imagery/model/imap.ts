@@ -3,8 +3,11 @@ import { Observable } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { GeoJsonObject, Point } from 'geojson';
+import Group from 'ol/layer/group';
 
 export abstract class IMap<T = any> {
+	static groupLayers = new Map<string, any>();
+
 	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
 	mapType: string;
@@ -14,7 +17,7 @@ export abstract class IMap<T = any> {
 	static addGroupLayer(layer: any, groupName: string) {
 	}
 
-	static removeGroupLayer(layer: any, groupName: string) {
+	static removeGroupLayer(id: string, groupName: string) {
 	}
 
 	static addGroupVectorLayer(layer: any, groupName: string) {

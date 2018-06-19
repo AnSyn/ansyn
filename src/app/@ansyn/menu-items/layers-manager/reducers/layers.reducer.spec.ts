@@ -1,47 +1,22 @@
-import {
-	LayerCollectionLoadedAction,
-	ToggleDisplayAnnotationsLayer
-} from '../actions/layers.actions';
+import { LayerCollectionLoadedAction, ToggleDisplayAnnotationsLayer } from '../actions/layers.actions';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
-import { Layer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('LayersReducer', () => {
 
-	it('LAYER_COLLECTION_LOADED action should add the new tree to the state', () => {
-		let staticLayer: Layer = {
+	it('LAYER_COLLECTION_LOADED action should add the new layers to the state', () => {
+		let staticLayer: ILayer = {
 			url: 'fakeStaticUrl',
-			name: 'staticLayer',
 			id: 'staticLayerId',
-			isChecked: false
-		};
-		let dynamicLayer: Layer = {
-			url: 'fakeDynamicUrl',
-			name: 'dynamicLayer',
-			id: 'dynamicLayerId',
-			isChecked: false
-		};
-		let complexLayer: Layer = {
-			url: 'fakeComplexUrl',
-			name: 'complexLayers',
-			id: 'complexLayersId',
-			isChecked: false
+			name: 'staticLayer',
+			type: LayerType.static,
+			creationTime: new Date()
 		};
 
-		let layers: Layer[] = [staticLayer, dynamicLayer, complexLayer];
-		const payload = [
-			{
-				type: LayerType.static,
-				dataLayers: layers,
-				id: '',
-				name: 'FakeName',
-				creationTime: new Date(),
-				dataLayerContainers: []
-			}
-		];
-		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction(payload);
+		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);
-		expect(result.layersContainers).toEqual(payload);
+		expect(result.layers).toEqual([staticLayer]);
 	});
 
 	describe('ANNOTATIONS', () => {

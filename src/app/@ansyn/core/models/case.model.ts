@@ -113,7 +113,8 @@ export interface CaseFacetsState {
 
 export interface CaseLayersState {
 	annotationsLayer: FeatureCollection<any>,
-	displayAnnotationsLayer?: boolean
+	displayAnnotationsLayer?: boolean,
+	activeLayersIds: string[]
 }
 
 export interface DilutedCaseMapsState {

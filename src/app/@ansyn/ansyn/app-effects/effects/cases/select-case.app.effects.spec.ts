@@ -7,7 +7,7 @@ import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/sel
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer
+	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -77,7 +77,7 @@ describe('SelectCaseAppEffects', () => {
 				dataInputFilters: CaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: Overlay[] = [],
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} },
+				layers: CaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
 				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
 				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
@@ -107,7 +107,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijk)--', {
+			const expectedResult = cold('--(abcdefghijkl)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
@@ -118,8 +118,10 @@ describe('SelectCaseAppEffects', () => {
 				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				j: new UpdateFacetsAction(facets),
-				k: new SetContextParamsAction({ contextEntities })
-			});
+				k: new UpdateSelectedLayersIds([]),
+				l: new SetContextParamsAction({ contextEntities })
+
+		});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);
 		});

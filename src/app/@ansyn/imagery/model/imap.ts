@@ -1,10 +1,13 @@
 import { EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { GeoJsonObject, Point } from 'geojson';
+import Group from 'ol/layer/group';
 
 export abstract class IMap<T = any> {
+	static groupLayers = new Map<string, any>();
+
 	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
 	mapType: string;
@@ -14,7 +17,7 @@ export abstract class IMap<T = any> {
 	static addGroupLayer(layer: any, groupName: string) {
 	}
 
-	static removeGroupLayer(layer: any, groupName: string) {
+	static removeGroupLayer(id: string, groupName: string) {
 	}
 
 	static addGroupVectorLayer(layer: any, groupName: string) {
@@ -29,8 +32,8 @@ export abstract class IMap<T = any> {
 	abstract initMap(element: HTMLElement, layers?: any, position?: CaseMapPosition): Observable<boolean>;
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
-	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
-	 * @param {Point[]} extent The extent (bounding box points) of the map at ESPG:4326
+	 * @param layer The new layer to set the view with. this layer projection will be the views projection
+	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
 	abstract resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean>;
 

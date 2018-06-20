@@ -6,7 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
 import { ContextService } from '@ansyn/context/services/context.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { AnsynBuilderModule } from '@builder/api/ansyn-builder.module';
 import { WindowLayout } from '@builder/reducers/builder.reducer';

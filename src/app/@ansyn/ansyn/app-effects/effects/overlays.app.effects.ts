@@ -1,6 +1,6 @@
 import { Actions, Effect } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,

@@ -5,7 +5,6 @@ import ScaleLine from 'ol/control/scaleline';
 import Group from 'ol/layer/group';
 import olGeoJSON from 'ol/format/geojson';
 import OLGeoJSON from 'ol/format/geojson';
-import Point from 'ol/geom/point';
 import Vector from 'ol/source/vector';
 import OSM from 'ol/source/osm';
 import Layer from 'ol/layer/layer';
@@ -18,13 +17,16 @@ import * as turf from '@turf/turf';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { IMap } from '@ansyn/imagery/model/imap';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/of';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -49,21 +51,23 @@ export class OpenLayersMap extends IMap<OLMap> {
 			throw new Error('Tried to add a layer to a non-existent group');
 		}
 
-		group.getLayers().getArray().push(layer);
+		group.getLayers().push(layer);
 	}
 
-	static removeGroupLayer(layer: any, groupName: string) {
+	static removeGroupLayer(id: string, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (!group) {
-			throw new Error('Tried to add a layer to a non-existent group');
+			throw new Error('Tried to remove a layer to a non-existent group');
 		}
 
 		const layersArray: any[] = group.getLayers().getArray();
-		let removeLayer = layersArray.indexOf(layersArray.filter(l => l.id === layer.id));
-		group.getLayers().getArray().splice(removeLayer, 1);
+		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
+		if (removeIdx >= 0) {
+			group.getLayers().removeAt(removeIdx);
+		}
 	}
 
-	static addGroupVectorLayer(layer: any, groupName: string) {
+	static addGroupVectorLayer(layer: ILayer, groupName: string) {
 		const vectorLayer = new TileLayer({
 			zIndex: 1,
 			source: new OSM({
@@ -75,8 +79,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 				crossOrigin: null
 			})
 		});
-		(<any>vectorLayer).id = layer.id;
-
+		vectorLayer.set('id', layer.id);
 		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
 	}
 
@@ -131,7 +134,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	createView(layer): View {
 		return new View({
-			projection: layer.getSource().getProjection(),
+			projection: layer.getSource().getProjection()
 		});
 	}
 

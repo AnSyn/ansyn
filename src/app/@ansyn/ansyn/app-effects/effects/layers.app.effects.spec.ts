@@ -5,15 +5,12 @@ import {
 	LayersReducer,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { BeginLayerCollectionLoadAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { cold, hot } from 'jasmine-marbles';
 import {
 	casesFeatureKey,
 	CasesReducer,

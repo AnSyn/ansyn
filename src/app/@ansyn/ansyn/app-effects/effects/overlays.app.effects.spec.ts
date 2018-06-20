@@ -19,7 +19,7 @@ import {
 	selectDropMarkup, selectFilteredOveralys,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	IToolsState,
 	toolsFeatureKey,

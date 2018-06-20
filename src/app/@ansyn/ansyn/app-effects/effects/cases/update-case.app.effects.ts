@@ -3,14 +3,14 @@ import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Case } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
 import {
-	selectDisplayAnnotationsLayer
+	selectDisplayAnnotationsLayer, selectSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectAnnotationLayer, selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
@@ -21,6 +21,7 @@ import { selectContextEntities, selectContextsParams } from '@ansyn/context/redu
 @Injectable()
 export class UpdateCaseAppEffects {
 	events: any[] = [
+		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectComboBoxesProperties),
@@ -47,6 +48,7 @@ export class UpdateCaseAppEffects {
 		.filter(([events, selectedCase]) => Boolean(selectedCase))    /* SelectCaseAction(selectedCase) already triggered */
 		.map(([events, selectedCase]: [any, any]) => {
 			const [
+				activeLayersIds,
 				facets,
 				favoriteOverlays,
 				{ timeFilter, orientation }, /* -> comboBoxesProperties */
@@ -79,6 +81,7 @@ export class UpdateCaseAppEffects {
 						activeMapId
 					},
 					layers: {
+						activeLayersIds,
 						annotationsLayer,
 						displayAnnotationsLayer
 					},

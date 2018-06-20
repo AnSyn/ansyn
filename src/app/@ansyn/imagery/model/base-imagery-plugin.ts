@@ -1,8 +1,9 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { IMap } from '@ansyn/imagery/model/imap';
+import { of } from 'rxjs';
 
 export class BaseImageryPlugin {
 	subscriptions: Subscription[] = [];
@@ -19,7 +20,7 @@ export class BaseImageryPlugin {
 	}
 
 	onResetView(): Observable<boolean> {
-		return Observable.of(true);
+		return of(true);
 	};
 
 	dispose() {

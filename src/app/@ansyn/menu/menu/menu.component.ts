@@ -16,7 +16,7 @@ import {
 	ToggleIsPinnedAction,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IMenuState } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';

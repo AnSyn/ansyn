@@ -5,7 +5,6 @@ import { Entity } from '@ansyn/core/services/storage/storage.service';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { DilutedOverlay } from '@ansyn/core/models/overlay.model';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export interface CasePreview extends Entity {
 	creationTime: Date;

@@ -69,4 +69,9 @@ export class LayerCollectionComponent implements OnInit {
 	public selectOnly(layerId: string) {
 		this.store.dispatch(new UpdateSelectedLayersIds([layerId]));
 	}
+
+	public showAll(collection: ILayer[]) {
+		const layerIds: string[] = collection.map((layer) => {return layer.id});
+		this.store.dispatch(new UpdateSelectedLayersIds(layerIds));
+	}
 }

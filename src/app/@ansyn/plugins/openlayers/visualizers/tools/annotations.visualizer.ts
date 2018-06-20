@@ -10,7 +10,7 @@ import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
 import {
-	ImageryVisualizer, IVisualizerEntity,
+	ImageryVisualizer,
 	VisualizerInteractions
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep } from 'lodash';
@@ -38,6 +38,7 @@ import { SetAnnotationMode, SetAnnotationsLayer } from '@ansyn/menu-items/tools/
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

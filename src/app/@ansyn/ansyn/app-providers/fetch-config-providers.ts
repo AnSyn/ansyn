@@ -6,7 +6,7 @@ import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.servic
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { IdahoOverlaysSourceConfig } from './overlay-source-providers/idaho-source-provider';
-import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { MultipleOverlaysSourceConfig } from './overlay-source-providers/multiple-source-provider';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';

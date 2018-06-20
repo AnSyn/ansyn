@@ -53,7 +53,7 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
-import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';

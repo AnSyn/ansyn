@@ -1,7 +1,7 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';

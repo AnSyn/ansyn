@@ -9,7 +9,7 @@ import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
-import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
+import { VisualizerStates, VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
 import {
@@ -22,12 +22,6 @@ export interface FeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
 }
-
-export const VisualizerStates = {
-	INITIAL: 'initial',
-	HOVER: 'hover'
-};
-
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isHidden = false;

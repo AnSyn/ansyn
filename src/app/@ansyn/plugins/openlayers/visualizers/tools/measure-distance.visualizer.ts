@@ -1,4 +1,4 @@
-import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import Feature from 'ol/feature';
 import Draw from 'ol/interaction/draw';
 import Text from 'ol/style/text';
@@ -25,6 +25,7 @@ import { Store } from '@ngrx/store';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

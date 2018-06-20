@@ -39,12 +39,12 @@ import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import {
 	ContextParams,
-	DisplayedOverlay,
 	selectContextEntities,
 	selectContextsParams
 } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContextEntity } from '@ansyn/core/models/case.model';
+import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 
 @Injectable()
 export class OverlaysAppEffects {

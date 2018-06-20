@@ -52,10 +52,11 @@ import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/cor
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import {
-	contextFeatureSelector, contextInitialState, DisplayedOverlay,
+	contextFeatureSelector, contextInitialState,
 	selectContextsParams
 } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

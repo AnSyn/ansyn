@@ -1,4 +1,4 @@
-import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import {
 	ImageryVisualizer,
 	VisualizerInteractions
@@ -32,6 +32,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { empty } from 'rxjs';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

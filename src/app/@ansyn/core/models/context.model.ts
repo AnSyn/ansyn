@@ -1,8 +1,12 @@
 import { CaseFacetsState, CaseRegionState, CaseTimeState } from './case.model';
 import { Entity } from '@ansyn/core/services/storage/storage.service';
-import { DisplayedOverlay } from '@ansyn/context/reducers/context.reducer';
 
-export interface Context extends Entity{
+export enum DisplayedOverlay {
+	nearest = 'nearest',
+	latest = 'latest',
+}
+
+export interface Context extends Entity {
 	id: string;
 	name: string;
 	creationTime: Date;

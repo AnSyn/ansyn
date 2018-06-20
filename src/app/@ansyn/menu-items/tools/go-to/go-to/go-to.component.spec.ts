@@ -20,6 +20,7 @@ describe('GoToComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [GoToModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), CoreModule, EffectsModule.forRoot([])],
 			providers: [
+				ProjectionConverterService,
 				{ provide: LoggerConfig, useValue: {} },
 				{
 					provide: toolsConfig, useValue: {

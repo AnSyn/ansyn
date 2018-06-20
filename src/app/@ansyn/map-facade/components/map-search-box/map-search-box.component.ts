@@ -1,14 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { GeocoderService } from '@ansyn/core/services/geocoder.service';
+import { Point } from 'geojson';
 
 @Component({
 	selector: 'ansyn-map-search-box',
 	templateUrl: './map-search-box.component.html',
 	styleUrls: ['./map-search-box.component.less']
 })
-export class MapSearchBoxComponent implements OnInit {
+export class MapSearchBoxComponent {
 	@Input() mapId: string;
 
 	searchString: string;
@@ -19,21 +20,17 @@ export class MapSearchBoxComponent implements OnInit {
 		this.reset();
 	}
 
-	ngOnInit() {
-		this.communicator = this.imageryCommunicatorService.provide(this.mapId);
-	}
-
 	reset() {
 		this.searchString = '';
 	}
 
 	onSubmit() {
-		console.log(this.searchString);
+		this.communicator = this.imageryCommunicatorService.provide(this.mapId);
 		this.geocoderService.getLocation$(this.searchString)
-			// .do(x => console.log(x))
-			// .map(res => res.json().results)
-			.do(x => console.log(x));
-		this.reset();
+			.do((point: Point) => this.communicator.setCenter(point)
+				.take(1).subscribe())
+			.take(1).subscribe()
+		;
 	}
 
 }

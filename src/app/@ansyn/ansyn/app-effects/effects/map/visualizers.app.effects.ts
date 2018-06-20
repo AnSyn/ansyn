@@ -1,6 +1,6 @@
 import { Actions, Effect } from '@ngrx/effects';
 import { differenceWith } from 'lodash';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../../app.effects.module';
 import { Store } from '@ngrx/store';
@@ -16,7 +16,6 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { ContextEntityVisualizer } from '../../../app-providers/app-visualizers/context-entity.visualizer';
 import {
 	DrawOverlaysOnMapTriggerAction,
 	MapActionTypes,
@@ -24,6 +23,7 @@ import {
 } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { BackToWorldView, ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { ContextEntityVisualizer } from '@ansyn/plugins/openlayers/visualizers/contexts/context-entity.visualizer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Injectable()

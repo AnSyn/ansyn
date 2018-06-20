@@ -4,7 +4,7 @@ import { ActiveImageryMouseEnter, ActiveImageryMouseLeave, SynchronizeMapsAction
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-imagery-container',

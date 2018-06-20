@@ -2,7 +2,7 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import olFeature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
 import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';

@@ -3,7 +3,7 @@ import { Action, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';

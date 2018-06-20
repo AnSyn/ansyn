@@ -8,7 +8,7 @@ import {
 	ViewChild
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Case } from '../../models/case.model';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';

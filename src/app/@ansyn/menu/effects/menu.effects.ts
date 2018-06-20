@@ -4,7 +4,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/share';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { MenuActionTypes } from '../actions/menu.actions';
 
 @Injectable()

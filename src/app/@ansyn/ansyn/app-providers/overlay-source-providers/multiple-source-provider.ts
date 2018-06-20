@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider, DateRange, IFetchParams, OverlayFilter,

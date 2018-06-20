@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	CopySelectedCaseLinkAction,
 	StatusBarActionsTypes,
@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import '@ansyn/core/utils/clone-deep';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';

@@ -23,7 +23,6 @@
 				"url": "http://{a-c}.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png",
 				"isChecked": false
 			}
-		],
-		"dataLayerContainers": []
+		]
 	}
 }

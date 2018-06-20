@@ -1,5 +1,5 @@
 import { toDegrees } from '@ansyn/core/utils/math';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';

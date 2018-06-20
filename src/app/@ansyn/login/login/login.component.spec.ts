@@ -4,7 +4,7 @@ import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/catch';
 

@@ -5,7 +5,7 @@ import Style from 'ol/style/style';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IMap } from '@ansyn/imagery/model/imap';

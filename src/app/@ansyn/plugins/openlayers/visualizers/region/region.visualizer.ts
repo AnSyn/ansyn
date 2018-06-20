@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import * as turf from '@turf/turf';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
@@ -15,6 +15,7 @@ import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/ac
 import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { empty } from 'rxjs';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -78,13 +79,13 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	drawChanges([geoFilter, region, geoFilterIndicator]) {
 		if (!geoFilterIndicator) {
 			this.clearEntities();
-			return Observable.empty();
+			return empty();
 		}
 		if (geoFilter === this.geoFilter) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();
-		return Observable.empty();
+		return empty();
 	}
 
 	onDrawEndEvent({ feature }) {

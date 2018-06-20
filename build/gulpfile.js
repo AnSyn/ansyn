@@ -56,7 +56,7 @@ gulp.task('copy-public-api', function () {
 
 	return gulp.src([
 		'../README.md',
-		'../public_api.ts',
+		'./public_api.ts',
 	])
 		.pipe(gulp.dest('src-dist'));
 

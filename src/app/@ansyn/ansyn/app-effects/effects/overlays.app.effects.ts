@@ -1,15 +1,17 @@
 import { Actions, Effect } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
-	OverlaysActionTypes, SetFilteredOverlaysAction,
-	SetHoveredOverlayAction
+	OverlaysActionTypes,
+	SetFilteredOverlaysAction,
+	SetHoveredOverlayAction,
+	SetSpecialObjectsActionStore
 } from '@ansyn/overlays/actions/overlays.actions';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
@@ -20,7 +22,7 @@ import {
 	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { Overlay, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import {
 	RemovePendingOverlayAction,
 	SetPendingOverlaysAction,
@@ -35,8 +37,14 @@ import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { ContextParams, DisplayedOverlay, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
+import {
+	ContextParams,
+	DisplayedOverlay,
+	selectContextEntities,
+	selectContextsParams
+} from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { IContextEntity } from '@ansyn/core/models/case.model';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -198,7 +206,10 @@ export class OverlaysAppEffects {
 			return [overlay];
 		}
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
-		return (<any>sourceProvider).getThumbnailUrl(overlay, position).map(thumbnailUrl => ({ ...overlay, thumbnailUrl }));
+		return (<any>sourceProvider).getThumbnailUrl(overlay, position).map(thumbnailUrl => ({
+			...overlay,
+			thumbnailUrl
+		}));
 	});
 	private getHoveredOverlayAction = map((overlay: Overlay) => new SetHoveredOverlayAction(overlay));
 
@@ -219,6 +230,18 @@ export class OverlaysAppEffects {
 				return Observable.of(err);
 			})
 		);
+
+	@Effect()
+	setSpecialObjectsFromContextEntities$: Observable<any> = this.store$.select(selectContextEntities)
+		.filter((contextEntities: IContextEntity[]) => Boolean(contextEntities))
+		.map((contextEntities: IContextEntity[]): Action => {
+			const specialObjects = contextEntities.map(contextEntity => ({
+				id: contextEntity.id,
+				date: contextEntity.date,
+				shape: 'star'
+			} as OverlaySpecialObject));
+			return new SetSpecialObjectsActionStore(specialObjects);
+		});
 
 	getSourceProvider(sType) {
 		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);

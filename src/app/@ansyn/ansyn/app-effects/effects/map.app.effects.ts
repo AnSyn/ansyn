@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable, ObservableInput } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -10,29 +10,20 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	LayersActionTypes,
-	SelectLayerAction,
-	UnselectLayerAction
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import '@ansyn/core/utils/clone-deep';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/observable/fromPromise';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import {
-	ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion,
+	ImageryCreatedAction,
+	MapActionTypes,
+	SetIsLoadingAcion,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
-	StartMouseShadow,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
@@ -57,46 +48,58 @@ import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { map, mergeMap } from 'rxjs/operators';
-import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/startWith';
+import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 @Injectable()
 export class MapAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.startWith(null)
-		.pairwise()
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(this.onDisplayOverlayFilter.bind(this));
+		.pipe(
+			startWith(null),
+			pairwise(),
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			filter(this.onDisplayOverlayFilter.bind(this))
+		);
 
 	@Effect()
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
-		.filter((data) => this.displayShouldSwitch(data))
-		.switchMap(this.onDisplayOverlay.bind(this));
+		.pipe(
+			filter((data) => this.displayShouldSwitch(data)),
+			switchMap(this.onDisplayOverlay.bind(this))
+		);
+
 
 	@Effect()
 	onDisplayOverlayMergeMap$ = this.onDisplayOverlay$
-		.filter((data) => !this.displayShouldSwitch(data))
-		.mergeMap(this.onDisplayOverlay.bind(this));
+		.pipe(
+			filter((data) => !this.displayShouldSwitch(data)),
+			mergeMap(this.onDisplayOverlay.bind(this))
+		);
 
 	@Effect()
 	onDisplayOverlayShowLoader$ = this.onDisplayOverlay$
-		.map(([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) => action)
-		.map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
-			mapId: payload.mapId, show: true, text: 'Loading Overlay'
-		}));
+		.pipe(
+			map(([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) => action),
+			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
+				mapId: payload.mapId, show: true, text: 'Loading Overlay'
+			}))
+		);
 
 	@Effect()
-		onDisplayOverlayHideLoader$ = this.actions$
-			.ofType<DisplayOverlayAction>(
-				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-				CoreActionTypes.BACK_TO_WORLD_VIEW
-			)
-			.map(({ payload}: DisplayOverlayAction) => new SetIsLoadingAcion({
+	onDisplayOverlayHideLoader$ = this.actions$
+		.ofType<DisplayOverlayAction>(
+			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+			CoreActionTypes.BACK_TO_WORLD_VIEW
+		)
+		.pipe(
+			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
 				mapId: payload.mapId, show: false
-			}));
+			}))
+		);
 
 	/**
 	 * @type Effect
@@ -109,18 +112,19 @@ export class MapAppEffects {
 	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState])
-		.filter(([activeMap]: [CaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay))
-		.mergeMap(([activeMap, action, mapState]: [CaseMapState, SetManualImageProcessing, IMapState]) => {
-			const updatedMapList = [...mapState.mapsList];
-			activeMap.data.imageManualProcessArgs = action.payload;
-			const overlayId = activeMap.data.overlay.id;
-			return [
-				new SetMapsDataActionStore({ mapsList: updatedMapList }),
-				new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
-			];
-		});
+		.pipe(
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
+			filter(([activeMap]: [CaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
+			mergeMap(([activeMap, action, mapState]: [CaseMapState, SetManualImageProcessing, IMapState]) => {
+				const updatedMapList = [...mapState.mapsList];
+				activeMap.data.imageManualProcessArgs = action.payload;
+				const overlayId = activeMap.data.overlay.id;
+				return [
+					new SetMapsDataActionStore({ mapsList: updatedMapList }),
+					new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
+				];
+			}));
 
 	/**
 	 * @type Effect
@@ -133,21 +137,23 @@ export class MapAppEffects {
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => Boolean(mapsState.mapsList) && mapsState.mapsList.length > 0)
-		.map(([action, mapsState]: [ImageryCreatedAction, IMapState]) => {
-			return mapsState.mapsList
-				.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
-		})
-		.filter((caseMapState: CaseMapState) => Boolean(caseMapState))
-		.map((caseMapState: CaseMapState) => {
-			startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
-			return new DisplayOverlayAction({
-				overlay: caseMapState.data.overlay,
-				mapId: caseMapState.id,
-				forceFirstDisplay: true
-			});
-		});
+		.pipe(
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => Boolean(mapsState.mapsList) && mapsState.mapsList.length > 0),
+			map(([action, mapsState]: [ImageryCreatedAction, IMapState]) => {
+				return mapsState.mapsList
+					.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
+			}),
+			filter((caseMapState: CaseMapState) => Boolean(caseMapState)),
+			map((caseMapState: CaseMapState) => {
+				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
+				return new DisplayOverlayAction({
+					overlay: caseMapState.data.overlay,
+					mapId: caseMapState.id,
+					forceFirstDisplay: true
+				});
+			})
+		);
 
 	/**
 	 * @type Effect
@@ -159,14 +165,16 @@ export class MapAppEffects {
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
-		.filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay))
-		.map((action: DisplayOverlayAction) => {
-			return new RequestOverlayByIDFromBackendAction({
-				overlayId: action.payload.overlay.id,
-				sourceType: action.payload.overlay.sourceType,
-				mapId: action.payload.mapId
-			});
-		});
+		.pipe(
+			filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay)),
+			map((action: DisplayOverlayAction) => {
+				return new RequestOverlayByIDFromBackendAction({
+					overlayId: action.payload.overlay.id,
+					sourceType: action.payload.overlay.sourceType,
+					mapId: action.payload.mapId
+				});
+			})
+		);
 
 
 	/**
@@ -178,48 +186,49 @@ export class MapAppEffects {
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
-		.do((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`))
-		.map((action) => new SetToastMessageAction({
-			toastText: statusBarToastMessages.showOverlayErrorToast,
-			showWarningIcon: true
-		}));
+		.pipe(
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
+			map((action) => new SetToastMessageAction({
+				toastText: statusBarToastMessages.showOverlayErrorToast,
+				showWarningIcon: true
+			}))
+		);
+
 
 	/**
 	 * @type Effect
-	 * @name addGroupLayer$
-	 * @ofType SelectLayerAction
+	 * @name updateSelectedLayers$
+	 * @ofType combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)
 	 */
 	@Effect({ dispatch: false })
-	addGroupLayer$: Observable<SelectLayerAction> = this.actions$
-		.ofType<SelectLayerAction>(LayersActionTypes.SELECT_LAYER)
-		.map((action: SelectLayerAction) => {
-			const providers = this.imageryProviderService.mapProviders;
-			Object.keys(providers).forEach(pName => {
-				const provider = providers[pName];
-				provider.mapComponent.mapClass.addGroupVectorLayer(action.payload, 'layers');
-			});
+	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
+		.pipe(
+			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
+				const providers = this.imageryProviderService.mapProviders;
+				Object.values(providers)
+					.filter((provider) => provider.mapComponent.mapClass.groupLayers.get('layers'))
+					.forEach((provider) => {
+						const displayedLayers: any = provider.mapComponent.mapClass.groupLayers.get('layers').getLayers().getArray();
 
-			return action;
-		});
+						/* remove layer if layerId not includes on selectLayers */
+						displayedLayers.forEach((layer) => {
+							const id = layer.get('id');
+							if (!selectedLayersIds.includes(id)) {
+								provider.mapComponent.mapClass.removeGroupLayer(id, 'layers');
+							}
+						});
 
-	/**
-	 * @type Effect
-	 * @name removeVectorLayer$
-	 * @ofType UnselectLayerAction
-	 * @dependencies map
-	 */
-	@Effect({ dispatch: false })
-	removeVectorLayer$: Observable<UnselectLayerAction> = this.actions$
-		.ofType(LayersActionTypes.UNSELECT_LAYER)
-		.map((action: UnselectLayerAction) => {
-			const providers = this.imageryProviderService.mapProviders;
-			Object.keys(providers).forEach(pName => {
-				const provider = providers[pName];
-				provider.mapComponent.mapClass.removeGroupLayer(action.payload, 'layers');
-			});
-
-			return action;
-		});
+						/* add layer if id includes on selectLayers but not on map */
+						selectedLayersIds.forEach((layerId) => {
+							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
+							if (!layer) {
+								const addLayer = layers.find(({ id }) => id === layerId);
+								provider.mapComponent.mapClass.addGroupVectorLayer(addLayer, 'layers');
+							}
+						});
+					});
+			})
+		);
 
 	/**
 	 * @type Effect
@@ -231,15 +240,17 @@ export class MapAppEffects {
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
-		.mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {
-			const key = AlertMsgTypes.overlayIsNotPartOfQuery;
-			return mapsList.map(({ data, id }) => {
-				const { overlay } = data;
-				const shouldRemoved = !overlay || filteredOverlays.includes(overlay.id);
-				return shouldRemoved ? new RemoveAlertMsg({ key, value: id }) : new AddAlertMsg({ key, value: id });
-			});
-		});
+		.pipe(
+			withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
+			mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {
+				const key = AlertMsgTypes.overlayIsNotPartOfQuery;
+				return mapsList.map(({ data, id }) => {
+					const { overlay } = data;
+					const shouldRemoved = !overlay || filteredOverlays.includes(overlay.id);
+					return shouldRemoved ? new RemoveAlertMsg({ key, value: id }) : new AddAlertMsg({ key, value: id });
+				});
+			})
+		);
 	/**
 	 * @type Effect
 	 * @name markupOnMapsDataChanges$
@@ -250,40 +261,42 @@ export class MapAppEffects {
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.mapsList && mapState.mapsList.length))
-		.map(([action, { mapsList, activeMapId }]: [Action, IMapState]) => {
-				const actives = [];
-				const displayed = [];
-				mapsList.forEach((map: CaseMapState) => {
-					if (Boolean(map.data.overlay)) {
-						if (map.id === activeMapId) {
-							actives.push(map.data.overlay.id);
-						} else {
-							displayed.push(map.data.overlay.id);
+		.pipe(
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.mapsList && mapState.mapsList.length)),
+			map(([action, { mapsList, activeMapId }]: [Action, IMapState]) => {
+					const actives = [];
+					const displayed = [];
+					mapsList.forEach((map: CaseMapState) => {
+						if (Boolean(map.data.overlay)) {
+							if (map.id === activeMapId) {
+								actives.push(map.data.overlay.id);
+							} else {
+								displayed.push(map.data.overlay.id);
+							}
 						}
-					}
-				});
-				return {
-					actives, displayed
-				};
-			}
-		)
-		.mergeMap(({ actives, displayed }) => [
-				new SetMarkUp({
-						classToSet: MarkUpClass.active,
+					});
+					return {
+						actives, displayed
+					};
+				}
+			),
+			mergeMap(({ actives, displayed }) => [
+					new SetMarkUp({
+							classToSet: MarkUpClass.active,
+							dataToSet: {
+								overlaysIds: actives
+							}
+						}
+					),
+					new SetMarkUp({
+						classToSet: MarkUpClass.displayed,
 						dataToSet: {
-							overlaysIds: actives
+							overlaysIds: displayed
 						}
-					}
-				),
-				new SetMarkUp({
-					classToSet: MarkUpClass.displayed,
-					dataToSet: {
-						overlaysIds: displayed
-					}
-				})
-			]
+					})
+				]
+			)
 		);
 
 	/**
@@ -294,11 +307,13 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
 		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
-		.map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId))
-		.do((communicator: CommunicatorEntity) => {
-			communicator.ActiveMap.toggleGroup('layers');
-			communicator.visualizers.forEach(v => v.toggleVisibility());
-		});
+		.pipe(
+			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
+			tap((communicator: CommunicatorEntity) => {
+				communicator.ActiveMap.toggleGroup('layers');
+				communicator.visualizers.forEach(v => v.toggleVisibility());
+			})
+		);
 
 
 	/**
@@ -312,12 +327,14 @@ export class MapAppEffects {
 	@Effect()
 	activeMapGeoRegistrationChanged$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.MAPS_LIST_CHANGED, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [Action, IMapState]) => {
-			const activeMapState = MapFacadeService.activeMap(mapState);
-			const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
-			return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
-		});
+		.pipe(
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			map(([action, mapState]: [Action, IMapState]) => {
+				const activeMapState = MapFacadeService.activeMap(mapState);
+				const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
+				return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
+			})
+		);
 
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;

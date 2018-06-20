@@ -1,7 +1,7 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { UpdateCaseAppEffects } from './update-case.app.effects';
 
 describe('UpdateCaseAppEffects', () => {

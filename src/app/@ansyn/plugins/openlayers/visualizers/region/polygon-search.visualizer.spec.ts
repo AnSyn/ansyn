@@ -4,7 +4,7 @@ import { PolygonSearchVisualizer } from '@ansyn/plugins/openlayers/visualizers/r
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { EffectsModule } from '@ngrx/effects';
 import { UUID } from 'angular2-uuid';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Feature, Polygon } from 'geojson';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 

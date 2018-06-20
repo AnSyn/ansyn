@@ -12,7 +12,7 @@ import {
 	TimelineRange
 } from '../../reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import {
@@ -133,7 +133,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		})
 		.do(drops => {
 			this.drops = drops;
-			if (this.drops.length) {
+			if (this.drops.length >= 2) {
 				this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops);
 			}
 			this.initEventDropsSequence();

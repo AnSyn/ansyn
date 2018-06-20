@@ -5,7 +5,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction

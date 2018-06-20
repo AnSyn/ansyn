@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { DataLayersService, layersConfig } from './data-layers.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -59,20 +59,6 @@ describe('DataLayersService', () => {
 					'id': 'layersContainerId_1234',
 					'name': 'Roads',
 					'type': 'Static',
-					'dataLayerContainers': [
-						{
-							'id': 'layersContainerId_1234',
-							'name': 'New York Roads',
-							'dataLayerContainers': [],
-							'dataLayers': [
-								{
-									'id': 'layerId_1234',
-									'name': 'Upper east side roads',
-									'isChecked': true
-								}
-							]
-						}
-					],
 					'dataLayers': [
 						{
 							'id': 'layerId_1234',

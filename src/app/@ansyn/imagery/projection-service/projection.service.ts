@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import { IMap } from '@ansyn/imagery/model/imap';
 

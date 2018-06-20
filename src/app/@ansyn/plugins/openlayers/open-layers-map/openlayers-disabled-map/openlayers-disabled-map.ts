@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as ol from 'openlayers';
 import Map from 'ol/map';
 import View from 'ol/view';

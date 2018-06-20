@@ -1,25 +1,20 @@
 import { ILayerState } from '../reducers/layers.reducer';
-import {
-	LayerCollectionLoadedAction,
-	LayersActions,
-	LayersActionTypes,
-	SelectLayerAction,
-	UnselectLayerAction
-} from '../actions/layers.actions';
+import { LayerCollectionLoadedAction, LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { Layer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { map, mergeMap } from 'rxjs/operators';
+
+
 
 @Injectable()
 export class LayersEffects {
@@ -34,20 +29,11 @@ export class LayersEffects {
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.ofType(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD)
-		.mergeMap(() => this.dataLayersService.getAllLayersInATree())
-		.withLatestFrom(this.store$.select(selectSelectedLayersIds))
-		.mergeMap(([layers, ids]: [Layer[], string[]]) => {
-			this.store$.dispatch(new LayerCollectionLoadedAction(layers));
-			let results = [];
-			layers.forEach((layerCollection: any) => {
-				if (ids.includes(layerCollection.id)) {
-					results.push(new SelectLayerAction(layerCollection));
-				} else {
-					results.push(new UnselectLayerAction(layerCollection));
-				}
-			});
-			return results;
-		});
+		.pipe(
+			mergeMap(() => this.dataLayersService.getAllLayersInATree()),
+			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
+		);
+
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,

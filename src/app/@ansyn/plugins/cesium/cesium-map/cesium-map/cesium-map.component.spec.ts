@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CesiumMapComponent } from './cesium-map.component';
 import { cold, hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map/cesium-map';
 import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
 

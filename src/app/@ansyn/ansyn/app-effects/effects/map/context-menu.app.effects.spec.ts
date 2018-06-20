@@ -15,7 +15,7 @@ import {
 } from '@ansyn/overlays/actions/overlays.actions';
 import * as turf from '@turf/turf';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Overlay } from '@ansyn/core/models/overlay.model';

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';

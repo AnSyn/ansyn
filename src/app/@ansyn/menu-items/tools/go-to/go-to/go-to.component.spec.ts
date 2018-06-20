@@ -7,7 +7,7 @@ import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.action
 import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 
 describe('GoToComponent', () => {

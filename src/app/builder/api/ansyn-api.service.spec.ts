@@ -3,7 +3,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';

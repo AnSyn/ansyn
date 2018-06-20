@@ -4,7 +4,7 @@ import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';

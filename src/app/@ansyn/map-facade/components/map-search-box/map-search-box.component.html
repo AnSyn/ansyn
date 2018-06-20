@@ -1,4 +1,5 @@
 <form (submit)="onSubmit()">
-	<input type="text" placeholder="Search" [(ngModel)]="searchString" name="searchString">
+	<input type="text" placeholder="Search" [(ngModel)]="searchString" name="searchString" (input)="resetError()">
 	<button type="submit"><i class="fa fa-search"></i></button>
 </form>
+<div class="error" *ngIf="error">not found</div>

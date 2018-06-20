@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { Observable } from 'rxjs/Observable';
-import { Point } from 'geojson';
 import { ICoreConfig, IMapSearchConfig } from '@ansyn/core/models/core.config.model';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 
@@ -21,9 +20,7 @@ export class GeocoderService {
 		const url = this.config.url.replace('$searchString', searchString).replace('$apiKey', this.config.apiKey);
 		return this.http.get<any>(url)
 			.map(res => res.resourceSets[0].resources[0])
-			.filter(Boolean)
-			.map(res => res.point)
-			.map((point: Point) => ({...point, coordinates: point.coordinates.reverse()}))
+			.map(res => res ? {...res.point, coordinates: res.point.coordinates.reverse()} : null)
 			.catch((error: Response | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});

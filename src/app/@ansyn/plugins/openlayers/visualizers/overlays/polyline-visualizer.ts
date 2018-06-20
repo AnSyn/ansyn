@@ -1,6 +1,6 @@
 import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
 import {
-	ImageryVisualizer, IVisualizerEntity,
+	ImageryVisualizer,
 	VisualizerInteractions
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
@@ -17,8 +17,6 @@ import { Observable } from 'rxjs';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { Actions } from '@ngrx/effects';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import {
@@ -33,6 +31,7 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { empty } from 'rxjs';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

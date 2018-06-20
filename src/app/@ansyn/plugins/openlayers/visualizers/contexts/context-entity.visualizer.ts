@@ -6,13 +6,14 @@ import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
-import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Store } from '@ngrx/store';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

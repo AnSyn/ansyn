@@ -2,7 +2,7 @@ import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { Entity } from '@ansyn/core/services/storage/storage.service';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { DilutedOverlay } from '@ansyn/core/models/overlay.model';
 

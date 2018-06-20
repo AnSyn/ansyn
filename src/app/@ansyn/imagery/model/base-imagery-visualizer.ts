@@ -1,16 +1,7 @@
-import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
-import { Feature } from 'geojson';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
 import { ImageryPlugin, ImageryPluginMetaData } from '@ansyn/imagery/model/base-imagery-plugin';
-
-export interface IVisualizerEntity {
-	id: string;
-	featureJson: Feature<any>;
-	state?: 'static' | 'activeDisplad';
-	type?: string,
-	style?: Partial<VisualizerStateStyle>
-}
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
@@ -20,8 +11,6 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 	contextMenu: 'contextMenu',
 	drawInteractionHandler: 'drawInteractionHandler'
 };
-
-
 
 
 export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
@@ -93,5 +82,5 @@ export interface BaseImageryVisualizerClass extends ImageryVisualizerMetaData {
 export function ImageryVisualizer(metaData: ImageryVisualizerMetaData) {
 	return function (constructor: BaseImageryVisualizerClass) {
 		ImageryPlugin(metaData)(constructor);
-	}
+	};
 }

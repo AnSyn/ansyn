@@ -12,11 +12,11 @@ import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style
 import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import {
-	BaseImageryVisualizer, BaseImageryVisualizerClass, IVisualizerEntity,
+	BaseImageryVisualizer, BaseImageryVisualizerClass,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 export interface FeatureIdentifier {
 	feature: Feature,

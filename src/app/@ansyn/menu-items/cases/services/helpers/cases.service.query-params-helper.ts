@@ -189,7 +189,6 @@ export class QueryParamsHelper {
 				}
 				return rison.encode(activeMapsManualProcessArgs);
 			case 'layers':
-				console.log(value);
 				return rison.encode(value.activeLayersIds);
 			default:
 				return wellknown.stringify(value);

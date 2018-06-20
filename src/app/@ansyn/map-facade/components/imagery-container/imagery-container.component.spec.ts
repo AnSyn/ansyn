@@ -40,6 +40,9 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-overlay-source-type-notice', inputs: ['overlay']
+				}),
+				MockComponent({
+					selector: 'ansyn-map-search-box', inputs: ['mapId']
 				})
 			]
 		}).compileComponents();

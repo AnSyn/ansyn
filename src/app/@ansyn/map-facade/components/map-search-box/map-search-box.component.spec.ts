@@ -1,14 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapSearchBoxComponent } from './map-search-box.component';
+import { FormsModule } from '@angular/forms';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { GeocoderService } from '@ansyn/core/services/geocoder.service';
 
-fdescribe('MapSearchBoxComponent', () => {
+describe('MapSearchBoxComponent', () => {
 	let component: MapSearchBoxComponent;
 	let fixture: ComponentFixture<MapSearchBoxComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [MapSearchBoxComponent]
+			declarations: [MapSearchBoxComponent],
+			imports: [FormsModule],
+			providers: [
+				{ provide: ImageryCommunicatorService, useValue: {}},
+				{ provide: GeocoderService, useValue: {}}
+			]
 		})
 			.compileComponents();
 	}));

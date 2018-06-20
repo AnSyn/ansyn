@@ -39,6 +39,6 @@ function fix(fileName) {
 }
 
 packages.forEach((pkg) => {
-	const fileName = 'src/app/@ansyn/' + pkg + '/package.json';
+	const fileName = 'projects/ansyn/' + pkg + '/package.json';
 	fix(fileName);
 });

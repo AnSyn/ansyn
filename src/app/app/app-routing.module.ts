@@ -1,11 +1,35 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { loginRoutes } from '@ansyn/login/login.routes';
-import { ansynRoutes } from '@ansyn/ansyn/ansyn.routes';
+import { PlaceholderComponent } from '@ansyn/core/components/placeholder/placeholder.component';
+import { UnAuthGuard } from '@ansyn/login/guards/unauth.guard';
+import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
+import { AuthGuard } from '@ansyn/login/guards/auth.guard';
+import { LoginComponent } from '@ansyn/login/login/login.component';
 
-export const routes: Routes = [];
-ansynRoutes.forEach((route) => routes.push(route));
-loginRoutes.forEach((route) => routes.push(route));
+export const routes: Routes = [
+	{
+		path: '',
+		component: AnsynComponent,
+		data: {
+			name: 'case'
+		},
+		canActivate: [AuthGuard],
+		canDeactivate: [UnAuthGuard],
+		children: [
+			{
+				path: 'case/:caseId',
+				component: PlaceholderComponent,
+				data: {
+					name: 'caseChild'
+				}
+			}
+		]
+	},
+	{
+		path: 'login',
+		component: LoginComponent
+	}
+];
 
 @NgModule({
 	imports: [RouterModule.forRoot(routes, { useHash: true })],

@@ -4,7 +4,7 @@ import 'rxjs/add/operator/switchMap';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { empty, Observable } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -28,7 +28,6 @@ import { Case } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { empty } from 'rxjs';
 
 @Injectable()
 export class CasesEffects {
@@ -103,8 +102,8 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [action, this.casesService.defaultCase.id])
-		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.id !== defaultCaseId)
+		.map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id])
+		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.id !== defaultCaseId && action.payload.autoSave)
 		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload))
 		.share();
 

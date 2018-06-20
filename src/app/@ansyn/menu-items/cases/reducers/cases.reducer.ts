@@ -60,10 +60,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		case CasesActionTypes.SELECT_CASE:
 			return { ...state, selectedCase: action.payload };
 
-		case CasesActionTypes.AUTO_SAVE_CHANGED:
-
-			return { ...state, selectedCase: { autoSave: action.payload }} ;
-
 		default:
 			return state;
 	}

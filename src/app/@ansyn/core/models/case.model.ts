@@ -60,7 +60,7 @@ export interface DilutedCaseState {
 	timeFilter: CaseTimeFilter,
 	favoriteOverlays?: DilutedOverlay[],
 	overlaysManualProcessArgs: OverlaysManualProcessArgs,
-	layers?: CaseLayersState,
+	layers?: CaseLayersState
 }
 
 export interface CaseState extends DilutedCaseState {

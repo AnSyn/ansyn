@@ -1,4 +1,4 @@
-import { VisualizerStateStyle } from '@ansyn/imagery/model/visualizer-state';
+import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { Feature } from 'geojson';
 
 export interface IVisualizerEntity {

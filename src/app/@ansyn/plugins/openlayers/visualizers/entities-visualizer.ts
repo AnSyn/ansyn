@@ -8,8 +8,8 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { VisualizerStyle } from '@ansyn/imagery/model/visualizer-style';
-import { VisualizerStateStyle } from '@ansyn/imagery/model/visualizer-state';
+import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
+import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
 import {

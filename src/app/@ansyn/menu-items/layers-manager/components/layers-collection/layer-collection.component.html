@@ -21,6 +21,8 @@
 				<div class="field-name-container">
 					<span class="field-name" [title]="layer.name">{{layer.name}}</span>
 				</div>
+				<span class="only-filter"
+					  (click)="selectOnly(layer.id)">only</span>
 			</div>
 		</div>
 	</div>

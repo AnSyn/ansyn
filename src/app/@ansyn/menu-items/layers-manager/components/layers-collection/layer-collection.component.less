@@ -44,6 +44,10 @@ div.container {
 			 div.left-side {
 				 visibility: visible;
 			 }
+
+			 div.left-side div.layer-row span.only-filter {
+				 visibility: visible;
+			 }
 		 }
 
 		 div.left-side {
@@ -116,6 +120,18 @@ div.container {
 						 font-size: 14px;
 						 font-style: normal;
 					 }
+				 }
+			 }
+
+			 span.only-filter {
+				 visibility: hidden;
+				 font-size: 12px;
+				 font-style: normal;
+				 color: rgba(255, 255, 255, 0.75);
+				 cursor: pointer;
+
+				 &:hover {
+					 text-decoration: underline;
 				 }
 			 }
 		 }

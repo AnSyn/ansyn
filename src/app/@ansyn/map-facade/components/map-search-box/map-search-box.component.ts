@@ -25,6 +25,7 @@ export class MapSearchBoxComponent {
 	}
 
 	onSubmit() {
+		if (!this.searchString) { return; }
 		this.communicator = this.imageryCommunicatorService.provide(this.mapId);
 		this.geocoderService.getLocation$(this.searchString)
 			.do((point: Point) => this.communicator.setCenter(point)

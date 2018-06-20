@@ -12,8 +12,10 @@ export class GeocoderService {
 	}
 
 	getLocation$(searchString): Observable<any> {
-		return this.http.get<any>(`http://dev.virtualearth.net/REST/v1/Locations?locality=San%20Francisco&maxResults=1&key=AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC`)
-			.map(res => res.resourceSets[0].resources[0].point)
+		return this.http.get<any>(`http://dev.virtualearth.net/REST/v1/Locations?locality=${searchString}&maxResults=1&key=AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC`)
+			.map(res => res.resourceSets[0].resources[0])
+			.filter(Boolean)
+			.map(res => res.point)
 			.map((point: Point) => ({...point, coordinates: point.coordinates.reverse()}))
 			.catch((error: Response | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);

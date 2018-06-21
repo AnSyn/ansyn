@@ -4,6 +4,7 @@ import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service'
 import { Observable } from 'rxjs/Observable';
 import { ICoreConfig, IMapSearchConfig } from '@ansyn/core/models/core.config.model';
 import { CoreConfig } from '@ansyn/core/models/core.config';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class GeocoderService {
@@ -22,7 +23,9 @@ export class GeocoderService {
 			.map(res => res.resourceSets[0].resources[0])
 			.map(res => res ? {...res.point, coordinates: res.point.coordinates.reverse()} : null)
 			.catch((error: Response | any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
+				this.errorHandlerService.httpErrorHandle(error);
+				console.warn(error);
+				return of(null);
 			});
 	}
 

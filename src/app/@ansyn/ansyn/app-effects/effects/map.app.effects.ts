@@ -44,7 +44,6 @@ import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/ope
 import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils/calc-extent';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
@@ -52,6 +51,7 @@ import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestF
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
 
 @Injectable()
 export class MapAppEffects {
@@ -204,17 +204,15 @@ export class MapAppEffects {
 	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				const providers = this.imageryProviderService.mapProviders;
-				Object.values(providers)
-					.filter((provider) => provider.mapComponent.mapClass.groupLayers.get('layers'))
-					.forEach((provider) => {
-						const displayedLayers: any = provider.mapComponent.mapClass.groupLayers.get('layers').getLayers().getArray();
-
+				this.imageryMapComponents
+					.filter(({ mapClass }: ImageryMapComponentConstructor) => mapClass.groupLayers.get('layers'))
+					.forEach(({ mapClass }: ImageryMapComponentConstructor) => {
+						const displayedLayers: any = mapClass.groupLayers.get('layers').getLayers().getArray();
 						/* remove layer if layerId not includes on selectLayers */
 						displayedLayers.forEach((layer) => {
 							const id = layer.get('id');
 							if (!selectedLayersIds.includes(id)) {
-								provider.mapComponent.mapClass.removeGroupLayer(id, 'layers');
+								mapClass.removeGroupLayer(id, 'layers');
 							}
 						});
 
@@ -223,7 +221,7 @@ export class MapAppEffects {
 							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
 							if (!layer) {
 								const addLayer = layers.find(({ id }) => id === layerId);
-								provider.mapComponent.mapClass.addGroupVectorLayer(addLayer, 'layers');
+								mapClass.addGroupVectorLayer(addLayer, 'layers');
 							}
 						});
 					});
@@ -395,7 +393,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected imageryProviderService: ImageryProviderService,
+				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}

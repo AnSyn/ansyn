@@ -18,11 +18,6 @@ export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
 
-	constructor(protected store: Store<any>, protected cacheService: CacheService,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
-		super(store, cacheService, imageryCommunicatorService);
-	}
-
 	create(metaData: Overlay): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,

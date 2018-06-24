@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
-import { ImageryPlugin, ImageryPluginMetaData } from '@ansyn/imagery/model/base-imagery-plugin';
+import { ImageryPlugin, ImageryPluginMetaData } from './base-imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';

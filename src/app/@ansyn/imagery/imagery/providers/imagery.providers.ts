@@ -1,9 +1,9 @@
 import { FactoryProvider, Injector } from '@angular/core';
 import { BaseImageryPlugin, BaseImageryPluginClass } from '../../model/base-imagery-plugin';
 import { PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { IMap } from '../../model/imap';
 import { StaticClassProvider } from '@angular/core/src/di/provider';
-import { ImageryCollectionEntitiy } from '@ansyn/imagery/model/plugins-collection';
+import { ImageryCollectionEntitiy } from '../../model/plugins-collection';
 
 export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryCollectionEntitiy[]>, parent: Injector, map: IMap) {
 		const providers: StaticClassProvider[] = pluginsCollections

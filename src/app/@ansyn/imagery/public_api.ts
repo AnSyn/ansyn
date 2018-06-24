@@ -1,1 +1,1 @@
-export { ImageryModule } from '@ansyn/imagery/imagery.module';
+export { ImageryModule } from './imagery.module';

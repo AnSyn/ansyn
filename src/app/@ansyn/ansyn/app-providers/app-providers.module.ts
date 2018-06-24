@@ -1,4 +1,4 @@
-import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { InjectionToken, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
@@ -14,7 +14,6 @@ import { OpenLayerTileWMSSourceProvider } from '@ansyn/ansyn/app-providers/map-s
 import { OpenLayerMapBoxSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-MapBox-source-provider';
 import { OpenLayerOSMSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-OSM-source-provider';
 import { OpenLayerIDAHOSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-IDAHO-source-provider';
-import { OpenLayerIDAHO2SourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-IDAHO2-source-provider';
 import { OpenLayerPlanetSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-planet-source-provider';
 import { OpenLayerNotGeoRegisteredPlanetSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-not-geo-registered-planet-source-provider';
 import { OpenLayerBingSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-BING-source-provider';
@@ -45,7 +44,6 @@ export const appProviders = [
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHO2SourceProvider, multi: true },
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerPlanetSourceProvider, multi: true },
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerNotGeoRegisteredPlanetSourceProvider, multi: true },
 	{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },

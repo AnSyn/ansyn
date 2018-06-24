@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { IMap } from './imap';
 import { of } from 'rxjs';
 
 export class BaseImageryPlugin {

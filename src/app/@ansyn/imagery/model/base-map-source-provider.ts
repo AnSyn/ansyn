@@ -1,4 +1,3 @@
-import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
@@ -9,7 +8,7 @@ export abstract class BaseMapSourceProvider {
 	abstract supported: string[];
 	abstract sourceType: string;
 
-	constructor(protected store: Store<any>, protected cacheService: CacheService,
+	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 

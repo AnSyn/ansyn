@@ -6,8 +6,8 @@ import { Observable, of } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
 import 'rxjs/add/observable/merge';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter } from 'rxjs/operators';
 
 export class CommunicatorEntity {

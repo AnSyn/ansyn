@@ -4,10 +4,9 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { ImageryProviderService } from '../provider-service/imagery-provider.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { ConfigurationToken } from '../model/configuration.token';
-import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
-import { Store } from '@ngrx/store';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
+import { VisualizersConfig } from '../model/visualizers-config.token';
+import { CacheService } from '../cache-service/cache.service';
+import { PLUGINS_COLLECTIONS } from '../model/plugins-collection';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
@@ -45,7 +44,6 @@ describe('ImageryComponent', () => {
 				{ provide: PLUGINS_COLLECTIONS, useValue: []},
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },
-				{ provide: Store, useValue: null },
 				{
 					provide: ConfigurationToken, useValue: {
 					'geoMapsInitialMapSource': [{

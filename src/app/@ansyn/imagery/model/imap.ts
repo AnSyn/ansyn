@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ProjectionService } from '../projection-service/projection.service';
 import { GeoJsonObject, Point } from 'geojson';
 import Group from 'ol/layer/group';
 

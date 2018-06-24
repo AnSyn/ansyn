@@ -1,16 +1,16 @@
-import { IImageryConfig, IMapConfig } from '@ansyn/imagery/model/iimagery-config';
-import { IMap } from '@ansyn/imagery/model/imap';
-import { ImageryMapComponent } from '@ansyn/imagery/model/imagery-map-component';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
+import { IMap } from '../../model/imap';
+import { ImageryMapComponent } from '../../model/imagery-map-component';
+import { BaseMapSourceProvider } from '../../model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ImageryProviderService, IProvidedMap } from '@ansyn/imagery/provider-service/imagery-provider.service';
+import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '../../communicator-service/communicator.service';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { forkJoin } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 
 export interface MapInstanceChanged {
 	id: string;

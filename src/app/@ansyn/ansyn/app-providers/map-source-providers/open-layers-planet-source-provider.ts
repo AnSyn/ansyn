@@ -16,11 +16,6 @@ export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 export class OpenLayerPlanetSourceProvider extends OpenLayersMapSourceProvider {
 	public sourceType = OpenLayerPlanetSourceProviderSourceType;
 
-	constructor(protected store: Store<any>, protected cacheService: CacheService,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
-		super(store, cacheService, imageryCommunicatorService);
-	}
-
 	create(metaData: Overlay): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,

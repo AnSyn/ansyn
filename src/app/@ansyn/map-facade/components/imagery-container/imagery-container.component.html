@@ -22,5 +22,5 @@
 
 	<ansyn-overlay-source-type-notice [overlay]="overlay"></ansyn-overlay-source-type-notice>
 
-	<ansyn-map-search-box *ngIf="mapSearchIsActive && !overlay" [mapId]="mapState.id"></ansyn-map-search-box>
+	<ansyn-map-search-box *ngIf="packageConfig.mapSearch.active && !overlay" [mapId]="mapState.id"></ansyn-map-search-box>
 </div>

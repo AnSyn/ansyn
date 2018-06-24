@@ -3,12 +3,12 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { GeocoderService } from './geocoder.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { ICoreConfig } from '@ansyn/core/models/core.config.model';
-import { CoreConfig } from '@ansyn/core/models/core.config';
 import { HttpClient } from '@angular/common/http';
 import { asyncData } from '@ansyn/core/test/async-observable-helpers';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 
 describe('GeocoderService', () => {
 	let me;
@@ -25,7 +25,7 @@ describe('GeocoderService', () => {
 					}
 				},
 				{
-					provide: CoreConfig, useValue: <ICoreConfig> {
+					provide: mapFacadeConfig, useValue: <IMapFacadeConfig> {
 						mapSearch: {
 							url: 'find/$searchString/key/$apiKey',
 							apiKey: 'myKey',
@@ -77,8 +77,7 @@ describe('GeocoderService', () => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
 				resourceSets: [
 					{
-						resources: [
-						]
+						resources: []
 					}
 				]
 			}));
@@ -91,8 +90,7 @@ describe('GeocoderService', () => {
 		}));
 
 		it('should return null, if there is an error, or unexpected format', fakeAsync(() => {
-			spyOn(httpClient, 'get').and.returnValue(asyncData({
-			}));
+			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');
 			result$.subscribe(res => {
 				endResult = res

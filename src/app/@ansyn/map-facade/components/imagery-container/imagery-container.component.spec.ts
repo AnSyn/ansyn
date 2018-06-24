@@ -6,8 +6,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { ICoreConfig } from '@ansyn/core/models/core.config.model';
+import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -22,7 +22,7 @@ describe('ImageryContainerComponent', () => {
 			],
 			providers: [
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: <ICoreConfig> { mapSearch: {} } }
+				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig> { mapSearch: {} } }
 			],
 			declarations: [
 				ImageryContainerComponent,
@@ -56,7 +56,7 @@ describe('ImageryContainerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageryContainerComponent);
 		component = fixture.componentInstance;
-		component.mapState = {data: {}} as any;
+		component.mapState = { data: {} } as any;
 		fixture.detectChanges();
 	});
 

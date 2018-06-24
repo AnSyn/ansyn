@@ -4,9 +4,9 @@ import { ActiveImageryMouseEnter, ActiveImageryMouseLeave, SynchronizeMapsAction
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Observable } from 'rxjs/Observable';
-import { ICoreConfig } from '@ansyn/core/models/core.config.model';
-import { CoreConfig } from '@ansyn/core/models/core.config';
+import { Observable } from 'rxjs';
+import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -19,8 +19,6 @@ export class ImageryContainerComponent {
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
 
-	public mapSearchIsActive: boolean;
-
 	isHidden$: Observable<boolean> = this.store.select(mapStateSelector)
 		.map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id));
 
@@ -29,10 +27,8 @@ export class ImageryContainerComponent {
 	}
 
 	constructor(protected store: Store<any>,
-				@Inject(CoreConfig) public coreConfig: ICoreConfig
-	) {
-		this.mapSearchIsActive = coreConfig.mapSearch.active;
-	}
+				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig
+	) {}
 
 	toggleMapSynchronization() {
 		this.store.dispatch(new SynchronizeMapsAction({ mapId: this.mapState.id }));

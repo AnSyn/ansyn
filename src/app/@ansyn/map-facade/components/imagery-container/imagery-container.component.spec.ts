@@ -6,6 +6,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -18,7 +20,10 @@ describe('ImageryContainerComponent', () => {
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])
 			],
-			providers: [{ provide: LoggerConfig, useValue: {} }],
+			providers: [
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: <ICoreConfig> { mapSearch: {} } }
+			],
 			declarations: [
 				ImageryContainerComponent,
 				MockComponent({

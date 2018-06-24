@@ -1,12 +1,12 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ImageryProviderService } from '../provider-service/imagery-provider.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { ConfigurationToken } from '../model/configuration.token';
 import { VisualizersConfig } from '../model/visualizers-config.token';
 import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../model/plugins-collection';
+import { IMAGERY_MAP_COMPONENTS } from '@ansyn/imagery/model/imagery-map-component';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
@@ -33,7 +33,6 @@ describe('ImageryComponent', () => {
 	let component: ImageryComponent;
 	let fixture: ComponentFixture<ImageryComponent>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
-	let imageryProviderService: ImageryProviderService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -44,6 +43,7 @@ describe('ImageryComponent', () => {
 				{ provide: PLUGINS_COLLECTIONS, useValue: []},
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },
+				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
 				{
 					provide: ConfigurationToken, useValue: {
 					'geoMapsInitialMapSource': [{
@@ -61,13 +61,12 @@ describe('ImageryComponent', () => {
 					"maxCachedLayers": 100
 				}
 				},
-				ImageryCommunicatorService, ImageryProviderService]
+				ImageryCommunicatorService]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([ImageryCommunicatorService, ImageryProviderService], (_imageryCommunicatorService, _imageryProviderService) => {
+	beforeEach(inject([ImageryCommunicatorService], (_imageryCommunicatorService) => {
 		imageryCommunicatorService = _imageryCommunicatorService;
-		imageryProviderService = _imageryProviderService;
 		fixture = TestBed.createComponent(ImageryComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

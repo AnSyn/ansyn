@@ -16,6 +16,7 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 @Injectable()
 export class OpenLayersDisabledMap extends IMap<Map> {
+	static mapType = DisabledOpenLayersMapName;
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();

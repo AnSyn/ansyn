@@ -8,7 +8,7 @@ export const CesiumMapName = 'cesium';
 @Injectable()
 export class CesiumMap extends IMap {
 	static groupLayers = new Map<string, any>();
-
+	static mapType = CesiumMapName;
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any>;
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();

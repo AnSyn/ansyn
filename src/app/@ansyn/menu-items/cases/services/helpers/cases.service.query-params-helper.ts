@@ -6,7 +6,10 @@ import * as wellknown from 'wellknown';
 import * as rison from 'rison';
 import { centroid, geometry } from '@turf/turf';
 import {
-	CaseGeoFilter, CaseMapsState, CaseMapState, CaseState, ImageManualProcessArgs,
+	CaseMapsState,
+	CaseMapState,
+	CaseState,
+	ImageManualProcessArgs,
 	OverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
@@ -106,9 +109,9 @@ export class QueryParamsHelper {
 											[x2, y1],
 											[x2, y2],
 											[x1, y2],
-											[x1, y1],
+											[x1, y1]
 										]]
-									}
+									};
 								});
 
 								updatedCaseModel.state.region = geoPolygon;
@@ -185,6 +188,8 @@ export class QueryParamsHelper {
 					});
 				}
 				return rison.encode(activeMapsManualProcessArgs);
+			case 'layers':
+				return rison.encode(value.activeLayersIds);
 			default:
 				return wellknown.stringify(value);
 		}
@@ -194,6 +199,9 @@ export class QueryParamsHelper {
 		switch (key) {
 			case 'region':
 				return wellknown.parse(value);
+			case 'layers':
+				const selectedLayersIds = rison.decode(value);
+				return { activeLayersIds: selectedLayersIds };
 			default:
 				return rison.decode(value);
 		}

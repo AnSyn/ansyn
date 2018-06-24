@@ -1,0 +1,44 @@
+@import "core/less/common";
+@import "core/less/z-index-globals";
+@import "core/less/tooltip";
+
+:host {
+	position: absolute;
+	top: 20px;
+	left: 10px;
+	z-index: @z-index-map-search-box;
+	font-size: 12px;
+	background-color: rgba(0,0,0,0.3);
+	color: white;
+	padding: 10px;
+
+	form {
+		display: flex;
+		flex-wrap: nowrap;
+
+	input {
+		width: @map-search-box-width;
+		padding: 0;
+		margin: 0;
+		border: none;
+		outline: none;
+		background-color: inherit;
+		color: inherit;
+
+		&::placeholder {
+			color: rgba(255, 255, 255, 0.8);
+		}
+	}
+
+	button {
+		padding: 0 2px;
+		margin: 0;
+		border: none;
+		outline: none;
+		background-color: inherit;
+		color: inherit;
+	}
+}
+
+}
+

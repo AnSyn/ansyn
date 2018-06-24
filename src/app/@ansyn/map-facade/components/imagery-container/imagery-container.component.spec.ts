@@ -6,6 +6,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -18,7 +20,10 @@ describe('ImageryContainerComponent', () => {
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])
 			],
-			providers: [{ provide: LoggerConfig, useValue: {} }],
+			providers: [
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig> { mapSearch: {} } }
+			],
 			declarations: [
 				ImageryContainerComponent,
 				MockComponent({
@@ -40,6 +45,9 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-overlay-source-type-notice', inputs: ['overlay']
+				}),
+				MockComponent({
+					selector: 'ansyn-map-search-box', inputs: ['mapId']
 				})
 			]
 		}).compileComponents();
@@ -48,7 +56,7 @@ describe('ImageryContainerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageryContainerComponent);
 		component = fixture.componentInstance;
-		component.mapState = {data: {}} as any;
+		component.mapState = { data: {} } as any;
 		fixture.detectChanges();
 	});
 

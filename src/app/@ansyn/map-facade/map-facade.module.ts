@@ -16,6 +16,7 @@ import { ImageryLoaderComponent } from './components/imagery-loader/imagery-load
 import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/imagery-tile-progress/imagery-tile-progress.component';
 import { OverlaySourceTypeNoticeComponent } from '@ansyn/map-facade/components/overlay-source-type-notice/overlay-source-type-notice.component';
 import { CoreModule } from '@ansyn/core/core.module';
+import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 
 @NgModule({
 	imports: [
@@ -35,7 +36,8 @@ import { CoreModule } from '@ansyn/core/core.module';
 		AnnotationContextMenuComponent,
 		ImageryLoaderComponent,
 		ImageryTileProgressComponent,
-		OverlaySourceTypeNoticeComponent
+		OverlaySourceTypeNoticeComponent,
+		MapSearchBoxComponent
 	],
 	exports: [ImageriesManagerComponent]
 })

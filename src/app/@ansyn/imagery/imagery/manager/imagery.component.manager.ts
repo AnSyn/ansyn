@@ -2,7 +2,7 @@ import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
 import { IMap } from '../../model/imap';
 import { ImageryMapComponent } from '../../model/imagery-map-component';
 import { BaseMapSourceProvider } from '../../model/base-map-source-provider';
-import { ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
+import { ImageryMapComponentConstructor } from '../../model/imagery-map-component';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs';

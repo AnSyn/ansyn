@@ -8,3 +8,7 @@ export interface IImageryConfig {
 	geoMapsInitialMapSource: IMapConfig[];
 	maxCachedLayers: number;
 }
+export const initialImageryConfig: IImageryConfig = {
+	geoMapsInitialMapSource: [],
+	maxCachedLayers: 100
+}

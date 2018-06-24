@@ -3,6 +3,10 @@ import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
 
+export interface BaseMapSourceProviderConstructor {
+	new(...args): BaseMapSourceProvider
+}
+
 @Injectable()
 export abstract class BaseMapSourceProvider {
 	abstract supported: string[];

@@ -6,8 +6,8 @@ import { coreStateSelector, ICoreState, selectFavoriteOverlays } from '../../red
 import { Observable } from 'rxjs';
 import { AlertMsg } from '../../reducers/core.reducer';
 import { Subscription } from 'rxjs/Subscription';
-import { getTimeFormat } from '@ansyn/core/utils/time';
-import { ALERTS, IAlert } from '@ansyn/core/alerts/alerts.model';
+import { getTimeFormat } from '../../utils/time';
+import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { type } from '@ansyn/core/utils/type';
+import { type } from '../utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';

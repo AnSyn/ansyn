@@ -8,7 +8,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
-import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
+import { CaseDataInputFiltersState } from '../models/case.model';
 
 
 export enum AlertMsgTypes {

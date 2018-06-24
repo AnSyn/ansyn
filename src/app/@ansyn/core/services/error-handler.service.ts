@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetToastMessageAction } from '../actions/core.actions';
 import { Observable } from 'rxjs';
 import { LoggerService } from './logger.service';
 

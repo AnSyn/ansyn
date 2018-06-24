@@ -1,5 +1,5 @@
 import { CaseFacetsState, CaseRegionState, CaseTimeState } from './case.model';
-import { Entity } from '@ansyn/core/services/storage/storage.service';
+import { Entity } from '../services/storage/storage.service';
 
 export enum DisplayedOverlay {
 	nearest = 'nearest',

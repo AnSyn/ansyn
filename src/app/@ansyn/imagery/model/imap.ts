@@ -19,7 +19,7 @@ export interface IMapConstructor {
 
 export abstract class IMap<T = any> {
 	static groupLayers = new Map<string, any>();
-	static mapType: string;
+	static mapType = '';
 
 	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;

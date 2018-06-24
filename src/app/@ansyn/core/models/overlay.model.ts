@@ -1,4 +1,4 @@
-import { CaseDataInputFiltersState, CaseRegionState, CaseTimeState } from '@ansyn/core/models/case.model';
+import { CaseDataInputFiltersState, CaseRegionState, CaseTimeState } from './case.model';
 
 export interface OverlaysFetchData {
 	data: Overlay[],

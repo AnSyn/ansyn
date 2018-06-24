@@ -2,7 +2,7 @@ import { ANALYZE_FOR_ENTRY_COMPONENTS, ModuleWithProviders, NgModule } from '@an
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
-import { IImageryConfig } from './model/iimagery-config';
+import { IImageryConfig, initialImageryConfig } from './model/iimagery-config';
 import { ConfigurationToken } from './model/configuration.token';
 import { CacheService } from './cache-service/cache.service';
 import { createCollection } from './model/plugins-collection';
@@ -10,7 +10,8 @@ import { ImageryCollectionEntity } from './model/plugins-collection';
 import {
 	IMAGERY_MAP_COMPONENTS, IMAGERY_MAP_COMPONENTS_COLLECTION, ImageryMapComponentConstructor,
 	ImageryMapComponentFactory
-} from '@ansyn/imagery/model/imagery-map-component';
+} from './model/imagery-map-component';
+import { BaseMapSourceProvider, BaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 
 @NgModule({
 	imports: [CommonModule],
@@ -29,7 +30,10 @@ import {
 })
 export class ImageryModule {
 
-	static forRoot(config: IImageryConfig): ModuleWithProviders {
+	static forRoot(config?: IImageryConfig): ModuleWithProviders {
+		if (!config) {
+			config = initialImageryConfig;
+		}
 		return {
 			ngModule: ImageryModule,
 			providers: [
@@ -63,4 +67,12 @@ export class ImageryModule {
 			]
 		};
 	}
+
+	static provideMapSourceProviders(mapSourceProviders: BaseMapSourceProviderConstructor): ModuleWithProviders {
+		return {
+			ngModule: ImageryModule,
+			providers: [{ provide: BaseMapSourceProvider, useClass: mapSourceProviders, multi: true }]
+		}
+	}
+
 }

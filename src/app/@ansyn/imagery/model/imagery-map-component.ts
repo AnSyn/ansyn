@@ -4,7 +4,7 @@ import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
 import { filter, map, take } from 'rxjs/operators';
-import { IMapConstructor } from '@ansyn/imagery/model/imap';
+import { IMapConstructor } from './imap';
 
 export class ImageryMapComponent implements OnDestroy{
 	protected map: IMap;

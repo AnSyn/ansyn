@@ -1,10 +1,10 @@
 import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
-import { Entity } from '@ansyn/core/services/storage/storage.service';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { LayoutKey } from '@ansyn/core/models/layout-options.model';
-import { DilutedOverlay } from '@ansyn/core/models/overlay.model';
+import { Entity } from '../services/storage/storage.service';
+import { IVisualizerEntity } from './visualizers/visualizers-entity';
+import { LayoutKey } from './layout-options.model';
+import { DilutedOverlay } from './overlay.model';
 
 export interface CasePreview extends Entity {
 	creationTime: Date;

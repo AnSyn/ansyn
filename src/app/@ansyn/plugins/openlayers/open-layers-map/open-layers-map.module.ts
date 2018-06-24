@@ -3,10 +3,10 @@ import { OpenlayersMapComponent } from './openlayers-map/openlayers-map.componen
 import { OpenLayersDisabledMapComponent } from './openlayers-disabled-map/openlayers-disabled-map.component';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 
+
 @NgModule({
-	imports: [
-		ImageryModule.provideMapComponents([OpenlayersMapComponent, OpenLayersDisabledMapComponent])
-	]
+	imports: [ImageryModule.provideMapComponents([OpenlayersMapComponent, OpenLayersDisabledMapComponent])],
+	declarations: [OpenlayersMapComponent, OpenLayersDisabledMapComponent]
 })
 export class OpenLayersMapModule {
 }

@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ANALYZE_FOR_ENTRY_COMPONENTS, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
@@ -48,15 +48,15 @@ export class ImageryModule {
 
 	static provideMapComponents(components): ModuleWithProviders {
 		return {
-			ngModule: NgModule({
-				declarations: components,
-				entryComponents: components,
-				exports: components
-			})(class ImageryComponentsModule {
-			}),
+			ngModule: ImageryModule,
 			providers: [
 				{
 					provide: IMAGERY_MAP_COMPONENTS_COLLECTION,
+					useValue: components,
+					multi: true
+				},
+				{
+					provide: ANALYZE_FOR_ENTRY_COMPONENTS,
 					useValue: components,
 					multi: true
 				}

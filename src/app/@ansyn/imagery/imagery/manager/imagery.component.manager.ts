@@ -1,9 +1,11 @@
 import { IImageryConfig, IMapConfig } from '@ansyn/imagery/model/iimagery-config';
 import { IMap } from '@ansyn/imagery/model/imap';
-import { ImageryMapComponent } from '@ansyn/imagery/model/imagery-map-component';
+import {
+	ImageryMapComponent,
+	ImageryMapComponentClass
+} from '@ansyn/imagery/model/imagery-map-component';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ImageryProviderService, IProvidedMap } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -34,7 +36,7 @@ export class ImageryComponentManager {
 		return this._mapComponentRef.instance.plugins;
 	}
 
-	constructor(protected imageryProviderService: ImageryProviderService,
+	constructor(protected imageryMapComponents: ImageryMapComponentClass[],
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				protected mapComponentElem: ViewContainerRef,
@@ -97,11 +99,11 @@ export class ImageryComponentManager {
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
-		const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(providedMap.mapComponent);
+		const mapComponentClass = this.imageryMapComponents.find(({ mapClass }: ImageryMapComponentClass) => mapClass.mapType === activeMapName);
+		const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(mapComponentClass);
 		this._mapComponentRef = this.mapComponentElem.createComponent<ImageryMapComponent>(factory);
 		const mapComponent = this._mapComponentRef.instance;
-		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(providedMap.mapType);
+		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapComponentClass.mapClass.mapType);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
 				.pipe(

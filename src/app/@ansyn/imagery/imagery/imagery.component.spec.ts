@@ -1,7 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ImageryProviderService } from '../provider-service/imagery-provider.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { ConfigurationToken } from '../model/configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
@@ -34,7 +33,6 @@ describe('ImageryComponent', () => {
 	let component: ImageryComponent;
 	let fixture: ComponentFixture<ImageryComponent>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
-	let imageryProviderService: ImageryProviderService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -63,13 +61,12 @@ describe('ImageryComponent', () => {
 					"maxCachedLayers": 100
 				}
 				},
-				ImageryCommunicatorService, ImageryProviderService]
+				ImageryCommunicatorService]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([ImageryCommunicatorService, ImageryProviderService], (_imageryCommunicatorService, _imageryProviderService) => {
+	beforeEach(inject([ImageryCommunicatorService], (_imageryCommunicatorService) => {
 		imageryCommunicatorService = _imageryCommunicatorService;
-		imageryProviderService = _imageryProviderService;
 		fixture = TestBed.createComponent(ImageryComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

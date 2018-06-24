@@ -52,7 +52,6 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ImageryProviderService } from '@ansyn/imagery/provider-service/imagery-provider.service';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
@@ -175,7 +174,6 @@ describe('MapAppEffects', () => {
 				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{ provide: CacheService, useClass: CacheService, deps: [VisualizersConfig, ImageryCommunicatorService] },
 				ImageryCommunicatorService,
-				ImageryProviderService,
 				{provide: VisualizersConfig, useValue: {}},
 				MapAppEffects,
 				OverlaysService,

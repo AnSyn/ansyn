@@ -17,7 +17,7 @@ import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import {
 	IMAGERY_MAP_COMPONENTS,
-	ImageryMapComponentClass
+	ImageryMapComponentConstructor
 } from '@ansyn/imagery/model/imagery-map-component';
 
 
@@ -59,7 +59,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentClass[],
+				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
 				@Inject(ConfigurationToken) protected config: IImageryConfig) {
 	}

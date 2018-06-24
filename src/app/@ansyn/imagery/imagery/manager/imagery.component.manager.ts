@@ -2,7 +2,7 @@ import { IImageryConfig, IMapConfig } from '@ansyn/imagery/model/iimagery-config
 import { IMap } from '@ansyn/imagery/model/imap';
 import {
 	ImageryMapComponent,
-	ImageryMapComponentClass
+	ImageryMapComponentConstructor
 } from '@ansyn/imagery/model/imagery-map-component';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
@@ -36,7 +36,7 @@ export class ImageryComponentManager {
 		return this._mapComponentRef.instance.plugins;
 	}
 
-	constructor(protected imageryMapComponents: ImageryMapComponentClass[],
+	constructor(protected imageryMapComponents: ImageryMapComponentConstructor[],
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				protected mapComponentElem: ViewContainerRef,
@@ -99,7 +99,7 @@ export class ImageryComponentManager {
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		const mapComponentClass = this.imageryMapComponents.find(({ mapClass }: ImageryMapComponentClass) => mapClass.mapType === activeMapName);
+		const mapComponentClass = this.imageryMapComponents.find(({ mapClass }: ImageryMapComponentConstructor) => mapClass.mapType === activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(mapComponentClass);
 		this._mapComponentRef = this.mapComponentElem.createComponent<ImageryMapComponent>(factory);
 		const mapComponent = this._mapComponentRef.instance;

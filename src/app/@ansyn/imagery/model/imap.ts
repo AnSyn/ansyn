@@ -4,7 +4,7 @@ import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-posi
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { GeoJsonObject, Point } from 'geojson';
 
-export interface IMapClass {
+export interface IMapConstructor {
 	mapType: string;
 	groupLayers: Map<string, any>;
 

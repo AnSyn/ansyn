@@ -8,7 +8,7 @@ import { CacheService } from './cache-service/cache.service';
 import { createCollection } from './model/plugins-collection';
 import { ImageryCollectionEntity } from '@ansyn/imagery/model/plugins-collection';
 import {
-	IMAGERY_MAP_COMPONENTS, IMAGERY_MAP_COMPONENTS_COLLECTION,
+	IMAGERY_MAP_COMPONENTS, IMAGERY_MAP_COMPONENTS_COLLECTION, ImageryMapComponentConstructor,
 	ImageryMapComponentFactory
 } from '@ansyn/imagery/model/imagery-map-component';
 
@@ -46,7 +46,7 @@ export class ImageryModule {
 		};
 	}
 
-	static provideMapComponents(components): ModuleWithProviders {
+	static provideMapComponents(components: ImageryMapComponentConstructor[]): ModuleWithProviders {
 		return {
 			ngModule: ImageryModule,
 			providers: [

@@ -33,6 +33,15 @@ div.container {
 				opacity: 0.7;
 			}
 		}
+
+		div.show-all {
+			float: right;
+			font-size: 12px;
+			font-style: normal;
+			color: rgba(255, 255, 255, 0.75);
+			margin-right: 7px;
+			cursor: pointer;
+		}
 	}
 
 	div.layers {
@@ -42,6 +51,10 @@ div.container {
 
 		 &:hover {
 			 div.left-side {
+				 visibility: visible;
+			 }
+
+			 div.left-side div.layer-row span.only-filter {
 				 visibility: visible;
 			 }
 		 }
@@ -116,6 +129,18 @@ div.container {
 						 font-size: 14px;
 						 font-style: normal;
 					 }
+				 }
+			 }
+
+			 span.only-filter {
+				 visibility: hidden;
+				 font-size: 12px;
+				 font-style: normal;
+				 color: rgba(255, 255, 255, 0.75);
+				 cursor: pointer;
+
+				 &:hover {
+					 text-decoration: underline;
 				 }
 			 }
 		 }

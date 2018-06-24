@@ -67,7 +67,7 @@ describe('CasesAutoSaveComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	fit('click should dispatch UpdateCaseAction', () => {
+	it('click should dispatch UpdateCaseAction', () => {
 		spyOn(store, 'dispatch');
 		component.currentCase = fakeCase;
 		component.onChange(true);

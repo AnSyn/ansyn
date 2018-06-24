@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';

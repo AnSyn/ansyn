@@ -35,7 +35,7 @@ import {
 } from '@ansyn/map-facade/reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	ILayerState,
 	initialLayersState,

@@ -2,12 +2,13 @@ import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { IMap } from '../model/imap';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
 import 'rxjs/add/observable/merge';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { filter } from 'rxjs/operators';
 
 export class CommunicatorEntity {
 	private _managerSubscriptions = [];
@@ -20,7 +21,7 @@ export class CommunicatorEntity {
 		return this._manager.imageryCommunicatorService;
 	}
 
-	get plugins(): BaseImageryPlugin[] {
+	get plugins() {
 		return this._manager.plugins;
 	}
 
@@ -37,7 +38,7 @@ export class CommunicatorEntity {
 	}
 
 	initPlugins() {
-		this.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
+		this.plugins.forEach((plugin) => plugin.init(this as any));
 	}
 
 	private registerToManagerEvents() {
@@ -51,7 +52,7 @@ export class CommunicatorEntity {
 
 		this._managerSubscriptions.push(
 			Observable.merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
-				.filter(({ id }) => id === this.id)
+				.pipe(filter(({ id }) => id === this.id))
 				.subscribe(this.initPlugins.bind(this))
 		);
 	}
@@ -99,7 +100,7 @@ export class CommunicatorEntity {
 		if (this.ActiveMap) {
 			return this.ActiveMap.getCenter();
 		}
-		return Observable.of(null);
+		return of(null);
 	}
 
 	public updateSize(): void {
@@ -128,7 +129,7 @@ export class CommunicatorEntity {
 			return this.ActiveMap.setCenter(center, animation);
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public setPosition(position: CaseMapPosition): Observable<boolean> {
@@ -170,7 +171,7 @@ export class CommunicatorEntity {
 			return this._manager.resetView(layer, position, extent);
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public addLayer(layer: any) {

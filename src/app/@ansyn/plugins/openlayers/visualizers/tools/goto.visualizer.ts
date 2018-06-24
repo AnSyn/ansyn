@@ -7,7 +7,7 @@ import {
 	toolsFlags,
 	toolsStateSelector
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';

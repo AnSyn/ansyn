@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable, empty } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
@@ -18,6 +18,7 @@ import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service'
 import * as moment from 'moment';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { map } from 'rxjs/internal/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -121,7 +122,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
 			{ headers: this.httpHeaders, params: { _page_size: limit } })
 			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: Overlay[]) => <OverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -159,19 +160,21 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
-			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: Overlay[]) => {
-				let startDate: Date, endDate: Date;
-				if (overlays.length === 0) {
-					startDate = moment().subtract(1, 'month').toDate();  // month ago
-					endDate = new Date();
-				} else {
-					const overlaysDates = overlays.map(overlay => moment(overlay.date));
-					startDate = moment.min(overlaysDates).toDate();
-					endDate = moment.max(overlaysDates).toDate();
-				}
-				return { startDate, endDate };
-			})
+			.pipe(
+				map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features)),
+				map((overlays: Overlay[]): StartAndEndDate => {
+					let startDate: string, endDate: string;
+					if (overlays.length === 0) {
+						startDate = moment().subtract(1, 'month').toISOString();  // month ago
+						endDate = new Date().toISOString();
+					} else {
+						const overlaysDates = overlays.map(overlay => moment(overlay.date));
+						startDate = moment.min(overlaysDates).toISOString();
+						endDate = moment.max(overlaysDates).toISOString();
+					}
+					return { startDate, endDate };
+				})
+			)
 			.catch((error: HttpResponseBase | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});

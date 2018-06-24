@@ -3,7 +3,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetFavoriteOverlaysAction,
@@ -12,7 +12,8 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer
+	ToggleDisplayAnnotationsLayer,
+	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case, CaseMapState } from '@ansyn/core/models/case.model';
@@ -64,9 +65,8 @@ export class SelectCaseAppEffects {
 		if (typeof time.to === 'string') {
 			time.to = new Date(time.to);
 		}
-
 		// layers
-		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
+		const { annotationsLayer, displayAnnotationsLayer, activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
 		return [
@@ -80,6 +80,7 @@ export class SelectCaseAppEffects {
 			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
+			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetContextParamsAction({ contextEntities })
 		];
 	}

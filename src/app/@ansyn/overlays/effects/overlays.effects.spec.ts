@@ -1,7 +1,7 @@
 import { cloneDeep, unionBy } from 'lodash';
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction,
 	RequestOverlayByIDFromBackendAction

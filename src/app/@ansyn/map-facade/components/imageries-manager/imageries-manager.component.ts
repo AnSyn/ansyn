@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import 'rxjs/add/operator/map';

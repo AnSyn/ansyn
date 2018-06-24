@@ -1,5 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -10,6 +10,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { empty } from 'rxjs';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -30,7 +31,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 			} else if (this.getEntities().length > 0) {
 				this.clearEntities();
 			}
-			return Observable.empty();
+			return empty();
 		});
 
 	constructor(public store$: Store<any>, public actions$: Actions) {

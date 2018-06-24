@@ -3,7 +3,7 @@ import { SetStateAction } from '../actions/router.actions';
 import { NavigationEnd, Router } from '@angular/router';
 import { IRouterState } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AnsynRouterService {

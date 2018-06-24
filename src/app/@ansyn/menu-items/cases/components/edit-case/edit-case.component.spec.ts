@@ -3,7 +3,7 @@ import { EditCaseComponent } from './edit-case.component';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';

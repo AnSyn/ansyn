@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesEffects } from '../../effects/cases.effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CaseModal, casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';

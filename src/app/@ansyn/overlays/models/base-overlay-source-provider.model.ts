@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { intersect, area } from '@turf/turf';
 import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { LimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/limited-array';

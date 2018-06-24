@@ -3,13 +3,12 @@ import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { BackToWorldView, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
-import 'rxjs/add/operator/pluck';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AlertMsg } from '../../reducers/core.reducer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '@ansyn/core/utils/time';
 import { ALERTS, IAlert } from '@ansyn/core/alerts/alerts.model';
+import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -40,9 +39,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	alertMsg: AlertMsg;
 
 	alertMsg$: Observable<AlertMsg> = this.core$
-		.pluck<ICoreState, AlertMsg>('alertMsg')
-		.do((alertMsg) => this.alertMsg = alertMsg)
-		.distinctUntilChanged();
+		.pipe(
+			pluck<ICoreState, AlertMsg>('alertMsg'),
+			tap((alertMsg) => this.alertMsg = alertMsg),
+			distinctUntilChanged()
+		)
 
 	favoriteOverlays: Overlay[];
 	isFavorite: boolean;
@@ -58,7 +59,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get noGeoRegistration() {
-		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
+		if (!this.overlay) {
+			return false
+		}
+		return !this.overlay.isGeoRegistered;
 	}
 
 	constructor(protected store$: Store<any>, @Inject(ALERTS) public alerts: IAlert[]) {

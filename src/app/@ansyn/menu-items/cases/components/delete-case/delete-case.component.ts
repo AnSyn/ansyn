@@ -4,7 +4,7 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CasePreview } from '../../models/case.model';
 
 const animationsDuring = '0.2s';

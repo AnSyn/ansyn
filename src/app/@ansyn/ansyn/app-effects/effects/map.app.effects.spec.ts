@@ -1,7 +1,7 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import {
 	ActiveMapChangedAction,

@@ -5,6 +5,10 @@
 		<button [@rotateArrow]="show" #downArrow class="down-arrow"
 				(click)="show = !show">
 		</button>
+
+		<div class="show-all">
+			<span (click)="showAll(collection)">Show all</span>
+		</div>
 	</div>
 
 	<div class="layers" *ngFor="let layer of collection" [@layersTrigger]="show">
@@ -14,13 +18,15 @@
 					id="checkbox{{ layer.id }}"
 					class="regular-checkbox"
 					(change)="onCheckboxClicked($event,layer)"
-					[checked]="layer.isChecked"></ansyn-checkbox>
+					[checked]="activeLayersIds.includes(layer.id)"></ansyn-checkbox>
 				<label for="checkbox{{ layer.id }}"></label>
 			</div>
 			<div class="layer-row">
 				<div class="field-name-container">
 					<span class="field-name" [title]="layer.name">{{layer.name}}</span>
 				</div>
+				<span class="only-filter"
+					  (click)="selectOnly(layer.id)">only</span>
 			</div>
 		</div>
 	</div>

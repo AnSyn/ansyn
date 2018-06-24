@@ -1,9 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayerState, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Layer, LayersContainer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import {
+	UpdateSelectedLayersIds
+} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'ansyn-layer-collection',
@@ -33,18 +36,42 @@ import { SelectLayerAction, UnselectLayerAction } from '@ansyn/menu-items/layers
 	]
 })
 
-export class LayerCollectionComponent {
-	@Input() collection: LayersContainer;
+export class LayerCollectionComponent implements OnInit {
+	@Input() collection: ILayer[];
+	activeLayersIds = [];
+	selectedLayers$: Observable<any> = this.store.select(selectSelectedLayersIds)
+		.distinctUntilChanged()
+		.do((selectedLayers) => {
+			this.activeLayersIds = selectedLayers;
+		});
+
 	public show = true;
+	subscribers = [];
+
+
+	ngOnInit() {
+		this.subscribers.push(
+			this.selectedLayers$.subscribe()
+		);
+	}
 
 	constructor(public store: Store<ILayerState>) {
 	}
 
-	public onCheckboxClicked(event, layer: Layer): void {
+	public onCheckboxClicked(event, layer: ILayer): void {
 		if (event.target.checked) {
-			this.store.dispatch(new SelectLayerAction(layer));
+			this.store.dispatch(new UpdateSelectedLayersIds([...this.activeLayersIds, layer.id]));
 		} else {
-			this.store.dispatch(new UnselectLayerAction(layer));
+			this.store.dispatch(new UpdateSelectedLayersIds(this.activeLayersIds.filter((id) => id !== layer.id)));
 		}
+	}
+
+	public selectOnly(layerId: string) {
+		this.store.dispatch(new UpdateSelectedLayersIds([layerId]));
+	}
+
+	public showAll(collection: ILayer[]) {
+		const layerIds: string[] = collection.map((layer) => {return layer.id});
+		this.store.dispatch(new UpdateSelectedLayersIds(layerIds));
 	}
 }

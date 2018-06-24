@@ -9,7 +9,7 @@ import { CaseMapState } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model'
 import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 @Injectable()

@@ -7,7 +7,7 @@ import {
 	StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 

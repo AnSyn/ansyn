@@ -1,5 +1,5 @@
 <label class="switch">
 	<span class="slider-text">Auto Save</span>
-	<input [id]="'autoSave' + currentCase.id" [checked]="currentCase.autoSave" (change)="onChange($event.target.checked)" type="checkbox"/>
+	<input class="auto-save" [id]="'autoSave' + currentCase?.id" [checked]="currentCase?.autoSave" (change)="onChange($event.target.checked)" type="checkbox"/>
 	<span class="slider round"></span>
 </label>

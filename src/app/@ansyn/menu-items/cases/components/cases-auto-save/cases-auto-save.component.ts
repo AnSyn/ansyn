@@ -16,6 +16,7 @@ export class CasesAutoSaveComponent {
 	}
 
 	onChange(autoSave) {
+		console.log('asa');
 		this.store$.dispatch(new UpdateCaseAction({
 			updatedCase: <Case> { ...this.currentCase, autoSave },
 			forceUpdate: true

@@ -10,12 +10,12 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "5.1.2",
-		"@angular/core": "5.1.2",
+		"@angular/common": "^6.0.3",
+		"@angular/core": "^6.0.3",
 		"@ansyn/core": "0.2.81",
-		"@ngrx/effects": "^5.1.0",
+		"@ngrx/effects": "^6.0.1",
 		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^5.1.0"
+		"@ngrx/store": "^6.0.1"
 	},
 	"typings": "index.d.ts"
 }

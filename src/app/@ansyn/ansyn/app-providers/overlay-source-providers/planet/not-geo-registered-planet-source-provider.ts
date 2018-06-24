@@ -1,7 +1,7 @@
-import { Overlay } from '@ansyn/core';
 import { Injectable } from '@angular/core';
 import { PlanetSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet-source-provider';
 import { PlanetOverlay } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
+import { Overlay } from '@ansyn/core/models/overlay.model';
 
 export const NotGeoRegisteredPlanetOverlaySourceType = 'NOT-GEO-REGISTERED-PLANET';
 

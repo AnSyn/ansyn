@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { IMap } from '@ansyn/imagery/index';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';
+import { IMap } from '@ansyn/imagery/model/imap';
 
 @Injectable()
 export class OpenLayersProjectionService extends ProjectionService {
@@ -23,13 +23,13 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectApproximatelyToImage<olGeometry>(point: Point, map: IMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
-		point.coordinates = proj.fromLonLat(point.coordinates, projection);
+		point.coordinates = proj.fromLonLat(<[number, number]>point.coordinates, projection);
 		return Observable.of(point);
 	}
 
 	projectApproximately(point: Point, map: IMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
-		point.coordinates = proj.toLonLat(point.coordinates, projection);
+		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
 		return Observable.of(point);
 	}
 

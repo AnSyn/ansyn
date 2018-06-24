@@ -1,7 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { CaseTimeState } from '@ansyn/core/models/case.model';
+declare function require(name: string);
+const flatpickr = require('flatpickr');
+// import flatpikr doesn't work
 
-import * as flatpickr from 'flatpickr';
-import { CaseTimeState } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-timeline-timepicker',

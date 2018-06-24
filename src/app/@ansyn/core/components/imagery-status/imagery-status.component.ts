@@ -1,15 +1,14 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
-import { ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
+import { BackToWorldView, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
-import 'rxjs/add/operator/pluck';
-import { Observable } from 'rxjs/Observable';
-import { AlertMsg } from '../../reducers';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { Observable } from 'rxjs';
+import { AlertMsg } from '../../reducers/core.reducer';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '@ansyn/core/utils/time';
 import { ALERTS, IAlert } from '@ansyn/core/alerts/alerts.model';
+import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -31,7 +30,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return this._overlay;
 	}
 
-	@Output() backToWorldView = new EventEmitter<void>();
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 
 	private _subscriptions: Subscription[] = [];
@@ -41,9 +39,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	alertMsg: AlertMsg;
 
 	alertMsg$: Observable<AlertMsg> = this.core$
-		.pluck<ICoreState, AlertMsg>('alertMsg')
-		.do((alertMsg) => this.alertMsg = alertMsg)
-		.distinctUntilChanged();
+		.pipe(
+			pluck<ICoreState, AlertMsg>('alertMsg'),
+			tap((alertMsg) => this.alertMsg = alertMsg),
+			distinctUntilChanged()
+		)
 
 	favoriteOverlays: Overlay[];
 	isFavorite: boolean;
@@ -59,7 +59,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get noGeoRegistration() {
-		return !MapFacadeService.isOverlayGeoRegistered(this.overlay);
+		if (!this.overlay) {
+			return false
+		}
+		return !this.overlay.isGeoRegistered;
 	}
 
 	constructor(protected store$: Store<any>, @Inject(ALERTS) public alerts: IAlert[]) {
@@ -103,5 +106,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleMapLayers() {
 		this.layerFlag = !this.layerFlag;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
+	}
+
+	backToWorldView() {
+		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }))
 	}
 }

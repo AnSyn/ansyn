@@ -10,7 +10,6 @@ import {
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { OverlaysCriteria } from '@ansyn/core';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
@@ -95,18 +94,24 @@ describe('Overlay Reducer', () => {
 		const action = new LoadOverlaysSuccessAction(overlays);
 		const result = OverlayReducer(overlaysInitialState, action);
 
-		expect(Array.from(result.overlays.keys())[0]).toBe('13');
+		expect(Array.from(result.overlays.keys())[0]).toBe('12');
 		expect(result.overlays.size).toBe(2);
 		expect(result.loading).toBe(false);
 		expect(result.loaded).toBe(true);
 	});
 
 
-	it('Set Filters actions', () => {
-		const filteredOverlays = ['1', '2', '3', '4', '5'];
+	it('Set Filters actions, should filter only overlays from "overlays" Map', () => {
+		const filteredOverlays = ['1', '2', '3', '4', '5', '6']; /*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
-		const state = OverlayReducer(overlaysInitialState, setFilteredOverlaysAction);
-		expect(state.filteredOverlays).toEqual(filteredOverlays);
+		const overlays: any = new Map([
+			['1', { id: '1' }],
+			['2', { id: '1' }],
+			['3', { id: '1' }],
+			['4', { id: '1' }]
+		]);
+		const state = OverlayReducer({...overlaysInitialState, overlays }, setFilteredOverlaysAction);
+		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});
 
 	it('Set Special Objects', () => {

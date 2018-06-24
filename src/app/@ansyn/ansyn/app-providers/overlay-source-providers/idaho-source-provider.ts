@@ -1,15 +1,19 @@
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { ErrorHandlerService, LoggerService, Overlay } from '@ansyn/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
-import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import {
+	BaseOverlaySourceProvider, IFetchParams,
+	StartAndEndDate
+} from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { toRadians } from '@ansyn/core/utils/math';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { limitArray } from '@ansyn/core/utils/limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { MultiPolygon } from 'geojson';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';
@@ -56,7 +60,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		// Multiple Source Provider may send a MultiPolygon which Idaho can't handle
 		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as MultiPolygon);
 		}
 
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
@@ -104,7 +108,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(idahoElement: any, token: string): Overlay {
-		let overlay: Overlay = new Overlay();
+		let overlay: Overlay = <Overlay> {};
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;
 		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;

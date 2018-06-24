@@ -1,36 +1,46 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/select-case.app.effects';
-import {
-	Case, CaseGeoFilter, CaseLayersState, CaseMapsState, CaseOrientation, CaseRegionState, CaseState, CaseTimeFilter,
-	CaseTimeState, SetLayoutAction, SetOverlaysCriteriaAction
-} from '@ansyn/core';
-import { CasesService, SelectCaseAction } from '@ansyn/menu-items';
+
 import { cold, hot } from 'jasmine-marbles';
-import { SetAnnotationsLayer, ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { SetComboBoxesProperties } from '@ansyn/status-bar';
+import {
+	BeginLayerCollectionLoadAction,
+	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersIds
+} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
+import {
+	SetFavoriteOverlaysAction,
+	SetLayoutAction,
+	SetOverlaysCriteriaAction
+} from '@ansyn/core/actions/core.actions';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
-import { OverlaysService } from '@ansyn/overlays';
+import {
+	Case,
+	CaseDataInputFiltersState,
+	CaseFacetsState,
+	CaseLayersState,
+	CaseMapsState,
+	CaseOrientation,
+	CaseRegionState,
+	CaseState,
+	CaseTimeFilter,
+	CaseTimeState,
+	IContextEntity,
+	OverlaysManualProcessArgs
+} from '@ansyn/core/models/case.model';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
-	let mockCasesService = {
-		contextValues: {
-			imageryCountBefore: -1,
-			imageryCountAfter: -1
-		}
-	};
-	let mockOverlaysService = {
-		getStartDateViaLimitFacets: () => Observable.of({startDate: new Date(), endDate: new Date()}),
-		getStartAndEndDateViaRangeFacets: () => Observable.of({startDate: new Date(), endDate: new Date()})
-	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -40,14 +50,6 @@ describe('SelectCaseAppEffects', () => {
 			],
 			providers: [
 				SelectCaseAppEffects,
-				{
-					provide: CasesService,
-					useValue: mockCasesService
-				},
-				{
-					provide: OverlaysService,
-					useValue: mockOverlaysService
-				},
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();
@@ -69,15 +71,30 @@ describe('SelectCaseAppEffects', () => {
 		it('should set all feature stores properties', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
-				geoFilter: CaseGeoFilter = 'Pin-Point',
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
+				dataInputFilters: CaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: Overlay[] = [],
 				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: CaseLayersState = { displayAnnotationsLayer: false, annotationsLayer: <any> {} };
+				layers: CaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
+				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
+				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] },
+				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
 
-			const state: CaseState = <any> { orientation, geoFilter, timeFilter, time, region, favoriteOverlays, maps, layers };
+			const state: CaseState = <any> {
+				orientation,
+				timeFilter,
+				time,
+				region,
+				dataInputFilters,
+				favoriteOverlays,
+				maps,
+				layers,
+				overlaysManualProcessArgs,
+				facets,
+				contextEntities
+			};
 
 			const payload: Case = {
 				id: 'caseId',
@@ -90,17 +107,23 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefg)--', {
-				a: new SetLayoutAction(maps.layout),
-				b: new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
-				c: new SetOverlaysCriteriaAction({ time, region }),
+			const expectedResult = cold('--(abcdefghijkl)--', {
+				a: new SetLayoutAction(<any>maps.layout),
+				b: new SetComboBoxesProperties({ orientation, timeFilter }),
+				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
-				f: new SetAnnotationsLayer(layers.annotationsLayer),
-				g: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
-			});
+				f: new BeginLayerCollectionLoadAction(),
+				g: new SetAnnotationsLayer(layers.annotationsLayer),
+				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
+				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				j: new UpdateFacetsAction(facets),
+				k: new UpdateSelectedLayersIds([]),
+				l: new SetContextParamsAction({ contextEntities })
 
-			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult)
+		});
+
+			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);
 		});
 	});
 });

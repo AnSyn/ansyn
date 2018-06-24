@@ -1,7 +1,7 @@
 import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from './menu/menu.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { MenuEffects } from './effects/menu.effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

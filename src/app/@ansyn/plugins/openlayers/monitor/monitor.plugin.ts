@@ -1,17 +1,26 @@
-import { BaseImageryPlugin } from '@ansyn/imagery';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { Injectable } from '@angular/core';
-import { SetProgressBarAction } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import {
+	DisabledOpenLayersMapName,
+	OpenLayersDisabledMap
+} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import TileSource from 'ol/source/tile';
+import { Observable } from 'rxjs';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import {
+	OpenLayersMap,
+	OpenlayersMapName
+} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
+import { Actions } from '@ngrx/effects';
 
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	deps: [Store]
+})
 export class MonitorPlugin extends BaseImageryPlugin {
-	static supported = [OpenlayersMapName, DisabledOpenLayersMapName];
-
 	source: TileSource;
 
 	isFirstLoad: boolean;
@@ -37,7 +46,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	}
 
 	onResetView() {
-		return super.onResetView()
+		return <Observable<boolean>>super.onResetView()
 			.do(this.monitorSource.bind(this));
 	}
 

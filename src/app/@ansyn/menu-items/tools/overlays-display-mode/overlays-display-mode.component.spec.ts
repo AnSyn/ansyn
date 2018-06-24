@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode.component';
 import { toolsFeatureKey, ToolsReducer, toolsStateSelector } from '../reducers/tools.reducer';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 describe('overlaysDisplayModeComponent', () => {
 	let component: OverlaysDisplayModeComponent;

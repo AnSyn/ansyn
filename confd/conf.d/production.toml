@@ -7,7 +7,10 @@ keys = [
     "/ansyn/overlay/api/find",
     "/ansyn/overlay/api/default",
     "/ansyn/login/baseurl",
+    "/ansyn/login/active",
     "/ansyn/menu/background",
     "/ansyn/menu/color",
-    "/ansyn/menu/mode"
+    "/ansyn/menu/mode",
+    "/ansyn/menu/forkme",
+    "/ansyn/imagery/mapsource"
 ]

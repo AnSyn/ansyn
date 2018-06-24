@@ -1,7 +1,9 @@
 <nav class="menu">
 
-	<button class="menu-open-button" (mousedown)="isClick($event) && setPinPoint()">
-		<span class="pointer icon-map-pin-point"></span>
+	<button class="menu-open-button" (mousedown)="isClick($event) && setPinPoint()" id="contextGeoFilter">
+		<span class="pointer" [ngClass]="'icon-map-' + geoFilter">
+
+		</span>
 	</button>
 
 	<div class="buttons-area">

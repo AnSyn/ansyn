@@ -10,11 +10,12 @@ import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/r
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Case } from '@ansyn/core/models/case.model';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { LoggerService } from '@ansyn/core';
-import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
+import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
 
 function mockOverlay(id: string): Overlay {
-	const overlay = new Overlay();
+	const overlay = <Overlay> {};
 	overlay.id = id;
 	return overlay;
 }

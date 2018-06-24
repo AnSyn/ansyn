@@ -1,5 +1,8 @@
 import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
-import { IVisualizerEntity, VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import {
+	ImageryVisualizer, IVisualizerEntity,
+	VisualizerInteractions
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
@@ -9,34 +12,44 @@ import condition from 'ol/events/condition';
 import Select from 'ol/interaction/select';
 import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
-import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
-import { HoverFeatureTriggerAction } from '@ansyn/map-facade/actions';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
-import { CommunicatorEntity } from '@ansyn/imagery';
-import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
-import { MarkUpClass, MarkUpData, overlaysStateSelector } from '@ansyn/overlays';
+import {
+	IOverlaysState,
+	MarkUpClass,
+	MarkUpData,
+	overlaysStateSelector
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { MultiLineString } from 'geojson';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { empty } from 'rxjs';
 
-@Injectable()
+@ImageryVisualizer({
+	supported: [OpenLayersMap],
+	deps: [Store, VisualizersConfig]
+})
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
 	markups: ExtendMap<MarkUpClass, MarkUpData>;
 
 	protected disableCache = true;
 
-	drawOverlaysOnMap$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.DRAW_OVERLAY_ON_MAP)
-		.withLatestFrom(this.store.select(overlaysStateSelector), this.store.select(mapStateSelector))
-		.map(([action, overlaysState, { mapsList }]) => [MapFacadeService.mapById(mapsList, this.mapId), overlaysState])
-		.filter(([map]) => Boolean(map))
+	currentMap$ = this.store.select(mapStateSelector)
+		.map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId))
+		.filter(Boolean);
+
+	drawOverlaysOnMap$: Observable<any> = this.currentMap$
+		.withLatestFrom(this.store.select(overlaysStateSelector))
 		.mergeMap(([map, { overlays, filteredOverlays }]: [CaseMapState, IOverlaysState]) => {
 			if (map.data.overlayDisplayMode === 'Polygon') {
 				const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
@@ -45,31 +58,18 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			} else if (this.getEntities().length > 0) {
 				this.clearEntities();
 			}
-			return Observable.empty();
+			return empty();
 		});
 
-	onHoverFeatureEmitSyncHoverFeature$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.VISUALIZERS.HOVER_FEATURE)
-		.do((action: HoverFeatureTriggerAction): void => this.setHoverFeature(action.payload.id));
-
-
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
+
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
 		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
 		.distinctUntilChanged()
-		.do((markups) => {
-			this.markups = markups;
-			if (this.hoverLayer) {
-				this.hoverLayer.getSource().refresh();
-			}
-			if (this.source) {
-				this.source.refresh();
-			}
-		})
+		.do((markups) => this.markups = markups)
+		.do(this.onMarkupsChange.bind(this));
 
-	constructor(public store: Store<any>,
-				public actions$: Actions,
-				@Inject(VisualizersConfig) config: IVisualizersConfig) {
+	constructor(public store: Store<any>, @Inject(VisualizersConfig) config: IVisualizersConfig) {
 
 		super(config.FootprintPolylineVisualizer);
 
@@ -100,8 +100,21 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		this.createHoverLayer();
 	}
 
+	private onMarkupsChange() {
+		const hover = this.markups.get(MarkUpClass.hover);
+		const [overlayId] = hover.overlaysIds;
+		this.setHoverFeature(overlayId);
+
+		if (this.hoverLayer) {
+			this.hoverLayer.getSource().refresh();
+		}
+		if (this.source) {
+			this.source.refresh();
+		}
+	}
+
 	private propsByFeature(feature: Feature) {
-		const classes = this.markups.findKeysByValue(<string>feature.getId(), "overlaysIds");
+		const classes = this.markups.findKeysByValue(<string>feature.getId(), 'overlaysIds');
 
 		const isFavorites = classes.includes(MarkUpClass.favorites);
 		const isActive = classes.includes(MarkUpClass.active);
@@ -166,7 +179,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		clonedLogicalEntities
 			.filter((entity: IVisualizerEntity) => entity.featureJson.geometry.type === 'MultiPolygon')
 			.forEach((entity: IVisualizerEntity) => {
-				let geometry: GeoJSON.MultiLineString = entity.featureJson.geometry;
+				let geometry: MultiLineString = entity.featureJson.geometry;
 				geometry.type = 'MultiLineString';
 				geometry.coordinates = <any> geometry.coordinates[0];
 			});
@@ -247,10 +260,10 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			const id = $event.selected[0].getId();
 			const hoverFeature = this.hoverLayer.getSource().getFeatureById(id);
 			if (!hoverFeature || hoverFeature.getId() !== id) {
-				this.store.dispatch(new HoverFeatureTriggerAction({ id }));
+				this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 			}
 		} else {
-			this.store.dispatch(new HoverFeatureTriggerAction({}));
+			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}
 
@@ -270,7 +283,6 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe(),
-			this.onHoverFeatureEmitSyncHoverFeature$.subscribe(),
 			this.dropsMarkUp$.subscribe()
 		);
 	}

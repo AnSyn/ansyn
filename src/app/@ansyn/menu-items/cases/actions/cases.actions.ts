@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Case } from '../models/case.model';
-import { Context } from '../models/context.model';
 import { Params } from '@angular/router';
+import { DilutedCase } from '@ansyn/core/models/case.model';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -20,6 +20,7 @@ export const CasesActionTypes = {
 	CLOSE_MODAL: 'CLOSE_MODAL',
 
 	SELECT_CASE: 'SELECT_CASE',
+	SELECT_DILUTED_CASE: 'SELECT_DILUTED_CASE',
 	SELECT_CASE_BY_ID: 'SELECT_CASE_BY_ID',
 
 	LOAD_DEFAULT_CASE: 'LOAD_DEFAULT_CASE',
@@ -31,12 +32,17 @@ export const CasesActionTypes = {
 
 	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
 	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
-	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY'
+	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
 
+	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE'
 
 };
 
 export type CasesActions = any;
+
+export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
+	type = CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE;
+}
 
 export class LoadCasesAction implements Action {
 	type = CasesActionTypes.LOAD_CASES;
@@ -105,6 +111,13 @@ export class SelectCaseAction implements Action {
 	type = CasesActionTypes.SELECT_CASE;
 
 	constructor(public payload: Case) {
+	}
+}
+
+export class SelectDilutedCaseAction implements Action {
+	type = CasesActionTypes.SELECT_DILUTED_CASE;
+
+	constructor(public payload: DilutedCase) {
 	}
 }
 

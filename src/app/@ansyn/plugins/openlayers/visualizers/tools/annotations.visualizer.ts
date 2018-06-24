@@ -9,53 +9,58 @@ import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import {
+	ImageryVisualizer, IVisualizerEntity,
+	VisualizerInteractions
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
-import { AnnotationMode, AnnotationsContextMenuBoundingRect } from '@ansyn/core/models/visualizers/annotations.model';
-import { AnnotationsContextMenuEvent } from '@ansyn/core/index';
+import {
+	AnnotationMode,
+	AnnotationsContextMenuBoundingRect,
+	AnnotationsContextMenuEvent
+} from '@ansyn/core/models/visualizers/annotations.model';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { IVisualizerEntity } from '@ansyn/imagery/index';
 import { Store } from '@ngrx/store';
-import { Injectable } from '@angular/core';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
-import { AnnotationProperties } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { Observable } from 'rxjs/Observable';
-import { IToolsState, selectSubMenu, SubMenuEnum, toolsStateSelector } from '@ansyn/menu-items';
-import { SetAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { ILayerState, layersStateSelector } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import {
+	AnnotationProperties,
+	IToolsState, selectAnnotationLayer,
+	selectSubMenu,
+	SubMenuEnum,
+	toolsStateSelector
+} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { Observable } from 'rxjs';
+import { selectDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
-import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { SetAnnotationMode, SetAnnotationsLayer } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
-@Injectable()
+@ImageryVisualizer({
+	supported: [OpenLayersMap],
+	deps: [Store],
+	isHideable: true
+})
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
-	isHideable = true;
 	disableCache = true;
 
 	public mode: AnnotationMode;
 
-	mapState$ = this.store$.select(mapStateSelector);
-	layersState$ = this.store$.select(layersStateSelector);
 	toolsState$ = this.store$.select(toolsStateSelector);
 	/* data */
-	annotationsLayer$: Observable<any> = this.layersState$
-		.pluck<ILayerState, FeatureCollection<any>>('annotationsLayer')
-		.distinctUntilChanged();
+	annotationsLayer$: Observable<any> = this.store$.select(selectAnnotationLayer);
 
-	displayAnnotationsLayer$: Observable<any> = this.layersState$
-		.pluck<ILayerState, boolean>('displayAnnotationsLayer')
-		.distinctUntilChanged();
+	displayAnnotationsLayer$: Observable<any> = this.store$.select(selectDisplayAnnotationsLayer);
 
 	annotationFlag$ = this.store$.select(selectSubMenu)
 		.map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations)
 		.distinctUntilChanged();
 
-	isActiveMap$ = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
+	isActiveMap$ = this.store$.select(selectActiveMapId)
 		.map((activeMapId: string): boolean => activeMapId === this.mapId)
 		.distinctUntilChanged();
 
@@ -265,7 +270,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.removeDrawInteraction();
 
 		if (!isActiveMap) {
-			this.mode =  undefined;
+			this.mode = undefined;
 			return;
 		}
 

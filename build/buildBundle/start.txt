@@ -1,0 +1,4 @@
+(function(ansynGlobal, factory){
+    factory(ansynGlobal);
+})(this,
+    function app(ansynGlobal){

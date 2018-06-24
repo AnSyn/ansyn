@@ -2,8 +2,9 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
 import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
-import { OverlayDisplayMode } from '@ansyn/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
+import { UUID } from 'angular2-uuid';
 
 @Component({
 	selector: 'ansyn-overlays-display-mode',
@@ -16,6 +17,12 @@ export class OverlaysDisplayModeComponent {
 	public needToDispatchAction = true;
 	public _disabled = false;
 	public _visualizerType: OverlayDisplayMode;
+
+	radioIds = {
+		switchNone: UUID.UUID(),
+		switchHeatMap: UUID.UUID(),
+		switchFootprint: UUID.UUID()
+	};
 
 	public selectedMapOverlaysMode$: Observable<OverlayDisplayMode> = this.store$.select(toolsStateSelector)
 		.map((state: IToolsState) => {

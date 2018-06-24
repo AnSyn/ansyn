@@ -1,0 +1,21 @@
+<div class="data-input-filter">
+	<div class="tree-view-main">
+		<div>
+			<ngx-treeview [config]="dataInputFiltersConfig" [items]="dataInputFiltersItems"
+						  (selectedChange)="selectedFilters = $event">
+			</ngx-treeview>
+		</div>
+		<div class="data-input-filters-buttons">
+			<label class="switch">
+				<input id="activate-data-input-filters" [checked]="dataInputFiltersActive" type="checkbox"
+					   (click)="activateDataInputFilters($event)"/>
+				<span class="slider round"></span>
+				<span class="slider-text">&nbsp;</span>
+			</label>
+			<div>
+				<a (click)="onTreeViewClose()">Cancel</a>
+				<a class="ok-button" (click)="dataInputFiltersOk()">Ok</a>
+			</div>
+		</div>
+	</div>
+</div>

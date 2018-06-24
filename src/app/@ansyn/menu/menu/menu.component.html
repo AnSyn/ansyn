@@ -1,18 +1,29 @@
 <div class="menu-wrapper">
 
 	<div class="menu" [class.expanded]="expand">
-		<div
-			class="menu-btn"
-			*ngFor="let menuItem of menuItemsAsArray$ | async"
-			[class.active]="isActive(menuItem.name)"
-			(click)="toggleItem(menuItem.name)">
 
-			<i [ngClass]="menuItem.iconClass"></i>
-			<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
-			{{menuItem.name}}
-		</div>
+		<ng-container *ngFor="let menuItem of menuItemsAsArray$ | async">
+
+			<div
+				class="menu-btn"
+				[class.active]="isActive(menuItem.name)"
+				(click)="toggleItem(menuItem.name)">
+
+				<i [ngClass]="menuItem.iconClass"></i>
+				<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
+				{{menuItem.name}}
+			</div>
+
+		</ng-container>
 
 		<div class="logo">
+
+			<ng-container *ngIf="menuConfig?.forkMe?.active === 'true'">
+				<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
+					<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title" [title]="menuConfig.forkMe?.title">
+				</a>
+			</ng-container>
+
 			<div class="mode"
 				 *ngIf="menuConfig?.mode"
 				 [style.color]="menuConfig.color"
@@ -24,8 +35,7 @@
 		</div>
 	</div>
 
-
-	<div class="menu-container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
+	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
 		<!--<button class="close" (click)="closeMenu()">×</button>-->
 		<button class="pin" (click)="toggleIsPinned()"

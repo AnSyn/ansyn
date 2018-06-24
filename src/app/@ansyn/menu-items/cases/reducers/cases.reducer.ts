@@ -2,8 +2,10 @@ import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
-import { CasePreview } from "@ansyn/core";
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { Operator } from 'rxjs/Operator';
+import { CasePreview } from '@ansyn/core/models/case.model';
 
 export interface CaseModal {
 	show: boolean,
@@ -38,7 +40,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.addOne(action.payload, state);
 
 		case CasesActionTypes.UPDATE_CASE: {
-			const caseToUpdate: Case = { ...action.payload, lastModified: new Date() };
+			const caseToUpdate = <any> { ...action.payload, lastModified: new Date() };
 			const selectedCase = caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
 			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
 		}
@@ -56,11 +58,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return { ...state, modal: { id: null, show: false } };
 
 		case CasesActionTypes.SELECT_CASE:
-			const selectedCase: Case = action.payload;
-			if (!selectedCase.state.time) {
-				selectedCase.state.time = CasesService.defaultTime;
-			}
-			return { ...state, selectedCase };
+			return { ...state, selectedCase: action.payload };
 
 		default:
 			return state;
@@ -69,6 +67,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 export const { selectEntities, selectAll, selectTotal, selectIds } = casesAdapter.getSelectors();
 export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
-export const selectCaseEntities = createSelector(casesStateSelector, selectEntities);
-export const selectCasesIds = createSelector(casesStateSelector, selectIds);
-
+export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<CasePreview>>>createSelector(casesStateSelector, selectEntities);
+export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
+export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);

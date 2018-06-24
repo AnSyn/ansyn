@@ -1,20 +1,27 @@
-import { BaseMapSourceProvider } from '@ansyn/imagery';
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
-import { OpenlayersMapName, ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map';
 import { Injectable } from '@angular/core';
-import { Overlay } from '@ansyn/core';
-import { extentFromGeojson } from '@ansyn/core/utils';
 import proj from 'ol/proj';
+import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { Store } from '@ngrx/store';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
+import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
 
-export const OpenLayerIDAHOSourceProviderMapType = OpenlayersMapName;
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
 @Injectable()
-export class OpenLayerIDAHOSourceProvider extends BaseMapSourceProvider {
-
-	public mapType = OpenLayerIDAHOSourceProviderMapType;
+export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
+
+	constructor(protected store: Store<any>, protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		super(store, cacheService, imageryCommunicatorService);
+	}
 
 	create(metaData: Overlay): any[] {
 		const source = new XYZ({

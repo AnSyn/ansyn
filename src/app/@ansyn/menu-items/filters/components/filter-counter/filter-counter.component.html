@@ -1,0 +1,6 @@
+<div>
+	<span *ngIf="!isChecked" class="unchecked">+</span>
+	<span [class.unchecked]="!isChecked">{{filteredCount}}</span>
+	/
+	<span>{{count}}</span>
+</div>

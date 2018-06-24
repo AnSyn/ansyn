@@ -3,15 +3,14 @@ import { EditCaseComponent } from './edit-case.component';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
-import { casesConfig } from '@ansyn/menu-items/cases';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { CasesService } from '../../services/cases.service';
+import { casesConfig, CasesService } from '../../services/cases.service';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;

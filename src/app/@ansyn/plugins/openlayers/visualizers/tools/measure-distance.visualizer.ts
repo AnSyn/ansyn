@@ -13,43 +13,44 @@ import VectorSource from 'ol/source/vector';
 import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
-import { VisualizerStateStyle } from '../models/visualizer-state';
-import { IVisualizerEntity } from '@ansyn/imagery/model';
-import { getPointByGeometry } from '@ansyn/core/utils';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import {
+	ImageryVisualizer, IVisualizerEntity,
+	VisualizerInteractions
+} from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
-import { Observable } from 'rxjs/Observable';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { Observable } from 'rxjs';
 import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { toolsFlags } from '@ansyn/menu-items';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { getPointByGeometry } from '@ansyn/core/utils/geo';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
+@ImageryVisualizer({
+	supported: [OpenLayersMap],
+	deps: [Store]
+})
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
-	drawDistamceMeasureOnMap$: Observable<any> = this.actions$
-		.ofType<SetMeasureDistanceToolState>(ToolsActionsTypes.SET_MEASURE_TOOL_STATE)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, { activeMapId }]: [SetMeasureDistanceToolState, IMapState]) => activeMapId === this.mapId)
-		.map(([action, { activeMapId }]: [SetMeasureDistanceToolState, IMapState]) => {
-			if (action.payload) {
+	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId)
+		.map((activeMapId) => activeMapId === this.mapId)
+		.distinctUntilChanged();
+
+	isMeasureToolActive$: Observable<boolean> = this.store$.select(toolsStateSelector)
+		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
+		.map((flags) => flags.get(toolsFlags.isMeasureToolActive))
+		.distinctUntilChanged();
+
+	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
+		.do(([isActiveMap, isMeasureToolActive]) => {
+			if (isActiveMap && isMeasureToolActive) {
 				this.createInteraction();
 			} else {
 				this.clearInteractionAndEntities();
 			}
 		});
-
-	onActiveMapChangesDeleteOldMeasureLayer$ = this.actions$
-		.ofType<ActiveMapChangedAction>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
-		.filter(action => action.payload === this.mapId)
-		.withLatestFrom(this.store$.select(toolsStateSelector), (action, toolState) => {
-			return [action, toolState.flags.get(toolsFlags.isMeasureToolActive)];
-		})
-		.filter(([action, isMeasureToolActive]: [ActiveMapChangedAction, boolean]) => isMeasureToolActive)
-		.do(() => this.createInteraction());
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -105,7 +106,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected actions$: Actions, protected store$: Store<any>) {
+	constructor(protected store$: Store<any>) {
 		super(null, {
 			initial: {
 				stroke: {
@@ -131,9 +132,8 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.drawDistamceMeasureOnMap$.subscribe(),
-			this.onActiveMapChangesDeleteOldMeasureLayer$.subscribe()
-		)
+			this.onChanges$.subscribe()
+		);
 	}
 
 	onResetView(): Observable<boolean> {
@@ -272,10 +272,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	/**
 	 * Format length output.
-	 * @param {ol.geom.LineString} line The line.
-	 * @return {string} The formatted length.
+	 * @param line The line.
+	 * @param projection The Projection.
 	 */
-	formatLength(line, projection) {
+	formatLength(line, projection): string {
 		const length = Sphere.getLength(line, { projection: projection });
 		let output;
 		if (length >= 1000) {

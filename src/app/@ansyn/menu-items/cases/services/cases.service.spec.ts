@@ -1,13 +1,15 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { CasesService } from './cases.service';
+import { casesConfig, CasesService } from './cases.service';
 import { Case } from '../models/case.model';
-import { casesConfig } from '@ansyn/menu-items/cases';
 import { UrlSerializer } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import 'rxjs/add/observable/of';
 import { UUID } from 'angular2-uuid';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 export const MockCasesConfig = {
 	provide: casesConfig,
@@ -43,11 +45,30 @@ describe('CasesService', () => {
 				to: new Date()
 			},
 			orientation: 'Align North',
+			dataInputFilters: { filters: [], active: true },
 			timeFilter: 'Start - End',
-			geoFilter: 'Pin-Point',
 			region: {},
+			maps: {
+				layout: 'layout1',
+				activeMapId: 'activeMapId',
+				data: [
+					{
+						id: 'activeMapId',
+						data: {
+							overlay: {
+								id: 'overlayId1',
+								sourceType: 'PLANET',
+								position: {
+									zoom: 1, center: 2, boundingBox: { test: 1 }
+								},
+								isHistogramActive: false
+							}
+						}
+					}
+				]
+			},
 			overlaysManualProcessArgs: {}
-		}
+		} as any
 	};
 
 	beforeEach(() => {
@@ -59,17 +80,17 @@ describe('CasesService', () => {
 				UrlSerializer,
 				MockCasesConfig,
 				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => Observable.throw(null) } },
-				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' }} }
+				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]
 		});
 	});
 
 	beforeEach(inject([StorageService, CasesService, HttpClient],
 		(_storageService: StorageService, _casesService: CasesService, _http: HttpClient) => {
-		storageService = _storageService;
-		casesService = _casesService;
-		http = _http;
-	}));
+			storageService = _storageService;
+			casesService = _casesService;
+			http = _http;
+		}));
 
 
 	it('should be defined', () => {
@@ -80,7 +101,7 @@ describe('CasesService', () => {
 		let fakeId = 'fakerId';
 		let selectedCase: Case = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'post').and.callFake(() => Observable.of(fakeResponse) );
+		spyOn(http, 'post').and.callFake(() => Observable.of(fakeResponse));
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
 		casesService.createCase(selectedCase);
 		expect(http.post).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/${fakeId}`,
@@ -92,14 +113,14 @@ describe('CasesService', () => {
 					creationTime: selectedCase.creationTime,
 					lastModified: selectedCase.lastModified
 				},
-				data: selectedCase.state
+				data: casesService.pluckIdSourceType(selectedCase.state)
 			});
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {
 		let selectedCase: Case = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'put').and.callFake(() => Observable.of(fakeResponse) );
+		spyOn(http, 'put').and.callFake(() => Observable.of(fakeResponse));
 		casesService.updateCase(selectedCase);
 		expect(http.put).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/fakerId`,
 			{
@@ -110,11 +131,11 @@ describe('CasesService', () => {
 					creationTime: selectedCase.creationTime,
 					lastModified: selectedCase.lastModified
 				},
-				data: selectedCase.state
+				data: casesService.pluckIdSourceType(selectedCase.state)
 			});
 	});
 
-	it('updateCase should send the case id as param in ajax("delete")', () => {
+	it('deleteCase should send the case id as param in ajax("delete")', () => {
 		let selectedCase: Case = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let caseIdToRemove = selectedCase.id;
 		let fakeResponse = { selectedCase };

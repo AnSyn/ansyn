@@ -1,39 +1,43 @@
-import { CommunicatorEntity, BaseImageryPlugin } from '@ansyn/imagery';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import ImageLayer from 'ol/layer/image';
 import { OpenLayersImageProcessing } from '@ansyn/plugins/openlayers/image-processing/image-processing';
 import Raster from 'ol/source/raster';
-import { Actions } from '@ngrx/effects';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { SetMapAutoImageProcessing, SetMapManualImageProcessing } from '@ansyn/map-facade';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { Store } from '@ngrx/store';
 
-
-@Injectable()
+@ImageryPlugin({
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	deps: [Store]
+})
 export class ImageProcessingPlugin extends BaseImageryPlugin {
-	static supported = [OpenlayersMapName, DisabledOpenLayersMapName];
 	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
+	currentMap$ = this.store$.select(mapStateSelector)
+		.map((mapState: IMapState) => MapFacadeService.mapById(mapState.mapsList, this.mapId))
+		.filter(Boolean);
 
-	onToggleImageProcessing$: Observable<any> = this.actions$
-		.ofType<SetMapAutoImageProcessing>(MapActionTypes.SET_MAP_AUTO_IMAGE_PROCESSING)
-		.filter((action: SetMapAutoImageProcessing) => action.payload.mapId === this.mapId && this.isImageLayerAndImageProcessing())
-		.do((action: SetMapAutoImageProcessing) =>  {
-			this.setAutoImageProcessing(action.payload.toggleValue)
+	onToggleImageProcessing$: Observable<any> = this.currentMap$
+		.map((currentMap: CaseMapState) => currentMap.data.isAutoImageProcessingActive)
+		.distinctUntilChanged()
+		.filter(this.isImageLayerAndImageProcessing.bind(this))
+		.do(this.setAutoImageProcessing.bind(this));
+
+	imageManualProcessArgs$ = this.currentMap$
+		.filter((currentMap: CaseMapState) => !currentMap.data.isAutoImageProcessingActive)
+		.map((currentMap: CaseMapState) => currentMap.data.imageManualProcessArgs)
+		.filter(this.isImageLayerAndImageProcessing.bind(this))
+		.do((imageManualProcessArgs) => {
+			this._imageProcessing.processImage(imageManualProcessArgs);
 		});
 
-	onSetManualImageProcessing$: Observable<any> = this.actions$
-		.ofType<SetMapManualImageProcessing>(MapActionTypes.SET_MAP_MANUAL_IMAGE_PROCESSING)
-		.filter((action: SetMapManualImageProcessing) => action.payload.mapId === this.mapId && this.isImageLayerAndImageProcessing())
-		.do((action: SetMapManualImageProcessing) => {
-			this.setManualImageProcessing(action.payload.processingParams);
-		});
-
-
-	constructor(public actions$: Actions) {
+	constructor(public store$: Store<any>) {
 		super();
 	}
 
@@ -44,7 +48,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		if (this.imageLayer && this.imageLayer.getSource() instanceof Raster) {
 			this._imageProcessing = new OpenLayersImageProcessing((<any>this.imageLayer).getSource());
 		}
-
 		return Observable.of(true);
 	}
 
@@ -61,19 +64,14 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	public setManualImageProcessing(processingParams: Object): void {
-		this._imageProcessing.processImage(processingParams);
-	}
-
-
 	public isImageLayerAndImageProcessing(): boolean {
-		return Boolean(this.imageLayer && this._imageProcessing)
+		return Boolean(this.imageLayer && this._imageProcessing);
 	}
 
 	onInit() {
 		this.subscriptions.push(
 			this.onToggleImageProcessing$.subscribe(),
-			this.onSetManualImageProcessing$.subscribe()
-		)
+			this.imageManualProcessArgs$.subscribe()
+		);
 	}
 }

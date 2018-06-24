@@ -2,14 +2,14 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { TimelineComponent } from './timeline.component';
 import { DebugElement, EventEmitter } from '@angular/core';
 import * as d3 from 'd3/build/d3';
-import { OverlaysService } from '@ansyn/overlays/services';
-import { BaseOverlaySourceProvider, OverlaysConfig } from '@ansyn/overlays';
-import { createStore, StoreFixture } from '@ansyn/core/test';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '@ansyn/overlays/effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
-import { LoggerService } from '@ansyn/core';
+import { createStore, StoreFixture } from '@ansyn/core/test/mock-store';
+import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;

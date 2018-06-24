@@ -1,0 +1,31 @@
+<div class="app animations" [ngClass]="(isPinnedClass$ | async)">
+	<div class="menu">
+		<ansyn-tools></ansyn-tools>
+	</div>
+
+	<div class="layer">
+		<div class="maps-container">
+			<ansyn-imageries-manager></ansyn-imageries-manager>
+		</div>
+
+		<div class="status-timeline-container">
+			<div class="status" *ngIf="(windowLayout$ | async).statusBar">
+				<ansyn-status-bar
+					[selectedCaseName]="(selectedCaseName$ | async)"
+					[activeMap]="(activeMap$ | async)"
+				>
+				</ansyn-status-bar>
+			</div>
+
+			<div class="app-timeline-container" *ngIf="(windowLayout$ | async).timeLine">
+				<ansyn-overlays-container></ansyn-overlays-container>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- App overlays -->
+<ansyn-toast [duration]="4"></ansyn-toast>
+
+<ansyn-overlay-overview></ansyn-overlay-overview>

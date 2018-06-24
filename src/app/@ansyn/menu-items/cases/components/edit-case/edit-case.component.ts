@@ -2,15 +2,15 @@ import { Component, ElementRef, HostBinding, HostListener, OnInit, ViewChild } f
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { Case } from '../../models/case.model';
-import { Context } from '../../models/context.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
-import { selectContextsArray } from '@ansyn/context/reducers';
 import { CasePreview } from '../../models/case.model';
+import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
+import { Context } from '@ansyn/core/models/context.model';
 
 const animationsDuring = '0.2s';
 
@@ -66,7 +66,7 @@ export class EditCaseComponent implements OnInit {
 
 	addDefaultContext(context: Context[]): Context[] {
 		return [
-			{ id: 'default', name: 'Default Case' },
+			{ id: 'default', name: 'Default Case', creationTime: new Date()},
 			...context
 		];
 	}
@@ -132,7 +132,7 @@ export class EditCaseComponent implements OnInit {
 			this.store.dispatch(new UpdateCaseAction(this.caseModel));
 		} else {
 			const selectContext = this.contextsList[contextIndex];
-			this.caseModel = this.casesService.updateCaseViaContext(selectContext, this.caseModel);
+			this.caseModel = cloneDeep(this.casesService.updateCaseViaContext(selectContext, this.caseModel));
 			this.casesService.createCase(this.caseModel)
 				.subscribe((addedCase: Case) => {
 					this.store.dispatch(new AddCaseAction(addedCase));

@@ -1,6 +1,7 @@
-<div class="app animations" [ngClass]="isPinnedClass">
+<div class="app animations" [ngClass]="(isPinnedClass$ | async)">
 	<div class="menu">
 		<ansyn-menu [version]="version"></ansyn-menu>
+		<ansyn-tools class="ansynToolsAlone" ></ansyn-tools>
 	</div>
 
 	<div class="layer">
@@ -11,9 +12,8 @@
 		<div class="status-timeline-container">
 			<div class="status">
 				<ansyn-status-bar
-					[selectedCaseName]="selectedCaseName"
-					[activeMap]="(activeMap$ | async)"
-				>
+					[selectedCaseName]="(selectedCaseName$ | async)"
+					[activeMap]="(activeMap$ | async)">
 				</ansyn-status-bar>
 			</div>
 
@@ -24,7 +24,10 @@
 	</div>
 </div>
 
-<router-outlet></router-outlet>
 
 <!-- App overlays -->
 <ansyn-toast [duration]="4"></ansyn-toast>
+
+<ansyn-overlay-overview></ansyn-overlay-overview>
+
+<router-outlet></router-outlet>

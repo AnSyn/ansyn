@@ -1,16 +1,15 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { OverlayDisplayMode } from '@ansyn/core/models/case.model';
-import { AnnotationProperties } from '../reducers/tools.reducer';
+import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
+import { AnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ImageManualProcessArgs } from '@ansyn/core';
-import { SubMenuEnum } from '@ansyn/menu-items';
+import { toolsFlags } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { FeatureCollection } from 'geojson';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
 	STOP_MOUSE_SHADOW: type('[Tools] stop mouse shadow'),
-	DISABLE_MOUSE_SHADOW: type('DISABLE_MOUSE_SHADOW'),
-	ENABLE_MOUSE_SHADOW: type('ENABLE_MOUSE_SHADOW'),
+	UPDATE_TOOLS_FLAGS: type('UPDATE_TOOLS_FLAGS'),
 	PULL_ACTIVE_CENTER: type('PULL_ACTIVE_CENTER'),
 	SET_ACTIVE_CENTER: type('SET_ACTIVE_CENTER'),
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
@@ -20,14 +19,14 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
-	SET_MANUAL_IMAGE_PROCESSING_SUCCESS: type('SET_MANUAL_IMAGE_PROCESSING_SUCCESS'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
-	SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS: type('SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
+	ANNOTATIONS_SET_LAYER: type('ANNOTATIONS_SET_LAYER'),
+	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
@@ -35,10 +34,17 @@ export const ToolsActionsTypes = {
 
 };
 
-export class SetManualImageProcessingSuccess implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS
+export class SetAnnotationsLayer implements Action {
+	type = ToolsActionsTypes.ANNOTATIONS_SET_LAYER;
 
-	constructor(public payload?: any) {
+	constructor(public payload: FeatureCollection<any>) {
+	}
+}
+
+export class UpdateOverlaysManualProcessArgs implements Action {
+	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
+
+	constructor(public payload: { override?: boolean, data: OverlaysManualProcessArgs }) {
 
 	}
 }
@@ -67,17 +73,10 @@ export class StopMouseShadow implements Action {
 	}
 }
 
-export class DisableMouseShadow implements Action {
-	type = ToolsActionsTypes.DISABLE_MOUSE_SHADOW;
+export class UpdateToolsFlags implements Action {
+	type = ToolsActionsTypes.UPDATE_TOOLS_FLAGS;
 
-	constructor(public payload?: any) {
-	};
-}
-
-export class EnableMouseShadow implements Action {
-	type = ToolsActionsTypes.ENABLE_MOUSE_SHADOW;
-
-	constructor(public payload?: any) {
+	constructor(public payload: { key: toolsFlags, value: boolean }[]) {
 	};
 }
 
@@ -177,14 +176,7 @@ export class EnableImageProcessing implements Action {
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
-	};
-}
-
-export class SetManualImageProcessingArguments implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS;
-
-	constructor(public payload: { processingParams: ImageManualProcessArgs }) {
+	constructor(public payload: ImageManualProcessArgs ) {
 	};
 }
 
@@ -205,10 +197,10 @@ export class SetSubMenu implements Action {
 }
 
 export type ToolsActions =
-	StartMouseShadow
+	UpdateOverlaysManualProcessArgs
+	| StartMouseShadow
 	| StopMouseShadow
-	| DisableMouseShadow
-	| EnableMouseShadow
+	| UpdateToolsFlags
 	| PullActiveCenter
 	| SetActiveCenter
 	| SetPinLocationModeAction
@@ -220,7 +212,6 @@ export type ToolsActions =
 	| EnableImageProcessing
 	| SetAutoImageProcessingSuccess
 	| SetMapGeoEnabledModeToolsActionStore
-	| SetManualImageProcessingArguments
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState

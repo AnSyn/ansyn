@@ -1,34 +1,34 @@
 <form class="form">
 	<div class="switch-field">
 		<input type="radio"
-			   id="switchNone"
+			   [id]="radioIds.switchNone"
 			   name="switchOverlays"
 			   [(ngModel)]="visualizerType"
 			   [disabled]="disabled"
 			   value="None"/>
 
-		<label for="switchNone">
+		<label [for]="radioIds.switchNone">
 			<i class="icon-close"></i>
 		</label>
 		<input type="radio"
-			   id="switchHeatMap"
+			   [id]="radioIds.switchHeatMap"
 			   name="switchOverlays"
 			   [(ngModel)]="visualizerType"
 			   value="Heatmap"
 			   [disabled]="disabled"/>
 
-		<label for="switchHeatMap" tooltip-class="bottom" tooltip-value="Heat Map">
+		<label [for]="radioIds.switchHeatMap" tooltip-class="bottom" tooltip-value="Heat Map">
 			<i class="icon-tools-heatmap"></i>
 		</label>
 
 		<input type="radio"
-			   id="switchFootprint"
+			   [id]="radioIds.switchFootprint"
 			   name="switchOverlays"
 			   [(ngModel)]="visualizerType"
 			   value="Polygon"
 			   [disabled]="disabled"/>
 
-		<label for="switchFootprint" tooltip-class="bottom" tooltip-value="Overlays Footprint">
+		<label [for]="radioIds.switchFootprint" tooltip-class="bottom" tooltip-value="Overlays Footprint">
 			<i class="icon-tools-polygons"></i>
 		</label>
 

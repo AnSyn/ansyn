@@ -1,0 +1,14 @@
+<button
+	class="trigger"
+	#optionsTrigger
+	[attr.tooltip-value]="comboBoxToolTipDescription || null"
+	tooltip-class="top"
+	[class.active]="isActive">
+
+	<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
+	<div class="rander" [innerHTML]="render"></div>
+	<span class="arrow">
+			{{ !isActive ? '▼' : '▲'}}
+		</span>
+
+</button>

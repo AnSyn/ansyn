@@ -1,17 +1,21 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { DrawOverlaysOnMapTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { Observable } from 'rxjs';
+import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { CommunicatorEntity } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { MapFacadeService } from '@ansyn/map-facade';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { empty } from 'rxjs';
 
-@Injectable()
+@ImageryVisualizer({
+	supported: [OpenLayersMap],
+	deps: [Store, Actions]
+})
 export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 
 	drawOverlaysOnMap$: Observable<any> = this.actions$
@@ -27,7 +31,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 			} else if (this.getEntities().length > 0) {
 				this.clearEntities();
 			}
-			return Observable.empty();
+			return empty();
 		});
 
 	constructor(public store$: Store<any>, public actions$: Actions) {
@@ -48,6 +52,6 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 		super.onInit();
 		this.subscriptions.push(
 			this.drawOverlaysOnMap$.subscribe()
-		)
+		);
 	}
 }

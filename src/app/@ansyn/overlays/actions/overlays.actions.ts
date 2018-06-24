@@ -1,10 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { Overlay } from '../models/overlay.model';
-import { OverlaySpecialObject } from '@ansyn/core';
-import { TimelineRange } from '../reducers/overlays.reducer';
-import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import { MarkUpClass, MarkUpData, OverlayDropMarkUp } from '@ansyn/overlays';
+import { MarkUpClass, MarkUpData, OverlayDropMarkUp, TimelineRange } from '../reducers/overlays.reducer';
+import { OverlaysCriteria, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -19,7 +17,6 @@ export const OverlaysActionTypes = {
 	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
 	DISPLAY_OVERLAY_SUCCESS: type('[Overlay] Display Overlay Success'),
 	DISPLAY_OVERLAY_FAILED: type('[Overlay] Display Overlay Failed'),
-	DEMO: type('[Overlay] demo'),
 	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
 	ADD_OVERLAYS_MARKUPS: type('ADD_OVERLAYS_MARKUPS'),
 	REMOVE_OVERLAYS_MARKUPS: type('REMOVE_OVERLAYS_MARKUPS'),
@@ -30,7 +27,8 @@ export const OverlaysActionTypes = {
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
 	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
-	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE')
+	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE'),
+	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY')
 };
 
 export class SelectOverlayAction implements Action {
@@ -138,14 +136,6 @@ export class DisplayOverlayFailedAction implements Action {
 	}
 }
 
-export class DemoAction implements Action {
-	type = OverlaysActionTypes.DEMO;
-
-	constructor(public payload: any) {
-	}
-}
-
-
 export class SetFilteredOverlaysAction implements Action {
 	type = OverlaysActionTypes.SET_FILTERED_OVERLAYS;
 
@@ -168,20 +158,6 @@ export class SetSpecialObjectsActionStore implements Action {
 	};
 }
 
-export class MouseOverDropAction implements Action {
-	type = OverlaysActionTypes.MOUSE_OVER_DROP;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class MouseOutDropAction implements Action {
-	type = OverlaysActionTypes.MOUSE_OUT_DROP;
-
-	constructor(public payload: string) {
-	}
-}
-
 export class SetOverlaysStatusMessage implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
@@ -189,11 +165,18 @@ export class SetOverlaysStatusMessage implements Action {
 	}
 }
 
-
 export class RedrawTimelineAction implements Action {
 	type = OverlaysActionTypes.REDRAW_TIMELINE;
 
 	constructor(public payload?: string) {
+	}
+}
+
+export class SetHoveredOverlayAction implements Action {
+	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
+
+	constructor(public payload?: Overlay) {
+
 	}
 }
 
@@ -211,10 +194,8 @@ export type OverlaysActions
 	| LoadOverlaysSuccessAction
 	| LoadOverlaysFailAction
 	| ClearFilterAction
-	| DemoAction
 	| SetFilteredOverlaysAction
-	| MouseOverDropAction
-	| MouseOutDropAction
 	| SetOverlaysStatusMessage
 	| AddMarkUp
 	| RemoveMarkUp
+	| SetHoveredOverlayAction

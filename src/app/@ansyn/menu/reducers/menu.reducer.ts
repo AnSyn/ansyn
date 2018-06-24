@@ -1,22 +1,29 @@
-import { AddMenuItemAction, MenuActionTypes, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
-import { SetBadgeAction } from '../actions/menu.actions';
-import { MenuItem } from '../models';
-import { isDevMode } from '@angular/core';
+import {
+	AddMenuItemAction,
+	MenuActionTypes,
+	SelectMenuItemAction,
+	SetBadgeAction,
+	UnSelectMenuItemAction
+} from '../actions/menu.actions';
 import { sessionData, updateSession } from '../helpers/menu-session.helper';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { MenuItem } from '@ansyn/menu/models/menu-item.model';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
 import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { localStorageData, updateLocalStorage } from '@ansyn/menu/helpers/menu-local-storage.helper';
 
-export interface IMenuState {
-	menuItems: Map<string, MenuItem>;
+export const menuItemsAdapter: EntityAdapter<MenuItem> = createEntityAdapter<MenuItem>({ selectId: (menuItem: MenuItem) => menuItem.name });
+
+export interface IMenuState extends EntityState<MenuItem> {
 	selectedMenuItem: string;
 	isPinned: boolean;
-	clickOutside: boolean;
+	autoClose: boolean;
 	showHelpOnStartup: boolean;
 	doneStartupOperations: boolean;
 }
 
-export const initialMenuState: IMenuState = {
-	menuItems: new Map(),
+export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
 	selectedMenuItem: (sessionData().doneStartupOperations ?
 			sessionData().selectedMenuItem
 			: (localStorageData().showHelpOnStartup ?
@@ -24,10 +31,10 @@ export const initialMenuState: IMenuState = {
 				: sessionData().selectedMenuItem)
 	),
 	isPinned: sessionData().isPinned,
-	clickOutside: true,
+	autoClose: true,
 	showHelpOnStartup: localStorageData().showHelpOnStartup,
 	doneStartupOperations: sessionData().doneStartupOperations
-};
+});
 
 export const menuFeatureKey = 'menu';
 
@@ -35,26 +42,14 @@ export const menuStateSelector: MemoizedSelector<any, IMenuState> = createFeatur
 
 export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
 
-const isMenuItemShown = (menuItem: MenuItem) => isDevMode() || menuItem.production;
-
 export function MenuReducer(state: IMenuState = initialMenuState, action: MenuActions) {
 
 	switch (action.type) {
 		case MenuActionTypes.INITIALIZE_MENU_ITEMS: {
-			const menuItems = new Map();
-			action.payload.forEach((menuItem: MenuItem) => {
-				if (isMenuItemShown(menuItem)) {
-					menuItems.set(menuItem.name, menuItem);
-				}
-			});
-			return { ...state, menuItems };
+			return menuItemsAdapter.addAll(action.payload, state);
 		}
 		case MenuActionTypes.ADD_MENU_ITEM:
-			const menuItems = new Map(state.menuItems);
-			if (isMenuItemShown(action.payload)) {
-				menuItems.set(action.payload.name, action.payload);
-			}
-			return { ...state, menuItems };
+			return menuItemsAdapter.addOne(action.payload, state);
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
 			const selectedMenuItem = action.payload;
@@ -69,18 +64,14 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SET_BADGE:
 			const { key, badge } = action.payload;
-			const menuItemsHandler = new Map<string, MenuItem>(state.menuItems);
-			const menuItem = menuItemsHandler.get(key);
-			menuItem.badge = badge;
-			menuItemsHandler.set(key, menuItem);
-			return { ...state, menuItems: menuItemsHandler };
+			return menuItemsAdapter.updateOne({ id: key, changes: { ...state.entities[key], badge } }, state);
 
 		case MenuActionTypes.TOGGLE_IS_PINNED:
 			updateSession({ isPinned: action.payload });
-			return { ...state, isPinned: action.payload };
+			return { ...state, isPinned: action.payload, clickOutside: !action.payload };
 
-		case MenuActionTypes.SET_CLICK_OUTSIDE:
-			return { ...state, clickOutside: action.payload };
+		case MenuActionTypes.SET_AUTO_CLODE:
+			return { ...state, autoClose: action.payload };
 
 		case MenuActionTypes.SET_SHOW_HELP_ON_STARTUP:
 			updateLocalStorage({ showHelpOnStartup: action.payload });
@@ -94,3 +85,14 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return state;
 	}
 }
+
+/* @ngrx/entity */
+export const { selectAll, selectEntities }: EntitySelectors<MenuItem, IMenuState> = menuItemsAdapter.getSelectors();
+export const selectAllMenuItems: MemoizedSelector<IMenuState, MenuItem[]> = createSelector(menuStateSelector, selectAll);
+export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<MenuItem>> = createSelector(menuStateSelector, selectEntities);
+
+export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
+export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
+export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
+
+

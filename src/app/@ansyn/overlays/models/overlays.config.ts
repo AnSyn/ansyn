@@ -1,9 +1,7 @@
-export interface KeyAndValue {
-	key: string;
-	value: string
-}
 
 export interface IOverlaysConfig {
 	limit: number;
-	sourceTypeNotices: KeyAndValue[];
+	sourceTypeNotices: {
+		[propName: string]: string
+	};
 }

@@ -1,12 +1,11 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MenuComponent } from './menu.component';
-import { MenuItem } from '../models';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reducer';
-import { SelectMenuItemAction, UnSelectMenuItemAction } from '../actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ContainerChangedTriggerAction } from '../actions/menu.actions';
-import { MenuConfig } from '../models';
+import { ContainerChangedTriggerAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
+import { MenuConfig } from '@ansyn/menu/models/menuConfig';
+import { MenuItem } from '@ansyn/menu/models/menu-item.model';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;

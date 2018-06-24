@@ -1,4 +1,5 @@
 import { LimitedArray } from '@ansyn/core/utils/limited-array';
+import { MultiPolygon, Polygon } from 'geojson';
 
 export class PlanetOverlay {
 	_links: {
@@ -7,7 +8,7 @@ export class PlanetOverlay {
 		thumbnail: string
 	};
 	_permissions: string[];
-	geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon;
+	geometry: Polygon | MultiPolygon;
 	id: string;
 	properties: {
 		acquired: string,

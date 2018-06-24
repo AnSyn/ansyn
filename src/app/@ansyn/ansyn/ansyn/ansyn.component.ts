@@ -1,17 +1,15 @@
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Case } from '@ansyn/menu-items/cases';
-import '@ansyn/core/utils/clone-deep';
-import * as packageJson from '../../../../../package.json';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { Case, CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
+import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
-import { ICasesState } from "@ansyn/menu-items";
+declare function require(name: string);
+const packageJson = require('../../../../../package.json');
 
 @Component({
 	selector: 'ansyn-app',
@@ -19,38 +17,21 @@ import { ICasesState } from "@ansyn/menu-items";
 	styleUrls: ['./ansyn.component.less']
 })
 
-export class AnsynComponent implements OnInit {
-	selectedCase$: Observable<Case> = this.store$.select(casesStateSelector)
-		.pluck<ICasesState, Case>('selectedCase')
-		.filter(selectedCase => Boolean(selectedCase))
-		.distinctUntilChanged();
+export class AnsynComponent {
+	selectedCaseName$: Observable<string> = this.store$.select(selectSelectedCase)
+		.map((selectSelected: Case) => selectSelected ? selectSelected.name : 'Default Case');
 
-	isPinned$ = this.store$.select(menuStateSelector)
-		.pluck<IMenuState, boolean>('isPinned')
-		.distinctUntilChanged()
-		.skip(1);
+	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned)
+		.skip(1)
+		.map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned');
 
-	mapState$: Observable<IMapState> = this.store$.select(mapStateSelector);
-
-	activeMap$: Observable<CaseMapState> = this.mapState$
+	activeMap$: Observable<CaseMapState> = this.store$.select(mapStateSelector)
+		.filter(Boolean)
 		.map(MapFacadeService.activeMap)
-		.filter(activeMap => Boolean(activeMap));
+		.filter(Boolean);
 
-	selectedCaseName$: Observable<string> = this.selectedCase$.pluck('name');
-	selectedCaseName: string;
 	version = (<any>packageJson).version;
-	isPinnedClass: string;
 
 	constructor(protected store$: Store<IAppState>) {
-	}
-
-	ngOnInit(): void {
-		this.selectedCaseName$.subscribe(_selectedCaseName => {
-			this.selectedCaseName = _selectedCaseName;
-		});
-
-		this.isPinned$.subscribe((_isPinned: boolean) => {
-			this.isPinnedClass = _isPinned ? 'isPinned' : 'isNotPinned';
-		});
 	}
 }

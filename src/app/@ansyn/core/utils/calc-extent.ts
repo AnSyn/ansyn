@@ -1,12 +1,9 @@
-import * as GeoJSON from 'geojson';
-import * as bbox from '@turf/bbox';
-import { polygon } from '@turf/helpers';
-import * as area from '@turf/area';
-import * as intersect from '@turf/intersect';
+import { Feature, MultiPolygon, Polygon as geoPolygon } from 'geojson';
+import { area, intersect, bbox, polygon, unkinkPolygon } from '@turf/turf';
 import { CaseMapExtent } from '../models/case-map-position.model';
 
-export function extentFromGeojson(footprint: GeoJSON.MultiPolygon | GeoJSON.Polygon): CaseMapExtent {
-	const footprintFeature: GeoJSON.Feature<any> = {
+export function extentFromGeojson(footprint: MultiPolygon | geoPolygon): CaseMapExtent {
+	const footprintFeature: Feature<any> = {
 		'type': 'Feature',
 		'properties': {},
 		'geometry': footprint
@@ -15,17 +12,23 @@ export function extentFromGeojson(footprint: GeoJSON.MultiPolygon | GeoJSON.Poly
 	return <any>bbox(<any>footprintFeature);
 }
 
-export function getFootprintIntersectionRatioInExtent(extent: GeoJSON.Polygon, footprint: GeoJSON.MultiPolygon): number {
-	const extentPolygon = polygon(extent.coordinates);
-	const extentArea = area(extentPolygon);
-
+export function getFootprintIntersectionRatioInExtent(extent: geoPolygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;
-	footprint.coordinates.forEach(coordinates => {
-		const intersection = intersect(extentPolygon, polygon(coordinates));
-		if (intersection) {
-			intersectionArea += area(intersection);
-		}
-	});
+	let extentArea = 1;
+	try {
+		const extentPolygon = polygon(extent.coordinates);
+		const extentPolygons = unkinkPolygon(extentPolygon);
+		extentArea = area(extentPolygons);
+
+		footprint.coordinates.forEach(coordinates => {
+			const intersection = intersect(extentPolygon, polygon(coordinates));
+			if (intersection) {
+				intersectionArea += area(intersection);
+			}
+		});
+	} catch (e) {
+		console.warn('getFootprintIntersectionRatioInExtent: turf exception', e);
+	}
 
 	return intersectionArea / extentArea;
 }

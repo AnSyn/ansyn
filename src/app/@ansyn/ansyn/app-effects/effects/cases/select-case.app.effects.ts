@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { IAppState } from '../../';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { Observable } from 'rxjs/Observable';
-import { CasesActionTypes, CasesService, SelectCaseAction } from '@ansyn/menu-items';
-import { SetComboBoxesProperties } from '@ansyn/status-bar';
+import { Observable } from 'rxjs';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import {
-	SetAnnotationsLayer,
-	ToggleDisplayAnnotationsLayer
+	SetFavoriteOverlaysAction,
+	SetLayoutAction,
+	SetOverlaysCriteriaAction
+} from '@ansyn/core/actions/core.actions';
+import {
+	BeginLayerCollectionLoadAction,
+	ToggleDisplayAnnotationsLayer,
+	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { Case, CaseMapState, Overlay, SetLayoutAction, SetOverlaysCriteriaAction } from '@ansyn/core';
-import { OverlaysService } from '@ansyn/overlays';
-import { UUID } from 'angular2-uuid';
+import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { Case, CaseMapState } from '@ansyn/core/models/case.model';
+import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
+import { Overlay } from '@ansyn/core/models/overlay.model';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -29,80 +38,26 @@ export class SelectCaseAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.filter(this.notImageryCountMode.bind(this))
 		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
 
-	/**
-	 * @type Effect
-	 * @name selectCaseWithImageryCountBefore$
-	 * @ofType SelectCaseAction
-	 * @filter There is an imagery count before and the case is not empty
-	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, SetAnnotationsLayer, ToggleDisplayAnnotation
-	 */
-	@Effect()
-	selectCaseWithImageryCountBefore$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(this.imageryCountBeforeMode.bind(this))
-		.switchMap(({ payload }: SelectCaseAction) => {
-			return this.overlaysService.getStartDateViaLimitFacets({
-				region: payload.state.region,
-				limit: this.casesService.contextValues.imageryCountBefore,
-				facets: payload.state.facets
-			}).mergeMap((data: { startDate, endDate }) => {
-				payload.state.time.from = new Date(data.startDate);
-				payload.state.time.to = new Date(data.endDate);
-				return this.selectCaseActions(payload);
-			});
-		});
-
-	/**
-	 * @type Effect
-	 * @name selectCaseWithImageryCountBeforeAndAfter$
-	 * @ofType SelectCaseAction
-	 * @filter There is an imagery count before and after and the case is not empty
-	 * @action UpdateCaseAction, SetTimeAction, LoadOverlaysAction
-	 */
-	@Effect()
-	selectCaseWithImageryCountBeforeAndAfter$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.SELECT_CASE)
-		.filter(this.imageryCountBeforeAfterMode.bind(this))
-		.switchMap(({ payload }: SelectCaseAction) => {
-			return this.overlaysService.getStartAndEndDateViaRangeFacets({
-				region: payload.state.region,
-				limitBefore: this.casesService.contextValues.imageryCountBefore,
-				limitAfter: this.casesService.contextValues.imageryCountAfter,
-				facets: payload.state.facets,
-				date: this.casesService.contextValues.time
-			})
-				.mergeMap((data: { startDate, endDate }) => {
-					payload.state.time.from = new Date(data.startDate);
-					payload.state.time.to = new Date(data.endDate);
-					return this.selectCaseActions(payload);
-				});
-		});
-
-
-	notImageryCountMode(): boolean {
-		return this.casesService.contextValues.imageryCountBefore === -1 && this.casesService.contextValues.imageryCountAfter === -1;
-	}
-
-	imageryCountBeforeMode(): boolean {
-		return this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter === -1;
-	}
-
-	imageryCountBeforeAfterMode(): boolean {
-		return this.casesService.contextValues.imageryCountBefore !== -1 && this.casesService.contextValues.imageryCountAfter !== -1;
+	constructor(protected actions$: Actions,
+				protected store$: Store<IAppState>) {
 	}
 
 	selectCaseActions(payload: Case): Action[] {
 		const { state } = payload;
 		// status-bar
-		const { orientation, geoFilter, timeFilter } = state;
+		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
-		// core
-		const { favoriteOverlays, time, region } = state;
+		// context
+		const { favoriteOverlays, region, dataInputFilters, contextEntities } = state;
+		let {  time } = state;
 		const { layout } = state.maps;
+
+		if (!time) {
+			time = CasesService.defaultTime;
+		}
 
 		if (typeof time.from === 'string') {
 			time.from = new Date(time.from);
@@ -110,34 +65,34 @@ export class SelectCaseAppEffects {
 		if (typeof time.to === 'string') {
 			time.to = new Date(time.to);
 		}
-
 		// layers
-		const { annotationsLayer, displayAnnotationsLayer } = state.layers;
+		const { annotationsLayer, displayAnnotationsLayer, activeLayersIds } = state.layers;
+		// filters
+		const { facets } = state;
 		return [
-			new SetLayoutAction(layout),
-			new SetComboBoxesProperties({ orientation, geoFilter, timeFilter }),
-			new SetOverlaysCriteriaAction({ time, region }),
+			new SetLayoutAction(<any>layout),
+			new SetComboBoxesProperties({ orientation, timeFilter }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
+			new BeginLayerCollectionLoadAction(),
 			new SetAnnotationsLayer(annotationsLayer),
-			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer)
+			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
+			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+			new UpdateFacetsAction(facets),
+			new UpdateSelectedLayersIds(activeLayersIds),
+			new SetContextParamsAction({ contextEntities })
 		];
 	}
 
 	parseMapData(map: CaseMapState): CaseMapState {
 		if (map.data.overlay) {
-			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } }
+			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } };
 		}
 		return map;
 	}
 
 	parseOverlay(overlay: Overlay): Overlay {
-		return  { ...overlay, date: new Date(overlay.date) }
-	}
-
-	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				protected casesService: CasesService,
-				protected overlaysService: OverlaysService) {
+		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
 }

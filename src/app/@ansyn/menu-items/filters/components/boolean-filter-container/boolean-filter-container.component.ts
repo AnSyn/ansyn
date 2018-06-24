@@ -6,8 +6,6 @@ export interface BooleanFilterCustomData {
 	displayFalseName: string;
 }
 
-export type BooleanOption = 'trueProperties' | 'falseProperties';
-
 @Component({
 	selector: 'ansyn-boolean-filter-container',
 	templateUrl: './boolean-filter-container.component.html',
@@ -16,13 +14,23 @@ export type BooleanOption = 'trueProperties' | 'falseProperties';
 export class BooleanFilterContainerComponent {
 	@Input() metadata: BooleanFilterMetadata;
 	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>();
-	@Input() customData: BooleanFilterCustomData = { displayFalseName: 'false', displayTrueName: 'true' };
+	@Input()
+	set customData(value: BooleanFilterCustomData ) {
+		if (value) {
+			this.metadata.properties.true.displayName = value.displayTrueName;
+			this.metadata.properties.false.displayName = value.displayFalseName;
+		}
+	}
+
 	@HostBinding('hidden')
 	get hidden() {
-		const countAll = this.metadata.trueProperties.count + this.metadata.falseProperties.count;
+		const countAll = this.metadata.properties.true.count + this.metadata.properties.false.count;
 		return  countAll < 1;
 	}
-	booleanOptions: { [key: string]: BooleanOption } = { trueKey: 'trueProperties', falseKey: 'falseProperties' };
+
+	get metadataValues() {
+		return Object.values(this.metadata.properties)
+	}
 
 	onInputClicked(key: string, value: boolean) {
 		this.metadata.updateMetadata({ key, value });

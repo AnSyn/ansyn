@@ -1,9 +1,10 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
-		"baseUrl": "src",
+		"baseUrl": "./",
 		"paths": {
-			"@ansyn/*": ["app/@ansyn/*"]
+			"@ansyn/*": ["src/app/@ansyn/*"],
+			"@builder/*": ["src/app/builder/*"]
 		},
 		"outDir": "./dist/out-tsc",
 		"sourceMap": true,

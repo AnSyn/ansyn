@@ -10,21 +10,20 @@ import {
 import { VisualizersAppEffects } from './visualizers.app.effects';
 import {
 	DrawOverlaysOnMapTriggerAction,
-	DrawPinPointAction,
-	HoverFeatureTriggerAction,
 	SetMapsDataActionStore
 } from '@ansyn/map-facade/actions/map.actions';
 import {
-	MouseOutDropAction,
-	MouseOverDropAction,
 	SetFilteredOverlaysAction
 } from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import {
+	AddCaseAction,
 	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case } from '@ansyn/core/models/case.model';
+import { Case, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import {
+	SetAnnotationMode,
+	SetMeasureDistanceToolState, SetPinLocationModeAction,
 	ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
@@ -36,7 +35,7 @@ import {
 } from '@ansyn/map-facade/reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	ILayerState,
 	initialLayersState,
@@ -44,13 +43,9 @@ import {
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { cloneDeep } from 'lodash';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
-import {
-	AddCaseAction, SetAnnotationMode, SetMeasureDistanceToolState,
-	SetPinLocationModeAction
-} from '@ansyn/menu-items';
-import { statusBarFlagsItems, UpdateStatusFlagsAction } from '@ansyn/status-bar';
-import { MarkUpClass, SetMarkUp } from '@ansyn/overlays';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 describe('VisualizersAppEffects', () => {
 	let visualizersAppEffects: VisualizersAppEffects;
@@ -133,40 +128,6 @@ describe('VisualizersAppEffects', () => {
 
 	}));
 
-	it('onHoverFeatureSetMarkup$ should call getOverlaysMarkup with overlay hoverId, result should be send as payload of OverlaysMarkupAction', () => {
-		const fakeId = 'fakeId'
-		const markup = {
-			classToSet: MarkUpClass.hover,
-			dataToSet: {
-				overlaysIds: [fakeId]
-			}
-		}
-
-		actions = hot('--a--', {
-			a: new HoverFeatureTriggerAction({
-				id: fakeId
-			})
-		});
-		const expectedResults = cold('--b--', { b: new SetMarkUp(markup) });
-		expect(visualizersAppEffects.onHoverFeatureSetMarkup$).toBeObservable(expectedResults);
-
-	});
-
-	describe('onMouseOverDropAction$ should return HoverFeatureTriggerAction (with "id" if MouseOverDropAction else "null")', () => {
-
-		it('with "id" if MouseOverDropAction', () => {
-			actions = hot('--a--', { a: new MouseOverDropAction('fakeId') });
-			const expectedResults = cold('--b--', {
-				b: new HoverFeatureTriggerAction({
-					id: 'fakeId'
-				})
-			});
-			expect(visualizersAppEffects.onMouseOverDropAction$).toBeObservable(expectedResults);
-		});
-	});
-
-
-
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
 		mapState.mapsList = [...selectedCase.state.maps.data];
 		mapState.activeMapId = selectedCase.state.maps.activeMapId;
@@ -191,17 +152,6 @@ describe('VisualizersAppEffects', () => {
 		expect(visualizersAppEffects.shouldDrawOverlaysOnMap$).toBeObservable(expectedResults);
 	});
 
-	it('drawPinPoint$ should call drawPinPointIconOnMap() for each map(from selected case)', () => {
-		spyOn(visualizersAppEffects, 'drawPinPointIconOnMap').and.callFake(() => Observable.of(true));
-		const action = new DrawPinPointAction([-70.33666666666667, 25.5]);
-		actions = hot('--a--', { a: action });
-		// undefined because: drawPinPoint$ map don't have a return
-		const expectedResults = cold('--b--', { b: new Array(3).fill(true) });
-
-		expect(visualizersAppEffects.drawPinPoint$).toBeObservable(expectedResults);
-		expect(visualizersAppEffects.drawPinPointIconOnMap).toHaveBeenCalledTimes(3);
-	});
-
 
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
@@ -209,7 +159,7 @@ describe('VisualizersAppEffects', () => {
 		const expectedResult = cold('--(abcd)--', {
 			a: new SetMeasureDistanceToolState(false),
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
+			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false)
 		});
 
@@ -223,10 +173,10 @@ describe('VisualizersAppEffects', () => {
 			})
 		});
 
-		const expectedResult = cold('--(bcd)--', {
+		const expectedResult = cold('--(bce)--', {
 			b: new SetAnnotationMode(),
-			c: new UpdateStatusFlagsAction({ key: statusBarFlagsItems.pinPointSearch, value: false}),
-			d: new SetPinLocationModeAction(false)
+			c: new UpdateGeoFilterStatus(),
+			e: new SetPinLocationModeAction(false)
 		});
 
 		expect(visualizersAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);

@@ -5,8 +5,9 @@
 @number-of-menu-item: 8;
 
 div.menu-wrapper {
-	height: 100vh;
+	height: 100%;
 	display: flex;
+	position: relative;
 
 	.menu:not(.expanded), .menu-container {
 		box-shadow: 0 0 10px black;
@@ -70,7 +71,7 @@ div.menu-wrapper {
 
 		left: 90px;
 		z-index: @z-index-menu-container;
-		height: 100vh;
+		height: 100%;
 		background: rgba(red(@application-main-color), green(@application-main-color), blue(@application-main-color), .9);
 
 		&.pinned {
@@ -124,6 +125,11 @@ div.menu-wrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+
+		a.forkMe {
+			margin-bottom: 15px;
+		}
+
 		div.mode {
 			width: 80%;
 			margin-bottom: 5px;
@@ -131,3 +137,10 @@ div.menu-wrapper {
 
 	}
 }
+
+@media screen and (max-width: 1400px) {
+	.pin {
+		display: none;
+	}
+}
+

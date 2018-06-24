@@ -2,9 +2,8 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
-import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
+import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '@ansyn/core/test/mock-component';
-import { SubMenuEnum, toolsFlags } from '@ansyn/menu-items';
 
 
 describe('ToolsComponent', () => {
@@ -41,7 +40,6 @@ describe('ToolsComponent', () => {
 		fixture = TestBed.createComponent(ToolsComponent);
 		// Add manualProcessingControls function: resetAllParams (accessible from ToolsComponent)
 		component = fixture.componentInstance;
-		component.imageProcessInitParams = null;
 		fixture.detectChanges();
 	});
 
@@ -66,12 +64,6 @@ describe('ToolsComponent', () => {
 		component.flags.set(toolsFlags.shadowMouse, true);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
-	});
-	it('on toggleAutoImageProcessing should nullify imageProcessInitParams', () => {
-		component.flags.set(toolsFlags.autoImageProcessing, false);
-		const button = fixture.debugElement.nativeElement.querySelector('div.image-auto-processing button');
-		button.click();
-		expect(component.imageProcessInitParams).toBeNull();
 	});
 
 	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {

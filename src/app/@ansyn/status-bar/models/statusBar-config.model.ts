@@ -1,8 +1,11 @@
+import { TreeviewItem } from 'ngx-treeview';
+
 export interface IToolTipsConfig {
 	orientation?: string,
 	geoFilter?: string,
 	geoFilterEdit?: string,
 	geoFilterShow?: string,
+	dataInputFilter?: string,
 	timeFilter ?: string,
 	timeFilterEdit?: string,
 	screenNumber?: string,
@@ -13,6 +16,11 @@ export interface IToolTipsConfig {
 	enlarge?: string
 }
 
+export interface IDataInputFiltersConfig {
+	[providerName: string]: TreeviewItem;
+}
+
 export interface IStatusBarConfig {
-	toolTips: IToolTipsConfig
+	toolTips: IToolTipsConfig,
+	dataInputFiltersConfig: IDataInputFiltersConfig
 }

@@ -1,14 +1,15 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
 	color: '#6e6e7f' | 'red';
 	tooltipNorth: 'Drag to Change Orientation' | 'Press Alt+Shift and drag to rotate';
 	tooltip: 'Click once to face north, twice for image perspective' | null;
-	compass: '/assets/icons/map/compass.svg' | '/assets/icons/map/compass_disabled.svg';
+	compass: 'assets/icons/map/compass.svg' | 'assets/icons/map/compass_disabled.svg';
 	rotatePointer: 'rotationAngle' | 'notGeoRegitredNorthAngle';
 }
 
@@ -25,7 +26,7 @@ export class ImageryRotationComponent {
 		color: 'red',
 		tooltipNorth: 'Drag to Change Orientation',
 		tooltip: 'Click once to face north, twice for image perspective',
-		compass: '/assets/icons/map/compass.svg',
+		compass: 'assets/icons/map/compass.svg',
 		rotatePointer: 'rotationAngle'
 	};
 
@@ -34,7 +35,7 @@ export class ImageryRotationComponent {
 		color: '#6e6e7f',
 		tooltipNorth: 'Press Alt+Shift and drag to rotate',
 		tooltip: null,
-		compass: '/assets/icons/map/compass_disabled.svg',
+		compass: 'assets/icons/map/compass_disabled.svg',
 		rotatePointer: 'notGeoRegitredNorthAngle'
 	};
 
@@ -105,8 +106,8 @@ export class ImageryRotationComponent {
 
 		const mouseMoveListener = (event) => {
 			const mouse = {
-				x: event.pageX,
-				y: event.pageY
+				x: event.clientX,
+				y: event.clientY
 			};
 
 			let radians = Math.atan2(mouse.y - center.y, mouse.x - center.x) + Math.PI / 2;

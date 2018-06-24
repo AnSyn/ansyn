@@ -1,14 +1,28 @@
 import { EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { GeoJsonObject, Point } from 'geojson';
+
+export interface IMapConstructor {
+	mapType: string;
+	groupLayers: Map<string, any>;
+
+	new(...args): IMap;
+
+	addGroupLayer(layer: any, groupName: string);
+
+	removeGroupLayer(layer: any, groupName: string);
+
+	addGroupVectorLayer(layer: any, groupName: string);
+}
 
 export abstract class IMap<T = any> {
-	centerChanged: EventEmitter<GeoJSON.Point>;
+	static groupLayers = new Map<string, any>();
+	static mapType: string;
+
 	positionChanged: EventEmitter<CaseMapPosition>;
 	pointerMove: EventEmitter<any>;
-	singleClick: EventEmitter<any>;
-	contextMenu: EventEmitter<any>;
 	mapType: string;
 	mapObject: T;
 	projectionService: ProjectionService;
@@ -16,23 +30,24 @@ export abstract class IMap<T = any> {
 	static addGroupLayer(layer: any, groupName: string) {
 	}
 
-	static removeGroupLayer(layer: any, groupName: string) {
+	static removeGroupLayer(id: string, groupName: string) {
 	}
 
 	static addGroupVectorLayer(layer: any, groupName: string) {
 	}
 
-	abstract getCenter(): Observable<GeoJSON.Point>;
+	abstract getCenter(): Observable<Point>;
 
-	abstract setCenter(center: GeoJSON.Point, animation: boolean): Observable<boolean>;
+	abstract setCenter(center: Point, animation: boolean): Observable<boolean>;
 
 	abstract toggleGroup(groupName: string);
 
 	abstract initMap(element: HTMLElement, layers?: any, position?: CaseMapPosition): Observable<boolean>;
+
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
-	 * @param {any} layer The new layer to set the view with. this layer projection will be the views projection
-	 * @param {GeoJSON.Point[]} extent The extent (bounding box points) of the map at ESPG:4326
+	 * @param layer The new layer to set the view with. this layer projection will be the views projection
+	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
 	abstract resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean>;
 
@@ -52,17 +67,9 @@ export abstract class IMap<T = any> {
 
 	abstract updateSize(): void;
 
-	abstract addGeojsonLayer(data: GeoJSON.GeoJsonObject);
+	abstract addGeojsonLayer(data: GeoJsonObject);
 
 	abstract dispose(): void;
-
-	abstract setPointerMove(enable: boolean);
-
-	abstract getPointerMove(): Observable<any>;
-
-	abstract addSingleClickEvent();
-
-	abstract removeSingleClickEvent();
 
 	abstract addLayerIfNotExist(layer: any);
 }

@@ -1,7 +1,7 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
 	AnnotationSetProperties,
@@ -10,7 +10,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
 export interface ModeList {
 	mode: AnnotationMode;

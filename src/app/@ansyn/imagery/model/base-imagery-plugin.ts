@@ -1,18 +1,18 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { IMap } from '@ansyn/imagery';
+import { IMap } from '@ansyn/imagery/model/imap';
+import { of } from 'rxjs';
 
 export class BaseImageryPlugin {
-	static supported = [];
 	subscriptions: Subscription[] = [];
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
 	onDisposedEvent: EventEmitter<any> = new EventEmitter<any>();
 
 	get iMap(): IMap {
-		return this.communicator.ActiveMap;
+		return this.communicator && this.communicator.ActiveMap;
 	}
 
 	get mapId(): string {
@@ -20,7 +20,7 @@ export class BaseImageryPlugin {
 	}
 
 	onResetView(): Observable<boolean> {
-		return Observable.of(true);
+		return of(true);
 	};
 
 	dispose() {
@@ -41,5 +41,22 @@ export class BaseImageryPlugin {
 
 	onDispose() {
 
+	}
+}
+
+export interface ImageryPluginMetaData {
+	supported?: { new(...args): IMap }[];
+	deps?: any[];
+}
+
+export interface BaseImageryPluginClass extends ImageryPluginMetaData {
+	new(...args): BaseImageryPlugin;
+}
+
+export function ImageryPlugin(metaData: ImageryPluginMetaData) {
+	return function (constructor: BaseImageryPluginClass) {
+		Object.keys(metaData).forEach((key) => {
+			constructor[key] = metaData[key];
+		});
 	}
 }

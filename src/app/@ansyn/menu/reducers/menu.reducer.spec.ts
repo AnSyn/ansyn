@@ -1,5 +1,6 @@
-import { AddMenuItemAction, MenuItem, SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/menu';
 import { IMenuState, initialMenuState, MenuReducer } from './menu.reducer';
+import { MenuItem } from '@ansyn/menu/models/menu-item.model';
+import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 
 describe('MenuReducer', () => {
 
@@ -11,7 +12,7 @@ describe('MenuReducer', () => {
 		};
 		let action: AddMenuItemAction = new AddMenuItemAction(menuItem);
 		let result: IMenuState = MenuReducer(initialMenuState, action);
-		expect(result.menuItems.get('fakeMenuItem')).toEqual(menuItem);
+		expect(result.entities.fakeMenuItem).toEqual(menuItem);
 	});
 
 

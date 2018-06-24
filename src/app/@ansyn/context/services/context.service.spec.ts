@@ -1,10 +1,10 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { ContextModule } from '../context.module';
-import { ContextConfig } from '@ansyn/context/models';
 import { ContextService } from '@ansyn/context/services/context.service';
-import { StoreModule } from '@ngrx/store';
-import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { ContextConfig } from '@ansyn/context/models/context.config';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 describe('ContextService', () => {
 	let contextService: ContextService;

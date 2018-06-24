@@ -5,21 +5,24 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Action, Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStateSelector } from '../reducers/overlays.reducer';
+import {
+	IOverlaysState, overlaysStateSelector, overlaysStatusMessages,
+	selectDrops
+} from '../reducers/overlays.reducer';
 import { Overlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState, UpdateOverlaysCountAction } from '@ansyn/core';
 import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
-import { overlaysStatusMessages } from '../reducers/index';
+import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
 
 @Injectable()
 export class OverlaysEffects {
@@ -42,11 +45,11 @@ export class OverlaysEffects {
 						favoriteOverlays, o => o.id);
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
-						return [new LoadOverlaysSuccessAction(overlaysResult),
+						return [new LoadOverlaysSuccessAction(overlaysResult ),
 							new SetOverlaysStatusMessage('Error on overlays request')];
 					}
 
-					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
+					const actions: Array<any> = [new LoadOverlaysSuccessAction( overlaysResult )];
 
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
@@ -57,7 +60,7 @@ export class OverlaysEffects {
 					}
 					return actions;
 				})
-				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
+				.catch(() => Observable.from([new LoadOverlaysSuccessAction([] ), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
 
 	/**
@@ -78,29 +81,10 @@ export class OverlaysEffects {
 				}));
 		});
 
-	/**
-	 * @type Effect
-	 * @name drops$
-	 * @description this method parse overlays for display ( drops )
-	 * @ofType LoadOverlaysAction, LoadOverlaysSuccessAction, SetFilteredOverlaysAction, SetSpecialObjectsActionStore
-	 * @dependencies overlays
-	 */
-
-	@Effect({ dispatch: false })
-	drops$: Observable<any[]> = this.actions$
-		.ofType(OverlaysActionTypes.LOAD_OVERLAYS,
-			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
-			OverlaysActionTypes.SET_FILTERED_OVERLAYS,
-			OverlaysActionTypes.SET_SPECIAL_OBJECTS)
-		.withLatestFrom(this.store$.select(overlaysStateSelector))
-		.map(([action, overlays]: [Action, IOverlaysState]) => {
-			return OverlaysService.parseOverlayDataForDisplay(overlays);
-		});
-
 	@Effect()
-	dropsCount$: Observable<UpdateOverlaysCountAction> = this.drops$
+	dropsCount$ = this.store$.select(selectDrops)
 		.filter(Boolean)
-		.map(drops => new UpdateOverlaysCountAction(drops[0].data.length));
+		.map(drops => new UpdateOverlaysCountAction(drops.length));
 
 
 	constructor(protected actions$: Actions,

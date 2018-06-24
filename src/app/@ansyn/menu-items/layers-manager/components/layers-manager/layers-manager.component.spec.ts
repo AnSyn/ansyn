@@ -1,14 +1,14 @@
-import { layersConfig } from '@ansyn/menu-items/layers-manager';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { LayersManagerModule } from '../../layers-manager.module';
 import { LayersManagerComponent } from './layers-manager.component';
 import { StoreModule } from '@ngrx/store';
-import { DataLayersService } from '../../services/data-layers.service';
+import { DataLayersService, layersConfig } from '../../services/data-layers.service';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -19,6 +19,7 @@ describe('LayersManagerComponent', () => {
 			imports: [
 				LayersManagerModule,
 				HttpClientModule,
+				BrowserAnimationsModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
 			],

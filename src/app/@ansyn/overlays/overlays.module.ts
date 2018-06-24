@@ -9,6 +9,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
+import { OverlayOverviewComponent } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component';
 
 @NgModule({
 	imports: [
@@ -21,9 +22,14 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 	declarations: [
 		TimelineComponent,
 		OverlaysContainerComponent,
-		OverlayStatusComponent
+		OverlayStatusComponent,
+		OverlayOverviewComponent
 	],
-	exports: [OverlaysContainerComponent, TimelineComponent],
+	exports: [
+		OverlaysContainerComponent,
+		TimelineComponent,
+		OverlayOverviewComponent
+	],
 	providers: [
 		OverlaysService
 	]

@@ -4,6 +4,8 @@
 /dist
 /tmp
 /out-tsc
+/build/dist
+/build/src-dist
 debug.log
 
 
@@ -50,9 +52,9 @@ Thumbs.db
 #chrome debug
 /out/chrome/*
 
-yarn.lock
 yarn-error.log
-
+#package-lock.json
+yarn.lock
 /e2e/REPORTS
 *.patch
 

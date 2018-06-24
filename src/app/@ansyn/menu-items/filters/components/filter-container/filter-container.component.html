@@ -1,23 +1,26 @@
 <div class="menu-container">
 
 	<div class="title-row">
-		<span class="title">{{ filter.displayName }}</span>
-		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered()"
+
+		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName }}</span>
+
+		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered() && !showOnlyFavorite"
 			  class="filtered">(filtered)</span>
 
-		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledButton"
+		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledShowAll"
 				(click)="show = !show">
 		</button>
 
-		<div class="show-all">
+		<div *ngIf="!showOnlyFavorite" class="show-all">
 			<span (click)="showAll()">Show all</span>
 		</div>
 	</div>
 
-	<div class="fields" #fields [@fieldsTrigger]="show">
+	<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
 		<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
 			<ansyn-enum-filter-container
 				*ngSwitchCase="'Enum'"
+				[isLongFiltersList]="isLongFiltersList"
 				[metadata]="metadataFromState"
 				(onMetadataChange)="onMetadataChange($event)">
 			</ansyn-enum-filter-container>
@@ -39,5 +42,12 @@
 
 	<div *ngIf="!metadataFromState">
 		Loading...
+	</div>
+
+	<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
+		<span (click)="toggleShowMoreLess()">SHOW MORE</span>
+	</div>
+	<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
+		<span (click)="toggleShowMoreLess()">SHOW LESS</span>
 	</div>
 </div>

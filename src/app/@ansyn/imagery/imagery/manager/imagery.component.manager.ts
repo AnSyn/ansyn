@@ -1,16 +1,18 @@
-import { IImageryConfig, IMapConfig } from '../../model/iimagery-config';
-import { IMap } from '../../model/imap';
-import { ImageryMapComponent } from '../../model/imagery-map-component';
-import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
-import { BaseMapSourceProvider } from '../../model/base-source-provider.model';
+import { IImageryConfig, IMapConfig } from '@ansyn/imagery/model/iimagery-config';
+import { IMap } from '@ansyn/imagery/model/imap';
+import {
+	ImageryMapComponent,
+	ImageryMapComponentConstructor
+} from '@ansyn/imagery/model/imagery-map-component';
+import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
-import { ImageryProviderService, IProvidedMap } from '../../provider-service/imagery-provider.service';
-import { CaseMapPosition } from '@ansyn/core';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/observable/fromPromise';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { Observable } from 'rxjs';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { map, mergeMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { forkJoin } from 'rxjs';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export interface MapInstanceChanged {
 	id: string;
@@ -22,10 +24,7 @@ export class ImageryComponentManager {
 
 	private _activeMap: IMap;
 	private _subscriptions = [];
-	public centerChanged: EventEmitter<GeoJSON.Point> = new EventEmitter<GeoJSON.Point>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	public singleClick: EventEmitter<any> = new EventEmitter<any>();
-	public contextMenu: EventEmitter<any> = new EventEmitter<any>();
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged> = new EventEmitter<MapInstanceChanged>();
 	public activeMapName: string;
 
@@ -37,7 +36,7 @@ export class ImageryComponentManager {
 		return this._mapComponentRef.instance.plugins;
 	}
 
-	constructor(protected imageryProviderService: ImageryProviderService,
+	constructor(protected imageryMapComponents: ImageryMapComponentConstructor[],
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				protected mapComponentElem: ViewContainerRef,
@@ -71,46 +70,47 @@ export class ImageryComponentManager {
 
 	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (this._activeMap) {
-			return this._activeMap.resetView(layer, position, extent).switchMap(() => this.resetPlugins());
+			return this._activeMap.resetView(layer, position, extent).pipe(mergeMap(() => this.resetPlugins()));
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	private resetPlugins(): Observable<boolean> {
-		let resetObservables = [];
-
-		this.plugins.forEach((plugin: BaseImageryPlugin) => {
-			resetObservables.push(plugin.onResetView());
-		});
-
-		return Observable.forkJoin(resetObservables).map(results => results.every(b => b === true));
+		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
+		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
-		let relevantMapConfig: IMapConfig = null;
-		this.config.geoMapsInitialMapSource.forEach((mapConfig) => {
-			if (mapConfig.mapType === mapType) {
-				relevantMapConfig = mapConfig;
-			}
-		});
+		const relevantMapConfig: IMapConfig = this.config.geoMapsInitialMapSource.find((mapConfig) => mapConfig.mapType === mapType);
 		if (!relevantMapConfig) {
 			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
 		}
-		const sourceProvider = this._baseSourceProviders.find((item) => item.mapType === relevantMapConfig.mapType && item.sourceType === relevantMapConfig.mapSource);
+		const sourceProvider = this.getMapSourceProvider({mapType: relevantMapConfig.mapType, sourceType: relevantMapConfig.mapSource});
 		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata);
 	}
 
+	getMapSourceProvider({ mapType, sourceType }): BaseMapSourceProvider {
+		return this._baseSourceProviders.find((baseSourceProvider: BaseMapSourceProvider) => {
+			const source = baseSourceProvider.sourceType === sourceType;
+			const supported = baseSourceProvider.supported.includes(mapType);
+			return source && supported;
+		});
+	}
+
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		const providedMap: IProvidedMap = this.imageryProviderService.provideMap(activeMapName);
-		const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(providedMap.mapComponent);
+		const mapComponentClass = this.imageryMapComponents.find(({ mapClass }: ImageryMapComponentConstructor) => mapClass.mapType === activeMapName);
+		const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(mapComponentClass);
 		this._mapComponentRef = this.mapComponentElem.createComponent<ImageryMapComponent>(factory);
 		const mapComponent = this._mapComponentRef.instance;
-		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(providedMap.mapType);
+		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapComponentClass.mapClass.mapType);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
-				.do((map) => this.onMapCreated(map, activeMapName, oldMapName))
+				.pipe(
+					tap((map) => this.onMapCreated(map, activeMapName, oldMapName)),
+				)
 				.toPromise()
+
 		});
 	}
 
@@ -148,9 +148,7 @@ export class ImageryComponentManager {
 	}
 
 	destroyPlugins() {
-		this.plugins.forEach((plugin: BaseImageryPlugin) => {
-			plugin.dispose();
-		});
+		this.plugins.forEach((plugin) => plugin.dispose());
 	}
 
 	private internalSetActiveMap(activeMap: IMap) {
@@ -159,23 +157,9 @@ export class ImageryComponentManager {
 	}
 
 	private registerToActiveMapEvents() {
-
-		this._subscriptions.push(this._activeMap.centerChanged.subscribe((center: GeoJSON.Point) => {
-			this.centerChanged.emit(center);
-		}));
-
 		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit(position);
 		}));
-
-		this._subscriptions.push(this._activeMap.singleClick.subscribe((event: Array<any>) => {
-			this.singleClick.emit(event);
-		}));
-
-		this._subscriptions.push(this._activeMap.contextMenu.subscribe((event: Array<any>) => {
-			this.contextMenu.emit(event);
-		}));
-
 	}
 
 	public get ActiveMap(): IMap {

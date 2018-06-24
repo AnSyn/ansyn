@@ -1,65 +1,49 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { CaseMapPosition } from '@ansyn/core';
-import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { IMap } from '../model/imap';
-import { Observable } from 'rxjs/Observable';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { Observable, of } from 'rxjs';
+import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { GeoJsonObject, Point } from 'geojson';
 import 'rxjs/add/observable/merge';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { filter } from 'rxjs/operators';
 
 export class CommunicatorEntity {
-	private _managerSubscriptions;
+	private _managerSubscriptions = [];
 
-
-	public positionChanged: EventEmitter<{ id: string, position: CaseMapPosition }>;
-	public centerChanged: EventEmitter<GeoJSON.Point>;
-	public singleClick: EventEmitter<any>;
-	public contextMenu: EventEmitter<any>;
-	public mapInstanceChanged: EventEmitter<MapInstanceChanged>;
-	public imageryPluginsInitialized = new EventEmitter<string>();
+	public positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
+	public mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
 	private _virtualNorth = 0;
 
 	get imageryCommunicatorService(): ImageryCommunicatorService {
-		return this._manager.imageryCommunicatorService
+		return this._manager.imageryCommunicatorService;
 	}
 
-	get plugins(): BaseImageryPlugin[] {
+	get plugins() {
 		return this._manager.plugins;
 	}
 
-	constructor(public _manager: ImageryComponentManager) {
-		this.centerChanged = new EventEmitter<GeoJSON.Point>();
-		this.positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
-		this.singleClick = new EventEmitter<any>();
-		this.contextMenu = new EventEmitter<any>();
-		this.mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
+	get visualizers(): BaseImageryVisualizer[] {
+		return <any> this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
+	}
 
-		this._managerSubscriptions = [];
+	get getMapSourceProvider() {
+		return this._manager.getMapSourceProvider.bind(this._manager);
+	}
+
+	constructor(public _manager: ImageryComponentManager) {
 		this.registerToManagerEvents();
 	}
 
 	initPlugins() {
-		this.plugins.forEach((plugin: BaseImageryPlugin) => plugin.init(this));
-		this.imageryPluginsInitialized.emit(this.id);
+		this.plugins.forEach((plugin) => plugin.init(this as any));
 	}
 
 	private registerToManagerEvents() {
-		this._managerSubscriptions.push(this._manager.centerChanged.subscribe((center: GeoJSON.Point) => {
-			this.centerChanged.emit(center);
-		}));
-
 		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: CaseMapPosition) => {
 			this.positionChanged.emit({ id: this._manager.id, position });
-		}));
-
-		this._managerSubscriptions.push(this._manager.singleClick.subscribe((event: any) => {
-			this.singleClick.emit(event);
-		}));
-
-		this._managerSubscriptions.push(this._manager.contextMenu.subscribe((event: any) => {
-			this.contextMenu.emit(event);
 		}));
 
 		this._managerSubscriptions.push(this._manager.mapInstanceChanged.subscribe((event: any) => {
@@ -68,12 +52,12 @@ export class CommunicatorEntity {
 
 		this._managerSubscriptions.push(
 			Observable.merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
-				.filter(({ id }) => id === this.id)
+				.pipe(filter(({ id }) => id === this.id))
 				.subscribe(this.initPlugins.bind(this))
 		);
 	}
 
-	get id () {
+	get id() {
 		return this._manager.id;
 	}
 
@@ -90,10 +74,8 @@ export class CommunicatorEntity {
 
 	// CommunicatorEntity methods begin
 
-	public setActiveMap(mapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		return this._manager.setActiveMap(mapName, position, layer).then((data) => {
-			return data;
-		});
+	get setActiveMap() {
+		return this._manager.setActiveMap.bind(this._manager);
 	}
 
 	public get activeMapName(): string {
@@ -114,11 +96,11 @@ export class CommunicatorEntity {
 		return null;
 	}
 
-	public getCenter(): Observable<GeoJSON.Point> {
+	public getCenter(): Observable<Point> {
 		if (this.ActiveMap) {
 			return this.ActiveMap.getCenter();
 		}
-		return Observable.of(null);
+		return of(null);
 	}
 
 	public updateSize(): void {
@@ -127,7 +109,7 @@ export class CommunicatorEntity {
 		}
 	}
 
-	public addGeojsonLayer(data: GeoJSON.GeoJsonObject) {
+	public addGeojsonLayer(data: GeoJsonObject) {
 		if (this.ActiveMap) {
 			this.ActiveMap.addGeojsonLayer(data);
 		}
@@ -142,12 +124,12 @@ export class CommunicatorEntity {
 	}
 
 
-	public setCenter(center: GeoJSON.Point, animation: boolean = true): Observable<boolean> {
+	public setCenter(center: Point, animation: boolean = true): Observable<boolean> {
 		if (this.ActiveMap) {
 			return this.ActiveMap.setCenter(center, animation);
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public setPosition(position: CaseMapPosition): Observable<boolean> {
@@ -189,7 +171,7 @@ export class CommunicatorEntity {
 			return this._manager.resetView(layer, position, extent);
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public addLayer(layer: any) {
@@ -210,25 +192,4 @@ export class CommunicatorEntity {
 			this.ActiveMap.removeLayer(layer);
 		}
 	}
-
-	// CommunicatorEntity methods end
-
-	// ======shadow mouse start
-	public setMouseShadowListener(enable: boolean): Observable<any> {
-		this.ActiveMap.setPointerMove(enable);
-		return this.ActiveMap.getPointerMove();
-	}
-
-	// ======shadow mouse end
-
-	// ====== treat map click event (used for pinPointIndicator)
-	public createMapSingleClickEvent() {
-		(<any>this.ActiveMap).addSingleClickEvent();
-	}
-
-	public removeSingleClickEvent() {
-		(<any>this.ActiveMap).removeSingleClickEvent();
-	}
-
-	// ======end treat map click event (used for pinPointIndicator)
 }

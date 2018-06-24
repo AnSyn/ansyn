@@ -1,15 +1,19 @@
 import {
-	CoreActions, CoreActionTypes, SetFavoriteOverlaysAction,
+	CoreActions,
+	CoreActionTypes,
+	SetFavoriteOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { Overlay, OverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
+import { CaseDataInputFiltersState } from '@ansyn/core/models/case.model';
+
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
-	OverlayIsNotPartOfCase = 'overlayIsNotPartOfCase'
+	overlayIsNotPartOfQuery = 'overlayIsNotPartOfQuery'
 }
 
 export type AlertMsg = Map<AlertMsgTypes, Set<string>>;
@@ -32,12 +36,12 @@ export const coreInitialState: ICoreState = {
 	toastMessage: null,
 	favoriteOverlays: [],
 	alertMsg: new Map([
-		[AlertMsgTypes.OverlayIsNotPartOfCase, new Set()],
+		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
 	overlaysCriteria: {},
+	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
-	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown
 };
 
 export const coreFeatureKey = 'core';
@@ -79,11 +83,16 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 			return { ...state, layout: action.payload };
 
 		case CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
-			const payloadObj = {wasWelcomeNotificationShown: action.payload};
-			return {...state, ...payloadObj };
+			const payloadObj = { wasWelcomeNotificationShown: action.payload };
+			return { ...state, ...payloadObj };
 
 		default:
 			return state;
 	}
 }
 
+export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
+export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
+export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
+export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
+export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);

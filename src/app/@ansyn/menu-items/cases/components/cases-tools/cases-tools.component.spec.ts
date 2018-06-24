@@ -6,12 +6,12 @@ import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
-import { casesConfig } from '@ansyn/menu-items/cases';
+import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;

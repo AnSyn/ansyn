@@ -7,7 +7,6 @@
       "name": "Default case",
       "lastModified": "2018-04-04T13:21:45.616Z",
       "state": {
-        "geoFilter": "Pin-Point",
         "timeFilter": "Start - End",
         "orientation": "Align North",
         "maps": {
@@ -69,35 +68,20 @@
             "type": "FeatureCollection",
             "features": []
           },
-          "displayAnnotationsLayer": true
+          "displayAnnotationsLayer": true,
+          "activeLayersIds": []
         },
         "favoriteOverlays": [],
         "region": {
-          "type": "Polygon",
+          "type": "Point",
           "coordinates": [
-            [
-              [
                 -117.9189835710201,
                 33.812091224680195
-              ],
-              [
-                -117.91896193002552,
-                33.812091224680195
-              ],
-              [
-                -117.91896193002552,
-                33.81210920546774
-              ],
-              [
-                -117.9189835710201,
-                33.81210920546774
-              ],
-              [
-                -117.9189835710201,
-                33.812091224680195
-              ]
-            ]
           ]
+        },
+        "dataInputFilters": {
+          "filters": [],
+          "active": false
         },
         "time": null,
         "facets": {
@@ -121,7 +105,8 @@
       "maps",
       "region",
       "overlaysManualProcessArgs",
-      "orientation"
+      "orientation",
+      "layers"
     ],
     "updateCaseDebounceTime": 700,
     "useHash": true
@@ -131,18 +116,22 @@
   },
   "overlaysConfig": {
     "limit": 249,
-    "sourceTypeNotices": [
-		{
-			"key": "PLANET",
-			"value": "Open California Satellite Imagery © 2016 Planet Labs Inc. licensed under CC BY-SA 4.0."
+    "sourceTypeNotices": {
+		"PLANET": {
+			"Default": "Open California Satellite Imagery © 2016 Planet Labs Inc. licensed under CC BY-SA 4.0.",
+			"Sentinel2L1C": "© Copernicus Sentinel data $year",
+			"Landsat8L1G": "© USGS/NASA Landsat Program"
+		},
+		"OPEN_AERIAL": {
+			"Default": "© Copyright 2010, OpenAerialMap contributors"
 		}
-    ]
+    }
   },
   "imageryConfig": {
     "geoMapsInitialMapSource": [
       {
         "mapType": "openLayersMap",
-        "mapSource": "ESRI_4326",
+        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
         "mapSourceMetadata": {
           "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
           "styles": [
@@ -157,7 +146,7 @@
       },
       {
         "mapType": "disabledOpenLayersMap",
-        "mapSource": "ESRI_4326",
+        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
         "mapSourceMetadata": {
           "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
           "styles": [
@@ -177,9 +166,15 @@
     },
     "contextMenu": {
       "filterField": "sensorType"
-    }
+    },
+	"mapSearch": {
+		"active": true,
+		"url": "http://dev.virtualearth.net/REST/v1/Locations?locality=$searchString&maxResults=1&key=$apiKey",
+		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
+	}
   },
   "filtersConfig": {
+  	"shortFilterListLength": 8,
     "filters": [
       {
         "modelName": "sensorType",
@@ -274,6 +269,7 @@
       "geoFilterEdit": "Edit Geo filter",
       "geoFilterShow": "Show/hide Geo filter",
       "timeFilter": "Time filter",
+      "dataInputFilter": "Data Input Filter",
       "timeFilterEdit": "Edit time filter",
       "screenNumber": "Screen number",
       "overlayCount": "Overlay count",
@@ -281,7 +277,78 @@
       "forward": "Next overlay",
       "reset": "Reset timeline (according to the time filter)",
       "enlarge": "Expand timeline"
+    },
+    "dataInputFiltersConfig": {
+      "PLANET": {
+        "text": "Planet",
+        "value": 1,
+        "collapsed":true,
+        "children": [
+          {
+            "text":"REScene",
+            "value": {
+              "sensorType": "REScene"
+            }
+          },
+          {
+            "text": "PSScene3Band",
+            "value": {
+              "sensorType": "PSScene3Band"
+            }
+          },
+		  {
+            "text": "PSScene4Band",
+            "value": {
+              "sensorType": "PSScene4Band"
+            }
+          },
+		  {
+            "text": "PSOrthoTile",
+            "value": {
+              "sensorType": "PSOrthoTile"
+            }
+          },
+		  {
+            "text": "REOrthoTile",
+            "value": {
+              "sensorType": "REOrthoTile"
+            }
+          },
+		  {
+            "text": "SkySatScene",
+            "value": {
+              "sensorType": "SkySatScene"
+            }
+          },
+		  {
+            "text": "Landsat8L1G",
+            "value": {
+              "sensorType": "Landsat8L1G"
+            }
+          },
+		  {
+            "text": "Sentinel2L1C",
+            "value": {
+              "sensorType": "Sentinel2L1C"
+            }
+          }
+        ]
+      },
+      "OPEN_AERIAL": {
+        "text":"OpenAerial",
+        "value": 1,
+        "collapsed": true,
+        "children": [
+          {
+            "text": "UAV",
+            "value": {
+              "sensorType": "UAV"
+            }
+          }
+        ]
+      }
     }
+
   },
   "coreConfig": {
 	"welcomeNotification": {
@@ -294,14 +361,20 @@
   },
   "loginConfig": {
     "baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
-    "active": true,
+    "active":  "{{ getv "/ansyn/login/active" "" }}",
     "authorizedPath": "/"
   },
   "menuConfig": {
     "path": "/assets/logo.svg",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
-    "mode": "{{ getv "/ansyn/menu/mode" "" }}"
+    "mode": "{{ getv "/ansyn/menu/mode" "" }}",
+    "forkMe": {
+    	"active": "{{ getv "/ansyn/menu/forkme" "true" }}",
+    	"image": "assets/icons/forkme.svg",
+    	"title": "Fork me on github",
+		"href": "https://github.com/ansyn/ansyn"
+    }
   },
   "visualizersConfig": {
     "FrameVisualizer": {
@@ -366,9 +439,7 @@
               "end": null
             }
           ],
-          "sensorNames": [
-            null
-          ],
+          "sensorNames": "[ null ]",
           "coverage": [
             [
               [
@@ -409,9 +480,7 @@
               "end": null
             }
           ],
-          "sensorNames": [
-            null
-          ],
+          "sensorNames": "[ null ]",
           "coverage": [
             [
               [
@@ -457,6 +526,42 @@
     "PLANET": {
       "whitelist": [
         {
+          "name": "Entire Earth",
+          "dates": [
+            {
+              "start": null,
+              "end": null
+            }
+          ],
+          "sensorNames": "[ \"Landsat8L1G\", \"Sentinel2L1C\" ]",
+          "coverage": [
+            [
+              [
+                [
+                  -180,
+                  -90
+                ],
+                [
+                  -180,
+                  90
+                ],
+                [
+                  180,
+                  90
+                ],
+                [
+                  180,
+                  -90
+                ],
+                [
+                  -180,
+                  -90
+                ]
+              ]
+            ]
+          ]
+        },
+        {
           "name": "California",
           "dates": [
             {
@@ -464,9 +569,7 @@
               "end": null
             }
           ],
-          "sensorNames": [
-            null
-          ],
+          "sensorNames": "[ null ]",
           "coverage": [
             [
               [
@@ -856,9 +959,7 @@
               "end": null
             }
           ],
-          "sensorNames": [
-            null
-          ],
+          "sensorNames": "[ null ]",
           "coverage": [
             [
               [
@@ -906,9 +1007,7 @@
               "end": null
             }
           ],
-          "sensorNames": [
-            null
-          ],
+          "sensorNames": "[ null ]",
           "coverage": [
             [
               [
@@ -946,12 +1045,56 @@
         }
       ],
       "blacklist": []
-    }
+    },
+    "OPEN_AERIAL": {
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": "[ null ]",
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": []
+	}
   },
   "idahoOverlaysSourceConfig": {
     "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
     "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
     "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
+  },
+  "openAerialOverlaysSourceConfig": {
+  	"baseUrl": "https://api.openaerialmap.org/meta"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",
@@ -965,7 +1108,7 @@
       "Landsat8L1G",
       "Sentinel2L1C"
     ],
-    "apiKey": "9f7afec0ebfb4e1ca0bf959a0050545b",
+    "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
     "tilesUrl": "https://tiles.planet.com/data/v1/"
   }
 }

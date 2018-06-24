@@ -1,6 +1,6 @@
 import { StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
-import { UpdateStatusFlagsAction } from '../actions/status-bar.actions';
-import { StatusBarFlag, statusBarFlagsItems } from '@ansyn/status-bar';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
 
 describe('Status Bar Reducer', () => {
 	let _reducerState;
@@ -9,25 +9,9 @@ describe('Status Bar Reducer', () => {
 		_reducerState = Object.assign({}, StatusBarInitialState);
 	});
 
-	it('update status flags - \'good\' value', () => {
-		const action = new UpdateStatusFlagsAction({
-			key: statusBarFlagsItems.pinPointIndicator,
-			value: true
-		});
-
+	it('update geoFilter status', () => {
+		const action = new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.PinPoint, indicator: true });
 		const newState = StatusBarReducer(_reducerState, action);
-		expect(newState.flags.get(statusBarFlagsItems.pinPointIndicator)).toBe(true);
-
-	});
-
-	it('update status flags - \'bad\' value', () => {
-		const action = new UpdateStatusFlagsAction({
-			key: <StatusBarFlag> 'TMP',
-			value: true
-		});
-
-		// const newState = StatusBarReducer(_reducerState, action);
-		expect(() => StatusBarReducer(_reducerState, action)).toThrow();
-
+		expect(newState.geoFilterStatus).toEqual({ searchMode: CaseGeoFilter.PinPoint, indicator: true });
 	});
 });

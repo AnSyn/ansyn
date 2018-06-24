@@ -1,11 +1,12 @@
-import { SelectLayerAction, UnselectLayerAction } from '../../actions/layers.actions';
-import { NodeActivationChangedEventArgs } from '../../event-args/node-activation-changed-event-args';
-import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { Component } from '@angular/core';
-import { ILayerTreeNode } from '../../models/layer-tree-node';
-import { Observable } from 'rxjs/Observable';
+import { ILayerState, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { layersStateSelector } from '../../reducers/layers.reducer';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { groupBy } from 'lodash';
+
 
 @Component({
 	selector: 'ansyn-layer-managers',
@@ -13,20 +14,29 @@ import { layersStateSelector } from '../../reducers/layers.reducer';
 	styleUrls: ['./layers-manager.component.less']
 })
 
-export class LayersManagerComponent {
+export class LayersManagerComponent implements OnInit {
+	annotationLayerChecked;
 
-	public nodes$: Observable<ILayerTreeNode[]> = this.store.select(layersStateSelector).map((state: ILayerState) => state.layers);
+	public layers$: Observable<any> = this.store.select(selectLayers)
+		.map((layers: ILayer[]) => {
+			const typeGroupedLayers = groupBy(layers, l => l.type);
+			return Object.keys(typeGroupedLayers).map(layer => typeGroupedLayers[layer]);
+		});
 
 	constructor(protected store: Store<ILayerState>) {
 	}
 
-	public onNodeActivationChanged(args: NodeActivationChangedEventArgs) {
-		if (args.newState) {
-			this.store.dispatch(new SelectLayerAction(args.node));
-		}
-		else {
-			this.store.dispatch(new UnselectLayerAction(args.node));
-		}
+	ngOnInit() {
+		this.store.select<ILayerState>(layersStateSelector)
+			.pluck<ILayerState, boolean>('displayAnnotationsLayer')
+			.subscribe(result => {
+				this.annotationLayerChecked = result;
+			});
+		this.layers$.subscribe();
+	}
+
+	annotationLayerClick() {
+		this.store.dispatch(new ToggleDisplayAnnotationsLayer(!this.annotationLayerChecked));
 	}
 
 }

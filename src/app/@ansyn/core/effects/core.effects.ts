@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ICoreState } from '../reducers/core.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CoreActionTypes, SetWasWelcomeNotificationShownFlagAction } from '../actions/core.actions';
 import { updateSession } from '../services/core-session.service';
 

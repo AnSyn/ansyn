@@ -1,19 +1,12 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, Output, OnInit, OnDestroy } from '@angular/core';
-import { IToolsState } from '../../reducers/tools.reducer';
+import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
-import { IToolsConfig, toolsConfig } from '../../models';
-import { IImageProcParam } from '../../models/tools-config';
-import { ImageManualProcessArgs } from '@ansyn/core';
-import { toolsStateSelector } from '../../reducers/tools.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Subscription } from "rxjs/Subscription";
-import { IMapState } from "@ansyn/map-facade";
-
-
-export interface IImageProcParamComp extends IImageProcParam {
-	value: number;
-}
+import { IToolsConfig, toolsConfig } from '../../models/tools-config';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
 
 
 @Component({
@@ -23,100 +16,49 @@ export interface IImageProcParamComp extends IImageProcParam {
 })
 export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
-	private _isExpended: boolean;
-
 	private subscriptions: Subscription[] = [];
 
+	public manualImageProcessingParams$: Observable<Object> = this.store$.select(toolsStateSelector)
+		.map((tools: IToolsState) => tools.manualImageProcessingParams)
+		.distinctUntilChanged()
+		.filter(Boolean)
+		.do((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs);
 
-	public mapsImapgeProcessingState =	this.store$.select(toolsStateSelector)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.do((res: [IToolsState , IMapState])   =>
-		{
-			const [toolsState, caseMapState]: [IToolsState , IMapState] = res;
-			if (toolsState.imageProcessingHash[caseMapState.activeMapId] !== undefined) {
-				this.params.forEach(param => {
-					this.params[this.params.findIndex((x) => x.name === param.name)].value = toolsState.imageProcessingHash[caseMapState.activeMapId][param.name];
-				});
-			}
-		});
-
-
-	params: Array<IImageProcParamComp> = this.config.ImageProcParams.map(param => {
-		return { ...param, value: param.defaultValue };
-	});
-
-	// public throttledManualImageProcess: Function;	// throttled function
-
-	@HostBinding('class.expand') @Input()
-	set expand(value) {
-		this._isExpended = value;
+	get params(): Array<IImageProcParam> {
+		return this.config.ImageProcParams;
 	}
 
-	get expand() {
-		return this._isExpended;
+	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
+		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+		}, {});
 	}
 
-	@Input()
-	set initParams(_initParams) {
-		if (_initParams) {
-			const isChangeFromInit = this.params.some(({ value, name }) => value !== _initParams[name]);
-			if (isChangeFromInit) {
-				this.params.forEach((param) => param.value = _initParams[param.name]);
-				this.manualImageProcess();
-			}
-		}
-		else {
-			this.resetParams();
-			this.isActive.emit(false);
-		}
-	}
+	imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
 
-	@Output() isActive = new EventEmitter<boolean>();
+	@HostBinding('class.expand') @Input() expand;
 
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
-		// this.throttledManualImageProcess = throttle(this.manualImageProcess, 200);
 	}
 
-	manualImageProcess() {
-
-		const isChangeFromDefualt = this.params.some(({ value, defaultValue }) => value !== defaultValue);
-		let dispatchValue = <ImageManualProcessArgs> {};
-		if (isChangeFromDefualt) {
-			this.params.forEach(param => {
-				dispatchValue[param.name] = param.value;
-			});
-		}
-		else {
-			dispatchValue = undefined;
-		}
-		this.isActive.emit(isChangeFromDefualt);
-		this.store$.dispatch(new SetManualImageProcessing({ processingParams: dispatchValue }));
+	resetOne(paramToReset) {
+		this.updateParam(this.defaultImageManualProcessArgs[paramToReset], paramToReset.name);
 	}
 
-	resetOne(param) {
-		param.value = param.defaultValue;
-		this.manualImageProcess();
-	}
-
-	resetAllParamsAndEmit() {
-		this.resetParams();
-		this.manualImageProcess();
-		this.isActive.emit(false);
+	updateParam(value, key) {
+		const imageManualProcessArgs = { ...this.imageManualProcessArgs };
+		imageManualProcessArgs[key] = value;
+		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArgs));
 	}
 
 	resetParams() {
-		this.params.forEach(param => {
-			param.value = param.defaultValue;
-		});
-	}
-
-	close() {
-		this.expand = false;
+		this.store$.dispatch(new SetManualImageProcessing({ ...this.defaultImageManualProcessArgs }));
 	}
 
 	ngOnInit(): void {
-		this.resetParams();
-		this.subscriptions.push(this.mapsImapgeProcessingState.subscribe());
+		this.subscriptions.push(
+			this.manualImageProcessingParams$.subscribe()
+		);
 	}
 
 	ngOnDestroy(): void {

@@ -1,4 +1,5 @@
-<div class="imagery" #imageryViewContainer (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()">
+<div class="imagery" #imageryViewContainer (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()"
+	 [style.visibility]="(isHidden$ | async) ? 'hidden' : 'visible'">
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
 						  [mapId]="mapState.id"
@@ -6,7 +7,6 @@
 						  [active]="active"
 						  [layerFlag]="mapState.flags.layers"
 						  [mapsAmount]="mapsAmount"
-						  (backToWorldView)="backToWorldView()"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
 
@@ -21,4 +21,6 @@
 	<ansyn-imagery-loader [mapId]="mapState.id"></ansyn-imagery-loader>
 
 	<ansyn-overlay-source-type-notice [overlay]="overlay"></ansyn-overlay-source-type-notice>
+
+	<ansyn-map-search-box *ngIf="packageConfig.mapSearch.active && !overlay" [mapId]="mapState.id"></ansyn-map-search-box>
 </div>

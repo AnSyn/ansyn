@@ -1,5 +1,5 @@
-@import "../../../core/less/common";
-@import "../../../core/less/z-index-globals";
+@import "core/less/common";
+@import "core/less/z-index-globals";
 
 @height-minus-status: calc(~"100% - @{status-bar-height}");
 
@@ -24,13 +24,8 @@
 			cursor: url('/assets/cursors/pin-location.cur') 12 12, pointer;
 		}
 
-		&.pin-point {
-			// Center cursor image to mouse pointer center
-			cursor: url('/assets/cursors/pin-point.cur') 17 17, pointer;
-		}
-
 		&:not(.layout1) {
-			/deep/ ansyn-imagery-rotation {
+			/deep/ ansyn-imagery-rotation, /deep/ ansyn-map-search-box {
 				top: 50px;
 			}
 		}
@@ -65,6 +60,10 @@
 		}
 		/deep/ .ol-scale-line-inner{
 			margin-top: 16px;
+		}
+
+		/deep/ .ol-attribution {
+			bottom: 40px;
 		}
 
 		/deep/ .ol-scale-line {

@@ -1,0 +1,10 @@
+{
+	"preview":{
+		"id": "bdb5d3e2-750a-4a5d-93ee-cbdb05273e7b",
+		"name": "OpenRailwayMap",
+		"url": "http://{a-c}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+		"type": "Static"
+	},
+	"data":{
+	}
+}

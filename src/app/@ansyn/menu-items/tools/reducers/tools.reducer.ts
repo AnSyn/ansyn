@@ -1,14 +1,21 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
-import { ImageManualProcessArgs, OverlayDisplayMode } from '@ansyn/core';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
+import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
+import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import {
+	ILayerState, initialLayersState,
+	layersStateSelector
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { FeatureCollection } from 'geojson';
+import * as turf from '@turf/turf';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
 	shadowMouse = 'shadowMouse',
 	shadowMouseDisabled = 'shadowMouseDisabled',
 	pinLocation = 'pinLocation',
-	autoImageProcessing= 'autoImageProcessing',
+	autoImageProcessing = 'autoImageProcessing',
 	imageProcessingDisabled = 'imageProcessingDisabled',
 	isMeasureToolActive = 'isMeasureToolActive'
 }
@@ -29,12 +36,13 @@ export interface IToolsState {
 	annotationMode: AnnotationMode;
 	annotationProperties: AnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
-	imageProcessingHash: { [key: string]: ImageManualProcessArgs }
+	overlaysManualProcessArgs: OverlaysManualProcessArgs;
+	annotationsLayer: FeatureCollection<any>
 }
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
-		[toolsFlags.geoRegisteredOptionsEnabled, true],
+		[toolsFlags.geoRegisteredOptionsEnabled, true]
 	]),
 	subMenu: undefined,
 	activeCenter: [0, 0],
@@ -45,7 +53,8 @@ export const toolsInitialState: IToolsState = {
 		fillColor: '#ffffff'
 	},
 	manualImageProcessingParams: undefined,
-	imageProcessingHash: {}
+	overlaysManualProcessArgs: {},
+	annotationsLayer: <FeatureCollection<any>> turf.featureCollection([])
 };
 
 export const toolsFeatureKey = 'tools';
@@ -54,19 +63,11 @@ export const toolsStateSelector: MemoizedSelector<any, IToolsState> = createFeat
 export function ToolsReducer(state = toolsInitialState, action: ToolsActions): IToolsState {
 	let tmpMap: Map<toolsFlags, boolean>;
 	switch (action.type) {
-
-		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_SUCCESS:
-		{
-			const {mapId, processingParams} = action.payload;
-			return {
-				...state,
-				imageProcessingHash: {
-					...state.imageProcessingHash,
-					[mapId]: processingParams
-				}
+		case ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS:
+			if (action.payload.override) {
+				return { ...state, overlaysManualProcessArgs: action.payload.data };
 			}
-		}
-
+			return { ...state, overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data } };
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };
@@ -92,17 +93,13 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.shadowMouse, false);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.DISABLE_MOUSE_SHADOW:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.shadowMouseDisabled, true);
-			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.ENABLE_MOUSE_SHADOW:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.shadowMouseDisabled, false);
-			return { ...state, flags: tmpMap };
+		case ToolsActionsTypes.UPDATE_TOOLS_FLAGS: {
+			const flags = new Map(state.flags);
+			action.payload.forEach(({ key, value }) => {
+				flags.set(key, value);
+			});
+			return { ...state, flags };
+		}
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
 			return { ...state, activeCenter: action.payload };
@@ -139,21 +136,19 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.autoImageProcessing, false);
-			return { ...state, flags: tmpMap, manualImageProcessingParams: action.payload.processingParams };
+			return { ...state, manualImageProcessingParams: action.payload };
 
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
 			return { ...state, activeOverlaysFootprintMode: action.payload };
-
-		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING_ARGUMENTS:
-			return { ...state, manualImageProcessingParams: action.payload.processingParams };
 
 		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
 		case ToolsActionsTypes.SET_SUB_MENU:
 			return { ...state, subMenu: action.payload };
+
+		case ToolsActionsTypes.ANNOTATIONS_SET_LAYER:
+			return { ...state, annotationsLayer: action.payload };
 
 		default:
 			return state;
@@ -162,3 +157,5 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 }
 
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
+export const selectOverlaysManualProcessArgs = createSelector(toolsStateSelector, (tools: IToolsState) => tools.overlaysManualProcessArgs);
+export const selectAnnotationLayer = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationsLayer );

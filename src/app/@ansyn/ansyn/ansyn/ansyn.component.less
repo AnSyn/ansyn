@@ -19,11 +19,13 @@
 }
 
 :host {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
 	div.app {
 		display: flex;
-		height: 100vh;
+		height: 100%;
+		width: 100%;
 		overflow: hidden;
-
 		&.isPinned, &.isNotPinned {
 			background: black;
 			div.layer {
@@ -57,7 +59,7 @@
 				}
 
 				.app-timeline-container {
-					height: 140px;
+					height: @timeline-area-height;
 					background-color: white;
 				}
 			}
@@ -102,6 +104,15 @@
 			div.menu {
 				animation: menu-init @animation-duration;
 				transform: transitionX(0);
+				.ansynToolsAlone {
+					background: @application-main-color;
+					height: 100%;
+
+				}
+				.ansynToolsAlone /deep/ .tools-menu-item-container {
+					padding: 0;
+				}
+
 			}
 
 			div.layer div.maps-container {
@@ -115,6 +126,26 @@
 				animation: timeline-init @animation-duration;
 			}
 		}
+	}
+
+}
+
+
+@media screen and (max-width: 959px) {
+	ansyn-menu {
+		display: none;
+	}
+	.ansynToolsAlone {
+		display: block;
+	}
+
+}
+@media screen and (min-width: 959px) {
+	ansyn-menu {
+		display: auto;
+	}
+	.ansynToolsAlone {
+		display: none;
 	}
 
 }

@@ -1,10 +1,10 @@
 import { CaseMapPosition } from './case-map-position.model';
 import { Overlay } from './overlay.model';
-import { FeatureCollection } from 'geojson';
+import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
+import { Entity } from '@ansyn/core/services/storage/storage.service';
 import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { LayoutKey } from '@ansyn/core';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map';
-import { Entity } from "@ansyn/core/services/storage/storage.service";
+import { LayoutKey } from '@ansyn/core/models/layout-options.model';
+import { DilutedOverlay } from '@ansyn/core/models/overlay.model';
 
 export interface CasePreview extends Entity {
 	creationTime: Date;
@@ -19,37 +19,67 @@ export interface Case extends CasePreview {
 	state: CaseState;
 }
 
+export interface DilutedCase extends CasePreview {
+	state: CaseState;
+}
+
 export interface IContextEntity extends IVisualizerEntity {
 	date: Date;
 }
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
-export type CaseGeoFilter = 'Pin-Point';
 
-export interface ImageManualProcessArgs {
-	Brightness: number
-	Contrast: number
-	Gamma: number
-	Saturation: number
-	Sharpness: number
+
+export enum CaseGeoFilter {
+	PinPoint = 'Point',
+	Polygon = 'Polygon'
 }
 
-export interface CaseState {
-	maps?: CaseMapsState,
+export interface ImageManualProcessArgs {
+	Brightness?: number
+	Contrast?: number
+	Gamma?: number
+	Saturation?: number
+	Sharpness?: number
+}
+
+export interface OverlaysManualProcessArgs {
+	[key: string]: ImageManualProcessArgs
+}
+
+export interface DilutedCaseState {
+	maps?: DilutedCaseMapsState,
 	time: CaseTimeState,
 	facets?: CaseFacetsState,
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
+	dataInputFilters: CaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
-	geoFilter: CaseGeoFilter,
-	favoriteOverlays?: Overlay[],
-	overlaysManualProcessArgs: { [key: string]: ImageManualProcessArgs } | {},
+	favoriteOverlays?: DilutedOverlay[],
+	overlaysManualProcessArgs: OverlaysManualProcessArgs,
 	layers?: CaseLayersState
 }
 
-export type CaseRegionState = any | GeoJSON.Feature<GeoJSON.Polygon> | GeoJSON.Point | GeoJSON.Polygon | GeoJSON.Position;
+export interface CaseState extends DilutedCaseState {
+	favoriteOverlays?: Overlay[];
+	maps?: CaseMapsState;
+}
+
+export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
+
+export interface DataInputFilterValue {
+	providerName: string,
+	sensorType: string,
+	sensorName: string
+}
+
+export interface CaseDataInputFiltersState {
+	fullyChecked: boolean,
+	filters: DataInputFilterValue[],
+	active: boolean
+}
 
 export interface CaseTimeState {
 	type: 'absolute',
@@ -66,7 +96,7 @@ export type CaseEnumFilterMetadata = string[];
 
 export type CaseFilterMetadata = CaseBooleanFilterMetadata | CaseEnumFilterMetadata;
 
-export type FilterType = 'Enum' | 'Slider' | 'Boolean';
+export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'};
 
 export interface CaseFilter {
 	type: FilterType;
@@ -83,32 +113,45 @@ export interface CaseFacetsState {
 
 export interface CaseLayersState {
 	annotationsLayer: FeatureCollection<any>,
-	displayAnnotationsLayer?: boolean
+	displayAnnotationsLayer?: boolean,
+	activeLayersIds: string[]
 }
 
-export interface CaseMapsState {
-	layout: LayoutKey,
-	activeMapId: string,
+export interface DilutedCaseMapsState {
+	layout: LayoutKey;
+	activeMapId: string;
+	data: DilutedCaseMapState[];
+}
+
+export interface CaseMapsState extends DilutedCaseMapsState {
 	data: CaseMapState[]
 }
 
 export type OverlayDisplayMode = 'Heatmap' | 'Polygon' | 'None';
 
-export interface CaseMapData {
+export interface DilutedCaseMapData {
 	position: CaseMapPosition,
-	overlay?: Overlay,
+	overlay?: DilutedOverlay,
 	isAutoImageProcessingActive?: boolean,
 	overlayDisplayMode?: OverlayDisplayMode,
 	imageManualProcessArgs?: ImageManualProcessArgs
 }
 
-export interface CaseMapState {
+export interface CaseMapData extends DilutedCaseMapData {
+	overlay?: Overlay,
+}
+
+export interface DilutedCaseMapState {
 	id: string;
-	data: CaseMapData;
+	data: DilutedCaseMapData;
 	mapType: string;
 	flags: {
 		layers?: boolean
 	};
 }
 
-export const defaultMapType = OpenlayersMapName;
+export interface CaseMapState extends DilutedCaseMapState {
+	data: CaseMapData;
+}
+
+export const defaultMapType = 'openLayersMap';

@@ -1,19 +1,15 @@
 import { Action } from '@ngrx/store';
-import { ComboBoxesProperties } from '@ansyn/status-bar/models';
-import { StatusBarFlag } from '@ansyn/status-bar';
+import { ComboBoxesProperties } from '../models/combo-boxes.model';
+import { GeoFilterStatus } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
-	UPDATE_STATUS_FLAGS: 'UPDATE_STATUS_FLAGS',
-	GO_PREV: 'GO_PREV',
-	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
-	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	EXPAND: 'EXPAND',
-	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES'
+	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES',
+	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS'
 };
-// some actions does not have payload
-export type StatusActions = any;
 
 export class CopySelectedCaseLinkAction implements Action {
 	type: string = StatusBarActionsTypes.COPY_SELECTED_CASE_LINK;
@@ -21,14 +17,6 @@ export class CopySelectedCaseLinkAction implements Action {
 	constructor() {
 	}
 }
-
-export class UpdateStatusFlagsAction implements Action {
-	type = StatusBarActionsTypes.UPDATE_STATUS_FLAGS;
-
-	constructor(public payload: { key: StatusBarFlag, value?: boolean }) {
-	}
-}
-
 
 export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
@@ -44,3 +32,11 @@ export class SetComboBoxesProperties implements Action {
 	constructor(public payload: ComboBoxesProperties) {
 	}
 }
+
+export class UpdateGeoFilterStatus implements Action {
+	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
+	constructor(public payload: Partial<GeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
+	}
+}
+
+export type StatusBarActions = CopySelectedCaseLinkAction | UpdateGeoFilterStatus | ExpandAction | SetComboBoxesProperties;

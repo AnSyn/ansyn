@@ -34,16 +34,13 @@
 		<button tooltip-class="right"
 				tooltip-value="Manual Image Enhancement"
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
-				[class.mode-on]="isImageControlActive && !imageProcessingDisabled"
-				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled"
-				[disabled]="imageProcessingDisabled">
+				[class.mode-on]="isImageControlActive && !imageManualProcessingDisabled"
+				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageManualProcessingDisabled"
+				[disabled]="imageManualProcessingDisabled">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !imageProcessingDisabled"
-										(isActive)="isImageControlActive=$event"
-										[initParams]="imageProcessInitParams"></ansyn-image-processing-control>
+		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !onAutoImageProcessing "></ansyn-image-processing-control>
 	</div>
-
 	<div class="display-overlay-visualizer">
 		<button tooltip-class="right"
 				tooltip-value="Display Overlays"

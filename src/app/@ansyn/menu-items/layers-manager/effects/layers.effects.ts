@@ -1,26 +1,20 @@
-import { ILayerState, layersStateSelector } from '../reducers/layers.reducer';
-import { ILayerTreeNodeLeaf } from '../models/layer-tree-node-leaf';
-import {
-	BeginLayerTreeLoadAction,
-	ErrorLoadingLayersAction,
-	LayersActions,
-	LayersActionTypes,
-	LayerTreeLoadedAction,
-	SelectLayerAction,
-	UnselectLayerAction
-} from '../actions/layers.actions';
-import { DataLayersService, LayerRootsBundle } from '../services/data-layers.service';
+import { ILayerState } from '../reducers/layers.reducer';
+import { LayerCollectionLoadedAction, LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { map, mergeMap } from 'rxjs/operators';
+
+
 
 @Injectable()
 export class LayersEffects {
@@ -28,42 +22,21 @@ export class LayersEffects {
 	/**
 	 * @type Effect
 	 * @name beginLayerTreeLoad$
-	 * @ofType BeginLayerTreeLoadAction
+	 * @ofType BeginLayerCollectionLoadAction
 	 * @dependencies layers
-	 * @action UnselectLayerAction?, LayerTreeLoadedAction?, SelectLayerAction?, ErrorLoadingLayersAction?
+	 * @action LayerCollectionLoadedAction?, ErrorLoadingLayersAction?
 	 */
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
-		.ofType(LayersActionTypes.BEGIN_LAYER_TREE_LOAD)
-		.switchMap(() => {
-			return this.dataLayersService.getAllLayersInATree();
-		})
-		.withLatestFrom(this.store.select(layersStateSelector))
-		.mergeMap(([layersBundle, store]: [LayerRootsBundle, ILayerState]) => {
-			let actionsArray = [];
+		.ofType(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD)
+		.pipe(
+			mergeMap(() => this.dataLayersService.getAllLayersInATree()),
+			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
+		);
 
-			store.selectedLayers.forEach((selectedLayer) => {
-				actionsArray.push(new UnselectLayerAction(selectedLayer));
-			});
-
-			actionsArray.push(new LayerTreeLoadedAction({
-				layers: layersBundle.layers,
-				selectedLayers: layersBundle.selectedLayers
-			}));
-
-			layersBundle.selectedLayers.forEach((layer: ILayerTreeNodeLeaf) => {
-				actionsArray.push(new SelectLayerAction(layer));
-			});
-
-			return Observable.from(actionsArray);
-		})
-		.catch(error => {
-			return Observable.of(new ErrorLoadingLayersAction(error));
-		})
-		.share();
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,
-				protected store: Store<ILayerState>) {
+				protected store$: Store<ILayerState>) {
 	}
 }

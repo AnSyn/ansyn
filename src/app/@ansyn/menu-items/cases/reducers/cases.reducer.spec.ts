@@ -1,17 +1,14 @@
 import {
+	AddCaseAction,
 	CloseModalAction,
 	OpenModalAction,
 	SelectCaseAction,
-	UpdateCaseAction,
+	UpdateCaseAction
 } from '../actions/cases.actions';
 import { Case } from '../models/case.model';
-import { CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
-import { AddCaseAction, casesAdapter, CasesService } from '@ansyn/menu-items';
-import { Overlay } from '@ansyn/core/models/overlay.model';
-import {
-	CaseGeoFilter, CaseOrientation, CaseRegionState, CaseTimeFilter, CaseTimeState,
-	ImageManualProcessArgs
-} from '@ansyn/core/models/case.model';
+import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
+import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 
 describe('CasesReducer', () => {
@@ -28,8 +25,8 @@ describe('CasesReducer', () => {
 				to: new Date()
 			},
 			orientation: 'Align North',
+			dataInputFilters: { fullyChecked: true, filters: [], active: true },
 			timeFilter: 'Start - End',
-			geoFilter: 'Pin-Point',
 			region: {},
 			overlaysManualProcessArgs: {}
 		}
@@ -58,7 +55,7 @@ describe('CasesReducer', () => {
 
 		let action: SelectCaseAction = new SelectCaseAction(fakeCase);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.selectedCase).toEqual(<any>{ ...fakeCase, state: { time: CasesService.defaultTime } });
+		expect(result.selectedCase).toEqual(<any>fakeCase);
 	});
 
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {
@@ -70,7 +67,7 @@ describe('CasesReducer', () => {
 		], state);
 
 		state.modal.id = 'id2';
-		state.selectedCase = { ...caseMock, id: 'id2'};
+		state.selectedCase = { ...caseMock, id: 'id2' };
 
 		let newCase: Case = {
 			...caseMock, id: 'id2', name: 'name2 lastname2'

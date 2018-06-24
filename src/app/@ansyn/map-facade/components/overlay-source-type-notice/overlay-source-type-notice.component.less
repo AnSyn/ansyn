@@ -1,13 +1,14 @@
-@import "../../../core/less/common";
-@import "../../../core/less/z-index-globals";
-@import "../../../core/less/tooltip";
+@import "core/less/common";
+@import "core/less/z-index-globals";
+@import "core/less/tooltip";
 
 :host {
 	position: absolute;
 	// bottom position is set in imagery-manager.component.less
 	//
 	// horizontally  centered
-	left: calc((100% - @source-type-notice-width) / 2);
+	left: 50%;
+	transform: translateX(-50%);
 	max-width: @source-type-notice-width;
 	z-index: @z-index-overlay-source-type-notice;
 

@@ -96,7 +96,7 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			return new UpdateCaseAction(updatedCase);
+			return new UpdateCaseAction({ updatedCase });
 		});
 
 	constructor(protected store$: Store<IAppState>) {

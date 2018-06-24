@@ -102,6 +102,7 @@ describe('SelectCaseAppEffects', () => {
 				owner: 'ownerName',
 				lastModified: new Date(),
 				creationTime: new Date(),
+				autoSave: false,
 				state
 			};
 

@@ -68,7 +68,7 @@ export class AddCaseAction implements Action {
 export class UpdateCaseAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE;
 
-	constructor(public payload: Case) {
+	constructor(public payload: { updatedCase: Case, forceUpdate?: boolean }) {
 	}
 }
 

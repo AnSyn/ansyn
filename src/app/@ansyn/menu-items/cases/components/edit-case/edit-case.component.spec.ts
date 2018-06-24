@@ -73,7 +73,7 @@ describe('EditCaseComponent', () => {
 			component.editMode = true;
 			spyOn(component, 'close');
 			component.onSubmitCase(0);
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction(component.caseModel));
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({updatedCase: component.caseModel, forceUpdate: true}));
 			expect(component.close).toHaveBeenCalled();
 		});
 

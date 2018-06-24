@@ -11,7 +11,14 @@ import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import * as moment from 'moment';
 import { StorageService, StoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { CasePreview, CaseState, CaseTimeState, IContextEntity } from '@ansyn/core/models/case.model';
+import {
+	CasePreview,
+	CaseState,
+	CaseTimeState,
+	DilutedCase,
+	DilutedCaseState,
+	IContextEntity
+} from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
 
@@ -94,28 +101,28 @@ export class CasesService {
 		return casePreview;
 	}
 
-	pluckIdSourceType(state: CaseState) {
-		let dilutedState: any = cloneDeep(state);
+	pluckIdSourceType(state: CaseState): DilutedCaseState {
+		const dilutedState: any = cloneDeep(state);
+		if (dilutedState) {
+			if (Array.isArray(dilutedState.favoriteOverlays)) {
+				dilutedState.favoriteOverlays = dilutedState.favoriteOverlays.map(overlay => ({
+					id: overlay.id,
+					sourceType: overlay.sourceType
+				}));
+			}
 
-		if (Array.isArray(dilutedState.favoriteOverlays)) {
-			dilutedState.favoriteOverlays = dilutedState.favoriteOverlays.map(overlay => ({
-				id: overlay.id,
-				sourceType: overlay.sourceType
-			}));
+			if (Array.isArray(dilutedState.maps.data)) {
+				dilutedState.maps.data.forEach((mapData: any) => {
+					if (Boolean(mapData.data.overlay)) {
+						mapData.data.overlay = { id: mapData.data.overlay.id, sourceType: mapData.data.overlay.sourceType };
+					}
+				});
+			}
 		}
-
-		if (Array.isArray(dilutedState.maps.data)) {
-			dilutedState.maps.data.forEach((mapData: any) => {
-				if (Boolean(mapData.data.overlay)) {
-					mapData.data.overlay = { id: mapData.data.overlay.id, sourceType: mapData.data.overlay.sourceType };
-				}
-			});
-		}
-
 		return dilutedState;
 	}
 
-	convertToStoredEntity(caseValue: Case): StoredEntity<CasePreview, CaseState> {
+	convertToStoredEntity(caseValue: Case): StoredEntity<CasePreview, DilutedCaseState> {
 		return {
 			preview: this.getPreview(caseValue),
 			data: this.pluckIdSourceType(caseValue.state)
@@ -138,13 +145,13 @@ export class CasesService {
 	wrapUpdateCase(selectedCase: Case): Observable<Case> {
 		return Observable.create(observer => observer.next(Date.now()))
 			.debounceTime(this.config.updateCaseDebounceTime)
-			.switchMap(() => this.updateCase(selectedCase))
+			.mergeMap(() => this.updateCase(selectedCase))
 			.catch(err => {
 				return this.errorHandlerService.httpErrorHandle(err);
 			});
 	}
 
-	updateCase(selectedCase: Case): Observable<StoredEntity<CasePreview, CaseState>> {
+	updateCase(selectedCase: Case): Observable<StoredEntity<CasePreview, DilutedCaseState>> {
 		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase)).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});

@@ -103,8 +103,8 @@ export class CasesEffects {
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
 		.map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id])
-		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.id !== defaultCaseId && action.payload.autoSave)
-		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload))
+		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.updatedCase.id !== defaultCaseId && (action.payload.updatedCase.autoSave || action.payload.forceUpdate))
+		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload.updatedCase))
 		.share();
 
 	/**
@@ -116,7 +116,7 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
-		.switchMap((action: UpdateCaseAction) => {
+		.mergeMap((action: UpdateCaseBackendAction) => {
 			return this.casesService.wrapUpdateCase(action.payload).map(updatedCase => {
 				return new UpdateCaseBackendSuccessAction(updatedCase);
 			});

@@ -1,6 +1,6 @@
 import { Component, HostListener, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { UpdateCaseAction, UpdateCaseBackendAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
 
 @Component({
@@ -16,8 +16,10 @@ export class CasesAutoSaveComponent {
 	}
 
 	onChange(autoSave) {
-		this.store$.dispatch(new UpdateCaseAction(<Case> { ...this.currentCase, autoSave }));
-		this.store$.dispatch(new UpdateCaseBackendAction(<Case> { ...this.currentCase, autoSave }));
+		this.store$.dispatch(new UpdateCaseAction({
+			updatedCase: <Case> { ...this.currentCase, autoSave },
+			forceUpdate: true
+		}));
 	}
 
 	constructor(protected store$: Store<any>) {

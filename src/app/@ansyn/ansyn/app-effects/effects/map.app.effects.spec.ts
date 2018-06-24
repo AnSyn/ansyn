@@ -132,6 +132,7 @@ describe('MapAppEffects', () => {
 		owner: 'owner',
 		creationTime: new Date(),
 		lastModified: new Date(),
+		autoSave: false,
 		state: {
 			time: {type: '', from: new Date(), to: new Date()},
 			region: {

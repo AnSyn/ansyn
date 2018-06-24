@@ -207,29 +207,29 @@ export class MapAppEffects {
 	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				// const providers = this.imageryProviderService.mapProviders;
-				// Object.values(providers)
-				// 	.filter((provider) => provider.mapComponent.mapClass.groupLayers.get('layers'))
-				// 	.forEach((provider) => {
-				// 		const displayedLayers: any = provider.mapComponent.mapClass.groupLayers.get('layers').getLayers().getArray();
-				//
-				// 		/* remove layer if layerId not includes on selectLayers */
-				// 		displayedLayers.forEach((layer) => {
-				// 			const id = layer.get('id');
-				// 			if (!selectedLayersIds.includes(id)) {
-				// 				provider.mapComponent.mapClass.removeGroupLayer(id, 'layers');
-				// 			}
-				// 		});
-				//
-				// 		/* add layer if id includes on selectLayers but not on map */
-				// 		selectedLayersIds.forEach((layerId) => {
-				// 			const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
-				// 			if (!layer) {
-				// 				const addLayer = layers.find(({ id }) => id === layerId);
-				// 				provider.mapComponent.mapClass.addGroupVectorLayer(addLayer, 'layers');
-				// 			}
-				// 		});
-				// 	});
+				const providers = this.imageryMapComponents;
+				this.imageryMapComponents
+					.filter(({ mapClass }: ImageryMapComponentClass) => mapClass.groupLayers.get('layers'))
+					.forEach(({ mapClass }: ImageryMapComponentClass) => {
+						const displayedLayers: any = mapClass.groupLayers.get('layers').getLayers().getArray();
+
+						/* remove layer if layerId not includes on selectLayers */
+						displayedLayers.forEach((layer) => {
+							const id = layer.get('id');
+							if (!selectedLayersIds.includes(id)) {
+								mapClass.removeGroupLayer(id, 'layers');
+							}
+						});
+
+						/* add layer if id includes on selectLayers but not on map */
+						selectedLayersIds.forEach((layerId) => {
+							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
+							if (!layer) {
+								const addLayer = layers.find(({ id }) => id === layerId);
+								mapClass.addGroupVectorLayer(addLayer, 'layers');
+							}
+						});
+					});
 			})
 		);
 

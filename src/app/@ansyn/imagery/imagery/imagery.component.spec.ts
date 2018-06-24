@@ -7,6 +7,7 @@ import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
+import { IMAGERY_MAP_COMPONENTS } from '@ansyn/imagery/model/imagery-map-component';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
@@ -44,6 +45,7 @@ describe('ImageryComponent', () => {
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: Store, useValue: null },
+				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
 				{
 					provide: ConfigurationToken, useValue: {
 					'geoMapsInitialMapSource': [{

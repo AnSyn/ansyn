@@ -6,6 +6,7 @@ import { GeoJsonObject, Point } from 'geojson';
 
 export interface IMapClass {
 	mapType: string;
+	groupLayers: Map<string, any>;
 
 	new(...args): IMap;
 

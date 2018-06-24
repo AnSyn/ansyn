@@ -62,6 +62,7 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
+import { IMAGERY_MAP_COMPONENTS } from '@ansyn/imagery/model/imagery-map-component';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';
@@ -182,6 +183,7 @@ describe('MapAppEffects', () => {
 					provide: mapFacadeConfig,
 					useValue: {}
 				},
+				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
 				{
 					provide: ConfigurationToken, useValue: {
 						'geoMapsInitialMapSource': [{

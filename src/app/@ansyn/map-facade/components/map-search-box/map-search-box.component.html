@@ -1,6 +1,6 @@
 <form (submit)="onSubmit()" (reset)="resetError()">
 	<input type="text" placeholder="Search" [(ngModel)]="searchString" name="searchString" (input)="resetError()">
 	<button type="submit"><i class="fa fa-search"></i></button>
-	<button type="reset"><i class="fa fa-times"></i></button>
+	<button type="reset" [hidden]="!searchString"><i class="fa fa-times"></i></button>
 </form>
 <div class="error" *ngIf="error">not found</div>

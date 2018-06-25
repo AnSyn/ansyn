@@ -59,8 +59,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
-				@Inject(IMAGERY_CONFIG) protected config: IImageryConfig) {
+				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}
 
 	ngOnDestroy() {

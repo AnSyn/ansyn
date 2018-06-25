@@ -46,23 +46,6 @@ describe('ImageryComponent', () => {
 				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: Store, useValue: null },
 				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
-				{
-					provide: IMAGERY_CONFIG, useValue: {
-					'geoMapsInitialMapSource': [{
-						'mapType': 'openLayersMap',
-						'mapSource': 'BING',
-						'mapSourceMetadata': {
-							'key': 'AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des',
-							'styles': ['Aerial']
-						}
-					}, {
-						'mapType': 'cesiumMap',
-						'mapSource': 'OSM',
-						'mapSourceMetadata': null
-					}],
-					"maxCachedLayers": 100
-				}
-				},
 				ImageryCommunicatorService]
 		}).compileComponents();
 	}));

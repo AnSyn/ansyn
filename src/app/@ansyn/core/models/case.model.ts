@@ -13,6 +13,7 @@ export interface CasePreview extends Entity {
 	owner: string;
 	lastModified: Date;
 	selectedContextId?: string;
+	autoSave: boolean;
 }
 
 export interface Case extends CasePreview {

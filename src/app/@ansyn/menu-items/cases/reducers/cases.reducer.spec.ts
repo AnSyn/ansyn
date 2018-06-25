@@ -18,6 +18,7 @@ describe('CasesReducer', () => {
 		owner: 'owner',
 		creationTime: new Date(),
 		lastModified: new Date(),
+		autoSave: false,
 		state: {
 			time: {
 				type: 'absolute',
@@ -73,7 +74,7 @@ describe('CasesReducer', () => {
 			...caseMock, id: 'id2', name: 'name2 lastname2'
 		};
 
-		let action: UpdateCaseAction = new UpdateCaseAction(newCase);
+		let action: UpdateCaseAction = new UpdateCaseAction({ updatedCase: newCase });
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.entities['id2'].name).toEqual('name2 lastname2');
 	});

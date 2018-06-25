@@ -38,6 +38,7 @@ describe('CasesService', () => {
 		owner: 'owner',
 		creationTime: new Date(),
 		lastModified: new Date(),
+		autoSave: true,
 		state: {
 			time: {
 				type: 'absolute',
@@ -111,7 +112,8 @@ describe('CasesService', () => {
 					name: selectedCase.name,
 					owner: selectedCase.owner,
 					creationTime: selectedCase.creationTime,
-					lastModified: selectedCase.lastModified
+					lastModified: selectedCase.lastModified,
+					autoSave: true
 				},
 				data: casesService.pluckIdSourceType(selectedCase.state)
 			});
@@ -129,7 +131,8 @@ describe('CasesService', () => {
 					name: selectedCase.name,
 					owner: selectedCase.owner,
 					creationTime: selectedCase.creationTime,
-					lastModified: selectedCase.lastModified
+					lastModified: selectedCase.lastModified,
+					autoSave: true
 				},
 				data: casesService.pluckIdSourceType(selectedCase.state)
 			});

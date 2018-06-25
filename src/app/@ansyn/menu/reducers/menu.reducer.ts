@@ -10,7 +10,6 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { MenuItem } from '@ansyn/menu/models/menu-item.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
-import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { localStorageData, updateLocalStorage } from '@ansyn/menu/helpers/menu-local-storage.helper';
 
 export const menuItemsAdapter: EntityAdapter<MenuItem> = createEntityAdapter<MenuItem>({ selectId: (menuItem: MenuItem) => menuItem.name });

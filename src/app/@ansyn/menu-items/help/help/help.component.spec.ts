@@ -2,12 +2,13 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 
 import { HelpComponent } from './help.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { menuFeatureKey, MenuReducer } from '@ansyn/menu';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { AnsynCheckboxComponent, CoreModule } from '@ansyn/core';
 import { By } from '@angular/platform-browser';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { EffectsModule } from '@ngrx/effects';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
+import { CoreModule } from '@ansyn/core/core.module';
+import { AnsynCheckboxComponent } from '@ansyn/core/components/ansyn-checkbox/ansyn-checkbox.component';
 
 describe('HelpComponent', () => {
 	let component: HelpComponent;

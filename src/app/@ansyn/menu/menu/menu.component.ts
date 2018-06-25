@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {
 	ContainerChangedTriggerAction,
-	SelectMenuItemAction,
+	SelectMenuItemAction, SetDoneStartupOperations,
 	ToggleIsPinnedAction,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';

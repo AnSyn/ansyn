@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IMenuState, menuStateSelector, SetShowHelpOnStartup } from '@ansyn/menu';
+import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
+import { SetShowHelpOnStartup } from '@ansyn/menu/actions/menu.actions';
 
 @Component({
 	selector: 'ansyn-help',

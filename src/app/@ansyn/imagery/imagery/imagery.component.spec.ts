@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
-import { ConfigurationToken } from '../model/configuration.token';
+import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
@@ -46,23 +46,6 @@ describe('ImageryComponent', () => {
 				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: Store, useValue: null },
 				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
-				{
-					provide: ConfigurationToken, useValue: {
-					'geoMapsInitialMapSource': [{
-						'mapType': 'openLayersMap',
-						'mapSource': 'BING',
-						'mapSourceMetadata': {
-							'key': 'AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des',
-							'styles': ['Aerial']
-						}
-					}, {
-						'mapType': 'cesiumMap',
-						'mapSource': 'OSM',
-						'mapSourceMetadata': null
-					}],
-					"maxCachedLayers": 100
-				}
-				},
 				ImageryCommunicatorService]
 		}).compileComponents();
 	}));

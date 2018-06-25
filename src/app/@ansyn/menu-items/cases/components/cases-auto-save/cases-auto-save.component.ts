@@ -14,8 +14,8 @@ import { map, tap } from 'rxjs/internal/operators';
 })
 export class CasesAutoSaveComponent implements OnInit, OnDestroy {
 	@Input() caseId: string;
-	private currentCase;
-	private subscribers = [];
+	currentCase;
+	subscribers = [];
 
 	currentCase$: Observable<any> = this.store$.select(selectCaseEntities)
 		.pipe(

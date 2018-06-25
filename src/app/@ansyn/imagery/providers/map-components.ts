@@ -2,7 +2,7 @@ import {
 	IMAGERY_MAP_COMPONENTS,
 	IMAGERY_MAP_COMPONENTS_COLLECTION, ImageryMapComponentConstructor,
 	ImageryMapComponentFactory
-} from '@ansyn/imagery/model/imagery-map-component';
+} from '../model/imagery-map-component';
 import { ANALYZE_FOR_ENTRY_COMPONENTS, FactoryProvider, ValueProvider } from '@angular/core';
 
 export function createComponentCollection(components: ImageryMapComponentConstructor[]): ValueProvider[] {

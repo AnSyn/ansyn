@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
 import { IImageryConfig, initialImageryConfig } from './model/iimagery-config';
-import { ConfigurationToken } from './model/configuration.token';
+import { IMAGERY_CONFIG } from './model/configuration.token';
 import { CacheService } from './cache-service/cache.service';
 import { createCollection } from './model/plugins-collection';
 import { ImageryCollectionEntity } from '@ansyn/imagery/model/plugins-collection';
@@ -16,9 +16,9 @@ import {
 	imports: [CommonModule],
 	declarations: [ImageryComponent],
 	providers: [
-		{ provide: ConfigurationToken, useValue: initialImageryConfig },
+		{ provide: IMAGERY_CONFIG, useValue: initialImageryConfig },
 		ImageryCommunicatorService,
-		{ provide: CacheService, useClass: CacheService, deps: [ConfigurationToken, ImageryCommunicatorService] },
+		{ provide: CacheService, useClass: CacheService, deps: [IMAGERY_CONFIG, ImageryCommunicatorService] },
 		createCollection([]),
 		{
 			provide: IMAGERY_MAP_COMPONENTS,
@@ -35,7 +35,7 @@ export class ImageryModule {
 			ngModule: ImageryModule,
 			providers: [
 				ImageryCommunicatorService,
-				{ provide: ConfigurationToken, useValue: config }
+				{ provide: IMAGERY_CONFIG, useValue: config }
 			]
 		};
 	}

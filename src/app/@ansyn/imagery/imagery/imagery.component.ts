@@ -13,7 +13,7 @@ import {
 import { ImageryComponentManager } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IImageryConfig } from '@ansyn/imagery/model/iimagery-config';
-import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
+import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import {
 	IMAGERY_MAP_COMPONENTS,
@@ -60,7 +60,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
-				@Inject(ConfigurationToken) protected config: IImageryConfig) {
+				@Inject(IMAGERY_CONFIG) protected config: IImageryConfig) {
 	}
 
 	ngOnDestroy() {

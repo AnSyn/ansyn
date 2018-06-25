@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { IImageryConfig } from '../model/iimagery-config';
-import { ConfigurationToken } from '../model/configuration.token';
+import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class CacheService {
 	protected cacheSize = this.config.maxCachedLayers || 100;
 	protected cachedLayesrMap: Map<string, any> = new Map<string, any>();
 
-	constructor(@Inject(ConfigurationToken) protected config: IImageryConfig,
+	constructor(@Inject(IMAGERY_CONFIG) protected config: IImageryConfig,
 				public imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 

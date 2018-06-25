@@ -9,33 +9,3 @@ if (configuration.production) {
 }
 
 fetchConfigProviders().then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));
-// "imageryConfig": {
-// 	"geoMapsInitialMapSource": [
-// 		{
-// 			"mapType": "openLayersMap",
-// 			"mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
-// 			"mapSourceMetadata": {
-// 				"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-// 				"styles": [
-// 					"AerialWithLabels"
-// 				]
-// 			}
-// 		},
-// 		{
-// 			"mapType": "cesiumMap",
-// 			"mapSource": "OSM",
-// 			"mapSourceMetadata": null
-// 		},
-// 		{
-// 			"mapType": "disabledOpenLayersMap",
-// 			"mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
-// 			"mapSourceMetadata": {
-// 				"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-// 				"styles": [
-// 					"AerialWithLabels"
-// 				]
-// 			}
-// 		}
-// 	],
-// 		"maxCachedLayers": 100
-// },

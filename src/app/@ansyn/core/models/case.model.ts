@@ -145,6 +145,7 @@ export interface DilutedCaseMapState {
 	id: string;
 	data: DilutedCaseMapData;
 	mapType: string;
+	sourceType: string
 	flags: {
 		layers?: boolean
 	};
@@ -153,5 +154,3 @@ export interface DilutedCaseMapState {
 export interface CaseMapState extends DilutedCaseMapState {
 	data: CaseMapData;
 }
-
-export const defaultMapType = 'openLayersMap';

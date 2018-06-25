@@ -1,5 +1,5 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { CaseMapState, defaultMapType } from '@ansyn/core/models/case.model';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
@@ -8,7 +8,7 @@ import { UUID } from 'angular2-uuid';
 
 export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
 	const mapsList: CaseMapState[] = [];
-	const activeMap = oldMapsList.find(({ id }) => oldActiveMapId === id);
+	const activeMap: CaseMapState = oldMapsList.find(({ id }) => oldActiveMapId === id);
 
 	range(layout.mapsCount).forEach((index) => {
 		if (oldMapsList[index]) {
@@ -17,7 +17,8 @@ export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsL
 			const mapStateCopy: CaseMapState = {
 				id: UUID.UUID(),
 				data: { position: null },
-				mapType: defaultMapType,
+				mapType: activeMap.mapType,
+				sourceType: activeMap.sourceType,
 				flags: {}
 			};
 			mapsList.push(mapStateCopy);

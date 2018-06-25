@@ -1,4 +1,4 @@
-import { IImageryConfig, IMapConfig } from '@ansyn/imagery/model/iimagery-config';
+import { IImageryConfig } from '@ansyn/imagery/model/iimagery-config';
 import { IMap } from '@ansyn/imagery/model/imap';
 import {
 	ImageryMapComponent,
@@ -13,6 +13,7 @@ import { map, mergeMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { forkJoin } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 export interface MapInstanceChanged {
 	id: string;
@@ -29,7 +30,7 @@ export class ImageryComponentManager {
 	public activeMapName: string;
 
 	public get id(): string {
-		return this._id;
+		return this.mapSettings.id;
 	}
 
 	public get plugins(): BaseImageryPlugin[] {
@@ -42,8 +43,7 @@ export class ImageryComponentManager {
 				protected mapComponentElem: ViewContainerRef,
 				protected _mapComponentRef: ComponentRef<ImageryMapComponent>,
 				protected _baseSourceProviders: BaseMapSourceProvider[],
-				protected config: IImageryConfig,
-				protected _id: string
+				protected mapSettings: CaseMapState
 	) {
 	}
 
@@ -82,12 +82,8 @@ export class ImageryComponentManager {
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
-		const relevantMapConfig: IMapConfig = this.config.geoMapsInitialMapSource.find((mapConfig) => mapConfig.mapType === mapType);
-		if (!relevantMapConfig) {
-			throw new Error(`getMapSourceForMapType failed, no config found for ${mapType}`);
-		}
-		const sourceProvider = this.getMapSourceProvider({mapType: relevantMapConfig.mapType, sourceType: relevantMapConfig.mapSource});
-		return sourceProvider.createAsync(relevantMapConfig.mapSourceMetadata);
+		const sourceProvider = this.getMapSourceProvider({mapType, sourceType: this.mapSettings.sourceType });
+		return sourceProvider.createAsync();
 	}
 
 	getMapSourceProvider({ mapType, sourceType }): BaseMapSourceProvider {

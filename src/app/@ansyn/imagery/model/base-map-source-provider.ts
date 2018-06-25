@@ -13,7 +13,7 @@ export abstract class BaseMapSourceProvider {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	protected createOrGetFromCache(metaData: any) {
+	protected createOrGetFromCache(metaData?: any) {
 		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
 		if (cacheLayers.length) {
 			return cacheLayers;
@@ -26,7 +26,7 @@ export abstract class BaseMapSourceProvider {
 
 	protected abstract create(metaData: any): any[];
 
-	createAsync(metaData: any): Promise<any> {
+	createAsync(metaData?: any): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer);
 	}

@@ -42,7 +42,7 @@ export class CacheService {
 		this.cachedLayesrMap.delete(this.createLayerId(overlay));
 	}
 
-	createLayerId(overlay: any): string {
+	createLayerId(overlay: any = {}): string {
 		return `${overlay.sourceType}/${JSON.stringify(overlay)}`;
 	}
 }

@@ -11,7 +11,6 @@ describe('CasesAutoSaveComponent', () => {
 	let store: Store<any>;
 
 	const fakeCase = {
-		id: '1',
 		autoSave: true
 	} as Case;
 

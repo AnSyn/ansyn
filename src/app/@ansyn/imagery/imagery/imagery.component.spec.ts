@@ -5,7 +5,7 @@ import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { ConfigurationToken } from '../model/configuration.token';
 import { VisualizersConfig } from '../model/visualizers-config.token';
 import { CacheService } from '../cache-service/cache.service';
-import { PLUGINS_COLLECTIONS } from '../model/plugins-collection';
+import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAP_COMPONENTS } from '../model/imagery-map-component';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {

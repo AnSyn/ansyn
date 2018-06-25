@@ -1,6 +1,6 @@
 import { FactoryProvider, Injector } from '@angular/core';
 import { BaseImageryPlugin, BaseImageryPluginClass } from '../../model/base-imagery-plugin';
-import { ImageryCollectionEntity, PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
+import { ImageryCollectionEntity, PLUGINS_COLLECTIONS } from '../../providers/plugins-collection';
 import { IMap } from '../../model/imap';
 import { StaticClassProvider } from '@angular/core/src/di/provider';
 

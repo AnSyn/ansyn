@@ -3,7 +3,7 @@ import { OpenLayersDisabledMapComponent } from './openlayers-disabled-map.compon
 import { Observable } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/providers/plugins-collection';
 
 describe('openLayersMap OpenLayersDisabledMapComponent spec', () => {
 	let component: OpenLayersDisabledMapComponent;

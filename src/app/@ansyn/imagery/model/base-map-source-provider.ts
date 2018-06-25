@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken, Injector, ReflectiveInjector } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
+
+export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
 export interface BaseMapSourceProviderConstructor {
 	new(...args): BaseMapSourceProvider

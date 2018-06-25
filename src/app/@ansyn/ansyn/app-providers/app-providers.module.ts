@@ -24,45 +24,40 @@ import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-laye
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { OpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
 import { OpenLayerOpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-open-aerial-source-provider';
-
-export const appProviders = [
-	// Source provider for overlays
-	{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
-
-	// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
-	// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider2, multi: true },
-	{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
-	{
-		provide: <InjectionToken<IMultipleOverlaysSources>>MultipleOverlaysSource,
-		useClass: NotGeoRegisteredPlaneSourceProvider,
-		multi: true
-	},
-	{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
-
-	// Map tiling source services
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerTileWMSSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerMapBoxSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerOSMSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerIDAHOSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerPlanetSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerNotGeoRegisteredPlanetSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerBingSourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerESRI4326SourceProvider, multi: true },
-	{ provide: BaseMapSourceProvider, useClass: OpenLayerOpenAerialSourceProvider, multi: true },
-
-	// Source provider for filters
-	{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
-	{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
-	{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
-
-	{ provide: ProjectionService, useClass: OpenLayersProjectionService }
-];
+import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { SomeModule } from '@ansyn/ansyn/app-providers/map-source-providers/some.module';
 
 @NgModule({
 	imports: [
-		HttpClientModule
+		HttpClientModule,
+		SomeModule,
+		ImageryModule.provideMapSourceProviders([
+			OpenLayerTileWMSSourceProvider,
+			OpenLayerMapBoxSourceProvider,
+			OpenLayerOSMSourceProvider,
+			OpenLayerIDAHOSourceProvider,
+			OpenLayerPlanetSourceProvider,
+		])
 	],
-	providers: appProviders
+	providers: [
+		// Source provider for overlays
+		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
+
+		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
+		{
+			provide: <InjectionToken<IMultipleOverlaysSources>>MultipleOverlaysSource,
+			useClass: NotGeoRegisteredPlaneSourceProvider,
+			multi: true
+		},
+		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
+
+		// Source provider for filters
+		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
+		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
+		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
+
+		{ provide: ProjectionService, useClass: OpenLayersProjectionService }
+	]
 })
 export class AppProvidersModule {
 

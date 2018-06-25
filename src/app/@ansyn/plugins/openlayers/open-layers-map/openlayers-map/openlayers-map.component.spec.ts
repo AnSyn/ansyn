@@ -5,7 +5,7 @@ import { OpenLayersProjectionService } from '../projection/open-layers-projectio
 import { cold } from 'jasmine-marbles';
 import { Observable } from 'rxjs';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
+import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/providers/plugins-collection';
 
 describe('OpenlayersMapComponent', () => {
 	let component: OpenlayersMapComponent;

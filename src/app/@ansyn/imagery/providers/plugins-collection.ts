@@ -1,5 +1,5 @@
 import { InjectionToken, ValueProvider } from '@angular/core';
-import { BaseImageryPluginClass	} from './base-imagery-plugin';
+import { BaseImageryPluginClass	} from '../model/base-imagery-plugin';
 
 export const PLUGINS_COLLECTIONS: InjectionToken<ImageryCollectionEntity[]> = new InjectionToken('PLUGINS_COLLECTIONS');
 export type ImageryCollectionEntity = BaseImageryPluginClass;

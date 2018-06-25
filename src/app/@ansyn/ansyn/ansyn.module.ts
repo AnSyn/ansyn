@@ -46,7 +46,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 		AlertsModule.provideAlerts(ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule,
-		ImageryModule.forRoot(),
+		ImageryModule,
 		StatusBarModule,
 		AnsynRouterModule
 	],

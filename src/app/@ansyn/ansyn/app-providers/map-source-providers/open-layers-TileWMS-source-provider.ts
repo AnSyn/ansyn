@@ -5,12 +5,11 @@ import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-sour
 
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 
-
 @Injectable()
 export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider {
 	public sourceType = OpenLayerTileWMSSourceProviderSourceType;
 
-	create(metaData: any): any[] {
+	create(metaData: any = this.config[this.sourceType]): any[] {
 		const layers = metaData.layers.join(',');
 
 		const source = new TileWMS(<any>{

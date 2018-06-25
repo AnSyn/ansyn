@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { CacheService } from './cache.service';
-import { ConfigurationToken } from '../model/configuration.token';
+import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 
 describe('CacheService', () => {
@@ -10,10 +10,10 @@ describe('CacheService', () => {
 				{
 					provide: CacheService,
 					useClass: CacheService,
-					deps: [ConfigurationToken, ImageryCommunicatorService]
+					deps: [IMAGERY_CONFIG, ImageryCommunicatorService]
 				},
 				{
-					provide: ConfigurationToken,
+					provide: IMAGERY_CONFIG,
 					useValue: {}
 				},
 				{

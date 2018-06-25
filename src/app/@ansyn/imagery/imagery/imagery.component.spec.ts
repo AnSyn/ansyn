@@ -2,7 +2,6 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
-import { ConfigurationToken } from '../model/configuration.token';
 import { VisualizersConfig } from '../model/visualizers-config.token';
 import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
@@ -44,23 +43,6 @@ describe('ImageryComponent', () => {
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
-				{
-					provide: ConfigurationToken, useValue: {
-					'geoMapsInitialMapSource': [{
-						'mapType': 'openLayersMap',
-						'mapSource': 'BING',
-						'mapSourceMetadata': {
-							'key': 'AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des',
-							'styles': ['Aerial']
-						}
-					}, {
-						'mapType': 'cesiumMap',
-						'mapSource': 'OSM',
-						'mapSourceMetadata': null
-					}],
-					"maxCachedLayers": 100
-				}
-				},
 				ImageryCommunicatorService]
 		}).compileComponents();
 	}));

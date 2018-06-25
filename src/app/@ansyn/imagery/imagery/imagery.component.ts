@@ -12,8 +12,6 @@ import {
 } from '@angular/core';
 import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { IImageryConfig } from '../model/iimagery-config';
-import { ConfigurationToken } from '../model/configuration.token';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import {
 	IMAGERY_MAP_COMPONENTS,
@@ -48,8 +46,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this.mapComponentElem,
 			this._mapComponentRef,
 			this.baseSourceProviders,
-			this.config,
-			this.mapComponentSettings.id
+			this.mapComponentSettings,
 		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.mapType, this.mapComponentSettings.data.position).then(() => {
@@ -60,8 +57,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
-				@Inject(ConfigurationToken) protected config: IImageryConfig) {
+				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}
 
 	ngOnDestroy() {

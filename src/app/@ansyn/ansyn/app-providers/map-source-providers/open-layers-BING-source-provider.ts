@@ -3,13 +3,18 @@ import BingMaps from 'ol/source/bingmaps';
 import { Injectable } from '@angular/core';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
 
+export interface IBingMapsConfig {
+	key: string;
+	styles: string[];
+}
+
 export const OpenLayerBingSourceProviderSourceType = 'BING';
 
 @Injectable()
 export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider {
 	public sourceType = OpenLayerBingSourceProviderSourceType;
 
-	create(metaData: any): any[] {
+	create(metaData: any = this.config[this.sourceType]): any[] {
 		const source = new BingMaps({
 			key: metaData.key,
 			imagerySet: metaData.styles[0],

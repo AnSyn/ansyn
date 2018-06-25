@@ -6,6 +6,7 @@
       "id": "4df64c1a-330b-1332-c286-7d73754bd001",
       "name": "Default case",
       "lastModified": "2018-04-04T13:21:45.616Z",
+      "autoSave": true,
       "state": {
         "timeFilter": "Start - End",
         "orientation": "Align North",
@@ -58,6 +59,7 @@
               },
               "flags": {},
               "mapType": "openLayersMap",
+              "sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
               "id": "defaultImagery1"
             }
           ],
@@ -127,36 +129,6 @@
 		}
     }
   },
-  "imageryConfig": {
-    "geoMapsInitialMapSource": [
-      {
-        "mapType": "openLayersMap",
-        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
-        "mapSourceMetadata": {
-          "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-          "styles": [
-            "AerialWithLabels"
-          ]
-        }
-      },
-      {
-        "mapType": "cesiumMap",
-        "mapSource": "OSM",
-        "mapSourceMetadata": null
-      },
-      {
-        "mapType": "disabledOpenLayersMap",
-        "mapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
-        "mapSourceMetadata": {
-          "key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-          "styles": [
-            "AerialWithLabels"
-          ]
-        }
-      }
-    ],
-    "maxCachedLayers": 100
-  },
   "mapFacadeConfig": {
     "overlayCoverage": 0.1,
     "sensorTypeShortcuts": {
@@ -166,6 +138,27 @@
     },
     "contextMenu": {
       "filterField": "sensorType"
+    },
+	"mapSearch": {
+		"active": true,
+		"url": "http://dev.virtualearth.net/REST/v1/Locations?locality=$searchString&maxResults=1&key=$apiKey",
+		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
+	}
+  },
+  "mapSourceProvidersConfig": {
+  	"BING": {
+    	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
+    	"styles": [ "AerialWithLabels" ]
+    },
+    "TileWMS": {
+
+    },
+  	"ESRI_4326": {
+    	"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
+    	"projection": "EPSG:4326",
+    	"maxZoom": 16,
+    	"tileSize": 512,
+    	"attributions": "Copyright:© 2013 ESRI, i-cubed, GeoEye"
     }
   },
   "filtersConfig": {

@@ -1,4 +1,3 @@
-import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
 import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
@@ -17,6 +16,7 @@ import { ContextConfig } from '@ansyn/context/models/context.config';
 import { LoginConfig } from '@ansyn/login/services/login-config.service';
 import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
 import { configuration } from '../../../../configuration/configuration';
+import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -49,10 +49,6 @@ export const getProviders = (conf): any[] => {
 		}, {
 			provide: OverlaysConfig,
 			useValue: conf.overlaysConfig
-		},
-		{
-			provide: ConfigurationToken,
-			useValue: conf.imageryConfig
 		},
 		{
 			provide: ContextConfig,
@@ -89,6 +85,10 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: CoreConfig,
 			useValue: conf.coreConfig
+		},
+		{
+			provide: MAP_SOURCE_PROVIDERS_CONFIG,
+			useValue: conf.mapSourceProvidersConfig
 		}
 	];
 };

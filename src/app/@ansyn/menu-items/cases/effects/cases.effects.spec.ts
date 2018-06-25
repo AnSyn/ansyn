@@ -140,7 +140,7 @@ describe('CasesEffects', () => {
 
 	it('onUpdateCase$ should call casesService.updateCase with action.payload("updatedCase"), and return UpdateCaseAction', () => {
 		const updatedCase: Case = { ...caseMock, id: 'updatedCaseId' };
-		actions = hot('--a--', { a: new UpdateCaseAction(updatedCase) });
+		actions = hot('--a--', { a: new UpdateCaseAction({ updatedCase: updatedCase, forceUpdate: true }) });
 		const expectedResults = cold('--b--', { b: new UpdateCaseBackendAction(updatedCase) });
 		expect(casesEffects.onUpdateCase$).toBeObservable(expectedResults);
 	});

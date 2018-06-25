@@ -5,7 +5,7 @@ import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { empty, Observable } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -25,11 +25,11 @@ import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/ca
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { Case } from '@ansyn/core/models/case.model';
+import { Case, CasePreview, DilutedCaseState } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { empty } from 'rxjs';
+import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
 
 @Injectable()
 export class CasesEffects {
@@ -104,9 +104,9 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [action, this.casesService.defaultCase.id])
-		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.id !== defaultCaseId)
-		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload))
+		.map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id])
+		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.updatedCase.id !== defaultCaseId && (action.payload.updatedCase.autoSave || action.payload.forceUpdate))
+		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload.updatedCase))
 		.share();
 
 	/**
@@ -118,8 +118,8 @@ export class CasesEffects {
 	@Effect()
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
-		.switchMap((action: UpdateCaseAction) => {
-			return this.casesService.wrapUpdateCase(action.payload).map(updatedCase => {
+		.mergeMap((action: UpdateCaseBackendAction) => {
+			return this.casesService.wrapUpdateCase(action.payload).map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => {
 				return new UpdateCaseBackendSuccessAction(updatedCase);
 			});
 		}).share();

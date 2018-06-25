@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 import { Case } from '../models/case.model';
 import { Params } from '@angular/router';
-import { DilutedCase } from '@ansyn/core/models/case.model';
+import { CasePreview, DilutedCase, DilutedCaseState } from '@ansyn/core/models/case.model';
+import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -68,7 +69,7 @@ export class AddCaseAction implements Action {
 export class UpdateCaseAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE;
 
-	constructor(public payload: Case) {
+	constructor(public payload: { updatedCase: Case, forceUpdate?: boolean }) {
 	}
 }
 
@@ -82,7 +83,7 @@ export class UpdateCaseBackendAction implements Action {
 export class UpdateCaseBackendSuccessAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
 
-	constructor(public payload: Case) {
+	constructor(public payload: StoredEntity<CasePreview, DilutedCaseState>) {
 	}
 }
 

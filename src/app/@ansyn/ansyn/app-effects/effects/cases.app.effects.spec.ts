@@ -163,6 +163,7 @@ describe('CasesAppEffects', () => {
 			owner: 'owner',
 			creationTime: new Date(),
 			lastModified: new Date(),
+			autoSave: false,
 			state: {
 				favoriteOverlays: [
 					{

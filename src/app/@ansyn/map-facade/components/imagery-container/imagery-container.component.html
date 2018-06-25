@@ -21,4 +21,6 @@
 	<ansyn-imagery-loader [mapId]="mapState.id"></ansyn-imagery-loader>
 
 	<ansyn-overlay-source-type-notice [overlay]="overlay"></ansyn-overlay-source-type-notice>
+
+	<ansyn-map-search-box *ngIf="packageConfig?.mapSearch?.active && !overlay" [mapId]="mapState.id"></ansyn-map-search-box>
 </div>

@@ -16,8 +16,7 @@ import { ContextConfig } from '@ansyn/context/models/context.config';
 import { LoginConfig } from '@ansyn/login/services/login-config.service';
 import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
 import { configuration } from '../../../../configuration/configuration';
-import { BING_MAPS_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-BING-source-provider';
-import { ESRI_4326_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-ESRI-4326-source-provider';
+import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -88,12 +87,8 @@ export const getProviders = (conf): any[] => {
 			useValue: conf.coreConfig
 		},
 		{
-			provide: BING_MAPS_CONFIG,
-			useValue: conf.bingMaps
-		},
-		{
-			provide: ESRI_4326_CONFIG,
-			useValue: conf.ESRI4326Config
+			provide: MAP_SOURCE_PROVIDERS_CONFIG,
+			useValue: conf.mapSourceProvidersConfig
 		}
 	];
 };

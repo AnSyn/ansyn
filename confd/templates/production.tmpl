@@ -144,16 +144,21 @@
 		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
 	}
   },
-  "bingMaps": {
-  	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-  	"styles": [ "AerialWithLabels" ]
-  },
-  "ESRI4326Config": {
-  	"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
-  	"projection": "EPSG:4326",
-  	"maxZoom": 16,
-  	"tileSize": 512,
-  	"attributions": "Copyright:© 2013 ESRI, i-cubed, GeoEye"
+  "mapSourceProvidersConfig": {
+  	"BING": {
+    	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
+    	"styles": [ "AerialWithLabels" ]
+    },
+    "TileWMS": {
+
+    },
+  	"ESRI_4326": {
+    	"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
+    	"projection": "EPSG:4326",
+    	"maxZoom": 16,
+    	"tileSize": 512,
+    	"attributions": "Copyright:© 2013 ESRI, i-cubed, GeoEye"
+    }
   },
   "filtersConfig": {
   	"shortFilterListLength": 8,

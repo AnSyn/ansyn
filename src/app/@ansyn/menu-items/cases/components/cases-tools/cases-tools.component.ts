@@ -4,7 +4,7 @@ import { SaveCaseComponent } from '../save-case/save-case.component';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { OpenModalAction } from '../../actions/cases.actions';
-import { UpdateCaseBackendAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/internal/operators';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
@@ -48,8 +48,6 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 	}
 
 	manualSave(): void {
-		if (this._selectedCase && this._selectedCase.id !== this.casesService.defaultCase.id) {
-			this.store.dispatch(new UpdateCaseBackendAction(this._selectedCase));
-		}
+		this.store.dispatch(new UpdateCaseAction({ updatedCase: this._selectedCase, forceUpdate: true }));
 	}
 }

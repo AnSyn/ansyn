@@ -10,41 +10,10 @@ describe('CasesAutoSaveComponent', () => {
 	let fixture: ComponentFixture<CasesAutoSaveComponent>;
 	let store: Store<any>;
 
-	const fakeCase: Case = {
+	const fakeCase = {
 		id: '1',
-		name: 'name',
-		owner: 'owner',
-		creationTime: new Date(),
-		lastModified: new Date(),
-		autoSave: true,
-		state: {
-			time: { type: '', from: new Date(), to: new Date() },
-			region: {
-				type: 'Polygon',
-				coordinates: [
-					[
-						[-64.73, 32.31]
-					]
-				]
-			},
-			maps: {
-				data: [
-					{
-						id: 'imagery1',
-						data: {
-							position: { zoom: 1, center: 2 },
-							isAutoImageProcessingActive: true,
-							overlay: 'overlay'
-						}
-					}
-				],
-				activeMapId: 'imagery1'
-			},
-			overlaysManualProcessArgs: {
-				'overlay_123': { Contrast: 50, Brightness: 20 }
-			}
-		} as any
-	};
+		autoSave: true
+	} as Case;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -69,7 +38,6 @@ describe('CasesAutoSaveComponent', () => {
 
 	it('click should dispatch UpdateCaseAction', () => {
 		spyOn(store, 'dispatch');
-		component.currentCase = fakeCase;
 		component.onChange(true);
 		fixture.detectChanges();
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({ updatedCase: fakeCase, forceUpdate: true }));

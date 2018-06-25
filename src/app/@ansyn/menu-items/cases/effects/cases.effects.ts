@@ -24,10 +24,11 @@ import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/ca
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { Case } from '@ansyn/core/models/case.model';
+import { Case, CasePreview, DilutedCaseState } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
+import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
 
 @Injectable()
 export class CasesEffects {
@@ -117,7 +118,7 @@ export class CasesEffects {
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
 		.mergeMap((action: UpdateCaseBackendAction) => {
-			return this.casesService.wrapUpdateCase(action.payload).map(updatedCase => {
+			return this.casesService.wrapUpdateCase(action.payload).map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => {
 				return new UpdateCaseBackendSuccessAction(updatedCase);
 			});
 		}).share();

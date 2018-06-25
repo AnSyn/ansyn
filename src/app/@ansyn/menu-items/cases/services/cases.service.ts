@@ -1,6 +1,6 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounceTime';
@@ -14,7 +14,7 @@ import { StorageService, StoredEntity } from '@ansyn/core/services/storage/stora
 import { CasePreview, CaseState, CaseTimeState, DilutedCaseState, IContextEntity } from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, debounceTime } from 'rxjs/operators';
 
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
@@ -47,11 +47,9 @@ export class CasesService {
 	loadCases(casesOffset: number = 0): Observable<any> {
 		return this.storageService.getPage<CasePreview>(this.config.schema, casesOffset, this.paginationLimit)
 			.pipe(
-				map(previews => previews.map(preview => this.parseCasePreview(preview)))
-			)
-			.pipe(
+				map(previews => previews.map(preview => this.parseCasePreview(preview))),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
-			);
+			)
 	}
 
 	parseCasePreview(casePreview: CasePreview): CasePreview {
@@ -139,21 +137,20 @@ export class CasesService {
 		selectedCase.lastModified = currentTime;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
 			.pipe(
-				map(_ => selectedCase))
-			.pipe(
-				catchError(err => {
-					return this.errorHandlerService.httpErrorHandle(err);
-				}));
+				map(_ => selectedCase),
+				catchError(err => this.errorHandlerService.httpErrorHandle(err))
+			)
 	}
 
-	wrapUpdateCase(selectedCase: Case): Observable<Case> {
-		return Observable.create(observer => observer.next(Date.now()))
-			.debounceTime(this.config.updateCaseDebounceTime).pipe(
-				mergeMap(() => this.updateCase(selectedCase)))
+	wrapUpdateCase(selectedCase: Case): Observable<StoredEntity<CasePreview, DilutedCaseState>> {
+		return of(Date.now())
 			.pipe(
+				debounceTime(this.config.updateCaseDebounceTime),
+				mergeMap(() => this.updateCase(selectedCase)),
 				catchError(err => {
 					return this.errorHandlerService.httpErrorHandle(err);
-				}));
+				})
+			);
 	}
 
 	updateCase(selectedCase: Case): Observable<StoredEntity<CasePreview, DilutedCaseState>> {

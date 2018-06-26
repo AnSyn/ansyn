@@ -17,6 +17,7 @@ import { PinPointVisualizer } from '@ansyn/plugins/openlayers/visualizers/region
 import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/measure-distance.visualizer';
 import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/heatmap-visualizer';
+import { OpenlayersOsmLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.plugin';
 
 @NgModule({
 	imports: [
@@ -38,7 +39,7 @@ import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizer
 			GoToVisualizer,
 			PinPointVisualizer,
 			MouseShadowVisualizer,
-			PolygonSearchVisualizer
+			OpenlayersOsmLayersPlugin
 		])
 	]
 })

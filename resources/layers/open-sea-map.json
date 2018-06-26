@@ -3,7 +3,8 @@
 		"id": "b78adfbe-8c2f-461b-b531-2df05257fc08",
 		"name": "OpenSeaMap",
 		"url": "https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png",
-		"type": "Static"
+		"type": "Static",
+    "layerPluginType": "OSM"
 	},
 	"data":{
 	}

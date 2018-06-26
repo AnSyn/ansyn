@@ -3,7 +3,7 @@ import {
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
-	Inject,
+	Inject, Injector,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -12,14 +12,9 @@ import {
 } from '@angular/core';
 import { ImageryComponentManager } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { IImageryConfig } from '@ansyn/imagery/model/iimagery-config';
-import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import {
-	IMAGERY_MAP_COMPONENTS,
-	ImageryMapComponentConstructor
-} from '@ansyn/imagery/model/imagery-map-component';
-
+import { IMapConstructor } from '@ansyn/imagery/model/imap';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 
 @Component({
 	selector: 'ansyn-imagery-view',
@@ -42,7 +37,8 @@ export class ImageryComponent implements OnInit, OnDestroy {
 		}
 
 		this._manager = new ImageryComponentManager(
-			this.imageryMapComponents,
+			this.injector,
+			this.iMapConstructors,
 			this.componentFactoryResolver,
 			this.imageryCommunicatorService,
 			this.mapComponentElem,
@@ -58,8 +54,9 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
+				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[],
+				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
+				protected injector: Injector) {
 	}
 
 	ngOnDestroy() {

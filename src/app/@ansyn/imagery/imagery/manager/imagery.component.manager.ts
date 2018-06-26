@@ -1,19 +1,14 @@
-import { IImageryConfig } from '@ansyn/imagery/model/iimagery-config';
-import { IMap } from '@ansyn/imagery/model/imap';
-import {
-	ImageryMapComponent,
-	ImageryMapComponentConstructor
-} from '@ansyn/imagery/model/imagery-map-component';
+import { IMap, IMapConstructor } from '@ansyn/imagery/model/imap';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { ComponentFactoryResolver, ComponentRef, EventEmitter, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, ViewContainerRef } from '@angular/core';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { map, mergeMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { forkJoin } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { BaseImageryPluginProvider } from '@ansyn/imagery/imagery/providers/imagery.providers';
+import { MapComponent } from '@ansyn/imagery/map/map.component';
 
 export interface MapInstanceChanged {
 	id: string;
@@ -37,17 +32,17 @@ export class ImageryComponentManager {
 		return this._mapComponentRef.instance.plugins;
 	}
 
-	constructor(protected imageryMapComponents: ImageryMapComponentConstructor[],
+	constructor(protected injector: Injector,
+				protected iMapConstructors: IMapConstructor[],
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				protected mapComponentElem: ViewContainerRef,
-				protected _mapComponentRef: ComponentRef<ImageryMapComponent>,
+				protected _mapComponentRef: ComponentRef<MapComponent>,
 				protected _baseSourceProviders: BaseMapSourceProvider[],
-				protected mapSettings: CaseMapState
-	) {
+				protected mapSettings: CaseMapState) {
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition): Promise <any> {
+	public loadInitialMapSource(position?: CaseMapPosition): Promise<any> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();
@@ -82,7 +77,7 @@ export class ImageryComponentManager {
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
-		const sourceProvider = this.getMapSourceProvider({mapType, sourceType: this.mapSettings.sourceType });
+		const sourceProvider = this.getMapSourceProvider({ mapType, sourceType: this.mapSettings.sourceType });
 		return sourceProvider.createAsync();
 	}
 
@@ -95,22 +90,31 @@ export class ImageryComponentManager {
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		const mapComponentClass = this.imageryMapComponents.find(({ mapClass }: ImageryMapComponentConstructor) => mapClass.mapType === activeMapName);
-		const factory = this.componentFactoryResolver.resolveComponentFactory<ImageryMapComponent>(mapComponentClass);
-		this._mapComponentRef = this.mapComponentElem.createComponent<ImageryMapComponent>(factory);
+		const imapClass = this.iMapConstructors.find((imap: IMapConstructor) => imap.mapType === activeMapName);
+		const factory = this.componentFactoryResolver.resolveComponentFactory<MapComponent>(MapComponent);
+		const providers = [
+			{
+				provide: IMap,
+				useClass: imapClass,
+				deps: imapClass.deps || []
+			},
+			BaseImageryPluginProvider];
+
+		const injector = Injector.create({ parent: this.injector, providers });
+		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;
-		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapComponentClass.mapClass.mapType);
+		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(imapClass.mapType);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
 				.pipe(
-					tap((map) => this.onMapCreated(map, activeMapName, oldMapName)),
+					tap((map) => this.onMapCreated(map, activeMapName, oldMapName))
 				)
-				.toPromise()
+				.toPromise();
 
 		});
 	}
 
-	private onMapCreated (map: IMap, activeMapName, oldMapName) {
+	private onMapCreated(map: IMap, activeMapName, oldMapName) {
 		this.internalSetActiveMap(map);
 		if (activeMapName !== oldMapName && Boolean(oldMapName)) {
 			this.mapInstanceChanged.emit({

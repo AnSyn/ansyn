@@ -1,13 +1,16 @@
 import { Observable } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
-	BaseOverlaySourceProvider, DateRange, IFetchParams, OverlayFilter,
+	BaseOverlaySourceProvider,
+	DateRange,
+	IFetchParams,
+	OverlayFilter,
 	StartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { area, intersect, difference } from '@turf/turf';
+import { area, difference, intersect } from '@turf/turf';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 
 export interface FiltersList {
@@ -132,7 +135,11 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
 		const mergedSortedOverlays: Observable<OverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
 			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: DataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
-			.map(s => s.provider.fetchMultiple(fetchParams, s.filters)))
+			.map(s => {
+				const dataFiltersOfProvider = Boolean(fetchParams.dataInputFilters) ?
+					fetchParams.dataInputFilters.filter((f) => f.providerName === s.provider.sourceType) : [];
+				return s.provider.fetchMultiple({ ...fetchParams, dataInputFilters: dataFiltersOfProvider }, s.filters);
+			}))
 			.map(overlays => {
 				const allFailed = overlays.every(overlay => this.isFaulty(overlay));
 				const errors = this.mergeErrors(overlays);
@@ -142,7 +149,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 						errors,
 						data: null,
 						limited: -1
-					}
+					};
 				}
 
 				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
@@ -155,7 +162,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise()))
 			.then(dates => dates.filter(Boolean)
-				// filter(Boolean) prevents crash from providers that do not yet implement the current function
+			// filter(Boolean) prevents crash from providers that do not yet implement the current function
 				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {
@@ -175,7 +182,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise()))
 			.then(dates => dates.filter(Boolean)
-				// filter(Boolean) prevents crash from providers that do not yet implement the current function
+			// filter(Boolean) prevents crash from providers that do not yet implement the current function
 				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
 			.then(dates => dates.reduce((d1, d2) => {
 				if (!d1) {

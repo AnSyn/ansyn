@@ -3,8 +3,13 @@ import { Observable } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { GeoJsonObject, Point } from 'geojson';
+import { ImageryDecorator } from '@ansyn/imagery/model/imagery-decorator';
 
-export interface IMapConstructor {
+export interface ImageryMapMetaData {
+	deps?: any[];
+}
+
+export interface IMapConstructor extends ImageryMapMetaData {
 	mapType: string;
 	groupLayers: Map<string, any>;
 
@@ -15,6 +20,12 @@ export interface IMapConstructor {
 	removeGroupLayer(layer: any, groupName: string);
 
 	addGroupVectorLayer(layer: any, groupName: string);
+}
+
+export function ImageryMap(metaData: ImageryMapMetaData) {
+	return function (constructor: IMapConstructor) {
+		ImageryDecorator<ImageryMapMetaData, IMapConstructor>(metaData)(constructor);
+	}
 }
 
 export abstract class IMap<T = any> {

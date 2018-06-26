@@ -11,10 +11,10 @@ import Raster from 'ol/source/raster';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import * as turf from '@turf/turf';
 import { GeoJsonObject, Point } from 'geojson';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
-@Injectable()
+@ImageryMap({})
 export class OpenLayersDisabledMap extends IMap<Map> {
 	static mapType = DisabledOpenLayersMapName;
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();

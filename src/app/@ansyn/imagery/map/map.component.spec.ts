@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MapComponent } from './map.component';
-import { Observable } from 'rxjs/index';
+import { Observable, of } from 'rxjs/index';
 import { cold } from 'jasmine-marbles';
-import { IMap } from '@ansyn/imagery/model/imap';
-import { inject } from '@angular/core';
+import { IMap } from '../model/imap';
+import { inject } from '@angular/core/testing';
+import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 
 describe('MapComponent', () => {
 	let component: MapComponent;
@@ -12,7 +13,17 @@ describe('MapComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [MapComponent]
+			declarations: [MapComponent],
+			providers: [
+				{
+					provide: IMap,
+					useValue: { initMap: of(true) }
+				},
+				{
+					provide: BaseImageryPlugin,
+					useValue: []
+				}
+			]
 		})
 			.compileComponents();
 	}));
@@ -32,7 +43,7 @@ describe('MapComponent', () => {
 		let success: boolean;
 
 		beforeEach(() => {
-			spyOn(map, 'initMap').and.callFake(() => Observable.of(success));
+			spyOn(map, 'initMap').and.callFake(() => of(success));
 		});
 
 		it('on success', () => {

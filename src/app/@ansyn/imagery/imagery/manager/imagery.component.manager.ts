@@ -9,7 +9,6 @@ import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { BaseImageryPluginProvider } from '@ansyn/imagery/imagery/providers/imagery.providers';
 import { MapComponent } from '@ansyn/imagery/map/map.component';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export interface MapInstanceChanged {
 	id: string;
@@ -93,11 +92,14 @@ export class ImageryComponentManager {
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
 		const imapClass = this.iMapConstructors.find((imap: IMapConstructor) => imap.mapType === activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory<MapComponent>(MapComponent);
-		const providers = [{
-			provide: IMap,
-			useClass: imapClass,
-			deps: [ProjectionService]
-		}, BaseImageryPluginProvider];
+		const providers = [
+			{
+				provide: IMap,
+				useClass: imapClass,
+				deps: imapClass.deps
+			},
+			BaseImageryPluginProvider];
+
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;

@@ -51,7 +51,8 @@ import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestF
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
+import { IMapConstructor } from '@ansyn/imagery/model/imap';
 
 @Injectable()
 export class MapAppEffects {
@@ -204,15 +205,15 @@ export class MapAppEffects {
 	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				this.imageryMapComponents
-					.filter(({ mapClass }: ImageryMapComponentConstructor) => mapClass.groupLayers.get('layers'))
-					.forEach(({ mapClass }: ImageryMapComponentConstructor) => {
-						const displayedLayers: any = mapClass.groupLayers.get('layers').getLayers().getArray();
+				this.iMapConstructors
+					.filter((iMapConstructor: IMapConstructor) => iMapConstructor.groupLayers.get('layers'))
+					.forEach((iMapConstructor: IMapConstructor) => {
+						const displayedLayers: any = iMapConstructor.groupLayers.get('layers').getLayers().getArray();
 						/* remove layer if layerId not includes on selectLayers */
 						displayedLayers.forEach((layer) => {
 							const id = layer.get('id');
 							if (!selectedLayersIds.includes(id)) {
-								mapClass.removeGroupLayer(id, 'layers');
+								iMapConstructor.removeGroupLayer(id, 'layers');
 							}
 						});
 
@@ -221,7 +222,7 @@ export class MapAppEffects {
 							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
 							if (!layer) {
 								const addLayer = layers.find(({ id }) => id === layerId);
-								mapClass.addGroupVectorLayer(addLayer, 'layers');
+								iMapConstructor.addGroupVectorLayer(addLayer, 'layers');
 							}
 						});
 					});
@@ -393,7 +394,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
+				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}

@@ -2,10 +2,10 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
-import { VisualizersConfig } from '../model/visualizers-config.token';
 import { CacheService } from '../cache-service/cache.service';
+import { Store } from '@ngrx/store';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
-import { IMAGERY_MAP_COMPONENTS } from '../model/imagery-map-component';
+import { IMAGERY_IMAP } from '../model/imap-collection';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
@@ -41,8 +41,8 @@ describe('ImageryComponent', () => {
 				{ provide: CacheService, useValue: null },
 				{ provide: PLUGINS_COLLECTIONS, useValue: []},
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
-				{ provide: VisualizersConfig, useValue: {} },
-				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
+				{ provide: Store, useValue: null },
+				{ provide: IMAGERY_IMAP, useValue: [] },
 				ImageryCommunicatorService]
 		}).compileComponents();
 	}));

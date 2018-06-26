@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CesiumMapComponent } from './cesium-map/cesium-map.component';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { CesiumMap } from './cesium-map';
 
 @NgModule({
-	imports: [ImageryModule.provideMapComponents([CesiumMapComponent])],
-	declarations: [CesiumMapComponent]
+	imports: [ImageryModule.provideIMaps([CesiumMap])]
 })
 export class CesiumMapModule {
 }

@@ -29,10 +29,3 @@ export const BaseImageryPluginProvider: FactoryProvider = {
 	useFactory: BaseImageryPluginProviderFactory,
 	deps: [PLUGINS_COLLECTIONS, Injector, IMap]
 };
-
-export function ProvideMap(implementaion: any) {
-	return {
-		provide: IMap,
-		useClass: implementaion
-	}
-}

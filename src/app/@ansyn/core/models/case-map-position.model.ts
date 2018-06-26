@@ -15,6 +15,6 @@ export interface CaseMapProjectedState {
 export type CaseMapExtentPolygon = Polygon;
 
 export interface CaseMapPosition {
-	projectedState: CaseMapProjectedState;
-	extentPolygon: CaseMapExtentPolygon;
+	projectedState?: CaseMapProjectedState;
+	extentPolygon?: CaseMapExtentPolygon;
 }

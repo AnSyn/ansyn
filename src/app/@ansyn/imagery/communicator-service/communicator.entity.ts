@@ -2,10 +2,9 @@ import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { IMap } from '../model/imap';
-import { Observable, of } from 'rxjs';
+import { Observable, of, merge } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
-import 'rxjs/add/observable/merge';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter } from 'rxjs/operators';
@@ -51,7 +50,7 @@ export class CommunicatorEntity {
 		}));
 
 		this._managerSubscriptions.push(
-			Observable.merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
+			merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
 				.pipe(filter(({ id }) => id === this.id))
 				.subscribe(this.initPlugins.bind(this))
 		);

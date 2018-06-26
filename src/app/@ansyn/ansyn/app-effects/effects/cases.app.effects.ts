@@ -81,13 +81,14 @@ export class CasesAppEffects {
 						.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
 
 					return new SelectCaseAction(caseValue);
+				})
+				.catch((result: HttpErrorResponse) => {
+					return [new SetToastMessageAction({
+						toastText: `Failed to load case (${result.status})`,
+						showWarningIcon: true
+					}),
+						new LoadDefaultCaseIfNoActiveCaseAction()];
 				});
-		}).catch((result: HttpErrorResponse) => {
-			return [new SetToastMessageAction({
-				toastText: `Failed to load case (${result.status})`,
-				showWarningIcon: true
-			}),
-				new LoadDefaultCaseIfNoActiveCaseAction()];
 		});
 
 	constructor(protected actions$: Actions,

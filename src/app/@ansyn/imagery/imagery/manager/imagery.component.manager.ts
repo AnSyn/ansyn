@@ -96,7 +96,7 @@ export class ImageryComponentManager {
 			{
 				provide: IMap,
 				useClass: imapClass,
-				deps: imapClass.deps
+				deps: imapClass.deps || []
 			},
 			BaseImageryPluginProvider];
 

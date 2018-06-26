@@ -7,10 +7,10 @@ import { ImageryDecorator } from '@ansyn/imagery/model/imagery-decorator';
 
 export interface ImageryMapMetaData {
 	deps?: any[];
+	mapType: string;
 }
 
 export interface IMapConstructor extends ImageryMapMetaData {
-	mapType: string;
 	groupLayers: Map<string, any>;
 
 	new(...args): IMap;

@@ -31,11 +31,11 @@ import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 export const OpenlayersMapName = 'openLayersMap';
 
 @ImageryMap({
-	deps: [ProjectionService],
+	mapType: OpenlayersMapName,
+	deps: [ProjectionService]
 })
 export class OpenLayersMap extends IMap<OLMap> {
 	static groupLayers = new Map<string, Group>();
-	static mapType = OpenlayersMapName;
 	private showGroups = new Map<string, boolean>();
 	public mapType: string = OpenlayersMapName;
 	private _mapObject: OLMap;

@@ -62,7 +62,7 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imagery-map-component';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';

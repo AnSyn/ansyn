@@ -6,7 +6,7 @@ import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
 import { Store } from '@ngrx/store';
 import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../model/plugins-collection';
-import { IMAGERY_IMAP } from '../model/imagery-map-component';
+import { IMAGERY_IMAP } from '../model/imap-collection';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];

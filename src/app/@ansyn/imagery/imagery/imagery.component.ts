@@ -14,7 +14,7 @@ import { ImageryComponentManager } from '@ansyn/imagery/imagery/manager/imagery.
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { IMapConstructor } from '@ansyn/imagery/model/imap';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imagery-map-component';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 
 @Component({
 	selector: 'ansyn-imagery-view',

@@ -5,10 +5,11 @@ import { Observable } from 'rxjs';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 export const CesiumMapName = 'cesium';
 
-@ImageryMap({})
+@ImageryMap({
+	mapType: CesiumMapName
+})
 export class CesiumMap extends IMap<any> {
 	static groupLayers = new Map<string, any>();
-	static mapType = CesiumMapName;
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any>;
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();

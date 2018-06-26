@@ -9,8 +9,8 @@ import { createCollection } from './model/plugins-collection';
 import { ImageryCollectionEntity } from '@ansyn/imagery/model/plugins-collection';
 import {
 	IMAGERY_IMAP_COLLECTION, IMAGERY_IMAP,
-	ImageryMapComponentFactory
-} from '@ansyn/imagery/model/imagery-map-component';
+	ImageryIMapFactory
+} from '@ansyn/imagery/model/imap-collection';
 import { MapComponent } from './map/map.component';
 import { IMapConstructor } from '@ansyn/imagery/model/imap';
 
@@ -25,7 +25,7 @@ import { IMapConstructor } from '@ansyn/imagery/model/imap';
 		createCollection([]),
 		{
 			provide: IMAGERY_IMAP,
-			useFactory: ImageryMapComponentFactory,
+			useFactory: ImageryIMapFactory,
 			deps: [IMAGERY_IMAP_COLLECTION]
 		}
 	],

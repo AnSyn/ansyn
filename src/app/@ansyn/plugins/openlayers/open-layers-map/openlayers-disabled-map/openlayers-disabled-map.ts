@@ -14,9 +14,10 @@ import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
-@ImageryMap({})
+@ImageryMap({
+	mapType: DisabledOpenLayersMapName
+})
 export class OpenLayersDisabledMap extends IMap<Map> {
-	static mapType = DisabledOpenLayersMapName;
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	pointerMove: EventEmitter<any> = new EventEmitter<any>();
 	contextMenu: EventEmitter<any> = new EventEmitter<any>();

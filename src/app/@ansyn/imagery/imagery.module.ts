@@ -1,4 +1,4 @@
-import { ANALYZE_FOR_ENTRY_COMPONENTS, ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
@@ -8,28 +8,30 @@ import { CacheService } from './cache-service/cache.service';
 import { createCollection } from './model/plugins-collection';
 import { ImageryCollectionEntity } from '@ansyn/imagery/model/plugins-collection';
 import {
-	IMAGERY_MAP_COMPONENTS, IMAGERY_MAP_COMPONENTS_COLLECTION, ImageryMapComponentConstructor,
+	IMAGERY_IMAP_COLLECTION, IMAGERY_IMAP,
 	ImageryMapComponentFactory
 } from '@ansyn/imagery/model/imagery-map-component';
+import { MapComponent } from './map/map.component';
+import { IMapConstructor } from '@ansyn/imagery/model/imap';
 
 @NgModule({
 	imports: [CommonModule],
-	declarations: [ImageryComponent],
+	declarations: [ImageryComponent, MapComponent],
+	entryComponents: [MapComponent],
 	providers: [
 		{ provide: IMAGERY_CONFIG, useValue: initialImageryConfig },
 		ImageryCommunicatorService,
 		{ provide: CacheService, useClass: CacheService, deps: [IMAGERY_CONFIG, ImageryCommunicatorService] },
 		createCollection([]),
 		{
-			provide: IMAGERY_MAP_COMPONENTS,
+			provide: IMAGERY_IMAP,
 			useFactory: ImageryMapComponentFactory,
-			deps: [IMAGERY_MAP_COMPONENTS_COLLECTION]
+			deps: [IMAGERY_IMAP_COLLECTION]
 		}
 	],
 	exports: [ImageryComponent]
 })
 export class ImageryModule {
-
 	static forRoot(config: IImageryConfig): ModuleWithProviders {
 		return {
 			ngModule: ImageryModule,
@@ -47,18 +49,13 @@ export class ImageryModule {
 		};
 	}
 
-	static provideMapComponents(components: ImageryMapComponentConstructor[]): ModuleWithProviders {
+	static provideIMaps(imaps: IMapConstructor[]): ModuleWithProviders {
 		return {
 			ngModule: ImageryModule,
 			providers: [
 				{
-					provide: IMAGERY_MAP_COMPONENTS_COLLECTION,
-					useValue: components,
-					multi: true
-				},
-				{
-					provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-					useValue: components,
+					provide: IMAGERY_IMAP_COLLECTION,
+					useValue: imaps,
 					multi: true
 				}
 			]

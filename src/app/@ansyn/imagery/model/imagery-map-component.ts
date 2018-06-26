@@ -28,13 +28,8 @@ export class ImageryMapComponent implements OnDestroy{
 	}
 }
 
-export const IMAGERY_MAP_COMPONENTS_COLLECTION = new InjectionToken<ImageryMapComponent[][]>('IMAGERY_MAP_COMPONENTS_COLLECTION');
-export const IMAGERY_MAP_COMPONENTS = new InjectionToken<ImageryMapComponent[]>('IMAGERY_MAP_COMPONENTS');
-
-export interface ImageryMapComponentConstructor {
-	mapClass: IMapConstructor;
-	new(...args): ImageryMapComponent;
-}
+export const IMAGERY_IMAP_COLLECTION = new InjectionToken<ImageryMapComponent[][]>('IMAGERY_IMAP_COLLECTION');
+export const IMAGERY_IMAP = new InjectionToken<ImageryMapComponent[]>('IMAGERY_IMAP');
 
 export function ImageryMapComponentFactory(imageryMapComponentsCollection: ImageryMapComponent[][]) {
 	return imageryMapComponentsCollection.reduce((a, b) => [...a, ...b], [])

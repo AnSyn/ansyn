@@ -1,28 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CesiumMapComponent } from './cesium-map.component';
-import { cold, hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs';
-import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map/cesium-map';
-import { PLUGINS_COLLECTIONS } from '@ansyn/imagery/model/plugins-collection';
+import { MapComponent } from './map.component';
+import { Observable } from 'rxjs/index';
+import { cold } from 'jasmine-marbles';
+import { IMap } from '@ansyn/imagery/model/imap';
+import { inject } from '@angular/core';
 
-describe('CesiumMapComponent', () => {
-	let component: CesiumMapComponent;
-	let fixture: ComponentFixture<CesiumMapComponent>;
-	let map: CesiumMap;
+describe('MapComponent', () => {
+	let component: MapComponent;
+	let fixture: ComponentFixture<MapComponent>;
+	let map: IMap;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [CesiumMapComponent],
-			providers: [{ provide: PLUGINS_COLLECTIONS, useValue: [] }]
-		}).compileComponents();
+			declarations: [MapComponent]
+		})
+			.compileComponents();
 	}));
 
-	beforeEach(() => {
-		fixture = TestBed.createComponent(CesiumMapComponent);
+	beforeEach(inject([IMap], (_map: IMap<any>) => {
+		fixture = TestBed.createComponent(MapComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-		map = (<any>component).map;
-	});
+		map = _map;
+	}));
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
@@ -46,7 +46,7 @@ describe('CesiumMapComponent', () => {
 			success = false;
 			const expectedResult = cold('|');
 			expect(component.createMap([])).toBeObservable(expectedResult);
-		})
+		});
 
 	});
 });

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable } from '@angular/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -85,6 +85,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 
 	constructor(public projectionService: ProjectionService) {
 		super();
+		console.log("new!!!")
 
 		if (!OpenLayersMap.groupLayers.get('layers')) {
 			OpenLayersMap.groupLayers.set('layers', new Group(<any>{

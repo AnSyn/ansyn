@@ -6,7 +6,7 @@ import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 export const CesiumMapName = 'cesium';
 
 @Injectable()
-export class CesiumMap extends IMap {
+export class CesiumMap extends IMap<any> {
 	static groupLayers = new Map<string, any>();
 	static mapType = CesiumMapName;
 	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();

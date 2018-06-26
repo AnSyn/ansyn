@@ -1,9 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
 import { IMap } from './imap';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 
 export class BaseImageryPlugin {
 	subscriptions: Subscription[] = [];

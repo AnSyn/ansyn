@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IMenuState, menuStateSelector } from '@ansyn/menu/reducers/menu.reducer';
-import { SetShowHelpOnStartup } from '@ansyn/menu/actions/menu.actions';
+import { IMenuState } from '@ansyn/menu/reducers/menu.reducer';
 import { helpComponentConstants } from '@ansyn/menu-items/help/components/help.component.const';
+import { SetShowHelpOnStartup } from '@ansyn/menu-items/help/actions/help.actions';
+import { selectShowHelpOnStartup } from '@ansyn/menu-items/help/reducer/help.reducer';
+import { map } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-help',
@@ -15,10 +17,10 @@ export class HelpComponent {
 		return helpComponentConstants;
 	}
 
-	public showHelpOnStartup$ = this.store.select<IMenuState>(menuStateSelector)
-		.pluck<IMenuState, boolean>('showHelpOnStartup')
-		.distinctUntilChanged()
-		.map(bool => !bool);
+	public dontShowHelpOnStartup$ = this.store.select<boolean>(selectShowHelpOnStartup)
+		.pipe(
+			map(bool => !bool)
+		);
 
 	constructor(public store: Store<IMenuState>) {
 	}

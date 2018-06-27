@@ -21,7 +21,7 @@
 	<label>
 		<ansyn-checkbox
 			text="Don't show on startup"
-			[checked]="showHelpOnStartup$ | async"
+			[checked]="dontShowHelpOnStartup$ | async"
 			(inputClicked)="onCheckboxClick($event.data.isChecked)"
 		></ansyn-checkbox>
 	</label>

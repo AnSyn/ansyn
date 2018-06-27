@@ -10,7 +10,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { MenuItem } from '@ansyn/menu/models/menu-item.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
-import { localStorageData, updateLocalStorage } from '@ansyn/menu/helpers/menu-local-storage.helper';
+import { localStorageData } from '@ansyn/menu-items/help/services/help.local-storage.service';
 
 export const menuItemsAdapter: EntityAdapter<MenuItem> = createEntityAdapter<MenuItem>({ selectId: (menuItem: MenuItem) => menuItem.name });
 
@@ -18,7 +18,6 @@ export interface IMenuState extends EntityState<MenuItem> {
 	selectedMenuItem: string;
 	isPinned: boolean;
 	autoClose: boolean;
-	showHelpOnStartup: boolean;
 	doneStartupOperations: boolean;
 }
 
@@ -31,7 +30,6 @@ export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
 	),
 	isPinned: sessionData().isPinned,
 	autoClose: true,
-	showHelpOnStartup: localStorageData().showHelpOnStartup,
 	doneStartupOperations: sessionData().doneStartupOperations
 });
 
@@ -71,10 +69,6 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SET_AUTO_CLODE:
 			return { ...state, autoClose: action.payload };
-
-		case MenuActionTypes.SET_SHOW_HELP_ON_STARTUP:
-			updateLocalStorage({ showHelpOnStartup: action.payload });
-			return { ...state, showHelpOnStartup: action.payload };
 
 		case MenuActionTypes.SET_DONE_STARTUP_OPERATIONS:
 			updateSession({ doneStartupOperations: action.payload });

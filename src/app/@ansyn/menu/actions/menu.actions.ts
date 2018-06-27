@@ -12,7 +12,6 @@ export const MenuActionTypes = {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
 	SET_AUTO_CLODE: 'SET_AUTO_CLODE',
-	SET_SHOW_HELP_ON_STARTUP: 'SET_SHOW_HELP_ON_STARTUP',
 	SET_DONE_STARTUP_OPERATIONS: 'SET_DONE_STARTUP_OPERATIONS'
 };
 
@@ -67,13 +66,6 @@ export class ContainerChangedTriggerAction implements Action {
 
 export class SetAutoClose implements Action {
 	type = MenuActionTypes.SET_AUTO_CLODE;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class SetShowHelpOnStartup implements Action {
-	type = MenuActionTypes.SET_SHOW_HELP_ON_STARTUP;
 
 	constructor(public payload: boolean) {
 	}

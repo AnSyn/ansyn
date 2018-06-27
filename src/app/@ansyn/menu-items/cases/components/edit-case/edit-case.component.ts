@@ -91,6 +91,7 @@ export class EditCaseComponent implements OnInit {
 			name: '',
 			owner: '',
 			id: '',
+			autoSave: true,
 			lastModified: new Date(),
 			creationTime: new Date(),
 			state: {
@@ -129,7 +130,7 @@ export class EditCaseComponent implements OnInit {
 
 	onSubmitCase(contextIndex: number) {
 		if (this.editMode) {
-			this.store.dispatch(new UpdateCaseAction(this.caseModel));
+			this.store.dispatch(new UpdateCaseAction({ updatedCase: this.caseModel, forceUpdate: true }));
 		} else {
 			const selectContext = this.contextsList[contextIndex];
 			this.caseModel = cloneDeep(this.casesService.updateCaseViaContext(selectContext, this.caseModel));

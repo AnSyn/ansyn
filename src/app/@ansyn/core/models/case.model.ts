@@ -13,6 +13,7 @@ export interface CasePreview extends Entity {
 	owner: string;
 	lastModified: Date;
 	selectedContextId?: string;
+	autoSave: boolean;
 }
 
 export interface Case extends CasePreview {
@@ -145,6 +146,7 @@ export interface DilutedCaseMapState {
 	id: string;
 	data: DilutedCaseMapData;
 	mapType: string;
+	sourceType: string
 	flags: {
 		layers?: boolean
 	};
@@ -153,5 +155,3 @@ export interface DilutedCaseMapState {
 export interface CaseMapState extends DilutedCaseMapState {
 	data: CaseMapData;
 }
-
-export const defaultMapType = 'openLayersMap';

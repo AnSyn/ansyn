@@ -17,6 +17,7 @@ import { SaveCaseComponent } from './components/save-case/save-case.component';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { InfiniteScrollModule } from 'ng-infinitescroll';
+import { CasesAutoSaveComponent } from '@ansyn/menu-items/cases/components/cases-auto-save/cases-auto-save.component';
 
 @NgModule({
 	imports: [
@@ -28,7 +29,7 @@ import { InfiniteScrollModule } from 'ng-infinitescroll';
 		EffectsModule.forFeature([CasesEffects]),
 		BrowserAnimationsModule
 	],
-	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
+	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
 	providers: [CasesService]
 })

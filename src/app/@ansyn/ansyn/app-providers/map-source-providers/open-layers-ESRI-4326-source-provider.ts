@@ -1,10 +1,15 @@
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
 import { Injectable } from '@angular/core';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { Store } from '@ngrx/store';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+
+export interface IESRI4326Config {
+	baseUrl: string;
+	projection: string;
+	maxZoom: number;
+	tileSize: number;
+	attributions: string;
+}
 
 export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 
@@ -12,19 +17,14 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider {
 	public sourceType = OpenLayerESRI_4326SourceProviderSourceType;
 
-	constructor(protected store: Store<any>, protected cacheService: CacheService,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
-		super(store, cacheService, imageryCommunicatorService);
-	}
-
-	create(metaData: any): any[] {
+	create(metaData: any = this.config[this.sourceType]): any[] {
 		const source = new XYZ({
-			attributions: 'Copyright:© 2013 ESRI, i-cubed, GeoEye',
-			maxZoom: 16,
-			projection: 'EPSG:4326',
-			tileSize: 512,
+			attributions: metaData.attributions,
+			maxZoom: metaData.maxZoom,
+			projection: metaData.projection,
+			tileSize: metaData.tileSize,
 			tileUrlFunction: function (tileCoord) {
-				return 'https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}'
+				return metaData.baseUrl
 					.replace('{z}', (tileCoord[0] - 1).toString())
 					.replace('{x}', tileCoord[1].toString())
 					.replace('{y}', (-tileCoord[2] - 1).toString());

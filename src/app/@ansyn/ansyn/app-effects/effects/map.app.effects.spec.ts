@@ -60,7 +60,7 @@ import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { ConfigurationToken } from '@ansyn/imagery/model/configuration.token';
+import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
 import { IMAGERY_MAP_COMPONENTS } from '@ansyn/imagery/model/imagery-map-component';
 class SourceProviderMock1 extends BaseMapSourceProvider {
@@ -132,6 +132,7 @@ describe('MapAppEffects', () => {
 		owner: 'owner',
 		creationTime: new Date(),
 		lastModified: new Date(),
+		autoSave: false,
 		state: {
 			time: {type: '', from: new Date(), to: new Date()},
 			region: {
@@ -185,7 +186,7 @@ describe('MapAppEffects', () => {
 				},
 				{ provide: IMAGERY_MAP_COMPONENTS, useValue: [] },
 				{
-					provide: ConfigurationToken, useValue: {
+					provide: IMAGERY_CONFIG, useValue: {
 						'geoMapsInitialMapSource': [{
 							'mapType': 'openLayersMap',
 							'mapSource': 'BING',

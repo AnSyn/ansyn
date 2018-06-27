@@ -11,48 +11,44 @@
 .help-slide {
 	box-sizing: border-box;
 	height: calc(~"100vh - @{ansyn-help-footer-height}");
-	padding-top: 20px;
-
-	.first-title {
-		padding: 0 10px;
-		font-size: 16px;
-	}
-
-	.second-title {
-		font-size: 22px;
-		width: 100%;
-		text-align: center;
-		margin-top: 1.5rem;
-	}
+	padding: 20px 0 0 10px;
+	display: flex;
+	justify-content: stretch;
+	flex-direction: column;
+	align-items: center;
 
 	.above-center {
 		width: 100%;
-		text-align: center;
-		margin-top: 1.5rem;
+		height: 46%;
+		margin-bottom: 4%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
 
-		& > div:not(:first-child) {
-			margin-top: 1rem;
+		& > div:nth-child(1) {
+			font-size: 16px;
+			align-self: start;
+		}
+
+		& > div:nth-child(2) {
+			font-size: 22px;
 		}
 	}
 
 	.from-center {
-		position: absolute;
-		top: 50%;
-		left: 5%;
-		transform: translateY(-0.5em);
-		width: 90%;
-		text-align: center;
-
-		& > div:not(:first-child) {
-			margin-top: 1rem;
-		}
+		height: 43%;
+		padding: 0 5%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
 	}
 }
 
 footer {
 	box-sizing: border-box;
 	padding: 0 10px;
-	//transform: translateY(-30px);
 
 	hr {
 		width: 80%;

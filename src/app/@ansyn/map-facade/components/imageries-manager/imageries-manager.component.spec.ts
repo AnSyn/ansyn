@@ -84,8 +84,6 @@ describe('ImageriesManagerComponent', () => {
 
 	beforeEach(() => {
 		const communicator = jasmine.createSpyObj('communicator', ['stopMouseShadowVectorLayer', 'setMouseShadowListener', 'drawShadowMouse', 'startMouseShadowVectorLayer']);
-		communicator.pointerMove = Observable.create(observer => {
-		});
 
 		// spyOn(communicator,'pointerMove').and.returnValue(Observable.create(observer => {} ));
 		communicatorProvider.communicators = {

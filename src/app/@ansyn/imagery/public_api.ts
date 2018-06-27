@@ -1,3 +1,4 @@
+export { ImageryMap } from './model/imap';
 export { BaseMapSourceProvider } from './model/base-map-source-provider';
 export { CacheService } from './cache-service/cache.service';
 export { ImageryCommunicatorService } from './communicator-service/communicator.service';

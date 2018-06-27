@@ -26,10 +26,11 @@ import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store]
+	deps: [Store, ProjectionService]
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
@@ -105,7 +106,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected store$: Store<any>) {
+	constructor(protected store$: Store<any>, protected projectionService: ProjectionService) {
 		super(null, {
 			initial: {
 				stroke: {
@@ -170,7 +171,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent(data) {
-		this.iMap.projectionService.projectCollectionAccurately([data.feature], this.iMap)
+		this.projectionService.projectCollectionAccurately([data.feature], this.iMap)
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [featureJson] = featureCollection.features;
 				const newEntity: IVisualizerEntity = {

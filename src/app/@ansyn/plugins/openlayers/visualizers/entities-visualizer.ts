@@ -17,6 +17,7 @@ import {
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export interface FeatureIdentifier {
 	feature: Feature,
@@ -200,7 +201,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			this.removeEntity(entity.id);
 		});
 
-		return this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
+		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
 			.map((features: Feature[]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();

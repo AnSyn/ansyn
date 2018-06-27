@@ -20,8 +20,6 @@ describe('ImageryCommunicatorService', () => {
 	const componentManager2: ImageryComponentManager = <any>{
 		id: '2',
 		positionChanged: new EventEmitter<{ id: string, position: CaseMapPosition }>(),
-		pointerMove: new EventEmitter<any>(),
-		contextMenu: new EventEmitter<any>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
 		mapInstanceChanged: new EventEmitter<MapInstanceChanged>(),
 		plugins: []

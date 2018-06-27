@@ -8,7 +8,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { BaseImageryPluginProvider } from '@ansyn/imagery/imagery/providers/imagery.providers';
+import { BaseImageryPluginProvider } from '../providers/imagery.providers';
 import { MapComponent } from '../../map/map.component';
 
 export interface MapInstanceChanged {
@@ -50,7 +50,7 @@ export class ImageryComponentManager {
 			}
 
 
-			this.createMapSourceForMapType(this._activeMap.mapType).then((layers) => {
+			this.createMapSourceForMapType((<IMapConstructor>this._activeMap.constructor).mapType).then((layers) => {
 				this.resetView(layers[0], position).subscribe(() => {
 					if (layers.length > 0) {
 						for (let i = 1; i < layers.length; i++) {

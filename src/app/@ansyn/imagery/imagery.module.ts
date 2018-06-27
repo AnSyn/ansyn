@@ -7,9 +7,9 @@ import { CacheService } from './cache-service/cache.service';
 import {
 	IMAGERY_IMAP_COLLECTION, IMAGERY_IMAP,
 	ImageryIMapFactory
-} from '@ansyn/imagery/model/imap-collection';
+} from './model/imap-collection';
 import { MapComponent } from './map/map.component';
-import { IMapConstructor } from '@ansyn/imagery/model/imap';
+import { IMapConstructor } from './model/imap';
 import { BaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 import { BaseMapSourceProviderProvider, createMapSourceProviders } from './providers/map-source-providers';
 import { createConfig } from './providers/config';

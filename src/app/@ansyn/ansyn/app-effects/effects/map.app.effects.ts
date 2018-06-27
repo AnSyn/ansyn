@@ -344,7 +344,7 @@ export class MapAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 
 
-		const mapType = communicator.ActiveMap.mapType;
+		const mapType = communicator.mapType;
 		const { sourceType } = overlay;
 		const sourceLoader = communicator.getMapSourceProvider({ mapType, sourceType });
 

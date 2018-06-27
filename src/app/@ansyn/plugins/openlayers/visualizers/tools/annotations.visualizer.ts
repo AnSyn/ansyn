@@ -39,10 +39,11 @@ import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store],
+	deps: [Store, ProjectionService],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -151,7 +152,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		);
 	}
 
-	constructor(public store$: Store<any>) {
+	constructor(public store$: Store<any>, protected projectionService: ProjectionService) {
 
 		super(null, {
 			initial: {
@@ -251,7 +252,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: cloneDeep(this.visualizerStyle)
 		});
 
-		this.iMap.projectionService
+		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
 			.take(1)
 			.withLatestFrom(this.annotationsLayer$)

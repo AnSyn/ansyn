@@ -10,10 +10,6 @@ export const CesiumMapName = 'cesium';
 })
 export class CesiumMap extends IMap<any> {
 	static groupLayers = new Map<string, any>();
-	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	pointerMove: EventEmitter<any>;
-	contextMenu: EventEmitter<any> = new EventEmitter<any>();
-	mapType: string = CesiumMapName;
 	mapObject: any;
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {

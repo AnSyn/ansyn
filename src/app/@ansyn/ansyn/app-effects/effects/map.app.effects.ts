@@ -51,7 +51,7 @@ import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestF
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { IMAGERY_IMAP } from '@ansyn/imagery/providers/imagery-map-collection';
+import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
 import { IMapConstructor } from '@ansyn/imagery/model/imap';
 
 @Injectable()
@@ -394,7 +394,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[],
+				@Inject(IMAGERY_MAPS) protected iMapConstructors: IMapConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}

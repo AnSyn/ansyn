@@ -5,7 +5,8 @@ import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import {
-	IMultipleOverlaysSources, MultipleOverlaysSource,
+	IMultipleOverlaysSources,
+	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider
 } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
 import { PlanetSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet-source-provider';
@@ -21,23 +22,28 @@ import { OpenLayerESRI4326SourceProvider } from '@ansyn/ansyn/app-providers/map-
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map/projection/open-layers-projection.service';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { OpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
 import { OpenLayerOpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-open-aerial-source-provider';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { SomeModule } from '@ansyn/ansyn/app-providers/map-source-providers/some.module';
 
 @NgModule({
 	imports: [
 		HttpClientModule,
-		SomeModule,
-		ImageryModule.provideMapSourceProviders([
-			OpenLayerTileWMSSourceProvider,
-			OpenLayerMapBoxSourceProvider,
-			OpenLayerOSMSourceProvider,
-			OpenLayerIDAHOSourceProvider,
-			OpenLayerPlanetSourceProvider,
-		])
+		ImageryModule.provide({
+			mapSourceProviders: [
+				OpenLayerTileWMSSourceProvider,
+				OpenLayerMapBoxSourceProvider,
+				OpenLayerOSMSourceProvider,
+				OpenLayerIDAHOSourceProvider,
+				OpenLayerPlanetSourceProvider,
+				OpenLayerNotGeoRegisteredPlanetSourceProvider,
+				OpenLayerBingSourceProvider,
+				OpenLayerESRI4326SourceProvider,
+				OpenLayerOpenAerialSourceProvider
+			],
+			plugins: [],
+			maps: []
+		})
 	],
 	providers: [
 		// Source provider for overlays

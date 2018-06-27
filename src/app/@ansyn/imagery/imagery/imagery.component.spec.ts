@@ -5,7 +5,7 @@ import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { CacheService } from '../cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
-import { IMAGERY_IMAP } from '../model/imap-collection';
+import { IMAGERY_IMAP } from '../providers/imagery-map-collection';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];

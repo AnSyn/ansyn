@@ -1,8 +1,8 @@
 import { InjectionToken, ValueProvider } from '@angular/core';
-import { BaseImageryPluginClass	} from '../model/base-imagery-plugin';
+import { BaseImageryPluginConstructor	} from '../model/base-imagery-plugin';
 
 export const PLUGINS_COLLECTIONS: InjectionToken<ImageryCollectionEntity[]> = new InjectionToken('PLUGINS_COLLECTIONS');
-export type ImageryCollectionEntity = BaseImageryPluginClass;
+export type ImageryCollectionEntity = BaseImageryPluginConstructor;
 
 export interface PluginsCollectionProvider extends ValueProvider {
 	provide: InjectionToken<ImageryCollectionEntity[]>;
@@ -10,7 +10,7 @@ export interface PluginsCollectionProvider extends ValueProvider {
 	multi: true;
 }
 
-export function createCollection(providers: Array<ImageryCollectionEntity>): PluginsCollectionProvider {
+export function createPluginsCollection(providers: Array<ImageryCollectionEntity>): PluginsCollectionProvider {
 	return {
 		provide: PLUGINS_COLLECTIONS,
 		useValue: providers,

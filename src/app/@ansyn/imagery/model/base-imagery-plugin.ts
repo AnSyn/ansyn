@@ -49,12 +49,12 @@ export interface ImageryPluginMetaData {
 	deps?: any[];
 }
 
-export interface BaseImageryPluginClass extends ImageryPluginMetaData {
+export interface BaseImageryPluginConstructor extends ImageryPluginMetaData {
 	new(...args): BaseImageryPlugin;
 }
 
 export function ImageryPlugin(metaData: ImageryPluginMetaData) {
-	return function (constructor: BaseImageryPluginClass) {
-		ImageryDecorator<ImageryPluginMetaData, BaseImageryPluginClass>(metaData)(constructor);
+	return function (constructor: BaseImageryPluginConstructor) {
+		ImageryDecorator<ImageryPluginMetaData, BaseImageryPluginConstructor>(metaData)(constructor);
 	}
 }

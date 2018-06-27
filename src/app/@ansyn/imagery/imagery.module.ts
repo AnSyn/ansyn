@@ -4,16 +4,20 @@ import { ImageryComponent } from './imagery/imagery.component';
 import { ImageryCommunicatorService } from './communicator-service/communicator.service';
 import { IImageryConfig, initialImageryConfig } from './model/iimagery-config';
 import { CacheService } from './cache-service/cache.service';
-import {
-	IMAGERY_IMAP_COLLECTION, IMAGERY_IMAP,
-	ImageryIMapFactory
-} from './model/imap-collection';
+import { createImageryMapsCollection } from './providers/imagery-map-collection';
 import { MapComponent } from './map/map.component';
 import { IMapConstructor } from './model/imap';
-import { BaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 import { BaseMapSourceProviderProvider, createMapSourceProviders } from './providers/map-source-providers';
 import { createConfig } from './providers/config';
-import { createCollection, ImageryCollectionEntity } from './providers/plugins-collection';
+import { createPluginsCollection } from './providers/plugins-collection';
+import { BaseImageryPluginConstructor } from './model/base-imagery-plugin';
+import { BaseMapSourceProviderConstructor } from './model/base-map-source-provider';
+
+export interface ImageryMetaData {
+	maps: IMapConstructor[],
+	plugins: BaseImageryPluginConstructor[],
+	sourcesProviders: BaseMapSourceProviderConstructor[]
+}
 
 @NgModule({
 	imports: [CommonModule],
@@ -23,50 +27,31 @@ import { createCollection, ImageryCollectionEntity } from './providers/plugins-c
 		ImageryCommunicatorService,
 		CacheService,
 		createConfig(initialImageryConfig),
-		createCollection([]),
-		{
-			provide: IMAGERY_IMAP,
-			useFactory: ImageryIMapFactory,
-			deps: [IMAGERY_IMAP_COLLECTION]
-		},
+		createPluginsCollection([]),
+		createImageryMapsCollection([]),
+		createMapSourceProviders([]),
 		BaseMapSourceProviderProvider
 	],
 	exports: [ImageryComponent]
 })
 export class ImageryModule {
 
+	static provide(metadata: ImageryMetaData) {
+		return {
+			ngModule: ImageryModule,
+			providers: [
+				createImageryMapsCollection(metadata.maps),
+				createPluginsCollection(metadata.plugins),
+				createMapSourceProviders(metadata.sourcesProviders)
+			]
+		};
+	}
+
 	static provideConfig(config: IImageryConfig): ModuleWithProviders {
 		return {
 			ngModule: ImageryModule,
 			providers: [createConfig(config)]
 		};
-	}
-
-	static provideCollection(providers: ImageryCollectionEntity[]): ModuleWithProviders {
-		return {
-			ngModule: ImageryModule,
-			providers: [createCollection(providers)]
-		};
-	}
-
-	static provideIMaps(imaps: IMapConstructor[]): ModuleWithProviders {
-		return {
-			ngModule: ImageryModule,
-			providers: [
-				{
-					provide: IMAGERY_IMAP_COLLECTION,
-					useValue: imaps,
-					multi: true
-				}
-			]
-		};
-	}
-
-	static provideMapSourceProviders(mapSourceProviders: BaseMapSourceProviderConstructor[]): ModuleWithProviders {
-		return {
-			ngModule: ImageryModule,
-			providers: createMapSourceProviders(mapSourceProviders)
-		}
 	}
 
 }

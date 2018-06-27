@@ -51,7 +51,7 @@ import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestF
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
+import { IMAGERY_IMAP } from '@ansyn/imagery/providers/imagery-map-collection';
 import { IMapConstructor } from '@ansyn/imagery/model/imap';
 
 @Injectable()

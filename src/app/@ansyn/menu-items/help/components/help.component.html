@@ -1,86 +1,16 @@
 <carousel [interval]="0">
-	<slide>
+	<slide *ngFor="let slide of const.SLIDES_DATA">
 		<div class="help-slide">
 			<div class="above-center">
 				<div>How to start exploring?</div>
-				<div>Geo filter</div>
-				<div>Right click your area of interest</div>
-				<img src="assets/icons/help/Frame 86.svg">
+				<div>{{slide.text[0]}}</div>
+				<div>{{slide.text[1]}}</div>
+				<img [src]="img(slide.image[0])">
 			</div>
 			<div class="from-center">
-				<div>Press the central button</div>
-				<img src="assets/icons/help/Frame 87.svg">
-				<div>Now the app will fetch the
-					overlays for this location
-				</div>
-			</div>
-		</div>
-	</slide>
-	<slide>
-		<div class="help-slide">
-			<div class="above-center">
-				<div>How to start exploring?</div>
-				<div>Time Filter</div>
-				<div>Set the time of interest</div>
-				<img src="assets/icons/help/Frame 88.svg">
-			</div>
-			<div class="from-center">
-				<div>Double click the pink circles to
-					open overlays
-				</div>
-				<img src="assets/icons/help/Frame 89.svg">
-				<div>Navigate between overlays by
-					using the arrows and the keyboard
-				</div>
-			</div>
-		</div>
-	</slide>
-	<slide>
-		<div class="help-slide">
-			<div class="above-center">
-				<div>How to start exploring?</div>
-				<div>Data Filter</div>
-				<div>Select the input data</div>
-				<img src="assets/icons/help/Frame 90.svg">
-			</div>
-			<div class="from-center">
-				<div>Accurate the query by using the filters</div>
-				<img src="assets/icons/help/Frame 91.svg">
-				<div>See the number of available overlays in the
-					filters menu and in the status bar
-				</div>
-			</div>
-		</div>
-	</slide>
-	<slide>
-		<div class="help-slide">
-			<div class="above-center">
-				<div>How to start exploring?</div>
-				<div>Tool Menu</div>
-				<div>Use the tools to support your work</div>
-				<img src="assets/icons/help/Frame 92.svg">
-			</div>
-			<div class="from-center">
-				<div>Your can draw annotations to indicate findings</div>
-				<img src="assets/icons/help/Frame 93.svg">
-				<div>You can also use image processing options,
-					make measurements and more
-				</div>
-			</div>
-		</div>
-	</slide>
-	<slide>
-		<div class="help-slide">
-			<div class="above-center">
-				<div>How to start exploring?</div>
-				<div>Context Menu</div>
-				<div>Navigate between overlays by right click</div>
-				<img src="assets/icons/help/Frame 94.svg">
-			</div>
-			<div class="from-center">
-				<div>See all available options</div>
-				<img src="assets/icons/help/Frame 95.svg">
-				<div>Good luck!</div>
+				<div>{{slide.text[2]}}</div>
+				<img [src]="img(slide.image[1])">
+				<div>{{slide.text[3]}}</div>
 			</div>
 		</div>
 	</slide>

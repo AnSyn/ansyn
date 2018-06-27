@@ -6,9 +6,7 @@ import Group from 'ol/layer/group';
 import olGeoJSON from 'ol/format/geojson';
 import OLGeoJSON from 'ol/format/geojson';
 import Vector from 'ol/source/vector';
-import OSM from 'ol/source/osm';
 import Layer from 'ol/layer/layer';
-import TileLayer from 'ol/layer/tile';
 import VectorLayer from 'ol/layer/vector';
 import olFeature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
@@ -26,7 +24,6 @@ import { IMap } from '@ansyn/imagery/model/imap';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -44,44 +41,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
-
-	static addGroupLayer(layer: any, groupName: string) {
-		const group = OpenLayersMap.groupLayers.get(groupName);
-		if (!group) {
-			throw new Error('Tried to add a layer to a non-existent group');
-		}
-
-		group.getLayers().push(layer);
-	}
-
-	static removeGroupLayer(id: string, groupName: string) {
-		const group = OpenLayersMap.groupLayers.get(groupName);
-		if (!group) {
-			throw new Error('Tried to remove a layer to a non-existent group');
-		}
-
-		const layersArray: any[] = group.getLayers().getArray();
-		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
-		if (removeIdx >= 0) {
-			group.getLayers().removeAt(removeIdx);
-		}
-	}
-
-	static addGroupVectorLayer(layer: ILayer, groupName: string) {
-		const vectorLayer = new TileLayer({
-			zIndex: 1,
-			source: new OSM({
-				attributions: [
-					layer.name
-				],
-				opaque: false,
-				url: layer.url,
-				crossOrigin: null
-			})
-		});
-		vectorLayer.set('id', layer.id);
-		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
-	}
 
 	constructor(public projectionService: ProjectionService) {
 		super();
@@ -175,17 +134,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		});
 	}
 
-	toggleGroup(groupName: string) {
-		const newState = !this.showGroups.get(groupName);
-		const group = OpenLayersMap.groupLayers.get(groupName);
-		if (newState) {
-			this.addLayer(group);
-		} else {
-			this._mapObject.removeLayer(group);
-		}
-		this.showGroups.set(groupName, newState);
-	}
-
 	setMainLayer(layer: Layer) {
 		layer.set('name', 'main');
 		this.removeAllLayers();
@@ -205,24 +153,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 	public addLayer(layer: any) {
 		this._mapLayers.push(layer);
 		this._mapObject.addLayer(layer);
-	}
-
-	/**
-	 * add layer to the map if it is not already exists the layer must have an id set
-	 * @param layer
-	 */
-	public addLayerIfNotExist(layer): Layer {
-		const layerId = layer.get('id');
-		if (!layerId) {
-			return;
-		}
-		const existingLayer: Layer = this.getLayerById(layerId);
-		if (!existingLayer) {
-			// layer.set('visible',false);
-			this.addLayer(layer);
-			return layer;
-		}
-		return existingLayer;
 	}
 
 	public removeAllLayers() {

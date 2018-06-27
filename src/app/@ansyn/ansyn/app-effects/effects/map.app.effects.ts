@@ -32,8 +32,7 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	RemoveAlertMsg,
-	SetToastMessageAction,
-	ToggleMapLayersAction
+	SetToastMessageAction
 } from '@ansyn/core/actions/core.actions';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { CaseMapState } from '@ansyn/core/models/case.model';
@@ -46,11 +45,7 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
 
 @Injectable()
@@ -194,40 +189,6 @@ export class MapAppEffects {
 			}))
 		);
 
-
-	/**
-	 * @type Effect
-	 * @name updateSelectedLayers$
-	 * @ofType combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)
-	 */
-	@Effect({ dispatch: false })
-	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
-		.pipe(
-			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				this.imageryMapComponents
-					.filter(({ mapClass }: ImageryMapComponentConstructor) => mapClass.groupLayers.get('layers'))
-					.forEach(({ mapClass }: ImageryMapComponentConstructor) => {
-						const displayedLayers: any = mapClass.groupLayers.get('layers').getLayers().getArray();
-						/* remove layer if layerId not includes on selectLayers */
-						displayedLayers.forEach((layer) => {
-							const id = layer.get('id');
-							if (!selectedLayersIds.includes(id)) {
-								mapClass.removeGroupLayer(id, 'layers');
-							}
-						});
-
-						/* add layer if id includes on selectLayers but not on map */
-						selectedLayersIds.forEach((layerId) => {
-							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
-							if (!layer) {
-								const addLayer = layers.find(({ id }) => id === layerId);
-								mapClass.addGroupVectorLayer(addLayer, 'layers');
-							}
-						});
-					});
-			})
-		);
-
 	/**
 	 * @type Effect
 	 * @name setOverlaysNotInCase$
@@ -295,22 +256,6 @@ export class MapAppEffects {
 					})
 				]
 			)
-		);
-
-	/**
-	 * @type Effect
-	 * @name toggleLayersGroupLayer$
-	 * @ofType ToggleMapLayersAction
-	 */
-	@Effect({ dispatch: false })
-	toggleLayersGroupLayer$: Observable<any> = this.actions$
-		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
-		.pipe(
-			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
-			tap((communicator: CommunicatorEntity) => {
-				communicator.ActiveMap.toggleGroup('layers');
-				communicator.visualizers.forEach(v => v.toggleVisibility());
-			})
 		);
 
 

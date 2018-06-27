@@ -39,6 +39,7 @@ import { OpenlayersOsmLayersPlugin } from '@ansyn/plugins/openlayers/layers/open
 			GoToVisualizer,
 			PinPointVisualizer,
 			MouseShadowVisualizer,
+			PolygonSearchVisualizer,
 			OpenlayersOsmLayersPlugin
 		])
 	]

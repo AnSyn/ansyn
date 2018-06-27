@@ -50,12 +50,6 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		return Observable.of(true);
 	}
 
-	addLayerIfNotExist(layer: Layer) {
-
-	}
-
-	toggleGroup(groupName: string) {
-	}
 
 	resetView(layer: any, position?: CaseMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);

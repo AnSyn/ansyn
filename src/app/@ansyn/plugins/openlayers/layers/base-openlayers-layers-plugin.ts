@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
 import { Inject } from '@angular/core';
@@ -16,13 +15,15 @@ import olGeoJSON from 'ol/format/geojson';
 
 export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 
+	_imageryMapComponents = [];
+
 	subscribers = [];
 
 	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			map(([layers, selectedLayersIds]: [ILayer[], string[]]) => this.filterLayers(layers, selectedLayersIds)),
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				this.imageryMapComponents
+				this._imageryMapComponents
 					.filter(({ mapClass }: ImageryMapComponentConstructor) => mapClass.groupLayers.get('layers'))
 					.forEach(({ mapClass }: ImageryMapComponentConstructor) => {
 						const displayedLayers: any = mapClass.groupLayers.get('layers').getLayers().getArray();
@@ -46,9 +47,14 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 			})
 		);
 
-	abstract addDataLayer(layer: ILayer, groupName: string): void;
+	filterLayers(layers, selectedLayersIds): [ILayer[], string[]] {
+		const osmLayers = this.relevantLayers(layers);
+		const validSelected = selectedLayersIds.filter(id => osmLayers.some((layer) => layer.id === id));
+		return [osmLayers, validSelected];
+	}
 
-	abstract filterLayers(layers, selectedLayersIds): [ILayer[], string[]] ;
+	abstract addDataLayer(data: any, groupName: string): void;
+	abstract relevantLayers(layers): ILayer[] ;
 
 	public addGeojsonLayer(data: GeoJsonObject, groupName: string): void {
 		let layer: VectorLayer = new VectorLayer({
@@ -81,14 +87,15 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 		group.getLayers().push(layer);
 	}
 
+	constructor(protected store$: Store<any>,
+				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[]) {
+		super();
+		this._imageryMapComponents = imageryMapComponents;
+	}
+
 	onInit() {
 		this.subscribers.push(
 			this.updateSelectedLayers$.subscribe()
 		);
-	}
-
-	constructor(protected store$: Store<any>,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[]) {
-		super();
 	}
 }

@@ -1,8 +1,7 @@
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Store } from '@ngrx/store';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
-import { Inject } from '@angular/core';
+import { IMAGERY_MAP_COMPONENTS } from '@ansyn/imagery/model/imagery-map-component';
 import { BaseOpenlayersLayersPlugin } from '@ansyn/plugins/openlayers/layers/base-openlayers-layers-plugin';
 import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import OSM from 'ol/source/osm';
@@ -14,11 +13,6 @@ import TileLayer from 'ol/layer/tile';
 	deps: [Store, IMAGERY_MAP_COMPONENTS]
 })
 export class OpenlayersOsmLayersPlugin extends BaseOpenlayersLayersPlugin {
-
-	constructor(protected store$: Store<any>,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[]) {
-		super(store$, imageryMapComponents);
-	}
 
 	addDataLayer(layer: ILayer, groupName: string) {
 		const vectorLayer = new TileLayer({
@@ -36,11 +30,15 @@ export class OpenlayersOsmLayersPlugin extends BaseOpenlayersLayersPlugin {
 		this.addGroupLayer(vectorLayer, groupName);
 	}
 
-	filterLayers(layers, selectedLayersIds): [ILayer[], string[]] {
-		const osmLayers = layers.filter(layer => layer.layerPluginType === layerPluginType.OSM);
-		const validSelected = selectedLayersIds.filter(id => osmLayers.some((layer) => layer.id === id));
-		return [osmLayers, validSelected];
+	relevantLayers(layers): ILayer[] {
+		return layers.filter(layer => layer.layerPluginType === layerPluginType.OSM);
 	}
+	//
+	// filterLayers(layers, selectedLayersIds): [ILayer[], string[]] {
+	// 	const osmLayers = layers.filter(layer => layer.layerPluginType === layerPluginType.OSM);
+	// 	const validSelected = selectedLayersIds.filter(id => osmLayers.some((layer) => layer.id === id));
+	// 	return [osmLayers, validSelected];
+	// }
 
 	// subscribers = [];
 	//

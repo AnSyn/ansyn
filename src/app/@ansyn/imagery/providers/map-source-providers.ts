@@ -3,7 +3,7 @@ import {
 	BaseMapSourceProviderConstructor,
 	IMAGERY_MAP_SOURCE_PROVIDERS
 } from '../model/base-map-source-provider';
-import { FactoryProvider, Provider } from '@angular/core';
+import { FactoryProvider, Injectable, Provider } from '@angular/core';
 
 export function BaseMapSourceProviderFactory(mapSourceProviders) {
 	return mapSourceProviders.reduce((a, mapSourceProvider) => [...a, ...mapSourceProvider], []);

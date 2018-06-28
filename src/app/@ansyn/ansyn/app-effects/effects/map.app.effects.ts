@@ -395,7 +395,6 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(IMAGERY_MAPS) protected iMapConstructors: IMapConstructor[],
-				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

@@ -1,18 +1,21 @@
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
-import { Injectable } from '@angular/core';
 import proj from 'ol/proj';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
 
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
-@Injectable()
+@ImageryMapSource({
+	sourceType: OpenLayerIDAHOSourceProviderSourceType,
+	supported: [OpenlayersMapName, DisabledOpenLayersMapName]
+})
 export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
-	public sourceType = OpenLayerIDAHOSourceProviderSourceType;
-
 	create(metaData: Overlay): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,

@@ -1,7 +1,9 @@
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';
-import { Injectable } from '@angular/core';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export interface IBingMapsConfig {
 	key: string;
@@ -10,11 +12,12 @@ export interface IBingMapsConfig {
 
 export const OpenLayerBingSourceProviderSourceType = 'BING';
 
-@Injectable()
+@ImageryMapSource({
+	sourceType: OpenLayerBingSourceProviderSourceType,
+	supported: [OpenlayersMapName, DisabledOpenLayersMapName]
+})
 export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider {
-	public sourceType = OpenLayerBingSourceProviderSourceType;
-
-	create(metaData: any = this.config[this.sourceType]): any[] {
+	create(metaData: any = this.config[OpenLayerBingSourceProviderSourceType]): any[] {
 		const source = new BingMaps({
 			key: metaData.key,
 			imagerySet: metaData.styles[0],

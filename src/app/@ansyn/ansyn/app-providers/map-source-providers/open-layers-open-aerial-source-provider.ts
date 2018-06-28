@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
@@ -7,13 +6,16 @@ import XYZ from 'ol/source/xyz';
 import proj from 'ol/proj';
 import ImageLayer from 'ol/layer/image';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 
-@Injectable()
+@ImageryMapSource({
+	sourceType: OpenLayerOpenAerialSourceProviderSourceType,
+	supported: [OpenlayersMapName, DisabledOpenLayersMapName]
+})
 export class OpenLayerOpenAerialSourceProvider extends OpenLayersMapSourceProvider {
-	public sourceType = OpenLayerOpenAerialSourceProviderSourceType;
-
 	create(metaData: Overlay): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,

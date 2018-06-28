@@ -1,18 +1,22 @@
-import { Injectable, InjectionToken, Injector, ReflectiveInjector } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
+import { ImageryDecorator } from './imagery-decorator';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
-export interface BaseMapSourceProviderConstructor {
+export interface ImageryMapSourceMetaData {
+	sourceType?: string;
+	supported?: string[];
+}
+
+export interface BaseMapSourceProviderConstructor extends ImageryMapSourceMetaData {
 	new(...args): BaseMapSourceProvider
 }
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
-	abstract supported: string[];
-	abstract sourceType: string;
 
 	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
@@ -39,4 +43,11 @@ export abstract class BaseMapSourceProvider {
 	getThumbnailUrl(overlay, position): Observable<string> {
 		return of(overlay.thumbnailUrl);
 	}
+}
+
+export function ImageryMapSource(metaData: ImageryMapSourceMetaData) {
+	return function (constructor: BaseMapSourceProviderConstructor) {
+		Injectable()(constructor);
+		ImageryDecorator<ImageryMapSourceMetaData, BaseMapSourceProviderConstructor>(metaData)(constructor)
+	};
 }

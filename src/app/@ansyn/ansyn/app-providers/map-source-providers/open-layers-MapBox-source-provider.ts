@@ -1,14 +1,17 @@
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
-import { Injectable } from '@angular/core';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
 
 export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 
-@Injectable()
+@ImageryMapSource({
+	sourceType: OpenLayerMapBoxSourceProviderSourceType,
+	supported: [OpenlayersMapName, DisabledOpenLayersMapName]
+})
 export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
-	public sourceType = OpenLayerMapBoxSourceProviderSourceType;
-
 	create(metaData: any): any[] {
 		const source = new XYZ({
 			url: metaData.imageUrl,

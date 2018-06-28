@@ -1,5 +1,5 @@
 import { IMap } from '../../model/imap';
-import { BaseMapSourceProvider } from '../../model/base-map-source-provider';
+import { BaseMapSourceProvider, BaseMapSourceProviderConstructor } from '../../model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, ViewContainerRef } from '@angular/core';
 import { IMapConstructor } from '../../model/imap';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
@@ -83,10 +83,12 @@ export class ImageryComponentManager {
 	}
 
 	getMapSourceProvider({ mapType, sourceType }): BaseMapSourceProvider {
-		return this._baseSourceProviders.find((baseSourceProvider: BaseMapSourceProvider) => {
-			const source = baseSourceProvider.sourceType === sourceType;
-			const supported = baseSourceProvider.supported.includes(mapType);
-			return source && supported;
+		return this._baseSourceProviders
+			.find((baseSourceProvider: BaseMapSourceProvider ) => {
+				const baseConstructor = <BaseMapSourceProviderConstructor> baseSourceProvider.constructor;
+				const source = baseConstructor.sourceType === sourceType;
+				const supported = baseConstructor.supported.includes(mapType);
+				return source && supported;
 		});
 	}
 

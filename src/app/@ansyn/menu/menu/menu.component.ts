@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {
 	ContainerChangedTriggerAction,
-	SelectMenuItemAction, SetDoneStartupOperations,
+	SelectMenuItemAction,
 	ToggleIsPinnedAction,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
@@ -150,7 +150,6 @@ export class MenuComponent implements OnInit {
 			this.store.dispatch(new ToggleIsPinnedAction(false));
 		}
 
-		this.store.dispatch(new SetDoneStartupOperations(true));
 	}
 
 	componentChanges(): void {

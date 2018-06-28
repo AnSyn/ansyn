@@ -5,12 +5,11 @@ import {
 	SetBadgeAction,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
-import { sessionData, updateSession } from '../helpers/menu-session.helper';
+import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { MenuItem } from '@ansyn/menu/models/menu-item.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
-import { localStorageData } from '@ansyn/menu-items/help/services/help.local-storage.service';
 
 export const menuItemsAdapter: EntityAdapter<MenuItem> = createEntityAdapter<MenuItem>({ selectId: (menuItem: MenuItem) => menuItem.name });
 
@@ -18,19 +17,12 @@ export interface IMenuState extends EntityState<MenuItem> {
 	selectedMenuItem: string;
 	isPinned: boolean;
 	autoClose: boolean;
-	doneStartupOperations: boolean;
 }
 
 export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
-	selectedMenuItem: (sessionData().doneStartupOperations ?
-			sessionData().selectedMenuItem
-			: (localStorageData().showHelpOnStartup ?
-				'Help'
-				: sessionData().selectedMenuItem)
-	),
-	isPinned: sessionData().isPinned,
-	autoClose: true,
-	doneStartupOperations: sessionData().doneStartupOperations
+	selectedMenuItem: getMenuSessionData() ? getMenuSessionData().selectedMenuItem : '',
+	isPinned: getMenuSessionData() ? getMenuSessionData().isPinned : false,
+	autoClose: true
 });
 
 export const menuFeatureKey = 'menu';
@@ -50,12 +42,12 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
 			const selectedMenuItem = action.payload;
-			updateSession({ selectedMenuItem });
+			setMenuSessionData({ selectedMenuItem });
 			return { ...state, selectedMenuItem };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM: {
 			const selectedMenuItem = '';
-			updateSession({ selectedMenuItem });
+			setMenuSessionData({ selectedMenuItem });
 			return { ...state, selectedMenuItem };
 		}
 
@@ -64,15 +56,11 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return menuItemsAdapter.updateOne({ id: key, changes: { ...state.entities[key], badge } }, state);
 
 		case MenuActionTypes.TOGGLE_IS_PINNED:
-			updateSession({ isPinned: action.payload });
+			setMenuSessionData({ isPinned: action.payload });
 			return { ...state, isPinned: action.payload, clickOutside: !action.payload };
 
 		case MenuActionTypes.SET_AUTO_CLODE:
 			return { ...state, autoClose: action.payload };
-
-		case MenuActionTypes.SET_DONE_STARTUP_OPERATIONS:
-			updateSession({ doneStartupOperations: action.payload });
-			return { ...state, doneStartupOperations: action.payload };
 
 		default:
 			return state;
@@ -87,5 +75,4 @@ export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<Me
 export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
-
 

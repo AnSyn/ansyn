@@ -11,8 +11,7 @@ export const MenuActionTypes = {
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
-	SET_AUTO_CLODE: 'SET_AUTO_CLODE',
-	SET_DONE_STARTUP_OPERATIONS: 'SET_DONE_STARTUP_OPERATIONS'
+	SET_AUTO_CLODE: 'SET_AUTO_CLODE'
 };
 
 export class InitializeMenuItemsAction implements Action {
@@ -66,13 +65,6 @@ export class ContainerChangedTriggerAction implements Action {
 
 export class SetAutoClose implements Action {
 	type = MenuActionTypes.SET_AUTO_CLODE;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class SetDoneStartupOperations implements Action {
-	type = MenuActionTypes.SET_DONE_STARTUP_OPERATIONS;
 
 	constructor(public payload: boolean) {
 	}

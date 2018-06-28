@@ -3,12 +3,13 @@ import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
 import { ImageryDecorator } from './imagery-decorator';
+import { IMapConstructor } from './imap';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
 export interface ImageryMapSourceMetaData {
 	sourceType?: string;
-	supported?: string[];
+	supported?: IMapConstructor[];
 }
 
 export interface BaseMapSourceProviderConstructor extends ImageryMapSourceMetaData {

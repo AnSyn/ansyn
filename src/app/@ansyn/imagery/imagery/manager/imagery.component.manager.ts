@@ -87,7 +87,7 @@ export class ImageryComponentManager {
 			.find((baseSourceProvider: BaseMapSourceProvider ) => {
 				const baseConstructor = <BaseMapSourceProviderConstructor> baseSourceProvider.constructor;
 				const source = baseConstructor.sourceType === sourceType;
-				const supported = baseConstructor.supported.includes(mapType);
+				const supported = baseConstructor.supported.some((imageryMapConstructor: IMapConstructor) => imageryMapConstructor.mapType === mapType);
 				return source && supported;
 		});
 	}

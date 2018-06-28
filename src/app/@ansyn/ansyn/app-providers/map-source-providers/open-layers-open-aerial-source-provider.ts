@@ -6,14 +6,14 @@ import XYZ from 'ol/source/xyz';
 import proj from 'ol/proj';
 import ImageLayer from 'ol/layer/image';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 
 @ImageryMapSource({
 	sourceType: OpenLayerOpenAerialSourceProviderSourceType,
-	supported: [OpenlayersMapName, DisabledOpenLayersMapName]
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerOpenAerialSourceProvider extends OpenLayersMapSourceProvider {
 	create(metaData: Overlay): any[] {

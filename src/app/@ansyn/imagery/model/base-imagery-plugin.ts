@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs';
-import { IMap } from './imap';
+import { IMap, IMapConstructor } from './imap';
 import { of, Subscription } from 'rxjs';
 import { ImageryDecorator } from './imagery-decorator';
 
@@ -45,7 +45,7 @@ export class BaseImageryPlugin {
 }
 
 export interface ImageryPluginMetaData {
-	supported?: { new(...args): IMap }[];
+	supported?: IMapConstructor[];
 	deps?: any[];
 }
 

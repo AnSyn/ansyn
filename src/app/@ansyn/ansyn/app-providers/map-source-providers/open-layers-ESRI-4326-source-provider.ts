@@ -1,8 +1,8 @@
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
 
 export interface IESRI4326Config {
@@ -17,7 +17,7 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 
 @ImageryMapSource({
 	sourceType: OpenLayerESRI_4326SourceProviderSourceType,
-	supported: [OpenlayersMapName, DisabledOpenLayersMapName]
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider {
 	create(metaData: any = this.config[OpenLayerESRI_4326SourceProviderSourceType]): any[] {

@@ -4,6 +4,7 @@ import { ImageryCommunicatorService } from '../communicator-service/communicator
 import { Observable, of } from 'rxjs';
 import { ImageryDecorator } from './imagery-decorator';
 import { IMapConstructor } from './imap';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
@@ -34,9 +35,9 @@ export abstract class BaseMapSourceProvider {
 		return layers;
 	}
 
-	protected abstract create(metaData: any): any[];
+	protected abstract create(metaData: CaseMapState): any[];
 
-	createAsync(metaData?: any): Promise<any> {
+	createAsync(metaData: CaseMapState): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer);
 	}
@@ -49,6 +50,6 @@ export abstract class BaseMapSourceProvider {
 export function ImageryMapSource(metaData: ImageryMapSourceMetaData) {
 	return function (constructor: BaseMapSourceProviderConstructor) {
 		Injectable()(constructor);
-		ImageryDecorator<ImageryMapSourceMetaData, BaseMapSourceProviderConstructor>(metaData)(constructor)
+		ImageryDecorator<ImageryMapSourceMetaData, BaseMapSourceProviderConstructor>(metaData)(constructor);
 	};
 }

@@ -4,6 +4,7 @@ import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-sour
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
@@ -13,7 +14,7 @@ export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerOSMSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: any): any[] {
+	create(metaData: CaseMapState): any[] {
 		const osmLayer = new TileLayer({
 			source: new OSM()
 		});

@@ -63,6 +63,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';
@@ -71,7 +72,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 		return true;
 	}
 
-	createAsync(metaData: any): Promise<any> {
+	createAsync(metaData: CaseMapState): Promise<any> {
 		return Promise.resolve();
 	}
 

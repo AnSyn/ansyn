@@ -79,7 +79,7 @@ export class ImageryComponentManager {
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
 		const sourceProvider = this.getMapSourceProvider({ mapType, sourceType: this.mapSettings.sourceType });
-		return sourceProvider.createAsync();
+		return sourceProvider.createAsync(this.mapSettings);
 	}
 
 	getMapSourceProvider({ mapType, sourceType }): BaseMapSourceProvider {

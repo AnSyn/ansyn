@@ -34,7 +34,7 @@ export class CacheService {
 			this.cachedLayesrMap.delete(key.value);
 		}
 		const cacheId = this.createLayerId(overlay);
-		layers.forEach((layer) => layer.set('cacheId', cacheId));
+		// layers.forEach((layer) => layer.set('cacheId', cacheId));
 		this.cachedLayesrMap.set(cacheId, [...layers]);
 	}
 

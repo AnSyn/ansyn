@@ -338,7 +338,8 @@ export class MapAppEffects {
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
-		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
+		const caseMapState = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId);
+		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
 		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
@@ -346,7 +347,7 @@ export class MapAppEffects {
 
 		const mapType = communicator.mapType;
 		const { sourceType } = overlay;
-		const sourceLoader = communicator.getMapSourceProvider({ mapType, sourceType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ mapType, sourceType });
 
 		if (!sourceLoader) {
 			return Observable.of(new SetToastMessageAction({
@@ -371,7 +372,7 @@ export class MapAppEffects {
 		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
 		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
 
-		return Observable.fromPromise(sourceLoader.createAsync(overlay))
+		return Observable.fromPromise(sourceLoader.createAsync({ ...caseMapState, data: { ...mapData, overlay } }))
 			.pipe(changeActiveMap, resetView, displaySuccess)
 			.catch(() => Observable.from([
 				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),

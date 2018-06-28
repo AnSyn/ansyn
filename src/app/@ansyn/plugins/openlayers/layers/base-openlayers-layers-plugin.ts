@@ -6,14 +6,12 @@ import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-
 import { map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import OSM from 'ol/source/osm';
-import TileLayer from 'ol/layer/tile';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
 import { Inject } from '@angular/core';
 import Vector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
-import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
+import { GeoJsonObject } from 'geojson';
 import olGeoJSON from 'ol/format/geojson';
 
 export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
@@ -48,26 +46,9 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 			})
 		);
 
-	constructor(protected store$: Store<any>,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[]) {
-		super();
-	}
+	abstract addDataLayer(layer: ILayer, groupName: string): void;
 
-	addDataLayer(layer: ILayer, groupName: string) {
-		const vectorLayer = new TileLayer({
-			zIndex: 1,
-			source: new OSM({
-				attributions: [
-					layer.name
-				],
-				opaque: false,
-				url: layer.url,
-				crossOrigin: null
-			})
-		});
-		vectorLayer.set('id', layer.id);
-		this.addGroupLayer(vectorLayer, groupName);
-	}
+	abstract filterLayers(layers, selectedLayersIds): [ILayer[], string[]] ;
 
 	public addGeojsonLayer(data: GeoJsonObject, groupName: string): void {
 		let layer: VectorLayer = new VectorLayer({
@@ -100,15 +81,14 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 		group.getLayers().push(layer);
 	}
 
-	filterLayers(layers, selectedLayersIds): [ILayer[], string[]] {
-		const osmLayers = layers.filter(layer => layer.layerPluginType === layerPluginType.OSM);
-		const validSelected = selectedLayersIds.filter(id => osmLayers.some((layer) => layer.id === id));
-		return [osmLayers, validSelected];
-	}
-
 	onInit() {
 		this.subscribers.push(
 			this.updateSelectedLayers$.subscribe()
 		);
+	}
+
+	constructor(protected store$: Store<any>,
+				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[]) {
+		super();
 	}
 }

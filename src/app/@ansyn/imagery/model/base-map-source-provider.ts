@@ -24,7 +24,7 @@ export abstract class BaseMapSourceProvider {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	protected createOrGetFromCache(metaData?: any) {
+	protected createOrGetFromCache(metaData: CaseMapState) {
 		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
 		if (cacheLayers.length) {
 			return cacheLayers;

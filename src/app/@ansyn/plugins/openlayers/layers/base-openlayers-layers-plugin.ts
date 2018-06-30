@@ -15,15 +15,13 @@ import olGeoJSON from 'ol/format/geojson';
 
 export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 
-	_imageryMapComponents = [];
-
 	subscribers = [];
 
 	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			map(([layers, selectedLayersIds]: [ILayer[], string[]]) => this.filterLayers(layers, selectedLayersIds)),
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				this._imageryMapComponents
+				this.imageryMapComponents
 					.filter(({ mapClass }: ImageryMapComponentConstructor) => mapClass.groupLayers.get('layers'))
 					.forEach(({ mapClass }: ImageryMapComponentConstructor) => {
 						const displayedLayers: any = mapClass.groupLayers.get('layers').getLayers().getArray();
@@ -56,15 +54,6 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 	abstract addDataLayer(data: any, groupName: string): void;
 	abstract relevantLayers(layers): ILayer[] ;
 
-	public addGeojsonLayer(data: GeoJsonObject, groupName: string): void {
-		let layer: VectorLayer = new VectorLayer({
-			source: new Vector({
-				features: new olGeoJSON().readFeatures(data)
-			})
-		});
-		this.addGroupLayer(layer, groupName);
-	}
-
 	removeGroupLayer(id: string, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (!group) {
@@ -90,7 +79,6 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 	constructor(protected store$: Store<any>,
 				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[]) {
 		super();
-		this._imageryMapComponents = imageryMapComponents;
 	}
 
 	onInit() {

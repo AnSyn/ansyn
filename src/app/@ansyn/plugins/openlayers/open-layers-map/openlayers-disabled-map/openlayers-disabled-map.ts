@@ -35,6 +35,12 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		return Observable.of(true);
 	}
 
+	addLayerIfNotExist(layer: any) {
+	}
+
+	toggleGroup(groupName: string) {
+	}
+
 	getLayers(): any[] {
 		return this.mapObject.getLayers().getArray();
 	}

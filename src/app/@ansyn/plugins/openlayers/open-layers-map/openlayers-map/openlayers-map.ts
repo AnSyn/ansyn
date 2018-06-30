@@ -54,7 +54,21 @@ export class OpenLayersMap extends IMap<OLMap> {
 			}));
 		}
 
+		if (!OpenLayersMap.groupLayers.get('geoJsonLayers')) {
+			OpenLayersMap.groupLayers.set('geoJsonLayers', new Group(<any>{
+				layers: [],
+				name: 'geoJsonLayers'
+			}));
+		}
+
 		this.showGroups.set('layers', true);
+		this.showGroups.set('geoJsonLayers', true);
+	}
+
+	addLayerIfNotExist(layer: any) {
+	}
+
+	toggleGroup(groupName: string) {
 	}
 
 	getLayers(): any[] {

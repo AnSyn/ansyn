@@ -8,6 +8,7 @@ import VectorLayer from 'ol/layer/vector';
 import { GeoJsonObject } from 'geojson';
 import olGeoJSON from 'ol/format/geojson';
 import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
+import { IMapConstructor } from '@ansyn/imagery/model/imap';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -15,17 +16,25 @@ import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 })
 export class OpenlayersGeoJsonLayersPlugin extends BaseOpenlayersLayersPlugin {
 
-	addDataLayer(data: GeoJsonObject, groupName: string): void {
+	addDataLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
 			source: new Vector({
 				format: new olGeoJSON,
 				url: 'http://localhost:4200/assets/geoJsonExample.json'
 			})
 		});
-		this.addGroupLayer(layer, groupName);
+		this.addGroupLayer(layer, 'geoJsonLayers');
 	}
 
 	relevantLayers(layers): ILayer[] {
 		return layers.filter(layer => layer.layerPluginType === layerPluginType.geoJson);
+	}
+
+	getGroupLayers(iMapConstructor: IMapConstructor) {
+		return iMapConstructor.groupLayers.get('geoJsonLayers');
+	}
+
+	removeDataLayer(id: string): void {
+		this.removeGroupLayer(id, 'geoJsonLayers');
 	}
 }

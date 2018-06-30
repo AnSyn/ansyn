@@ -3,7 +3,7 @@ import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entiti
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { Inject } from '@angular/core';
@@ -16,16 +16,17 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 
 	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
+			map(([layers, selectedLayersIds]: [ILayer[], string[]]) =>  this.filterLayers(layers, selectedLayersIds)),
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
 				this.iMapConstructors
-					.filter((iMapConstructor: IMapConstructor) => iMapConstructor.groupLayers.get('layers'))
+					.filter((iMapConstructor: IMapConstructor) => this.getGroupLayers(iMapConstructor))
 					.forEach((iMapConstructor: IMapConstructor) => {
-						const displayedLayers: any = iMapConstructor.groupLayers.get('layers').getLayers().getArray();
+						const displayedLayers: any = this.getGroupLayers(iMapConstructor).getLayers().getArray();
 						/* remove layer if layerId not includes on selectLayers */
 						displayedLayers.forEach((layer) => {
 							const id: string = layer.get('id');
 							if (!selectedLayersIds.includes(id)) {
-								iMapConstructor.removeGroupLayer(id, 'layers');
+								this.removeDataLayer(id);
 							}
 						});
 
@@ -34,22 +35,28 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
 							if (!layer) {
 								const addLayer = layers.find(({ id }) => id === layerId);
-								iMapConstructor.addGroupVectorLayer(addLayer, 'layers');
+								this.addDataLayer(addLayer);
 							}
 						});
 					});
 			})
 		);
+	abstract getGroupLayers(iMapConstructor: IMapConstructor): any;
 
-	filterLayers(layers, selectedLayersIds): [ILayer[], string[]] {
-		const osmLayers = this.relevantLayers(layers);
-		const validSelected = selectedLayersIds.filter(id => osmLayers.some((layer) => layer.id === id));
-		return [osmLayers, validSelected];
-	}
+	abstract addDataLayer(data: any): void;
 
-	abstract addDataLayer(data: any, groupName: string): void;
+	abstract removeDataLayer(id: string): void;
+
 
 	abstract relevantLayers(layers): ILayer[] ;
+
+	filterLayers(layers, selectedLayersIds): [ILayer[], string[]] {
+		const correctLayers = this.relevantLayers(layers);
+		const validSelected = selectedLayersIds.filter(id => correctLayers.some((layer) => layer.id === id));
+		return [correctLayers, validSelected];
+	}
+
+
 
 	removeGroupLayer(id: string, groupName: string) {
 		const group = OpenLayersMap.groupLayers.get(groupName);

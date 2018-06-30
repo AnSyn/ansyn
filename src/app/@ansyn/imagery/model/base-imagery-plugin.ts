@@ -2,8 +2,9 @@ import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { IMap } from './imap';
 import { of } from 'rxjs';
+import { ImageryDecorator } from './imagery-decorator';
 
 export class BaseImageryPlugin {
 	subscriptions: Subscription[] = [];
@@ -55,8 +56,6 @@ export interface BaseImageryPluginClass extends ImageryPluginMetaData {
 
 export function ImageryPlugin(metaData: ImageryPluginMetaData) {
 	return function (constructor: BaseImageryPluginClass) {
-		Object.keys(metaData).forEach((key) => {
-			constructor[key] = metaData[key];
-		});
+		ImageryDecorator<ImageryPluginMetaData, BaseImageryPluginClass>(metaData)(constructor);
 	}
 }

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable } from '@angular/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -20,17 +20,19 @@ import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Po
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
 export const OpenlayersMapName = 'openLayersMap';
 
-@Injectable()
+@ImageryMap({
+	mapType: OpenlayersMapName,
+	deps: [ProjectionService]
+})
 export class OpenLayersMap extends IMap<OLMap> {
 	static groupLayers = new Map<string, Group>();
-	static mapType = OpenlayersMapName;
 	private showGroups = new Map<string, boolean>();
 	public mapType: string = OpenlayersMapName;
 	private _mapObject: OLMap;

@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import { OpenlayersMapComponent } from './openlayers-map/openlayers-map.component';
-import { OpenLayersDisabledMapComponent } from './openlayers-disabled-map/openlayers-disabled-map.component';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import {
+	OpenLayersDisabledMap
+} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
 
 @NgModule({
-	imports: [ImageryModule.provideMapComponents([OpenlayersMapComponent, OpenLayersDisabledMapComponent])],
-	declarations: [OpenlayersMapComponent, OpenLayersDisabledMapComponent]
+	imports: [ImageryModule.provideIMaps([OpenLayersMap, OpenLayersDisabledMap])]
 })
 export class OpenLayersMapModule {
 }

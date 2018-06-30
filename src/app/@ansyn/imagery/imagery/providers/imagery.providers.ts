@@ -4,6 +4,7 @@ import { PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
 import { IMap } from '@ansyn/imagery/model/imap';
 import { StaticClassProvider } from '@angular/core/src/di/provider';
 import { ImageryCollectionEntity } from '@ansyn/imagery/model/plugins-collection';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
 export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryCollectionEntity[]>, parent: Injector, map: IMap) {
 		const providers: StaticClassProvider[] = pluginsCollections
@@ -30,10 +31,3 @@ export const BaseImageryPluginProvider: FactoryProvider = {
 	useFactory: BaseImageryPluginProviderFactory,
 	deps: [PLUGINS_COLLECTIONS, Injector, IMap]
 };
-
-export function ProvideMap(implementaion: any) {
-	return {
-		provide: IMap,
-		useClass: implementaion
-	}
-}

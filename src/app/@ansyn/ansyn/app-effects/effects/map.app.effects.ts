@@ -46,7 +46,11 @@ import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-prov
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
+import { IMapConstructor } from '@ansyn/imagery/model/imap';
 
 @Injectable()
 export class MapAppEffects {
@@ -338,7 +342,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[],
+				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
 	}

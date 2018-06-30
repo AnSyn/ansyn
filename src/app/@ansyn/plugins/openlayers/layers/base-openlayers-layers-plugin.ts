@@ -3,15 +3,12 @@ import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entiti
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
 import { Inject } from '@angular/core';
-import Vector from 'ol/source/vector';
-import VectorLayer from 'ol/layer/vector';
-import { GeoJsonObject } from 'geojson';
-import olGeoJSON from 'ol/format/geojson';
+import { IMapConstructor } from '@ansyn/imagery/model/imap';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 
 export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 
@@ -19,17 +16,16 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 
 	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
-			map(([layers, selectedLayersIds]: [ILayer[], string[]]) => this.filterLayers(layers, selectedLayersIds)),
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				this.imageryMapComponents
-					.filter(({ mapClass }: ImageryMapComponentConstructor) => mapClass.groupLayers.get('layers'))
-					.forEach(({ mapClass }: ImageryMapComponentConstructor) => {
-						const displayedLayers: any = mapClass.groupLayers.get('layers').getLayers().getArray();
+				this.iMapConstructors
+					.filter((iMapConstructor: IMapConstructor) => iMapConstructor.groupLayers.get('layers'))
+					.forEach((iMapConstructor: IMapConstructor) => {
+						const displayedLayers: any = iMapConstructor.groupLayers.get('layers').getLayers().getArray();
 						/* remove layer if layerId not includes on selectLayers */
 						displayedLayers.forEach((layer) => {
-							const id = layer.get('id');
+							const id: string = layer.get('id');
 							if (!selectedLayersIds.includes(id)) {
-								this.removeGroupLayer(id, 'layers');
+								iMapConstructor.removeGroupLayer(id, 'layers');
 							}
 						});
 
@@ -38,7 +34,7 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
 							if (!layer) {
 								const addLayer = layers.find(({ id }) => id === layerId);
-								this.addDataLayer(addLayer, 'layers');
+								iMapConstructor.addGroupVectorLayer(addLayer, 'layers');
 							}
 						});
 					});
@@ -52,6 +48,7 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 	}
 
 	abstract addDataLayer(data: any, groupName: string): void;
+
 	abstract relevantLayers(layers): ILayer[] ;
 
 	removeGroupLayer(id: string, groupName: string) {
@@ -77,7 +74,7 @@ export abstract class BaseOpenlayersLayersPlugin extends EntitiesVisualizer {
 	}
 
 	constructor(protected store$: Store<any>,
-				@Inject(IMAGERY_MAP_COMPONENTS) protected imageryMapComponents: ImageryMapComponentConstructor[]) {
+				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[]) {
 		super();
 	}
 

@@ -1,16 +1,16 @@
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Store } from '@ngrx/store';
 import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { IMAGERY_MAP_COMPONENTS } from '@ansyn/imagery/model/imagery-map-component';
 import { BaseOpenlayersLayersPlugin } from '@ansyn/plugins/openlayers/layers/base-openlayers-layers-plugin';
 import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import OSM from 'ol/source/osm';
 import TileLayer from 'ol/layer/tile';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, IMAGERY_MAP_COMPONENTS]
+	deps: [Store, IMAGERY_IMAP]
 })
 export class OpenlayersOsmLayersPlugin extends BaseOpenlayersLayersPlugin {
 

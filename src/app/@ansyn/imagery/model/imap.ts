@@ -15,6 +15,10 @@ export interface IMapConstructor extends ImageryMapMetaData {
 
 	new(...args): IMap;
 
+	addGroupLayer(layer: any, groupName: string);
+
+	removeGroupLayer(layer: any, groupName: string);
+
 	addGroupVectorLayer(layer: any, groupName: string);
 }
 
@@ -34,12 +38,20 @@ export abstract class IMap<T = any> {
 	mapObject: T;
 	projectionService: ProjectionService;
 
+	static addGroupLayer(layer: any, groupName: string) {
+	}
+
+	static removeGroupLayer(id: string, groupName: string) {
+	}
+
 	static addGroupVectorLayer(layer: any, groupName: string) {
 	}
 
 	abstract getCenter(): Observable<Point>;
 
 	abstract setCenter(center: Point, animation: boolean): Observable<boolean>;
+
+	abstract toggleGroup(groupName: string);
 
 	abstract initMap(element: HTMLElement, layers?: any, position?: CaseMapPosition): Observable<boolean>;
 
@@ -69,4 +81,6 @@ export abstract class IMap<T = any> {
 	abstract addGeojsonLayer(data: GeoJsonObject);
 
 	abstract dispose(): void;
+
+	abstract addLayerIfNotExist(layer: any);
 }

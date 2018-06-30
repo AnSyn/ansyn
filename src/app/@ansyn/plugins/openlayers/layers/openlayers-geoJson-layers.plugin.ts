@@ -7,12 +7,11 @@ import Vector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { GeoJsonObject } from 'geojson';
 import olGeoJSON from 'ol/format/geojson';
-import { IMAGERY_MAP_COMPONENTS, ImageryMapComponentConstructor } from '@ansyn/imagery/model/imagery-map-component';
-import { Inject } from '@angular/core';
+import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, IMAGERY_MAP_COMPONENTS]
+	deps: [Store, IMAGERY_IMAP]
 })
 export class OpenlayersGeoJsonLayersPlugin extends BaseOpenlayersLayersPlugin {
 

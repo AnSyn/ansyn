@@ -4,7 +4,7 @@ import {
 	ComponentRef,
 	ElementRef,
 	Inject,
-	Input, isDevMode,
+	Input,
 	OnInit,
 	Renderer2,
 	ViewChild,
@@ -84,8 +84,7 @@ export class MenuComponent implements OnInit {
 	autoClose$ = this.store.select(selectAutoClose);
 
 	entities$: Observable<Dictionary<MenuItem>> = this.store.select(selectEntitiesMenuItems);
-	menuItemsAsArray$: Observable<MenuItem[]> = this.store.select(selectAllMenuItems)
-		.map((menuItems: MenuItem[]) => menuItems.filter(this.isMenuItemShown));
+	menuItemsAsArray$: Observable<MenuItem[]> = this.store.select(selectAllMenuItems);
 
 	selectedMenuItem$: Observable<string> = this.store.select(selectSelectedMenuItem);
 
@@ -110,10 +109,6 @@ export class MenuComponent implements OnInit {
 
 	get selectedMenuItem(): MenuItem {
 		return this.entities[this.selectedMenuItemName];
-	}
-
-	isMenuItemShown(menuItem: MenuItem) {
-		return isDevMode() || menuItem.production;
 	}
 
 	forceRedraw() {

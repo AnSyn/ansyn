@@ -13,44 +13,37 @@ export const configuration = {
 		{
 			name: 'Cases',
 			component: CasesComponent,
-			iconClass: 'icon-main-cases',
-			production: true
+			iconClass: 'icon-main-cases'
 		},
 		{
 			name: 'Filters',
 			component: FiltersCollectionComponent,
-			iconClass: 'icon-main-filters',
-			production: true
+			iconClass: 'icon-main-filters'
 		},
 		{
 			name: 'Data Layers',
 			component: LayersManagerComponent,
-			iconClass: 'icon-main-data-layers',
-			production: true
+			iconClass: 'icon-main-data-layers'
 		},
 		{
 			name: 'Tools',
 			component: ToolsComponent,
-			iconClass: 'icon-main-tools',
-			production: true
+			iconClass: 'icon-main-tools'
 		},
 		{
 			name: 'Algorithms',
 			component: AlgorithmsComponent,
-			iconClass: 'icon-main-algorithms',
-			production: false
+			iconClass: 'icon-main-algorithms'
 		},
 		{
 			name: 'Settings',
 			component: SettingsComponent,
-			iconClass: 'icon-main-settings',
-			production: false
+			iconClass: 'icon-main-settings'
 		},
 		{
 			name: 'Help',
 			component: HelpComponent,
-			iconClass: 'icon-help-settings',
-			production: true
+			iconClass: 'icon-help-settings'
 		}
 	]
 };

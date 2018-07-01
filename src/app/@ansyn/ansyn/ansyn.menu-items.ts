@@ -5,6 +5,7 @@ import { LayersManagerComponent } from '@ansyn/menu-items/layers-manager/compone
 import { ToolsComponent } from '@ansyn/menu-items/tools/tools/tools.component';
 import { AlgorithmsComponent } from '@ansyn/menu-items/algorithms/algorithms/algorithms.component';
 import { SettingsComponent } from '@ansyn/menu-items/settings/settings/settings.component';
+import { HelpComponent } from '@ansyn/menu-items/help/components/help.component';
 
 export const ansynMenuItems: MenuItem[] = [
 	{
@@ -42,5 +43,11 @@ export const ansynMenuItems: MenuItem[] = [
 		component: SettingsComponent,
 		iconClass: 'icon-main-settings',
 		production: false
+	},
+	{
+		name: 'Help',
+		component: HelpComponent,
+		iconClass: 'icon-help-settings',
+		production: true
 	}
 ];

@@ -37,6 +37,8 @@
           },
           "configurations": {
             "dev": {
+              "sourceMap": true,
+              "extractCss": true,
               "fileReplacements": [
                 {
                   "replace": "src/configuration/configuration.ts",

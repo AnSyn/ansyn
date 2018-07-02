@@ -103,6 +103,8 @@ export class ImageryComponentManager {
 			},
 			BaseImageryPluginProvider];
 
+		this.mapSettings.mapType = imapClass.mapType;
+
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;

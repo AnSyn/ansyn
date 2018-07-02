@@ -79,7 +79,7 @@ export class ImageryComponentManager {
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
 		const sourceProvider = this.getMapSourceProvider({ mapType, sourceType: this.mapSettings.sourceType });
-		return sourceProvider.createAsync({ ...this.mapSettings, mapType });
+		return sourceProvider.createAsync(this.mapSettings);
 	}
 
 	getMapSourceProvider({ mapType, sourceType }: { mapType: string, sourceType?: string }): BaseMapSourceProvider {
@@ -102,6 +102,8 @@ export class ImageryComponentManager {
 				deps: imapClass.deps || []
 			},
 			BaseImageryPluginProvider];
+
+		this.mapSettings.mapType = imapClass.mapType;
 
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);

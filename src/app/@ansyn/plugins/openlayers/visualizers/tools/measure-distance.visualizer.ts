@@ -1,4 +1,4 @@
-import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import Feature from 'ol/feature';
 import Draw from 'ol/interaction/draw';
 import Text from 'ol/style/text';
@@ -14,23 +14,23 @@ import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
 import {
-	ImageryVisualizer, IVisualizerEntity,
 	VisualizerInteractions
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs';
-import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store]
+	deps: [Store, ProjectionService]
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
@@ -106,7 +106,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected store$: Store<any>) {
+	constructor(protected store$: Store<any>, protected projectionService: ProjectionService) {
 		super(null, {
 			initial: {
 				stroke: {
@@ -171,7 +171,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent(data) {
-		this.iMap.projectionService.projectCollectionAccurately([data.feature], this.iMap)
+		this.projectionService.projectCollectionAccurately([data.feature], this.iMap)
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [featureJson] = featureCollection.features;
 				const newEntity: IVisualizerEntity = {

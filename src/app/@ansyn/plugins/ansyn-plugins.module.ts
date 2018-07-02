@@ -4,7 +4,6 @@ import { NorthCalculationsPlugin } from '@ansyn/plugins/openlayers/north-calcula
 import { ImageProcessingPlugin } from '@ansyn/plugins/openlayers/image-processing/image-processing.plugin';
 import { MonitorPlugin } from '@ansyn/plugins/openlayers/monitor/monitor.plugin';
 import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
-import { OpenLayersMapModule } from '@ansyn/plugins/openlayers/open-layers-map/open-layers-map.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ContextMenuPlugin } from '@ansyn/plugins/openlayers/context-menu/context-menu.plugin';
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
@@ -17,29 +16,35 @@ import { PinPointVisualizer } from '@ansyn/plugins/openlayers/visualizers/region
 import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/measure-distance.visualizer';
 import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/heatmap-visualizer';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
 
 @NgModule({
 	imports: [
 		CommonModule,
-		OpenLayersMapModule,
-		ImageryModule.provideCollection([
-			NorthCalculationsPlugin,
-			CenterMarkerPlugin,
-			ImageProcessingPlugin,
-			MonitorPlugin,
-			ContextMenuPlugin,
-			// Visualizers
-			ContextEntityVisualizer,
-			FootprintHeatmapVisualizer,
-			FrameVisualizer,
-			FootprintPolylineVisualizer,
-			AnnotationsVisualizer,
-			MeasureDistanceVisualizer,
-			GoToVisualizer,
-			PinPointVisualizer,
-			MouseShadowVisualizer,
-			PolygonSearchVisualizer
-		])
+		ImageryModule.provide({
+			plugins: [
+				NorthCalculationsPlugin,
+				CenterMarkerPlugin,
+				ImageProcessingPlugin,
+				MonitorPlugin,
+				ContextMenuPlugin,
+				// Visualizers
+				ContextEntityVisualizer,
+				FootprintHeatmapVisualizer,
+				FrameVisualizer,
+				FootprintPolylineVisualizer,
+				AnnotationsVisualizer,
+				MeasureDistanceVisualizer,
+				GoToVisualizer,
+				PinPointVisualizer,
+				MouseShadowVisualizer,
+				PolygonSearchVisualizer
+			],
+			maps: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
+			mapSourceProviders: []
+		})
 	]
 })
 export class AnsynPluginsModule {

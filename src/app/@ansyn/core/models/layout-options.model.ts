@@ -1,4 +1,4 @@
-import { MapsLayout } from '@ansyn/core/models/maps-layout';
+import { MapsLayout } from './maps-layout';
 
 export type LayoutKey = 'layout1' | 'layout2' | 'layout3' | 'layout4' | 'layout5' | 'layout6';
 

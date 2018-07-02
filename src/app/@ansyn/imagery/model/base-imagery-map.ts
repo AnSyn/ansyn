@@ -1,19 +1,17 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryDecorator } from '@ansyn/imagery/model/imagery-decorator';
 
 export interface ImageryMapMetaData {
 	deps?: any[];
-	mapType: string;
+	mapType?: string;
 }
 
-export interface IMapConstructor extends ImageryMapMetaData {
+export interface BaseImageryMapConstructor extends ImageryMapMetaData {
 	groupLayers: Map<string, any>;
 
-	new(...args): IMap;
+	new(...args): BaseImageryMap;
 
 	addGroupLayer(layer: any, groupName: string);
 
@@ -22,21 +20,10 @@ export interface IMapConstructor extends ImageryMapMetaData {
 	addGroupVectorLayer(layer: any, groupName: string);
 }
 
-export function ImageryMap(metaData: ImageryMapMetaData) {
-	return function (constructor: IMapConstructor) {
-		ImageryDecorator<ImageryMapMetaData, IMapConstructor>(metaData)(constructor);
-	}
-}
-
-export abstract class IMap<T = any> {
+export abstract class BaseImageryMap<T = any> {
 	static groupLayers = new Map<string, any>();
-	static mapType: string;
-
-	positionChanged: EventEmitter<CaseMapPosition>;
-	pointerMove: EventEmitter<any>;
-	mapType: string;
-	mapObject: T;
-	projectionService: ProjectionService;
+	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
+	public mapObject: T;
 
 	static addGroupLayer(layer: any, groupName: string) {
 	}

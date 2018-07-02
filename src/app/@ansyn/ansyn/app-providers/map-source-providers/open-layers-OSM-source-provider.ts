@@ -1,19 +1,20 @@
 import OSM from 'ol/source/osm';
 import TileLayer from 'ol/layer/tile';
-import { Injectable } from '@angular/core';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { Store } from '@ngrx/store';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
 
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 
 
-@Injectable()
+@ImageryMapSource({
+	sourceType: OpenLayerOSMSourceProviderSourceType,
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
+})
 export class OpenLayerOSMSourceProvider extends OpenLayersMapSourceProvider {
-	public sourceType = OpenLayerOSMSourceProviderSourceType;
-
-	create(metaData: any): any[] {
+	create(metaData: CaseMapState): any[] {
 		const osmLayer = new TileLayer({
 			source: new OSM()
 		});

@@ -9,25 +9,20 @@ import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
-import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
+import { VisualizerStates, VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import {
-	BaseImageryVisualizer, BaseImageryVisualizerClass, IVisualizerEntity,
+	BaseImageryVisualizer, BaseImageryVisualizerClass,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
 export interface FeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
 }
-
-export const VisualizerStates = {
-	INITIAL: 'initial',
-	HOVER: 'hover'
-};
-
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isHidden = false;
@@ -206,7 +201,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			this.removeEntity(entity.id);
 		});
 
-		return this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
+		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
 			.map((features: Feature[]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();

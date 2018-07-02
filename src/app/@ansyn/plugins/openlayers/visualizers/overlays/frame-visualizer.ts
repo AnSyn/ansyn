@@ -1,14 +1,14 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

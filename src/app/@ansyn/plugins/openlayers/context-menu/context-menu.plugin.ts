@@ -5,13 +5,14 @@ import * as turf from '@turf/turf';
 import { inside } from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs';
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ContextMenuShowAction } from '@ansyn/map-facade/actions/map.actions';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

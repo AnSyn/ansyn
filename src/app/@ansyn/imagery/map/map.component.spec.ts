@@ -2,21 +2,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 import { Observable, of } from 'rxjs/index';
 import { cold } from 'jasmine-marbles';
-import { IMap } from '../model/imap';
+import { BaseImageryMap } from '../model/base-imagery-map';
 import { inject } from '@angular/core/testing';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 
 describe('MapComponent', () => {
 	let component: MapComponent;
 	let fixture: ComponentFixture<MapComponent>;
-	let map: IMap;
+	let map: BaseImageryMap;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [MapComponent],
 			providers: [
 				{
-					provide: IMap,
+					provide: BaseImageryMap,
 					useValue: { initMap: of(true) }
 				},
 				{
@@ -28,7 +28,7 @@ describe('MapComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([IMap], (_map: IMap<any>) => {
+	beforeEach(inject([BaseImageryMap], (_map: BaseImageryMap<any>) => {
 		fixture = TestBed.createComponent(MapComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

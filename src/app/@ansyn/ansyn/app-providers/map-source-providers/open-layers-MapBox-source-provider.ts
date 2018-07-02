@@ -1,17 +1,21 @@
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
-import { Injectable } from '@angular/core';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
 
 export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 
-@Injectable()
+@ImageryMapSource({
+	sourceType: OpenLayerMapBoxSourceProviderSourceType,
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
+})
 export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
-	public sourceType = OpenLayerMapBoxSourceProviderSourceType;
-
-	create(metaData: any): any[] {
+	create(metaData: CaseMapState): any[] {
 		const source = new XYZ({
-			url: metaData.imageUrl,
+			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'Anonymous',
 			projection: 'EPSG:3857'
 		});

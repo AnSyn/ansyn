@@ -2,12 +2,12 @@ import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit,
 import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { BackToWorldView, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
-import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
+import { coreStateSelector, ICoreState, selectFavoriteOverlays } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { AlertMsg } from '../../reducers/core.reducer';
 import { Subscription } from 'rxjs/Subscription';
-import { getTimeFormat } from '@ansyn/core/utils/time';
-import { ALERTS, IAlert } from '@ansyn/core/alerts/alerts.model';
+import { getTimeFormat } from '../../utils/time';
+import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
 
 @Component({
@@ -34,7 +34,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	private _subscriptions: Subscription[] = [];
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
-	favoriteOverlays$: Observable<Overlay[]> = this.core$.pluck<ICoreState, Overlay[]>('favoriteOverlays');
+	favoriteOverlays$: Observable<Overlay[]> = this.store$.select(selectFavoriteOverlays);
 
 	alertMsg: AlertMsg;
 
@@ -43,7 +43,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			pluck<ICoreState, AlertMsg>('alertMsg'),
 			tap((alertMsg) => this.alertMsg = alertMsg),
 			distinctUntilChanged()
-		)
+		);
 
 	favoriteOverlays: Overlay[];
 	isFavorite: boolean;

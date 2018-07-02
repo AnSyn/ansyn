@@ -4,7 +4,7 @@ import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Overlay } from '@ansyn/core/models/overlay.model';
@@ -14,7 +14,7 @@ import { LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases
 import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
@@ -35,7 +35,7 @@ export class AnsynApi {
 
 	private subscriptions: Array<Subscription> = [];
 	pointerMove$ = new EventEmitter();
-	private iMap: IMap;
+	private iMap: BaseImageryMap;
 
 	constructor(public store: Store<any>,
 				protected actions$: Actions,

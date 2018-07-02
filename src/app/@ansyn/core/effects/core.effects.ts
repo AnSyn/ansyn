@@ -5,22 +5,21 @@ import { ICoreState } from '../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { CoreActionTypes, SetWasWelcomeNotificationShownFlagAction } from '../actions/core.actions';
 import { updateSession } from '../services/core-session.service';
+import { tap } from 'rxjs/internal/operators';
 
 @Injectable()
 export class CoreEffects {
 
-	/**
-	 * @type Effect
-	 * @name onWelcomeNotification$
-	 * @ofType SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG
-	 */
 	@Effect({ dispatch: false })
 	onWelcomeNotification$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG)
-		.do((action: SetWasWelcomeNotificationShownFlagAction) => {
-			const payloadObj = {wasWelcomeNotificationShown: action.payload};
-			updateSession(payloadObj);
-		});
+		.pipe(
+			tap((action: SetWasWelcomeNotificationShownFlagAction) => {
+				const payloadObj = {wasWelcomeNotificationShown: action.payload};
+				updateSession(payloadObj);
+			})
+		);
+
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<ICoreState>) {

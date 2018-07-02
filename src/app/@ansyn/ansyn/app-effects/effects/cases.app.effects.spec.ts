@@ -96,7 +96,7 @@ describe('CasesAppEffects', () => {
 								return Observable.of(overlay);
 							}
 
-							throw new HttpErrorResponse({ status: 404 });
+							return Observable.throwError(new HttpErrorResponse({ status: 404 }));
 						}
 					}
 				},
@@ -204,7 +204,7 @@ describe('CasesAppEffects', () => {
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction( <any> caseItem) });
-			const expectedResults = cold('--(bc|)', {
+			const expectedResults = cold('--(bc)--', {
 				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
 				c: new LoadDefaultCaseIfNoActiveCaseAction()
 			});

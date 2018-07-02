@@ -82,11 +82,11 @@ export class ImageryComponentManager {
 		return sourceProvider.createAsync(this.mapSettings);
 	}
 
-	getMapSourceProvider({ mapType, sourceType }): BaseMapSourceProvider {
+	getMapSourceProvider({ mapType, sourceType }: { mapType: string, sourceType?: string }): BaseMapSourceProvider {
 		return this._baseSourceProviders
 			.find((baseSourceProvider: BaseMapSourceProvider ) => {
 				const baseConstructor = <BaseMapSourceProviderConstructor> baseSourceProvider.constructor;
-				const source = baseConstructor.sourceType === sourceType;
+				const source = !sourceType ? true : baseConstructor.sourceType === sourceType;
 				const supported = baseConstructor.supported.some((imageryMapConstructor: BaseImageryMapConstructor) => imageryMapConstructor.mapType === mapType);
 				return source && supported;
 		});

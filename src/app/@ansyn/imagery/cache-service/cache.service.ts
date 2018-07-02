@@ -25,7 +25,7 @@ export class CacheService {
 
 	getLayerFromCache(metaData: CaseMapState): any[] {
 		if (metaData.data.overlay) {
-			const cacheId = this.createLayerId(metaData.data.overlay);
+			const cacheId = this.createLayerId(metaData);
 			const layers = this.cachedLayesrMap.get(cacheId);
 			return layers && !this.isDisplayedLayer(layers, cacheId) ? [ ...layers ] : [];
 		}
@@ -38,17 +38,18 @@ export class CacheService {
 			this.cachedLayesrMap.delete(key.value);
 		}
 		if (caseMapState.data.overlay) {
-			const cacheId = this.createLayerId(caseMapState.data.overlay);
+			const cacheId = this.createLayerId(caseMapState);
 			layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set('cacheId', cacheId));
 			this.cachedLayesrMap.set(cacheId, [...layers]);
+		} else {
+
 		}
 	}
 
-	removeLayerFromCache(overlay: any) {
-		this.cachedLayesrMap.delete(this.createLayerId(overlay));
-	}
-
-	createLayerId(overlay: any = {}): string {
-		return `${overlay.sourceType}/${JSON.stringify(overlay)}`;
+	createLayerId(caseMapState: CaseMapState): string {
+		if (caseMapState.data.overlay) {
+			return `${caseMapState.mapType}/${JSON.stringify(caseMapState.data.overlay)}`;
+		}
+		return `${caseMapState.mapType}/${caseMapState.sourceType}`;
 	}
 }

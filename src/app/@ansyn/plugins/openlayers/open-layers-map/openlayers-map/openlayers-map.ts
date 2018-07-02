@@ -1,4 +1,4 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -44,6 +44,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private _mapLayers = [];
 	public isValidPosition;
 
+
 	constructor(public projectionService: ProjectionService) {
 		super();
 
@@ -53,22 +54,36 @@ export class OpenLayersMap extends IMap<OLMap> {
 				name: 'layers'
 			}));
 		}
-
-		if (!OpenLayersMap.groupLayers.get('geoJsonLayers')) {
-			OpenLayersMap.groupLayers.set('geoJsonLayers', new Group(<any>{
-				layers: [],
-				name: 'geoJsonLayers'
-			}));
-		}
-
 		this.showGroups.set('layers', true);
-		this.showGroups.set('geoJsonLayers', true);
 	}
 
-	addLayerIfNotExist(layer: any) {
+	/**
+	 * add layer to the map if it is not already exists the layer must have an id set
+	 * @param layer
+	 */
+	public addLayerIfNotExist(layer): Layer {
+		const layerId = layer.get('id');
+		if (!layerId) {
+			return;
+		}
+		const existingLayer: Layer = this.getLayerById(layerId);
+		if (!existingLayer) {
+			// layer.set('visible',false);
+			this.addLayer(layer);
+			return layer;
+		}
+		return existingLayer;
 	}
 
 	toggleGroup(groupName: string) {
+		const newState = !this.showGroups.get(groupName);
+		const group = OpenLayersMap.groupLayers.get(groupName);
+		if (newState) {
+			this.addLayer(group);
+		} else {
+			this._mapObject.removeLayer(group);
+		}
+		this.showGroups.set(groupName, newState);
 	}
 
 	getLayers(): any[] {

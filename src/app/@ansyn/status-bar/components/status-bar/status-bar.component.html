@@ -2,6 +2,7 @@
 	*ngIf="!hideOverlay"
 	[overlay]="activeMap?.data?.overlay"
 	[active]="true"
+	[layerFlag]="activeMap?.flags.layers"
 	[mapId]="activeMap?.id">
 </ansyn-imagery-status>
 

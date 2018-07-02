@@ -32,7 +32,8 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	RemoveAlertMsg,
-	SetToastMessageAction
+	SetToastMessageAction,
+	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { CaseMapState } from '@ansyn/core/models/case.model';
@@ -46,11 +47,9 @@ import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-prov
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 import { IMapConstructor } from '@ansyn/imagery/model/imap';
+import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 
 @Injectable()
 export class MapAppEffects {
@@ -262,6 +261,20 @@ export class MapAppEffects {
 			)
 		);
 
+	/**
+	 * @type Effect
+	 * @name toggleLayersGroupLayer$
+	 * @ofType ToggleMapLayersAction
+	 */
+	@Effect({ dispatch: false })
+	toggleLayersGroupLayer$: Observable<any> = this.actions$
+		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
+		.pipe(
+			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
+			tap((communicator: CommunicatorEntity) => {
+				communicator.visualizers.forEach(v => v.toggleVisibility());
+			})
+		);
 
 	/**
 	 * @type Effect

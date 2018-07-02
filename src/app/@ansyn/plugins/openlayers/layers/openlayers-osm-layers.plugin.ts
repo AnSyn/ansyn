@@ -1,23 +1,58 @@
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Store } from '@ngrx/store';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { BaseOpenlayersLayersPlugin } from '@ansyn/plugins/openlayers/layers/base-openlayers-layers-plugin';
 import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import OSM from 'ol/source/osm';
 import TileLayer from 'ol/layer/tile';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
-import { IMapConstructor } from '@ansyn/imagery/model/imap';
-
+import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { filter, map, tap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+import { distinctUntilChanged } from 'rxjs/internal/operators';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, IMAGERY_IMAP]
+	deps: [Store]
 })
-export class OpenlayersOsmLayersPlugin extends BaseOpenlayersLayersPlugin {
+export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 
-	addDataLayer(layer: ILayer) {
-		const vectorLayer = new TileLayer({
-			zIndex: 1,
+	isHidden$ = this.store$.select(selectMapsList).pipe(
+		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
+		filter(Boolean),
+		map((map: CaseMapState) => map.flags.layers),
+		distinctUntilChanged()
+	);
+
+	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds), this.isHidden$)
+		.pipe(
+			tap(([result, selectedLayerId, isHidden]: [ILayer[], string[], boolean]) => {
+				result.filter((layer: ILayer) => layer.layerPluginType === layerPluginType.OSM)
+					.forEach((layer: ILayer) => {
+						if (selectedLayerId.includes(layer.id) && !isHidden) {
+							this.addGroupLayer(layer);
+						} else {
+							this.removeGroupLayer(layer.id);
+						}
+					});
+				if (isHidden) {
+					selectedLayerId.forEach((id) => this.removeGroupLayer(id));
+				}
+			})
+		);
+
+	constructor(protected store$: Store<any>) {
+		super();
+	}
+
+	isOSMlayer(layer: ILayer) {
+		return layer.layerPluginType === layerPluginType.OSM;
+	}
+
+	createOSMLayer(layer: ILayer): TileLayer {
+		const vector = new TileLayer({
+			zIndex: 100,
 			source: new OSM({
 				attributions: [
 					layer.name
@@ -27,20 +62,38 @@ export class OpenlayersOsmLayersPlugin extends BaseOpenlayersLayersPlugin {
 				crossOrigin: null
 			})
 		});
-		vectorLayer.set('id', layer.id);
-		this.addGroupLayer(vectorLayer, 'layers');
+		vector.set('id', layer.id);
+		return vector;
 	}
 
-	removeDataLayer(id: string): void {
-		this.removeGroupLayer(id, 'layers');
+	addGroupLayer(layer: ILayer) {
+		const group = OpenLayersMap.groupLayers.get('layers');
+		if (!group.getLayers().getArray().some((shownLayer) => shownLayer.get('id') === layer.id)) {
+			if (!group) {
+				throw new Error('Tried to add a layer to a non-existent group');
+			}
+			const osmLayer = this.createOSMLayer(layer);
+			group.getLayers().push(osmLayer);
+		}
 	}
 
-	relevantLayers(layers): ILayer[] {
-		return layers.filter(layer => layer.layerPluginType === layerPluginType.OSM);
+	removeGroupLayer(id: string): void {
+		const group = OpenLayersMap.groupLayers.get('layers');
+		if (!group) {
+			throw new Error('Tried to remove a layer to a non-existent group');
+		}
+
+		const layersArray: any[] = group.getLayers().getArray();
+		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
+		if (removeIdx >= 0) {
+			group.getLayers().removeAt(removeIdx);
+		}
 	}
 
-	getGroupLayers(iMapConstructor: IMapConstructor) {
-		return iMapConstructor.groupLayers.get('layers');
+	onInit() {
+		super.onInit();
+		this.subscriptions.push(
+			this.osmLayersChanges$.subscribe()
+		);
 	}
-
 }

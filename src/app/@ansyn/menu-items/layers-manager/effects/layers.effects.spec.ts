@@ -12,7 +12,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -61,8 +61,9 @@ describe('LayersEffects', () => {
 			id: 'staticLayerId',
 			name: 'staticLayer',
 			type: LayerType.static,
-			creationTime: new Date()
-		};
+			creationTime: new Date(),
+			layerPluginType: layerPluginType.OSM
+	};
 
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of([staticLayer]));
 		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction() });

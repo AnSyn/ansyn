@@ -8,13 +8,16 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
+import ol_Layer from 'ol/layer/layer';
+
 import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
 import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import {
-	BaseImageryVisualizer, BaseImageryVisualizerClass, IVisualizerEntity,
+	BaseImageryVisualizer,
+	BaseImageryVisualizerClass,
+	IVisualizerEntity,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 
@@ -33,7 +36,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isHidden = false;
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
-	vector: VectorLayer;
+	vector: ol_Layer;
 	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected disableCache = false;
 

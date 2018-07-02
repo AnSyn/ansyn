@@ -1,6 +1,6 @@
 {
   "name": "@ansyn/ansyn",
-  "version": "0.2.81.1",
+  "version": "0.2.81.3",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -16,7 +16,6 @@
     "docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3",
     "fix-all": "node scripts/fix-package-json -a",
     "fix-package-json": "node scripts/fix-package-json",
-    "fix-packages": "node scripts/fix-packages",
     "generate-config": "node scripts/generate-config.js",
     "lint": "ng lint ansyn --type-check",
     "log": "git log master --pretty=format:\\\"%an\\\",\\\"%ai\\\",\\\"%s\\\",\\\"%H\\\" > log.csv && echo Commiter, Date, Message, Hash | cat - log.csv > log2.csv && mv log2.csv log.csv",

@@ -20,16 +20,13 @@ export class CacheService {
 			.some((communicator) => {
 				const communicatorLayers = communicator.getLayers();
 				return layers.some((layer) => communicatorLayers.some((layer) => (layer.get && layer.get('cacheId')) === cacheId));
-			})
+			});
 	}
 
 	getLayerFromCache(metaData: CaseMapState): any[] {
-		if (metaData.data.overlay) {
-			const cacheId = this.createLayerId(metaData);
-			const layers = this.cachedLayesrMap.get(cacheId);
-			return layers && !this.isDisplayedLayer(layers, cacheId) ? [ ...layers ] : [];
-		}
-		return [];
+		const cacheId = this.createLayerId(metaData);
+		const layers = this.cachedLayesrMap.get(cacheId);
+		return layers && !this.isDisplayedLayer(layers, cacheId) ? [...layers] : [];
 	}
 
 	addLayerToCache(caseMapState: CaseMapState, layers: any[]) {
@@ -37,13 +34,9 @@ export class CacheService {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
 		}
-		if (caseMapState.data.overlay) {
-			const cacheId = this.createLayerId(caseMapState);
-			layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set('cacheId', cacheId));
-			this.cachedLayesrMap.set(cacheId, [...layers]);
-		} else {
-
-		}
+		const cacheId = this.createLayerId(caseMapState);
+		layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set('cacheId', cacheId));
+		this.cachedLayesrMap.set(cacheId, [...layers]);
 	}
 
 	createLayerId(caseMapState: CaseMapState): string {

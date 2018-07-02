@@ -7,12 +7,13 @@ import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-sour
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
 export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 
 @ImageryMapSource({
 	sourceType: OpenLayerPlanetSourceProviderSourceType,
-	supported: [OpenLayersMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerPlanetSourceProvider extends OpenLayersMapSourceProvider {
 	create(metaData: CaseMapState): any[] {

@@ -7,7 +7,7 @@ export const OpenLayerNotGeoRegisteredPlanetSourceProviderSourceType = 'NOT-GEO-
 
 @ImageryMapSource({
 	sourceType: OpenLayerNotGeoRegisteredPlanetSourceProviderSourceType,
-	supported: [OpenLayersDisabledMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerNotGeoRegisteredPlanetSourceProvider extends OpenLayerPlanetSourceProvider {
 }

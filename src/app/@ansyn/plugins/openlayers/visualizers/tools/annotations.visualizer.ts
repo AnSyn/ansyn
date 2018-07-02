@@ -9,10 +9,7 @@ import MultiLineString from 'ol/geom/multilinestring';
 import GeomPolygon from 'ol/geom/polygon';
 import olPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
-import {
-	ImageryVisualizer,
-	VisualizerInteractions
-} from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
@@ -26,7 +23,8 @@ import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
 	AnnotationProperties,
-	IToolsState, selectAnnotationLayer,
+	IToolsState,
+	selectAnnotationLayer,
 	selectSubMenu,
 	SubMenuEnum,
 	toolsStateSelector
@@ -40,6 +38,7 @@ import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

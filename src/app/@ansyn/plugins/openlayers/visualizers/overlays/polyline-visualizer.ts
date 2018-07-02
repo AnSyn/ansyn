@@ -1,6 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import {
-	ImageryVisualizer,
 	VisualizerInteractions
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
@@ -33,6 +32,7 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 import { empty } from 'rxjs';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

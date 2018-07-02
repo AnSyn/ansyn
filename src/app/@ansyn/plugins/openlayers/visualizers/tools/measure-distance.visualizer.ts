@@ -14,7 +14,6 @@ import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
 import {
-	ImageryVisualizer,
 	VisualizerInteractions
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
@@ -27,6 +26,7 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

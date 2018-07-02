@@ -22,11 +22,12 @@ import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Po
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -34,7 +35,7 @@ export const OpenlayersMapName = 'openLayersMap';
 	mapType: OpenlayersMapName,
 	deps: [ProjectionService]
 })
-export class OpenLayersMap extends IMap<OLMap> {
+export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupLayers = new Map<string, Group>();
 	private showGroups = new Map<string, boolean>();
 	private _mapObject: OLMap;
@@ -393,7 +394,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.mapObject.addLayer(layer);
 	}
 
-	// IMap End
+	// BaseImageryMap End
 	public dispose() {
 		this.removeAllLayers();
 

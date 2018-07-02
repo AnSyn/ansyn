@@ -1,9 +1,17 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs';
-import { IMap, IMapConstructor } from './imap';
+import { BaseImageryMap, BaseImageryMapConstructor } from './base-imagery-map';
 import { of, Subscription } from 'rxjs';
-import { ImageryDecorator } from './imagery-decorator';
+
+export interface ImageryPluginMetaData {
+	supported?: BaseImageryMapConstructor[];
+	deps?: any[];
+}
+
+export interface BaseImageryPluginConstructor extends ImageryPluginMetaData {
+	new(...args): BaseImageryPlugin;
+}
 
 export class BaseImageryPlugin {
 	subscriptions: Subscription[] = [];
@@ -11,7 +19,7 @@ export class BaseImageryPlugin {
 	isEnabled: boolean;
 	onDisposedEvent: EventEmitter<any> = new EventEmitter<any>();
 
-	get iMap(): IMap {
+	get iMap(): BaseImageryMap {
 		return this.communicator && this.communicator.ActiveMap;
 	}
 
@@ -44,17 +52,3 @@ export class BaseImageryPlugin {
 	}
 }
 
-export interface ImageryPluginMetaData {
-	supported?: IMapConstructor[];
-	deps?: any[];
-}
-
-export interface BaseImageryPluginConstructor extends ImageryPluginMetaData {
-	new(...args): BaseImageryPlugin;
-}
-
-export function ImageryPlugin(metaData: ImageryPluginMetaData) {
-	return function (constructor: BaseImageryPluginConstructor) {
-		ImageryDecorator<ImageryPluginMetaData, BaseImageryPluginConstructor>(metaData)(constructor);
-	}
-}

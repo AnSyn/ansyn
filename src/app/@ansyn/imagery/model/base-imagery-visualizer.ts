@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
-import { ImageryPlugin, ImageryPluginMetaData } from './base-imagery-plugin';
+import { ImageryPluginMetaData } from './base-imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
@@ -77,10 +77,4 @@ export interface ImageryVisualizerMetaData extends ImageryPluginMetaData {
 
 export interface BaseImageryVisualizerClass extends ImageryVisualizerMetaData {
 	new(...args): BaseImageryVisualizer;
-}
-
-export function ImageryVisualizer(metaData: ImageryVisualizerMetaData) {
-	return function (constructor: BaseImageryVisualizerClass) {
-		ImageryPlugin(metaData)(constructor);
-	};
 }

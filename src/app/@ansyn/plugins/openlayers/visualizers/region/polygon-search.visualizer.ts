@@ -10,8 +10,8 @@ import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

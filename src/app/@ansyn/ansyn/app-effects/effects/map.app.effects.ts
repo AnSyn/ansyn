@@ -52,7 +52,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
-import { IMapConstructor } from '@ansyn/imagery/model/imap';
+import { BaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
 
 @Injectable()
 export class MapAppEffects {
@@ -206,8 +206,8 @@ export class MapAppEffects {
 		.pipe(
 			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
 				this.iMapConstructors
-					.filter((iMapConstructor: IMapConstructor) => iMapConstructor.groupLayers.get('layers'))
-					.forEach((iMapConstructor: IMapConstructor) => {
+					.filter((iMapConstructor: BaseImageryMapConstructor) => iMapConstructor.groupLayers.get('layers'))
+					.forEach((iMapConstructor: BaseImageryMapConstructor) => {
 						const displayedLayers: any = iMapConstructor.groupLayers.get('layers').getLayers().getArray();
 						/* remove layer if layerId not includes on selectLayers */
 						displayedLayers.forEach((layer) => {
@@ -395,7 +395,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_MAPS) protected iMapConstructors: IMapConstructor[],
+				@Inject(IMAGERY_MAPS) protected iMapConstructors: BaseImageryMapConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

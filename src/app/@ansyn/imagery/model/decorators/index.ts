@@ -1,3 +1,5 @@
+import { ImageryMapMetaData, BaseImageryMapConstructor } from '../base-imagery-map';
+
 /**
  * @description Add depths to constructor
  */

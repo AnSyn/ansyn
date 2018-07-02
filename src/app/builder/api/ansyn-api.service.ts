@@ -14,7 +14,7 @@ import { LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases
 import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
@@ -35,7 +35,7 @@ export class AnsynApi {
 
 	private subscriptions: Array<Subscription> = [];
 	pointerMove$ = new EventEmitter();
-	private iMap: IMap;
+	private iMap: BaseImageryMap;
 
 	constructor(public store: Store<any>,
 				protected actions$: Actions,

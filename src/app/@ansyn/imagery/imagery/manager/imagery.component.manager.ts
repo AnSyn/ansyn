@@ -1,7 +1,7 @@
-import { IMap } from '../../model/imap';
+import { BaseImageryMap } from '../../model/base-imagery-map';
 import { BaseMapSourceProvider, BaseMapSourceProviderConstructor } from '../../model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, ViewContainerRef } from '@angular/core';
-import { IMapConstructor } from '../../model/imap';
+import { BaseImageryMapConstructor } from '../../model/base-imagery-map';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '../../communicator-service/communicator.service';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -19,7 +19,7 @@ export interface MapInstanceChanged {
 
 export class ImageryComponentManager {
 
-	private _activeMap: IMap;
+	private _activeMap: BaseImageryMap;
 	private _subscriptions = [];
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public mapInstanceChanged: EventEmitter<MapInstanceChanged> = new EventEmitter<MapInstanceChanged>();
@@ -34,7 +34,7 @@ export class ImageryComponentManager {
 	}
 
 	constructor(protected injector: Injector,
-				protected iMapConstructors: IMapConstructor[],
+				protected iMapConstructors: BaseImageryMapConstructor[],
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				protected mapComponentElem: ViewContainerRef,
@@ -50,7 +50,7 @@ export class ImageryComponentManager {
 			}
 
 
-			this.createMapSourceForMapType((<IMapConstructor>this._activeMap.constructor).mapType).then((layers) => {
+			this.createMapSourceForMapType((<BaseImageryMapConstructor>this._activeMap.constructor).mapType).then((layers) => {
 				this.resetView(layers[0], position).subscribe(() => {
 					if (layers.length > 0) {
 						for (let i = 1; i < layers.length; i++) {
@@ -87,17 +87,17 @@ export class ImageryComponentManager {
 			.find((baseSourceProvider: BaseMapSourceProvider ) => {
 				const baseConstructor = <BaseMapSourceProviderConstructor> baseSourceProvider.constructor;
 				const source = baseConstructor.sourceType === sourceType;
-				const supported = baseConstructor.supported.some((imageryMapConstructor: IMapConstructor) => imageryMapConstructor.mapType === mapType);
+				const supported = baseConstructor.supported.some((imageryMapConstructor: BaseImageryMapConstructor) => imageryMapConstructor.mapType === mapType);
 				return source && supported;
 		});
 	}
 
 	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: CaseMapPosition, layer?: any): Promise<any> {
-		const imapClass = this.iMapConstructors.find((imap: IMapConstructor) => imap.mapType === activeMapName);
+		const imapClass = this.iMapConstructors.find((imap: BaseImageryMapConstructor) => imap.mapType === activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory<MapComponent>(MapComponent);
 		const providers = [
 			{
-				provide: IMap,
+				provide: BaseImageryMap,
 				useClass: imapClass,
 				deps: imapClass.deps || []
 			},
@@ -117,7 +117,7 @@ export class ImageryComponentManager {
 		});
 	}
 
-	private onMapCreated(map: IMap, activeMapName, oldMapName) {
+	private onMapCreated(map: BaseImageryMap, activeMapName, oldMapName) {
 		this.internalSetActiveMap(map);
 		if (activeMapName !== oldMapName && Boolean(oldMapName)) {
 			this.mapInstanceChanged.emit({
@@ -154,7 +154,7 @@ export class ImageryComponentManager {
 		this.plugins.forEach((plugin) => plugin.dispose());
 	}
 
-	private internalSetActiveMap(activeMap: IMap) {
+	private internalSetActiveMap(activeMap: BaseImageryMap) {
 		this._activeMap = activeMap;
 		this.registerToActiveMapEvents();
 	}
@@ -165,7 +165,7 @@ export class ImageryComponentManager {
 		}));
 	}
 
-	public get ActiveMap(): IMap {
+	public get ActiveMap(): BaseImageryMap {
 		return this._activeMap;
 	}
 

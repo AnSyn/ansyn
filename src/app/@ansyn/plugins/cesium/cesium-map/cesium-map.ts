@@ -1,14 +1,14 @@
-import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
-import { EventEmitter } from '@angular/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { Observable } from 'rxjs';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 export const CesiumMapName = 'cesium';
 
 @ImageryMap({
 	mapType: CesiumMapName
 })
-export class CesiumMap extends IMap<any> {
+export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
 

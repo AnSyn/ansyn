@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { IMap, IMapConstructor } from '../model/imap';
+import { BaseImageryMap, BaseImageryMapConstructor } from '../model/base-imagery-map';
 import { Observable, of, merge } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
@@ -88,7 +88,7 @@ export class CommunicatorEntity {
 		return this._manager.loadInitialMapSource(position);
 	}
 
-	public get ActiveMap(): IMap {
+	public get ActiveMap(): BaseImageryMap {
 		if (this._manager) {
 			return this._manager.ActiveMap;
 		}
@@ -97,7 +97,7 @@ export class CommunicatorEntity {
 
 	public get mapType() {
 		if (this.ActiveMap) {
-			return (<IMapConstructor> this.ActiveMap.constructor).mapType;
+			return (<BaseImageryMapConstructor> this.ActiveMap.constructor).mapType;
 		}
 	}
 

@@ -2,15 +2,14 @@ import { Injectable, InjectionToken } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
-import { ImageryDecorator } from './imagery-decorator';
-import { IMapConstructor } from './imap';
+import { BaseImageryMapConstructor } from './base-imagery-map';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
 export interface ImageryMapSourceMetaData {
 	sourceType?: string;
-	supported?: IMapConstructor[];
+	supported?: BaseImageryMapConstructor[];
 }
 
 export interface BaseMapSourceProviderConstructor extends ImageryMapSourceMetaData {
@@ -45,11 +44,4 @@ export abstract class BaseMapSourceProvider {
 	getThumbnailUrl(overlay, position): Observable<string> {
 		return of(overlay.thumbnailUrl);
 	}
-}
-
-export function ImageryMapSource(metaData: ImageryMapSourceMetaData) {
-	return function (constructor: BaseMapSourceProviderConstructor) {
-		Injectable()(constructor);
-		ImageryDecorator<ImageryMapSourceMetaData, BaseMapSourceProviderConstructor>(metaData)(constructor);
-	};
 }

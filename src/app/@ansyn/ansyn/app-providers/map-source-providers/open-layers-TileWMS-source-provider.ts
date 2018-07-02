@@ -3,8 +3,8 @@ import TileWMS from 'ol/source/tilewms';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
 
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 

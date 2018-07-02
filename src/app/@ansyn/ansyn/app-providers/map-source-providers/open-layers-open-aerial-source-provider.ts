@@ -1,4 +1,3 @@
-import { ImageryMapSource } from '@ansyn/imagery/model/base-map-source-provider';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
@@ -9,6 +8,7 @@ import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-sour
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
 
 export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 

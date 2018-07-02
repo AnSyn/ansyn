@@ -6,7 +6,7 @@ import { IImageryConfig, initialImageryConfig } from './model/iimagery-config';
 import { CacheService } from './cache-service/cache.service';
 import { createImageryMapsCollection, ImageryMapsProvider } from './providers/imagery-map-collection';
 import { MapComponent } from './map/map.component';
-import { IMapConstructor } from './model/imap';
+import { BaseImageryMapConstructor } from './model/base-imagery-map';
 import { BaseMapSourceProviderProvider, createMapSourceProviders } from './providers/map-source-providers';
 import { createConfig } from './providers/config';
 import { createPluginsCollection } from './providers/plugins-collection';
@@ -14,7 +14,7 @@ import { BaseImageryPluginConstructor } from './model/base-imagery-plugin';
 import { BaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 
 export interface ImageryMetaData {
-	maps: IMapConstructor[],
+	maps: BaseImageryMapConstructor[],
 	plugins: BaseImageryPluginConstructor[],
 	mapSourceProviders: BaseMapSourceProviderConstructor[]
 }

@@ -1,19 +1,19 @@
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Store } from '@ngrx/store';
 import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection } from 'geojson';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { combineLatest, forkJoin, Observable } from 'rxjs';
-import { ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
+import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

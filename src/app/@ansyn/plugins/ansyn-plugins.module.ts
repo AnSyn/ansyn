@@ -4,7 +4,6 @@ import { NorthCalculationsPlugin } from '@ansyn/plugins/openlayers/north-calcula
 import { ImageProcessingPlugin } from '@ansyn/plugins/openlayers/image-processing/image-processing.plugin';
 import { MonitorPlugin } from '@ansyn/plugins/openlayers/monitor/monitor.plugin';
 import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
-import { OpenLayersMapModule } from '@ansyn/plugins/openlayers/open-layers-map/open-layers-map.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ContextMenuPlugin } from '@ansyn/plugins/openlayers/context-menu/context-menu.plugin';
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
@@ -19,6 +18,9 @@ import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/heatmap-visualizer';
 import { OpenlayersOsmLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.plugin';
 import { OpenlayersGeoJsonLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-geoJson-layers.plugin';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
 @NgModule({
 	imports: [

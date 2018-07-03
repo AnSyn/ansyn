@@ -75,13 +75,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return existingLayer;
 	}
 
-	toggleGroup(groupName: string) {
-		const newState = !this.showGroups.get(groupName);
+	toggleGroup(groupName: string, newState: boolean) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (newState) {
 			this.addLayer(group);
 		} else {
-			this._mapObject.removeLayer(group);
+			this.removeLayer(group);
 		}
 		this.showGroups.set(groupName, newState);
 	}
@@ -182,8 +181,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public addLayer(layer: any) {
-		this._mapLayers.push(layer);
-		this._mapObject.addLayer(layer);
+
+		if (!this._mapLayers.includes(layer)) {
+			this._mapLayers.push(layer);
+			this._mapObject.addLayer(layer);
+		}
 	}
 
 	public removeAllLayers() {

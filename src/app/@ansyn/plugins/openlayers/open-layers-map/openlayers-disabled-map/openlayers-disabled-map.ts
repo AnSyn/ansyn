@@ -30,7 +30,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	addLayerIfNotExist(layer: any) {
 	}
 
-	toggleGroup(groupName: string) {
+	toggleGroup(groupName: string, newState: boolean) {
 	}
 
 	getLayers(): any[] {

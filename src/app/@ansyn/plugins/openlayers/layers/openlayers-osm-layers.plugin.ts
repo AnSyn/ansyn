@@ -6,11 +6,13 @@ import TileLayer from 'ol/layer/tile';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
+import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -18,27 +20,25 @@ import { distinctUntilChanged } from 'rxjs/internal/operators';
 })
 export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 
-	isHidden$ = this.store$.select(selectMapsList).pipe(
+	toggleGroup$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
-		map((map: CaseMapState) => map.flags.layers),
-		distinctUntilChanged()
+		map((map: CaseMapState) => !map.flags.layers),
+		distinctUntilChanged(),
+		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 
-	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds), this.isHidden$)
+	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
-			tap(([result, selectedLayerId, isHidden]: [ILayer[], string[], boolean]) => {
-				result.filter((layer: ILayer) => layer.layerPluginType === layerPluginType.OSM)
+			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
+				result.filter(this.isOSMlayer)
 					.forEach((layer: ILayer) => {
-						if (selectedLayerId.includes(layer.id) && !isHidden) {
+						if (selectedLayerId.includes(layer.id)) {
 							this.addGroupLayer(layer);
 						} else {
 							this.removeGroupLayer(layer.id);
 						}
 					});
-				if (isHidden) {
-					selectedLayerId.forEach((id) => this.removeGroupLayer(id));
-				}
 			})
 		);
 
@@ -93,7 +93,8 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 	onInit() {
 		super.onInit();
 		this.subscriptions.push(
-			this.osmLayersChanges$.subscribe()
+			this.osmLayersChanges$.subscribe(),
+			this.toggleGroup$.subscribe()
 		);
 	}
 }

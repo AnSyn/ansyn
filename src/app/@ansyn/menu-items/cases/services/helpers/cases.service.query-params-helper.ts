@@ -102,6 +102,7 @@ export class QueryParamsHelper {
 								const [x1, y1, x2, y2]: CaseMapExtent = extentFromGeojson(geoPolygon);
 
 								updatedCaseModel.state.maps.data.forEach(map => {
+									map.data.position.projectedState = null;
 									map.data.position.extentPolygon = {
 										type: 'Polygon',
 										coordinates: [[

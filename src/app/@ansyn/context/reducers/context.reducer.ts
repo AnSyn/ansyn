@@ -1,19 +1,11 @@
-import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
+import { createEntityAdapter } from '@ngrx/entity';
 import { EntityState } from '@ngrx/entity/src/models';
 import { ContextActionTypes, ContextActions } from '../actions/context.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { Context } from '@ansyn/core/models/context.model';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { Context, DisplayedOverlay } from '@ansyn/core/models/context.model';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 
 export const contextFeatureKey = 'context';
-
-export enum DisplayedOverlay {
-	nearest = 'nearest',
-	latest = 'latest',
-}
-
 
 export interface ContextParams {
 	defaultOverlay?: DisplayedOverlay;

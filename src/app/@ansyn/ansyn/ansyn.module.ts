@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@ansyn/core/core.module';
+import { HelpModule } from '@ansyn/menu-items/help/help.module';
 
 @NgModule({
 	imports: [
@@ -48,7 +49,8 @@ import { CoreModule } from '@ansyn/core/core.module';
 		MapFacadeModule,
 		ImageryModule,
 		StatusBarModule,
-		AnsynRouterModule
+		AnsynRouterModule,
+		HelpModule
 	],
 	declarations: [AnsynComponent],
 	exports: [AnsynComponent]

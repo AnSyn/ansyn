@@ -52,7 +52,7 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
+import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
@@ -62,7 +62,8 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
+import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';
@@ -71,7 +72,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 		return true;
 	}
 
-	createAsync(metaData: any): Promise<any> {
+	createAsync(metaData: CaseMapState): Promise<any> {
 		return Promise.resolve();
 	}
 
@@ -184,7 +185,7 @@ describe('MapAppEffects', () => {
 					provide: mapFacadeConfig,
 					useValue: {}
 				},
-				{ provide: IMAGERY_IMAP, useValue: [] },
+				{ provide: IMAGERY_MAPS, useValue: [] },
 				{
 					provide: IMAGERY_CONFIG, useValue: {
 						'geoMapsInitialMapSource': [{

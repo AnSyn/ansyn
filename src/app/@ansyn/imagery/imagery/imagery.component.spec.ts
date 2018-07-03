@@ -2,11 +2,11 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
-import { VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
-import { Store } from '@ngrx/store';
 import { CacheService } from '../cache-service/cache.service';
-import { PLUGINS_COLLECTIONS } from '../model/plugins-collection';
-import { IMAGERY_IMAP } from '../model/imap-collection';
+import { Store } from '@ngrx/store';
+import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
+import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
+import { CaseMapState } from '@ansyn/core/models/case.model';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
@@ -16,7 +16,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 		return true;
 	}
 
-	createAsync(metaData: any): Promise<any> {
+	createAsync(metaData: CaseMapState): Promise<any> {
 		return Promise.resolve();
 	}
 
@@ -42,9 +42,8 @@ describe('ImageryComponent', () => {
 				{ provide: CacheService, useValue: null },
 				{ provide: PLUGINS_COLLECTIONS, useValue: []},
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
-				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: Store, useValue: null },
-				{ provide: IMAGERY_IMAP, useValue: [] },
+				{ provide: IMAGERY_MAPS, useValue: [] },
 				ImageryCommunicatorService]
 		}).compileComponents();
 	}));

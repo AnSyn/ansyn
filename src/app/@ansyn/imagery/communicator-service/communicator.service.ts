@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { ImageryComponentManager } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { CommunicatorEntity } from './communicator.entity';
+import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
 
 export interface ImageryChanged {
 	id: string;

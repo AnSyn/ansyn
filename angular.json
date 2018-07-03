@@ -37,6 +37,8 @@
           },
           "configurations": {
             "dev": {
+              "sourceMap": true,
+              "extractCss": true,
               "fileReplacements": [
                 {
                   "replace": "src/configuration/configuration.ts",
@@ -263,31 +265,6 @@
         }
       }
     },
-    "builder-e2e": {
-      "root": "",
-      "sourceRoot": "e2e",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "builder:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**/*"
-            ]
-          }
-        }
-      }
-    },
     "builder-dev": {
       "root": "",
       "sourceRoot": "src",
@@ -398,6 +375,66 @@
             ],
             "exclude": [
               "**/node_modules/**/*"
+            ]
+          }
+        }
+      }
+    },
+    "@ansyn/core": {
+      "root": "projects/ansyn/core",
+      "sourceRoot": "src/app/@ansyn/core",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/core/tsconfig.lib.json",
+            "project": "projects/ansyn/core/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/core/ng-package.json"
+            }
+          }
+        }
+      }
+    },
+    "@ansyn/imagery": {
+      "root": "projects/ansyn/imagery",
+      "sourceRoot": "src/app/@ansyn/imagery",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/imagery/tsconfig.lib.json",
+            "project": "projects/ansyn/imagery/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/imagery/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ansyn/imagery/src/test.ts",
+            "tsConfig": "projects/ansyn/imagery/tsconfig.spec.json",
+            "karmaConfig": "projects/ansyn/imagery/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ansyn/imagery/tsconfig.lib.json",
+              "projects/ansyn/imagery/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
             ]
           }
         }

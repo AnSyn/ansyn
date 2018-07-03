@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { SetSubMenu } from '../../actions/tools.actions';
 import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
 import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';

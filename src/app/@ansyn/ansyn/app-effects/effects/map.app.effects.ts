@@ -46,10 +46,10 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
-import { IMapConstructor } from '@ansyn/imagery/model/imap';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
+import { BaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
 
 @Injectable()
 export class MapAppEffects {
@@ -299,15 +299,16 @@ export class MapAppEffects {
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
-		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
+		const caseMapState = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId);
+		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
 		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 
 
-		const mapType = communicator.ActiveMap.mapType;
+		const mapType = communicator.mapType;
 		const { sourceType } = overlay;
-		const sourceLoader = communicator.getMapSourceProvider({ mapType, sourceType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ mapType, sourceType });
 
 		if (!sourceLoader) {
 			return Observable.of(new SetToastMessageAction({
@@ -332,7 +333,7 @@ export class MapAppEffects {
 		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
 		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
 
-		return Observable.fromPromise(sourceLoader.createAsync(overlay))
+		return Observable.fromPromise(sourceLoader.createAsync({ ...caseMapState, data: { ...mapData, overlay } }))
 			.pipe(changeActiveMap, resetView, displaySuccess)
 			.catch(() => Observable.from([
 				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
@@ -355,8 +356,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[],
-				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
+				@Inject(IMAGERY_MAPS) protected iMapConstructors: BaseImageryMapConstructor[],
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

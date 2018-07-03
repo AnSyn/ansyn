@@ -9,8 +9,8 @@ import { Actions } from '@ngrx/effects';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { empty } from 'rxjs';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

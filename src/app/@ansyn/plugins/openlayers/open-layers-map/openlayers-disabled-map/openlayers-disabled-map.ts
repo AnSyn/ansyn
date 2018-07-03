@@ -1,28 +1,20 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import * as ol from 'openlayers';
 import Map from 'ol/map';
 import View from 'ol/view';
-import proj from 'ol/proj';
 import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
-import ImageLayer from 'ol/layer/image';
-import Raster from 'ol/source/raster';
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import * as turf from '@turf/turf';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
+import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 @ImageryMap({
 	mapType: DisabledOpenLayersMapName
 })
-export class OpenLayersDisabledMap extends IMap<Map> {
-	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	pointerMove: EventEmitter<any> = new EventEmitter<any>();
-	contextMenu: EventEmitter<any> = new EventEmitter<any>();
-	mapType: string = DisabledOpenLayersMapName;
-	mapObject: Map;
+export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 
 	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
@@ -46,11 +38,7 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	}
 
 	public getCenter(): Observable<Point> {
-		const view = this.mapObject.getView();
-		const center = view.getCenter();
-		const point = <Point> turf.geometry('Point', center);
-
-		return this.projectionService.projectAccurately(point, this);
+		return of(null);
 	}
 
 	setCenter(center: Point, animation: boolean): Observable<boolean> {

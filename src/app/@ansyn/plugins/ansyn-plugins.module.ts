@@ -23,27 +23,30 @@ import { OpenlayersGeoJsonLayersPlugin } from '@ansyn/plugins/openlayers/layers/
 @NgModule({
 	imports: [
 		CommonModule,
-		OpenLayersMapModule,
-		ImageryModule.provideCollection([
-			NorthCalculationsPlugin,
-			CenterMarkerPlugin,
-			ImageProcessingPlugin,
-			MonitorPlugin,
-			ContextMenuPlugin,
-			// Visualizers
-			ContextEntityVisualizer,
-			FootprintHeatmapVisualizer,
-			FrameVisualizer,
-			FootprintPolylineVisualizer,
-			AnnotationsVisualizer,
-			MeasureDistanceVisualizer,
-			GoToVisualizer,
-			PinPointVisualizer,
-			MouseShadowVisualizer,
-			PolygonSearchVisualizer,
-			OpenlayersOsmLayersPlugin,
-			OpenlayersGeoJsonLayersPlugin
-		])
+		ImageryModule.provide({
+			plugins: [
+				NorthCalculationsPlugin,
+				CenterMarkerPlugin,
+				ImageProcessingPlugin,
+				MonitorPlugin,
+				ContextMenuPlugin,
+				// Visualizers
+				ContextEntityVisualizer,
+				FootprintHeatmapVisualizer,
+				FrameVisualizer,
+				FootprintPolylineVisualizer,
+				AnnotationsVisualizer,
+				MeasureDistanceVisualizer,
+				GoToVisualizer,
+				PinPointVisualizer,
+				MouseShadowVisualizer,
+				PolygonSearchVisualizer,
+				OpenlayersOsmLayersPlugin,
+				OpenlayersGeoJsonLayersPlugin
+			],
+			maps: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
+			mapSourceProviders: []
+		})
 	]
 })
 export class AnsynPluginsModule {

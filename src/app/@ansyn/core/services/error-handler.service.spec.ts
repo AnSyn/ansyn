@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ErrorHandlerService } from './error-handler.service';
+import { LoggerService } from './logger.service';
 
 describe('ErrorHandlerService', () => {
 	beforeEach(() => {

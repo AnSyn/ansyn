@@ -36,15 +36,15 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { BaseMapSourceProvider, BaseMapSourceProviderConstructor } from '@ansyn/imagery/model/base-map-source-provider';
 import {
 	ContextParams,
-	DisplayedOverlay,
 	selectContextEntities,
 	selectContextsParams
 } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContextEntity } from '@ansyn/core/models/case.model';
+import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -244,7 +244,7 @@ export class OverlaysAppEffects {
 		});
 
 	getSourceProvider(sType) {
-		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
+		return this.baseSourceProviders.find(({ constructor }) => sType === (<BaseMapSourceProviderConstructor>constructor).sourceType);
 	}
 
 	constructor(public actions$: Actions,

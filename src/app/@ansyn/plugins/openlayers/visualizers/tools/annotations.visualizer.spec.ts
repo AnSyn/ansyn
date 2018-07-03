@@ -2,13 +2,15 @@ import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/too
 import { inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import olColor from 'ol/color';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { of } from 'rxjs/index';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [AnnotationsVisualizer],
+			providers: [AnnotationsVisualizer, { provide: ProjectionService, useValue: { projectCollectionAccurately: of(true) } }],
 			imports: [StoreModule.forRoot({})]
 		});
 	});

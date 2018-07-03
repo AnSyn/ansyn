@@ -1,0 +1,81 @@
+@import "core/less/common";
+
+@ansyn-help-footer-height: 40px;
+
+:host {
+	&:extend(.default-menu-item);
+	color: white;
+	font-size: 14px;
+}
+
+.help-slide {
+	box-sizing: border-box;
+	height: calc(~"100vh - @{ansyn-help-footer-height}");
+	padding: 20px 0 0 10px;
+	display: flex;
+	justify-content: stretch;
+	flex-direction: column;
+	align-items: center;
+
+	.above-center {
+		width: 100%;
+		height: 46%;
+		margin-bottom: 4%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+
+		& > div:nth-child(1) {
+			font-size: 16px;
+			align-self: start;
+		}
+
+		& > div:nth-child(2) {
+			font-size: 22px;
+		}
+	}
+
+	.from-center {
+		height: 43%;
+		padding: 0 5%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	img {
+		height: 276px;
+	}
+
+	@media screen and (max-height: 850px) {
+		img {
+			height: 70%;
+		}
+	}
+}
+
+footer {
+	box-sizing: border-box;
+	padding: 0 10px;
+
+	hr {
+		width: 80%;
+		text-align: center;
+		border-color: fade(#ffffff, 50);
+	}
+
+	input {
+		transform: translateY(3px)
+	}
+}
+
+// Make the carousel indicators round
+/deep/ .carousel-indicators {
+	li {
+		height: 10px;
+		width: 10px;
+		border-radius: 5px;
+	}
+}

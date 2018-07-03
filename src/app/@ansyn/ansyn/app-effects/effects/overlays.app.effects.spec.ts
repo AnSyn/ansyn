@@ -52,10 +52,12 @@ import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/cor
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import {
-	contextFeatureSelector, contextInitialState, DisplayedOverlay,
+	contextFeatureSelector, contextInitialState,
 	selectContextsParams
 } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { DisplayedOverlay } from '@ansyn/core/models/context.model';
+import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -139,11 +141,11 @@ describe('OverlaysAppEffects', () => {
 	const contextState: any = { ...contextInitialState };
 
 	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
-
+	@ImageryMapSource({
+		supported: [],
+		sourceType: 'FIRST'
+	})
 	class MapSourceProviderMock extends BaseMapSourceProvider {
-		sourceType = 'FIRST';
-		supported = [];
-
 		public create(metaData: any): any[] {
 			return [];
 		}

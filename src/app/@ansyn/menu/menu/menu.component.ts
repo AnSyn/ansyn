@@ -149,6 +149,7 @@ export class MenuComponent implements OnInit {
 		} else {
 			this.store.dispatch(new ToggleIsPinnedAction(false));
 		}
+
 	}
 
 	componentChanges(): void {

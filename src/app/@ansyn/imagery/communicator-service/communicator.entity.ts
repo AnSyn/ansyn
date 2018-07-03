@@ -1,13 +1,12 @@
 import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { IMap } from '../model/imap';
-import { Observable, of } from 'rxjs';
+import { BaseImageryMap, BaseImageryMapConstructor } from '../model/base-imagery-map';
+import { Observable, of, merge } from 'rxjs';
 import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
-import 'rxjs/add/observable/merge';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter } from 'rxjs/operators';
 
 export class CommunicatorEntity {
@@ -51,7 +50,7 @@ export class CommunicatorEntity {
 		}));
 
 		this._managerSubscriptions.push(
-			Observable.merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
+			merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
 				.pipe(filter(({ id }) => id === this.id))
 				.subscribe(this.initPlugins.bind(this))
 		);
@@ -89,11 +88,17 @@ export class CommunicatorEntity {
 		return this._manager.loadInitialMapSource(position);
 	}
 
-	public get ActiveMap(): IMap {
+	public get ActiveMap(): BaseImageryMap {
 		if (this._manager) {
 			return this._manager.ActiveMap;
 		}
 		return null;
+	}
+
+	public get mapType() {
+		if (this.ActiveMap) {
+			return (<BaseImageryMapConstructor> this.ActiveMap.constructor).mapType;
+		}
 	}
 
 	public getCenter(): Observable<Point> {

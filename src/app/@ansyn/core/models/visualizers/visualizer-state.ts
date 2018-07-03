@@ -1,4 +1,4 @@
-import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
+import { VisualizerStyle } from './visualizer-style';
 
 export interface VisualizerStateStyle {
 	opacity: number;
@@ -15,3 +15,9 @@ export interface VisualizerStateStyle {
 		[key: string]: Partial<VisualizerStyle>;
 	};
 }
+
+export const VisualizerStates = {
+	INITIAL: 'initial',
+	HOVER: 'hover'
+};
+

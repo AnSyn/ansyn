@@ -4,7 +4,6 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
-import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
@@ -15,6 +14,8 @@ import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/m
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Subscription } from 'rxjs/Subscription';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

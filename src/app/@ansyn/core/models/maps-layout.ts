@@ -1,4 +1,4 @@
-import { LayoutKey } from '@ansyn/core/models/layout-options.model';
+import { LayoutKey } from './layout-options.model';
 
 export interface MapsLayout {
 	id: LayoutKey;

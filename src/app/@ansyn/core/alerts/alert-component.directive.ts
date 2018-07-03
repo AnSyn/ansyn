@@ -1,5 +1,5 @@
 import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef } from '@angular/core';
-import { IAlertComponent } from '@ansyn/core/alerts/alerts.model';
+import { IAlertComponent } from '../alerts/alerts.model';
 
 
 export interface IAlertComponentSettings {

@@ -1,19 +1,29 @@
-import { Store } from '@ngrx/store';
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
+import { BaseImageryMapConstructor } from './base-imagery-map';
+import { CaseMapState } from '@ansyn/core/models/case.model';
+
+export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
+
+export interface ImageryMapSourceMetaData {
+	sourceType?: string;
+	supported?: BaseImageryMapConstructor[];
+}
+
+export interface BaseMapSourceProviderConstructor extends ImageryMapSourceMetaData {
+	new(...args): BaseMapSourceProvider
+}
 
 @Injectable()
 export abstract class BaseMapSourceProvider {
-	abstract supported: string[];
-	abstract sourceType: string;
 
-	constructor(protected store: Store<any>, protected cacheService: CacheService,
+	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	protected createOrGetFromCache(metaData?: any) {
+	protected createOrGetFromCache(metaData: CaseMapState) {
 		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
 		if (cacheLayers.length) {
 			return cacheLayers;
@@ -24,9 +34,9 @@ export abstract class BaseMapSourceProvider {
 		return layers;
 	}
 
-	protected abstract create(metaData: any): any[];
+	protected abstract create(metaData: CaseMapState): any[];
 
-	createAsync(metaData?: any): Promise<any> {
+	createAsync(metaData: CaseMapState): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer);
 	}

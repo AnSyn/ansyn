@@ -1,4 +1,4 @@
-import { Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { ANALYZE_FOR_ENTRY_COMPONENTS, Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from './menu/menu.component';
 import { CoreModule } from '@ansyn/core/core.module';
@@ -32,6 +32,11 @@ export class MenuModule {
 				{
 					provide: MENU_ITEMS,
 					useValue: menuItems
+				},
+				{
+					provide: ANALYZE_FOR_ENTRY_COMPONENTS,
+					useValue: menuItems,
+					multi: true
 				}
 			]
 		};

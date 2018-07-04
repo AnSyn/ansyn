@@ -42,7 +42,7 @@ export const helpComponentConstants = {
 			text: [
 				'Tool Menu',
 				'Use the tools to support your work',
-				'Your can draw annotations to indicate findings',
+				'You can draw annotations to indicate findings',
 				'You can also use image processing options, make measurements and more'
 			],
 			image: [

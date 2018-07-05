@@ -1,4 +1,5 @@
-import { enableProdMode, ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AnsynModule } from '@ansyn/ansyn/ansyn.module';
@@ -13,6 +14,7 @@ import { LoginModule } from '@ansyn/login/login.module';
 @NgModule({
 	imports: [
 		BrowserModule,
+		TranslateModule.forRoot(),
 		StoreModule.forRoot({}),
 		EffectsModule.forRoot([]),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),

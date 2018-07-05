@@ -147,9 +147,7 @@ export class CasesService {
 			.pipe(
 				debounceTime(this.config.updateCaseDebounceTime),
 				mergeMap(() => this.updateCase(selectedCase)),
-				catchError(err => {
-					return this.errorHandlerService.httpErrorHandle(err);
-				})
+				catchError(err =>  this.errorHandlerService.httpErrorHandle(err, 'Failed to update case'))
 			);
 	}
 

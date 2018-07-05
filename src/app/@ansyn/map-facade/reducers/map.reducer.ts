@@ -117,7 +117,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			const mapsList = [ ...state.mapsList ];
 			const toggledMap = mapsList.find(map => map.id === action.payload.mapId);
 			if (toggledMap) {
-				toggledMap.flags.layers = !toggledMap.flags.layers;
+				toggledMap.flags.displayLayers = !toggledMap.flags.displayLayers;
 			}
 
 			return { ...state, mapsList };

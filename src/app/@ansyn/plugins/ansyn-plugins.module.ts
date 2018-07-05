@@ -16,11 +16,11 @@ import { PinPointVisualizer } from '@ansyn/plugins/openlayers/visualizers/region
 import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/measure-distance.visualizer';
 import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/heatmap-visualizer';
-import { OpenlayersOsmLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.plugin';
-import { OpenlayersGeoJsonLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-geoJson-layers.plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersOsmLayersVisualizer } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.visualizer';
+import { OpenlayersGeoJsonLayersVisualizer } from '@ansyn/plugins/openlayers/layers/openlayers-geoJson-layers.visualizer';
 
 @NgModule({
 	imports: [
@@ -43,8 +43,8 @@ import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map
 				PinPointVisualizer,
 				MouseShadowVisualizer,
 				PolygonSearchVisualizer,
-				OpenlayersOsmLayersPlugin,
-				OpenlayersGeoJsonLayersPlugin
+				OpenlayersOsmLayersVisualizer,
+				OpenlayersGeoJsonLayersVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
 			mapSourceProviders: []

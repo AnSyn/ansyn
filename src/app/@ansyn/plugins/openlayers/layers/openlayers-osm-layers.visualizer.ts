@@ -18,12 +18,12 @@ import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 	supported: [OpenLayersMap],
 	deps: [Store]
 })
-export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
+export class OpenlayersOsmLayersVisualizer extends BaseImageryPlugin {
 
 	toggleGroup$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
-		map((map: CaseMapState) => !map.flags.layers),
+		map((map: CaseMapState) => !map.flags.displayLayers),
 		distinctUntilChanged(),
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
@@ -68,7 +68,8 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 
 	addGroupLayer(layer: ILayer) {
 		const group = OpenLayersMap.groupLayers.get('layers');
-		if (!group.getLayers().getArray().some((shownLayer) => shownLayer.get('id') === layer.id)) {
+		const layersArray = group.getLayers().getArray();
+		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
 			if (!group) {
 				throw new Error('Tried to add a layer to a non-existent group');
 			}

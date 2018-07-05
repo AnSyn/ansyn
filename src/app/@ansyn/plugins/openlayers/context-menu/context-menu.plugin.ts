@@ -1,24 +1,47 @@
 import { Store } from '@ngrx/store';
-import { Actions } from '@ngrx/effects';
+import { Actions, ofType } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
 import { inside } from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable, pipe } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { ContextMenuShowAction } from '@ansyn/map-facade/actions/map.actions';
+import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
+import { tap, filter, withLatestFrom, map } from 'rxjs/operators';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { cold, hot } from 'jasmine-marbles';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })
 export class ContextMenuPlugin extends BaseImageryPlugin {
+	isActiveOperators = pipe(
+		withLatestFrom(this.store$.select(selectActiveMapId).pipe(map((activeMapId: string) => activeMapId === this.mapId))),
+		filter(([prevData, isActive]: [any, boolean]) => isActive),
+		map(([prevData]: [any, boolean]) => prevData)
+	);
+
+	onContextMenuDisplayAction$: Observable<any> = this.actions$
+		.pipe(
+			ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY),
+			map(({ payload }) => payload),
+			this.isActiveOperators,
+			tap(id => this.store$.dispatch(new DisplayOverlayFromStoreAction({ id })))
+		);
+
+	contextMenuTrigger$ = () => fromEvent(this.containerElem, 'contextmenu')
+		.pipe(
+			tap(this.contextMenuEventListener.bind(this))
+		);
+
 	get containerElem(): HTMLElement {
 		return <HTMLElement> this.iMap.mapObject.getViewport();
 	}
@@ -28,7 +51,10 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 	}
 
 	onInit() {
-		this.containerElem.addEventListener('contextmenu', this.contextMenuEventListener.bind(this));
+		this.subscriptions.push(
+			this.contextMenuTrigger$().subscribe(),
+			this.onContextMenuDisplayAction$.subscribe()
+		);
 	}
 
 	contextMenuEventListener(event: MouseEvent) {
@@ -59,10 +85,10 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			.projectAccurately(point, this.iMap)
 			.take(1);
 	}
-
-	onDispose() {
-		if (this.containerElem) {
-			this.containerElem.removeEventListener('contextmenu', this.contextMenuEventListener.bind(this));
-		}
-	}
 }
+
+// it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
+// 	actions = hot('--a--', { a: new ContextMenuDisplayAction('fakeId') });
+// 	const expectedResults = cold('--b--', { b: new DisplayOverlayFromStoreAction({ id: 'fakeId' }) });
+// 	expect(contextMenuAppEffects.onContextMenuDisplayAction$).toBeObservable(expectedResults);
+// });

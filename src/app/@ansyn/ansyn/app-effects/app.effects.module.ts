@@ -14,7 +14,6 @@ import { StatusBarAppEffects } from './effects/status-bar.app.effects';
 import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
-import { ContextMenuAppEffects } from './effects/map/context-menu.app.effects';
 import { VisualizersAppEffects } from './effects/map/visualizers.app.effects';
 import { IRouterState } from '@ansyn/router/reducers/router.reducer';
 import { CoreAppEffects } from './effects/core.app.effects';
@@ -48,7 +47,6 @@ export interface IAppState {
 			StatusBarAppEffects,
 			FiltersAppEffects,
 			ToolsAppEffects,
-			ContextMenuAppEffects,
 			VisualizersAppEffects,
 			CoreAppEffects,
 			UpdateCaseAppEffects,

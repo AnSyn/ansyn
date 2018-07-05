@@ -5,7 +5,7 @@ import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { empty, Observable } from 'rxjs';
+import { empty, Observable, of } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -30,6 +30,7 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
+import { catchError, map } from 'rxjs/internal/operators';
 
 @Injectable()
 export class CasesEffects {
@@ -116,12 +117,15 @@ export class CasesEffects {
 	 * @action UpdateCaseBackendSuccessAction
 	 */
 	@Effect()
-	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction> = this.actions$
+	onUpdateCaseBackend$: Observable< UpdateCaseBackendSuccessAction | any> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
 		.mergeMap((action: UpdateCaseBackendAction) => {
-			return this.casesService.wrapUpdateCase(action.payload).map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => {
-				return new UpdateCaseBackendSuccessAction(updatedCase);
-			});
+			return this.casesService.wrapUpdateCase(action.payload)
+				.pipe(
+					map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
+					catchError(() => empty())
+				)
+
 		}).share();
 
 	/**

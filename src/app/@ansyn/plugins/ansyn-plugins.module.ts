@@ -16,9 +16,11 @@ import { PinPointVisualizer } from '@ansyn/plugins/openlayers/visualizers/region
 import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/measure-distance.visualizer';
 import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
 import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/heatmap-visualizer';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersGeoJsonLayersVisualizer } from '@ansyn/plugins/openlayers/layers/openlayers-geoJson-layers.visualizer';
+import { OpenlayersOsmLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.plugin';
 
 @NgModule({
 	imports: [
@@ -30,6 +32,7 @@ import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
 				ImageProcessingPlugin,
 				MonitorPlugin,
 				ContextMenuPlugin,
+				OpenlayersOsmLayersPlugin,
 				// Visualizers
 				ContextEntityVisualizer,
 				FootprintHeatmapVisualizer,
@@ -40,7 +43,8 @@ import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
 				GoToVisualizer,
 				PinPointVisualizer,
 				MouseShadowVisualizer,
-				PolygonSearchVisualizer
+				PolygonSearchVisualizer,
+				OpenlayersGeoJsonLayersVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
 			mapSourceProviders: []

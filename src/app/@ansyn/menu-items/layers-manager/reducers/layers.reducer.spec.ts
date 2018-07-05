@@ -1,6 +1,6 @@
 import { LayerCollectionLoadedAction, ToggleDisplayAnnotationsLayer } from '../actions/layers.actions';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('LayersReducer', () => {
 
@@ -10,7 +10,8 @@ describe('LayersReducer', () => {
 			id: 'staticLayerId',
 			name: 'staticLayer',
 			type: LayerType.static,
-			creationTime: new Date()
+			creationTime: new Date(),
+			layerPluginType: layerPluginType.OSM
 		};
 
 		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);

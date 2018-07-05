@@ -27,6 +27,12 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return Observable.of(true);
 	}
 
+	addLayerIfNotExist(layer: any) {
+	}
+
+	toggleGroup(groupName: string, newState: boolean) {
+	}
+
 	getLayers(): any[] {
 		return this.mapObject.getLayers().getArray();
 	}
@@ -39,12 +45,6 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return Observable.of(true);
 	}
 
-	addLayerIfNotExist(layer: Layer) {
-
-	}
-
-	toggleGroup(groupName: string) {
-	}
 
 	resetView(layer: any, position?: CaseMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);

@@ -38,7 +38,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract setCenter(center: Point, animation: boolean): Observable<boolean>;
 
-	abstract toggleGroup(groupName: string);
+	abstract toggleGroup(groupName: string, newState: boolean);
 
 	abstract initMap(element: HTMLElement, layers?: any, position?: CaseMapPosition): Observable<boolean>;
 

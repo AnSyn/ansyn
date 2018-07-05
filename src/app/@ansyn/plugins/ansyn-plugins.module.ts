@@ -19,8 +19,8 @@ import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizer
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenlayersOsmLayersVisualizer } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.visualizer';
 import { OpenlayersGeoJsonLayersVisualizer } from '@ansyn/plugins/openlayers/layers/openlayers-geoJson-layers.visualizer';
+import { OpenlayersOsmLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.plugin';
 
 @NgModule({
 	imports: [
@@ -32,6 +32,7 @@ import { OpenlayersGeoJsonLayersVisualizer } from '@ansyn/plugins/openlayers/lay
 				ImageProcessingPlugin,
 				MonitorPlugin,
 				ContextMenuPlugin,
+				OpenlayersOsmLayersPlugin,
 				// Visualizers
 				ContextEntityVisualizer,
 				FootprintHeatmapVisualizer,
@@ -43,7 +44,6 @@ import { OpenlayersGeoJsonLayersVisualizer } from '@ansyn/plugins/openlayers/lay
 				PinPointVisualizer,
 				MouseShadowVisualizer,
 				PolygonSearchVisualizer,
-				OpenlayersOsmLayersVisualizer,
 				OpenlayersGeoJsonLayersVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],

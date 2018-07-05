@@ -18,7 +18,7 @@ import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 	supported: [OpenLayersMap],
 	deps: [Store]
 })
-export class OpenlayersOsmLayersVisualizer extends BaseImageryPlugin {
+export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 
 	toggleGroup$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),

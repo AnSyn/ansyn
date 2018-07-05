@@ -19,6 +19,9 @@ import { SliderFilterContainerComponent } from './components/slider-filter-conta
 import { BooleanFilterContainerComponent } from './components/boolean-filter-container/boolean-filter-container.component';
 import { ShowMorePipe } from './pipes/show-more.pipe';
 import { FilterCounterComponent } from './components/filter-counter/filter-counter.component';
+import { HttpLoaderFactory } from '@ansyn/status-bar/status-bar.module';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 
 @NgModule({
 	imports: [
@@ -28,7 +31,14 @@ import { FilterCounterComponent } from './components/filter-counter/filter-count
 		StoreModule.forFeature(filtersFeatureKey, FiltersReducer),
 		SliderModule,
 		FormsModule,
-		EffectsModule.forFeature([FiltersEffects])
+		EffectsModule.forFeature([FiltersEffects]),
+		TranslateModule.forRoot({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			}
+		})
 	],
 	declarations: [
 		FiltersCollectionComponent,

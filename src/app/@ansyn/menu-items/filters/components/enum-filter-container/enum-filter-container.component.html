@@ -12,7 +12,7 @@
 		</div>
 		<div class="filter-row">
 			<div class="field-name-container">
-				<span class="field-name" [title]="enumMetadata.key">{{enumMetadata.key}}</span>
+				<span class="field-name">{{enumMetadata.key | translate}}</span>
 			</div>
 			<span class="only-filter"
 				  [hidden]="enumMetadata.value.disabled"

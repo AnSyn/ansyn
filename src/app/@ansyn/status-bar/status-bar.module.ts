@@ -7,12 +7,7 @@ import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
-import {
-	comboBoxesOptions,
-	GEO_FILTERS,
-	ORIENTATIONS,
-	TIME_FILTERS
-} from '@ansyn/status-bar/models/combo-boxes.model';
+import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '@ansyn/status-bar/models/combo-boxes.model';
 import { TreeviewModule } from 'ngx-treeview';
 import { TreeViewComponent } from '@ansyn/status-bar/components/tree-view/tree-view.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
@@ -20,7 +15,13 @@ import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.compon
 import { SelectedCaseBarComponent } from './components/selected-case-bar/selected-case-bar.component';
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
+export function HttpLoaderFactory(http: HttpClient) {
+	return new TranslateHttpLoader(http);
+}
 
 @NgModule({
 	imports: [
@@ -28,6 +29,13 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 		CommonModule,
 		CoreModule,
 		TreeviewModule.forRoot(),
+		TranslateModule.forRoot({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			}
+		}),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
 	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, SelectedCaseBarComponent, ComboBoxTriggerComponent, ClickOutsideDirective],

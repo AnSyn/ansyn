@@ -9,6 +9,7 @@ import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/ac
 import { isEqual } from 'lodash';
 import { DataInputFilterValue } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -17,7 +18,6 @@ import { Observable } from 'rxjs';
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
-
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
@@ -35,7 +35,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			}
 		});
 
-
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: false,
 		hasFilter: false,
@@ -48,9 +47,15 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	public dataInputFiltersActive: boolean;
 
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				public store: Store<IStatusBarState>) {
+				public store: Store<IStatusBarState>,
+				private translate: TranslateService) {
+		translate.setDefaultLang('sns');
+
 		this.dataFilters.forEach((f) => {
-			this.dataInputFiltersItems.push(new TreeviewItem(f));
+			translate.get(f.text, {value: 'sns'}).subscribe((res: string) => {
+				f.text = res;
+				this.dataInputFiltersItems.push(new TreeviewItem(f));
+			});
 		});
 	}
 
@@ -66,6 +71,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 						this.leavesCount++;
 						leaf.value.providerName = providerName;
 					});
+					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
+						this.translate.get(leaf.text, {value: 'sns'}).subscribe((res: string) => {
+							leaf.text = res;
+						});
+					})
 				}
 			);
 

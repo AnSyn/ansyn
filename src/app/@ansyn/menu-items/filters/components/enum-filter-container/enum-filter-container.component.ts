@@ -1,5 +1,6 @@
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-enum-filter-container',
@@ -8,9 +9,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class EnumFilterContainerComponent {
 
+
 	@Input() metadata: EnumFilterMetadata;
 	@Input() isLongFiltersList: boolean;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
+
+	constructor(private translate: TranslateService) {
+		translate.setDefaultLang('sns');
+	}
+
 
 	onInputClicked(key: string) {
 		const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);

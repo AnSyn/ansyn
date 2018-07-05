@@ -1,6 +1,8 @@
 @import "core/less/common";
 
 @ansyn-help-footer-height: 40px;
+@ansyn-help-elements-width-normal: 320px;
+@ansyn-help-elements-width-small: 160px;
 
 :host {
 	&:extend(.default-menu-item);
@@ -11,24 +13,32 @@
 .help-slide {
 	box-sizing: border-box;
 	height: calc(~"100vh - @{ansyn-help-footer-height}");
-	padding: 20px 0 0 10px;
+	padding: 20px 10px 0 10px;
 	display: flex;
 	justify-content: stretch;
 	flex-direction: column;
 	align-items: center;
 
 	.above-center {
-		width: 100%;
 		height: 46%;
 		margin-bottom: 4%;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		align-items: center;
+		align-items: start;
+
+		& > * {
+			width: @ansyn-help-elements-width-normal;
+		}
+
+		@media screen and (max-height: 850px) {
+			& > * {
+				width: @ansyn-help-elements-width-small;
+			}
+		}
 
 		& > div:nth-child(1) {
 			font-size: 16px;
-			align-self: start;
 		}
 
 		& > div:nth-child(2) {
@@ -38,21 +48,21 @@
 
 	.from-center {
 		height: 43%;
-		padding: 0 5%;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		align-items: center;
-	}
+		align-items: start;
 
-	img {
-		height: 276px;
-	}
-
-	@media screen and (max-height: 850px) {
-		img {
-			height: 70%;
+		& > * {
+			width: @ansyn-help-elements-width-normal;
 		}
+
+		@media screen and (max-height: 850px) {
+			& > * {
+				width: @ansyn-help-elements-width-small;
+			}
+		}
+
 	}
 }
 
@@ -79,3 +89,17 @@ footer {
 		border-radius: 5px;
 	}
 }
+
+// Replace the next/prev controls
+/deep/ .carousel-control-next-icon {
+	background-image: url(/assets/icons/help/help_next.svg);
+}
+/deep/ .carousel-control-prev-icon {
+	background-image: url(/assets/icons/help/help_prev.svg);
+}
+/deep/ .carousel-control-prev,
+/deep/ .carousel-control-next {
+	opacity: 0.8;
+	&:hover, &:focus {
+		opacity: 1.0;
+	}}

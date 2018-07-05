@@ -4,7 +4,7 @@
 const {SpecReporter} = require('jasmine-spec-reporter');
 
 exports.config = {
-	allScriptsTimeout: 11000,
+	allScriptsTimeout: 60000,
 	specs: [
 		'./e2e/**/*.e2e-spec.ts'
 	],
@@ -40,7 +40,7 @@ exports.config = {
 	onPrepare() {
 		jasmine.getEnv().addReporter(new SpecReporter({spec: {displayStacktrace: true}}));
 		// returning the promise makes protractor wait for the reporter config before executing tests
-		return global.browser.getProcessedConfig().then(function(config) {
+		return global.browser.getProcessedConfig().then(function (config) {
 			//it is ok to be empty
 		});
 

@@ -81,7 +81,7 @@ export class ContextEffects {
 				return this.contextService
 					.loadContext(action.payload.context)
 					.map((context: Context) => [action, context, params])
-					.pipe(this.setContext)
+					.pipe(this.setContext);
 			})
 			.catch((err) => {
 				console.warn('Error loading context as case', err);
@@ -151,7 +151,7 @@ export class ContextEffects {
 					time: {
 						type: 'absolute',
 						from: new Date(startDate),
-						to: new Date(endDate),
+						to: new Date(endDate)
 					}
 				}
 			}
@@ -164,7 +164,7 @@ export class ContextEffects {
 				region: updatedCase.state.region,
 				limit: context.imageryCountBefore,
 				facets: updatedCase.state.facets
-			}).pipe(mapToCase)
+			}).pipe(mapToCase);
 		} else if (context.imageryCountBefore && context.imageryCountAfter) {
 			case$ = this.overlaysService.getStartAndEndDateViaRangeFacets({
 				region: updatedCase.state.region,
@@ -172,7 +172,7 @@ export class ContextEffects {
 				limitAfter: context.imageryCountAfter,
 				facets: updatedCase.state.facets,
 				date: params.time
-			}).pipe(mapToCase)
+			}).pipe(mapToCase);
 		}
 		return case$;
 	}

@@ -148,7 +148,7 @@ export interface DilutedCaseMapState {
 	mapType: string;
 	sourceType: string;
 	flags: {
-		layers?: boolean
+		displayLayers?: boolean
 	};
 }
 

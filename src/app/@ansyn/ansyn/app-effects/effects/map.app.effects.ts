@@ -48,9 +48,6 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
 import { BaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
 
@@ -195,40 +192,6 @@ export class MapAppEffects {
 			}))
 		);
 
-
-	/**
-	 * @type Effect
-	 * @name updateSelectedLayers$
-	 * @ofType combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)
-	 */
-	@Effect({ dispatch: false })
-	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
-		.pipe(
-			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				this.iMapConstructors
-					.filter((iMapConstructor: BaseImageryMapConstructor) => iMapConstructor.groupLayers.get('layers'))
-					.forEach((iMapConstructor: BaseImageryMapConstructor) => {
-						const displayedLayers: any = iMapConstructor.groupLayers.get('layers').getLayers().getArray();
-						/* remove layer if layerId not includes on selectLayers */
-						displayedLayers.forEach((layer) => {
-							const id = layer.get('id');
-							if (!selectedLayersIds.includes(id)) {
-								iMapConstructor.removeGroupLayer(id, 'layers');
-							}
-						});
-
-						/* add layer if id includes on selectLayers but not on map */
-						selectedLayersIds.forEach((layerId) => {
-							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
-							if (!layer) {
-								const addLayer = layers.find(({ id }) => id === layerId);
-								iMapConstructor.addGroupVectorLayer(addLayer, 'layers');
-							}
-						});
-					});
-			})
-		);
-
 	/**
 	 * @type Effect
 	 * @name setOverlaysNotInCase$
@@ -309,11 +272,9 @@ export class MapAppEffects {
 		.pipe(
 			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
 			tap((communicator: CommunicatorEntity) => {
-				communicator.ActiveMap.toggleGroup('layers');
 				communicator.visualizers.forEach(v => v.toggleVisibility());
 			})
 		);
-
 
 	/**
 	 * @type Effect

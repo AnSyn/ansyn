@@ -25,7 +25,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return Observable.throw(new Error('Method not implemented.'));
 	}
 
-	toggleGroup(groupName: string) {
+	toggleGroup(groupName: string, newState: boolean) {
 		throw new Error('Method not implemented.');
 	}
 

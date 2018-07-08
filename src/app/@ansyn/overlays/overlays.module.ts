@@ -6,11 +6,11 @@ import { OverlaysContainerComponent } from './components/container/overlays-cont
 import { OverlaysService } from './services/overlays.service';
 import { OverlaysEffects } from './effects/overlays.effects';
 import { EffectsModule } from '@ngrx/effects';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component';
-import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '@ansyn/core/core.module';
 import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation-logging';
 
@@ -21,7 +21,7 @@ import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation
 		StoreModule.forFeature(overlaysFeatureKey, OverlayReducer),
 		EffectsModule.forFeature([OverlaysEffects]),
 		TranslateModule.forRoot({
-			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MissingTranslationLogging},
+			missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogging },
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,

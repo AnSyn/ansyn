@@ -16,7 +16,7 @@ import { SelectedCaseBarComponent } from './components/selected-case-bar/selecte
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { HttpClient } from '@angular/common/http';
-import { TranslateLoader, TranslateModule, MissingTranslationHandler } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation-logging';
 
 @NgModule({
@@ -26,11 +26,11 @@ import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation
 		CoreModule,
 		TreeviewModule.forRoot(),
 		TranslateModule.forRoot({
-			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MissingTranslationLogging},
+			missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogging },
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,
-				deps: [HttpClient],
+				deps: [HttpClient]
 			},
 			useDefaultLang: true
 		}),

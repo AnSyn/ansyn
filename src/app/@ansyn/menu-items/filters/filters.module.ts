@@ -19,7 +19,7 @@ import { SliderFilterContainerComponent } from './components/slider-filter-conta
 import { BooleanFilterContainerComponent } from './components/boolean-filter-container/boolean-filter-container.component';
 import { ShowMorePipe } from './pipes/show-more.pipe';
 import { FilterCounterComponent } from './components/filter-counter/filter-counter.component';
-import { TranslateLoader, TranslateModule, MissingTranslationHandler } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation-logging';
 
@@ -33,7 +33,7 @@ import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation
 		FormsModule,
 		EffectsModule.forFeature([FiltersEffects]),
 		TranslateModule.forRoot({
-			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MissingTranslationLogging},
+			missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogging },
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,

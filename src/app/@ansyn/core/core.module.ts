@@ -1,4 +1,4 @@
-import { NgModule, Inject } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
@@ -14,10 +14,9 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
-import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateService } from '@ngx-translate/core';
 import { MissingTranslationLogging } from './utils/missing-translation-logging';
 
 
@@ -39,7 +38,7 @@ const coreComponents = [
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
 		EffectsModule.forFeature([CoreEffects]),
 		TranslateModule.forRoot({
-			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MissingTranslationLogging},
+			missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogging },
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,

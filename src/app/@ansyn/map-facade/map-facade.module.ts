@@ -18,7 +18,7 @@ import { OverlaySourceTypeNoticeComponent } from '@ansyn/map-facade/components/o
 import { CoreModule, HttpLoaderFactory } from '@ansyn/core/core.module';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
-import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation-logging';
 
@@ -27,7 +27,7 @@ import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation
 		StoreModule.forFeature(mapFeatureKey, MapReducer),
 		EffectsModule.forFeature([MapEffects]),
 		TranslateModule.forRoot({
-			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MissingTranslationLogging},
+			missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogging },
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,

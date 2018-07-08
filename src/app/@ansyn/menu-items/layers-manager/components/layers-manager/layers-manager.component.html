@@ -9,7 +9,12 @@
 			id="annotation-layer"
 			[checked]="annotationLayerChecked"
 			text="Annotations"
-			(inputClicked)="annotationLayerClick()"></ansyn-checkbox>
+			(inputClicked)="annotationLayerClick()">
+			<button class="download-layer" (click)="downloadAnnotations()">
+				<i class="icon icon-download-layer"></i>
+			</button>
+
+		</ansyn-checkbox>
 	</div>
 
 	<ng-container *ngFor="let collection of layers$ | async">

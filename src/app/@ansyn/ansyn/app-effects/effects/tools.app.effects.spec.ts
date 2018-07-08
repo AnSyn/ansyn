@@ -17,14 +17,17 @@ import {
 	GoToAction,
 	PullActiveCenter,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
+	SetActiveOverlaysFootprintModeAction, SetAnnotationMode,
 	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess
+	SetAutoImageProcessingSuccess, SetMeasureDistanceToolState, SetPinLocationModeAction, ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { Case } from '@ansyn/core/models/case.model';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { ActiveMapChangedAction, SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
+import {
+	ActiveMapChangedAction,
+	SetMapsDataActionStore
+} from '@ansyn/map-facade/actions/map.actions';
 import {
 	casesFeatureKey,
 	CasesReducer,
@@ -39,9 +42,10 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { BackToWorldView } from '@ansyn/core/actions/core.actions';
+import { BackToWorldView, ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -316,5 +320,46 @@ describe('ToolsAppEffects', () => {
 			b: new SetAutoImageProcessingSuccess(false)
 		});
 		expect(toolsAppEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
+	});
+
+	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
+		const updatedMapsList = [...imapState.mapsList];
+		const activeMap = MapFacadeService.mapById(updatedMapsList, imapState.activeMapId);
+		activeMap.data.overlayDisplayMode = 'Heatmap';
+
+		actions = hot('--a--', { a: new ShowOverlaysFootprintAction('Heatmap') });
+
+		const expectedResults = cold('--a--', { a: new SetMapsDataActionStore({ mapsList: updatedMapsList }) });
+
+		expect(toolsAppEffects.updateCaseFromTools$).toBeObservable(expectedResults);
+	});
+
+	it('clearActiveInteractions$ should clear active interactions', () => {
+		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
+
+		const expectedResult = cold('--(abcd)--', {
+			a: new SetMeasureDistanceToolState(false),
+			b: new SetAnnotationMode(),
+			c: new UpdateGeoFilterStatus(),
+			d: new SetPinLocationModeAction(false)
+		});
+
+		expect(toolsAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
+	});
+
+	it('clearActiveInteractions$ should clear active interactions without SetMeasureDistanceToolState', () => {
+		actions = hot('--a--', {
+			a: new ClearActiveInteractionsAction({
+				skipClearFor: [SetMeasureDistanceToolState]
+			})
+		});
+
+		const expectedResult = cold('--(bce)--', {
+			b: new SetAnnotationMode(),
+			c: new UpdateGeoFilterStatus(),
+			e: new SetPinLocationModeAction(false)
+		});
+
+		expect(toolsAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
 	});
 });

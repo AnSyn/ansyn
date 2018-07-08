@@ -17,12 +17,11 @@ export const MapActionTypes = {
 	SET_MAP_MANUAL_IMAGE_PROCESSING: 'SET_MAP_MANUAL_IMAGE_PROCESSING',
 	CONTEXT_MENU: {
 		SHOW: 'CONTEXT_MENU_SHOW',
-		DISPLAY: 'DISPLAY'
+		DISPLAY: 'CONTEXT_MENU_DISPLAY'
 	},
 	VISUALIZERS: {
 		HOVER_FEATURE: 'HOVER_FEATURE'
 	},
-	DRAW_OVERLAY_ON_MAP: 'DRAW_OVERLAY_ON_MAP',
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	STORE: {
 		SET_MAPS_DATA: 'SET_MAPS_DATA'
@@ -133,13 +132,6 @@ export class ContextMenuDisplayAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
 
 	constructor(public payload: string) {
-	}
-}
-
-export class DrawOverlaysOnMapTriggerAction implements Action {
-	type = MapActionTypes.DRAW_OVERLAY_ON_MAP;
-
-	constructor() {
 	}
 }
 

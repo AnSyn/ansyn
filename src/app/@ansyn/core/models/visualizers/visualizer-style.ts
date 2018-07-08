@@ -29,6 +29,6 @@ export interface VisualizerStyle {
 		stroke?: Stroke,
 		offsetX?: number;
 		offsetY?: number;
-		text?: string
+		text?: (feature: any) => string | string;
 	}
 }

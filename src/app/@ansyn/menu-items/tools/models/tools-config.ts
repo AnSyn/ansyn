@@ -2,6 +2,9 @@ import { InjectionToken } from '@angular/core';
 import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 
 export interface IToolsConfig {
+	Annotations: {
+		displayId: "0" | "1";
+	},
 	GoTo: {
 		from: CoordinatesSystem;
 		to: CoordinatesSystem;

@@ -52,6 +52,7 @@ export interface OverlaysManualProcessArgs {
 export interface DilutedCaseState {
 	maps?: DilutedCaseMapsState,
 	time: CaseTimeState,
+	search?: boolean,
 	facets?: CaseFacetsState,
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],

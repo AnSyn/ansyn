@@ -34,6 +34,7 @@ export interface OverlaysCriteria {
 	time?: CaseTimeState;
 	region?: CaseRegionState;
 	dataInputFilters?: CaseDataInputFiltersState;
+	search?: boolean;
 }
 
 export interface OverlaySpecialObject {

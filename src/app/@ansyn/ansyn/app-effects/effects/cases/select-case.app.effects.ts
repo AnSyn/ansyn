@@ -51,7 +51,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
-		const { favoriteOverlays, region, dataInputFilters, contextEntities } = state;
+		const { favoriteOverlays, region, search, dataInputFilters, contextEntities } = state;
 		let {  time } = state;
 		const { layout } = state.maps;
 
@@ -72,7 +72,7 @@ export class SelectCaseAppEffects {
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, search }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction(),

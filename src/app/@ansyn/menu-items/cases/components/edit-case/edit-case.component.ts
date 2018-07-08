@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, HostListener, OnInit, ViewChild } f
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { Case } from '../../models/case.model';
@@ -11,6 +11,7 @@ import { CasesService } from '../../services/cases.service';
 import { CasePreview } from '../../models/case.model';
 import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
 import { Context } from '@ansyn/core/models/context.model';
+import { catchError } from 'rxjs/internal/operators';
 
 const animationsDuring = '0.2s';
 

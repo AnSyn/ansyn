@@ -31,32 +31,40 @@
 		}
 	}
 
-	.content, .header {
+	& > div:nth-child(1) {
+		font-size: 16px;
+	}
+	& > div:nth-child(2) {
+		font-size: 22px;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
-		align-items: start;
+		justify-content: center;
+		height: 69px;
 
+	//.header {
+	//	display: flex;
+	//	flex-direction: column;
+	//	justify-content: space-between;
+	//	align-items: start;
+	//	height: 60px;0
+
+			//height: 60px;
+			//display: flex;
+			//flex-direction: column;
+			//justify-content: center;
+		}
+	//}
+
+	.content {
 		& > * {
 			width: 100%;
 		}
-	}
-
-	.header {
-		height: 132px;
-		& > div:nth-child(1) {
-			font-size: 16px;
+		& > div {
+			height: 4em;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
 		}
-		& > div:nth-child(2) {
-			font-size: 22px;
-		}
-		& > div:nth-child(3) {
-			height: 0;
-		}
-	}
-
-	.content {
-		height: 605px;
 	}
 
 }

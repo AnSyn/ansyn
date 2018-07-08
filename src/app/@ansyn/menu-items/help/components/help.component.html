@@ -1,11 +1,8 @@
 <carousel [interval]="0">
 	<slide *ngFor="let slide of const.SLIDES_DATA">
 		<div class="help-slide">
-			<div class="header">
 				<div>How to start exploring?</div>
 				<div>{{slide.text[0]}}</div>
-				<div>&nbsp;</div>
-			</div>
 			<div class="content">
 				<div>{{slide.text[1]}}</div>
 				<img [src]="img(slide.image[0])">

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
@@ -7,11 +7,11 @@ import {
 	EnableImageProcessing,
 	GoToAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
+	SetActiveOverlaysFootprintModeAction, SetAnnotationMode,
 	SetAnnotationsLayer,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing,
+	SetManualImageProcessing, SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow,
@@ -35,7 +35,7 @@ import { CaseGeoFilter, CaseMapState, ImageManualProcessArgs } from '@ansyn/core
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import {
 	IToolsState,
 	selectAnnotationLayer,
@@ -44,8 +44,9 @@ import {
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { isEqual } from 'lodash';
+import { differenceWith, isEqual } from 'lodash';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { map, withLatestFrom } from 'rxjs/internal/operators';
 
 
 @Injectable()
@@ -283,6 +284,52 @@ export class ToolsAppEffects {
 			});
 			updatedAnnotationsLayer.features.splice(featureIndex, 1);
 			return new SetAnnotationsLayer(updatedAnnotationsLayer);
+		});
+
+	/**
+	 * @type Effect
+	 * @name updateCaseFromTools$
+	 * @ofType ShowOverlaysFootprintAction
+	 * @dependencies map
+	 * @action SetMapsDataActionStore, DrawOverlaysOnMapTriggerAction
+	 */
+	@Effect()
+	updateCaseFromTools$: Observable<any> = this.actions$
+		.pipe(
+			ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
+				const mapsList = [...mapState.mapsList];
+				const activeMap = MapFacadeService.activeMap(mapState);
+				activeMap.data.overlayDisplayMode = action.payload;
+				return new SetMapsDataActionStore({ mapsList })
+
+			})
+		);
+
+	/**
+	 * @type Effect
+	 * @name clearActiveInteractions$
+	 * @ofType ClearActiveInteractionsAction
+	 * @action SetMeasureDistanceToolState?, SetAnnotationMode?, UpdateStatusFlagsAction?, SetPinLocationModeAction?
+	 */
+	@Effect()
+	clearActiveInteractions$ = this.actions$
+		.ofType<ClearActiveInteractionsAction>(CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS)
+		.mergeMap(action => {
+			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
+			let clearActions = [
+				new SetMeasureDistanceToolState(false),
+				new SetAnnotationMode(),
+				new UpdateGeoFilterStatus(),
+				new SetPinLocationModeAction(false)
+			];
+			// return defaultClearActions without skipClearFor
+			if (action.payload && action.payload.skipClearFor) {
+				clearActions = differenceWith(clearActions, action.payload.skipClearFor,
+					(act, actType) => act instanceof actType);
+			}
+			return clearActions;
 		});
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService,

@@ -4,8 +4,8 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
-import { empty, Observable, of } from 'rxjs';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Observable } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -30,7 +30,8 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { catchError, map } from 'rxjs/internal/operators';
+import { catchError, map, switchMap } from 'rxjs/internal/operators';
+import { EMPTY } from 'rxjs/internal/observable/empty';
 
 @Injectable()
 export class CasesEffects {
@@ -49,7 +50,7 @@ export class CasesEffects {
 		.switchMap((total: number) => {
 			return this.casesService.loadCases(total)
 				.map(cases => new AddCasesAction(cases))
-				.catch(() => empty());
+				.catch(() => EMPTY);
 		}).share();
 
 	/**
@@ -118,15 +119,17 @@ export class CasesEffects {
 	 */
 	@Effect()
 	onUpdateCaseBackend$: Observable< UpdateCaseBackendSuccessAction | any> = this.actions$
-		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
-		.mergeMap((action: UpdateCaseBackendAction) => {
-			return this.casesService.wrapUpdateCase(action.payload)
-				.pipe(
-					map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
-					catchError(() => empty())
-				)
+		.pipe(
+			ofType(CasesActionTypes.UPDATE_CASE_BACKEND),
+			switchMap((action: UpdateCaseBackendAction) => {
+				return this.casesService.updateCase(action.payload)
+					.pipe(
+						map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
+						catchError(() => EMPTY)
+					)
 
-		}).share();
+			})
+		);
 
 	/**
 	 * @type Effect

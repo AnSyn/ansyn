@@ -11,7 +11,8 @@ import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component';
 import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
-import { HttpLoaderFactory, MyMissingTranslationHandler } from '@ansyn/core/core.module';
+import { HttpLoaderFactory } from '@ansyn/core/core.module';
+import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation-logging';
 
 @NgModule({
 	imports: [
@@ -20,7 +21,7 @@ import { HttpLoaderFactory, MyMissingTranslationHandler } from '@ansyn/core/core
 		StoreModule.forFeature(overlaysFeatureKey, OverlayReducer),
 		EffectsModule.forFeature([OverlaysEffects]),
 		TranslateModule.forRoot({
-			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MyMissingTranslationHandler},
+			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MissingTranslationLogging},
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,

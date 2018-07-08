@@ -14,28 +14,15 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
-import { TranslateModule, TranslateLoader, MissingTranslationHandler, MissingTranslationHandlerParams } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateService } from '@ngx-translate/core';
-import { ILoggerConfig } from './models/logger-config.model';
-import { LoggerConfig } from './models/logger.config';
+import { MissingTranslationLogging } from './utils/missing-translation-logging';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http);
-}
-
-export class MyMissingTranslationHandler implements MissingTranslationHandler {
-	constructor(public logger: LoggerService,
-				@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
-
-	}
-
-	handle(params: MissingTranslationHandlerParams) {
-		this.logger.warn(`Cannot find ${params.key}`);
-		return params.key;
-	}
 }
 
 const coreComponents = [
@@ -52,7 +39,7 @@ const coreComponents = [
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
 		EffectsModule.forFeature([CoreEffects]),
 		TranslateModule.forRoot({
-			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MyMissingTranslationHandler},
+			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MissingTranslationLogging},
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,

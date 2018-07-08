@@ -1,11 +1,11 @@
 import {
-	ILayerState, selectDisplayAnnotationsLayer,
+	ILayerState,
+	selectDisplayAnnotationsLayer,
 	selectLayers
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { layersStateSelector } from '../../reducers/layers.reducer';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { groupBy } from 'lodash';
@@ -68,8 +68,7 @@ export class LayersManagerComponent implements OnInit, OnDestroy {
 
 	downloadAnnotations() {
 		const blob = new Blob([JSON.stringify(this.annotationsLayer)], { type: 'application/json' });
-		saveAs(blob, 'hello.json');
-		console.log('what?');
+		saveAs(blob, 'annotations.json');
 	}
 
 }

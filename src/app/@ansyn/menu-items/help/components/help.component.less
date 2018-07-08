@@ -1,6 +1,6 @@
 @import "core/less/common";
 
-@ansyn-help-footer-height: 40px;
+@ansyn-help-footer-height: 58px;
 @ansyn-help-elements-width-normal: 320px;
 @ansyn-help-elements-width-small: 160px;
 
@@ -8,6 +8,8 @@
 	&:extend(.default-menu-item);
 	color: white;
 	font-size: 14px;
+	display: flex;
+	flex-direction: column;
 }
 
 .help-slide {
@@ -19,62 +21,59 @@
 	flex-direction: column;
 	align-items: center;
 
-	.above-center {
-		height: 46%;
-		margin-bottom: 4%;
+	& > * {
+		width: @ansyn-help-elements-width-normal;
+	}
+
+	@media screen and (max-height: 850px) {
+		& > * {
+			width: @ansyn-help-elements-width-small;
+		}
+	}
+
+	.content, .header {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: start;
 
 		& > * {
-			width: @ansyn-help-elements-width-normal;
+			width: 100%;
 		}
+	}
 
-		@media screen and (max-height: 850px) {
-			& > * {
-				width: @ansyn-help-elements-width-small;
-			}
-		}
-
+	.header {
+		height: 132px;
 		& > div:nth-child(1) {
 			font-size: 16px;
 		}
-
 		& > div:nth-child(2) {
 			font-size: 22px;
 		}
+		& > div:nth-child(3) {
+			height: 0;
+		}
 	}
 
-	.from-center {
-		height: 43%;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: start;
-
-		& > * {
-			width: @ansyn-help-elements-width-normal;
-		}
-
-		@media screen and (max-height: 850px) {
-			& > * {
-				width: @ansyn-help-elements-width-small;
-			}
-		}
-
+	.content {
+		height: 605px;
 	}
+
+}
+
+hr {
+	width: 80%;
+	text-align: center;
+	border-color: fade(#ffffff, 50);
 }
 
 footer {
 	box-sizing: border-box;
-	padding: 0 10px;
-
-	hr {
-		width: 80%;
-		text-align: center;
-		border-color: fade(#ffffff, 50);
-	}
+	padding: 0 10%;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 
 	input {
 		transform: translateY(3px)

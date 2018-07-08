@@ -143,7 +143,7 @@ export class ContextMenuComponent implements OnInit {
 				protected actions$: Actions,
 				protected elem: ElementRef,
 				protected renderer: Renderer2,
-				protected translate: TranslateService,
+				public translate: TranslateService,
 				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}

@@ -5,6 +5,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ImageryRotationComponent', () => {
 	let component: ImageryRotationComponent;
@@ -13,6 +14,7 @@ describe('ImageryRotationComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				HttpClientModule,
 				CoreModule,
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
@@ -20,7 +22,7 @@ describe('ImageryRotationComponent', () => {
 			providers: [{ provide: LoggerConfig, useValue: {} }, ImageryCommunicatorService],
 			declarations: [
 				ImageryRotationComponent
-			],
+			]
 		}).compileComponents();
 	}));
 

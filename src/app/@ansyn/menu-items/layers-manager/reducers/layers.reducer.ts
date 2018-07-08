@@ -13,7 +13,7 @@ export interface ILayerState {
 
 export const initialLayersState: ILayerState = {
 	layers: [],
-	displayAnnotationsLayer: false,
+	displayAnnotationsLayer: true,
 	annotationsLayer: null,
 	selectedLayersIds: []
 };
@@ -42,6 +42,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 }
 
-export const selectLayers = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.layers);
-export const selectDisplayAnnotationsLayer = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.displayAnnotationsLayer);
-export const selectSelectedLayersIds = createSelector(layersStateSelector, (layersState: ILayerState) => layersState.selectedLayersIds);
+export const layersStateOrInitial = createSelector(layersStateSelector, (layersState: ILayerState) => layersState || initialLayersState);
+export const selectLayers = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.layers);
+export const selectDisplayAnnotationsLayer = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.displayAnnotationsLayer);
+export const selectSelectedLayersIds = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.selectedLayersIds);

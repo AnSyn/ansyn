@@ -1,5 +1,4 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-
 import { OverlayOverviewComponent } from './overlay-overview.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -8,6 +7,7 @@ import { SetHoveredOverlayAction } from '@ansyn/overlays/actions/overlays.action
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { By } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
@@ -18,6 +18,7 @@ describe('OverlayOverviewComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				TranslateModule.forRoot(),
 				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
 				EffectsModule.forRoot([])
 			],

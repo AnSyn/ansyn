@@ -14,6 +14,15 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MissingTranslationLogging } from './utils/missing-translation-logging';
+
+
+export function HttpLoaderFactory(http: HttpClient) {
+	return new TranslateHttpLoader(http);
+}
 
 const coreComponents = [
 	AnsynCheckboxComponent,
@@ -28,6 +37,15 @@ const coreComponents = [
 		CommonModule,
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
 		EffectsModule.forFeature([CoreEffects]),
+		TranslateModule.forRoot({
+			missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogging },
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			},
+			useDefaultLang: true
+		}),
 		AlertsModule
 	],
 	providers: [
@@ -41,5 +59,7 @@ const coreComponents = [
 })
 
 export class CoreModule {
-
+	constructor(public translate: TranslateService) {
+		translate.setDefaultLang('sns');
+	}
 }

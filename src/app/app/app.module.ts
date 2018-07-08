@@ -1,4 +1,4 @@
-import { enableProdMode, ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AnsynModule } from '@ansyn/ansyn/ansyn.module';

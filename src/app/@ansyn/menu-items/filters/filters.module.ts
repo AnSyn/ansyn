@@ -5,7 +5,7 @@ import { IFiltersConfig } from './models/filters-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FiltersCollectionComponent } from './components/filters-collection/filters-collection.component';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule, HttpLoaderFactory } from '@ansyn/core/core.module';
 import { FilterContainerComponent } from './components/filter-container/filter-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EnumFilterContainerComponent } from './components/enum-filter-container/enum-filter-container.component';
@@ -19,6 +19,9 @@ import { SliderFilterContainerComponent } from './components/slider-filter-conta
 import { BooleanFilterContainerComponent } from './components/boolean-filter-container/boolean-filter-container.component';
 import { ShowMorePipe } from './pipes/show-more.pipe';
 import { FilterCounterComponent } from './components/filter-counter/filter-counter.component';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { MissingTranslationLogging } from '@ansyn/core/utils/missing-translation-logging';
 
 @NgModule({
 	imports: [
@@ -28,7 +31,16 @@ import { FilterCounterComponent } from './components/filter-counter/filter-count
 		StoreModule.forFeature(filtersFeatureKey, FiltersReducer),
 		SliderModule,
 		FormsModule,
-		EffectsModule.forFeature([FiltersEffects])
+		EffectsModule.forFeature([FiltersEffects]),
+		TranslateModule.forRoot({
+			missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogging },
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			},
+			useDefaultLang: true
+		})
 	],
 	declarations: [
 		FiltersCollectionComponent,

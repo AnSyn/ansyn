@@ -6,11 +6,13 @@ import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MapEffects } from '../../effects/map.effects';
 import { EventEmitter } from '@angular/core';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
-import { mapFacadeConfig,  } from '../../models/map-facade.config';
+import { mapFacadeConfig  } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
-import { statusBarFeatureKey, StatusBarReducer } from "@ansyn/status-bar/reducers/status-bar.reducer";
+import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
+import { HttpClientModule } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -19,7 +21,7 @@ describe('ContextMenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [statusBarFeatureKey]: StatusBarReducer, [coreFeatureKey]: CoreReducer }), EffectsModule.forRoot([])],
+			imports: [HttpClientModule, TranslateModule.forRoot(), FormsModule, StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [statusBarFeatureKey]: StatusBarReducer, [coreFeatureKey]: CoreReducer }), EffectsModule.forRoot([])],
 			declarations: [ContextMenuComponent],
 			providers: [{
 				provide: mapFacadeConfig,

@@ -3,7 +3,7 @@
 		<img [src]="overlay?.thumbnailUrl || ''">
 	</main>
 	<footer>
-		<div>{{overlay?.sensorName}}</div>
+		<div dir="rtl">{{overlay?.sensorName | translate}}</div>
 		<div>{{formattedTime}}</div>
 	</footer>
 </div>

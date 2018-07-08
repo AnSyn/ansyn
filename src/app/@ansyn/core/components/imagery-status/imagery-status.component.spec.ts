@@ -6,6 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '../../models/logger.config';
 import { CoreModule } from '../../core.module';
 import { ALERTS } from '../../alerts/alerts.model';
+import { HttpClientModule } from '@angular/common/http';
 
 
 describe('ImageryStatusComponent', () => {
@@ -14,7 +15,7 @@ describe('ImageryStatusComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CoreModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
+			imports: [CoreModule, HttpClientModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
 			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: ALERTS, useValue: [] }]
 		}).compileComponents();
 	}));

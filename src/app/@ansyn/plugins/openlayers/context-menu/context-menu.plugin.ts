@@ -35,7 +35,6 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			map(({ payload }) => payload),
 			this.isActiveOperators,
 			map(id => new DisplayOverlayFromStoreAction({ id })),
-			tap(console.log),
 			tap((action) => this.store$.dispatch(action))
 		);
 

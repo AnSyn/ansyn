@@ -146,7 +146,6 @@ export class ContextMenuComponent implements OnInit {
 				protected translate: TranslateService,
 				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
-		translate.setDefaultLang('sns');
 	}
 
 	pluckFilterField(overlays: Overlay[]) {

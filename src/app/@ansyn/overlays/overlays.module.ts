@@ -10,8 +10,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpLoaderFactory } from '@ansyn/core/core.module';
+import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
+import { HttpLoaderFactory, MyMissingTranslationHandler } from '@ansyn/core/core.module';
 
 @NgModule({
 	imports: [
@@ -20,11 +20,13 @@ import { HttpLoaderFactory } from '@ansyn/core/core.module';
 		StoreModule.forFeature(overlaysFeatureKey, OverlayReducer),
 		EffectsModule.forFeature([OverlaysEffects]),
 		TranslateModule.forRoot({
+			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MyMissingTranslationHandler},
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,
 				deps: [HttpClient]
-			}
+			},
+			useDefaultLang: true
 		})
 	],
 

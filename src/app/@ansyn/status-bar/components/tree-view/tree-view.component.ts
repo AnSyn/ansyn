@@ -49,7 +49,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				public store: Store<IStatusBarState>,
 				private translate: TranslateService) {
-		translate.setDefaultLang('sns');
 
 		this.dataFilters.forEach((f) => {
 			translate.get(f.text, {value: 'sns'}).subscribe((res: string) => {

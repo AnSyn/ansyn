@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
-import { CoreModule, HttpLoaderFactory } from '@ansyn/core/core.module';
+import { CoreModule, HttpLoaderFactory, MyMissingTranslationHandler } from '@ansyn/core/core.module';
 import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';
@@ -16,7 +16,7 @@ import { SelectedCaseBarComponent } from './components/selected-case-bar/selecte
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { HttpClient } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, MissingTranslationHandler } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
@@ -25,11 +25,13 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 		CoreModule,
 		TreeviewModule.forRoot(),
 		TranslateModule.forRoot({
+			missingTranslationHandler: {provide: MissingTranslationHandler, useClass: MyMissingTranslationHandler},
 			loader: {
 				provide: TranslateLoader,
 				useFactory: HttpLoaderFactory,
-				deps: [HttpClient]
-			}
+				deps: [HttpClient],
+			},
+			useDefaultLang: true
 		}),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],

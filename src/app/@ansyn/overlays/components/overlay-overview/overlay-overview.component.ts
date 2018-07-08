@@ -43,7 +43,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		protected el: ElementRef,
 		protected translate: TranslateService
 	) {
-		translate.setDefaultLang('sns');
 	}
 
 	ngOnInit() {

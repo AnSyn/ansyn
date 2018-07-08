@@ -70,7 +70,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	constructor(protected store$: Store<any>,
 				@Inject(ALERTS) public alerts: IAlert[],
 				protected translate: TranslateService) {
-		translate.setDefaultLang('sns');
 	}
 
 	ngOnInit(): void {

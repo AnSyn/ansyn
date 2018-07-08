@@ -14,11 +14,6 @@ export class EnumFilterContainerComponent {
 	@Input() isLongFiltersList: boolean;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
 
-	constructor(private translate: TranslateService) {
-		translate.setDefaultLang('sns');
-	}
-
-
 	onInputClicked(key: string) {
 		const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
 		clonedMetadata.updateMetadata(key);

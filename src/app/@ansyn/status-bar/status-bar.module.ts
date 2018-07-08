@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule, HttpLoaderFactory } from '@ansyn/core/core.module';
 import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';
@@ -16,12 +16,7 @@ import { SelectedCaseBarComponent } from './components/selected-case-bar/selecte
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-
-export function HttpLoaderFactory(http: HttpClient) {
-	return new TranslateHttpLoader(http);
-}
 
 @NgModule({
 	imports: [

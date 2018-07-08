@@ -7,6 +7,7 @@ import { Overlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -39,8 +40,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public store$: Store<IOverlaysState>,
-		protected el: ElementRef
+		protected el: ElementRef,
+		protected translate: TranslateService
 	) {
+		translate.setDefaultLang('sns');
 	}
 
 	ngOnInit() {

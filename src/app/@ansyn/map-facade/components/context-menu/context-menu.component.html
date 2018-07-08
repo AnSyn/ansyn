@@ -19,8 +19,8 @@
 				<button
 					*ngFor="let filter of this[data.subList]"
 					(mousedown)="isClick($event) && data.action($event, filter)"
-					[attr.tooltip-value]="filter">
-					<span>{{getSensorType(filter)}}</span>
+					[attr.tooltip-value]="filter | translate">
+					<span dir="auto">{{getSensorType(filter) | translate}}</span>
 				</button>
 			</div>
 		</button>

@@ -15,14 +15,23 @@ import { ImageryRotationComponent } from './components/imagery-rotation/imagery-
 import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
 import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/imagery-tile-progress/imagery-tile-progress.component';
 import { OverlaySourceTypeNoticeComponent } from '@ansyn/map-facade/components/overlay-source-type-notice/overlay-source-type-notice.component';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule, HttpLoaderFactory } from '@ansyn/core/core.module';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 
 @NgModule({
 	imports: [
 		StoreModule.forFeature(mapFeatureKey, MapReducer),
 		EffectsModule.forFeature([MapEffects]),
+		TranslateModule.forRoot({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			}
+		}),
 		ImageryModule,
 		CommonModule,
 		CoreModule,

@@ -19,6 +19,8 @@ import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
 import { Actions } from '@ngrx/effects';
 import { selectRegion } from '@ansyn/core/reducers/core.reducer';
+import { TranslateService } from '@ngx-translate/core';
+
 
 export interface OverlayButton {
 	name: string;
@@ -141,8 +143,10 @@ export class ContextMenuComponent implements OnInit {
 				protected actions$: Actions,
 				protected elem: ElementRef,
 				protected renderer: Renderer2,
+				protected translate: TranslateService,
 				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
+		translate.setDefaultLang('sns');
 	}
 
 	pluckFilterField(overlays: Overlay[]) {

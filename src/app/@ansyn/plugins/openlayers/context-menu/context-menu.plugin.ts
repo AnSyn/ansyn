@@ -34,7 +34,9 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY),
 			map(({ payload }) => payload),
 			this.isActiveOperators,
-			tap(id => this.store$.dispatch(new DisplayOverlayFromStoreAction({ id })))
+			map(id => new DisplayOverlayFromStoreAction({ id })),
+			tap(console.log),
+			tap((action) => this.store$.dispatch(action))
 		);
 
 	contextMenuTrigger$ = () => fromEvent(this.containerElem, 'contextmenu')
@@ -86,9 +88,3 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			.take(1);
 	}
 }
-
-// it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
-// 	actions = hot('--a--', { a: new ContextMenuDisplayAction('fakeId') });
-// 	const expectedResults = cold('--b--', { b: new DisplayOverlayFromStoreAction({ id: 'fakeId' }) });
-// 	expect(contextMenuAppEffects.onContextMenuDisplayAction$).toBeObservable(expectedResults);
-// });

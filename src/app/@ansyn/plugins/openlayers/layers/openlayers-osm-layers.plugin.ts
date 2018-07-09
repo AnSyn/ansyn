@@ -10,7 +10,7 @@ import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
-import { distinctUntilChanged } from 'rxjs/internal/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 
 
@@ -25,6 +25,7 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 		filter(Boolean),
 		map((map: CaseMapState) => !map.flags.displayLayers),
 		distinctUntilChanged(),
+		debounceTime(500),
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 

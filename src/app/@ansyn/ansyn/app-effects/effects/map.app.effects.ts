@@ -50,6 +50,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
 import { BaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
+import { debounceTime } from 'rxjs/internal/operators';
 
 @Injectable()
 export class MapAppEffects {
@@ -66,6 +67,7 @@ export class MapAppEffects {
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
 		.pipe(
 			filter((data) => this.displayShouldSwitch(data)),
+			debounceTime(50),
 			switchMap(this.onDisplayOverlay.bind(this))
 		);
 

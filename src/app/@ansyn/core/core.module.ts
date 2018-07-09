@@ -54,7 +54,7 @@ const coreComponents = [
 		ErrorHandlerService,
 		StorageService
 	],
-	exports: coreComponents,
+	exports: [...coreComponents, TranslateModule],
 	declarations: coreComponents
 })
 

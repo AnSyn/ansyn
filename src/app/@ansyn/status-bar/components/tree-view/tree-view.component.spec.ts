@@ -17,6 +17,7 @@ import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -27,7 +28,7 @@ describe('TreeViewComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [TreeViewComponent],
+			declarations: [TreeViewComponent, SliderCheckboxComponent],
 			imports: [
 				TranslateModule.forRoot(),
 				StoreModule.forRoot({}),

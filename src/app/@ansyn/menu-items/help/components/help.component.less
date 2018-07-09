@@ -1,22 +1,27 @@
 @import "core/less/common";
 
 @ansyn-help-footer-height: 58px;
+@ansyn-help-slide-height: calc(~"100vh - @{ansyn-help-footer-height}");
+@ansyn-help-slide-padding-top: calc(~"@{ansyn-help-slide-height} * 0.022");
 @ansyn-help-image-original-width-px: 320px;
-@ansyn-help-image-original-width-vh: 33.5vh;
-@ansyn-help-header-vertical-margin: 3.3vh;
+@ansyn-help-image-original-width-vh: calc(~"@{ansyn-help-slide-height} * 0.36");
+@ansyn-help-header-vertical-margin: calc(~"@{ansyn-help-slide-height} * 0.044");
+@ansyn-help-font-size-default: calc(~"@{ansyn-help-slide-height} * 0.016");
+@ansyn-help-font-size-head1: calc(~"@{ansyn-help-slide-height} * 0.019");
+@ansyn-help-font-size-head2: calc(~"@{ansyn-help-slide-height} * 0.025");
 
 :host {
 	&:extend(.default-menu-item);
 	color: white;
-	font-size: 1.8vh;
+	font-size: @ansyn-help-font-size-default;
 	display: flex;
 	flex-direction: column;
 }
 
 .help-slide {
 	box-sizing: border-box;
-	height: calc(~"100vh - @{ansyn-help-footer-height}");
-	padding: 3.5% 1vh 0 1vh;
+	height: @ansyn-help-slide-height;
+	padding: @ansyn-help-slide-padding-top 1vh 0 1vh;
 	display: flex;
 	justify-content: stretch;
 	flex-direction: column;
@@ -27,42 +32,37 @@
 	}
 
 	.header1 {
-		font-size: 2.1vh;
+		font-size: @ansyn-help-font-size-head1;
 	}
 
 	.header2 {
-		font-size: 3.0vh;
+		font-size: @ansyn-help-font-size-head2;
 		margin: @ansyn-help-header-vertical-margin 0;
 	}
 
-	.content {
-		& > * {
-			width: 100%;
+	img {
+		width: @ansyn-help-image-original-width-vh;
+	}
+	.img-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: start;
+	}
+	.fixed-height-text {
+		display: flex;
+		flex-direction: column;
+		&.topText {
+			height: 2em;
+			justify-content: flex-start;
 		}
-		img {
-			width: @ansyn-help-image-original-width-vh;
-		}
-		.img-container {
-			display: flex;
-			flex-direction: row;
+		&.midText {
+			height: 3em;
 			justify-content: center;
-			align-items: start;
 		}
-		.text {
-			display: flex;
-			flex-direction: column;
-			&.topText {
-				height: 2em;
-				justify-content: flex-start;
-			}
-			&.midText {
-				height: 3em;
-				justify-content: center;
-			}
-		}
-		.bottomText {
-			margin-top: 1em;
-		}
+	}
+	.bottomText {
+		margin-top: 1em;
 	}
 }
 

@@ -25,7 +25,7 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 		filter(Boolean),
 		map((map: CaseMapState) => !map.flags.displayLayers),
 		distinctUntilChanged(),
-		debounceTime(500),
+		debounceTime(50),
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 

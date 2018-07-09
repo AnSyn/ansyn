@@ -1,39 +1,38 @@
 @import "core/less/common";
 
 @ansyn-help-footer-height: 58px;
-@ansyn-help-image-original-width: 320px;
+@ansyn-help-image-original-width-px: 320px;
+@ansyn-help-image-original-width-vh: 33.5vh;
+@ansyn-help-header-vertical-margin: 3.3vh;
 
 :host {
 	&:extend(.default-menu-item);
 	color: white;
-	font-size: 14px;
+	font-size: 1.8vh;
 	display: flex;
 	flex-direction: column;
-	--text-vertical-margin: 1.5vh;
-	--header-vertical-margin: 3.7vh;
-	--image-width: 100%;
 }
 
 .help-slide {
 	box-sizing: border-box;
 	height: calc(~"100vh - @{ansyn-help-footer-height}");
-	padding: 20px 10px 0 10px;
+	padding: 3.5% 1vh 0 1vh;
 	display: flex;
 	justify-content: stretch;
 	flex-direction: column;
 	align-items: center;
 
 	& > * {
-		width: @ansyn-help-image-original-width;
+		width: @ansyn-help-image-original-width-px;
 	}
 
 	.header1 {
-		font-size: 16px;
+		font-size: 2.1vh;
 	}
 
 	.header2 {
-		font-size: 22px;
-		margin: var(--header-vertical-margin) 0;
+		font-size: 3.0vh;
+		margin: @ansyn-help-header-vertical-margin 0;
 	}
 
 	.content {
@@ -41,7 +40,7 @@
 			width: 100%;
 		}
 		img {
-			width: var(--image-width);
+			width: @ansyn-help-image-original-width-vh;
 		}
 		.img-container {
 			display: flex;
@@ -49,20 +48,21 @@
 			justify-content: center;
 			align-items: start;
 		}
-		.topText {
-			margin: 0 0 var(--text-vertical-margin) 0;
-		}
-		.midText {
-			margin: var(--text-vertical-margin) 0;
+		.text {
+			display: flex;
+			flex-direction: column;
+			&.topText {
+				height: 2em;
+				justify-content: flex-start;
+			}
+			&.midText {
+				height: 3em;
+				justify-content: center;
+			}
 		}
 		.bottomText {
-			margin: var(--text-vertical-margin) 0 0 0;
+			margin-top: 1em;
 		}
-	}
-
-	@media screen and (max-height: 850px) {
-		--header-vertical-margin: 2.1vh;
-		--image-width: 160px;
 	}
 }
 

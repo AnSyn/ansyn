@@ -142,15 +142,6 @@ export class CasesService {
 			)
 	}
 
-	wrapUpdateCase(selectedCase: Case): Observable<StoredEntity<CasePreview, DilutedCaseState>> {
-		return of(Date.now())
-			.pipe(
-				debounceTime(this.config.updateCaseDebounceTime),
-				mergeMap(() => this.updateCase(selectedCase)),
-				catchError(err =>  this.errorHandlerService.httpErrorHandle(err, 'Failed to update case'))
-			);
-	}
-
 	updateCase(selectedCase: Case): Observable<StoredEntity<CasePreview, DilutedCaseState>> {
 		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase)).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);

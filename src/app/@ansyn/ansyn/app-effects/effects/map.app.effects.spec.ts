@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import {
 	ActiveMapChangedAction,
-	ImageryCreatedAction,
-	MapInstanceChangedAction,
+	ImageryCreatedAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
@@ -27,7 +26,7 @@ import {
 	MapReducer,
 	mapStateSelector
 } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetMapGeoEnabledModeToolsActionStore, StartMouseShadow } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -214,7 +213,6 @@ describe('MapAppEffects', () => {
 					provide: CasesService,
 					useValue: {
 						updateCase: () => null,
-						wrapUpdateCase: () => null,
 						getOverlaysMarkup: () => null
 					}
 				}

@@ -30,7 +30,7 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { catchError, map, switchMap } from 'rxjs/internal/operators';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 
 @Injectable()
@@ -121,6 +121,7 @@ export class CasesEffects {
 	onUpdateCaseBackend$: Observable< UpdateCaseBackendSuccessAction | any> = this.actions$
 		.pipe(
 			ofType(CasesActionTypes.UPDATE_CASE_BACKEND),
+			debounceTime(this.casesService.config.updateCaseDebounceTime),
 			switchMap((action: UpdateCaseBackendAction) => {
 				return this.casesService.updateCase(action.payload)
 					.pipe(

@@ -7,7 +7,7 @@ import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/sel
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersIds
+	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -108,7 +108,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijkl)--', {
+			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
@@ -116,11 +116,10 @@ describe('SelectCaseAppEffects', () => {
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
 				f: new BeginLayerCollectionLoadAction(),
 				g: new SetAnnotationsLayer(layers.annotationsLayer),
-				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
-				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				j: new UpdateFacetsAction(facets),
-				k: new UpdateSelectedLayersIds([]),
-				l: new SetContextParamsAction({ contextEntities })
+				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				i: new UpdateFacetsAction(facets),
+				j: new UpdateSelectedLayersIds([]),
+				k: new SetContextParamsAction({ contextEntities })
 
 		});
 

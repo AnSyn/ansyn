@@ -12,7 +12,6 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -66,7 +65,7 @@ export class SelectCaseAppEffects {
 			time.to = new Date(time.to);
 		}
 		// layers
-		const { annotationsLayer, displayAnnotationsLayer, activeLayersIds } = state.layers;
+		const { annotationsLayer, activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
 		return [
@@ -77,7 +76,6 @@ export class SelectCaseAppEffects {
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction(),
 			new SetAnnotationsLayer(annotationsLayer),
-			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),

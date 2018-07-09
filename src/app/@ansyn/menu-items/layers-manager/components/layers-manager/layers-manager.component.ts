@@ -6,13 +6,13 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { groupBy } from 'lodash';
 import { saveAs } from 'file-saver';
 import { map } from 'rxjs/internal/operators';
 import { selectAnnotationLayer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { tap } from 'rxjs/operators';
+import { ILayerCollection } from '../layers-collection/layer-collection.component';
 
 
 @Component({
@@ -29,9 +29,25 @@ export class LayersManagerComponent implements OnInit, OnDestroy {
 	public layers$: Observable<any> = this.store
 		.pipe(
 			select(selectLayers),
-			map((layers: ILayer[]) => {
+			map((layers) => {
+				const annotations: ILayer = {
+					id: LayerType.annotation,
+					creationTime: new Date(),
+					layerPluginType: layerPluginType.Annotations,
+					name: 'Annotation',
+					type: LayerType.annotation
+				};
+				return [annotations, ...layers]
+			}),
+			map((layers: ILayer[]): ILayerCollection[] => {
 				const typeGroupedLayers = groupBy(layers, l => l.type);
-				return Object.keys(typeGroupedLayers).map(layer => typeGroupedLayers[layer]);
+				return Object.keys(typeGroupedLayers)
+					.map((name): ILayerCollection => ({
+						name,
+						onDownload: name === LayerType.annotation ? this.downloadAnnotations.bind(this) : null,
+						data: typeGroupedLayers[name],
+						hideArrow: name === LayerType.annotation
+					}))
 			})
 		);
 
@@ -60,10 +76,6 @@ export class LayersManagerComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.subscriptions.forEach((sub) => sub.unsubscribe());
-	}
-
-	annotationLayerClick() {
-		this.store.dispatch(new ToggleDisplayAnnotationsLayer(!this.annotationLayerChecked));
 	}
 
 	downloadAnnotations() {

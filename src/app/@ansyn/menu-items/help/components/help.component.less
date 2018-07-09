@@ -1,8 +1,7 @@
 @import "core/less/common";
 
 @ansyn-help-footer-height: 58px;
-@ansyn-help-elements-width-normal: 320px;
-@ansyn-help-elements-width-small: 160px;
+@ansyn-help-image-original-width: 320px;
 
 :host {
 	&:extend(.default-menu-item);
@@ -10,6 +9,9 @@
 	font-size: 14px;
 	display: flex;
 	flex-direction: column;
+	--text-vertical-margin: 1.5vh;
+	--header-vertical-margin: 3.7vh;
+	--image-width: 100%;
 }
 
 .help-slide {
@@ -22,38 +24,46 @@
 	align-items: center;
 
 	& > * {
-		width: @ansyn-help-elements-width-normal;
+		width: @ansyn-help-image-original-width;
 	}
 
-	@media screen and (max-height: 850px) {
-		& > * {
-			width: @ansyn-help-elements-width-small;
-		}
-	}
-
-	& > div:nth-child(1) {
+	.header1 {
 		font-size: 16px;
 	}
-	& > div:nth-child(2) {
+
+	.header2 {
 		font-size: 22px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		height: 69px;
+		margin: var(--header-vertical-margin) 0;
 	}
 
 	.content {
 		& > * {
 			width: 100%;
 		}
-		& > div {
-			height: 4em;
+		img {
+			width: var(--image-width);
+		}
+		.img-container {
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 			justify-content: center;
+			align-items: start;
+		}
+		.topText {
+			margin: 0 0 var(--text-vertical-margin) 0;
+		}
+		.midText {
+			margin: var(--text-vertical-margin) 0;
+		}
+		.bottomText {
+			margin: var(--text-vertical-margin) 0 0 0;
 		}
 	}
 
+	@media screen and (max-height: 850px) {
+		--header-vertical-margin: 2.1vh;
+		--image-width: 160px;
+	}
 }
 
 hr {
@@ -88,12 +98,15 @@ footer {
 /deep/ .carousel-control-next-icon {
 	background-image: url(/assets/icons/help/help_next.svg);
 }
+
 /deep/ .carousel-control-prev-icon {
 	background-image: url(/assets/icons/help/help_prev.svg);
 }
+
 /deep/ .carousel-control-prev,
 /deep/ .carousel-control-next {
 	opacity: 0.8;
 	&:hover, &:focus {
 		opacity: 1.0;
-	}}
+	}
+}

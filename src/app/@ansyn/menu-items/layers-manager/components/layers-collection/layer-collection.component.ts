@@ -10,7 +10,7 @@ export interface ILayerCollection {
 	name: string;
 	data: ILayer[];
 	hideArrow?: boolean;
-	onDownload: () => {}
+	onDownload?: () => void
 }
 
 @Component({

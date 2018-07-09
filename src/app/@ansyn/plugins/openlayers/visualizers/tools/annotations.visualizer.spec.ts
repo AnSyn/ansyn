@@ -4,13 +4,14 @@ import { StoreModule } from '@ngrx/store';
 import olColor from 'ol/color';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { of } from 'rxjs/index';
+import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [AnnotationsVisualizer, { provide: ProjectionService, useValue: { projectCollectionAccurately: of(true) } }],
+			providers: [AnnotationsVisualizer, { provide: ProjectionService, useValue: { projectCollectionAccurately: of(true) } }, { provide: toolsConfig, useValue: { Annotations: { displayId: true }} }],
 			imports: [StoreModule.forRoot({})]
 		});
 	});

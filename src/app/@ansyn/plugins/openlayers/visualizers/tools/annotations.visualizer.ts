@@ -39,10 +39,12 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { Inject } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, ProjectionService],
+	deps: [Store, ProjectionService, toolsConfig],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -151,7 +153,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		);
 	}
 
-	constructor(public store$: Store<any>, protected projectionService: ProjectionService) {
+	constructor(public store$: Store<any>, protected projectionService: ProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
 
 		super(null, {
 			initial: {
@@ -170,6 +172,26 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
+
+		//  0 or 1
+		if (Number(toolsConfig.Annotations.displayId)) {
+			this.updateStyle({
+				initial: {
+					label: {
+						font: '12px Calibri,sans-serif',
+						fill: {
+							color: '#fff'
+						},
+						stroke: {
+							color: '#000',
+							width: 3
+						},
+						text: (feature) => feature.getId() || ''
+					}
+				}
+			});
+		}
+
 	}
 
 	resetInteractions(): void {

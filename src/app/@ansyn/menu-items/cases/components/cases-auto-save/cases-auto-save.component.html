@@ -1,5 +1,1 @@
-<label class="switch">
-	<span class="slider-text">&nbsp;</span>
-	<input class="auto-save" [id]="'autoSave' + currentCase?.id" [checked]="currentCase?.autoSave" (change)="onChange($event.target.checked)" type="checkbox"/>
-	<span class="slider round"></span>
-</label>
+<ansyn-slider-checkbox [checked]="currentCase?.autoSave" (checkedChange)="onChange($event.target.checked)"></ansyn-slider-checkbox>

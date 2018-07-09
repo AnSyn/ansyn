@@ -18,6 +18,7 @@ import { MissingTranslationHandler, TranslateLoader, TranslateModule, TranslateS
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MissingTranslationLogging } from './utils/missing-translation-logging';
+import { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -29,7 +30,8 @@ const coreComponents = [
 	ImageryStatusComponent,
 	PlaceholderComponent,
 	ToastComponent,
-	WelcomeNotificationComponent
+	WelcomeNotificationComponent,
+	SliderCheckboxComponent
 ];
 
 @NgModule({

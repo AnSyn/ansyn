@@ -89,11 +89,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		cb(curr);
 	}
 
-	updateFiltersTreeActivation(activate: boolean): void {
+	updateFiltersTreeActivation(disabled: boolean = !this.dataInputFiltersActive): void {
 		this.dataInputFiltersItems.forEach((dataInputItem) => {
-			dataInputItem.disabled = activate;
+			dataInputItem.disabled = disabled;
 			dataInputItem.children.forEach((sensor) => {
-				sensor.disabled = activate;
+				sensor.disabled = disabled;
 			});
 		});
 	}
@@ -146,7 +146,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.setSubscribers();
-		this.updateFiltersTreeActivation(!this.dataInputFiltersActive);
+		this.updateFiltersTreeActivation();
 	}
 
 	ngOnDestroy(): void {
@@ -159,6 +159,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	activateDataInputFilters($event) {
 		this.dataInputFiltersActive = !this.dataInputFiltersActive;
-		this.updateFiltersTreeActivation(!this.dataInputFiltersActive);
+		this.updateFiltersTreeActivation();
 	}
 }

@@ -4,6 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Case } from '@ansyn/core/models/case.model';
+import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
 
 describe('CasesAutoSaveComponent', () => {
 	let component: CasesAutoSaveComponent;
@@ -19,7 +20,7 @@ describe('CasesAutoSaveComponent', () => {
 			imports: [
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer })
 			],
-			declarations: [CasesAutoSaveComponent]
+			declarations: [CasesAutoSaveComponent, SliderCheckboxComponent]
 		})
 			.compileComponents();
 	}));

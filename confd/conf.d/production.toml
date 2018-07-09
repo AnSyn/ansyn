@@ -13,5 +13,5 @@ keys = [
     "/ansyn/menu/mode",
     "/ansyn/menu/forkme",
     "/ansyn/imagery/mapsource",
-    "ansyn/tools/displayid"
+    "/ansyn/tools/displayid"
 ]

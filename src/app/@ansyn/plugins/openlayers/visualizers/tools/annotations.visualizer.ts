@@ -186,7 +186,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 							color: '#000',
 							width: 3
 						},
-						text: (feature) => feature.getId() || '';
+						text: (feature) => feature.getId() || ''
 					}
 				}
 			});

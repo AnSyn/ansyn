@@ -9,8 +9,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
-import { OverlayOverviewComponent } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component';
 import { CoreModule } from '@ansyn/core/core.module';
+import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';
 
 @NgModule({
 	imports: [

@@ -1,13 +1,13 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 import { TranslateService } from '@ngx-translate/core';
+import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
+import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
 
 @Component({
 	selector: 'ansyn-overlay-overview',

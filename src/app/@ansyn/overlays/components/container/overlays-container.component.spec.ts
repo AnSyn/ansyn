@@ -1,21 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlaysContainerComponent } from './overlays-container.component';
-import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
+import { OverlaysService } from '../../services/overlays.service';
 import { Observable } from 'rxjs/Rx';
 import { DebugElement } from '@angular/core';
-
 import { Overlay } from '../../models/overlay.model';
 import { OverlaysEffects } from '../../effects/overlays.effects';
-
 import { State, Store, StoreModule } from '@ngrx/store';
-
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '../../actions/overlays.actions';
-import { Actions } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { BaseOverlaySourceProvider, IFetchParams } from '../../models//base-overlay-source-provider.model';
 import { createStore, StoreFixture } from '@ansyn/core/test/mock-store';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 

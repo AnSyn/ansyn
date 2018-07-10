@@ -6,12 +6,12 @@ import { selection } from 'd3';
 import * as d3 from 'd3/build/d3';
 import eventDrops from '@ansyn/event-drops';
 import { OverlaysService } from '../../services/overlays.service';
-import { OverlayDrop, selectDrops } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	IOverlaysState, MarkUpClass, MarkUpData, MarkUpTypes, overlaysStateSelector, selectDropMarkup, selectTimelineRange,
+	IOverlaysState, MarkUpClass, MarkUpData, MarkUpTypes, OverlayDrop, overlaysStateSelector, selectDropMarkup,
+	selectDrops,
+	selectTimelineRange,
 	TimelineRange
 } from '../../reducers/overlays.reducer';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
@@ -21,9 +21,10 @@ import {
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { schemeCategory10 } from 'd3-scale';
-import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { isEqual } from 'lodash';
+import { ExtendMap } from '../../reducers/extendedMap.class';
+import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -132,7 +133,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDrops),
 			distinctUntilChanged(isEqual),
-			filter(Boolean),
 			tap(drops => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
 			tap(drops => {
 				if (drops.length >= 1) {
@@ -144,7 +144,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	private subscribers: Subscription[];
 
-	onresize$ = fromEvent(window, 'resize')
+	onResize$ = fromEvent(window, 'resize')
 		.pipe(
 			withLatestFrom(this.store$.select(selectDrops)),
 			tap(([event, drops]) => this.initEventDropsSequence(drops))
@@ -161,7 +161,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			this.dropsMarkUp$.subscribe(),
 			this.timeLineRange$.subscribe(),
 			this.redraw$.subscribe(),
-			this.onresize$.subscribe()
+			this.onResize$.subscribe()
 		];
 	}
 

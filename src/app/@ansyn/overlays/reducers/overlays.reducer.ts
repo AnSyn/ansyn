@@ -4,7 +4,7 @@ import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { ExtendMap } from './extendedMap.class';
 
 export interface TimelineRange {
 	start: Date;

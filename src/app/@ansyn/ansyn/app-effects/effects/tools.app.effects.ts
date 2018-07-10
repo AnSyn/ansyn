@@ -157,6 +157,8 @@ export class ToolsAppEffects {
 	@Effect()
 	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
+		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId))
+		.filter(communicator => Boolean(communicator))
 		.map(() => new DisableImageProcessing());
 
 	/**

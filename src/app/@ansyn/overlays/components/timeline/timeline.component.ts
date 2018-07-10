@@ -100,7 +100,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	private chart: any;
 	private element: any;
-	private dblClick: number;
 	private oldActiveId: string;
 
 	redraw$ = this.actions$
@@ -109,8 +108,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			withLatestFrom(this.store$.select(selectDrops)),
 			tap(([action, drops]) => this.initEventDropsSequence(drops))
 		);
-
-	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
 
 	timeLineRange$: Observable<TimelineRange> = this.store$
 		.pipe(
@@ -138,7 +135,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			filter(Boolean),
 			tap(drops => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
 			tap(drops => {
-				if (drops.length >= 2) {
+				if (drops.length >= 1) {
 					this.configuration.range = this.overlaysService.getTimeRangeFromDrops(drops);
 				}
 				this.initEventDropsSequence(drops);

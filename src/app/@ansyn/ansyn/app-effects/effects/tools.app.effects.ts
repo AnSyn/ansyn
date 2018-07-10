@@ -7,11 +7,13 @@ import {
 	EnableImageProcessing,
 	GoToAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction, SetAnnotationMode,
+	SetActiveOverlaysFootprintModeAction,
+	SetAnnotationMode,
 	SetAnnotationsLayer,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing, SetMeasureDistanceToolState,
+	SetManualImageProcessing,
+	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	ShowOverlaysFootprintAction,
 	StopMouseShadow,
@@ -36,23 +38,18 @@ import { Feature, FeatureCollection, Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import {
-	IToolsState,
-	selectAnnotationLayer,
-	toolsFlags,
-	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, selectAnnotationLayer, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { differenceWith, isEqual } from 'lodash';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { map, withLatestFrom } from 'rxjs/internal/operators';
+import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
 
 
 @Injectable()
 export class ToolsAppEffects {
 	isPolygonSearch$ = this.store$.select(selectGeoFilterSearchMode)
-		.map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon );
+		.map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon);
 
 	activeMap$ = this.store$.select(mapStateSelector)
 		.map((mapState) => MapFacadeService.activeMap(mapState))
@@ -157,7 +154,11 @@ export class ToolsAppEffects {
 	@Effect()
 	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
-		.map(() => new DisableImageProcessing());
+		.pipe(
+			withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),
+			filter(communicator => Boolean(communicator)),
+			map(() => new DisableImageProcessing())
+		);
 
 	/**
 	 * @type Effect
@@ -302,7 +303,7 @@ export class ToolsAppEffects {
 				const mapsList = [...mapState.mapsList];
 				const activeMap = MapFacadeService.activeMap(mapState);
 				activeMap.data.overlayDisplayMode = action.payload;
-				return new SetMapsDataActionStore({ mapsList })
+				return new SetMapsDataActionStore({ mapsList });
 
 			})
 		);

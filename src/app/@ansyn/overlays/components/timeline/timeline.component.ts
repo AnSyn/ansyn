@@ -133,7 +133,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		})
 		.do(drops => {
 			this.drops = drops;
-			if (this.drops.length >= 2) {
+			if (this.drops.length >= 1) {
 				this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops);
 			}
 			this.initEventDropsSequence();

@@ -4,7 +4,7 @@ import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+import { ExtendMap } from './extendedMap.class';
 
 export interface TimelineRange {
 	start: Date;
@@ -246,3 +246,4 @@ export const selectFilteredOveralys = createSelector(overlaysStateSelector, (ove
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, MarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Overlay => overlays.hoveredOverlay);
+export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): TimelineRange => overlays.timeLineRange);

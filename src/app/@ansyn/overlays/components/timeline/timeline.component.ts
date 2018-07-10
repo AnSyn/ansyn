@@ -1,27 +1,30 @@
 import {
-	ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit,
+	ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit,
 	ViewChild
 } from '@angular/core';
 import { selection } from 'd3';
 import * as d3 from 'd3/build/d3';
-import eventDrops from 'new-ansyn-event-drops';
+import eventDrops from '@ansyn/event-drops';
 import { OverlaysService } from '../../services/overlays.service';
-import { OverlayDrop, selectDrops } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
-	IOverlaysState, MarkUpClass, MarkUpData, MarkUpTypes, overlaysStateSelector,
+	IOverlaysState, MarkUpClass, MarkUpData, MarkUpTypes, OverlayDrop, overlaysStateSelector, selectDropMarkup,
+	selectDrops,
+	selectTimelineRange,
 	TimelineRange
 } from '../../reducers/overlays.reducer';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { Actions } from '@ngrx/effects';
+import { fromEvent, Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
 import {
 	DisplayOverlayFromStoreAction, OverlaysActionTypes, RedrawTimelineAction,
 	SetMarkUp, SetTimelineStateAction
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { schemeCategory10 } from 'd3-scale';
-import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
+import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { isEqual } from 'lodash';
+import { ExtendMap } from '../../reducers/extendedMap.class';
+import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -85,6 +88,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		},
 		zoom: {
 			onZoom: this.drawMarkup.bind(this),
+			onZoomStart: null,
 			onZoomEnd: this.onZoomEnd.bind(this)
 		},
 		label: {
@@ -97,53 +101,54 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	private chart: any;
 	private element: any;
-	private dblClick: number;
 	private oldActiveId: string;
 
-	redraw$ = this.actions$.ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE)
-		.do(() => this.initEventDropsSequence());
+	redraw$ = this.actions$
+		.pipe(
+			ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE),
+			withLatestFrom(this.store$.select(selectDrops)),
+			tap(([action, drops]) => this.initEventDropsSequence(drops))
+		);
 
-	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
-
-	timeLineRange$: Observable<TimelineRange> = this.overlaysState$
-		.pluck <IOverlaysState, TimelineRange>('timeLineRange')
-		.distinctUntilChanged()
-		.filter(Boolean)
-		.do((value: TimelineRange) => {
-			this.configuration.range = value;
-		});
-
+	timeLineRange$: Observable<TimelineRange> = this.store$
+		.pipe(
+			select(selectTimelineRange),
+			tap((value: TimelineRange) => this.configuration.range = value)
+		);
 
 	private markup: ExtendMap<MarkUpClass, MarkUpData>;
-	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
-		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
-		.distinctUntilChanged()
-		.do(this.checkDiffranceInTimeRange.bind(this))
-		.do((value: ExtendMap<MarkUpClass, MarkUpData>) => {
-			this.markup = value;
-			this.drawMarkup();
-		});
+	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, MarkUpData>, any]> = this.store$
+		.pipe(
+			select(selectDropMarkup),
+			withLatestFrom(this.store$.pipe(select(selectDrops))),
+			tap(this.checkDiffranceInTimeRange.bind(this)),
+			tap(([value]: [ExtendMap<MarkUpClass, MarkUpData>, any]) => {
+				this.markup = value;
+				this.drawMarkup();
+			})
+		);
 
 	dropsIdMap: Map<string, OverlayDrop> = new Map();
-	drops: OverlayDrop[] = [];
-	dropsChange$: Observable<OverlayDrop[]> = this.store$.select(selectDrops)
-		.filter(Boolean)
-		.do(drops => {
-			this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]));
-		})
-		.do(drops => {
-			this.drops = drops;
-			if (this.drops.length >= 1) {
-				this.configuration.range = this.overlaysService.getTimeRangeFromDrops(this.drops);
-			}
-			this.initEventDropsSequence();
-		});
+	dropsChange$: Observable<OverlayDrop[]> = this.store$
+		.pipe(
+			select(selectDrops),
+			distinctUntilChanged(isEqual),
+			tap(drops => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
+			tap(drops => {
+				if (drops.length >= 1) {
+					this.configuration.range = this.overlaysService.getTimeRangeFromDrops(drops);
+				}
+				this.initEventDropsSequence(drops);
+			})
+		);
+
 	private subscribers: Subscription[];
 
-	@HostListener('window:resize')
-	onresize() {
-		this.initEventDropsSequence();
-	}
+	onResize$ = fromEvent(window, 'resize')
+		.pipe(
+			withLatestFrom(this.store$.select(selectDrops)),
+			tap(([event, drops]) => this.initEventDropsSequence(drops))
+		);
 
 	constructor(@Inject(OverlaysService) protected overlaysService: OverlaysService,
 				protected store$: Store<IOverlaysState>,
@@ -155,7 +160,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.subscribers = [this.dropsChange$.subscribe(),
 			this.dropsMarkUp$.subscribe(),
 			this.timeLineRange$.subscribe(),
-			this.redraw$.subscribe()
+			this.redraw$.subscribe(),
+			this.onResize$.subscribe()
 		];
 	}
 
@@ -210,17 +216,12 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				end: this.chart.scale().domain()[1]
 			}
 		}));
-
 	}
 
-	initEventDropsSequence() {
-		if (this.drops) {
-			this.removeOldEventDrops();
-			this.initEventDrop();
-			if (this.markup) {
-				this.drawMarkup();
-			}
-		}
+	initEventDropsSequence(drops) {
+		this.removeOldEventDrops();
+		this.initEventDrop(drops);
+		this.drawMarkup();
 	}
 
 	removeOldEventDrops() {
@@ -232,7 +233,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	checkDiffranceInTimeRange(newMarkUp: ExtendMap<MarkUpClass, MarkUpData>) {
+	checkDiffranceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, MarkUpData>, any]) {
 		const newActive = newMarkUp.get(MarkUpClass.active).overlaysIds;
 		if (!newActive || !newActive.length) {
 			return;
@@ -245,17 +246,17 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				timeLineRange.end.getTime() !== this.configuration.range.end.getTime()
 			) {
 				this.configuration.range = timeLineRange;
-				this.initEventDropsSequence();
+				this.initEventDropsSequence(drops);
 			}
 		}
 		this.oldActiveId = newActiveId;
 	}
 
-	initEventDrop(): void {
+	initEventDrop(drops): void {
 		this.chart = eventDrops(this.configuration);
 		this.element = d3.select(this.context.nativeElement);
 		this.element
-			.data([[{ data: this.drops }]])
+			.data([[{ data: drops }]])
 			.call(this.chart);
 
 		this.element.clone().select('.drops').append('g').classed('textContainer', true);

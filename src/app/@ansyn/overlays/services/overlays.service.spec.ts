@@ -8,8 +8,8 @@ import { Observer } from 'rxjs/Observer';
 import { Overlay } from '../models/overlay.model';
 import { OverlaysCriteria, OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

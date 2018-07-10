@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IOverlaysState, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
+import { IOverlaysState, overlaysStateSelector } from '../../reducers/overlays.reducer';
+import { SetOverlaysStatusMessage } from '../../actions/overlays.actions';
 
 const animations: any[] = [
 	trigger('timeline-status', [

@@ -8,7 +8,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
-	RequestOverlayByIDFromBackendAction
+	RequestOverlayByIDFromBackendAction, SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { Action, Store } from '@ngrx/store';
@@ -20,7 +20,6 @@ import { Overlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { SetOverlaysStatusMessage } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
 

@@ -1,4 +1,4 @@
-import { LayerCollectionLoadedAction, ToggleDisplayAnnotationsLayer } from '../actions/layers.actions';
+import { LayerCollectionLoadedAction } from '../actions/layers.actions';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
 import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
@@ -18,19 +18,6 @@ describe('LayersReducer', () => {
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);
 		expect(result.layers).toEqual([staticLayer]);
-	});
-
-	describe('ANNOTATIONS', () => {
-
-		it('TOGGLE_DISPLAY_LAYER', () => {
-			let action = new ToggleDisplayAnnotationsLayer(true);
-			let result: ILayerState = LayersReducer(initialLayersState, action);
-			expect(result.displayAnnotationsLayer).toBeTruthy();
-
-			action = new ToggleDisplayAnnotationsLayer(false);
-			result = LayersReducer(initialLayersState, action);
-			expect(result.displayAnnotationsLayer).toBeFalsy();
-		});
 	});
 
 });

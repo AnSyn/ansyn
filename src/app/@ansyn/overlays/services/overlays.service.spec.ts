@@ -9,7 +9,7 @@ import { Overlay } from '../models/overlay.model';
 import { OverlaysCriteria, OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { BaseOverlaySourceProvider } from '../models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

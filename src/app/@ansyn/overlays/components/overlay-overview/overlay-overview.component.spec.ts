@@ -6,7 +6,8 @@ import { By } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Overlay } from '@ansyn/core/models/overlay.model';
-import { OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
+import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
+import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;

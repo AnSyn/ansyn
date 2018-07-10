@@ -246,3 +246,4 @@ export const selectFilteredOveralys = createSelector(overlaysStateSelector, (ove
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, MarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Overlay => overlays.hoveredOverlay);
+export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): TimelineRange => overlays.timeLineRange);

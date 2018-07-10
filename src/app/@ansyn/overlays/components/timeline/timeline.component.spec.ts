@@ -148,7 +148,6 @@ describe('TimelineComponent', () => {
 		fixture = TestBed.createComponent(TimelineComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-		component.drops = [];
 	});
 
 

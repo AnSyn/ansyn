@@ -38,6 +38,7 @@ import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/ope
 import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class MapEffects {
@@ -205,29 +206,31 @@ export class MapEffects {
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [BackToWorldView, IMapState]) => {
-			const mapId = action.payload.mapId;
-			const selectedMap = MapFacadeService.mapById(mapState.mapsList, mapId);
-			const communicator = this.communicatorsService.provide(mapId);
-			const { position } = selectedMap.data;
-			return [action.payload, mapState.mapsList, communicator, position];
-		})
-		.filter(([payload, mapsList, communicator, position]: [{ mapId: string }, CaseMapState[], CommunicatorEntity, CaseMapPosition]) => Boolean(communicator))
-		.switchMap(([payload, mapsList, communicator, position]: [{ mapId: string }, CaseMapState[], CommunicatorEntity, CaseMapPosition]) => {
-			const disabledMap = communicator.ActiveMap instanceof OpenLayersDisabledMap;
-			const updatedMapsList = [...mapsList];
-			updatedMapsList.forEach(
-				(map) => {
-					if (map.id === communicator.id) {
-						map.data.overlay = null;
-						map.data.isAutoImageProcessingActive = false;
-					}
-				});
-			this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-			return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
-				.map(() => new BackToWorldSuccess(payload));
-		});
+		.pipe(
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			map(([action, mapState]: [BackToWorldView, IMapState]) => {
+				const mapId = action.payload.mapId;
+				const selectedMap = MapFacadeService.mapById(mapState.mapsList, mapId);
+				const communicator = this.communicatorsService.provide(mapId);
+				const { position } = selectedMap.data;
+				return [action.payload, mapState.mapsList, communicator, position];
+			}),
+			filter(([payload, mapsList, communicator, position]: [{ mapId: string }, CaseMapState[], CommunicatorEntity, CaseMapPosition]) => Boolean(communicator)),
+			switchMap(([payload, mapsList, communicator, position]: [{ mapId: string }, CaseMapState[], CommunicatorEntity, CaseMapPosition]) => {
+				const disabledMap = communicator.ActiveMap instanceof OpenLayersDisabledMap;
+				const updatedMapsList = [...mapsList];
+				updatedMapsList.forEach(
+					(map) => {
+						if (map.id === communicator.id) {
+							map.data.overlay = null;
+							map.data.isAutoImageProcessingActive = false;
+						}
+					});
+				this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
+				return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+					.map(() => new BackToWorldSuccess(payload));
+			})
+		);
 
 	/**
 	 * @type Effect

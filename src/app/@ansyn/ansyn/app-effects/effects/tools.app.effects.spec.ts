@@ -299,6 +299,9 @@ describe('ToolsAppEffects', () => {
 
 	describe('backToWorldView', () => {
 		it('backToWorldView should raise DisableImageProcessing', () => {
+			const activeCommunicator = {
+			};
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 			actions = hot('--a--', { a: new BackToWorldView({ mapId: 'mapId' }) });
 			const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
 			expect(toolsAppEffects.backToWorldView$).toBeObservable(expectedResults);

@@ -95,18 +95,29 @@ footer {
 }
 
 // Replace the next/prev controls
-/deep/ .carousel-control-next-icon {
-	background-image: url(/assets/icons/help/help_next.svg);
+
+/deep/ .carousel-control-prev {
+	opacity: 0.8;
+	.carousel-control-prev-icon {
+		background-image: url(/assets/icons/help/help_prev.svg);
+	}
+	&:hover, &:focus {
+		opacity: 1;
+		.carousel-control-prev-icon {
+			background-image: url(/assets/icons/help/help_prev_bold.svg);
+		}
+	}
 }
 
-/deep/ .carousel-control-prev-icon {
-	background-image: url(/assets/icons/help/help_prev.svg);
-}
-
-/deep/ .carousel-control-prev,
 /deep/ .carousel-control-next {
 	opacity: 0.8;
+	.carousel-control-next-icon {
+		background-image: url(/assets/icons/help/help_next.svg);
+	}
 	&:hover, &:focus {
-		opacity: 1.0;
+		opacity: 1;
+		.carousel-control-next-icon {
+			background-image: url(/assets/icons/help/help_next_bold.svg);
+		}
 	}
 }

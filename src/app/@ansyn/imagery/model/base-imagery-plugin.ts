@@ -15,7 +15,7 @@ export interface BaseImageryPluginConstructor extends ImageryPluginMetaData {
 
 export class BaseImageryPlugin {
 	/* prototype */ readonly subscriptionKeys;
-	subscriptions: Subscription[] = [];
+	private subscriptions: Subscription[] = [];
 
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;

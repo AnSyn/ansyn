@@ -197,6 +197,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
+	private isRasterLayer(layer): boolean {
+		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster
+	}
+
 	public removeLayer(layer: any): void {
 		if (!layer) {
 			return;
@@ -206,9 +210,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
-			const source: ProjectableRaster = layer.getSource && layer.getSource();
-			if (source instanceof ProjectableRaster) {
-				source.destroy();
+			if (this.isRasterLayer(layer)) {
+				layer.getSource().destroy();
 			}
 			this._mapObject.renderSync();
 		}

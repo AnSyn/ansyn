@@ -5,7 +5,6 @@ import { get } from 'lodash';
 import { GlobalObject } from 'openlayers';
 
 export class ProjectableRaster extends Raster {
-	private worker_;
 	sources: Source[];
 
 	constructor(options: any) {

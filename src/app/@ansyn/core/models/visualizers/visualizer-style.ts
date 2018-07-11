@@ -21,6 +21,7 @@ export interface VisualizerStyle {
 	icon?: {
 		scale: number;
 		src: string;
+		anchor?: number[];
 	};
 	geometry?: any;
 	label?: {

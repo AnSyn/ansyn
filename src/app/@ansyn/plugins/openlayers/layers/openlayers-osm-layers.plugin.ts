@@ -71,9 +71,6 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 		const group =  OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray = group.getLayers().getArray();
 		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
-			if (!group) {
-				throw new Error('Tried to add a layer to a non-existent group');
-			}
 			const osmLayer = this.createOSMLayer(layer);
 			group.getLayers().push(osmLayer);
 		}
@@ -81,10 +78,6 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 
 	removeGroupLayer(id: string): void {
 		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
-		if (!group) {
-			throw new Error('Tried to remove a layer to a non-existent group');
-		}
-
 		const layersArray: any[] = group.getLayers().getArray();
 		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
 		if (removeIdx >= 0) {

@@ -73,9 +73,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
-		if (!group) {
-			throw new Error('Tried to toggle a non-existent group');
-		}
 		if (newState) {
 			this.addLayer(group);
 		} else {

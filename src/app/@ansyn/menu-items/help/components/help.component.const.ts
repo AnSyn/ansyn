@@ -19,7 +19,7 @@ export const helpComponentConstants = {
 				'Time Filter',
 				'Set the time of interest',
 				'Double click the pink circles to open overlays',
-				'Navigate between overlays by using the arrows and the keyboard'
+				'You can navigate between overlays by using the arrows and the keyboard'
 			],
 			image: [
 				'Frame 88.jpg',
@@ -30,7 +30,7 @@ export const helpComponentConstants = {
 			text: [
 				'Data Filter',
 				'Select the input data',
-				'Accurate the query by using the filters',
+				'Modify the query by using the filters',
 				'See the number of available overlays in the filters menu and in the status bar'
 			],
 			image: [

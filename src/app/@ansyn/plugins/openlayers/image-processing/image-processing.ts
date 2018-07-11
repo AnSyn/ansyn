@@ -1,4 +1,6 @@
-import Raster from 'ol/source/raster';
+
+import { get } from 'lodash';
+import { ProjectableRaster } from '../open-layers-map/models/projectable-raster';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [
@@ -18,16 +20,16 @@ interface ProcessOperation {
 // design based on : https://openlayers.org/en/latest/examples/raster.html
 export class OpenLayersImageProcessing {
 	private _libs: Object;
-	private _raster: Raster;
+	private _raster: ProjectableRaster;
 
-	constructor(layerSource?: Raster) {
+	constructor(layerSource?: ProjectableRaster) {
 		this.initializeOperations();
 		if (layerSource) {
 			this.initializeRaster(layerSource);
 		}
 	}
 
-	initializeRaster(layerRaster: Raster) {
+	initializeRaster(layerRaster: ProjectableRaster) {
 		this._raster = layerRaster;
 		// register pixelOperations to raster event
 		this._raster.on('beforeoperations', (event) => {

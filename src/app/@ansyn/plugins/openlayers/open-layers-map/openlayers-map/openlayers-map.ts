@@ -1,4 +1,3 @@
-import { EventEmitter } from '@angular/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -23,9 +22,12 @@ import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/cor
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import Raster from 'ol/source/raster';
+import { get } from 'lodash';
+import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import { koLocale } from 'ngx-bootstrap';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -211,6 +213,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
+			const source: ProjectableRaster = layer.getSource && layer.getSource();
+			if (source instanceof ProjectableRaster) {
+				source .destroy();
+			}
 			this._mapObject.renderSync();
 		}
 	}

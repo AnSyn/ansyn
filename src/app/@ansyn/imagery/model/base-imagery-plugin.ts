@@ -68,7 +68,7 @@ export class BaseImageryPlugin {
 
 	}
 }
-
+/* Properties decorator */
 export function ImageryPluginSubscription(target: Object | any, propertyKey: string | symbol) {
 	if (!target.subscriptionKeys) {
 		target.subscriptionKeys = []

@@ -12,27 +12,12 @@ export interface BaseImageryMapConstructor extends ImageryMapMetaData {
 	groupLayers: Map<string, any>;
 
 	new(...args): BaseImageryMap;
-
-	addGroupLayer(layer: any, groupName: string);
-
-	removeGroupLayer(layer: any, groupName: string);
-
-	addGroupVectorLayer(layer: any, groupName: string);
 }
 
 export abstract class BaseImageryMap<T = any> {
 	static groupLayers = new Map<string, any>();
 	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 	public mapObject: T;
-
-	static addGroupLayer(layer: any, groupName: string) {
-	}
-
-	static removeGroupLayer(id: string, groupName: string) {
-	}
-
-	static addGroupVectorLayer(layer: any, groupName: string) {
-	}
 
 	abstract getCenter(): Observable<Point>;
 

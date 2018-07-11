@@ -24,20 +24,22 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import Raster from 'ol/source/raster';
-import { get } from 'lodash';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
-import { koLocale } from 'ngx-bootstrap';
 
 export const OpenlayersMapName = 'openLayersMap';
+
+enum StaticGroupsKeys {
+	layers = 'layers'
+}
 
 @ImageryMap({
 	mapType: OpenlayersMapName,
 	deps: [ProjectionService]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
-	static groupLayers = new Map<string, Group>();
-	private showGroups = new Map<string, boolean>();
+	static groupsKeys = StaticGroupsKeys;
+	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
+	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
 
 	private _subscriptions: Subscription[] = [];
@@ -49,14 +51,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(public projectionService: ProjectionService) {
 		super();
-
-		if (!OpenLayersMap.groupLayers.get('layers')) {
-			OpenLayersMap.groupLayers.set('layers', new Group(<any>{
-				layers: [],
-				name: 'layers'
-			}));
-		}
-		this.showGroups.set('layers', true);
 	}
 
 	/**
@@ -77,8 +71,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return existingLayer;
 	}
 
-	toggleGroup(groupName: string, newState: boolean) {
+	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
+		if (!group) {
+			throw new Error('Tried to toggle a non-existent group');
+		}
 		if (newState) {
 			this.addLayer(group);
 		} else {
@@ -105,7 +102,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true });
 		this.initListeners();
-		this.setGroupLayers();
 		return this.resetView(layers[0], position);
 	}
 
@@ -215,7 +211,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._mapObject.removeLayer(layer);
 			const source: ProjectableRaster = layer.getSource && layer.getSource();
 			if (source instanceof ProjectableRaster) {
-				source .destroy();
+				source.destroy();
 			}
 			this._mapObject.renderSync();
 		}

@@ -39,7 +39,7 @@ describe('ContextMenuPlugin', () => {
 	});
 
 	it('onContextMenuDisplayAction$ should call displayOverlayFromStoreAction with id from payload', () => {
-		contextMenuPlugin.subscriptions.push(contextMenuPlugin.onContextMenuDisplayAction$.subscribe());
+		contextMenuPlugin.onContextMenuDisplayAction$.subscribe();
 		actions = hot('--a--', { a: new ContextMenuDisplayAction('fakeId') });
 		const expectedResults = cold('--b--', { b: new DisplayOverlayFromStoreAction({ id: 'fakeId' }) });
 		expect(contextMenuPlugin.onContextMenuDisplayAction$).toBeObservable(expectedResults);

@@ -36,6 +36,7 @@ import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visua
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { Overlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -56,6 +57,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			distinctUntilChanged()
 		);
 
+	@ImageryPluginSubscription
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store.select(selectOverlaysMap)),
@@ -73,6 +75,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
 
+	@ImageryPluginSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
 		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
 		.distinctUntilChanged()
@@ -287,13 +290,5 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			}
 			features.forEach(f => this.purgeCache(f));
 		}
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.drawOverlaysOnMap$.subscribe(),
-			this.dropsMarkUp$.subscribe()
-		);
 	}
 }

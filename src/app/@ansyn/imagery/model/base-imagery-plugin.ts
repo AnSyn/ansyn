@@ -14,7 +14,9 @@ export interface BaseImageryPluginConstructor extends ImageryPluginMetaData {
 }
 
 export class BaseImageryPlugin {
-	subscriptions: Subscription[] = [];
+	/* prototype */ readonly subscriptionKeys;
+	private subscriptions: Subscription[] = [];
+
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
 	onDisposedEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -33,7 +35,7 @@ export class BaseImageryPlugin {
 
 	dispose() {
 		this.onDisposedEvent.emit();
-		this.subscriptions.forEach(sub => sub.unsubscribe());
+		this.subscriptions.forEach((sub: Subscription) => sub.unsubscribe());
 		this.subscriptions = [];
 		this.onDispose()
 	}
@@ -41,9 +43,24 @@ export class BaseImageryPlugin {
 	init(communicator: CommunicatorEntity) {
 		this.communicator = communicator;
 		this.onInit();
+		if (this.subscriptionKeys) {
+			this.subscriptions.push(
+				...this.subscriptionKeys
+					.map((key) => this[key])
+					.filter(Boolean)
+					.map((value) => typeof value === 'function' ? value() : value)
+					.filter((observable: Observable<any>) => observable instanceof Observable)
+					.map((observable): Subscription => observable.subscribe())
+			)
+		}
+		this.onInitSubscriptions();
 	};
 
 	onInit(): void {
+
+	}
+
+	onInitSubscriptions() {
 
 	}
 
@@ -51,4 +68,10 @@ export class BaseImageryPlugin {
 
 	}
 }
-
+/* Properties decorator */
+export function ImageryPluginSubscription(target: Object | any, propertyKey: string | symbol) {
+	if (!target.subscriptionKeys) {
+		target.subscriptionKeys = []
+	}
+	target.subscriptionKeys.push(propertyKey);
+}

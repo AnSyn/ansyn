@@ -41,6 +41,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { Inject } from '@angular/core';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -75,13 +76,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		.select(toolsStateSelector)
 		.pluck<IToolsState, AnnotationProperties>('annotationProperties');
 
-	/* events */
+	@ImageryPluginSubscription
 	annoatationModeChange$: Observable<any> = Observable.combineLatest(this.annotationMode$, this.isActiveMap$)
 		.do(this.onModeChange.bind(this));
 
+	@ImageryPluginSubscription
 	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
 		.do(this.onAnnotationPropertiesChange.bind(this));
 
+	@ImageryPluginSubscription
 	onAnnotationsChange$ = Observable
 		.combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
 		.mergeMap(this.onAnnotationsChange.bind(this));
@@ -144,15 +147,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return Observable.of(true);
 	}
 
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.annoatationModeChange$.subscribe(),
-			this.annotationPropertiesChange$.subscribe(),
-			this.onAnnotationsChange$.subscribe()
-		);
-	}
-
 	constructor(public store$: Store<any>, protected projectionService: ProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
 
 		super(null, {
@@ -191,7 +185,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			});
 		}
-
 	}
 
 	resetInteractions(): void {

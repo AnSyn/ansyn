@@ -5,7 +5,7 @@ import * as turf from '@turf/turf';
 import { inside } from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { fromEvent, Observable, pipe } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
@@ -29,6 +29,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		map(([prevData]: [any, boolean]) => prevData)
 	);
 
+	@ImageryPluginSubscription
 	onContextMenuDisplayAction$: Observable<any> = this.actions$
 		.pipe(
 			ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY),
@@ -38,6 +39,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			tap((action) => this.store$.dispatch(action))
 		);
 
+	@ImageryPluginSubscription
 	contextMenuTrigger$ = () => fromEvent(this.containerElem, 'contextmenu')
 		.pipe(
 			tap(this.contextMenuEventListener.bind(this))
@@ -49,13 +51,6 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 
 	constructor(protected store$: Store<IAppState>, protected actions$: Actions, protected projectionService: ProjectionService) {
 		super();
-	}
-
-	onInit() {
-		this.subscriptions.push(
-			this.contextMenuTrigger$().subscribe(),
-			this.onContextMenuDisplayAction$.subscribe()
-		);
 	}
 
 	contextMenuEventListener(event: MouseEvent) {

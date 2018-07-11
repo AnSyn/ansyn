@@ -20,6 +20,7 @@ import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducer
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -30,10 +31,12 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;
 
+	@ImageryPluginSubscription
 	contextEntites$ = this.store$.select(selectContextEntities)
 		.filter(Boolean)
 		.mergeMap(this.setEntities.bind(this));
 
+	@ImageryPluginSubscription
 	referenceDate$ = this.store$
 		.pipe(
 			select(mapStateSelector),
@@ -74,14 +77,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		});
 
 		this.geoJsonFormat = new GeoJSON();
-	}
-
-	public onInit(): void {
-		super.onInit();
-		this.subscriptions.push(
-			this.contextEntites$.subscribe(),
-			this.referenceDate$.subscribe()
-		)
 	}
 
 	private getText(feature) {

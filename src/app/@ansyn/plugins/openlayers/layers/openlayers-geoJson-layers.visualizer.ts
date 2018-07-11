@@ -14,6 +14,7 @@ import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -28,6 +29,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		distinctUntilChanged()
 	);
 
+	@ImageryPluginSubscription
 	updateLayersOnMap$ = combineLatest(this.store$.pipe(select(selectLayers)), this.store$.pipe(select(selectSelectedLayersIds)), this.isHidden$)
 		.pipe(
 			mergeMap(([result, selectedLayerIds, isHidden]: [ILayer[], string[], boolean]) => forkJoin(result
@@ -60,13 +62,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			featureJson: feature,
 			style: feature.properties.style
 		}));
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.updateLayersOnMap$.subscribe()
-		);
 	}
 
 	constructor(protected store$: Store<any>,

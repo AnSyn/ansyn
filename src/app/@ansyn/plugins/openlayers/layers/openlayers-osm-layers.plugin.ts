@@ -6,7 +6,7 @@ import TileLayer from 'ol/layer/tile';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseMapState } from '@ansyn/core/models/case.model';
@@ -20,6 +20,7 @@ import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 })
 export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 
+	@ImageryPluginSubscription
 	toggleGroup$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
@@ -29,6 +30,7 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 
+	@ImageryPluginSubscription
 	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
@@ -85,11 +87,4 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.osmLayersChanges$.subscribe(),
-			this.toggleGroup$.subscribe()
-		);
-	}
 }

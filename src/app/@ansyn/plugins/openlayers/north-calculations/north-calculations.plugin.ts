@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import {
 	OpenLayersMap,
 	OpenlayersMapName
@@ -42,6 +42,44 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
+
+	@ImageryPluginSubscription
+	pointNorth$ = this.actions$
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
+		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
+			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
+		})
+		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
+			return this.pointNorth()
+				.do(virtualNorth => {
+					this.communicator.setVirtualNorth(virtualNorth);
+					if (!forceFirstDisplay) {
+						switch (orientation) {
+							case 'Align North':
+								this.communicator.setRotation(virtualNorth);
+								break;
+							case 'Imagery Perspective':
+								this.communicator.setRotation(overlay.azimuth);
+								break;
+						}
+					}
+				});
+		});
+
+	@ImageryPluginSubscription
+	backToWorldSuccessSetNorth$ = this.actions$
+		.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
+		.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)
+		.withLatestFrom(this.store$.select(statusBarStateSelector))
+		.do(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+			this.communicator.setVirtualNorth(0);
+			switch (comboBoxesProperties.orientation) {
+				case 'Align North':
+				case 'Imagery Perspective':
+					this.communicator.setRotation(0);
+			}
+		});
 
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
@@ -95,46 +133,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
 			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
-	}
-
-	onInit() {
-		const pointNorth = this.actions$
-			.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-			.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
-			.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-				return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
-			})
-			.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
-				return this.pointNorth()
-					.do(virtualNorth => {
-						this.communicator.setVirtualNorth(virtualNorth);
-						if (!forceFirstDisplay) {
-							switch (orientation) {
-								case 'Align North':
-									this.communicator.setRotation(virtualNorth);
-									break;
-								case 'Imagery Perspective':
-									this.communicator.setRotation(overlay.azimuth);
-									break;
-							}
-						}
-					});
-			}).subscribe();
-
-		const backToWorldSuccessSetNorth = this.actions$
-			.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
-			.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)
-			.withLatestFrom(this.store$.select(statusBarStateSelector))
-			.do(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
-				this.communicator.setVirtualNorth(0);
-				switch (comboBoxesProperties.orientation) {
-					case 'Align North':
-					case 'Imagery Perspective':
-						this.communicator.setRotation(0);
-				}
-			}).subscribe();
-
-		this.subscriptions.push(pointNorth, backToWorldSuccessSetNorth);
 	}
 
 	pointNorth(): Observable<any> {

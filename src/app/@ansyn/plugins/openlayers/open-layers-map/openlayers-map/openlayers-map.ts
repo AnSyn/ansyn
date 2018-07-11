@@ -1,4 +1,3 @@
-import { EventEmitter } from '@angular/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -23,19 +22,24 @@ import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/cor
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 
 export const OpenlayersMapName = 'openLayersMap';
+
+enum StaticGroupsKeys {
+	layers = 'layers'
+}
 
 @ImageryMap({
 	mapType: OpenlayersMapName,
 	deps: [ProjectionService]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
-	static groupLayers = new Map<string, Group>();
-	private showGroups = new Map<string, boolean>();
+	static groupsKeys = StaticGroupsKeys;
+	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
+	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
 
 	private _subscriptions: Subscription[] = [];
@@ -47,14 +51,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(public projectionService: ProjectionService) {
 		super();
-
-		if (!OpenLayersMap.groupLayers.get('layers')) {
-			OpenLayersMap.groupLayers.set('layers', new Group(<any>{
-				layers: [],
-				name: 'layers'
-			}));
-		}
-		this.showGroups.set('layers', true);
 	}
 
 	/**
@@ -75,7 +71,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return existingLayer;
 	}
 
-	toggleGroup(groupName: string, newState: boolean) {
+	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (newState) {
 			this.addLayer(group);
@@ -103,7 +99,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true });
 		this.initListeners();
-		this.setGroupLayers();
 		return this.resetView(layers[0], position);
 	}
 
@@ -202,6 +197,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
+	private isRasterLayer(layer): boolean {
+		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster
+	}
+
 	public removeLayer(layer: any): void {
 		if (!layer) {
 			return;
@@ -211,6 +210,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
+			if (this.isRasterLayer(layer)) {
+				layer.getSource().destroy();
+			}
 			this._mapObject.renderSync();
 		}
 	}

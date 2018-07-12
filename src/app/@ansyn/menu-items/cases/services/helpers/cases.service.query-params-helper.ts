@@ -17,6 +17,8 @@ import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { IContext } from '@ansyn/core/models/context.model';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import { point } from '@turf/turf';
+import { UUID } from 'angular2-uuid';
 
 export class QueryParamsHelper {
 
@@ -76,19 +78,17 @@ export class QueryParamsHelper {
 
 								updatedCaseModel.state.region = geoPoint;
 
-								updatedCaseModel.state.contextEntities = [];
-
-								const feature: Feature<any> = {
-									'type': 'Feature',
-									'properties': {},
-									'geometry': geoPoint
-								};
-
-								updatedCaseModel.state.contextEntities.push({
-									id: '1',
+								updatedCaseModel.state.contextEntities = [{
+									id: UUID.UUID(),
 									date: qParams.time ? new Date(qParams.time) : new Date(),
-									featureJson: feature
+									featureJson: point(geoPoint.coordinates)
+								}];
+								const extentPolygon = getPolygonByPointAndRadius(geoPoint.coordinates, 1).geometry;
+								updatedCaseModel.state.maps.data.forEach(map => {
+									map.data.position.projectedState = null;
+									map.data.position.extentPolygon = extentPolygon;
 								});
+
 							} else if (geoJsonGeomtry.type === 'Polygon') {
 								const geoPolygon: Polygon = <Polygon>geoJsonGeomtry;
 								geoPolygon.coordinates[0] = geoPolygon.coordinates[0].map((pair) => pair.reverse());

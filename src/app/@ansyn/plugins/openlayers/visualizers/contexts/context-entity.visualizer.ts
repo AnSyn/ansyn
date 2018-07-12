@@ -81,7 +81,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	}
 
 	private getText(feature) {
-		if (!this.referenceDate) {
+		if (!this.referenceDate || !(this.getGeometry(feature) instanceof Point)) {
 			return '';
 		}
 		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
@@ -101,14 +101,14 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
 
-		if (<any>entityMap.originalEntity.featureJson.type === 'Point') {
+		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
 			const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
 			const centroid = getPointByGeometry(featureGeoJson.geometry);
 			const point = new Point(<[number, number]> centroid.coordinates);
 
 			this.idToCachedCenter.set(featureId, point);
 			return point;
-		} else if (<any>entityMap.originalEntity.featureJson.type === 'Polygon') {
+		} else if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Polygon') {
 			const projectedPolygon = entityMap.feature.getGeometry() as Polygon;
 
 			this.idToCachedCenter.set(featureId, projectedPolygon);

@@ -52,13 +52,13 @@ export class FiltersService {
 				.filter(([enumFiledKey, { isChecked }]: [any, IEnumFiled]) => !isChecked)
 				.forEach(([enumFiledKey, value]: [any, IEnumFiled]) => {
 					(<EnumFilterMetadata>cloneMetadata).enumsFields.set(enumFiledKey, { ...value, isChecked: true });
-					FiltersService.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, (<EnumFilterMetadata>cloneMetadata));
+					this.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, (<EnumFilterMetadata>cloneMetadata));
 				});
 		} else {
 			if ((<BooleanFilterMetadata>metadata).properties.true.value === false || (<BooleanFilterMetadata>metadata).properties.false.value === false) {
 				(<BooleanFilterMetadata>cloneMetadata).properties.true.value = true;
 				(<BooleanFilterMetadata>cloneMetadata).properties.false.value = true;
-				FiltersService.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, cloneMetadata);
+				this.calculateOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState, cloneMetadata);
 			}
 		}
 	}
@@ -66,13 +66,13 @@ export class FiltersService {
 	static calculateOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], filterState: IFiltersState, cloneMetadata: FilterMetadata): void {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
-		const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(cloneFilters);
+		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);
 		const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites);
 		metadata.resetFilteredCount();
-		filteredOverlays.forEach((id: string) => {
-			const overlay = overlays.get(id);
-			metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
-		});
+		filteredOverlays
+			.map((id) => overlays.get(id))
+			.filter(Boolean)
+			.forEach((overlay) => metadata.incrementFilteredCount(overlay[metadataKey.modelName]));
 	}
 
 	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {

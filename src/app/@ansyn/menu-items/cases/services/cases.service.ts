@@ -5,13 +5,13 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/of';
-import { Case } from '../models/case.model';
+import { ICase } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import * as moment from 'moment';
-import { StorageService, StoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { CasePreview, CaseState, CaseTimeState, DilutedCaseState, IContextEntity } from '@ansyn/core/models/case.model';
+import { StorageService, IStoredEntity } from '@ansyn/core/services/storage/storage.service';
+import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEntity } from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
 import { catchError, map, mergeMap, debounceTime } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cas
 
 @Injectable()
 export class CasesService {
-	static defaultTime: CaseTimeState = {
+	static defaultTime: ICaseTimeState = {
 		type: 'absolute',
 		from: moment().subtract(1, 'y').toDate(),
 		to: new Date()
@@ -45,14 +45,14 @@ export class CasesService {
 	}
 
 	loadCases(casesOffset: number = 0): Observable<any> {
-		return this.storageService.getPage<CasePreview>(this.config.schema, casesOffset, this.paginationLimit)
+		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit)
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
 			)
 	}
 
-	parseCasePreview(casePreview: CasePreview): CasePreview {
+	parseCasePreview(casePreview: ICasePreview): ICasePreview {
 		return <any> {
 			...casePreview,
 			creationTime: new Date(casePreview.creationTime),
@@ -60,7 +60,7 @@ export class CasesService {
 		};
 	}
 
-	parseCase(caseValue: Case): Case {
+	parseCase(caseValue: ICase): ICase {
 		return <any> {
 			...caseValue,
 			creationTime: new Date(caseValue.creationTime),
@@ -81,8 +81,8 @@ export class CasesService {
 		};
 	}
 
-	getPreview(caseValue: Case): CasePreview {
-		const casePreview: CasePreview = {
+	getPreview(caseValue: ICase): ICasePreview {
+		const casePreview: ICasePreview = {
 			id: caseValue.id,
 			name: caseValue.name,
 			autoSave: caseValue.autoSave,
@@ -98,7 +98,7 @@ export class CasesService {
 		return casePreview;
 	}
 
-	pluckIdSourceType(state: CaseState): DilutedCaseState {
+	pluckIdSourceType(state: ICaseState): IDilutedCaseState {
 		const dilutedState: any = cloneDeep(state);
 		if (dilutedState) {
 			if (Array.isArray(dilutedState.favoriteOverlays)) {
@@ -122,14 +122,14 @@ export class CasesService {
 		return dilutedState;
 	}
 
-	convertToStoredEntity(caseValue: Case): StoredEntity<CasePreview, DilutedCaseState> {
+	convertToStoredEntity(caseValue: ICase): IStoredEntity<ICasePreview, IDilutedCaseState> {
 		return {
 			preview: this.getPreview(caseValue),
 			data: this.pluckIdSourceType(caseValue.state)
 		};
 	}
 
-	createCase(selectedCase: Case): Observable<Case> {
+	createCase(selectedCase: ICase): Observable<ICase> {
 		const currentTime = new Date();
 		const uuid = UUID.UUID();
 		selectedCase.id = uuid;
@@ -142,7 +142,7 @@ export class CasesService {
 			)
 	}
 
-	updateCase(selectedCase: Case): Observable<StoredEntity<CasePreview, DilutedCaseState>> {
+	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
 		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase)).catch(err => {
 			return this.errorHandlerService.httpErrorHandle(err);
 		});
@@ -155,10 +155,10 @@ export class CasesService {
 	}
 
 	loadCase(selectedCaseId: string): Observable<any> {
-		return this.storageService.get<CasePreview, CaseState>(this.config.schema, selectedCaseId)
+		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId)
 			.pipe(
 				map(storedEntity =>
-					this.parseCase(<Case>{ ...storedEntity.preview, state: storedEntity.data }))
+					this.parseCase(<ICase>{ ...storedEntity.preview, state: storedEntity.data }))
 			).pipe(
 				catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}

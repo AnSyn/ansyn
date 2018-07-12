@@ -1,10 +1,10 @@
-import { Filter } from '../filter';
+import { IFilter } from '../IFilter';
 import { FilterType } from '@ansyn/core/models/case.model';
 
 export abstract class FilterMetadata {
 	type: FilterType;
 
-	abstract initializeFilter(value: any, filter?: Filter): void;
+	abstract initializeFilter(value: any, filter?: IFilter): void;
 
 	abstract accumulateData(value: any): void;
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Overlay } from '../../models/overlay.model';
+import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { BackToWorldView, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
 import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays } from '../../reducers/core.reducer';
@@ -16,14 +16,14 @@ import { TranslateService } from '@ngx-translate/core';
 	styleUrls: ['./imagery-status.component.less']
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	_overlay: Overlay;
+	_overlay: IOverlay;
 
 	@HostBinding('class.active') @Input() active: boolean;
 	@Input() mapId: string = null;
 	@Input() mapsAmount = 1;
 	@Input() layerFlag = false;
 
-	@Input() set overlay(overlay: Overlay) {
+	@Input() set overlay(overlay: IOverlay) {
 		this._overlay = overlay;
 		this.updateFavoriteStatus();
 	};
@@ -36,7 +36,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	private _subscriptions: Subscription[] = [];
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
-	favoriteOverlays$: Observable<Overlay[]> = this.store$.select(selectFavoriteOverlays);
+	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
 
 	alertMsg: AlertMsg;
 
@@ -47,7 +47,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			distinctUntilChanged()
 		);
 
-	favoriteOverlays: Overlay[];
+	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
 	favoritesButtonText: string;
 

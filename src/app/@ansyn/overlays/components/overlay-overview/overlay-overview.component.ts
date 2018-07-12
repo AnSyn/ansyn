@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } f
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
@@ -55,7 +55,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 
-	onHoveredOverlay(overlay: Overlay) {
+	onHoveredOverlay(overlay: IOverlay) {
 		if (overlay) {
 			this.overlayId = overlay.id;
 			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);

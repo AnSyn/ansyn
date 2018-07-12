@@ -4,8 +4,7 @@ import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Observable } from 'rxjs';
 import { selectLayout } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { BackToWorldView } from '@ansyn/core/actions/core.actions';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -15,7 +14,7 @@ import { BackToWorldView } from '@ansyn/core/actions/core.actions';
 
 export class StatusBarComponent implements OnInit, OnDestroy {
 	@Input() selectedCaseName: string;
-	@Input() activeMap: CaseMapState;
+	@Input() activeMap: ICaseMapState;
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout)
 		.do((layout) => this.layout = layout);
 	layout: LayoutKey;

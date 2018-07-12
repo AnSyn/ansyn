@@ -5,7 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
 
@@ -45,7 +45,7 @@ describe('OverlayOverviewComponent', () => {
 	describe('Show or hide me', () => {
 		let classExists = (className) => fixture.nativeElement.classList.contains(className);
 		let overlayId = '234';
-		let overlays: Overlay[] = [{
+		let overlays: IOverlay[] = [{
 			id: overlayId,
 			name: 'bcd',
 			photoTime: 'ttt',

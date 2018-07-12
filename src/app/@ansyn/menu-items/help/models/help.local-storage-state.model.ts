@@ -1,3 +1,3 @@
-export interface HelpLocalStorageState {
+export interface IHelpLocalStorageState {
 	dontShowHelpOnStartup?: boolean;
 }

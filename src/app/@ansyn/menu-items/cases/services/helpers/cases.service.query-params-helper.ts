@@ -1,4 +1,4 @@
-import { Case } from '../../models/case.model';
+import { ICase } from '../../models/case.model';
 import { Params } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
@@ -6,16 +6,16 @@ import * as wellknown from 'wellknown';
 import * as rison from 'rison';
 import { centroid, geometry } from '@turf/turf';
 import {
-	CaseMapsState,
-	CaseMapState,
-	CaseState,
+	ICaseMapsState,
+	ICaseMapState,
+	ICaseState,
 	ImageManualProcessArgs,
-	OverlaysManualProcessArgs
+	IOverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
-import { Context } from '@ansyn/core/models/context.model';
+import { IContext } from '@ansyn/core/models/context.model';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 
 export class QueryParamsHelper {
@@ -27,9 +27,9 @@ export class QueryParamsHelper {
 		return this.casesService.config.defaultCase;
 	}
 
-	updateCaseViaQueryParmas(qParams: Params = {}, defaultCase: Case = this.defaultCase) {
+	updateCaseViaQueryParmas(qParams: Params = {}, defaultCase: ICase = this.defaultCase) {
 		const sCase = cloneDeep(defaultCase);
-		sCase.state.overlaysManualProcessArgs = <OverlaysManualProcessArgs>sCase.state.overlaysManualProcessArgs;
+		sCase.state.overlaysManualProcessArgs = <IOverlaysManualProcessArgs>sCase.state.overlaysManualProcessArgs;
 		// needed for ngc
 		const qParamsKeys = Object.keys(qParams);
 		qParamsKeys.forEach((key) => {
@@ -38,7 +38,7 @@ export class QueryParamsHelper {
 		return this.casesService.parseCase(sCase);
 	}
 
-	updateCaseViaContext(selectedContext: Context, caseModel: Case, qParams: Params = {}) {
+	updateCaseViaContext(selectedContext: IContext, caseModel: ICase, qParams: Params = {}) {
 		if (selectedContext.id === 'default') {
 			return { ...this.defaultCase, name: caseModel.name };
 		}
@@ -141,7 +141,7 @@ export class QueryParamsHelper {
 		return this.casesService.parseCase(updatedCaseModel);
 	}
 
-	generateQueryParamsViaCase(sCase: Case): string {
+	generateQueryParamsViaCase(sCase: ICase): string {
 		const url = `/`;
 		const urlTree = this.casesService.urlSerializer.parse(url);
 		const keys = this.casesService.queryParamsKeys.filter(key => sCase.state[key]);
@@ -152,15 +152,15 @@ export class QueryParamsHelper {
 		return decodeURIComponent(`${baseLocation}${urlTree.toString()}`);
 	}
 
-	encodeCaseObjects(key, value, caseState?: CaseState) {
+	encodeCaseObjects(key, value, caseState?: ICaseState) {
 		switch (key) {
 			case 'facets':
 				return rison.encode(value);
 			case 'time':
 				return rison.encode({ ...value, from: value.from.toISOString(), to: value.to.toISOString() });
 			case 'maps':
-				const clonedvalue: CaseMapsState = cloneDeep(value);
-				clonedvalue.data.forEach((caseMapState: CaseMapState) => {
+				const clonedvalue: ICaseMapsState = cloneDeep(value);
+				clonedvalue.data.forEach((caseMapState: ICaseMapState) => {
 					if (caseMapState.data.overlay) {
 						caseMapState.data.overlay = <any>{
 							id: caseMapState.data.overlay.id,
@@ -180,7 +180,7 @@ export class QueryParamsHelper {
 					const keys = Object.keys(caseState.overlaysManualProcessArgs);
 					keys.forEach((overlayId) => {
 						const processArgs: ImageManualProcessArgs = caseState.overlaysManualProcessArgs[overlayId];
-						const loadedOverlay = caseState.maps.data.find((caseMapState: CaseMapState) => {
+						const loadedOverlay = caseState.maps.data.find((caseMapState: ICaseMapState) => {
 							return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
 						});
 						if (loadedOverlay) {

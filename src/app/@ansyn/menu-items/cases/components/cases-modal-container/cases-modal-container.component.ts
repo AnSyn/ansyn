@@ -2,7 +2,7 @@ import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, View
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
-import { CaseModal, casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
+import { ICaseModal, casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 
@@ -26,8 +26,8 @@ const animations: any[] = [
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	@ViewChild('modalContent', { read: ViewContainerRef }) modalContent: ViewContainerRef;
 	show$: Observable<boolean> = this.store.select(casesStateSelector)
-		.pluck <ICasesState, CaseModal>('modal')
-		.map((modal: CaseModal) => modal.show)
+		.pluck <ICasesState, ICaseModal>('modal')
+		.map((modal: ICaseModal) => modal.show)
 		.distinctUntilChanged();
 
 	selectedComponentRef;

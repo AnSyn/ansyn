@@ -5,11 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
-	StartAndEndDate
+	IStartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { toRadians } from '@ansyn/core/utils/math';
-import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { limitArray } from '@ansyn/core/utils/limited-array';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { limitArray } from '@ansyn/core/utils/i-limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { MultiPolygon } from 'geojson';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
@@ -20,12 +20,12 @@ export const IdahoOverlaySourceType = 'IDAHO';
 
 export const IdahoOverlaysSourceConfig: InjectionToken<IIdahoOverlaySourceConfig> = new InjectionToken('idaho-overlays-source-config');
 
-interface IdahoResponse {
+interface IIdahoResponse {
 	idahoResult: Array<any>;
 	token: string;
 }
 
-interface IdahoResponseForGetById {
+interface IIdahoResponseForGetById {
 	idahoResult: any;
 	token: string;
 }
@@ -48,16 +48,16 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	}
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
-		return <Observable<Overlay>>this.httpClient.get(url)
+		return <Observable<IOverlay>>this.httpClient.get(url)
 			.map(this.extractData.bind(this))
 			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 	};
 
-	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		// Multiple Source Provider may send a MultiPolygon which Idaho can't handle
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as MultiPolygon);
@@ -69,9 +69,9 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const requestParams = Object.assign({}, fetchParams, { limit: fetchParams.limit + 1 });
-		return <Observable<OverlaysFetchData>>this.httpClient.post(url, requestParams)
+		return <Observable<IOverlaysFetchData>>this.httpClient.post(url, requestParams)
 			.map(this.extractArrayData.bind(this))
-			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -81,34 +81,34 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	}
 
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
+	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
-		return <Observable<StartAndEndDate>>this.httpClient.post<StartAndEndDate>(url, params)
+		return <Observable<IStartAndEndDate>>this.httpClient.post<IStartAndEndDate>(url, params)
 			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 	}
 
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<StartAndEndDate> {
+	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<IStartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDateRange');
-		return <Observable<StartAndEndDate>>this.httpClient.post<StartAndEndDate>(url, params)
+		return <Observable<IStartAndEndDate>>this.httpClient.post<IStartAndEndDate>(url, params)
 			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			});
 	}
 
-	private extractArrayData(data: IdahoResponse): Array<Overlay> {
+	private extractArrayData(data: IIdahoResponse): Array<IOverlay> {
 		return data ? data.idahoResult.map((element) => {
 			return this.parseData(element, data.token);
 		}) : [];
 	}
 
-	private extractData(data: IdahoResponseForGetById): Overlay {
+	private extractData(data: IIdahoResponseForGetById): IOverlay {
 		return this.parseData(data.idahoResult, data.token);
 	}
 
-	protected parseData(idahoElement: any, token: string): Overlay {
-		let overlay: Overlay = <Overlay> {};
+	protected parseData(idahoElement: any, token: string): IOverlay {
+		let overlay: IOverlay = <IOverlay> {};
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;
 		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;

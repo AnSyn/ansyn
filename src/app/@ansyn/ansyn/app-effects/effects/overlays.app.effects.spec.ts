@@ -41,7 +41,7 @@ import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.re
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { Case } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import {
 	RemovePendingOverlayAction,
@@ -71,7 +71,7 @@ describe('OverlaysAppEffects', () => {
 		provide: () => {
 		}
 	};
-	const caseItem: Case = {
+	const caseItem: ICase = {
 		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
 		'state': {
 			'region': {

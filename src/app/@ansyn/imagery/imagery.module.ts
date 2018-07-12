@@ -6,17 +6,17 @@ import { IImageryConfig, initialImageryConfig } from './model/iimagery-config';
 import { CacheService } from './cache-service/cache.service';
 import { createImageryMapsCollection, ImageryMapsProvider } from './providers/imagery-map-collection';
 import { MapComponent } from './map/map.component';
-import { BaseImageryMapConstructor } from './model/base-imagery-map';
+import { IBaseImageryMapConstructor } from './model/base-imagery-map';
 import { BaseMapSourceProviderProvider, createMapSourceProviders } from './providers/map-source-providers';
 import { createConfig } from './providers/config';
 import { createPluginsCollection } from './providers/plugins-collection';
-import { BaseImageryPluginConstructor } from './model/base-imagery-plugin';
-import { BaseMapSourceProviderConstructor } from './model/base-map-source-provider';
+import { IBaseImageryPluginConstructor } from './model/base-imagery-plugin';
+import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 
 export interface ImageryMetaData {
-	maps: BaseImageryMapConstructor[],
-	plugins: BaseImageryPluginConstructor[],
-	mapSourceProviders: BaseMapSourceProviderConstructor[]
+	maps: IBaseImageryMapConstructor[],
+	plugins: IBaseImageryPluginConstructor[],
+	mapSourceProviders: IBaseMapSourceProviderConstructor[]
 }
 
 @NgModule({

@@ -2,9 +2,9 @@ import { inRange, isEqual } from 'lodash';
 import proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
-import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 
-export interface UtmZone {
+export interface IUtmZone {
 	zone: number;
 	utmProj: string;
 }
@@ -36,7 +36,7 @@ export class ProjectionConverterService {
 	}
 
 	// isValidConversion
-	isValidConversion(coords: number[], from: CoordinatesSystem): boolean {
+	isValidConversion(coords: number[], from: ICoordinatesSystem): boolean {
 		let isValid = Boolean(coords);
 
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';
@@ -53,7 +53,7 @@ export class ProjectionConverterService {
 	}
 
 
-	convertByProjectionDatum(coords: number[], from: CoordinatesSystem, to: CoordinatesSystem) {
+	convertByProjectionDatum(coords: number[], from: ICoordinatesSystem, to: ICoordinatesSystem) {
 
 		if (isEqual(from, to)) {
 			return [...coords];
@@ -87,7 +87,7 @@ export class ProjectionConverterService {
 	}
 
 	// leave hemisphere alone for future use :)
-	getZoneUtmProj(lng: number, hemisphere: number): UtmZone {
+	getZoneUtmProj(lng: number, hemisphere: number): IUtmZone {
 		// source of calculation: https://www.uwgb.edu/dutchs/UsefulData/UTMFormulas.HTM
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
 		return { zone: zone, utmProj: this.getUtmFromConf(zone) };

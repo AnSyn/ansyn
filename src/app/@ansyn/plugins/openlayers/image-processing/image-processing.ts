@@ -11,7 +11,7 @@ export const IMG_PROCESS_ORDER = [
 	{ ArgumentName: 'Sharpness', skipOnValue: 0, perImage: true }
 ];
 
-interface ProcessOperation {
+interface IProcessOperation {
 	type: string,
 	args: any
 }
@@ -64,8 +64,8 @@ export class OpenLayersImageProcessing {
 
 	processImage(operationsArguments: Object) {
 		// collection operation by processingParams
-		const pixelOperations: ProcessOperation[] = [];
-		const imageOperations: ProcessOperation[] = [];
+		const pixelOperations: IProcessOperation[] = [];
+		const imageOperations: IProcessOperation[] = [];
 
 		// collect parameters in processing order
 		IMG_PROCESS_ORDER.forEach(operation => {

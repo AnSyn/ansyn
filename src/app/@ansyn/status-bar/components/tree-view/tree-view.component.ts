@@ -7,7 +7,7 @@ import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.mode
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { isEqual } from 'lodash';
-import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -18,7 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
-	_selectedFilters: DataInputFilterValue[];
+	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
 

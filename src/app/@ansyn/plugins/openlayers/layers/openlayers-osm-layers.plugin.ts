@@ -9,7 +9,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 
@@ -24,7 +24,7 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 	toggleGroup$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
-		map((map: CaseMapState) => !map.flags.displayLayers),
+		map((map: ICaseMapState) => !map.flags.displayLayers),
 		distinctUntilChanged(),
 		debounceTime(50),
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))

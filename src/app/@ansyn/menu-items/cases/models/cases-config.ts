@@ -1,10 +1,10 @@
-import { Case } from './case.model';
+import { ICase } from './case.model';
 
 export interface ICasesConfig {
 	schema: string,
 	paginationLimit: number,
 	casesQueryParamsKeys: string[],
-	defaultCase: Case,
+	defaultCase: ICase,
 	updateCaseDebounceTime: number,
 	useHash: boolean
 }

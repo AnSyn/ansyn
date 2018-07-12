@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
-import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
@@ -85,7 +85,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this._mapLayers = [...layers];
 		const controls = [
 			new ScaleLine(),
@@ -122,7 +122,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		this.isValidPosition = false;
 		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
@@ -299,7 +299,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			});
 	}
 
-	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
+	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
 		const rotation = this._mapObject.getView().getRotation();
 		view.setCenter([0, 0]);
 		view.setRotation(rotation ? rotation : 0);
@@ -320,7 +320,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public getPosition(): Observable<CaseMapPosition> {
+	public getPosition(): Observable<ICaseMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };

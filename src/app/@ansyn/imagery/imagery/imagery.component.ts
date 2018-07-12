@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { BaseImageryMapConstructor } from '../model/base-imagery-map';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { IBaseImageryMapConstructor } from '../model/base-imagery-map';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 
 @Component({
@@ -25,7 +25,7 @@ import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 export class ImageryComponent implements OnInit, OnDestroy {
 
 	@ViewChild('mapComponentElem', { read: ViewContainerRef }) mapComponentElem: ViewContainerRef;
-	@Input() public mapComponentSettings: CaseMapState;
+	@Input() public mapComponentSettings: ICaseMapState;
 
 	private _mapComponentRef: ComponentRef<any>;
 	private _manager: ImageryComponentManager;
@@ -54,7 +54,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
-				@Inject(IMAGERY_MAPS) protected iMapConstructors: BaseImageryMapConstructor[],
+				@Inject(IMAGERY_MAPS) protected iMapConstructors: IBaseImageryMapConstructor[],
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
 				protected injector: Injector) {
 	}

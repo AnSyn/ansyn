@@ -1,6 +1,6 @@
 import { LayoutKey } from './layout-options.model';
 
-export interface MapsLayout {
+export interface IMapsLayout {
 	id: LayoutKey;
 	mapsCount: number
 }

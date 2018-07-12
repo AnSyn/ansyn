@@ -1,6 +1,6 @@
 import { FiltersService } from '../../services/filters.service';
 import { Component, OnDestroy } from '@angular/core';
-import { Filter } from '../../models/filter';
+import { IFilter } from '../../models/IFilter';
 import { Store } from '@ngrx/store';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../actions/filters.actions';
@@ -14,7 +14,7 @@ import { UpdateFacetsAction } from '../../actions/filters.actions';
 export class FiltersCollectionComponent implements OnDestroy {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
-	public filters: Filter[] = this.filtersService.getFilters();
+	public filters: IFilter[] = this.filtersService.getFilters();
 
 	public subscribers = {
 		filters: undefined

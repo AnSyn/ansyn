@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
 import {
-	GeoFilterStatus,
+	IGeoFilterStatus,
 	IStatusBarState,
 	selectComboBoxesProperties,
 	selectGeoFilterStatus
@@ -10,7 +10,7 @@ import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
-	ComboBoxesProperties,
+	IComboBoxesProperties,
 	GEO_FILTERS,
 	ORIENTATIONS,
 	TIME_FILTERS
@@ -22,14 +22,14 @@ import {
 	UpdateOverlaysCountAction
 } from '@ansyn/core/actions/core.actions';
 import {
-	CaseDataInputFiltersState,
+	ICaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	CaseTimeState
+	ICaseTimeState
 } from '@ansyn/core/models/case.model';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { Overlay, OverlaysCriteria } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import {
 	selectDataInputFilter,
 	selectLayout,
@@ -61,19 +61,19 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	animations: [fadeAnimations]
 })
 export class ComboBoxesComponent implements OnInit, OnDestroy {
-	comboBoxesProperties$: Observable<ComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
-	geoFilterStatus$ = this.store.select(selectGeoFilterStatus).do((geoFilterStatus: GeoFilterStatus) => this.geoFilterStatus = geoFilterStatus);
+	comboBoxesProperties$: Observable<IComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
+	geoFilterStatus$ = this.store.select(selectGeoFilterStatus).do((geoFilterStatus: IGeoFilterStatus) => this.geoFilterStatus = geoFilterStatus);
 
 	regionType$ = this.store.select(selectRegion).filter(Boolean).map((region) => region.type).do((regionType) => this.regionType = regionType);
-	overlaysCriteria$: Observable<OverlaysCriteria> = this.store.select(selectOverlaysCriteria);
-	time$: Observable<CaseTimeState> = this.overlaysCriteria$
-		.pluck<OverlaysCriteria, CaseTimeState>('time')
+	overlaysCriteria$: Observable<IOverlaysCriteria> = this.store.select(selectOverlaysCriteria);
+	time$: Observable<ICaseTimeState> = this.overlaysCriteria$
+		.pluck<IOverlaysCriteria, ICaseTimeState>('time')
 		.distinctUntilChanged();
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout);
 
 	dataInputFilters$ = this.store.select(selectDataInputFilter)
-		.filter((caseDataInputFiltersState: CaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters))
-		.do((caseDataInputFiltersState: CaseDataInputFiltersState) => {
+		.filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters))
+		.do((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : caseDataInputFiltersState.fullyChecked ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
 			this.dataInputFilters = caseDataInputFiltersState;
 		});
@@ -82,17 +82,17 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
 		.map(({ payload }: UpdateOverlaysCountAction) => payload);
 
-	geoFilterStatus: GeoFilterStatus;
+	geoFilterStatus: IGeoFilterStatus;
 	regionType: CaseGeoFilter;
 
-	comboBoxesProperties: ComboBoxesProperties;
+	comboBoxesProperties: IComboBoxesProperties;
 	dataInputFilterExpand: boolean;
 	timeSelectionEditIcon: boolean;
-	favoriteOverlays: Overlay[];
+	favoriteOverlays: IOverlay[];
 	layout: LayoutKey;
-	time: CaseTimeState;
+	time: ICaseTimeState;
 
-	dataInputFilters: CaseDataInputFiltersState;
+	dataInputFilters: ICaseDataInputFiltersState;
 	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
 	private subscriptions = [];
 
@@ -151,7 +151,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	applyTimelinePickerResult(time: CaseTimeState) {
+	applyTimelinePickerResult(time: ICaseTimeState) {
 		this.store.dispatch(new SetOverlaysCriteriaAction({ time }));
 		this.toggleTimelineStartEndSearch();
 	}
@@ -173,12 +173,12 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
 	}
 
-	comboBoxesChange(payload: ComboBoxesProperties) {
+	comboBoxesChange(payload: IComboBoxesProperties) {
 		this.store.dispatch(new SetComboBoxesProperties(payload));
 	}
 
 	geoFilterChanged(geoFilter?: SearchMode) {
-		const payload: Partial<GeoFilterStatus> = { searchMode: geoFilter };
+		const payload: Partial<IGeoFilterStatus> = { searchMode: geoFilter };
 
 		if (Boolean(geoFilter)) {
 			payload.indicator = true;

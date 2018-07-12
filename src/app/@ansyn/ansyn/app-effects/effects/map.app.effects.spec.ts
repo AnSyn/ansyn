@@ -16,8 +16,8 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
-import { Case } from '@ansyn/menu-items/cases/models/case.model';
-import { Overlay } from '@ansyn/overlays/models/overlay.model';
+import { ICase } from '@ansyn/menu-items/cases/models/case.model';
+import { IOverlay } from '@ansyn/overlays/models/overlay.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	IMapState,
@@ -52,7 +52,7 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
@@ -62,7 +62,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';
@@ -71,7 +71,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 		return true;
 	}
 
-	createAsync(metaData: CaseMapState): Promise<any> {
+	createAsync(metaData: ICaseMapState): Promise<any> {
 		return Promise.resolve();
 	}
 
@@ -86,7 +86,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
-	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return Observable.empty();
 	}
 
@@ -98,7 +98,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return Observable.empty();
 	};
 }
@@ -122,11 +122,11 @@ describe('MapAppEffects', () => {
 		communicatorsAsArray: () => {
 		}
 	};
-	let fakeOverlay: Overlay;
+	let fakeOverlay: IOverlay;
 
 	const imagery1PositionBoundingBox = {test: 1};
 
-	const cases: Case[] = [{
+	const cases: ICase[] = [{
 		id: '1',
 		name: 'name',
 		owner: 'owner',
@@ -295,7 +295,7 @@ describe('MapAppEffects', () => {
 		});
 
 		it('should NOT dispatch/do anything if "overlay date = undefined"', () => {
-			const testOverlay: Overlay = <Overlay>{
+			const testOverlay: IOverlay = <IOverlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -310,7 +310,7 @@ describe('MapAppEffects', () => {
 
 	describe('onOverlayFromURL$ from IDAHO', () => {
 		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay date = undefined"', () => {
-			const testOverlay: Overlay = <Overlay>{
+			const testOverlay: IOverlay = <IOverlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -333,7 +333,7 @@ describe('MapAppEffects', () => {
 
 
 		it('should NOT dispatch anything if "overlay date exists"', () => {
-			const testOverlay: Overlay = {
+			const testOverlay: IOverlay = {
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -350,7 +350,7 @@ describe('MapAppEffects', () => {
 
 	describe('onOverlayFromURL$ from PLANET', () => {
 		it('should dispatch RequestOverlayByIDFromBackendAction if "overlay date = undefined"', () => {
-			const testOverlay: Overlay = <Overlay>{
+			const testOverlay: IOverlay = <IOverlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -411,7 +411,7 @@ describe('MapAppEffects', () => {
 
 	describe('activeMapGeoRegistrationChanged$', () => {
 		it('After active map is changed should dispatch "SetMapGeoEnabledModeToolsActionStore" geoOpertions state', () => {
-			const testOverlay: Overlay = {id: 'testOverlayId1', isGeoRegistered: false} as Overlay;
+			const testOverlay: IOverlay = {id: 'testOverlayId1', isGeoRegistered: false} as IOverlay;
 			mapState.mapsList = <any> [
 				{id: 'imagery1', data: {overlay: testOverlay}},
 				{id: 'imagery2', data: {overlay: testOverlay}}

@@ -3,7 +3,7 @@ import TileLayer from 'ol/layer/tile';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
 
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
@@ -14,7 +14,7 @@ export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerOSMSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: CaseMapState): any[] {
+	create(metaData: ICaseMapState): any[] {
 		const osmLayer = new TileLayer({
 			source: new OSM()
 		});

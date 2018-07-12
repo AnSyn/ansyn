@@ -1,11 +1,11 @@
 import { Action } from '@ngrx/store';
 import { Point, Position } from 'geojson';
-import { ImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
-import { MapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
-import { AnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { IImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
+import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IAnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -49,9 +49,9 @@ export const MapActionTypes = {
 	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER'
 };
 
-export interface ContextMenuShowPayload {
+export interface IContextMenuShowPayload {
 	point: Point;
-	overlays: Overlay[];
+	overlays: IOverlay[];
 	event: MouseEvent;
 }
 
@@ -75,7 +75,7 @@ export class ActiveMapChangedAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: CaseMapPosition, mapInstance: CaseMapState }) {
+	constructor(public payload: { id: string, position: ICaseMapPosition, mapInstance: ICaseMapState }) {
 	}
 }
 
@@ -89,21 +89,21 @@ export class UpdateMapSizeAction implements Action {
 export class ImageryCreatedAction implements Action {
 	type = MapActionTypes.IMAGERY_CREATED;
 
-	constructor(public payload: ImageryChanged) {
+	constructor(public payload: IImageryChanged) {
 	}
 }
 
 export class ImageryRemovedAction implements Action {
 	type = MapActionTypes.IMAGERY_REMOVED;
 
-	constructor(public payload: ImageryChanged) {
+	constructor(public payload: IImageryChanged) {
 	}
 }
 
 export class MapInstanceChangedAction implements Action {
 	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
 
-	constructor(public payload: MapInstanceChanged) {
+	constructor(public payload: IMapInstanceChanged) {
 	}
 }
 
@@ -124,7 +124,7 @@ export class ContextMenuTriggerAction implements Action {
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
-	constructor(public payload: ContextMenuShowPayload) {
+	constructor(public payload: IContextMenuShowPayload) {
 	}
 }
 
@@ -138,7 +138,7 @@ export class ContextMenuDisplayAction implements Action {
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.STORE.SET_MAPS_DATA;
 
-	constructor(public payload: { mapsList?: CaseMapState[], activeMapId?: string }) {
+	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
 	}
 }
 
@@ -152,14 +152,14 @@ export class PinLocationModeTriggerAction implements Action {
 export class MapsListChangedAction implements Action {
 	type = MapActionTypes.TRIGGER.MAPS_LIST_CHANGED;
 
-	constructor(public payload: CaseMapState[]) {
+	constructor(public payload: ICaseMapState[]) {
 	}
 }
 
 export class AnnotationContextMenuTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU;
 
-	constructor(public payload: AnnotationsContextMenuEvent) {
+	constructor(public payload: IAnnotationsContextMenuEvent) {
 
 	}
 }

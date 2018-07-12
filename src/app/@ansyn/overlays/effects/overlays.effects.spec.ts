@@ -6,7 +6,7 @@ import {
 	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction,
 	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
-import { Overlay } from '../models/overlay.model';
+import { IOverlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
 import {
@@ -34,7 +34,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return Observable.empty();
 	};
 }
@@ -46,7 +46,7 @@ describe('Overlays Effects ', () => {
 	let overlaysEffects: OverlaysEffects;
 	let overlaysService: OverlaysService | any;
 
-	const overlays = <Overlay[]>[
+	const overlays = <IOverlay[]>[
 		{
 			id: '12',
 			name: 'tmp12',
@@ -62,7 +62,7 @@ describe('Overlays Effects ', () => {
 			footprint: {}
 		}
 	];
-	const favoriteOverlays = <Overlay[]>[
+	const favoriteOverlays = <IOverlay[]>[
 		{
 			id: '13',
 			name: 'tmp13',
@@ -115,7 +115,7 @@ describe('Overlays Effects ', () => {
 
 
 	it('it should load all the overlays', () => {
-		let tmp = <Overlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
+		let tmp = <IOverlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
 		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0, errors: [] }));
 		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
 		const expectedResults = cold('--(a)--', {
@@ -125,7 +125,7 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('onRequestOverlayByID$ from IDAHO should dispatch DisplayOverlayAction with overlay', () => {
-		const fakeOverlay = <Overlay> { id: 'test' };
+		const fakeOverlay = <IOverlay> { id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
@@ -146,7 +146,7 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('onRequestOverlayByID$ from PLANET should dispatch DisplayOverlayAction with overlay', () => {
-		const fakeOverlay = <Overlay> { id: 'test' };
+		const fakeOverlay = <IOverlay> { id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({

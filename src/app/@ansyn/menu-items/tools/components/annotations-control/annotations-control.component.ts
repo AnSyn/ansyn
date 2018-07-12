@@ -8,11 +8,11 @@ import {
 	SetAnnotationMode
 } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { IAnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
-export interface ModeList {
+export interface IModeList {
 	mode: AnnotationMode;
 	icon: string;
 }
@@ -33,14 +33,14 @@ export class AnnotationsControlComponent implements OnInit {
 		.pluck<IToolsState, AnnotationMode>('annotationMode')
 		.distinctUntilChanged();
 
-	public annotationProperties$: Observable<AnnotationProperties> = this.store.select<IToolsState>(toolsStateSelector)
-		.pluck<IToolsState, AnnotationProperties>('annotationProperties')
+	public annotationProperties$: Observable<IAnnotationProperties> = this.store.select<IToolsState>(toolsStateSelector)
+		.pluck<IToolsState, IAnnotationProperties>('annotationProperties')
 		.distinctUntilChanged();
 
 	public mode: AnnotationMode;
-	public annotationProperties: AnnotationProperties;
+	public annotationProperties: IAnnotationProperties;
 
-	public modesList: ModeList[] = [
+	public modesList: IModeList[] = [
 		{ mode: 'Point', icon: 'point' },
 		{ mode: 'LineString', icon: 'line' },
 		{ mode: 'Polygon', icon: 'polygon' },

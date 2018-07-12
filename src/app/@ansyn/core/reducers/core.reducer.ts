@@ -5,11 +5,9 @@ import {
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { Overlay, OverlaysCriteria } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
-import { CaseDataInputFiltersState } from '../models/case.model';
-
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -25,9 +23,9 @@ export interface IToastMessage {
 
 export interface ICoreState {
 	toastMessage: IToastMessage;
-	favoriteOverlays: Overlay[];
+	favoriteOverlays: IOverlay[];
 	alertMsg: AlertMsg;
-	overlaysCriteria: OverlaysCriteria;
+	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
 }

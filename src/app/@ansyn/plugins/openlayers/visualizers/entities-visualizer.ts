@@ -10,18 +10,18 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import ol_Layer from 'ol/layer/layer';
 
-import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
-import { VisualizerStates, VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
+import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
+import { VisualizerStates, IVisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
 import {
-	BaseImageryVisualizer, BaseImageryVisualizerClass,
+	BaseImageryVisualizer, IBaseImageryVisualizerClass,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 
-export interface FeatureIdentifier {
+export interface IFeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
 }
@@ -31,10 +31,10 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
 	vector: ol_Layer;
-	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
+	protected idToEntity: Map<string, IFeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected disableCache = false;
 
-	protected visualizerStyle: VisualizerStateStyle = {
+	protected visualizerStyle: IVisualizerStateStyle = {
 		opacity: 1,
 		initial: {
 			fill: {
@@ -49,7 +49,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
 
-	constructor(visualizerStyle: Partial<VisualizerStateStyle> = {}, defaultStyle: Partial<VisualizerStateStyle> = {}) {
+	constructor(visualizerStyle: Partial<IVisualizerStateStyle> = {}, defaultStyle: Partial<IVisualizerStateStyle> = {}) {
 		super();
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
 	}
@@ -88,7 +88,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	toggleVisibility() {
-		if (!(<BaseImageryVisualizerClass>this.constructor).isHideable) {
+		if (!(<IBaseImageryVisualizerClass>this.constructor).isHideable) {
 			return;
 		}
 
@@ -124,7 +124,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		});
 	}
 
-	protected createStyle(feature: Feature, isStyle, ...styles: Array<Partial<VisualizerStyle>>) {
+	protected createStyle(feature: Feature, isStyle, ...styles: Array<Partial<IVisualizerStyle>>) {
 		const styleSettings: any = merge({}, ...styles);
 		this.fixStyleValues(feature, styleSettings);
 
@@ -265,13 +265,13 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return this.addOrUpdateEntities(currentEntities);
 	}
 
-	updateStyle(style: Partial<VisualizerStateStyle>) {
+	updateStyle(style: Partial<IVisualizerStateStyle>) {
 		merge(this.visualizerStyle, style);
 		this.purgeCache();
 	}
 
 
-	updateFeatureStyle(featureId: string, style: Partial<VisualizerStateStyle>) {
+	updateFeatureStyle(featureId: string, style: Partial<IVisualizerStateStyle>) {
 		const feature = this.source.getFeatureById(featureId);
 
 		const entity = this.getEntity(feature);

@@ -10,7 +10,7 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -67,7 +67,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			.withLatestFrom(this.store$.select(overlaysStateSelector))
 			.do(([point, overlaysState]) => {
 				const overlays = overlaysState.filteredOverlays
-					.map((id: string): Overlay => overlaysState.overlays.get(id))
+					.map((id: string): IOverlay => overlaysState.overlays.get(id))
 					.filter(({ footprint }) => inside(point, footprint));
 
 				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));

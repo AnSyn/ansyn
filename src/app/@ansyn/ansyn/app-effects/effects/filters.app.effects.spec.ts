@@ -19,7 +19,7 @@ import {
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays/actions/overlays.actions';
-import { Filter } from '@ansyn/menu-items/filters/models/filter';
+import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
@@ -27,7 +27,7 @@ import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import 'rxjs/add/observable/of';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
@@ -42,13 +42,13 @@ describe('Filters app effects', () => {
 	const filterMetadata2: FilterMetadata = new EnumFilterMetadata();
 	const filterMetadata3: FilterMetadata = new SliderFilterMetadata();
 	const filterMetadata4: FilterMetadata = new SliderFilterMetadata();
-	const filterKey: Filter = { modelName: 'enumModel1', displayName: 'Enum Model', type: FilterType.Enum };
-	const filterKey2: Filter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: FilterType.Enum };
-	const filterKey3: Filter = { modelName: 'SliderModel', displayName: 'Slider Model', type: FilterType.Slider };
-	const filterKey4: Filter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
+	const filterKey: IFilter = { modelName: 'enumModel1', displayName: 'Enum Model', type: FilterType.Enum };
+	const filterKey2: IFilter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: FilterType.Enum };
+	const filterKey3: IFilter = { modelName: 'SliderModel', displayName: 'Slider Model', type: FilterType.Slider };
+	const filterKey4: IFilter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
-	const favoriteOver =  <Overlay> {};
+	const favoriteOver =  <IOverlay> {};
 	favoriteOver.id = '2';
 
 	beforeEach(async(() => {
@@ -115,7 +115,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('setShowFavoritesFlagOnFilters$', () => {
-		const overlays = [ <Overlay> {}, <Overlay> {}];
+		const overlays = [ <IOverlay> {}, <IOverlay> {}];
 		store.dispatch(new SetFavoriteOverlaysAction(overlays));
 		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);

@@ -7,10 +7,10 @@ import * as d3 from 'd3/build/d3';
 import eventDrops from '@ansyn/event-drops';
 import { OverlaysService } from '../../services/overlays.service';
 import {
-	IOverlaysState, MarkUpClass, MarkUpData, MarkUpTypes, OverlayDrop, overlaysStateSelector, selectDropMarkup,
+	IOverlaysState, MarkUpClass, IMarkUpData, MarkUpTypes, OverlayDrop, overlaysStateSelector, selectDropMarkup,
 	selectDrops,
 	selectTimelineRange,
-	TimelineRange
+	ITimelineRange
 } from '../../reducers/overlays.reducer';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
@@ -110,19 +110,19 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			tap(([action, drops]) => this.initEventDropsSequence(drops))
 		);
 
-	timeLineRange$: Observable<TimelineRange> = this.store$
+	timeLineRange$: Observable<ITimelineRange> = this.store$
 		.pipe(
 			select(selectTimelineRange),
-			tap((value: TimelineRange) => this.configuration.range = value)
+			tap((value: ITimelineRange) => this.configuration.range = value)
 		);
 
-	private markup: ExtendMap<MarkUpClass, MarkUpData>;
-	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, MarkUpData>, any]> = this.store$
+	private markup: ExtendMap<MarkUpClass, IMarkUpData>;
+	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
 		.pipe(
 			select(selectDropMarkup),
 			withLatestFrom(this.store$.pipe(select(selectDrops))),
 			tap(this.checkDiffranceInTimeRange.bind(this)),
-			tap(([value]: [ExtendMap<MarkUpClass, MarkUpData>, any]) => {
+			tap(([value]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) => {
 				this.markup = value;
 				this.drawMarkup();
 			})
@@ -233,7 +233,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	checkDiffranceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, MarkUpData>, any]) {
+	checkDiffranceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) {
 		const newActive = newMarkUp.get(MarkUpClass.active).overlaysIds;
 		if (!newActive || !newActive.length) {
 			return;

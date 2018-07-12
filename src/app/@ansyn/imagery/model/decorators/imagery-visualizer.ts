@@ -1,8 +1,8 @@
-import { BaseImageryVisualizerClass, ImageryVisualizerMetaData } from '../base-imagery-visualizer';
+import { IBaseImageryVisualizerClass, IImageryVisualizerMetaData } from '../base-imagery-visualizer';
 import { ImageryPlugin } from './imagery-plugin';
 
-export function ImageryVisualizer(metaData: ImageryVisualizerMetaData) {
-	return function (constructor: BaseImageryVisualizerClass) {
+export function ImageryVisualizer(metaData: IImageryVisualizerMetaData) {
+	return function (constructor: IBaseImageryVisualizerClass) {
 		ImageryPlugin(metaData)(constructor);
 	};
 }

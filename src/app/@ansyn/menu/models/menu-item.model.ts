@@ -1,4 +1,4 @@
-export interface MenuItem {
+export interface IMenuItem {
 	name: string;
 	component: any;
 	iconClass: string;

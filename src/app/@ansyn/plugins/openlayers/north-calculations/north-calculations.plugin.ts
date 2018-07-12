@@ -20,7 +20,7 @@ import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CaseOrientation } from '@ansyn/core/models/case.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
@@ -50,7 +50,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
 			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
 		})
-		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
+		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return this.pointNorth()
 				.do(virtualNorth => {
 					this.communicator.setVirtualNorth(virtualNorth);

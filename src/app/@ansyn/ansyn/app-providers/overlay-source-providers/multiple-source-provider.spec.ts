@@ -4,16 +4,16 @@ import {
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceConfig
 } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
-import { Overlay } from '@ansyn/overlays/models/overlay.model';
+import { IOverlay } from '@ansyn/overlays/models/overlay.model';
 import { Observable } from 'rxjs/Rx';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Injectable } from '@angular/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 
-const overlays: OverlaysFetchData = {
+const overlays: IOverlaysFetchData = {
 	data: [
 		{
 			id: '1',
@@ -27,7 +27,7 @@ const overlays: OverlaysFetchData = {
 	errors: []
 };
 
-const emptyOverlays: OverlaysFetchData = {
+const emptyOverlays: IOverlaysFetchData = {
 	data: [],
 	limited: 0,
 	errors: []
@@ -39,7 +39,7 @@ const faultySourceType = 'Faulty';
 class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Truthy';
 
-	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		if (fetchParams.limit <= 0) {
 			return Observable.of(emptyOverlays);
 		}
@@ -55,7 +55,7 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return Observable.empty();
 	}
 }
@@ -64,7 +64,7 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = faultySourceType;
 
-	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return Observable.throw(new Error('Failed to fetch overlays'));
 	}
 
@@ -76,7 +76,7 @@ class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return Observable.empty();
 	}
 }

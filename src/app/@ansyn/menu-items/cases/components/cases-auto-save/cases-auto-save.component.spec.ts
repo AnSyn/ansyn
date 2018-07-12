@@ -3,7 +3,7 @@ import { CasesAutoSaveComponent } from './cases-auto-save.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
 
 describe('CasesAutoSaveComponent', () => {
@@ -13,7 +13,7 @@ describe('CasesAutoSaveComponent', () => {
 
 	const fakeCase = {
 		autoSave: true
-	} as Case;
+	} as ICase;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

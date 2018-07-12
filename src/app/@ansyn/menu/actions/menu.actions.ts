@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { MenuItem } from '../models/menu-item.model';
+import { IMenuItem } from '../models/menu-item.model';
 
 export const MenuActionTypes = {
 	INITIALIZE_MENU_ITEMS: 'INITIALIZE_MENU_ITEMS',
@@ -17,14 +17,14 @@ export const MenuActionTypes = {
 export class InitializeMenuItemsAction implements Action {
 	type = MenuActionTypes.INITIALIZE_MENU_ITEMS;
 
-	constructor(public payload: MenuItem[]) {
+	constructor(public payload: IMenuItem[]) {
 	}
 }
 
 export class AddMenuItemAction implements Action {
 	type = MenuActionTypes.ADD_MENU_ITEM;
 
-	constructor(public payload: MenuItem) {
+	constructor(public payload: IMenuItem) {
 	}
 }
 

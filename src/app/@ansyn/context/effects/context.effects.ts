@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ContextParams, selectContextsArray, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
+import { IContextParams, selectContextsArray, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	CasesActionTypes,
@@ -12,10 +12,10 @@ import {
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
-import { Context } from '@ansyn/core/models/context.model';
-import { Case } from '@ansyn/core/models/case.model';
+import { IContext } from '@ansyn/core/models/context.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { StartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { IStartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Actions, Effect } from '@ngrx/effects';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
@@ -31,13 +31,13 @@ export class ContextEffects {
 		.ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.filter((action: LoadDefaultCaseAction) => action.payload.context)
 		.withLatestFrom(this.store.select(selectContextsArray), this.store.select(selectContextsParams))
-		.map(([action, contexts, params]: [LoadDefaultCaseAction, any[], ContextParams]) => {
+		.map(([action, contexts, params]: [LoadDefaultCaseAction, any[], IContextParams]) => {
 			const context = contexts.find(({ id }) => action.payload.context === id);
 			return [action, context, params];
 		});
 
-	setContext = mergeMap(([action, context, contextParams]: [LoadDefaultCaseAction, Context, ContextParams]) => {
-		const paramsPayload: ContextParams = {};
+	setContext = mergeMap(([action, context, contextParams]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
+		const paramsPayload: IContextParams = {};
 		if (context.defaultOverlay) {
 			paramsPayload.defaultOverlay = context.defaultOverlay;
 		}
@@ -63,7 +63,7 @@ export class ContextEffects {
 	@Effect()
 	loadExistingDefaultCaseContext$: Observable<SetContextParamsAction | SelectCaseAction> =
 		this.loadDefaultCaseContext$
-			.filter(([action, context]: [LoadDefaultCaseAction, any, ContextParams]) => Boolean(context))
+			.filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => Boolean(context))
 			.pipe(this.setContext);
 
 	/**
@@ -76,11 +76,11 @@ export class ContextEffects {
 	@Effect()
 	loadNotExistingDefaultCaseContext$: Observable<any> =
 		this.loadDefaultCaseContext$
-			.filter(([action, context]: [LoadDefaultCaseAction, any, ContextParams]) => !(Boolean(context)))
-			.mergeMap(([action, context, params]: [LoadDefaultCaseAction, Context, ContextParams]) => {
+			.filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => !(Boolean(context)))
+			.mergeMap(([action, context, params]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
 				return this.contextService
 					.loadContext(action.payload.context)
-					.map((context: Context) => [action, context, params])
+					.map((context: IContext) => [action, context, params])
 					.pipe(this.setContext);
 			})
 			.catch((err) => {
@@ -115,7 +115,7 @@ export class ContextEffects {
 			}
 			return sCase;
 		})
-		.map((sCase: Case) => {
+		.map((sCase: ICase) => {
 			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
 			copyFromContent(shareLink);
 			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
@@ -141,10 +141,10 @@ export class ContextEffects {
 
 	}
 
-	getCaseForContext(defaultCaseQueryParams: Case, context: Context, params: ContextParams): Observable<Case> {
+	getCaseForContext(defaultCaseQueryParams: ICase, context: IContext, params: IContextParams): Observable<ICase> {
 		const updatedCase = { ...defaultCaseQueryParams };
 
-		const mapToCase = map(({ startDate, endDate }: StartAndEndDate): Case => ({
+		const mapToCase = map(({ startDate, endDate }: IStartAndEndDate): ICase => ({
 				...updatedCase,
 				state: {
 					...updatedCase.state,
@@ -157,7 +157,7 @@ export class ContextEffects {
 			}
 		));
 
-		let case$: Observable<Case> = Observable.of(defaultCaseQueryParams).pipe(<any>mapToCase);
+		let case$: Observable<ICase> = Observable.of(defaultCaseQueryParams).pipe(<any>mapToCase);
 
 		if (context.imageryCountBefore && !context.imageryCountAfter) {
 			case$ = <any> this.overlaysService.getStartDateViaLimitFacets({

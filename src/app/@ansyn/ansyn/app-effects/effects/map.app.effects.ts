@@ -36,7 +36,7 @@ import {
 	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
@@ -49,7 +49,7 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
-import { BaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
+import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
 import { debounceTime } from 'rxjs/internal/operators';
 
 @Injectable()
@@ -115,8 +115,8 @@ export class MapAppEffects {
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
-			filter(([activeMap]: [CaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
-			mergeMap(([activeMap, action, mapState]: [CaseMapState, SetManualImageProcessing, IMapState]) => {
+			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
+			mergeMap(([activeMap, action, mapState]: [ICaseMapState, SetManualImageProcessing, IMapState]) => {
 				const updatedMapList = [...mapState.mapsList];
 				activeMap.data.imageManualProcessArgs = action.payload;
 				const overlayId = activeMap.data.overlay.id;
@@ -144,8 +144,8 @@ export class MapAppEffects {
 				return mapsState.mapsList
 					.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
 			}),
-			filter((caseMapState: CaseMapState) => Boolean(caseMapState)),
-			map((caseMapState: CaseMapState) => {
+			filter((caseMapState: ICaseMapState) => Boolean(caseMapState)),
+			map((caseMapState: ICaseMapState) => {
 				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
@@ -231,7 +231,7 @@ export class MapAppEffects {
 			map(([action, { mapsList, activeMapId }]: [Action, IMapState]) => {
 					const actives = [];
 					const displayed = [];
-					mapsList.forEach((map: CaseMapState) => {
+					mapsList.forEach((map: ICaseMapState) => {
 						if (Boolean(map.data.overlay)) {
 							if (map.id === activeMapId) {
 								actives.push(map.data.overlay.id);
@@ -358,7 +358,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_MAPS) protected iMapConstructors: BaseImageryMapConstructor[],
+				@Inject(IMAGERY_MAPS) protected iMapConstructors: IBaseImageryMapConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

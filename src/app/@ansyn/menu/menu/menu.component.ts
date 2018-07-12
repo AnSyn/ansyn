@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { DOCUMENT } from '@angular/common';
-import { MenuItem } from '../models/menu-item.model';
+import { IMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import {
@@ -83,14 +83,14 @@ export class MenuComponent implements OnInit {
 
 	autoClose$ = this.store.select(selectAutoClose);
 
-	entities$: Observable<Dictionary<MenuItem>> = this.store.select(selectEntitiesMenuItems);
-	menuItemsAsArray$: Observable<MenuItem[]> = this.store.select(selectAllMenuItems)
-		.map((menuItems: MenuItem[]) => menuItems.filter(this.isMenuItemShown));
+	entities$: Observable<Dictionary<IMenuItem>> = this.store.select(selectEntitiesMenuItems);
+	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.select(selectAllMenuItems)
+		.map((menuItems: IMenuItem[]) => menuItems.filter(this.isMenuItemShown));
 
 	selectedMenuItem$: Observable<string> = this.store.select(selectSelectedMenuItem);
 
 	selectedMenuItemName: string;
-	entities: Dictionary<MenuItem> = {};
+	entities: Dictionary<IMenuItem> = {};
 	isPinned: boolean;
 	expand: boolean;
 	onAnimation: boolean;
@@ -108,11 +108,11 @@ export class MenuComponent implements OnInit {
 		return this.isPinned ? 'Pin' : 'Unpin';
 	}
 
-	get selectedMenuItem(): MenuItem {
+	get selectedMenuItem(): IMenuItem {
 		return this.entities[this.selectedMenuItemName];
 	}
 
-	isMenuItemShown(menuItem: MenuItem) {
+	isMenuItemShown(menuItem: IMenuItem) {
 		return isDevMode() || menuItem.production;
 	}
 

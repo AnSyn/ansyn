@@ -1,8 +1,8 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { Filter } from '../filter';
+import { IFilter } from '../IFilter';
 import { FilterType } from '@ansyn/core/models/case.model';
 
-export interface EnumFiled {
+export interface IEnumFiled {
 	count: number;
 	filteredCount: number;
 	isChecked: boolean;
@@ -11,11 +11,11 @@ export interface EnumFiled {
 
 export class EnumFilterMetadata implements FilterMetadata {
 
-	enumsFields: Map<string, EnumFiled>;
+	enumsFields: Map<string, IEnumFiled>;
 	type: FilterType;
 
 	constructor() {
-		this.enumsFields = new Map<string, EnumFiled>();
+		this.enumsFields = new Map<string, IEnumFiled>();
 		this.type = FilterType.Enum;
 	}
 
@@ -26,7 +26,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	selectOnly(selectedKey: string): void {
-		this.enumsFields.forEach((value: EnumFiled, key: string) => {
+		this.enumsFields.forEach((value: IEnumFiled, key: string) => {
 			value.isChecked = (key === selectedKey);
 		});
 	}
@@ -58,7 +58,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	postInitializeFilter(value: { oldFiltersArray: [Filter, EnumFilterMetadata][], modelName: string }): void {
+	postInitializeFilter(value: { oldFiltersArray: [IFilter, EnumFilterMetadata][], modelName: string }): void {
 		this.enumsFields.forEach((value, key, mapObj: Map<any, any>) => {
 			if (!value.count) {
 				mapObj.delete(key);
@@ -67,7 +67,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 
 		if (value.oldFiltersArray) {
 			const oldFilterArray = value.oldFiltersArray
-				.find(([oldFilterKey, oldFilter]: [Filter, FilterMetadata]) => oldFilterKey.modelName === value.modelName);
+				.find(([oldFilterKey, oldFilter]: [IFilter, FilterMetadata]) => oldFilterKey.modelName === value.modelName);
 
 
 			if (oldFilterArray) {
@@ -116,11 +116,11 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	isFiltered(): boolean {
-		return Array.from(this.enumsFields.values()).some((value: EnumFiled) => !value.isChecked);
+		return Array.from(this.enumsFields.values()).some((value: IEnumFiled) => !value.isChecked);
 	}
 
 	showAll(): void {
-		this.enumsFields.forEach((value: EnumFiled) => {
+		this.enumsFields.forEach((value: IEnumFiled) => {
 			value.isChecked = true;
 		});
 	}

@@ -1,4 +1,4 @@
-import { MenuItem } from '@ansyn/menu/models/menu-item.model.ts';
+import { IMenuItem } from '@ansyn/menu/models/menu-item.model.ts';
 import { CasesComponent } from '@ansyn/menu-items/cases/components/cases/cases.component';
 import { FiltersCollectionComponent } from '@ansyn/menu-items/filters/components/filters-collection/filters-collection.component';
 import { LayersManagerComponent } from '@ansyn/menu-items/layers-manager/components/layers-manager/layers-manager.component';
@@ -7,7 +7,7 @@ import { AlgorithmsComponent } from '@ansyn/menu-items/algorithms/algorithms/alg
 import { SettingsComponent } from '@ansyn/menu-items/settings/settings/settings.component';
 import { HelpComponent } from '@ansyn/menu-items/help/components/help.component';
 
-export const ansynMenuItems: MenuItem[] = [
+export const ansynMenuItems: IMenuItem[] = [
 	{
 		name: 'Cases',
 		component: CasesComponent,

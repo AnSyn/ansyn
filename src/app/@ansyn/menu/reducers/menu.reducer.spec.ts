@@ -1,11 +1,11 @@
 import { IMenuState, initialMenuState, MenuReducer } from './menu.reducer';
-import { MenuItem } from '@ansyn/menu/models/menu-item.model';
+import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
 import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 
 describe('MenuReducer', () => {
 
 	it('ADD_MENU_ITEM action should add new menuItem to state', () => {
-		let menuItem: MenuItem = {
+		let menuItem: IMenuItem = {
 			name: 'fakeMenuItem',
 			iconClass: 'fake/icon/url',
 			component: 'component'

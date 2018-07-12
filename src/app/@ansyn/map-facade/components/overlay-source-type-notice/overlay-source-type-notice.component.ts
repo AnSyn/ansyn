@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '@ansyn/overlays/models/overlays.config';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
@@ -10,7 +10,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 })
 export class OverlaySourceTypeNoticeComponent {
 
-	@Input()  set overlay(newOverlay: Overlay) {
+	@Input()  set overlay(newOverlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration
 		this._title = newOverlay

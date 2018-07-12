@@ -6,7 +6,7 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reduce
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
-import { createStore, StoreFixture } from '@ansyn/core/test/mock-store';
+import { createStore, IStoreFixture } from '@ansyn/core/test/mock-store';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
 import { BaseOverlaySourceProvider } from '../../models/base-overlay-source-provider.model';
@@ -14,7 +14,7 @@ import { BaseOverlaySourceProvider } from '../../models/base-overlay-source-prov
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
 	let fixture: ComponentFixture<TimelineComponent>;
-	let storeFixture: StoreFixture<IOverlaysState>;
+	let storeFixture: IStoreFixture<IOverlaysState>;
 	let store: Store<IOverlaysState>;
 	let state: State<{ overlays: IOverlaysState }>;
 	let overlaysEffects: OverlaysEffects;

@@ -2,20 +2,20 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { CommunicatorEntity } from './communicator.entity';
 import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
 
-export interface ImageryChanged {
+export interface IImageryChanged {
 	id: string;
 }
 
-export interface Communicators {
+export interface ICommunicators {
 	[id: string]: CommunicatorEntity;
 }
 
 @Injectable()
 export class ImageryCommunicatorService {
 
-	public communicators: Communicators = {};
-	public instanceCreated = new EventEmitter<ImageryChanged>();
-	public instanceRemoved = new EventEmitter<ImageryChanged>();
+	public communicators: ICommunicators = {};
+	public instanceCreated = new EventEmitter<IImageryChanged>();
+	public instanceRemoved = new EventEmitter<IImageryChanged>();
 
 	public provide(id: string): CommunicatorEntity {
 

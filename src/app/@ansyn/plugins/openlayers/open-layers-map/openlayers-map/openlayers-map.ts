@@ -1,4 +1,3 @@
-import { EventEmitter } from '@angular/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -19,23 +18,28 @@ import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
-import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 
 export const OpenlayersMapName = 'openLayersMap';
+
+enum StaticGroupsKeys {
+	layers = 'layers'
+}
 
 @ImageryMap({
 	mapType: OpenlayersMapName,
 	deps: [ProjectionService]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
-	static groupLayers = new Map<string, Group>();
-	private showGroups = new Map<string, boolean>();
+	static groupsKeys = StaticGroupsKeys;
+	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
+	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
 
 	private _subscriptions: Subscription[] = [];
@@ -47,14 +51,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(public projectionService: ProjectionService) {
 		super();
-
-		if (!OpenLayersMap.groupLayers.get('layers')) {
-			OpenLayersMap.groupLayers.set('layers', new Group(<any>{
-				layers: [],
-				name: 'layers'
-			}));
-		}
-		this.showGroups.set('layers', true);
 	}
 
 	/**
@@ -75,7 +71,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return existingLayer;
 	}
 
-	toggleGroup(groupName: string, newState: boolean) {
+	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
 		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (newState) {
 			this.addLayer(group);
@@ -89,7 +85,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this._mapLayers = [...layers];
 		const controls = [
 			new ScaleLine(),
@@ -103,7 +99,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true });
 		this.initListeners();
-		this.setGroupLayers();
 		return this.resetView(layers[0], position);
 	}
 
@@ -127,7 +122,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		this.isValidPosition = false;
 		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
@@ -202,6 +197,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
+	private isRasterLayer(layer): boolean {
+		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster
+	}
+
 	public removeLayer(layer: any): void {
 		if (!layer) {
 			return;
@@ -211,6 +210,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
+			if (this.isRasterLayer(layer)) {
+				layer.getSource().destroy();
+			}
 			this._mapObject.renderSync();
 		}
 	}
@@ -297,7 +299,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			});
 	}
 
-	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
+	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
 		const rotation = this._mapObject.getView().getRotation();
 		view.setCenter([0, 0]);
 		view.setRotation(rotation ? rotation : 0);
@@ -318,7 +320,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public getPosition(): Observable<CaseMapPosition> {
+	public getPosition(): Observable<ICaseMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };

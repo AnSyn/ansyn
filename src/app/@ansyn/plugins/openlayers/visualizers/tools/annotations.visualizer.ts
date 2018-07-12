@@ -14,15 +14,15 @@ import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
 	AnnotationMode,
-	AnnotationsContextMenuBoundingRect,
-	AnnotationsContextMenuEvent
+	IAnnotationsContextMenuBoundingRect,
+	IAnnotationsContextMenuEvent
 } from '@ansyn/core/models/visualizers/annotations.model';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
-	AnnotationProperties,
+	IAnnotationProperties,
 	selectAnnotationLayer,
 	selectAnnotationMode,
 	selectAnnotationProperties,
@@ -33,7 +33,7 @@ import { Observable } from 'rxjs';
 import { selectDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
 import { SetAnnotationMode, SetAnnotationsLayer } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
@@ -43,9 +43,10 @@ import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-
 import { Inject } from '@angular/core';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { filter, map } from 'rxjs/internal/operators';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -64,7 +65,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		select(selectMapsList),
 		map((mapList) => MapFacadeService.mapById(mapList, this.mapId)),
 		filter(Boolean),
-		map((map: CaseMapState) => map.data.overlay)
+		map((map: ICaseMapState) => map.data.overlay)
 	);
 
 	displayAnnotationsLayer$: Observable<any> = this.store$.select(selectDisplayAnnotationsLayer);
@@ -80,13 +81,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
 
-	/* events */
+	@ImageryPluginSubscription
 	annoatationModeChange$: Observable<any> = Observable.combineLatest(this.annotationMode$, this.isActiveMap$)
 		.do(this.onModeChange.bind(this));
 
+	@ImageryPluginSubscription
 	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
 		.do(this.onAnnotationPropertiesChange.bind(this));
 
+	@ImageryPluginSubscription
 	onAnnotationsChange$ = Observable
 		.combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
 		.mergeMap(this.onAnnotationsChange.bind(this));
@@ -129,7 +132,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
-	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: AnnotationProperties) {
+	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: IAnnotationProperties) {
 		if (fillColor) {
 			this.changeFillColor(fillColor);
 		}
@@ -147,15 +150,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		this.clearEntities();
 		return Observable.of(true);
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.annoatationModeChange$.subscribe(),
-			this.annotationPropertiesChange$.subscribe(),
-			this.onAnnotationsChange$.subscribe()
-		);
 	}
 
 	constructor(public store$: Store<any>, protected projectionService: ProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
@@ -196,7 +190,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			});
 		}
-
 	}
 
 	resetInteractions(): void {
@@ -220,7 +213,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
-		const contextMenuEvent: AnnotationsContextMenuEvent = {
+		const contextMenuEvent: IAnnotationsContextMenuEvent = {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect
@@ -244,7 +237,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 
-	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
+	getFeatureBoundingRect(selectedFeature): IAnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]
@@ -282,7 +275,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.projectCollectionAccurately([feature], this.iMap)
 			.take(1)
 			.withLatestFrom(this.annotationsLayer$, this.currentOverlay$)
-			.subscribe(([featureCollection, annotationsLayer, overlay]: [FeatureCollection<GeometryObject>, any, Overlay]) => {
+			.subscribe(([featureCollection, annotationsLayer, overlay]: [FeatureCollection<GeometryObject>, any, IOverlay]) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
 				updatedAnnotationsLayer.features.push(geoJsonFeature);

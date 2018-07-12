@@ -1,4 +1,4 @@
-import { Entity } from '@ansyn/core/services/storage/storage.service';
+import { IEntity } from '@ansyn/core/services/storage/storage.service';
 
 export enum LayerType {
 	static = 'Static',
@@ -13,7 +13,7 @@ export enum layerPluginType {
 	Annotations = 'Annotations'
 }
 
-export interface ILayer extends Entity {
+export interface ILayer extends IEntity {
 	url?: string;
 	name: string;
 	type: LayerType;

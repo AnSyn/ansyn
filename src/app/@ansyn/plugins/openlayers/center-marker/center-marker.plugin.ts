@@ -4,9 +4,9 @@ import Point from 'ol/geom/point';
 import Style from 'ol/style/style';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
@@ -37,6 +37,15 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 		return this._isEnabled;
 	}
 
+	@ImageryPluginSubscription
+	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: ICaseMapPosition) => {
+		if (this.isEnabled) {
+			this.tryDrawCenter();
+		} else {
+			this.tryDeleteCenter();
+		}
+	});
+
 	constructor() {
 		super();
 		this._isEnabled = false;
@@ -54,16 +63,6 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 
 	onResetView(): Observable<boolean> {
 		return Observable.of(true);
-	}
-
-	onInit() {
-		this.subscriptions.push(this.communicator.positionChanged.subscribe((position: CaseMapPosition) => {
-			if (this.isEnabled) {
-				this.tryDrawCenter();
-			} else {
-				this.tryDeleteCenter();
-			}
-		}));
 	}
 
 	public dispose() {

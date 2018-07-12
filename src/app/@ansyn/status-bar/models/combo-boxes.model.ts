@@ -10,15 +10,15 @@ export const GEO_FILTERS = new InjectionToken<CaseGeoFilter[]>('GEO_FILTERS');
 export const TIME_FILTERS = new InjectionToken<CaseTimeFilter[]>('TIME_FILTERS');
 
 
-export interface ComboBoxesOptions {
+export interface IComboBoxesOptions {
 	timeFilters: CaseTimeFilter[];
 	orientations: CaseOrientation[];
 	geoFilters: CaseGeoFilter[];
 }
 
-export const comboBoxesOptions: ComboBoxesOptions = { timeFilters, orientations, geoFilters };
+export const comboBoxesOptions: IComboBoxesOptions = { timeFilters, orientations, geoFilters };
 
-export interface ComboBoxesProperties {
+export interface IComboBoxesProperties {
 	orientation?: CaseOrientation;
 	timeFilter?: CaseTimeFilter;
 }

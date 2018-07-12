@@ -6,7 +6,7 @@ import {
 	IOverlaysState, overlaysStateSelector,
 	selectFilteredOveralys, selectOverlaysArray, selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -17,8 +17,9 @@ import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visua
 import { select } from '@ngrx/store';
 import { filter, map, distinctUntilChanged } from 'rxjs/operators';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -34,10 +35,11 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 			distinctUntilChanged()
 		);
 
+	@ImageryPluginSubscription
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store$.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store$.select(selectOverlaysMap)),
-			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, Overlay>]) => {
+			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === 'Heatmap') {
 					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
@@ -64,10 +66,4 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.drawOverlaysOnMap$.subscribe()
-		);
-	}
 }

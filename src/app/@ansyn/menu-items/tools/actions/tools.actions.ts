@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
-import { AnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
+import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
+import { IAnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { toolsFlags } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { FeatureCollection } from 'geojson';
@@ -44,7 +44,7 @@ export class SetAnnotationsLayer implements Action {
 export class UpdateOverlaysManualProcessArgs implements Action {
 	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
 
-	constructor(public payload: { override?: boolean, data: OverlaysManualProcessArgs }) {
+	constructor(public payload: { override?: boolean, data: IOverlaysManualProcessArgs }) {
 
 	}
 }
@@ -183,7 +183,7 @@ export class SetManualImageProcessing implements Action {
 export class AnnotationSetProperties implements Action {
 	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
 
-	constructor(public payload: AnnotationProperties) {
+	constructor(public payload: IAnnotationProperties) {
 
 	}
 }

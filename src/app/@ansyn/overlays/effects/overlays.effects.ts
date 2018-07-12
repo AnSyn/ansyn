@@ -16,10 +16,10 @@ import {
 	IOverlaysState, overlaysStateSelector, overlaysStatusMessages,
 	selectDrops
 } from '../reducers/overlays.reducer';
-import { Overlay } from '../models/overlay.model';
+import { IOverlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
-import { OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
 
@@ -39,7 +39,7 @@ export class OverlaysEffects {
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.mergeMap(([action, { favoriteOverlays }]: [LoadOverlaysAction, ICoreState]) => {
 			return this.overlaysService.search(action.payload)
-				.mergeMap((overlays: OverlaysFetchData) => {
+				.mergeMap((overlays: IOverlaysFetchData) => {
 					const overlaysResult = unionBy(Array.isArray(overlays.data) ? overlays.data : [],
 						favoriteOverlays, o => o.id);
 
@@ -73,7 +73,7 @@ export class OverlaysEffects {
 		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType) // this.overlaysService.fetchData("",action.payload)
-				.map((overlay: Overlay) => new DisplayOverlayAction({
+				.map((overlay: IOverlay) => new DisplayOverlayAction({
 					overlay,
 					mapId: action.payload.mapId,
 					forceFirstDisplay: true

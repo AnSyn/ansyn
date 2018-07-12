@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { ProjectionConverterService } from './projection-converter.service';
-import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 
 describe('ProjectionConverterService', () => {
@@ -86,8 +86,8 @@ describe('ProjectionConverterService', () => {
 			expect(result2).toBeFalsy();
 		});
 		// ------ isValidCoordinates ------ //
-		const wgs84: CoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
-		const ed50: CoordinatesSystem = { datum: 'ed50', projection: 'utm' };
+		const wgs84: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
+		const ed50: ICoordinatesSystem = { datum: 'ed50', projection: 'utm' };
 
 		it('isValidConversion should pass', () => {
 			const fromED50 = projectionConverterService.isValidConversion([-80000, 100, 10], ed50);

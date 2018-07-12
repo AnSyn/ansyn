@@ -3,7 +3,7 @@ import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
-import { CaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
+import { ICaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
@@ -20,6 +20,7 @@ import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducer
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -30,16 +31,18 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;
 
+	@ImageryPluginSubscription
 	contextEntites$ = this.store$.select(selectContextEntities)
 		.filter(Boolean)
 		.mergeMap(this.setEntities.bind(this));
 
+	@ImageryPluginSubscription
 	referenceDate$ = this.store$
 		.pipe(
 			select(mapStateSelector),
 			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
 			filter(Boolean),
-			map((map: CaseMapState) => map.data.overlay && map.data.overlay.date),
+			map((map: ICaseMapState) => map.data.overlay && map.data.overlay.date),
 			distinctUntilChanged(),
 			tap((referenceDate) => this.referenceDate = referenceDate)
 		);
@@ -55,7 +58,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 				},
 				icon: {
 					scale: 1,
-					src: 'assets/icons/map/entity-marker.svg'
+					src: 'assets/icons/map/entity-marker.svg',
+					anchor: [0.5, 1]
 				},
 				geometry: this.getGeometry.bind(this),
 				label: {
@@ -74,14 +78,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		});
 
 		this.geoJsonFormat = new GeoJSON();
-	}
-
-	public onInit(): void {
-		super.onInit();
-		this.subscriptions.push(
-			this.contextEntites$.subscribe(),
-			this.referenceDate$.subscribe()
-		)
 	}
 
 	private getText(feature) {

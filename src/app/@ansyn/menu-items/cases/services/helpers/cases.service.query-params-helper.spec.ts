@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
-import { Case } from '../../models/case.model';
+import { ICase } from '../../models/case.model';
 import { CasesService } from '../cases.service';
 import * as rison from 'rison';
 import * as wellknown from 'wellknown';
@@ -57,7 +57,7 @@ describe('CasesService', () => {
 				'c': 'd'
 			};
 
-			let fakeCase: Case = {
+			let fakeCase: ICase = {
 				id: '12345678',
 				state: {}
 			} as any;
@@ -72,7 +72,7 @@ describe('CasesService', () => {
 			spyOn(queryParamsHelper, 'encodeCaseObjects').and.callFake((key, val) => val);
 			spyOn(urlSerializer, 'parse').and.returnValue({ queryParams: {} });
 
-			let fakeCase: Case = {
+			let fakeCase: ICase = {
 				id: '12345678',
 				state: {
 					facets: 'facets', time: 'time', maps: 'maps', region: 'region'

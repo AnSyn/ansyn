@@ -15,21 +15,21 @@ import {
 	SetLayoutAction,
 	SetOverlaysCriteriaAction
 } from '@ansyn/core/actions/core.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
 import {
-	Case,
-	CaseDataInputFiltersState,
-	CaseFacetsState,
-	CaseLayersState,
-	CaseMapsState,
+	ICase,
+	ICaseDataInputFiltersState,
+	ICaseFacetsState,
+	ICaseLayersState,
+	ICaseMapsState,
 	CaseOrientation,
 	CaseRegionState,
-	CaseState,
+	ICaseState,
 	CaseTimeFilter,
-	CaseTimeState,
+	ICaseTimeState,
 	IContextEntity,
-	OverlaysManualProcessArgs
+	IOverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
@@ -72,17 +72,17 @@ describe('SelectCaseAppEffects', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
 				timeFilter: CaseTimeFilter = 'Start - End',
-				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
+				time: ICaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
-				dataInputFilters: CaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
-				favoriteOverlays: Overlay[] = [],
-				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: CaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
-				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
-				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] },
+				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
+				favoriteOverlays: IOverlay[] = [],
+				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
+				layers: ICaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
+				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
+				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
 
-			const state: CaseState = <any> {
+			const state: ICaseState = <any> {
 				orientation,
 				timeFilter,
 				time,
@@ -96,7 +96,7 @@ describe('SelectCaseAppEffects', () => {
 				contextEntities
 			};
 
-			const payload: Case = {
+			const payload: ICase = {
 				id: 'caseId',
 				name: 'caseName',
 				owner: 'ownerName',

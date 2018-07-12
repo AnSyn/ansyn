@@ -15,7 +15,7 @@ import {
 } from '../actions/map.actions';
 import { SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -105,7 +105,7 @@ describe('MapEffects', () => {
 					return Observable.of({});
 				}
 			};
-			const fakeMap: CaseMapState = <any> {id: 'imagery2'};
+			const fakeMap: ICaseMapState = <any> {id: 'imagery2'};
 			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'setPosition').and.callFake(() => Observable.of(true));

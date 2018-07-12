@@ -1,7 +1,7 @@
-import { Filter } from './filter';
+import { IFilter } from './IFilter';
 
 
 export interface IFiltersConfig {
 	shortFilterListLength: number,
-	filters: Filter[]
+	filters: IFilter[]
 }

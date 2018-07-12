@@ -5,12 +5,12 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable, of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { Case } from '../../models/case.model';
+import { ICase } from '../../models/case.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
-import { CasePreview } from '../../models/case.model';
+import { ICasePreview } from '../../models/case.model';
 import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
-import { Context } from '@ansyn/core/models/context.model';
+import { IContext } from '@ansyn/core/models/context.model';
 import { catchError } from 'rxjs/internal/operators';
 
 const animationsDuring = '0.2s';
@@ -44,15 +44,15 @@ export class EditCaseComponent implements OnInit {
 
 	casesState$: Observable<ICasesState> = this.store.select(casesStateSelector);
 
-	activeCase$: Observable<Case> = this.casesState$
+	activeCase$: Observable<ICase> = this.casesState$
 		.distinctUntilChanged()
 		.map(this.getCloneActiveCase.bind(this));
 
-	contextsList$: Observable<Context[]> = this.store.select(selectContextsArray)
+	contextsList$: Observable<IContext[]> = this.store.select(selectContextsArray)
 		.map(this.addDefaultContext);
 
-	contextsList: Context[];
-	caseModel: Case;
+	contextsList: IContext[];
+	caseModel: ICase;
 	editMode = false;
 
 	@ViewChild('nameInput') nameInput: ElementRef;
@@ -65,15 +65,15 @@ export class EditCaseComponent implements OnInit {
 	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
 	}
 
-	addDefaultContext(context: Context[]): Context[] {
+	addDefaultContext(context: IContext[]): IContext[] {
 		return [
-			{ id: 'default', name: 'Default Case', creationTime: new Date()},
+			{ id: 'default', name: 'Default ICase', creationTime: new Date()},
 			...context
 		];
 	}
 
-	getCloneActiveCase(caseState: ICasesState): CasePreview {
-		let sCase: CasePreview = caseState.entities[caseState.modal.id];
+	getCloneActiveCase(caseState: ICasesState): ICasePreview {
+		let sCase: ICasePreview = caseState.entities[caseState.modal.id];
 		if (sCase) {
 			this.editMode = true;
 			sCase = cloneDeep(sCase);
@@ -85,7 +85,7 @@ export class EditCaseComponent implements OnInit {
 		return sCase;
 	}
 
-	getEmptyCase(selectedCase: Case): Case {
+	getEmptyCase(selectedCase: ICase): ICase {
 		const activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.activeMapId);
 
 		return {
@@ -115,11 +115,11 @@ export class EditCaseComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.activeCase$.subscribe((activeCase: Case) => {
+		this.activeCase$.subscribe((activeCase: ICase) => {
 			this.caseModel = activeCase;
 		});
 
-		this.contextsList$.subscribe((_contextsList: Context[]) => {
+		this.contextsList$.subscribe((_contextsList: IContext[]) => {
 			this.contextsList = _contextsList;
 		});
 
@@ -136,7 +136,7 @@ export class EditCaseComponent implements OnInit {
 			const selectContext = this.contextsList[contextIndex];
 			this.caseModel = cloneDeep(this.casesService.updateCaseViaContext(selectContext, this.caseModel));
 			this.casesService.createCase(this.caseModel)
-				.subscribe((addedCase: Case) => {
+				.subscribe((addedCase: ICase) => {
 					this.store.dispatch(new AddCaseAction(addedCase));
 				});
 		}

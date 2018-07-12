@@ -4,7 +4,7 @@ import { IContextConfig } from '../models/context.config.model';
 import { Observable } from 'rxjs';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { Context } from '@ansyn/core/models/context.model';
+import { IContext } from '@ansyn/core/models/context.model';
 
 @Injectable()
 export class ContextService {
@@ -19,14 +19,14 @@ export class ContextService {
 			.catch(err => this.errorHandlerService.httpErrorHandle(err));
 	}
 
-	loadContext(selectedContextId: string): Observable<Context> {
-		return this.storageService.get<Context, Context>(this.config.schema, selectedContextId)
+	loadContext(selectedContextId: string): Observable<IContext> {
+		return this.storageService.get<IContext, IContext>(this.config.schema, selectedContextId)
 			.map(storedEntity =>
 				this.parseContext({...storedEntity.preview, ...storedEntity.data}))
 			.catch(err => this.errorHandlerService.httpErrorHandle(err));
 	}
 
-	private parseContext(contextValue: Context) {
+	private parseContext(contextValue: IContext) {
 		return {
 			...contextValue,
 			creationTime: new Date(contextValue.creationTime)

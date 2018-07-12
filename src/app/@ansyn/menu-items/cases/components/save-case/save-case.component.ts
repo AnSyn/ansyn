@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Observable } from 'rxjs';
-import { Case } from '../../models/case.model';
+import { ICase } from '../../models/case.model';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
@@ -43,12 +43,12 @@ export class SaveCaseComponent implements OnInit {
 		return true;
 	};
 
-	selectedCase$: Observable<Case> = this.store.select(casesStateSelector)
-		.pluck<ICasesState, Case>('selectedCase')
+	selectedCase$: Observable<ICase> = this.store.select(casesStateSelector)
+		.pluck<ICasesState, ICase>('selectedCase')
 		.distinctUntilChanged()
 		.map(_cloneDeep);
 
-	caseModel: Case;
+	caseModel: ICase;
 
 	@ViewChild('nameInput') nameInput: ElementRef;
 
@@ -61,7 +61,7 @@ export class SaveCaseComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.selectedCase$.subscribe((selectedCase: Case) => {
+		this.selectedCase$.subscribe((selectedCase: ICase) => {
 			this.caseModel = selectedCase;
 		});
 	}

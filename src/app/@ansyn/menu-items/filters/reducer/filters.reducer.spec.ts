@@ -1,25 +1,25 @@
 import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
 import * as reducer from './filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { Filter } from '../models/filter';
+import { IFilter } from '../models/IFilter';
 import { FilterType } from '@ansyn/core/models/case.model';
 import * as actions from '../actions/filters.actions';
 
 describe('FiltersReducer', () => {
 
 	it('UPDATE_FILTER_METADATA should update the metadata of the filter in the store', () => {
-		const filter1: Filter = { modelName: 'filter1', displayName: 'filter1', type: FilterType.Enum };
+		const filter1: IFilter = { modelName: 'filter1', displayName: 'filter1', type: FilterType.Enum };
 		const metadata1: FilterMetadata = new EnumFilterMetadata();
 		metadata1.initializeFilter(['metadata1']);
 
-		const filter2: Filter = { modelName: 'filter2', displayName: 'filter2', type: FilterType.Enum };
+		const filter2: IFilter = { modelName: 'filter2', displayName: 'filter2', type: FilterType.Enum };
 		const metadata2: FilterMetadata = new EnumFilterMetadata();
 		metadata2.initializeFilter(['metadata2']);
 
 		const metadata3: FilterMetadata = new EnumFilterMetadata();
 		metadata3.initializeFilter(['metadata3']);
 
-		const initialState = new Map<Filter, FilterMetadata>();
+		const initialState = new Map<IFilter, FilterMetadata>();
 		initialState.set(filter1, metadata1);
 		initialState.set(filter2, metadata2);
 

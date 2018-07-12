@@ -2,28 +2,28 @@ import { Observable } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
-	DateRange,
+	IDateRange,
 	IFetchParams,
-	OverlayFilter,
-	StartAndEndDate
+	IOverlayFilter,
+	IStartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, difference, intersect } from '@turf/turf';
-import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
 
-export interface FiltersList {
+export interface IFiltersList {
 	name: string,
-	dates: DateRange[]
+	dates: IDateRange[]
 	sensorNames: string,
 	coverage: number[][][][]
 }
 
 export interface IMultipleOverlaysSourceConfig {
 	[key: string]: {
-		whitelist: FiltersList[],
-		blacklist: FiltersList[]
+		whitelist: IFiltersList[],
+		blacklist: IFiltersList[]
 	}
 }
 
@@ -35,7 +35,7 @@ export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = 
 @Injectable()
 export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
-	private sourceConfigs: Array<{ filters: OverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
+	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[],
@@ -128,13 +128,13 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	public getById(id: string, sourceType: string): Observable<Overlay> {
+	public getById(id: string, sourceType: string): Observable<IOverlay> {
 		return this.overlaysSources.find(s => s.sourceType === sourceType).getById(id, sourceType);
 	}
 
-	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
-		const mergedSortedOverlays: Observable<OverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
-			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: DataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
+		const mergedSortedOverlays: Observable<IOverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
+			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => {
 				const dataFiltersOfProvider = Boolean(fetchParams.dataInputFilters) ?
 					fetchParams.dataInputFilters.filter((f) => f.providerName === s.provider.sourceType) : [];
@@ -158,7 +158,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		return mergedSortedOverlays;
 	}
 
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
+	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
 		const startEnd = Promise.all(this.sourceConfigs
 			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise()))
 			.then(dates => dates.filter(Boolean)
@@ -199,7 +199,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 }
 
-export function filterFilter(whiteFilter: OverlayFilter, blackFilters: OverlayFilter[]): OverlayFilter[] {
+export function filterFilter(whiteFilter: IOverlayFilter, blackFilters: IOverlayFilter[]): IOverlayFilter[] {
 	let filters = [whiteFilter];
 
 	if (blackFilters.length === 0) {

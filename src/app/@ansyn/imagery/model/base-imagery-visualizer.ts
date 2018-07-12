@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
-import { ImageryPluginMetaData } from './base-imagery-plugin';
+import { IImageryPluginMetaData } from './base-imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
@@ -71,10 +71,10 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
 }
 
-export interface ImageryVisualizerMetaData extends ImageryPluginMetaData {
+export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
 	isHideable?: boolean;
 }
 
-export interface BaseImageryVisualizerClass extends ImageryVisualizerMetaData {
+export interface IBaseImageryVisualizerClass extends IImageryVisualizerMetaData {
 	new(...args): BaseImageryVisualizer;
 }

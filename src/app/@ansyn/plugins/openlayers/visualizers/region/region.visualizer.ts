@@ -16,6 +16,7 @@ import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/stat
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { empty } from 'rxjs';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -33,6 +34,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
 
+	@ImageryPluginSubscription
 	toggleOpacity$ = this.geoFilterSearch$
 		.do((geoFilterSearch) => {
 			if (geoFilterSearch !== SearchModeEnum.none) {
@@ -48,6 +50,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 
+	@ImageryPluginSubscription
 	onContextMenu$: Observable<any> = this.actions$
 		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
 		.withLatestFrom(this.isActiveGeoFilter$)
@@ -55,25 +58,17 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.map(([{ payload }]) => payload)
 		.do(this.onContextMenu.bind(this));
 
+	@ImageryPluginSubscription
 	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
 		.do(this.interactionChanges.bind(this));
 
+	@ImageryPluginSubscription
 	drawChanges$ = Observable
 		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$)
 		.mergeMap(this.drawChanges.bind(this));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.drawChanges$.subscribe(),
-			this.onContextMenu$.subscribe(),
-			this.toggleOpacity$.subscribe(),
-			this.interactionChanges$.subscribe()
-		);
 	}
 
 	drawChanges([geoFilter, region, geoFilterIndicator]) {

@@ -5,7 +5,7 @@ import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions'
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
 import { Observable } from 'rxjs';
-import { CasePreview } from '../../models/case.model';
+import { ICasePreview } from '../../models/case.model';
 
 const animationsDuring = '0.2s';
 
@@ -36,7 +36,7 @@ export class DeleteCaseComponent implements OnInit {
 		.select(casesStateSelector)
 		.map((cases) => cases.entities[cases.modal.id]);
 
-	activeCase: CasePreview;
+	activeCase: ICasePreview;
 
 	@Output() submitCase = new EventEmitter();
 

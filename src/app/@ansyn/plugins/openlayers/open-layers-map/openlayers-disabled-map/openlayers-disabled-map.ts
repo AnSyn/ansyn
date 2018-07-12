@@ -4,7 +4,7 @@ import Map from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
@@ -17,7 +17,7 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
@@ -46,12 +46,12 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 
-	resetView(layer: any, position?: CaseMapPosition): Observable<boolean> {
+	resetView(layer: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
 		return Observable.of(true);
 	}
 
-	setMainLayer(layer: Layer, position?: CaseMapPosition) {
+	setMainLayer(layer: Layer, position?: ICaseMapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
 			this.mapObject.render();
@@ -67,7 +67,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		}
 	}
 
-	generateNewView(layer: Layer, position?: CaseMapPosition): View {
+	generateNewView(layer: Layer, position?: ICaseMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
 
 		// for outside only
@@ -99,11 +99,11 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	removeLayer(layer: any): void {
 	}
 
-	setPosition(position: CaseMapPosition): Observable<boolean> {
+	setPosition(position: ICaseMapPosition): Observable<boolean> {
 		return Observable.of(true);
 	}
 
-	getPosition(): Observable<CaseMapPosition> {
+	getPosition(): Observable<ICaseMapPosition> {
 		return Observable.of(undefined);
 	}
 

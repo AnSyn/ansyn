@@ -33,7 +33,7 @@ import {
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CaseGeoFilter, CaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
@@ -95,7 +95,7 @@ export class ToolsAppEffects {
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
 		.withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => MapFacadeService.activeMap(mapState))
-		.mergeMap((activeMap: CaseMapState) => {
+		.mergeMap((activeMap: ICaseMapState) => {
 			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 			if (!Boolean(activeMap.data.overlay)) {
 				actions.push(new DisableImageProcessing());
@@ -136,7 +136,7 @@ export class ToolsAppEffects {
 		.activeMap$
 		.filter((map) => Boolean(map.data.overlay))
 		.withLatestFrom(this.store$.select(toolsStateSelector).pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))
-		.mergeMap(([map, manualImageProcessingParams]: [CaseMapState, ImageManualProcessArgs]) => {
+		.mergeMap(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
 			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
 			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
@@ -183,7 +183,7 @@ export class ToolsAppEffects {
 		.ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			const activeMap: CaseMapState = MapFacadeService.activeMap(mapsState);
+			const activeMap: ICaseMapState = MapFacadeService.activeMap(mapsState);
 			activeMap.data.isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
 				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),

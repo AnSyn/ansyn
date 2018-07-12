@@ -70,7 +70,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	protected createStaticLayers() {
 		this.featuresCollection = [];
-		this.source = new SourceVector({ features: this.featuresCollection });
+		this.source = new SourceVector({ features: this.featuresCollection, wrapX: false });
 
 		this.vector = new VectorLayer(<any>{
 			source: this.source,

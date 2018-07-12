@@ -5,6 +5,8 @@ import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
+import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
+import proj from 'ol/proj';
 
 export interface IESRI4326Config {
 	baseUrl: string;
@@ -37,9 +39,13 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 			wrapX: true
 		});
 
+		const [x, y] = proj.transform([-180, -90], 'EPSG:4326', config.projection);
+		const [x1, y1] = proj.transform([180, 90], 'EPSG:4326', config.projection);
+
 		const esriLayer = new TileLayer({
 			source: source,
-			visible: true
+			visible: true,
+			extent: [x, y, x1, y1]
 		});
 
 		return [esriLayer];

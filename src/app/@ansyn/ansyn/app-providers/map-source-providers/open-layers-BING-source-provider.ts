@@ -5,6 +5,7 @@ import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
+import proj from 'ol/proj';
 
 export interface IBingMapsConfig {
 	key: string;
@@ -26,10 +27,15 @@ export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider {
 			maxZoom: 19
 		});
 
+		const [x, y] = proj.transform([-180, -90], 'EPSG:4326', 'EPSG:3857');
+		const [x1, y1] = proj.transform([180, 90], 'EPSG:4326', 'EPSG:3857');
+		const extent = [x, y, x1, y1];
+
 		const result = new TileLayer(<any>{
 			visible: true,
 			preload: Infinity,
-			source
+			source,
+			extent
 		});
 		return [result];
 	}

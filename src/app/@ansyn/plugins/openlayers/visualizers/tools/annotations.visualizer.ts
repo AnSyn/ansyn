@@ -42,7 +42,7 @@ import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visua
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { Inject } from '@angular/core';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { filter, map } from 'rxjs/internal/operators';
+import { filter, map, take, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
@@ -273,22 +273,26 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
-			.take(1)
-			.withLatestFrom(this.annotationsLayer$, this.currentOverlay$)
-			.subscribe(([featureCollection, annotationsLayer, overlay]: [FeatureCollection<GeometryObject>, any, IOverlay]) => {
-				const [geoJsonFeature] = featureCollection.features;
-				const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
-				updatedAnnotationsLayer.features.push(geoJsonFeature);
-				if (overlay) {
-					geoJsonFeature.properties = {
-						...geoJsonFeature.properties,
-						overlayId: overlay.id,
-						pixels: new OLGeoJSON().writeFeatureObject(feature)
-					};
-				}
-				geoJsonFeature.properties = { ...geoJsonFeature.properties };
-				this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
-			});
+			.pipe(
+				take(1),
+				withLatestFrom(this.annotationsLayer$, this.currentOverlay$),
+				tap(([featureCollection, annotationsLayer, overlay]: [FeatureCollection<GeometryObject>, any, IOverlay]) => {
+					const [geoJsonFeature] = featureCollection.features;
+					const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
+					updatedAnnotationsLayer.features.push(geoJsonFeature);
+					if (overlay) {
+						geoJsonFeature.properties = {
+							...geoJsonFeature.properties,
+							overlayId: overlay.id,
+							pixels: new OLGeoJSON().writeFeatureObject(feature),
+							...this.projectionService
+						};
+					}
+					geoJsonFeature.properties = { ...geoJsonFeature.properties };
+					this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
+				})
+			).subscribe()
+
 	}
 
 	removeDrawInteraction() {

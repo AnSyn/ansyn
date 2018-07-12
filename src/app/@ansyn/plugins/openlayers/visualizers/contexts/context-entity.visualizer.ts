@@ -81,7 +81,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	}
 
 	private getText(feature) {
-		if (!this.referenceDate) {
+		if (!this.referenceDate || !(this.getGeometry(feature) instanceof Point)) {
 			return '';
 		}
 		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;

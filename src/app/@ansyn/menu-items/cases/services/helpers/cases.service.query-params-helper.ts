@@ -84,7 +84,6 @@ export class QueryParamsHelper {
 									featureJson: point(geoPoint.coordinates)
 								}];
 								const extentPolygon = getPolygonByPointAndRadius(geoPoint.coordinates, 1).geometry;
-								console.log(extentPolygon.coordinates);
 								updatedCaseModel.state.maps.data.forEach(map => {
 									map.data.position.projectedState = null;
 									map.data.position.extentPolygon = extentPolygon;

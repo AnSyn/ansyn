@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { IImageryConfig } from '../model/iimagery-config';
 import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 
 @Injectable()
 export class CacheService {
@@ -23,13 +23,13 @@ export class CacheService {
 			});
 	}
 
-	getLayerFromCache(metaData: CaseMapState): any[] {
+	getLayerFromCache(metaData: ICaseMapState): any[] {
 		const cacheId = this.createLayerId(metaData);
 		const layers = this.cachedLayesrMap.get(cacheId);
 		return layers && !this.isDisplayedLayer(layers, cacheId) ? [...layers] : [];
 	}
 
-	addLayerToCache(caseMapState: CaseMapState, layers: any[]) {
+	addLayerToCache(caseMapState: ICaseMapState, layers: any[]) {
 		if (this.cachedLayesrMap.size >= this.cacheSize) {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
@@ -39,7 +39,7 @@ export class CacheService {
 		this.cachedLayesrMap.set(cacheId, [...layers]);
 	}
 
-	createLayerId(caseMapState: CaseMapState): string {
+	createLayerId(caseMapState: ICaseMapState): string {
 		if (caseMapState.data.overlay) {
 			return `${caseMapState.mapType}/${JSON.stringify(caseMapState.data.overlay)}`;
 		}

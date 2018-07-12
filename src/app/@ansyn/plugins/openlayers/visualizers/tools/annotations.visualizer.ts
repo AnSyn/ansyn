@@ -14,15 +14,15 @@ import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
 	AnnotationMode,
-	AnnotationsContextMenuBoundingRect,
-	AnnotationsContextMenuEvent
+	IAnnotationsContextMenuBoundingRect,
+	IAnnotationsContextMenuEvent
 } from '@ansyn/core/models/visualizers/annotations.model';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
-	AnnotationProperties,
+	IAnnotationProperties,
 	IToolsState,
 	selectAnnotationLayer,
 	selectSubMenu,
@@ -74,7 +74,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationProperties$: Observable<any> = this.store$
 		.select(toolsStateSelector)
-		.pluck<IToolsState, AnnotationProperties>('annotationProperties');
+		.pluck<IToolsState, IAnnotationProperties>('annotationProperties');
 
 	@ImageryPluginSubscription
 	annoatationModeChange$: Observable<any> = Observable.combineLatest(this.annotationMode$, this.isActiveMap$)
@@ -127,7 +127,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
-	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: AnnotationProperties) {
+	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: IAnnotationProperties) {
 		if (fillColor) {
 			this.changeFillColor(fillColor);
 		}
@@ -208,7 +208,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
-		const contextMenuEvent: AnnotationsContextMenuEvent = {
+		const contextMenuEvent: IAnnotationsContextMenuEvent = {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect
@@ -232,7 +232,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 
-	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
+	getFeatureBoundingRect(selectedFeature): IAnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]

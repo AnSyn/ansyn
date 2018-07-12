@@ -1,9 +1,9 @@
 import { EventEmitter } from '@angular/core';
-import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
+import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { BaseImageryMap, BaseImageryMapConstructor } from '../model/base-imagery-map';
+import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
 import { Observable, of, merge } from 'rxjs';
-import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
@@ -12,8 +12,8 @@ import { filter } from 'rxjs/operators';
 export class CommunicatorEntity {
 	private _managerSubscriptions = [];
 
-	public positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
-	public mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
+	public positionChanged = new EventEmitter<{ id: string, position: ICaseMapPosition }>();
+	public mapInstanceChanged = new EventEmitter<IMapInstanceChanged>();
 	private _virtualNorth = 0;
 
 	get imageryCommunicatorService(): ImageryCommunicatorService {
@@ -41,7 +41,7 @@ export class CommunicatorEntity {
 	}
 
 	private registerToManagerEvents() {
-		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: CaseMapPosition) => {
+		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: ICaseMapPosition) => {
 			this.positionChanged.emit({ id: this._manager.id, position });
 		}));
 
@@ -84,7 +84,7 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition): Promise<any> {
+	public loadInitialMapSource(position?: ICaseMapPosition): Promise<any> {
 		return this._manager.loadInitialMapSource(position);
 	}
 
@@ -97,7 +97,7 @@ export class CommunicatorEntity {
 
 	public get mapType() {
 		if (this.ActiveMap) {
-			return (<BaseImageryMapConstructor> this.ActiveMap.constructor).mapType;
+			return (<IBaseImageryMapConstructor> this.ActiveMap.constructor).mapType;
 		}
 	}
 
@@ -137,7 +137,7 @@ export class CommunicatorEntity {
 		return of(true);
 	}
 
-	public setPosition(position: CaseMapPosition): Observable<boolean> {
+	public setPosition(position: ICaseMapPosition): Observable<boolean> {
 		if (!this.ActiveMap) {
 			return Observable.throw(new Error('missing active map'));
 		}
@@ -145,7 +145,7 @@ export class CommunicatorEntity {
 		return this.ActiveMap.setPosition(position);
 	}
 
-	public getPosition(): Observable<CaseMapPosition> {
+	public getPosition(): Observable<ICaseMapPosition> {
 		if (!this.ActiveMap) {
 			return Observable.throw(new Error('missing active map'));
 		}
@@ -170,7 +170,7 @@ export class CommunicatorEntity {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this._manager) {
 			return this._manager.resetView(layer, position, extent);

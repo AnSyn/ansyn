@@ -1,4 +1,4 @@
-export interface ForkMe {
+export interface IForkMe {
 	active: boolean;
 	href?: string;
 	title: string;
@@ -10,5 +10,5 @@ export interface IMenuConfig {
 	color: string;
 	mode: string;
 	background: string;
-	forkMe: ForkMe;
+	forkMe: IForkMe;
 }

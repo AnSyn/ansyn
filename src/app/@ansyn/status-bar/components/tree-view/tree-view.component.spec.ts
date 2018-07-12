@@ -13,7 +13,7 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
-import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
+import { IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
@@ -51,7 +51,7 @@ describe('TreeViewComponent', () => {
 			.compileComponents();
 	}));
 
-	let searchParams: OverlaysCriteria = {
+	let searchParams: IOverlaysCriteria = {
 		region: {
 			'type': 'Polygon',
 			'coordinates': [

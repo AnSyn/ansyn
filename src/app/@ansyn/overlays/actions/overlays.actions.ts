@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { Overlay } from '../models/overlay.model';
-import { MarkUpClass, MarkUpData, OverlayDropMarkUp, TimelineRange } from '../reducers/overlays.reducer';
-import { OverlaysCriteria, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '../models/overlay.model';
+import { MarkUpClass, IMarkUpData, IOverlayDropMarkUp, ITimelineRange } from '../reducers/overlays.reducer';
+import { IOverlaysCriteria, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -41,14 +41,14 @@ export class SelectOverlayAction implements Action {
 export class SetMarkUp implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: MarkUpData }) {
+	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData }) {
 	};
 }
 
 export class AddMarkUp implements Action {
 	type = OverlaysActionTypes.ADD_OVERLAYS_MARKUPS;
 
-	constructor(public payload: Array<OverlayDropMarkUp>) {
+	constructor(public payload: Array<IOverlayDropMarkUp>) {
 	};
 }
 
@@ -57,7 +57,7 @@ export class RemoveMarkUp implements Action {
 	type = OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS;
 
 	// array of overlay ids
-	constructor(public payload: { overlayIds?: Array<string>, markupToRemove?: Array<OverlayDropMarkUp> }) {
+	constructor(public payload: { overlayIds?: Array<string>, markupToRemove?: Array<IOverlayDropMarkUp> }) {
 	};
 }
 
@@ -72,7 +72,7 @@ export class UnSelectOverlayAction implements Action {
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 
-	constructor(public payload: OverlaysCriteria) {
+	constructor(public payload: IOverlaysCriteria) {
 	}
 }
 
@@ -86,14 +86,14 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 export class LoadOverlaysSuccessAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
-	constructor(public payload: Overlay[]) {
+	constructor(public payload: IOverlay[]) {
 	}
 }
 
 export class LoadOverlaysFailAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_FAIL;
 
-	constructor(public payload: Overlay[]) {
+	constructor(public payload: IOverlay[]) {
 	}
 }
 
@@ -121,7 +121,7 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: Overlay, mapId: string, forceFirstDisplay?: boolean }) {
+	constructor(public payload: { overlay: IOverlay, mapId: string, forceFirstDisplay?: boolean }) {
 	}
 }
 
@@ -146,7 +146,7 @@ export class SetFilteredOverlaysAction implements Action {
 export class SetTimelineStateAction implements Action {
 	type = OverlaysActionTypes.SET_TIMELINE_STATE;
 
-	constructor(public payload: { timeLineRange: TimelineRange }) {
+	constructor(public payload: { timeLineRange: ITimelineRange }) {
 	}
 }
 
@@ -154,7 +154,7 @@ export class SetTimelineStateAction implements Action {
 export class SetSpecialObjectsActionStore implements Action {
 	type = OverlaysActionTypes.SET_SPECIAL_OBJECTS;
 
-	constructor(public payload: Array<OverlaySpecialObject>) {
+	constructor(public payload: Array<IOverlaySpecialObject>) {
 	};
 }
 
@@ -175,7 +175,7 @@ export class RedrawTimelineAction implements Action {
 export class SetHoveredOverlayAction implements Action {
 	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
 
-	constructor(public payload?: Overlay) {
+	constructor(public payload?: IOverlay) {
 
 	}
 }

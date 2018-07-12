@@ -1,4 +1,4 @@
-import { AnnotationProperties, toolsInitialState, ToolsReducer, toolsFlags } from './tools.reducer';
+import { IAnnotationProperties, toolsInitialState, ToolsReducer, toolsFlags } from './tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode, SetAnnotationsLayer } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
 import {
@@ -19,7 +19,7 @@ describe('ToolsReducer', () => {
 	});
 
 	it('Check SET_ANNOTATION_PROPERTIES', () => {
-		const payload: AnnotationProperties = {
+		const payload: IAnnotationProperties = {
 			fillColor: 'gray',
 			strokeColor: 'blue',
 			strokeWidth: 4
@@ -29,7 +29,7 @@ describe('ToolsReducer', () => {
 		expect(result.annotationProperties).toEqual(payload);
 
 
-		const secPayload: AnnotationProperties = {
+		const secPayload: IAnnotationProperties = {
 			fillColor: 'green',
 		};
 

@@ -11,11 +11,11 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reduce
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	builderFeatureKey, BuilderReducer, builderStateSelector,
-	WindowLayout
+	IWindowLayout
 } from '@builder/reducers/builder.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 
@@ -105,7 +105,7 @@ describe('apiService', () => {
 	});
 
 	it('should displayOverLay', () => {
-		const overlay: Overlay = {
+		const overlay: IOverlay = {
 			'id': 'LC80410372018051LGN00',
 			'footprint': {
 				'type': 'MultiPolygon',
@@ -134,7 +134,7 @@ describe('apiService', () => {
 
 
 	it('createCommunicator should raise instanceCreated event', (done) => {
-		const windowLayout: WindowLayout = {
+		const windowLayout: IWindowLayout = {
 			menu: false,
 			statusBar: true,
 			timeLine: true,

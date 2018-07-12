@@ -1,20 +1,20 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 
-export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: CaseMapState[], activeMapId?: string } {
-	const mapsList: CaseMapState[] = [];
-	const activeMap: CaseMapState = oldMapsList.find(({ id }) => oldActiveMapId === id);
+export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: ICaseMapState[], activeMapId?: string } {
+	const mapsList: ICaseMapState[] = [];
+	const activeMap: ICaseMapState = oldMapsList.find(({ id }) => oldActiveMapId === id);
 
 	range(layout.mapsCount).forEach((index) => {
 		if (oldMapsList[index]) {
 			mapsList.push(oldMapsList[index]);
 		} else {
-			const mapStateCopy: CaseMapState = {
+			const mapStateCopy: ICaseMapState = {
 				id: UUID.UUID(),
 				data: { position: null },
 				mapType: activeMap.mapType,
@@ -38,7 +38,7 @@ export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsL
 
 export interface IMapState {
 	activeMapId: string;
-	mapsList: CaseMapState[];
+	mapsList: ICaseMapState[];
 	isLoadingMaps: Map<string, string>,
 	isHiddenMaps: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened

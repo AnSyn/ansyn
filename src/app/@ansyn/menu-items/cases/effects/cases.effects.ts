@@ -25,11 +25,11 @@ import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/ca
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { Case, CasePreview, DilutedCaseState } from '@ansyn/core/models/case.model';
+import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
+import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 
@@ -125,7 +125,7 @@ export class CasesEffects {
 			switchMap((action: UpdateCaseBackendAction) => {
 				return this.casesService.updateCase(action.payload)
 					.pipe(
-						map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
+						map((updatedCase: IStoredEntity<ICasePreview, IDilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
 						catchError(() => EMPTY)
 					)
 
@@ -164,7 +164,7 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.filter((action: LoadDefaultCaseAction) => !action.payload.context)
 		.map((action: LoadDefaultCaseAction) => {
-			const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
+			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
 			return new SelectCaseAction(defaultCaseQueryParams);
 		}).share();
 
@@ -178,9 +178,9 @@ export class CasesEffects {
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$
 		.ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS)
 		.map(({ payload }) => payload)
-		.switchMap((savedCase: Case) => {
+		.switchMap((savedCase: ICase) => {
 			return this.casesService.createCase(savedCase)
-				.map((addedCase: Case) => new SaveCaseAsSuccessAction(addedCase));
+				.map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase));
 		});
 
 	/**

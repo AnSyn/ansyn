@@ -1,9 +1,9 @@
-import { Filter } from '../filter';
-import { CaseBooleanFilterMetadata } from '@ansyn/menu-items/cases/models/case.model';
+import { IFilter } from '../IFilter';
+import { ICaseBooleanFilterMetadata } from '@ansyn/menu-items/cases/models/case.model';
 import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '@ansyn/core/models/case.model';
 
-export interface BooleanProperty {
+export interface IBooleanProperty {
 	name: 'true' | 'false';
 	displayName: string;
 	value: boolean;
@@ -11,14 +11,14 @@ export interface BooleanProperty {
 	count: number;
 	disabled?: boolean;
 }
-export interface BooleanProperties {
-	true: BooleanProperty;
-	false: BooleanProperty;
+export interface IBooleanProperties {
+	true: IBooleanProperty;
+	false: IBooleanProperty;
 }
 
 export class BooleanFilterMetadata implements FilterMetadata {
 	type: FilterType = FilterType.Boolean;
-	properties: BooleanProperties = {
+	properties: IBooleanProperties = {
 		true: {
 			name: 'true',
 			displayName: 'true',
@@ -37,7 +37,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	};
 
-	baseFilter: Filter;
+	baseFilter: IFilter;
 
 	updateMetadata({ key, value }): void {
 		this.properties[key].value = value;
@@ -70,7 +70,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	initializeFilter(selectedValues: CaseBooleanFilterMetadata, filter: Filter): void {
+	initializeFilter(selectedValues: ICaseBooleanFilterMetadata, filter: IFilter): void {
 		this.properties.true.count = 0;
 		this.properties.true.value = true;
 		this.properties.false.value = true;

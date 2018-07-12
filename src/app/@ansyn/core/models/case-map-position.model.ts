@@ -2,7 +2,7 @@ import { Polygon } from 'geojson';
 
 export type CaseMapExtent = [number, number, number, number];
 
-export interface CaseMapProjectedState {
+export interface ICaseMapProjectedState {
 	projection: {
 		code: string;
 	};
@@ -14,7 +14,7 @@ export interface CaseMapProjectedState {
 
 export type CaseMapExtentPolygon = Polygon;
 
-export interface CaseMapPosition {
-	projectedState?: CaseMapProjectedState;
+export interface ICaseMapPosition {
+	projectedState?: ICaseMapProjectedState;
 	extentPolygon?: CaseMapExtentPolygon;
 }

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
@@ -19,7 +19,7 @@ export interface IsGeoRegisteredProperties {
 	styleUrls: ['./imagery-rotation.component.less']
 })
 export class ImageryRotationComponent {
-	@Input() mapState: CaseMapState;
+	@Input() mapState: ICaseMapState;
 
 	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: 'N',

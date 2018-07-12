@@ -17,11 +17,11 @@ import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visu
 import { select, Store } from '@ngrx/store';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import {
 	IOverlaysState,
 	MarkUpClass,
-	MarkUpData,
+	IMarkUpData,
 	overlaysStateSelector, selectFilteredOveralys, selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
@@ -34,9 +34,10 @@ import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-en
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { EMPTY } from 'rxjs/internal/observable/empty';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -44,7 +45,7 @@ import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plu
 })
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
-	markups: ExtendMap<MarkUpClass, MarkUpData>;
+	markups: ExtendMap<MarkUpClass, IMarkUpData>;
 
 	protected disableCache = true;
 
@@ -53,7 +54,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			select(mapStateSelector),
 			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
 			filter(Boolean),
-			map((map: CaseMapState) => map.data.overlayDisplayMode),
+			map((map: ICaseMapState) => map.data.overlayDisplayMode),
 			distinctUntilChanged()
 		);
 
@@ -61,7 +62,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store.select(selectOverlaysMap)),
-			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, Overlay>]) => {
+			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === 'Polygon') {
 				const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
 				const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
@@ -69,15 +70,15 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			} else if (this.getEntities().length > 0) {
 				this.clearEntities();
 			}
-			return empty();
+			return EMPTY;
 			})
 		);
 
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
 
 	@ImageryPluginSubscription
-	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
-		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
+	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.overlaysState$
+		.pluck <IOverlaysState, ExtendMap<MarkUpClass, IMarkUpData>>('dropsMarkUp')
 		.distinctUntilChanged()
 		.do((markups) => this.markups = markups)
 		.do(this.onMarkupsChange.bind(this));

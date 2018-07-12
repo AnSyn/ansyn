@@ -21,7 +21,7 @@ import {
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess, SetMeasureDistanceToolState, SetPinLocationModeAction, ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { Case } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
@@ -56,7 +56,7 @@ describe('ToolsAppEffects', () => {
 	let layerState: ILayerState;
 	let toolsState: IToolsState;
 
-	const cases: Case[] = [{
+	const cases: ICase[] = [{
 		id: '1',
 		name: 'name',
 		owner: 'owner',
@@ -309,7 +309,7 @@ describe('ToolsAppEffects', () => {
 	});
 
 	it('onSelectCase$ should raise DisableImageProcessing', () => {
-		actions = hot('--a--', { a: new SelectCaseAction({} as Case) });
+		actions = hot('--a--', { a: new SelectCaseAction({} as ICase) });
 		const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
 		expect(toolsAppEffects.onSelectCase$).toBeObservable(expectedResults);
 	});

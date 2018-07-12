@@ -3,7 +3,7 @@ import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { ContextModule } from '@ansyn/context/context.module';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
@@ -14,7 +14,7 @@ import {
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case, CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { ICase, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs';
@@ -40,7 +40,7 @@ describe('CasesAppEffects', () => {
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 
-	const selectedCase: Case = {
+	const selectedCase: ICase = {
 		id: 'case1',
 		name: 'name',
 		owner: 'owner',
@@ -90,7 +90,7 @@ describe('CasesAppEffects', () => {
 					useValue: {
 						getOverlayById: (id: string) => {
 							if (['uuu', 'eee'].includes(id)) {
-								const overlay = <Overlay> {};
+								const overlay = <IOverlay> {};
 								overlay.id = id;
 
 								return Observable.of(overlay);
@@ -142,7 +142,7 @@ describe('CasesAppEffects', () => {
 	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
 		const mapsList: any[] = [{ id: 'map1', data: {} }, { id: 'map2', data: {} }];
 		const activeMapId = 'map1';
-		const overlay = <Overlay> { id: 'tmp' };
+		const overlay = <IOverlay> { id: 'tmp' };
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
 		const action = new DisplayOverlayAction({ overlay, mapId: "map1"});
 		actions = hot('--a--', { a: action });
@@ -157,7 +157,7 @@ describe('CasesAppEffects', () => {
 	});
 
 	describe('loadCase$', () => {
-		const caseMock2: Case = {
+		const caseMock2: ICase = {
 			id: 'fakeId',
 			name: 'fakeName',
 			owner: 'owner',
@@ -212,7 +212,7 @@ describe('CasesAppEffects', () => {
 		});
 
 		it('loadCase$ should dispatch SelectCaseAction if all case and all its overlays exists', () => {
-			const caseItem: Case = caseMock2;
+			const caseItem: ICase = caseMock2;
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });

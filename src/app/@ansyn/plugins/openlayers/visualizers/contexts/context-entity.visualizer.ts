@@ -3,7 +3,7 @@ import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
-import { CaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
+import { ICaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
@@ -42,7 +42,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			select(mapStateSelector),
 			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
 			filter(Boolean),
-			map((map: CaseMapState) => map.data.overlay && map.data.overlay.date),
+			map((map: ICaseMapState) => map.data.overlay && map.data.overlay.date),
 			distinctUntilChanged(),
 			tap((referenceDate) => this.referenceDate = referenceDate)
 		);

@@ -1,15 +1,15 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 import { Observable } from 'rxjs';
-import { BaseImageryMap, BaseImageryMapConstructor } from './base-imagery-map';
+import { BaseImageryMap, IBaseImageryMapConstructor } from './base-imagery-map';
 import { of, Subscription } from 'rxjs';
 
-export interface ImageryPluginMetaData {
-	supported?: BaseImageryMapConstructor[];
+export interface IImageryPluginMetaData {
+	supported?: IBaseImageryMapConstructor[];
 	deps?: any[];
 }
 
-export interface BaseImageryPluginConstructor extends ImageryPluginMetaData {
+export interface IBaseImageryPluginConstructor extends IImageryPluginMetaData {
 	new(...args): BaseImageryPlugin;
 }
 

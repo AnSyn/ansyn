@@ -1,6 +1,6 @@
 import {
 	BaseMapSourceProvider,
-	BaseMapSourceProviderConstructor,
+	IBaseMapSourceProviderConstructor,
 	IMAGERY_MAP_SOURCE_PROVIDERS
 } from '../model/base-map-source-provider';
 import { FactoryProvider, Provider } from '@angular/core';
@@ -22,7 +22,7 @@ export function MapSourceProvidersFactory(...mapSourceProviders) {
 /**
  * @description Factory for Merge an array of arrays ( BaseMapSourceProvider )
  */
-export function createMapSourceProviders(mapSourceProviders: BaseMapSourceProviderConstructor[]): Provider[] {
+export function createMapSourceProviders(mapSourceProviders: IBaseMapSourceProviderConstructor[]): Provider[] {
 	return [
 		mapSourceProviders,
 		{

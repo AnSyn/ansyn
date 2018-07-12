@@ -14,11 +14,11 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { DilutedCase } from '@ansyn/core/models/case.model';
+import { IDilutedCase } from '@ansyn/core/models/case.model';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 @Injectable()
@@ -58,23 +58,23 @@ export class CasesAppEffects {
 	loadCase$: Observable<any> = this.actions$
 		.ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE)
 		.map(({ payload }: SelectDilutedCaseAction) => payload)
-		.mergeMap((caseValue: DilutedCase) => {
+		.mergeMap((caseValue: IDilutedCase) => {
 			let resultObservable = Observable.of([]);
 
 			const observablesArray = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 				.map((mapData) => mapData.data.overlay)
 				.concat(caseValue.state.favoriteOverlays), 'id')
-				.map(({ id, sourceType }: Overlay) => this.overlaysService.getOverlayById(id, sourceType));
+				.map(({ id, sourceType }: IOverlay) => this.overlaysService.getOverlayById(id, sourceType));
 
 			if (observablesArray.length > 0) {
 				resultObservable = Observable.forkJoin(observablesArray);
 			}
 
 			return resultObservable
-				.map(overlays => new Map(overlays.map((overlay): [string, Overlay] => [overlay.id, overlay])))
-				.map((mapOverlay: Map<string, Overlay>) => {
+				.map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay])))
+				.map((mapOverlay: Map<string, IOverlay>) => {
 					caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
-						.map((favOverlay: Overlay) => mapOverlay.get(favOverlay.id));
+						.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
 
 					caseValue.state.maps.data
 						.filter(mapData => Boolean(Boolean(mapData.data.overlay)))

@@ -1,4 +1,4 @@
-export interface AnnotationsContextMenuBoundingRect {
+export interface IAnnotationsContextMenuBoundingRect {
 	top: number;
 	left: number;
 	width: number;
@@ -6,10 +6,10 @@ export interface AnnotationsContextMenuBoundingRect {
 	rotation: number;
 }
 
-export interface AnnotationsContextMenuEvent {
+export interface IAnnotationsContextMenuEvent {
 	mapId: string;
 	featureId: string;
-	boundingRect: AnnotationsContextMenuBoundingRect;
+	boundingRect: IAnnotationsContextMenuBoundingRect;
 }
 
 export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;

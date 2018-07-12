@@ -5,7 +5,7 @@ import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visu
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
@@ -54,7 +54,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	setOverlay(overlay: Overlay) {
+	setOverlay(overlay: IOverlay) {
 		if (overlay) {
 			const { id, footprint } = overlay;
 			const featureJson: GeoJSON.Feature<any> = { type: 'Feature', geometry: footprint, properties: {} };

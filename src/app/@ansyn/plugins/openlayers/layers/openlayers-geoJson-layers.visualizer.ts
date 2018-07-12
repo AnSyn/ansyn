@@ -7,7 +7,7 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
@@ -25,7 +25,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	isHidden$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
-		map((map: CaseMapState) => map.flags.displayLayers),
+		map((map: ICaseMapState) => map.flags.displayLayers),
 		distinctUntilChanged()
 	);
 

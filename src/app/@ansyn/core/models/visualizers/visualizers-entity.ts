@@ -1,4 +1,4 @@
-import { VisualizerStateStyle } from './visualizer-state';
+import { IVisualizerStateStyle } from './visualizer-state';
 import { Feature } from 'geojson';
 
 export interface IVisualizerEntity {
@@ -6,5 +6,5 @@ export interface IVisualizerEntity {
 	featureJson: Feature<any>;
 	state?: 'static' | 'activeDisplad';
 	type?: string,
-	style?: Partial<VisualizerStateStyle>
+	style?: Partial<IVisualizerStateStyle>
 }

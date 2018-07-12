@@ -1,4 +1,4 @@
-export interface MenuSessionState {
+export interface IMenuSessionState {
 	selectedMenuItem?: string;
 	isPinned?: boolean;
 }

@@ -40,14 +40,14 @@ describe('AnnotationsControlComponent', () => {
 	describe('toggleSelection should toggle selectionBox', () => {
 		it('select', () => {
 			component.selectedBox = undefined;
-			component.toggleSelection(component.SelectionBoxes.lineWidth);
-			expect(component.selectedBox).toEqual(component.SelectionBoxes.lineWidth);
+			component.toggleSelection(component.SelectionBoxTypes.LineWidth);
+			expect(component.selectedBox).toEqual(component.SelectionBoxTypes.LineWidth);
 		});
 
 		it('unselect', () => {
-			component.selectedBox = component.SelectionBoxes.colorPicker;
-			component.toggleSelection(component.SelectionBoxes.colorPicker);
-			expect(component.selectedBox).toBeUndefined();
+			component.selectedBox = component.SelectionBoxTypes.ColorPicker;
+			component.toggleSelection(component.SelectionBoxTypes.ColorPicker);
+			expect(component.selectedBox).toEqual(component.SelectionBoxTypes.None);
 		});
 	});
 

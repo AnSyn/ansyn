@@ -1,17 +1,17 @@
-export interface Fill {
+export interface IFill {
 	color: string;
 }
 
-export interface Stroke {
+export interface IStroke {
 	color?: any;
 	width?: any;
 }
 
-export interface VisualizerStyle {
+export interface IVisualizerStyle {
 	zIndex?: number;
-	fill?: Fill;
-	stroke?: Stroke;
-	shadow?: Stroke;
+	fill?: IFill;
+	stroke?: IStroke;
+	shadow?: IStroke;
 	point?: {
 		radius: number;
 	};
@@ -21,14 +21,15 @@ export interface VisualizerStyle {
 	icon?: {
 		scale: number;
 		src: string;
+		anchor?: number[];
 	};
 	geometry?: any;
 	label?: {
 		font?: string,
-		fill?: Fill;
-		stroke?: Stroke,
+		fill?: IFill;
+		stroke?: IStroke,
 		offsetX?: number;
 		offsetY?: number;
-		text?: string
+		text?: (feature: any) => string | string;
 	}
 }

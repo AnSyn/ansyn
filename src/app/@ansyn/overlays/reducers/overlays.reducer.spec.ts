@@ -9,7 +9,7 @@ import {
 	UnSelectOverlayAction
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
-import { OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
@@ -115,7 +115,7 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('Set Special Objects', () => {
-		let data: OverlaySpecialObject[] = [];
+		let data: IOverlaySpecialObject[] = [];
 		data.push({ id: 'fkdsjl', date: new Date(), shape: 'star' });
 		const action = new SetSpecialObjectsActionStore(data);
 

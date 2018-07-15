@@ -1,14 +1,14 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Overlay } from '../../models/overlay.model';
+import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import { BackToWorldView, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
-import { coreStateSelector, ICoreState, selectFavoriteOverlays } from '../../reducers/core.reducer';
+import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
-import { AlertMsg } from '../../reducers/core.reducer';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '../../utils/time';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -16,16 +16,18 @@ import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
 	styleUrls: ['./imagery-status.component.less']
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	_overlay: Overlay;
+	_overlay: IOverlay;
 
 	@HostBinding('class.active') @Input() active: boolean;
 	@Input() mapId: string = null;
 	@Input() mapsAmount = 1;
 	@Input() layerFlag = false;
-	@Input() set overlay(overlay: Overlay) {
+
+	@Input() set overlay(overlay: IOverlay) {
 		this._overlay = overlay;
 		this.updateFavoriteStatus();
 	};
+
 	get overlay() {
 		return this._overlay;
 	}
@@ -34,7 +36,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	private _subscriptions: Subscription[] = [];
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
-	favoriteOverlays$: Observable<Overlay[]> = this.store$.select(selectFavoriteOverlays);
+	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
 
 	alertMsg: AlertMsg;
 
@@ -45,7 +47,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			distinctUntilChanged()
 		);
 
-	favoriteOverlays: Overlay[];
+	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
 	favoritesButtonText: string;
 
@@ -55,17 +57,19 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get description() {
-		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) + ' ' + this.overlay.sensorName : null;
+		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 
 	get noGeoRegistration() {
 		if (!this.overlay) {
-			return false
+			return false;
 		}
 		return !this.overlay.isGeoRegistered;
 	}
 
-	constructor(protected store$: Store<any>, @Inject(ALERTS) public alerts: IAlert[]) {
+	constructor(protected store$: Store<any>,
+				@Inject(ALERTS) public alerts: IAlert[],
+				protected translate: TranslateService) {
 	}
 
 	ngOnInit(): void {
@@ -109,6 +113,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }))
+		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
 	}
 }

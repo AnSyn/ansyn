@@ -5,7 +5,7 @@ import { Debounce } from 'lodash-decorators';
 
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 
-export interface LogObject {
+export interface ILogObject {
 	severity: string;
 	msg: string;
 }
@@ -13,7 +13,7 @@ export interface LogObject {
 @Injectable()
 export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
-	stack: LogObject[] = [];
+	stack: ILogObject[] = [];
 
 	handleError(error: any): void {
 		if (error.stack) {

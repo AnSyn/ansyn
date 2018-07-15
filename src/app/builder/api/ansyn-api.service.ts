@@ -7,18 +7,20 @@ import { Observable } from 'rxjs';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+mport { Overlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { WindowLayout } from '@builder/reducers/builder.reducer';
+import { IWindowLayout } from '@builder/reducers/builder.reducer';
 import { SetWindowLayout } from '@builder/actions/builder.actions';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '@ansyn/menu-items/cases/models/cases-config';
@@ -76,7 +78,7 @@ export class AnsynApi {
 			.subscribe();
 	}
 
-	displayOverLay(overlay: Overlay) {
+	displayOverLay(overlay: IOverlay) {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
 
@@ -93,11 +95,11 @@ export class AnsynApi {
 	}
 
 
-	changeWindowLayout(windowLayout: WindowLayout) {
+	changeWindowLayout(windowLayout: IWindowLayout) {
 		this.store.dispatch(new SetWindowLayout(windowLayout));
 	}
 
-	transfromHelper(position, convertMethodFrom: CoordinatesSystem, convertMethodTo: CoordinatesSystem) {
+	transfromHelper(position, convertMethodFrom: ICoordinatesSystem, convertMethodTo: ICoordinatesSystem) {
 		const conversionValid = this.projectionConverterService.isValidConversion(position, convertMethodFrom);
 		if (conversionValid) {
 			this.projectionConverterService.convertByProjectionDatum(position, convertMethodFrom, convertMethodTo);

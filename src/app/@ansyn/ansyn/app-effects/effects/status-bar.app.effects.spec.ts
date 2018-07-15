@@ -4,7 +4,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { ExpandAction, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { Case } from '@ansyn/menu-items/cases/models/case.model';
+import { ICase } from '@ansyn/menu-items/cases/models/case.model';
 import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs';
@@ -14,14 +14,14 @@ import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/ove
 import { HttpClientModule, HttpBackend  } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
-	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return Observable.empty();
 	}
 
@@ -33,7 +33,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return Observable.empty();
 	};
 }
@@ -45,7 +45,7 @@ describe('StatusBarAppEffects', () => {
 	let casesService: CasesService;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let overlaysService: OverlaysService;
-	let fakeCase: Case;
+	let fakeCase: ICase;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

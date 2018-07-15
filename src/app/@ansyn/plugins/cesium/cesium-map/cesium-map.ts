@@ -1,6 +1,6 @@
 import { GeoJsonObject, Point } from 'geojson';
 import { Observable } from 'rxjs';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 export const CesiumMapName = 'cesium';
@@ -12,7 +12,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = {};
 		return Observable.of(false);
 	}
@@ -41,11 +41,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	setPosition(position: CaseMapPosition): Observable<boolean> {
+	setPosition(position: ICaseMapPosition): Observable<boolean> {
 		return Observable.throw(new Error('Method not implemented.'));
 	}
 
-	getPosition(): Observable<CaseMapPosition> {
+	getPosition(): Observable<ICaseMapPosition> {
 		return Observable.throw(new Error('Method not implemented.'));
 	}
 

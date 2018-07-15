@@ -8,6 +8,7 @@ import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -16,6 +17,7 @@ describe('ImageryContainerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				HttpClientModule,
 				CoreModule,
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])

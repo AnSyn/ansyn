@@ -7,13 +7,13 @@ import {
 } from '../actions/menu.actions';
 import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { MenuItem } from '@ansyn/menu/models/menu-item.model';
+import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
 
-export const menuItemsAdapter: EntityAdapter<MenuItem> = createEntityAdapter<MenuItem>({ selectId: (menuItem: MenuItem) => menuItem.name });
+export const menuItemsAdapter: EntityAdapter<IMenuItem> = createEntityAdapter<IMenuItem>({ selectId: (menuItem: IMenuItem) => menuItem.name });
 
-export interface IMenuState extends EntityState<MenuItem> {
+export interface IMenuState extends EntityState<IMenuItem> {
 	selectedMenuItem: string;
 	isPinned: boolean;
 	autoClose: boolean;
@@ -68,9 +68,9 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 }
 
 /* @ngrx/entity */
-export const { selectAll, selectEntities }: EntitySelectors<MenuItem, IMenuState> = menuItemsAdapter.getSelectors();
-export const selectAllMenuItems: MemoizedSelector<IMenuState, MenuItem[]> = createSelector(menuStateSelector, selectAll);
-export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<MenuItem>> = createSelector(menuStateSelector, selectEntities);
+export const { selectAll, selectEntities }: EntitySelectors<IMenuItem, IMenuState> = menuItemsAdapter.getSelectors();
+export const selectAllMenuItems: MemoizedSelector<IMenuState, IMenuItem[]> = createSelector(menuStateSelector, selectAll);
+export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<IMenuItem>> = createSelector(menuStateSelector, selectEntities);
 
 export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);

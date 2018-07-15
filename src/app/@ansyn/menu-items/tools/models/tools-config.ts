@@ -1,10 +1,13 @@
 import { InjectionToken } from '@angular/core';
-import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 
 export interface IToolsConfig {
+	Annotations: {
+		displayId: "0" | "1";
+	},
 	GoTo: {
-		from: CoordinatesSystem;
-		to: CoordinatesSystem;
+		from: ICoordinatesSystem;
+		to: ICoordinatesSystem;
 	},
 	Proj4: {
 		ed50: string;

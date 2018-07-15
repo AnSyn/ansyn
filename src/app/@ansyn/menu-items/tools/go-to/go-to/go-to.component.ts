@@ -13,7 +13,7 @@ import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { SetSubMenu } from '../../actions/tools.actions';
 import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
-import { CoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
@@ -33,7 +33,7 @@ export class GoToComponent implements OnInit {
 		.pluck<any, any>('activeCenter')
 		.distinctUntilChanged();
 
-	activeCenterProjDatum: CoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
+	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
 	inputs = {
 		from: [0, 0],
@@ -55,11 +55,11 @@ export class GoToComponent implements OnInit {
 		return this._expand;
 	}
 
-	get from(): CoordinatesSystem {
+	get from(): ICoordinatesSystem {
 		return this.config.GoTo.from;
 	}
 
-	get to(): CoordinatesSystem {
+	get to(): ICoordinatesSystem {
 		return this.config.GoTo.to;
 	}
 
@@ -117,7 +117,7 @@ export class GoToComponent implements OnInit {
 		this.store$.dispatch(new SetSubMenu(null));
 	}
 
-	private dispatchInputUpdated(coords: number[], convertFrom: CoordinatesSystem) {
+	private dispatchInputUpdated(coords: number[], convertFrom: ICoordinatesSystem) {
 		const conversionValid = this.projectionConverterService.isValidConversion(coords, convertFrom);
 		if (conversionValid) {
 			const toWgs84 = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.activeCenterProjDatum);

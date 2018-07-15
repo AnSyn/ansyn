@@ -1,12 +1,7 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
-import { LayersActionTypes } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import {
-	ILayerState, initialLayersState,
-	layersStateSelector
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
 import { FeatureCollection } from 'geojson';
 import * as turf from '@turf/turf';
 
@@ -22,7 +17,7 @@ export enum toolsFlags {
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
-export interface AnnotationProperties {
+export interface IAnnotationProperties {
 	strokeWidth?: number;
 	strokeColor?: string;
 	fillColor?: string;
@@ -34,9 +29,9 @@ export interface IToolsState {
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	annotationMode: AnnotationMode;
-	annotationProperties: AnnotationProperties
+	annotationProperties: IAnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
-	overlaysManualProcessArgs: OverlaysManualProcessArgs;
+	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	annotationsLayer: FeatureCollection<any>
 }
 
@@ -159,3 +154,5 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
 export const selectOverlaysManualProcessArgs = createSelector(toolsStateSelector, (tools: IToolsState) => tools.overlaysManualProcessArgs);
 export const selectAnnotationLayer = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationsLayer );
+export const selectAnnotationMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationMode);
+export const selectAnnotationProperties = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationProperties);

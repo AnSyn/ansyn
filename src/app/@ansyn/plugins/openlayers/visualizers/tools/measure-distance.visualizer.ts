@@ -27,6 +27,7 @@ import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-en
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -43,6 +44,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		.map((flags) => flags.get(toolsFlags.isMeasureToolActive))
 		.distinctUntilChanged();
 
+	@ImageryPluginSubscription
 	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
 		.do(([isActiveMap, isMeasureToolActive]) => {
 			if (isActiveMap && isMeasureToolActive) {
@@ -127,13 +129,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 
 		this.geoJsonFormat = new GeoJSON();
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.onChanges$.subscribe()
-		);
 	}
 
 	onResetView(): Observable<boolean> {

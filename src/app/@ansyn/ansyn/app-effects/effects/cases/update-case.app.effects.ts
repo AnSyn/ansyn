@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { Case } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
@@ -65,7 +65,7 @@ export class UpdateCaseAppEffects {
 
 			const { id, name, lastModified, owner, creationTime, selectedContextId, autoSave } = selectedCase;
 
-			const updatedCase: Case = {
+			const updatedCase: ICase = {
 				id,
 				name,
 				creationTime,

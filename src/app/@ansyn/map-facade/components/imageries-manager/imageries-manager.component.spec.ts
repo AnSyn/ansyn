@@ -13,6 +13,7 @@ import { MockComponent } from '@ansyn/core/test/mock-component';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { TranslateModule } from '@ngx-translate/core';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -47,6 +48,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports: [
+				TranslateModule.forRoot(),
 				StoreModule.forRoot({[mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer})
 			],
 			declarations: [

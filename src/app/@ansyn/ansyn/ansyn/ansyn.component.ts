@@ -2,7 +2,7 @@ import { Store } from '@ngrx/store';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { Case, CaseMapState } from '@ansyn/core/models/case.model';
+import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
@@ -19,13 +19,13 @@ const packageJson = require('../../../../../package.json');
 
 export class AnsynComponent {
 	selectedCaseName$: Observable<string> = this.store$.select(selectSelectedCase)
-		.map((selectSelected: Case) => selectSelected ? selectSelected.name : 'Default Case');
+		.map((selectSelected: ICase) => selectSelected ? selectSelected.name : 'Default Case');
 
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned)
 		.skip(1)
 		.map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned');
 
-	activeMap$: Observable<CaseMapState> = this.store$.select(mapStateSelector)
+	activeMap$: Observable<ICaseMapState> = this.store$.select(mapStateSelector)
 		.filter(Boolean)
 		.map(MapFacadeService.activeMap)
 		.filter(Boolean);

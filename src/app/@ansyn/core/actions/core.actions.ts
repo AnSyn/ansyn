@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '../utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
-import { Overlay, OverlaysCriteria } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 
 export const CoreActionTypes = {
@@ -56,7 +56,7 @@ export class ToggleMapLayersAction implements Action {
 export class ToggleFavoriteAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload: Overlay) {
+	constructor(public payload: IOverlay) {
 	}
 }
 
@@ -70,7 +70,7 @@ export class SetToastMessageAction implements Action {
 export class SetFavoriteOverlaysAction implements Action {
 	type = CoreActionTypes.SET_FAVORITE_OVERLAYS;
 
-	constructor(public payload: Overlay[]) {
+	constructor(public payload: IOverlay[]) {
 	}
 }
 
@@ -101,7 +101,7 @@ export class RemoveAlertMsg implements Action {
 export class SetOverlaysCriteriaAction implements Action {
 	type = CoreActionTypes.SET_OVERLAYS_CRITERIA;
 
-	constructor(public payload: OverlaysCriteria) {
+	constructor(public payload: IOverlaysCriteria) {
 	}
 }
 

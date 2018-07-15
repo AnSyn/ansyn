@@ -1,14 +1,14 @@
 import { ActionReducer, State, Store } from '@ngrx/store';
 import { getTestBed, TestBed } from '@angular/core/testing';
 
-export interface StoreFixture<T> {
+export interface IStoreFixture<T> {
 	store: Store<T>;
 	state: State<T>;
 	cleanup: () => void;
 	getState: () => T;
 }
 
-export function createStore<T>(reducer: ActionReducer<T>, options: any = {}): StoreFixture<T> {
+export function createStore<T>(reducer: ActionReducer<T>, options: any = {}): IStoreFixture<T> {
 	const testbed: TestBed = getTestBed();
 	const store: Store<T> = testbed.get(Store);
 	const state: State<T> = testbed.get(State);

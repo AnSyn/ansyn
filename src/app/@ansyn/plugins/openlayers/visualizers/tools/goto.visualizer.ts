@@ -20,6 +20,7 @@ import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/too
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -49,10 +50,12 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged();
 
 	/* events */
+	@ImageryPluginSubscription
 	drawPinPoint$ = Observable
 		.combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$)
 		.mergeMap(this.drawGotoIconOnMap.bind(this));
 
+	@ImageryPluginSubscription
 	goToPinAvailable$ = Observable.combineLatest(this.pinLocation$, this.isActiveMap$)
 		.do(([pinLocation, isActiveMap]: [boolean, boolean]) => {
 			if (isActiveMap && pinLocation) {
@@ -83,15 +86,6 @@ export class GoToVisualizer extends EntitiesVisualizer {
 	constructor(public store$: Store<any>, protected projectionService: ProjectionService) {
 		super();
 	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.drawPinPoint$.subscribe(),
-			this.goToPinAvailable$.subscribe()
-		);
-	}
-
 
 	featureStyle(feature: Feature, resolution) {
 		return this._iconSrc;

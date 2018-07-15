@@ -12,13 +12,12 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case, CaseMapState } from '@ansyn/core/models/case.model';
+import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
@@ -44,7 +43,7 @@ export class SelectCaseAppEffects {
 				protected store$: Store<IAppState>) {
 	}
 
-	selectCaseActions(payload: Case): Action[] {
+	selectCaseActions(payload: ICase): Action[] {
 		const { state } = payload;
 		// status-bar
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
@@ -66,7 +65,7 @@ export class SelectCaseAppEffects {
 			time.to = new Date(time.to);
 		}
 		// layers
-		const { annotationsLayer, displayAnnotationsLayer, activeLayersIds } = state.layers;
+		const { annotationsLayer, activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
 		return [
@@ -77,7 +76,6 @@ export class SelectCaseAppEffects {
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction(),
 			new SetAnnotationsLayer(annotationsLayer),
-			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
@@ -85,14 +83,14 @@ export class SelectCaseAppEffects {
 		];
 	}
 
-	parseMapData(map: CaseMapState): CaseMapState {
+	parseMapData(map: ICaseMapState): ICaseMapState {
 		if (map.data.overlay) {
 			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } };
 		}
 		return map;
 	}
 
-	parseOverlay(overlay: Overlay): Overlay {
+	parseOverlay(overlay: IOverlay): IOverlay {
 		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
 }

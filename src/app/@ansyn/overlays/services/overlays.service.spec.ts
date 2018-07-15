@@ -5,11 +5,11 @@ import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs';
 import { Observer } from 'rxjs/Observer';
-import { Overlay } from '../models/overlay.model';
-import { OverlaysCriteria, OverlaysFetchData, OverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '../models/overlay.model';
+import { IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -22,13 +22,13 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return Observable.empty();
 	};
 
-	public fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData> {
-		return Observable.create((observer: Observer<OverlaysFetchData>) => {
-			const overlays: Overlay[] = [
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
+		return Observable.create((observer: Observer<IOverlaysFetchData>) => {
+			const overlays: IOverlay[] = [
 				{
 					id: 'abc',
 					sourceType: 'mock1',
@@ -53,8 +53,8 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		});
 	}
 
-	getOverlayById(id: string): Observable<Overlay> {
-		return Observable.create((observer: Observer<Overlay>) => {
+	getOverlayById(id: string): Observable<IOverlay> {
+		return Observable.create((observer: Observer<IOverlay>) => {
 			const overlay: any = {
 				id: 'abc',
 				sourceType: 'mock1',
@@ -80,7 +80,7 @@ describe('OverlaysService', () => {
 			{ key: 'b', value: 2 }
 		]
 	};
-	let searchParams: OverlaysCriteria = {
+	let searchParams: IOverlaysCriteria = {
 		region: {
 			'type': 'Polygon',
 			'coordinates': [
@@ -223,7 +223,7 @@ describe('OverlaysService', () => {
 		const mockData = {
 			overlays: new Map(),
 			filteredOverlays: ['13'],
-			specialObjects: new Map<string, OverlaySpecialObject>()
+			specialObjects: new Map<string, IOverlaySpecialObject>()
 		} as IOverlaysState;
 
 		overlaysTmpData.forEach(item => {
@@ -266,7 +266,7 @@ describe('OverlaysService', () => {
 		}).calls;
 
 
-		let params: OverlaysCriteria = {
+		let params: IOverlaysCriteria = {
 			region: {
 				'type': 'Polygon',
 				'coordinates': [

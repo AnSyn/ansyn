@@ -1,7 +1,7 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { Filter } from '../models/filter';
+import { IFilter } from '../models/IFilter';
 import { Action } from '@ngrx/store';
-import { CaseFacetsState } from '@ansyn/core/models/case.model';
+import { ICaseFacetsState } from '@ansyn/core/models/case.model';
 import { Filters } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 
 export const FiltersActionTypes = {
@@ -33,7 +33,7 @@ export class InitializeFiltersSuccessAction implements Action {
 export class UpdateFilterAction implements Action {
 	type = FiltersActionTypes.UPDATE_FILTER_METADATA;
 
-	constructor(public payload?: { filter: Filter, newMetadata: FilterMetadata }) {
+	constructor(public payload?: { filter: IFilter, newMetadata: FilterMetadata }) {
 	}
 }
 
@@ -52,7 +52,7 @@ export class EnableOnlyFavoritesSelectionAction implements Action {
 }
 export class UpdateFacetsAction implements Action {
 	readonly type = FiltersActionTypes.UPDATE_FACETS;
-	constructor(public payload: CaseFacetsState) {
+	constructor(public payload: ICaseFacetsState) {
 
 	}
 }

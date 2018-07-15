@@ -8,14 +8,14 @@ import { cold, hot } from 'jasmine-marbles';
 import { SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Case } from '@ansyn/core/models/case.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { ICase } from '@ansyn/core/models/case.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
 
-function mockOverlay(id: string): Overlay {
-	const overlay = <Overlay> {};
+function mockOverlay(id: string): IOverlay {
+	const overlay = <IOverlay> {};
 	overlay.id = id;
 	return overlay;
 }
@@ -24,8 +24,8 @@ describe('CoreAppEffects', () => {
 	let coreAppEffects: CoreAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
-	let overlays1to3: Array<Overlay>;
-	let overlays1to4: Array<Overlay>;
+	let overlays1to3: Array<IOverlay>;
+	let overlays1to4: Array<IOverlay>;
 	const coreState = { ...coreInitialState };
 	const casesState = { ...initialCasesState };
 	const mapsState = { ...initialMapState };
@@ -85,7 +85,7 @@ describe('CoreAppEffects', () => {
 	});
 
 	it('setFavoriteOverlaysUpdateCase$ should update selected case and overlay markup', () => {
-		casesState.selectedCase = <Case> { state: { favoriteOverlays: overlays1to3 } };
+		casesState.selectedCase = <ICase> { state: { favoriteOverlays: overlays1to3 } };
 		const markupsResult = {
 			classToSet: MarkUpClass.favorites,
 			dataToSet: {

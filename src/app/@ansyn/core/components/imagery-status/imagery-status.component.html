@@ -34,10 +34,10 @@
 </div>
 
 <div class="description">
-	<div *ngIf="overlay"
+	<div dir="auto" *ngIf="overlay"
 		 [attr.tooltip-value]="description"
 		 [attr.tooltip-class]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
-		{{description}}
+		{{description}} {{overlay.sensorName | translate}}
 	</div>
 	<div *ngIf="!overlay">
 		Base Map

@@ -1,18 +1,18 @@
-import { CaseDataInputFiltersState, CaseRegionState, CaseTimeState } from './case.model';
+import { ICaseDataInputFiltersState, CaseRegionState, ICaseTimeState } from './case.model';
 
-export interface OverlaysFetchData {
-	data: Overlay[],
+export interface IOverlaysFetchData {
+	data: IOverlay[],
 	// number of overlays removed from total overlays (according to config)
 	limited: number,
 	errors?: Error[]
 }
 
-export interface DilutedOverlay {
+export interface IDilutedOverlay {
 	id: string;
 	sourceType?: string;
 }
 
-export interface Overlay extends DilutedOverlay {
+export interface IOverlay extends IDilutedOverlay {
 	footprint?: any; // @TODO add type geojson multipoligon,
 	sensorType?: string;
 	sensorName?: string;
@@ -30,14 +30,14 @@ export interface Overlay extends DilutedOverlay {
 	isGeoRegistered: boolean;
 }
 
-export interface OverlaysCriteria {
-	time?: CaseTimeState;
+export interface IOverlaysCriteria {
+	time?: ICaseTimeState;
 	region?: CaseRegionState;
-	dataInputFilters?: CaseDataInputFiltersState;
+	dataInputFilters?: ICaseDataInputFiltersState;
 	search?: boolean;
 }
 
-export interface OverlaySpecialObject {
+export interface IOverlaySpecialObject {
 	id: string;
 	date: Date;
 	shape: string; // this will be type soon or I will add another property for shapeType

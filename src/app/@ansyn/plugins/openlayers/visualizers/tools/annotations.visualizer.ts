@@ -14,46 +14,59 @@ import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
 	AnnotationMode,
-	AnnotationsContextMenuBoundingRect,
-	AnnotationsContextMenuEvent
+	IAnnotationsContextMenuBoundingRect,
+	IAnnotationsContextMenuEvent
 } from '@ansyn/core/models/visualizers/annotations.model';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
-	AnnotationProperties,
-	IToolsState,
+	IAnnotationProperties,
 	selectAnnotationLayer,
+	selectAnnotationMode,
+	selectAnnotationProperties,
 	selectSubMenu,
-	SubMenuEnum,
-	toolsStateSelector
+	SubMenuEnum
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs';
 import { selectDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
 import { SetAnnotationMode, SetAnnotationsLayer } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { Inject } from '@angular/core';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { filter, map, take, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
+import OLGeoJSON from 'ol/format/geojson';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, ProjectionService],
+	deps: [Store, ProjectionService, toolsConfig],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
 	disableCache = true;
-
 	public mode: AnnotationMode;
 
-	toolsState$ = this.store$.select(toolsStateSelector);
 	/* data */
 	annotationsLayer$: Observable<any> = this.store$.select(selectAnnotationLayer);
+
+	currentOverlay$ = this.store$.pipe(
+		select(selectMapsList),
+		map((mapList) => MapFacadeService.mapById(mapList, this.mapId)),
+		filter(Boolean),
+		map((map: ICaseMapState) => map.data.overlay)
+	);
 
 	displayAnnotationsLayer$: Observable<any> = this.store$.select(selectDisplayAnnotationsLayer);
 
@@ -65,21 +78,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		.map((activeMapId: string): boolean => activeMapId === this.mapId)
 		.distinctUntilChanged();
 
-	annotationMode$: Observable<AnnotationMode> = this.toolsState$
-		.pluck<IToolsState, AnnotationMode>('annotationMode')
-		.distinctUntilChanged();
+	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
+	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
 
-	annotationProperties$: Observable<any> = this.store$
-		.select(toolsStateSelector)
-		.pluck<IToolsState, AnnotationProperties>('annotationProperties');
-
-	/* events */
+	@ImageryPluginSubscription
 	annoatationModeChange$: Observable<any> = Observable.combineLatest(this.annotationMode$, this.isActiveMap$)
 		.do(this.onModeChange.bind(this));
 
+	@ImageryPluginSubscription
 	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
 		.do(this.onAnnotationPropertiesChange.bind(this));
 
+	@ImageryPluginSubscription
 	onAnnotationsChange$ = Observable
 		.combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
 		.mergeMap(this.onAnnotationsChange.bind(this));
@@ -122,7 +132,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
-	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: AnnotationProperties) {
+	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: IAnnotationProperties) {
 		if (fillColor) {
 			this.changeFillColor(fillColor);
 		}
@@ -142,16 +152,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return Observable.of(true);
 	}
 
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.annoatationModeChange$.subscribe(),
-			this.annotationPropertiesChange$.subscribe(),
-			this.onAnnotationsChange$.subscribe()
-		);
-	}
-
-	constructor(public store$: Store<any>, protected projectionService: ProjectionService) {
+	constructor(public store$: Store<any>, protected projectionService: ProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
 
 		super(null, {
 			initial: {
@@ -170,6 +171,25 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
+
+		//  0 or 1
+		if (Number(toolsConfig.Annotations.displayId)) {
+			this.updateStyle({
+				initial: {
+					label: {
+						font: '12px Calibri,sans-serif',
+						fill: {
+							color: '#fff'
+						},
+						stroke: {
+							color: '#000',
+							width: 3
+						},
+						text: (feature) => feature.getId() || ''
+					}
+				}
+			});
+		}
 	}
 
 	resetInteractions(): void {
@@ -193,7 +213,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
-		const contextMenuEvent: AnnotationsContextMenuEvent = {
+		const contextMenuEvent: IAnnotationsContextMenuEvent = {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect
@@ -217,7 +237,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 
-	getFeatureBoundingRect(selectedFeature): AnnotationsContextMenuBoundingRect {
+	getFeatureBoundingRect(selectedFeature): IAnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]
@@ -253,14 +273,26 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap)
-			.take(1)
-			.withLatestFrom(this.annotationsLayer$)
-			.subscribe(([featureCollection, annotationsLayer]: [FeatureCollection<GeometryObject>, any]) => {
-				const [geoJsonFeature] = featureCollection.features;
-				const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
-				updatedAnnotationsLayer.features.push(geoJsonFeature);
-				this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
-			});
+			.pipe(
+				take(1),
+				withLatestFrom(this.annotationsLayer$, this.currentOverlay$),
+				tap(([featureCollection, annotationsLayer, overlay]: [FeatureCollection<GeometryObject>, any, IOverlay]) => {
+					const [geoJsonFeature] = featureCollection.features;
+					const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
+					updatedAnnotationsLayer.features.push(geoJsonFeature);
+					if (overlay) {
+						geoJsonFeature.properties = {
+							...geoJsonFeature.properties,
+							overlayId: overlay.id,
+							pixels: new OLGeoJSON().writeFeatureObject(feature),
+							...this.projectionService.getProjectionProperties(this.communicator, updatedAnnotationsLayer)
+						};
+					}
+					geoJsonFeature.properties = { ...geoJsonFeature.properties };
+					this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
+				})
+			).subscribe()
+
 	}
 
 	removeDrawInteraction() {

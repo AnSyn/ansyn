@@ -5,25 +5,14 @@ export const LayersActionTypes = {
 	BEGIN_LAYER_COLLECTION_LOAD: 'BEGIN_LAYER_COLLECTION_LOAD',
 	LAYER_COLLECTION_LOADED: 'LAYER_COLLECTION_LOADED',
 	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
-	ANNOTATIONS: {
-		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER'
-	},
 	UPDATE_SELECTED_LAYERS_IDS: 'UPDATE_SELECTED_LAYERS_IDS',
 };
 
 export type LayersActions =
-	| ToggleDisplayAnnotationsLayer
 	| BeginLayerCollectionLoadAction
 	| LayerCollectionLoadedAction
 	| ErrorLoadingLayersAction
 	| UpdateSelectedLayersIds;
-
-export class ToggleDisplayAnnotationsLayer implements Action {
-	type = LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER;
-
-	constructor(public payload: boolean) {
-	}
-}
 
 export class BeginLayerCollectionLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;

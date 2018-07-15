@@ -1,9 +1,9 @@
 import { ImageryDecorator } from './index';
-import { BaseImageryPluginConstructor, ImageryPluginMetaData } from '../base-imagery-plugin';
+import { IBaseImageryPluginConstructor, IImageryPluginMetaData } from '../base-imagery-plugin';
 
 
-export function ImageryPlugin(metaData: ImageryPluginMetaData) {
-	return function (constructor: BaseImageryPluginConstructor) {
-		ImageryDecorator<ImageryPluginMetaData, BaseImageryPluginConstructor>(metaData)(constructor);
+export function ImageryPlugin(metaData: IImageryPluginMetaData) {
+	return function (constructor: IBaseImageryPluginConstructor) {
+		ImageryDecorator<IImageryPluginMetaData, IBaseImageryPluginConstructor>(metaData)(constructor);
 	}
 }

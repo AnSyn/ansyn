@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -38,6 +39,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	onEnterMap$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER);
 
+	@ImageryPluginSubscription
 	onLeaveMap$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
 		.do(() => {
@@ -45,6 +47,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
 		});
 
+	@ImageryPluginSubscription
 	createShadowMouseProducer$ = Observable.combineLatest(this.isActive$, this.shadowMouseFlag$, this.onEnterMap$)
 		.do(([isActive, shadowMouseFlag]) => {
 			this.clearEntities();
@@ -55,7 +58,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			}
 		});
 
-
+	@ImageryPluginSubscription
 	drawPoint$ = Observable.combineLatest(this.mouseShadowProducer$, this.isActive$)
 		.filter(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => payload.outsideSource || !isActive)
 		.mergeMap(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => this.setEntities([{
@@ -116,16 +119,6 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new ShadowMouseProducer({ point: projectedPoint }));
 			})
 			.subscribe();
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			<Subscription>this.createShadowMouseProducer$.subscribe(),
-			this.onLeaveMap$.subscribe(),
-			this.drawPoint$.subscribe()
-		)
-		;
 	}
 
 	onDispose() {

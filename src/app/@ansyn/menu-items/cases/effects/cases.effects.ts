@@ -4,8 +4,8 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
-import { empty, Observable, of } from 'rxjs';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Observable, throwError } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -25,12 +25,15 @@ import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/ca
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
-import { Case, CasePreview, DilutedCaseState } from '@ansyn/core/models/case.model';
+import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { catchError, map } from 'rxjs/internal/operators';
+import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/internal/operators';
+import { EMPTY } from 'rxjs/internal/observable/empty';
+import { LoadCaseAction, SelectDilutedCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 @Injectable()
 export class CasesEffects {
@@ -49,7 +52,7 @@ export class CasesEffects {
 		.switchMap((total: number) => {
 			return this.casesService.loadCases(total)
 				.map(cases => new AddCasesAction(cases))
-				.catch(() => empty());
+				.catch(() => EMPTY);
 		}).share();
 
 	/**
@@ -118,15 +121,18 @@ export class CasesEffects {
 	 */
 	@Effect()
 	onUpdateCaseBackend$: Observable< UpdateCaseBackendSuccessAction | any> = this.actions$
-		.ofType(CasesActionTypes.UPDATE_CASE_BACKEND)
-		.mergeMap((action: UpdateCaseBackendAction) => {
-			return this.casesService.wrapUpdateCase(action.payload)
-				.pipe(
-					map((updatedCase: StoredEntity<CasePreview, DilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
-					catchError(() => empty())
-				)
+		.pipe(
+			ofType(CasesActionTypes.UPDATE_CASE_BACKEND),
+			debounceTime(this.casesService.config.updateCaseDebounceTime),
+			switchMap((action: UpdateCaseBackendAction) => {
+				return this.casesService.updateCase(action.payload)
+					.pipe(
+						map((updatedCase: IStoredEntity<ICasePreview, IDilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
+						catchError(() => EMPTY)
+					)
 
-		}).share();
+			})
+		);
 
 	/**
 	 * @type Effect
@@ -160,7 +166,7 @@ export class CasesEffects {
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
 		.filter((action: LoadDefaultCaseAction) => !action.payload.context)
 		.map((action: LoadDefaultCaseAction) => {
-			const defaultCaseQueryParams: Case = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
+			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
 			return new SelectCaseAction(defaultCaseQueryParams);
 		}).share();
 
@@ -174,9 +180,9 @@ export class CasesEffects {
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$
 		.ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS)
 		.map(({ payload }) => payload)
-		.switchMap((savedCase: Case) => {
+		.switchMap((savedCase: ICase) => {
 			return this.casesService.createCase(savedCase)
-				.map((addedCase: Case) => new SaveCaseAsSuccessAction(addedCase));
+				.map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase));
 		});
 
 	/**
@@ -208,9 +214,21 @@ export class CasesEffects {
 		.filter(([action, casesState]: [LoadDefaultCaseAction, ICasesState]) => !Boolean(casesState.selectedCase))
 		.map(() => new LoadDefaultCaseAction());
 
+	@Effect()
+	loadCase$: Observable<any> = this.actions$
+		.pipe(
+			ofType(CasesActionTypes.LOAD_CASE),
+			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
+			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
+			catchError(() => EMPTY),
+			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase))
+			);
+
+
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,
 				protected store: Store<ICasesState>,
+				protected errorHandlerService: ErrorHandlerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}
 }

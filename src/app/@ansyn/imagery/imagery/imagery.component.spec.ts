@@ -6,7 +6,7 @@ import { CacheService } from '../cache-service/cache.service';
 import { Store } from '@ngrx/store';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
@@ -16,7 +16,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 		return true;
 	}
 
-	createAsync(metaData: CaseMapState): Promise<any> {
+	createAsync(metaData: ICaseMapState): Promise<any> {
 		return Promise.resolve();
 	}
 

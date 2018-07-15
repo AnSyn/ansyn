@@ -5,10 +5,11 @@ import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visu
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -18,6 +19,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 	public isActive = false;
 	private overlay;
 
+	@ImageryPluginSubscription
 	overlay$ = this.store$.select(mapStateSelector)
 		.filter(() => Boolean(this.mapId))
 		.map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId))
@@ -26,6 +28,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged()
 		.do((overlay) => this.overlay = overlay);
 
+	@ImageryPluginSubscription
 	isActive$: Observable<boolean> = this.store$
 		.select(mapStateSelector)
 		.pluck<IMapState, string>('activeMapId')
@@ -51,7 +54,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	setOverlay(overlay: Overlay) {
+	setOverlay(overlay: IOverlay) {
 		if (overlay) {
 			const { id, footprint } = overlay;
 			const featureJson: GeoJSON.Feature<any> = { type: 'Feature', geometry: footprint, properties: {} };
@@ -82,11 +85,4 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		return this.setOverlay(this.overlay)
 	}
 
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.overlay$.subscribe(),
-			this.isActive$.subscribe()
-		);
-	}
 }

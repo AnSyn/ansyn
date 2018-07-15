@@ -7,13 +7,14 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -24,10 +25,11 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	isHidden$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
-		map((map: CaseMapState) => map.flags.displayLayers),
+		map((map: ICaseMapState) => map.flags.displayLayers),
 		distinctUntilChanged()
 	);
 
+	@ImageryPluginSubscription
 	updateLayersOnMap$ = combineLatest(this.store$.pipe(select(selectLayers)), this.store$.pipe(select(selectSelectedLayersIds)), this.isHidden$)
 		.pipe(
 			mergeMap(([result, selectedLayerIds, isHidden]: [ILayer[], string[], boolean]) => forkJoin(result
@@ -60,13 +62,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			featureJson: feature,
 			style: feature.properties.style
 		}));
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.updateLayersOnMap$.subscribe()
-		);
 	}
 
 	constructor(protected store$: Store<any>,

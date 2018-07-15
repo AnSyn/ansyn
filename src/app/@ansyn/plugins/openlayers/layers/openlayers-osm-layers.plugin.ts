@@ -6,11 +6,11 @@ import TileLayer from 'ol/layer/tile';
 import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { BaseImageryPlugin, ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { distinctUntilChanged } from 'rxjs/internal/operators';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 
 
@@ -20,14 +20,17 @@ import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
 })
 export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 
+	@ImageryPluginSubscription
 	toggleGroup$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
-		map((map: CaseMapState) => !map.flags.displayLayers),
+		map((map: ICaseMapState) => !map.flags.displayLayers),
 		distinctUntilChanged(),
+		debounceTime(50),
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 
+	@ImageryPluginSubscription
 	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
@@ -67,23 +70,16 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 	}
 
 	addGroupLayer(layer: ILayer) {
-		const group = OpenLayersMap.groupLayers.get('layers');
+		const group =  OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray = group.getLayers().getArray();
 		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
-			if (!group) {
-				throw new Error('Tried to add a layer to a non-existent group');
-			}
 			const osmLayer = this.createOSMLayer(layer);
 			group.getLayers().push(osmLayer);
 		}
 	}
 
 	removeGroupLayer(id: string): void {
-		const group = OpenLayersMap.groupLayers.get('layers');
-		if (!group) {
-			throw new Error('Tried to remove a layer to a non-existent group');
-		}
-
+		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray: any[] = group.getLayers().getArray();
 		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
 		if (removeIdx >= 0) {
@@ -91,11 +87,4 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.osmLayersChanges$.subscribe(),
-			this.toggleGroup$.subscribe()
-		);
-	}
 }

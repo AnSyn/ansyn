@@ -43,7 +43,7 @@ export class MapSearchBoxComponent implements OnDestroy {
 			this.geocoderService.getLocation$(this.searchString)
 				.do((point: Point) => {
 						if (point) {
-							this._subscriptions.push(this._communicator.setCenter(point).take(1).subscribe())
+							this._subscriptions.push(this._communicator.setCenter(point, false).take(1).subscribe())
 						} else {
 							this.error = true;
 						}

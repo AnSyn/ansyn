@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, HostBinding } from '@angular/core';
 import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
 
-export interface BooleanFilterCustomData {
+export interface IBooleanFilterCustomData {
 	displayTrueName: string;
 	displayFalseName: string;
 }
@@ -15,7 +15,7 @@ export class BooleanFilterContainerComponent {
 	@Input() metadata: BooleanFilterMetadata;
 	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>();
 	@Input()
-	set customData(value: BooleanFilterCustomData ) {
+	set customData(value: IBooleanFilterCustomData ) {
 		if (value) {
 			this.metadata.properties.true.displayName = value.displayTrueName;
 			this.metadata.properties.false.displayName = value.displayFalseName;

@@ -6,6 +6,9 @@
       "@ansyn/*": [
         "src/app/@ansyn/*"
       ],
+      "@ansyn/event-drops": [
+        "node_modules/@ansyn/event-drops"
+      ],
       "@builder/*": [
         "src/app/builder/*"
       ]

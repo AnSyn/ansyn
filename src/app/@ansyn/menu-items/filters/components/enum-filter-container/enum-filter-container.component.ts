@@ -1,5 +1,6 @@
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-enum-filter-container',
@@ -7,6 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 	styleUrls: ['./enum-filter-container.component.less']
 })
 export class EnumFilterContainerComponent {
+
 
 	@Input() metadata: EnumFilterMetadata;
 	@Input() isLongFiltersList: boolean;

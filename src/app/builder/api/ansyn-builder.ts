@@ -9,7 +9,7 @@ import { ContextService } from '@ansyn/context/services/context.service';
 import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { AnsynBuilderModule } from '@builder/api/ansyn-builder.module';
-import { WindowLayout } from '@builder/reducers/builder.reducer';
+import { IWindowLayout } from '@builder/reducers/builder.reducer';
 import { buildAnsynCustomComponent } from '@builder/dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
 import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
@@ -31,7 +31,7 @@ import { AnsynApi } from '@builder/api/ansyn-api.service';
 
 export interface AnsynBuilderOptions {
 	providers?: any[];
-	windowLayout?: WindowLayout,
+	windowLayout?: IWindowLayout,
 	customModules?: any[],
 	sourceProviders?: Array<Provider>
 }

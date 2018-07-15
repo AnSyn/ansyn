@@ -1,23 +1,20 @@
 <carousel [interval]="0">
 	<slide *ngFor="let slide of const.SLIDES_DATA">
 		<div class="help-slide">
-			<div class="above-center">
-				<div>How to start exploring?</div>
-				<div>{{slide.text[0]}}</div>
-				<div>{{slide.text[1]}}</div>
-				<img [src]="img(slide.image[0])">
-			</div>
-			<div class="from-center">
-				<div>{{slide.text[2]}}</div>
-				<img [src]="img(slide.image[1])">
-				<div>{{slide.text[3]}}</div>
-			</div>
+			<div class="header1">How to start exploring?</div>
+			<div class="header2">{{slide.text[0]}}</div>
+			<div class="fixed-height-text topText">{{slide.text[1]}}</div>
+			<div class="img-container"><img [src]="img(slide.image[0])"></div>
+			<div class="fixed-height-text midText">{{slide.text[2]}}</div>
+			<div class="img-container"><img [src]="img(slide.image[1])"></div>
+			<div class="bottomText">{{slide.text[3]}}</div>
 		</div>
 	</slide>
 </carousel>
 
+<hr/>
+
 <footer>
-	<hr/>
 	<label>
 		<ansyn-checkbox
 			text="Don't show on startup"

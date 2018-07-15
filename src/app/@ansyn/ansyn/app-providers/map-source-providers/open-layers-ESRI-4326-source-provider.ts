@@ -3,8 +3,10 @@ import TileLayer from 'ol/layer/tile';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
+import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
+import proj from 'ol/proj';
 
 export interface IESRI4326Config {
 	baseUrl: string;
@@ -21,7 +23,7 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: CaseMapState): any[] {
+	create(metaData: ICaseMapState): any[] {
 		const config = this.config[OpenLayerESRI_4326SourceProviderSourceType];
 		const source = new XYZ({
 			attributions: config.attributions,
@@ -37,9 +39,13 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 			wrapX: true
 		});
 
+		const [x, y] = proj.transform([-180, -90], 'EPSG:4326', config.projection);
+		const [x1, y1] = proj.transform([180, 90], 'EPSG:4326', config.projection);
+
 		const esriLayer = new TileLayer({
 			source: source,
-			visible: true
+			visible: true,
+			extent: [x, y, x1, y1]
 		});
 
 		return [esriLayer];

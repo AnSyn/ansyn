@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { limitArray, mergeLimitedArrays } from './limited-array';
+import { limitArray, mergeLimitedArrays } from './i-limited-array';
 
 describe('limitArray function: ', () => {
 	let arr;

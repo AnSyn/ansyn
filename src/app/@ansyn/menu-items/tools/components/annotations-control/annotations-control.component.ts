@@ -8,16 +8,20 @@ import {
 	SetAnnotationMode
 } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { AnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { IAnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
 
-export interface ModeList {
+export interface IModeList {
 	mode: AnnotationMode;
 	icon: string;
 }
 
-export type SelectionBoxTypes = 'lineWidth' | 'colorPicker' | undefined;
+export enum SelectionBoxTypes {
+	None,
+	LineWidth,
+	ColorPicker
+}
 
 @Component({
 	selector: 'ansyn-annotations-control',
@@ -26,21 +30,23 @@ export type SelectionBoxTypes = 'lineWidth' | 'colorPicker' | undefined;
 })
 export class AnnotationsControlComponent implements OnInit {
 	private _expand: boolean;
-	SelectionBoxes: {[key: string]: SelectionBoxTypes} = { lineWidth: 'lineWidth', colorPicker: 'colorPicker' };
 	public selectedBox: SelectionBoxTypes;
+	get SelectionBoxTypes() {
+		return SelectionBoxTypes;
+	}
 
 	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
 		.pluck<IToolsState, AnnotationMode>('annotationMode')
 		.distinctUntilChanged();
 
-	public annotationProperties$: Observable<AnnotationProperties> = this.store.select<IToolsState>(toolsStateSelector)
-		.pluck<IToolsState, AnnotationProperties>('annotationProperties')
+	public annotationProperties$: Observable<IAnnotationProperties> = this.store.select<IToolsState>(toolsStateSelector)
+		.pluck<IToolsState, IAnnotationProperties>('annotationProperties')
 		.distinctUntilChanged();
 
 	public mode: AnnotationMode;
-	public annotationProperties: AnnotationProperties;
+	public annotationProperties: IAnnotationProperties;
 
-	public modesList: ModeList[] = [
+	public modesList: IModeList[] = [
 		{ mode: 'Point', icon: 'point' },
 		{ mode: 'LineString', icon: 'line' },
 		{ mode: 'Polygon', icon: 'polygon' },
@@ -73,7 +79,7 @@ export class AnnotationsControlComponent implements OnInit {
 	}
 
 	toggleSelection(selected: SelectionBoxTypes) {
-		this.selectedBox = this.selectedBox === selected ? undefined : selected;
+		this.selectedBox = this.selectedBox === selected ? SelectionBoxTypes.None : selected;
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {

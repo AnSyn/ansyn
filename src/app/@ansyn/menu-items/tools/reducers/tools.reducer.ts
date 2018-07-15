@@ -154,3 +154,5 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
 export const selectOverlaysManualProcessArgs = createSelector(toolsStateSelector, (tools: IToolsState) => tools.overlaysManualProcessArgs);
 export const selectAnnotationLayer = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationsLayer );
+export const selectAnnotationMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationMode);
+export const selectAnnotationProperties = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationProperties);

@@ -1,0 +1,27 @@
+:host{
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility .5s, opacity .5s;
+	&.show {
+		visibility: visible;
+		opacity: 1;
+		.content {
+			transform: translateY(0);
+		}
+	}
+	.blackscreen {
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: flex;
+		flex-direction: column;
+	}
+	.content {
+		transition: .5s;
+		transform: translateY(-100%);
+		align-self: center;
+	}
+}

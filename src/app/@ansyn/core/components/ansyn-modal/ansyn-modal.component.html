@@ -1,0 +1,5 @@
+<div class="blackscreen" (click)="this.showChange.emit(false)">
+	<div class="content" (click)="$event.stopPropagation()">
+		<ng-content></ng-content>
+	</div>
+</div>

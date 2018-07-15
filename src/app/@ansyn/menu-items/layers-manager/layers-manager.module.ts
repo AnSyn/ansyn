@@ -9,6 +9,7 @@ import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
 import { LayerCollectionComponent } from '@ansyn/menu-items/layers-manager/components/layers-collection/layer-collection.component';
 import { CoreModule } from '@ansyn/core/core.module';
+import { DownloadLayersComponent } from './components/download-layers/download-layers.component';
 
 @NgModule({
 	imports: [
@@ -17,7 +18,7 @@ import { CoreModule } from '@ansyn/core/core.module';
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
 		EffectsModule.forFeature([LayersEffects])
 	],
-	declarations: [LayersManagerComponent, LayerCollectionComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })

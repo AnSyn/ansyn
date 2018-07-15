@@ -18,6 +18,7 @@ import { ILayerCollection } from '../layers-collection/layer-collection.componen
 })
 
 export class LayersManagerComponent {
+	showModal: boolean;
 
 	public layers$: Observable<any> = this.store
 		.pipe(
@@ -44,21 +45,11 @@ export class LayersManagerComponent {
 			})
 		);
 
-	annotationsLayer$: Observable<any> = this.store.pipe(select(selectAnnotationLayer));
-
 	constructor(protected store: Store<ILayerState>) {
 	}
 
 	downloadAnnotations() {
-		this.annotationsLayer$
-			.pipe(
-				take(1),
-				tap((annotationsLayer) => {
-					const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/json' });
-					saveAs(blob, 'annotations.json');
-				})
-			)
-			.subscribe();
+		this.showModal = true;
 	}
 
 }

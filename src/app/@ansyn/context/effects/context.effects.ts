@@ -121,18 +121,6 @@ export class ContextEffects {
 			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
 		});
 
-	/**
-	 * @type Effect
-	 * @name loadCase$
-	 * @ofType LoadCaseAction
-	 * @action SelectCaseAction?, SetToastMessageAction?, LoadDefaultCaseIfNoActiveCaseAction?
-	 */
-	@Effect()
-	loadCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.LOAD_CASE)
-		.switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload))
-		.map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase));
-
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,
 				protected casesService: CasesService,

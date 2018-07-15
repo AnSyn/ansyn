@@ -20,7 +20,7 @@ import {
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-
+import ol_color from 'ol/color';
 export interface IFeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
@@ -136,7 +136,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 
 		if (styleSettings.fill) {
-			styleSettings.fill = new Fill({ color: styleSettings.fill });
+			const color = this.colorWithAlpha(styleSettings.fill, styleSettings['fill-opacity']);
+			styleSettings.fill = new Fill({ color });
 		}
 
 		if (styleSettings.icon) {
@@ -157,6 +158,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 
 		return isStyle ? new Style(styleSettings) : styleSettings;
+	}
+
+	colorWithAlpha(color, alpha) {
+		const [r, g, b] = Array.from(ol_color.asArray(color));
+		return ol_color.asString([r, g, b, alpha]);
 	}
 
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {

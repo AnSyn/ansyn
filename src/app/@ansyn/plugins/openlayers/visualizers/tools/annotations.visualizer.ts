@@ -158,7 +158,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			initial: {
 				stroke: '#27b2cfe6',
 				'stroke-width': 1,
-				fill:  `rgba(255, 255, 255, ${AnnotationsVisualizer.fillAlpha})`,
+				fill:  `white`,
+				'fill-opacity': AnnotationsVisualizer.fillAlpha,
 				point: {
 					radius: 4
 				},
@@ -219,9 +220,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	changeFillColor(fillColor) {
-		const [r, g, b] = Array.from(olColor.asArray(fillColor));
-		const rgbaColor = olColor.asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
-		this.updateStyle({ initial: { fill: rgbaColor } });
+		this.updateStyle({ initial: { fill: fillColor } });
 	}
 
 	changeStrokeWidth(width) {

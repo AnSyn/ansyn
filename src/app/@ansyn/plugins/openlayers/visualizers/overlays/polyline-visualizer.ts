@@ -93,14 +93,15 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				zIndex: this.getZIndex.bind(this),
 				fill: 'transparent',
 				stroke: this.getStrokeColor.bind(this),
-				'stroke-width': this.getStrokeColor.bind(this),
+				'stroke-width': this.getStrokeWidth.bind(this),
 				shadow: this.getShadow.bind(this)
 			},
 			hover: {
 				zIndex: 4,
-				fill: 'rgba(255, 255, 255, 0.4)',
-				stroke: (feature) => this.getStrokeWidth(feature, 5),
-				'stroke-width': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
+				fill: 'rgba(255, 255, 255)',
+				'fill-opacity': 0.4,
+				'stroke-width': (feature) => this.getStrokeWidth(feature, 5),
+				'stroke': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
 			}
 		});
 	}

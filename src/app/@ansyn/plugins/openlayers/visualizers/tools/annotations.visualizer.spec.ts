@@ -49,9 +49,9 @@ describe('AnnotationsVisualizer', () => {
 
 	it('changeFillColor should call updateStyle with new fill "color" value', () => {
 		const color = 'red';
-		const [r, g, b] = Array.from(olColor.asArray(color));
-		const rgbaColor = olColor.asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
-		const expectedResult = { initial: { fill: { color: rgbaColor } } };
+	// 	const [r, g, b] = Array.from(olColor.asArray(color));
+	// 	const rgbaColor = olColor.asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
+		const expectedResult = { initial: { fill: { color } } };
 		spyOn(annotationsVisualizer, 'updateStyle');
 		annotationsVisualizer.changeFillColor(color);
 		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);

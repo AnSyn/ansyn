@@ -80,7 +80,8 @@ describe('SelectCaseAppEffects', () => {
 				layers: ICaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
+				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}],
+				search = true;
 
 			const state: ICaseState = <any> {
 				orientation,
@@ -93,7 +94,8 @@ describe('SelectCaseAppEffects', () => {
 				layers,
 				overlaysManualProcessArgs,
 				facets,
-				contextEntities
+				contextEntities,
+				search
 			};
 
 			const payload: ICase = {
@@ -111,7 +113,7 @@ describe('SelectCaseAppEffects', () => {
 			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
-				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
+				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, search }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
 				f: new BeginLayerCollectionLoadAction(),

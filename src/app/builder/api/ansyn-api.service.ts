@@ -1,18 +1,16 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
-import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
+import { ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
-mport { Overlay } from '@ansyn/core/models/overlay.model';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
-import { LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
@@ -82,7 +80,7 @@ export class AnsynApi {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
 
-	setOverlays(overlays: Overlay[]) {
+	setOverlays(overlays: IOverlay[]) {
 		this.store.dispatch(new LoadOverlaysSuccessAction(overlays));
 	}
 

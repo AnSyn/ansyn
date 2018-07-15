@@ -29,17 +29,17 @@ import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
 import { AnsynApi } from '@builder/api/ansyn-api.service';
 
-export interface AnsynBuilderOptions {
+export interface IAnsynBuilderOptions {
 	providers?: any[];
 	windowLayout?: IWindowLayout,
 	customModules?: any[],
 	sourceProviders?: Array<Provider>
 }
 
-export interface AnsynBuilderConstructor {
+export interface IAnsynBuilderConstructor {
 	id: string;
 	config: any;
-	options: AnsynBuilderOptions;
+	options: IAnsynBuilderOptions;
 	callback: any;
 }
 
@@ -48,7 +48,7 @@ export class AnsynBuilder {
 
 	id: string;
 	config: any;
-	options: AnsynBuilderOptions;
+	options: IAnsynBuilderOptions;
 	callback: any;
 	moduleRef: NgModuleRef<DynamicsAnsynModule>;
 
@@ -56,7 +56,7 @@ export class AnsynBuilder {
 		return this.moduleRef && this.moduleRef.instance.api;
 	}
 
-	constructor({ id, config, options, callback }: AnsynBuilderConstructor) {
+	constructor({ id, config, options, callback }: IAnsynBuilderConstructor) {
 		if (!id || !config) {
 			throw new Error('Ansyn waiting for params');
 		}

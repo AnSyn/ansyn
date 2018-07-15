@@ -26,10 +26,8 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 		this.updateStyle({
 			initial: {
-				stroke: {
-					color: '#f32ee1',
-					width: 4
-				},
+				stroke: '#f32ee1',
+				'stroke-width': 4,
 				point: {
 					radius: 4
 				},

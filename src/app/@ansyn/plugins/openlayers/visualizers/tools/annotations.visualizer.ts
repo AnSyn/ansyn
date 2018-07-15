@@ -156,13 +156,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		super(null, {
 			initial: {
-				stroke: {
-					color: '#27b2cfe6',
-					width: 1
-				},
-				fill: {
-					color: `rgba(255, 255, 255, ${AnnotationsVisualizer.fillAlpha})`
-				},
+				stroke: '#27b2cfe6',
+				'stroke-width': 1,
+				fill:  `rgba(255, 255, 255, ${AnnotationsVisualizer.fillAlpha})`,
 				point: {
 					radius: 4
 				},
@@ -178,13 +174,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				initial: {
 					label: {
 						font: '12px Calibri,sans-serif',
-						fill: {
-							color: '#fff'
-						},
-						stroke: {
-							color: '#000',
-							width: 3
-						},
+						fill: '#fff',
+						stroke: '#000',
+						'stroke-width': 3,
 						text: (feature) => feature.getId() || ''
 					}
 				}
@@ -223,17 +215,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	changeStrokeColor(color) {
-		this.updateStyle({ initial: { stroke: { color } } });
+		this.updateStyle({ initial: { stroke: color } });
 	}
 
 	changeFillColor(fillColor) {
 		const [r, g, b] = Array.from(olColor.asArray(fillColor));
 		const rgbaColor = olColor.asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
-		this.updateStyle({ initial: { fill: { color: rgbaColor } } });
+		this.updateStyle({ initial: { fill: rgbaColor } });
 	}
 
 	changeStrokeWidth(width) {
-		this.updateStyle({ initial: { stroke: { width } } });
+		this.updateStyle({ initial: { 'stroke-width': width } });
 	}
 
 

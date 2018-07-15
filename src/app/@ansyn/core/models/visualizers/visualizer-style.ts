@@ -1,16 +1,25 @@
-export interface IFill {
-	color: string;
-}
-
 export interface IStroke {
-	color?: any;
-	width?: any;
+	stroke?: string | any;
+	'stroke-width'?: number | any;
+	"stroke-opacity"?: number | any;
+}
+export interface IFill {
+	fill?: string | any;
+	"fill-opacity"?: number | any;
 }
 
-export interface IVisualizerStyle {
+export interface ILabel extends IStroke {
+	font?: string,
+	fill?: string;
+	offsetX?: number;
+	offsetY?: number;
+	text?: (feature: any) => string | string;
+}
+
+export interface IVisualizerStyle extends IStroke, IFill {
 	zIndex?: number;
-	fill?: IFill;
-	stroke?: IStroke;
+	fill?: string;
+	"fill-opacity"?: number
 	shadow?: IStroke;
 	point?: {
 		radius: number;
@@ -24,12 +33,5 @@ export interface IVisualizerStyle {
 		anchor?: number[];
 	};
 	geometry?: any;
-	label?: {
-		font?: string,
-		fill?: IFill;
-		stroke?: IStroke,
-		offsetX?: number;
-		offsetY?: number;
-		text?: (feature: any) => string | string;
-	}
+	label?: ILabel;
 }

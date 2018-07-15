@@ -53,9 +53,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 		this.updateStyle({
 			initial: {
-				stroke: {
-					color: '#3DCC33'
-				},
+				stroke: '#3DCC33',
 				icon: {
 					scale: 1,
 					src: 'assets/icons/map/entity-marker.svg',
@@ -64,13 +62,9 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 				geometry: this.getGeometry.bind(this),
 				label: {
 					font: '12px Calibri,sans-serif',
-					fill: {
-						color: '#fff'
-					},
-					stroke: {
-						color: '#000',
-						width: 3
-					},
+					fill: '#fff',
+					stroke: '#000',
+					"stroke-width": 3,
 					offsetY: 30,
 					text: this.getText.bind(this)
 				}

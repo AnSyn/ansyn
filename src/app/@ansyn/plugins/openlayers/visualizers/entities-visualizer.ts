@@ -37,13 +37,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	protected visualizerStyle: IVisualizerStateStyle = {
 		opacity: 1,
 		initial: {
-			fill: {
-				color: 'transparent'
-			},
-			stroke: {
-				color: 'blue',
-				width: 3
-			}
+			fill: 'transparent',
+			stroke: 'blue',
+			"stroke-width": 3,
 		}
 	};
 
@@ -131,16 +127,16 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		let secondaryStyle: any = {};
 
 		if (styleSettings.shadow) {
-			secondaryStyle.stroke = new Stroke(styleSettings.shadow);
+			secondaryStyle.stroke = new Stroke({ color: styleSettings.shadow.stroke, width: styleSettings.shadow['stroke-width'] });
 			delete styleSettings.shadow;
 		}
 
 		if (styleSettings.stroke) {
-			styleSettings.stroke = new Stroke(styleSettings.stroke);
+			styleSettings.stroke = new Stroke({ color: styleSettings.stroke, width: styleSettings['stroke-width'] });
 		}
 
 		if (styleSettings.fill) {
-			styleSettings.fill = new Fill(styleSettings.fill);
+			styleSettings.fill = new Fill({ color: styleSettings.fill });
 		}
 
 		if (styleSettings.icon) {

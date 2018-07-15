@@ -91,20 +91,16 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			opacity: 0.5,
 			initial: {
 				zIndex: this.getZIndex.bind(this),
-				fill: null,
-				stroke: {
-					width: this.getStrokeWidth.bind(this),
-					color: this.getStrokeColor.bind(this)
-				},
+				fill: 'transparent',
+				stroke: this.getStrokeColor.bind(this),
+				'stroke-width': this.getStrokeColor.bind(this),
 				shadow: this.getShadow.bind(this)
 			},
 			hover: {
 				zIndex: 4,
-				fill: { color: 'rgba(255, 255, 255, 0.4)' },
-				stroke: {
-					width: (feature) => this.getStrokeWidth(feature, 5),
-					color: (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
-				}
+				fill: 'rgba(255, 255, 255, 0.4)',
+				stroke: (feature) => this.getStrokeWidth(feature, 5),
+				'stroke-width': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
 			}
 		});
 	}
@@ -164,8 +160,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		}
 
 		return {
-			width: 5,
-			color: this.visualizerStyle.colors.favorite
+			'stroke-width': 5,
+			stroke: this.visualizerStyle.colors.favorite
 		};
 	}
 

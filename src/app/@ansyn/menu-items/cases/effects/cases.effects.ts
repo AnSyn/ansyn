@@ -5,7 +5,7 @@ import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -32,6 +32,8 @@ import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
+import { LoadCaseAction, SelectDilutedCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 @Injectable()
 export class CasesEffects {
@@ -212,9 +214,21 @@ export class CasesEffects {
 		.filter(([action, casesState]: [LoadDefaultCaseAction, ICasesState]) => !Boolean(casesState.selectedCase))
 		.map(() => new LoadDefaultCaseAction());
 
+	@Effect()
+	loadCase$: Observable<any> = this.actions$
+		.pipe(
+			ofType(CasesActionTypes.LOAD_CASE),
+			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
+			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
+			catchError(() => EMPTY),
+			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase))
+			);
+
+
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,
 				protected store: Store<ICasesState>,
+				protected errorHandlerService: ErrorHandlerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}
 }

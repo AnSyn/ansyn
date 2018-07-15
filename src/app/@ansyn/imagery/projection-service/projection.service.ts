@@ -25,5 +25,5 @@ export abstract class ProjectionService {
 	abstract projectCollectionApproximatelyToImage<T = any>(featureCollection: FeatureCollection<GeometryObject>, map: BaseImageryMap): Observable<T[]>;
 
 
-	abstract getProjectionProperties(communicator: CommunicatorEntity): Object
+	abstract getProjectionProperties(communicator: CommunicatorEntity, annotationLayer: any): Object
 }

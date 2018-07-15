@@ -30,7 +30,6 @@ export class ProjectableRaster extends Raster {
 		if (worker) {
 			const workers = get(worker, '_workers') || [];
 			workers.forEach((worker: Worker) => worker.terminate());
-			worker.destroy();
 		}
 	}
 }

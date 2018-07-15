@@ -17,7 +17,11 @@ export interface IModeList {
 	icon: string;
 }
 
-export type SelectionBoxTypes = 'lineWidth' | 'colorPicker' | undefined;
+export enum SelectionBoxTypes {
+	None,
+	LineWidth,
+	ColorPicker
+}
 
 @Component({
 	selector: 'ansyn-annotations-control',
@@ -26,8 +30,10 @@ export type SelectionBoxTypes = 'lineWidth' | 'colorPicker' | undefined;
 })
 export class AnnotationsControlComponent implements OnInit {
 	private _expand: boolean;
-	SelectionBoxes: {[key: string]: SelectionBoxTypes} = { lineWidth: 'lineWidth', colorPicker: 'colorPicker' };
 	public selectedBox: SelectionBoxTypes;
+	get SelectionBoxTypes() {
+		return SelectionBoxTypes;
+	}
 
 	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
 		.pluck<IToolsState, AnnotationMode>('annotationMode')
@@ -73,7 +79,7 @@ export class AnnotationsControlComponent implements OnInit {
 	}
 
 	toggleSelection(selected: SelectionBoxTypes) {
-		this.selectedBox = this.selectedBox === selected ? undefined : selected;
+		this.selectedBox = this.selectedBox === selected ? SelectionBoxTypes.None : selected;
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {

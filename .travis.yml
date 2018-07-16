@@ -49,7 +49,7 @@ deploy:
     on:
       branch: master
   - provider: script
-    script: sh -x scripts/deploy.sh ansyn/client $TRAVIS_TAG ansyn-client
+    script: sh -x scripts/deploy.sh ansyn/client $TRAVIS_TAG ansyn-client ansyn-client-messi-service
     skip_cleanup: true
     on:
       tags: true

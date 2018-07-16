@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DownloadLayersComponent } from './download-layers.component';
+import { StoreModule } from '@ngrx/store';
+import { layersFeatureKey, LayersReducer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
 describe('DownloadLayersComponent', () => {
 	let component: DownloadLayersComponent;
@@ -8,7 +10,8 @@ describe('DownloadLayersComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DownloadLayersComponent]
+			declarations: [DownloadLayersComponent],
+			imports: [StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })]
 		})
 			.compileComponents();
 	}));

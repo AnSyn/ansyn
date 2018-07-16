@@ -1,13 +1,11 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 export function cloneDeep() {
-	// notice that we return a function here
-	return function mySimpleOperatorImplementation(source) {
+	return function cloneDeepImplementation(source) {
 		return Observable.create(subscriber => {
 			const subscription = source.subscribe(value => {
 					try {
-						console.log("yairtawil cloning deep!!!!")
 						subscriber.next(_cloneDeep(value));
 					} catch (err) {
 						subscriber.error(err);

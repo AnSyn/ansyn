@@ -32,7 +32,7 @@ describe('AnnotationsVisualizer', () => {
 
 	it('changeStrokeWidth should call updateStyle with new stroke "width" value', () => {
 		const width = 10;
-		const expectedResult = { initial: { stroke: { width } } };
+		const expectedResult = { initial: { 'stroke-width': width } };
 		spyOn(annotationsVisualizer, 'updateStyle');
 		annotationsVisualizer.changeStrokeWidth(10);
 		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);
@@ -40,7 +40,7 @@ describe('AnnotationsVisualizer', () => {
 
 	it('changeStrokeColor should call updateStyle with new stroke "color" value', () => {
 		const color = 'green';
-		const expectedResult = { initial: { stroke: { color } } };
+		const expectedResult = { initial: { stroke: color } };
 		spyOn(annotationsVisualizer, 'updateStyle');
 		annotationsVisualizer.changeStrokeColor(color);
 		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);
@@ -48,12 +48,10 @@ describe('AnnotationsVisualizer', () => {
 
 
 	it('changeFillColor should call updateStyle with new fill "color" value', () => {
-		const color = 'red';
-	// 	const [r, g, b] = Array.from(olColor.asArray(color));
-	// 	const rgbaColor = olColor.asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
-		const expectedResult = { initial: { fill: { color } } };
+		const fill = 'red';
+		const expectedResult = { initial: { fill } };
 		spyOn(annotationsVisualizer, 'updateStyle');
-		annotationsVisualizer.changeFillColor(color);
+		annotationsVisualizer.changeFillColor(fill);
 		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);
 	});
 

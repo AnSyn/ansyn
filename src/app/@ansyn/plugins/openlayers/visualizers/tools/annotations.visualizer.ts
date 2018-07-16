@@ -47,6 +47,7 @@ import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
 import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -156,19 +157,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		super(null, {
 			initial: {
-				stroke: {
-					color: '#27b2cfe6',
-					width: 1
-				},
-				fill: {
-					color: `rgba(255, 255, 255, ${AnnotationsVisualizer.fillAlpha})`
-				},
-				point: {
-					radius: 4
-				},
-				line: {
-					width: 1
-				}
+				stroke: '#27b2cfe6',
+				'stroke-width': 1,
+				fill:  `white`,
+				'fill-opacity': AnnotationsVisualizer.fillAlpha,
+				'marker-size': MarkerSize.medium,
+				'marker-color': `white`
 			}
 		});
 
@@ -178,13 +172,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				initial: {
 					label: {
 						font: '12px Calibri,sans-serif',
-						fill: {
-							color: '#fff'
-						},
-						stroke: {
-							color: '#000',
-							width: 3
-						},
+						fill: '#fff',
+						stroke: '#000',
+						'stroke-width': 3,
 						text: (feature) => feature.getId() || ''
 					}
 				}
@@ -223,17 +213,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	changeStrokeColor(color) {
-		this.updateStyle({ initial: { stroke: { color } } });
+		this.updateStyle({ initial: { stroke: color } });
 	}
 
 	changeFillColor(fillColor) {
-		const [r, g, b] = Array.from(olColor.asArray(fillColor));
-		const rgbaColor = olColor.asString([r, g, b, AnnotationsVisualizer.fillAlpha]);
-		this.updateStyle({ initial: { fill: { color: rgbaColor } } });
+		this.updateStyle({ initial: { fill: fillColor, "marker-color": fillColor } });
 	}
 
 	changeStrokeWidth(width) {
-		this.updateStyle({ initial: { stroke: { width } } });
+		this.updateStyle({ initial: { 'stroke-width': width } });
 	}
 
 

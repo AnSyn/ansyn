@@ -19,20 +19,12 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MissingTranslationLogging } from './utils/missing-translation-logging';
 import { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
+import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http);
 }
-
-const coreComponents = [
-	AnsynCheckboxComponent,
-	ImageryStatusComponent,
-	PlaceholderComponent,
-	ToastComponent,
-	WelcomeNotificationComponent,
-	SliderCheckboxComponent
-];
 
 @NgModule({
 	imports: [
@@ -56,8 +48,25 @@ const coreComponents = [
 		ErrorHandlerService,
 		StorageService
 	],
-	exports: [...coreComponents, TranslateModule],
-	declarations: coreComponents
+	exports: [
+		AnsynCheckboxComponent,
+		ImageryStatusComponent,
+		PlaceholderComponent,
+		ToastComponent,
+		WelcomeNotificationComponent,
+		SliderCheckboxComponent,
+		AnsynModalComponent,
+		TranslateModule
+	],
+	declarations:  [
+		AnsynCheckboxComponent,
+		ImageryStatusComponent,
+		PlaceholderComponent,
+		ToastComponent,
+		WelcomeNotificationComponent,
+		SliderCheckboxComponent,
+		AnsynModalComponent
+	]
 })
 
 export class CoreModule {

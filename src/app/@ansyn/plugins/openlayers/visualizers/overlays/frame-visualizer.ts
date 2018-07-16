@@ -46,10 +46,8 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			initial: {
 				zIndex: 10,
 				fill: null,
-				stroke: {
-					width: 3,
-					color: this.getStroke.bind(this)
-				}
+				stroke: this.getStroke.bind(this),
+				'stroke-width': 3
 			}
 		});
 	}

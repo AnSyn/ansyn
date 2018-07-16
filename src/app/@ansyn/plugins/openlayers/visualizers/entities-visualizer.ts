@@ -10,7 +10,7 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import ol_Layer from 'ol/layer/layer';
 
-import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
+import { IVisualizerStyle, MarkerSizeDic } from '@ansyn/core/models/visualizers/visualizer-style';
 import { VisualizerStates, IVisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
@@ -20,7 +20,7 @@ import {
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-
+import ol_color from 'ol/color';
 export interface IFeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
@@ -37,13 +37,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	protected visualizerStyle: IVisualizerStateStyle = {
 		opacity: 1,
 		initial: {
-			fill: {
-				color: 'transparent'
-			},
-			stroke: {
-				color: 'blue',
-				width: 3
-			}
+			fill: 'transparent',
+			stroke: 'blue',
+			"stroke-width": 3,
 		}
 	};
 
@@ -125,42 +121,50 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	protected createStyle(feature: Feature, isStyle, ...styles: Array<Partial<IVisualizerStyle>>) {
-		const styleSettings: any = merge({}, ...styles);
+		const styleSettings: IVisualizerStyle = merge({}, ...styles);
 		this.fixStyleValues(feature, styleSettings);
 
+		let firstStyle: any = {};
 		let secondaryStyle: any = {};
 
 		if (styleSettings.shadow) {
-			secondaryStyle.stroke = new Stroke(styleSettings.shadow);
-			delete styleSettings.shadow;
+			secondaryStyle.stroke = new Stroke({ color: styleSettings.shadow.stroke, width: styleSettings.shadow['stroke-width'] });
 		}
 
 		if (styleSettings.stroke) {
-			styleSettings.stroke = new Stroke(styleSettings.stroke);
+			const color = this.colorWithAlpha(styleSettings.stroke, styleSettings['stroke-opacity']);
+			firstStyle.stroke = new Stroke({ color, width: styleSettings['stroke-width'] });
 		}
 
 		if (styleSettings.fill) {
-			styleSettings.fill = new Fill(styleSettings.fill);
+			const color = this.colorWithAlpha(styleSettings.fill, styleSettings['fill-opacity']);
+			firstStyle.fill = new Fill({ color });
 		}
 
 		if (styleSettings.icon) {
-			styleSettings.image = new Icon(styleSettings.icon);
+			firstStyle.image = new Icon(styleSettings.icon);
 		}
 
 		if (styleSettings.label) {
-			styleSettings.text = new Text(this.createStyle(feature, false, styleSettings.label));
+			firstStyle.text = new Text(this.createStyle(feature, false, styleSettings.label));
 		}
 
-		if (styleSettings.point) {
-			const { fill, stroke } = styleSettings;
-			styleSettings.image = new Circle({ fill, stroke, ...styleSettings.point });
+		if (styleSettings['marker-color'] || styleSettings['marker-size']) {
+			const color = styleSettings['marker-color'];
+			const radius = MarkerSizeDic[styleSettings['marker-size']];
+			firstStyle.image = new Circle({ fill: new Fill({ color }), stroke: null, radius });
 		}
 
 		if (Object.keys(secondaryStyle).length !== 0) {
-			return [styleSettings, secondaryStyle].map(s => new Style(s));
+			return [firstStyle, secondaryStyle].map(s => new Style(s));
 		}
 
-		return isStyle ? new Style(styleSettings) : styleSettings;
+		return isStyle ? new Style(firstStyle) : firstStyle;
+	}
+
+	colorWithAlpha(color, alpha = 1) {
+		const [r, g, b] = Array.from(ol_color.asArray(color));
+		return ol_color.asString([r, g, b, alpha]);
 	}
 
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {

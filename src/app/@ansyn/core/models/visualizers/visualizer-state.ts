@@ -16,8 +16,8 @@ export interface IVisualizerStateStyle {
 	};
 }
 
-export const VisualizerStates = {
-	INITIAL: 'initial',
-	HOVER: 'hover'
-};
-
+export enum VisualizerStates {
+	INITIAL = 'initial',
+	HOVER = 'hover',
+	ENTITIES = 'entities'
+}

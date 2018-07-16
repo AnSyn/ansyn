@@ -29,7 +29,6 @@ import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { empty } from 'rxjs';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
@@ -91,20 +90,17 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			opacity: 0.5,
 			initial: {
 				zIndex: this.getZIndex.bind(this),
-				fill: null,
-				stroke: {
-					width: this.getStrokeWidth.bind(this),
-					color: this.getStrokeColor.bind(this)
-				},
+				fill: 'transparent',
+				stroke: this.getStrokeColor.bind(this),
+				'stroke-width': this.getStrokeWidth.bind(this),
 				shadow: this.getShadow.bind(this)
 			},
 			hover: {
 				zIndex: 4,
-				fill: { color: 'rgba(255, 255, 255, 0.4)' },
-				stroke: {
-					width: (feature) => this.getStrokeWidth(feature, 5),
-					color: (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
-				}
+				fill: 'white',
+				'fill-opacity': 0.4,
+				'stroke-width': (feature) => this.getStrokeWidth(feature, 5),
+				'stroke': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
 			}
 		});
 	}
@@ -164,8 +160,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		}
 
 		return {
-			width: 5,
-			color: this.visualizerStyle.colors.favorite
+			'stroke-width': 5,
+			stroke: this.visualizerStyle.colors.favorite
 		};
 	}
 

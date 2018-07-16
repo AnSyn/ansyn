@@ -3,3 +3,7 @@
 		<ansyn-layer-collection [collection]="collection"></ansyn-layer-collection>
 	</ng-container>
 </div>
+
+<ansyn-modal [(show)]="showModal">
+	<ansyn-download-layers (onFinish)="showModal = false"></ansyn-download-layers>
+</ansyn-modal>

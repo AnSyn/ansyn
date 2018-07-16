@@ -1,35 +1,43 @@
-export interface IFill {
-	color: string;
-}
-
 export interface IStroke {
-	color?: any;
-	width?: any;
+	stroke?: string | any;
+	'stroke-width'?: number | any;
+	"stroke-opacity"?: number | any;
+}
+export interface IFill {
+	fill?: string | any;
+	"fill-opacity"?: number | any;
 }
 
-export interface IVisualizerStyle {
+export interface ILabel extends IStroke {
+	font?: string,
+	fill?: string;
+	offsetX?: number;
+	offsetY?: number;
+	text?: (feature: any) => string | string;
+}
+
+export interface IVisualizerStyle extends IStroke, IFill {
 	zIndex?: number;
-	fill?: IFill;
-	stroke?: IStroke;
+	fill?: string;
+	"fill-opacity"?: number;
+	"marker-color"?: string;
+	"marker-size"?: MarkerSize;
 	shadow?: IStroke;
-	point?: {
-		radius: number;
-	};
-	line?: {
-		width: number;
-	};
 	icon?: {
 		scale: number;
 		src: string;
 		anchor?: number[];
 	};
 	geometry?: any;
-	label?: {
-		font?: string,
-		fill?: IFill;
-		stroke?: IStroke,
-		offsetX?: number;
-		offsetY?: number;
-		text?: (feature: any) => string | string;
-	}
+	label?: ILabel;
+}
+export enum MarkerSize {
+	small = 'small',
+	medium = 'medium',
+	large = 'large'
+}
+export enum MarkerSizeDic {
+	small = 4,
+	medium = 6,
+	large = 8
 }

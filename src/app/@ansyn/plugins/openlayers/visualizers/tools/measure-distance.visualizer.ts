@@ -28,6 +28,7 @@ import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-stat
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -111,19 +112,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	constructor(protected store$: Store<any>, protected projectionService: ProjectionService) {
 		super(null, {
 			initial: {
-				stroke: {
-					color: '#3399CC',
-					width: 2
-				},
-				fill: {
-					color: '#FFFFFF'
-				},
-				point: {
-					radius: 4
-				},
-				line: {
-					width: 2
-				},
+				stroke: '#3399CC',
+				'stroke-width': 2,
+				fill: '#FFFFFF',
+				'marker-size': MarkerSize.small,
+				'marker-color': '#FFFFFF',
 				zIndex: 5
 			}
 		});
@@ -199,13 +192,13 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	// Line style (after DBClick)
 	mainStyle(feature) {
-		const styles = [new Style({ stroke: new Stroke(this.visualizerStyle.initial.stroke) })];
+		const styles = [new Style({ stroke: new Stroke({ color: this.visualizerStyle.initial.stroke, width: this.visualizerStyle.initial['stroke-width'] }) })];
 		// Points
 		const pointsStyle = new Style({
 			image: new Circle({
 				radius: 5,
-				stroke: new Stroke(this.visualizerStyle.initial.stroke),
-				fill: new Fill(this.visualizerStyle.initial.fill)
+				stroke: new Stroke({ color: this.visualizerStyle.initial.stroke, width: this.visualizerStyle.initial['stroke-width'] }),
+				fill: new Fill({ color: this.visualizerStyle.initial.fill })
 			}),
 			geometry: function (feature) {
 				// return the coordinates of the first ring of the polygon

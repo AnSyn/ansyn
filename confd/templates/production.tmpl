@@ -423,7 +423,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "{{ getv "/ansyn/overlay/idaho/sensor/names" "[]" }}",
           "coverage": [
             [
               [
@@ -464,7 +464,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "[]",
           "coverage": [
             [
               [
@@ -517,7 +517,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ \"Landsat8L1G\", \"Sentinel2L1C\" ]",
+          "sensorNames": {{ if exists "/ansyn/overlay/planet/sensor/names" }}{{ getv "/ansyn/overlay/planet/sensor/names" }}{{ else }}"[ \"Landsat8L1G\", \"Sentinel2L1C\" ]"{{ end }},
 		  "coverage": [[[[-126.73828125000001,48.195387408333374],[-51.32812500000002,47.9605023889151],[-80.24414062500001,24.166802085303246],[-125.94726562500003,30.41078179084589],[-126.73828125000001,48.195387408333374]]]]
         },
         {
@@ -528,7 +528,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" " [ null ]" }}" ,
           "coverage": [
             [
               [
@@ -966,7 +966,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" "[ null ]" }}",
           "coverage": [
             [
               [
@@ -1015,7 +1015,7 @@
 						"end": null
 					}
 				],
-				"sensorNames": "[ null ]",
+				"sensorNames": "{{ getv "/ansyn/overlay/open/aerial/sensor/names" "[ null ]" }}",
 				"coverage": [
 					[
 						[

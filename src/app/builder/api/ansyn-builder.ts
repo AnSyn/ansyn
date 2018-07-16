@@ -141,6 +141,7 @@ export class AnsynBuilder {
 			.bootstrapModule(module)
 			.then((moduleRef: NgModuleRef<DynamicsAnsynModule>) => {
 				this.moduleRef = moduleRef;
+				this.api.disableInitialSearch();
 				this.api.loadDefaultCase();
 
 				if (this.options && this.options.windowLayout) {

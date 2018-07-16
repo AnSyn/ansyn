@@ -92,6 +92,9 @@ export class AnsynApi {
 		this.store.dispatch(new SelectCaseAction(this.casesConfig.defaultCase));
 	}
 
+	disableInitialSearch() {
+		this.casesConfig.defaultCase.state.search = false;
+	}
 
 	changeWindowLayout(windowLayout: IWindowLayout) {
 		this.store.dispatch(new SetWindowLayout(windowLayout));

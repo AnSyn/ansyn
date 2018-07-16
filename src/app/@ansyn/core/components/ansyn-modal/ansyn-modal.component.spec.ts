@@ -22,4 +22,10 @@ describe('AnsynModalComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+
+	it('close() should call showChange.emit with "false"', () => {
+		spyOn(component.showChange, 'emit');
+		component.close();
+		expect(component.showChange.emit).toHaveBeenCalledWith(false);
+	});
 });

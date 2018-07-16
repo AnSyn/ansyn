@@ -132,7 +132,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 
 		if (styleSettings.stroke) {
-			firstStyle.stroke = new Stroke({ color: styleSettings.stroke, width: styleSettings['stroke-width'] });
+			const color = this.colorWithAlpha(styleSettings.stroke, styleSettings['stroke-opacity']);
+			firstStyle.stroke = new Stroke({ color, width: styleSettings['stroke-width'] });
 		}
 
 		if (styleSettings.fill) {
@@ -161,7 +162,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return isStyle ? new Style(firstStyle) : firstStyle;
 	}
 
-	colorWithAlpha(color, alpha) {
+	colorWithAlpha(color, alpha = 1) {
 		const [r, g, b] = Array.from(ol_color.asArray(color));
 		return ol_color.asString([r, g, b, alpha]);
 	}

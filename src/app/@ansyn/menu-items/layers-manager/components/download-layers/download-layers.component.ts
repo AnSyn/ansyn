@@ -34,8 +34,9 @@ export class DownloadLayersComponent {
 	downloadKml() {
 		this.annotationsLayer$
 			.pipe(
+				tap(this.visualizerToSimpleStyle),
 				tap((annotationsLayer) => {
-					const blob = new Blob([tokml(this.visualizerToSimpleStyle(annotationsLayer), { simplestyle: true })], { type: 'application/vnd.google-earth.kml+xml' });
+					const blob = new Blob([tokml(annotationsLayer, { simplestyle: true })], { type: 'application/vnd.google-earth.kml+xml' });
 					saveAs(blob, 'annotations.kml');
 					this.onFinish.emit();
 				})
@@ -44,11 +45,11 @@ export class DownloadLayersComponent {
 
 	}
 
-	visualizerToSimpleStyle(annotationsLayer) {
+	visualizerToSimpleStyle(annotationsLayer): void {
+		/* reference */
 		annotationsLayer.features.forEach((feature) => {
 			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial };
 		});
-		return { ...annotationsLayer };
 	}
 
 }

@@ -97,7 +97,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			},
 			hover: {
 				zIndex: 4,
-				fill: 'rgba(255, 255, 255)',
+				fill: 'white',
 				'fill-opacity': 0.4,
 				'stroke-width': (feature) => this.getStrokeWidth(feature, 5),
 				'stroke': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)

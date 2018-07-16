@@ -56,8 +56,10 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 		super(null, {
 			opacity: 0.5,
 			initial: {
-				fill: 'rgba(255, 0, 0, 0.05)',
-				stroke:  'rgba(0, 0, 0, 0.02)'
+				fill: 'rgb(255, 0, 0)',
+				'fill-opacity': 0.05,
+				stroke:  'rgb(0, 0, 0)',
+				'stroke-opacity': 0.02
 			}
 		});
 	}

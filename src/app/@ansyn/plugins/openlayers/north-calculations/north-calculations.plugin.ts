@@ -10,11 +10,8 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseImageryPlugin, ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
-import {
-	OpenLayersMap,
-	OpenlayersMapName
-} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { LoggerService } from '@ansyn/core/services/logger.service';
@@ -25,6 +22,7 @@ import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/cor
 import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { AutoSubscription } from 'auto-subscriptions';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -43,7 +41,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	pointNorth$ = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
@@ -67,7 +65,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				});
 		});
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$
 		.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
 		.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)

@@ -1,7 +1,6 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Select from 'ol/interaction/select';
-import olColor from 'ol/color';
 import Circle from 'ol/style/circle';
 import GeomCircle from 'ol/geom/circle';
 import LineString from 'ol/geom/linestring';
@@ -46,8 +45,8 @@ import { filter, map, take, tap, withLatestFrom } from 'rxjs/internal/operators'
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -82,15 +81,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	annoatationModeChange$: Observable<any> = Observable.combineLatest(this.annotationMode$, this.isActiveMap$)
 		.do(this.onModeChange.bind(this));
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
 		.do(this.onAnnotationPropertiesChange.bind(this));
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	onAnnotationsChange$ = Observable
 		.combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
 		.mergeMap(this.onAnnotationsChange.bind(this));
@@ -159,7 +158,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			initial: {
 				stroke: '#27b2cfe6',
 				'stroke-width': 1,
-				fill:  `white`,
+				fill: `white`,
 				'fill-opacity': AnnotationsVisualizer.fillAlpha,
 				'marker-size': MarkerSize.medium,
 				'marker-color': `white`
@@ -217,7 +216,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	changeFillColor(fillColor) {
-		this.updateStyle({ initial: { fill: fillColor, "marker-color": fillColor } });
+		this.updateStyle({ initial: { fill: fillColor, 'marker-color': fillColor } });
 	}
 
 	changeStrokeWidth(width) {
@@ -279,7 +278,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
 					this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
 				})
-			).subscribe()
+			).subscribe();
 
 	}
 

@@ -19,7 +19,7 @@ import { filter, map, distinctUntilChanged } from 'rxjs/operators';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -35,7 +35,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 			distinctUntilChanged()
 		);
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store$.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store$.select(selectOverlaysMap)),

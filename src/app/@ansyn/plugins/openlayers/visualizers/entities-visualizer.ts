@@ -11,11 +11,12 @@ import VectorLayer from 'ol/layer/vector';
 import ol_Layer from 'ol/layer/layer';
 
 import { IVisualizerStyle, MarkerSizeDic } from '@ansyn/core/models/visualizers/visualizer-style';
-import { VisualizerStates, IVisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
+import { IVisualizerStateStyle, VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
 import {
-	BaseImageryVisualizer, IBaseImageryVisualizerClass,
+	BaseImageryVisualizer,
+	IBaseImageryVisualizerClass,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
@@ -39,7 +40,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		initial: {
 			fill: 'transparent',
 			stroke: 'blue',
-			"stroke-width": 3,
+			'stroke-width': 3
 		}
 	};
 
@@ -128,7 +129,10 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		let secondaryStyle: any = {};
 
 		if (styleSettings.shadow) {
-			secondaryStyle.stroke = new Stroke({ color: styleSettings.shadow.stroke, width: styleSettings.shadow['stroke-width'] });
+			secondaryStyle.stroke = new Stroke({
+				color: styleSettings.shadow.stroke,
+				width: styleSettings.shadow['stroke-width']
+			});
 		}
 
 		if (styleSettings.stroke) {

@@ -3,6 +3,7 @@ import { CommunicatorEntity } from '../communicator-service/communicator.entity'
 import { Observable } from 'rxjs';
 import { BaseImageryMap, IBaseImageryMapConstructor } from './base-imagery-map';
 import { of, Subscription } from 'rxjs';
+import { AutoSubscriptions } from 'auto-subscriptions';
 
 export interface IImageryPluginMetaData {
 	supported?: IBaseImageryMapConstructor[];
@@ -12,10 +13,7 @@ export interface IImageryPluginMetaData {
 export interface IBaseImageryPluginConstructor extends IImageryPluginMetaData {
 	new(...args): BaseImageryPlugin;
 }
-
 export class BaseImageryPlugin {
-	/* prototype */ readonly subscriptionKeys;
-	private subscriptions: Subscription[] = [];
 
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;
@@ -35,24 +33,12 @@ export class BaseImageryPlugin {
 
 	dispose() {
 		this.onDisposedEvent.emit();
-		this.subscriptions.forEach((sub: Subscription) => sub.unsubscribe());
-		this.subscriptions = [];
 		this.onDispose()
 	}
 
 	init(communicator: CommunicatorEntity) {
 		this.communicator = communicator;
 		this.onInit();
-		if (this.subscriptionKeys) {
-			this.subscriptions.push(
-				...this.subscriptionKeys
-					.map((key) => this[key])
-					.filter(Boolean)
-					.map((value) => typeof value === 'function' ? value() : value)
-					.filter((observable: Observable<any>) => observable instanceof Observable)
-					.map((observable): Subscription => observable.subscribe())
-			)
-		}
 		this.onInitSubscriptions();
 	};
 
@@ -60,18 +46,11 @@ export class BaseImageryPlugin {
 
 	}
 
-	onInitSubscriptions() {
+	onInitSubscriptions(): void {
 
 	}
 
-	onDispose() {
+	onDispose(): void {
 
 	}
-}
-/* Properties decorator */
-export function ImageryPluginSubscription(target: Object | any, propertyKey: string | symbol) {
-	if (!target.subscriptionKeys) {
-		target.subscriptionKeys = []
-	}
-	target.subscriptionKeys.push(propertyKey);
 }

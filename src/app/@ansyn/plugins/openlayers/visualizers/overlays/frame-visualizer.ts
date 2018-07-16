@@ -9,7 +9,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -19,7 +19,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 	public isActive = false;
 	private overlay;
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	overlay$ = this.store$.select(mapStateSelector)
 		.filter(() => Boolean(this.mapId))
 		.map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId))
@@ -28,7 +28,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged()
 		.do((overlay) => this.overlay = overlay);
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	isActive$: Observable<boolean> = this.store$
 		.select(mapStateSelector)
 		.pluck<IMapState, string>('activeMapId')

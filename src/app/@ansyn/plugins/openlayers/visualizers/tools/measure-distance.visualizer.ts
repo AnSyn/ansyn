@@ -13,9 +13,7 @@ import VectorSource from 'ol/source/vector';
 import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
-import {
-	VisualizerInteractions
-} from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
@@ -27,8 +25,8 @@ import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-en
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -45,7 +43,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		.map((flags) => flags.get(toolsFlags.isMeasureToolActive))
 		.distinctUntilChanged();
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
 		.do(([isActiveMap, isMeasureToolActive]) => {
 			if (isActiveMap && isMeasureToolActive) {
@@ -192,12 +190,20 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	// Line style (after DBClick)
 	mainStyle(feature) {
-		const styles = [new Style({ stroke: new Stroke({ color: this.visualizerStyle.initial.stroke, width: this.visualizerStyle.initial['stroke-width'] }) })];
+		const styles = [new Style({
+			stroke: new Stroke({
+				color: this.visualizerStyle.initial.stroke,
+				width: this.visualizerStyle.initial['stroke-width']
+			})
+		})];
 		// Points
 		const pointsStyle = new Style({
 			image: new Circle({
 				radius: 5,
-				stroke: new Stroke({ color: this.visualizerStyle.initial.stroke, width: this.visualizerStyle.initial['stroke-width'] }),
+				stroke: new Stroke({
+					color: this.visualizerStyle.initial.stroke,
+					width: this.visualizerStyle.initial['stroke-width']
+				}),
 				fill: new Fill({ color: this.visualizerStyle.initial.fill })
 			}),
 			geometry: function (feature) {

@@ -28,6 +28,7 @@ import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-stat
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
 import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -114,12 +115,8 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				stroke: '#3399CC',
 				'stroke-width': 2,
 				fill: '#FFFFFF',
-				point: {
-					radius: 4
-				},
-				line: {
-					width: 2
-				},
+				'marker-size': MarkerSize.small,
+				'marker-color': '#FFFFFF',
 				zIndex: 5
 			}
 		});

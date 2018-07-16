@@ -12,6 +12,7 @@ import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlay
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -28,12 +29,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 			initial: {
 				stroke: '#f32ee1',
 				'stroke-width': 4,
-				point: {
-					radius: 4
-				},
-				line: {
-					width: 1
-				}
+				'marker-size': MarkerSize.small,
 			}
 		});
 	}

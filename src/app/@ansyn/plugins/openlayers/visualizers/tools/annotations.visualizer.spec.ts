@@ -49,7 +49,7 @@ describe('AnnotationsVisualizer', () => {
 
 	it('changeFillColor should call updateStyle with new fill "color" value', () => {
 		const fill = 'red';
-		const expectedResult = { initial: { fill } };
+		const expectedResult = { initial: { fill, 'marker-color': fill } };
 		spyOn(annotationsVisualizer, 'updateStyle');
 		annotationsVisualizer.changeFillColor(fill);
 		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);

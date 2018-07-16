@@ -19,14 +19,10 @@ export interface ILabel extends IStroke {
 export interface IVisualizerStyle extends IStroke, IFill {
 	zIndex?: number;
 	fill?: string;
-	"fill-opacity"?: number
+	"fill-opacity"?: number;
+	"marker-color"?: string;
+	"marker-size"?: MarkerSize;
 	shadow?: IStroke;
-	point?: {
-		radius: number;
-	};
-	line?: {
-		width: number;
-	};
 	icon?: {
 		scale: number;
 		src: string;
@@ -34,4 +30,14 @@ export interface IVisualizerStyle extends IStroke, IFill {
 	};
 	geometry?: any;
 	label?: ILabel;
+}
+export enum MarkerSize {
+	small = 'small',
+	medium = 'medium',
+	large = 'large'
+}
+export enum MarkerSizeDic {
+	small = 4,
+	medium = 6,
+	large = 8
 }

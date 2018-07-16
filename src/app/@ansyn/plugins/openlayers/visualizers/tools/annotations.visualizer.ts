@@ -47,6 +47,7 @@ import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
 import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -160,12 +161,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				'stroke-width': 1,
 				fill:  `white`,
 				'fill-opacity': AnnotationsVisualizer.fillAlpha,
-				point: {
-					radius: 4
-				},
-				line: {
-					width: 1
-				}
+				'marker-size': MarkerSize.medium,
+				'marker-color': `white`
 			}
 		});
 
@@ -220,7 +217,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	changeFillColor(fillColor) {
-		this.updateStyle({ initial: { fill: fillColor } });
+		this.updateStyle({ initial: { fill: fillColor, "marker-color": fillColor } });
 	}
 
 	changeStrokeWidth(width) {

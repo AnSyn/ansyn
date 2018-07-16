@@ -46,7 +46,7 @@ export class DownloadLayersComponent {
 
 	visualizerToSimpleStyle(annotationsLayer) {
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { ...feature.properties, ...feature.properties.style.initial };
+			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial };
 		});
 		return { ...annotationsLayer };
 	}

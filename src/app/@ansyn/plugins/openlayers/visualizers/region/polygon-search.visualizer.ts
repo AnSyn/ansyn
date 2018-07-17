@@ -28,6 +28,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 		this.updateStyle({
 			initial: {
 				stroke: '#f32ee1',
+				fill: null,
 				'stroke-width': 4,
 				'marker-size': MarkerSize.small,
 			}

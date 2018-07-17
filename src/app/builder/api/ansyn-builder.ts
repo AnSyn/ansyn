@@ -139,7 +139,7 @@ export class AnsynBuilder {
 	}
 
 	modifyModuleConfig() {
-		this.config.casesConfig.defaultCase.state.noInitialSearch = !this.options.doInitialSearch;
+		this.config.coreConfig.noInitialSearch = !this.options.doInitialSearch;
 	}
 
 	bootsrapModule(module = this.buildModule()) {

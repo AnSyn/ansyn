@@ -34,6 +34,9 @@ export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
 	dataInputFilters?: ICaseDataInputFiltersState;
+}
+
+export interface IOverlaysCriteriaOptions {
 	noInitialSearch?: boolean;
 }
 

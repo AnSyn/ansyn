@@ -52,7 +52,6 @@ export interface IOverlaysManualProcessArgs {
 export interface IDilutedCaseState {
 	maps?: IDilutedCaseMapsState,
 	time: ICaseTimeState,
-	noInitialSearch?: boolean,
 	facets?: ICaseFacetsState,
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],

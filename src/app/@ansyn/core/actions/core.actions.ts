@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '../utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
-import { IOverlay, IOverlaysCriteria } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 
 export const CoreActionTypes = {
@@ -101,7 +101,8 @@ export class RemoveAlertMsg implements Action {
 export class SetOverlaysCriteriaAction implements Action {
 	type = CoreActionTypes.SET_OVERLAYS_CRITERIA;
 
-	constructor(public payload: IOverlaysCriteria) {
+	constructor(public payload: IOverlaysCriteria,
+				public options: IOverlaysCriteriaOptions = null) {
 	}
 }
 

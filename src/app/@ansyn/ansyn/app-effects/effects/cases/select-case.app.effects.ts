@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
@@ -24,6 +24,8 @@ import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/men
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -37,20 +39,21 @@ export class SelectCaseAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
+		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch));
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>) {
+				protected store$: Store<IAppState>,
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig) {
 	}
 
-	selectCaseActions(payload: ICase): Action[] {
+	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
 		const { state } = payload;
 		// status-bar
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
-		const { favoriteOverlays, region, noInitialSearch, dataInputFilters, contextEntities } = state;
+		const { favoriteOverlays, region, dataInputFilters, contextEntities } = state;
 		let {  time } = state;
 		const { layout } = state.maps;
 
@@ -71,7 +74,7 @@ export class SelectCaseAppEffects {
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters}, { noInitialSearch }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction(),

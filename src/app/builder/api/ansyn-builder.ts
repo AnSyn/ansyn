@@ -71,7 +71,6 @@ export class AnsynBuilder {
 
 	bootStrapplatformWithAnsyn() {
 		this.createElement();
-		this.modifyModuleConfig();
 		this.bootsrapModule();
 	}
 
@@ -136,10 +135,6 @@ export class AnsynBuilder {
 
 		return NgModule(options)(class AnsynCustom extends DynamicsAnsynModule {
 		});
-	}
-
-	modifyModuleConfig() {
-		this.config.coreConfig.noInitialSearch = !this.options.doInitialSearch;
 	}
 
 	bootsrapModule(module = this.buildModule()) {

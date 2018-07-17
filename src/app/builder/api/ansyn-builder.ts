@@ -33,7 +33,8 @@ export interface IAnsynBuilderOptions {
 	providers?: any[];
 	windowLayout?: IWindowLayout,
 	customModules?: any[],
-	sourceProviders?: Array<Provider>
+	sourceProviders?: Array<Provider>,
+	doInitialSearch?: boolean
 }
 
 export interface IAnsynBuilderConstructor {
@@ -70,6 +71,7 @@ export class AnsynBuilder {
 
 	bootStrapplatformWithAnsyn() {
 		this.createElement();
+		this.modifyModuleConfig();
 		this.bootsrapModule();
 	}
 
@@ -136,12 +138,15 @@ export class AnsynBuilder {
 		});
 	}
 
+	modifyModuleConfig() {
+		this.config.casesConfig.defaultCase.state.noInitialSearch = !this.options.doInitialSearch;
+	}
+
 	bootsrapModule(module = this.buildModule()) {
 		platformBrowserDynamic()
 			.bootstrapModule(module)
 			.then((moduleRef: NgModuleRef<DynamicsAnsynModule>) => {
 				this.moduleRef = moduleRef;
-				this.api.disableInitialSearch();
 				this.api.loadDefaultCase();
 
 				if (this.options && this.options.windowLayout) {

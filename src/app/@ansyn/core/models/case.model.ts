@@ -52,7 +52,7 @@ export interface IOverlaysManualProcessArgs {
 export interface IDilutedCaseState {
 	maps?: IDilutedCaseMapsState,
 	time: ICaseTimeState,
-	search?: boolean,
+	noInitialSearch?: boolean,
 	facets?: ICaseFacetsState,
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
@@ -98,7 +98,7 @@ export type CaseEnumFilterMetadata = string[];
 
 export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata;
 
-export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'};
+export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
 
 export interface ICaseFilter {
 	type: FilterType;

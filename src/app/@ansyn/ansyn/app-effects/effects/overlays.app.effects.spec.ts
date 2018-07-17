@@ -57,7 +57,7 @@ import {
 } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { DisplayedOverlay } from '@ansyn/core/models/context.model';
-import { ImageryMapSource } from '@ansyn/imagery/model/decorators/map-source-provider';
+import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

@@ -13,7 +13,7 @@ import { select, Store } from '@ngrx/store';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';

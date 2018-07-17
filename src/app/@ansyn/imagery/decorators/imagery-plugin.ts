@@ -1,5 +1,5 @@
 import { ImageryDecorator } from './index';
-import { IBaseImageryPluginConstructor, IImageryPluginMetaData } from '../base-imagery-plugin';
+import { IBaseImageryPluginConstructor, IImageryPluginMetaData } from '../model/base-imagery-plugin';
 import { AutoSubscriptions } from 'auto-subscriptions';
 
 

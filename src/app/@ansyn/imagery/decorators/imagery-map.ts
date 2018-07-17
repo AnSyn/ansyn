@@ -1,4 +1,4 @@
-import { IImageryMapMetaData, IBaseImageryMapConstructor } from '../base-imagery-map';
+import { IImageryMapMetaData, IBaseImageryMapConstructor } from '../model/base-imagery-map';
 import { ImageryDecorator } from './index';
 
 export function ImageryMap(metaData: IImageryMapMetaData) {

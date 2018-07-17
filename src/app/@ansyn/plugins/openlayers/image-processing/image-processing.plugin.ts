@@ -10,7 +10,7 @@ import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Store } from '@ngrx/store';
-import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryPlugin({

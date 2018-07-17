@@ -12,7 +12,7 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
-import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { AutoSubscription } from 'auto-subscriptions';
 

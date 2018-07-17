@@ -13,7 +13,7 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { empty } from 'rxjs';
-import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { select } from '@ngrx/store';
 import { filter, map, distinctUntilChanged } from 'rxjs/operators';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';

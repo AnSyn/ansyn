@@ -21,7 +21,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 
 export interface INorthData {

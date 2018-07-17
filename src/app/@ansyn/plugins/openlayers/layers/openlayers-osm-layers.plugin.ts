@@ -11,7 +11,7 @@ import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
-import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 
 

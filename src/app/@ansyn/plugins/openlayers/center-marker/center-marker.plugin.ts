@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryPlugin({

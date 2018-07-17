@@ -12,7 +12,7 @@ import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes } from 
 import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import { ImageryPlugin } from '@ansyn/imagery/model/decorators/imagery-plugin';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { tap, filter, withLatestFrom, map } from 'rxjs/operators';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';

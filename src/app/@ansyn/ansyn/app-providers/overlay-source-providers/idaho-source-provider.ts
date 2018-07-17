@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { geojsonMultiPolygonToPolygon } from '@ansyn/core/utils/geo';
+import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
 	IStartAndEndDate
@@ -11,7 +11,7 @@ import { toRadians } from '@ansyn/core/utils/math';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { limitArray } from '@ansyn/core/utils/i-limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { MultiPolygon } from 'geojson';
+import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 
@@ -61,6 +61,9 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		// Multiple Source Provider may send a MultiPolygon which Idaho can't handle
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as MultiPolygon);
+		} else if (fetchParams.region.type === 'Point') {
+			const polygonFeature: Feature<Polygon> = getPolygonByPointAndRadius((fetchParams.region as Point).coordinates);
+			fetchParams.region = polygonFeature.geometry;
 		}
 
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.overlaysByTimeAndPolygon);
@@ -123,8 +126,11 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.channel = idahoElement.properties.numBands;
 		overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
 		overlay.name = idahoElement.properties.catalogID;
-		overlay.imageUrl = 'http://idaho.geobigdata.io/v1/tile/idaho-images/' + idahoElement.identifier + '/{z}/{x}/{y}?bands=' + bands + '&token=' + token;
-		overlay.thumbnailUrl = 'https://geobigdata.io/thumbnails/v1/browse/' + idahoElement.properties.catalogID + '.large.png';
+
+		// https://gbdxdocs.digitalglobe.com/v1/docs/get-a-tms-tile
+		// https://idaho.geobigdata.io/v1/tile/:bucket_name/:idaho_id/:tileZ/:tileX/:TileY
+		overlay.imageUrl = 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}?bands=' + bands + '&token=' + token;
+		overlay.thumbnailUrl = 'https://api.discover.digitalglobe.com/show?id=' + idahoElement.properties.catalogID + '&f=jpeg';
 		overlay.date = new Date(idahoElement.properties.acquisitionDate);
 		overlay.photoTime = idahoElement.properties.acquisitionDate;
 		overlay.azimuth = toRadians(180 - idahoElement.properties.satAzimuth);

@@ -1,9 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BaseImageryMap, IBaseImageryMapConstructor } from './base-imagery-map';
-import { of, Subscription } from 'rxjs';
-import { AutoSubscriptions } from 'auto-subscriptions';
 
 export interface IImageryPluginMetaData {
 	supported?: IBaseImageryMapConstructor[];
@@ -13,6 +11,7 @@ export interface IImageryPluginMetaData {
 export interface IBaseImageryPluginConstructor extends IImageryPluginMetaData {
 	new(...args): BaseImageryPlugin;
 }
+
 export class BaseImageryPlugin {
 
 	communicator: CommunicatorEntity;
@@ -33,7 +32,7 @@ export class BaseImageryPlugin {
 
 	dispose() {
 		this.onDisposedEvent.emit();
-		this.onDispose()
+		this.onDispose();
 	}
 
 	init(communicator: CommunicatorEntity) {

@@ -97,7 +97,7 @@ export type CaseEnumFilterMetadata = string[];
 
 export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata;
 
-export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'};
+export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
 
 export interface ICaseFilter {
 	type: FilterType;

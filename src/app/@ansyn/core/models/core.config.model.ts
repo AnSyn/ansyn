@@ -6,4 +6,5 @@ export interface ICoreConfig {
 		headerText: string;
 		mainText: string;
 	};
+	noInitialSearch?: boolean;
 }

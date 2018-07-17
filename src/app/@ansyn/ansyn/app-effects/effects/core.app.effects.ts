@@ -80,6 +80,7 @@ export class CoreAppEffects {
 	@Effect()
 	loadOverlays$ = this.actions$
 		.ofType<SetOverlaysCriteriaAction>(CoreActionTypes.SET_OVERLAYS_CRITERIA)
+		.filter(action => !(action.options && action.options.noInitialSearch))
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria));
 

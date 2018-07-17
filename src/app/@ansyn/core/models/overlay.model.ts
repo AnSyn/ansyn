@@ -36,6 +36,10 @@ export interface IOverlaysCriteria {
 	dataInputFilters?: ICaseDataInputFiltersState;
 }
 
+export interface IOverlaysCriteriaOptions {
+	noInitialSearch?: boolean;
+}
+
 export interface IOverlaySpecialObject {
 	id: string;
 	date: Date;

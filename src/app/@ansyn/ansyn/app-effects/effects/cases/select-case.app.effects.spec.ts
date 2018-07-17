@@ -36,6 +36,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.ac
 import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -50,7 +51,8 @@ describe('SelectCaseAppEffects', () => {
 			],
 			providers: [
 				SelectCaseAppEffects,
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{provide: CoreConfig, useValue: {}}
 			]
 		}).compileComponents();
 	}));
@@ -80,7 +82,10 @@ describe('SelectCaseAppEffects', () => {
 				layers: ICaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
+				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}]
+			;
+
+			let noInitialSearch;
 
 			const state: ICaseState = <any> {
 				orientation,
@@ -111,7 +116,7 @@ describe('SelectCaseAppEffects', () => {
 			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
-				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
+				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
 				f: new BeginLayerCollectionLoadAction(),

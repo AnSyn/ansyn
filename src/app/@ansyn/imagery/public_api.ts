@@ -1,6 +1,6 @@
-export { ImageryPlugin } from './model/decorators/imagery-plugin';
-export { ImageryMap } from './model/decorators/imagery-map';
-export { ImageryMapSource } from './model/decorators/map-source-provider';
+export { ImageryPlugin } from './decorators/imagery-plugin';
+export { ImageryMap } from './decorators/imagery-map';
+export { ImageryMapSource } from './decorators/map-source-provider';
 export { BaseImageryMap } from './model/base-imagery-map';
 export { BaseMapSourceProvider } from './model/base-map-source-provider';
 export { BaseImageryPlugin } from './model/base-imagery-plugin';

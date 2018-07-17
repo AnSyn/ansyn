@@ -6,7 +6,7 @@ import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
+import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';

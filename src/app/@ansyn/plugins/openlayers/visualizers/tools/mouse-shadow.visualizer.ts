@@ -4,7 +4,7 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { Action, Store } from '@ngrx/store';
@@ -12,11 +12,10 @@ import * as turf from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { Subscription } from 'rxjs/Subscription';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -39,7 +38,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	onEnterMap$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER);
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	onLeaveMap$ = this.actions$
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
 		.do(() => {
@@ -47,7 +46,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
 		});
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	createShadowMouseProducer$ = Observable.combineLatest(this.isActive$, this.shadowMouseFlag$, this.onEnterMap$)
 		.do(([isActive, shadowMouseFlag]) => {
 			this.clearEntities();
@@ -58,7 +57,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			}
 		});
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	drawPoint$ = Observable.combineLatest(this.mouseShadowProducer$, this.isActive$)
 		.filter(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => payload.outsideSource || !isActive)
 		.mergeMap(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => this.setEntities([{

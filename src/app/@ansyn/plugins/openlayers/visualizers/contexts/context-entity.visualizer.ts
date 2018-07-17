@@ -13,14 +13,14 @@ import { select, Store } from '@ngrx/store';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -31,12 +31,12 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	contextEntites$ = this.store$.select(selectContextEntities)
 		.filter(Boolean)
 		.mergeMap(this.setEntities.bind(this));
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	referenceDate$ = this.store$
 		.pipe(
 			select(mapStateSelector),

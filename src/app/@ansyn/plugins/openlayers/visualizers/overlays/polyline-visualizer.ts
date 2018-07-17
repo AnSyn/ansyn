@@ -1,7 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import {
-	VisualizerInteractions
-} from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
@@ -19,10 +17,12 @@ import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/action
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import {
+	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
-	IMarkUpData,
-	overlaysStateSelector, selectFilteredOveralys, selectOverlaysMap
+	overlaysStateSelector,
+	selectFilteredOveralys,
+	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { MultiLineString } from 'geojson';
@@ -31,12 +31,12 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
-import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
 import { EMPTY } from 'rxjs/internal/observable/empty';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -57,25 +57,25 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			distinctUntilChanged()
 		);
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store.select(selectOverlaysMap)),
 			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === 'Polygon') {
-				const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
-				const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
-				return this.setEntities(entitiesToDraw);
-			} else if (this.getEntities().length > 0) {
-				this.clearEntities();
-			}
-			return EMPTY;
+					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
+					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
+					return this.setEntities(entitiesToDraw);
+				} else if (this.getEntities().length > 0) {
+					this.clearEntities();
+				}
+				return EMPTY;
 			})
 		);
 
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.overlaysState$
 		.pluck <IOverlaysState, ExtendMap<MarkUpClass, IMarkUpData>>('dropsMarkUp')
 		.distinctUntilChanged()

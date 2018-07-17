@@ -11,7 +11,7 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 
 @ImageryVisualizer({

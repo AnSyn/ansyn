@@ -13,13 +13,13 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { empty } from 'rxjs';
-import { ImageryVisualizer } from '@ansyn/imagery/model/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { select } from '@ngrx/store';
 import { filter, map, distinctUntilChanged } from 'rxjs/operators';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
-import { ImageryPluginSubscription } from '@ansyn/imagery/model/base-imagery-plugin';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -35,7 +35,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 			distinctUntilChanged()
 		);
 
-	@ImageryPluginSubscription
+	@AutoSubscription
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store$.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store$.select(selectOverlaysMap)),

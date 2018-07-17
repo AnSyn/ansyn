@@ -22,7 +22,7 @@ import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/co
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-import { ImageryMap } from '@ansyn/imagery/model/decorators/imagery-map';
+import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 

@@ -4,7 +4,8 @@ import {
 	ComponentRef,
 	ElementRef,
 	Inject,
-	Input, isDevMode,
+	Input,
+	isDevMode,
 	OnInit,
 	Renderer2,
 	ViewChild,
@@ -16,9 +17,9 @@ import {
 	ToggleIsPinnedAction,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { IMenuState } from '../reducers/menu.reducer';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { DOCUMENT } from '@angular/common';
@@ -26,10 +27,15 @@ import { IMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import {
-	selectAllMenuItems, selectAutoClose, selectEntitiesMenuItems,
-	selectIsPinned, selectSelectedMenuItem
+	selectAllMenuItems,
+	selectAutoClose,
+	selectEntitiesMenuItems,
+	selectIsPinned,
+	selectSelectedMenuItem
 } from '@ansyn/menu/reducers/menu.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 
 const animations: any[] = [
 	trigger(
@@ -50,6 +56,10 @@ const animations: any[] = [
 	templateUrl: './menu.component.html',
 	styleUrls: ['./menu.component.less'],
 	animations
+})
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
 })
 
 /*
@@ -79,15 +89,35 @@ export class MenuComponent implements OnInit {
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
 
-	isPinned$ = this.store.select(selectIsPinned);
+	@AutoSubscription
+	isPinned$ = this.store
+		.pipe(
+			select(selectIsPinned),
+			tap((_isPinned: boolean) => {
+				this.isPinned = _isPinned;
+				this.onIsPinnedChange();
+			})
+		);
 
-	autoClose$ = this.store.select(selectAutoClose);
+	@AutoSubscription
+	entities$: Observable<Dictionary<IMenuItem>> = this.store
+		.pipe(
+			select(selectEntitiesMenuItems),
+			tap((_menuItems) => this.entities = _menuItems)
+		);
 
-	entities$: Observable<Dictionary<IMenuItem>> = this.store.select(selectEntitiesMenuItems);
-	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.select(selectAllMenuItems)
-		.map((menuItems: IMenuItem[]) => menuItems.filter(this.isMenuItemShown));
+	menuItemsAsArray$: Observable<IMenuItem[]> = this.store
+		.pipe(
+			select(selectAllMenuItems),
+			map((menuItems: IMenuItem[]) => menuItems.filter(this.isMenuItemShown))
+		);
 
-	selectedMenuItem$: Observable<string> = this.store.select(selectSelectedMenuItem);
+	@AutoSubscription
+	selectedMenuItem$: Observable<string> = this.store
+		.pipe(
+			select(selectSelectedMenuItem),
+			tap(this.setSelectedMenuItem.bind(this))
+		);
 
 	selectedMenuItemName: string;
 	entities: Dictionary<IMenuItem> = {};
@@ -95,6 +125,18 @@ export class MenuComponent implements OnInit {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
+
+	@AutoSubscription
+	onClickOutside$ = () => fromEvent(this.document, 'click')
+		.pipe(
+			filter(this.anyMenuItemSelected.bind(this)),
+			withLatestFrom(this.store.select(selectAutoClose)),
+			filter(([click, autoClose]: [any, boolean]) => {
+				const include = click.path.includes(this.elementRef.nativeElement);
+				return !include && !this.isPinned && autoClose;
+			}),
+			tap(this.closeMenu.bind(this))
+		);
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				protected store: Store<IMenuState>,
@@ -218,35 +260,12 @@ export class MenuComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.entities$.subscribe((_menuItems) => {
-			this.entities = _menuItems;
-		});
-
-		this.selectedMenuItem$.subscribe(this.setSelectedMenuItem.bind(this));
-
-		this.isPinned$.subscribe((_isPinned: boolean) => {
-			this.isPinned = _isPinned;
-			this.onIsPinnedChange();
-		});
-
 		new MutationObserver(() => {
 			const conPosition = getComputedStyle(this.container.nativeElement).position;
 			if (conPosition !== 'absolute') {
 				this.store.dispatch(new ContainerChangedTriggerAction());
 			}
 		}).observe(this.container.nativeElement, { childList: true });
-
-		Observable
-			.fromEvent(this.document, 'click')
-			.filter(this.anyMenuItemSelected.bind(this))
-
-			.withLatestFrom(this.autoClose$)
-			.filter(([click, autoClose]: [any, boolean]) => {
-				const include = click.path.includes(this.elementRef.nativeElement);
-				return !include && !this.isPinned && autoClose;
-			})
-			.do(this.closeMenu.bind(this))
-			.subscribe()
 	}
 }
 

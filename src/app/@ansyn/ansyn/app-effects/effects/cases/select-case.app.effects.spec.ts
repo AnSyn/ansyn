@@ -98,7 +98,7 @@ describe('SelectCaseAppEffects', () => {
 				layers,
 				overlaysManualProcessArgs,
 				facets,
-				contextEntities,
+				contextEntities
 			};
 
 			const payload: ICase = {

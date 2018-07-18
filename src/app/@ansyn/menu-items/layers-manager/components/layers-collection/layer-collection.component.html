@@ -7,16 +7,17 @@
 				#downArrow class="down-arrow"
 				(click)="show = !show">
 		</button>
-		<div class="show-all">
-			<span (click)="showAll()">Show all</span>
-		</div>
 	</div>
 
 	<ansyn-layer *ngFor="let layer of collection.data"
 				 [@layersTrigger]="show"
 				 [layer]="layer"
 				 [showOnly]="collection.data.length < 2">
-
+				<button *ngIf="collection.onDownload"
+						class="download-layer"
+						(click)="collection.onDownload()">
+					<i class="icon icon-download-layer"></i>
+				</button>
 	</ansyn-layer>
 
 </div>

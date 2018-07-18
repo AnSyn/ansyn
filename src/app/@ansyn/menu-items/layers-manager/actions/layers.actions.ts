@@ -2,13 +2,12 @@ import { Action } from '@ngrx/store';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 export enum LayersActionTypes {
-	BEGIN_LAYER_COLLECTION_LOAD = 'BEGIN_LAYER_COLLECTION_LOAD',
-	LAYER_COLLECTION_LOADED = 'LAYER_COLLECTION_LOADED',
-	ERROR_LOADING_LAYERS = 'ERROR_LOADING_LAYERS',
-	UPDATE_SELECTED_LAYERS_IDS = 'UPDATE_SELECTED_LAYERS_IDS',
-	TOGGLE_LAYER_SELECTION = '[Layers] TOGGLE_LAYER_SELECTION',
+	BEGIN_LAYER_COLLECTION_LOAD = '[Layers] Begin layer collection load',
+	LAYER_COLLECTION_LOADED = '[Layers] Layer collection loaded',
+	ERROR_LOADING_LAYERS = '[Layers] Error loading layers',
+	UPDATE_SELECTED_LAYERS_IDS = '[Layers] Update selected layers ids',
+	SET_LAYER_SELECTION = '[Layers] Set layer selection',
 	SELECT_ONLY = '[Layers] Select only',
-	SELECT_ALL = '[Layers] Select all',
 	UPDATE_LAYER = '[Layers] Update layer',
 };
 
@@ -17,9 +16,8 @@ export type LayersActions =
 	| LayerCollectionLoadedAction
 	| ErrorLoadingLayersAction
 	| UpdateSelectedLayersIds
-	| ToggleLayerSelection
-	| SelectOnly
-	| SelectAll
+	| SetLayerSelection
+	| SelectOnlyLayer
 	| UpdateLayer;
 
 export class BeginLayerCollectionLoadAction implements Action {
@@ -49,21 +47,15 @@ export class ErrorLoadingLayersAction implements Action {
 	}
 }
 
-export class ToggleLayerSelection {
-	readonly type = LayersActionTypes.TOGGLE_LAYER_SELECTION;
-	constructor(public payload: string) {
+export class SetLayerSelection {
+	readonly type = LayersActionTypes.SET_LAYER_SELECTION;
+	constructor(public payload: { id: string, value: boolean }) {
 	}
 }
 
-export class SelectOnly {
+export class SelectOnlyLayer {
 	readonly type = LayersActionTypes.SELECT_ONLY;
 	constructor(public payload: string) {
-	}
-}
-
-export class SelectAll {
-	readonly type = LayersActionTypes.SELECT_ALL;
-	constructor(public payload: LayerType) {
 	}
 }
 

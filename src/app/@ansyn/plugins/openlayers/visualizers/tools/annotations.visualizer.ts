@@ -67,8 +67,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			select(selectLayers),
 			map((layers: ILayer[]) => {
 				return layers.find(({ type }) => type === LayerType.annotation);
-				// const features = annotationsLayers.map(({ data }) => data.features).reduce((init, arr) => [...init, ...arr], []);
-				// return featureCollection(features);
 			})
 		);
 

@@ -30,10 +30,9 @@ describe('LayerComponent', () => {
 	});
 
 	it('on selectOnly store should dispatch "UpdateSelectedLayersIds" action with layerId', () => {
-		console.log(store);
-		// spyOn(store, 'dispatch');
-		// component.layer = <any> { id: 'layerId' };
-		// component.selectOnly();
-		// expect(store.dispatch).toHaveBeenCalledWith(new UpdateSelectedLayersIds(['layerId']));
+		spyOn(store, 'dispatch');
+		component.layer = <any> { id: 'layerId' };
+		component.selectOnly();
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateSelectedLayersIds(['layerId']));
 	});
 });

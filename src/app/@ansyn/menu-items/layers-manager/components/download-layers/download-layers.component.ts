@@ -2,10 +2,12 @@ import { Component, EventEmitter, Output } from '@angular/core';
 // import { selectAnnotationLayer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/index';
 import { select, Store } from '@ngrx/store';
-import { take, tap } from 'rxjs/internal/operators';
+import { map, take, tap, filter } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import * as tokml from 'tokml';
 import { cloneDeep } from '@ansyn/core/utils/rxjs-operators/cloneDeep';
+import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 @Component({
 	selector: 'ansyn-download-layers',
@@ -14,8 +16,15 @@ import { cloneDeep } from '@ansyn/core/utils/rxjs-operators/cloneDeep';
 })
 export class DownloadLayersComponent {
 	@Output() onFinish = new EventEmitter();
-	// select(selectAnnotationLayer)
-	annotationsLayer$: Observable<any> = this.store.pipe(take(1), cloneDeep());
+
+	annotationsLayer$: Observable<any> = this.store.pipe(
+		select(selectLayers),
+		map((layers: ILayer[]) => layers.find(({ type }) => type === LayerType.annotation)),
+		filter(Boolean),
+		map((layer) => layer.data),
+		take(1),
+		cloneDeep()
+	);
 
 	constructor(protected store: Store<any>) {
 	}

@@ -1,13 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import {
-	SelectOnly, ToggleLayerSelection,
-	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { SelectOnlyLayer, SetLayerSelection } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { select, Store } from '@ngrx/store';
 import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Observable } from 'rxjs/Observable';
-import { map, tap } from 'rxjs/internal/operators';
+import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 @Component({
@@ -31,15 +28,15 @@ export class LayerComponent {
 			tap(selectedLayersIds => this.selectedLayersIds = selectedLayersIds)
 		);
 
-	constructor(protected store$: Store <any>) {
+	constructor(protected store$: Store<any>) {
 	}
 
-	public onCheckboxClicked(): void {
-		this.store$.dispatch(new ToggleLayerSelection(this.layer.id));
+	public onCheckboxClicked($event: any): void {
+		this.store$.dispatch(new SetLayerSelection({ id: this.layer.id, value: $event.target.checked }));
 	}
 
 	public selectOnly() {
-		this.store$.dispatch(new SelectOnly(this.layer.id));
+		this.store$.dispatch(new SelectOnlyLayer(this.layer.id));
 	}
 
 }

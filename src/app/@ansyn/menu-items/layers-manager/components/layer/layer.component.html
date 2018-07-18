@@ -5,7 +5,7 @@
 			<ansyn-checkbox
 				class="regular-checkbox"
 				[id]="'checkbox' + layer?.id"
-				(change)="onCheckboxClicked()"
+				(change)="onCheckboxClicked($event)"
 				[checked]="selectedLayersIds.includes(layer?.id)">
 			</ansyn-checkbox>
 		</div>
@@ -14,12 +14,9 @@
 			<div class="field-name-container">
 				<span class="field-name" [title]="layer?.name">{{layer?.name}}</span>
 			</div>
-			<span class="only-filter" (click)="selectOnly()" >only</span>
+			<span class="only-filter" (click)="selectOnly()" [hidden]="showOnly">only</span>
 		</div>
-		<!--<button *ngIf="collection.onDownload"-->
-				<!--class="download-layer"-->
-				<!--(click)="collection.onDownload()">-->
-			<!--<i class="icon icon-download-layer"></i>-->
-		<!--</button>-->
+
+		<ng-content></ng-content>
 	</div>
 </div>

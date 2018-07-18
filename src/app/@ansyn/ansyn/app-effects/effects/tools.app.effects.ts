@@ -284,9 +284,10 @@ export class ToolsAppEffects {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
-			const updateLayer: ILayer = { ...layer };
-			updateLayer.data = { ...updateLayer.data, features: updateLayer.data.features.filter(({properties}) => properties.id !== action.payload) };
-			return new UpdateLayer(updateLayer);
+			return new UpdateLayer({
+				...layer,
+				data: { ...layer.data, features: layer.data.features.filter(({properties}) => properties.id !== action.payload) }
+			});
 		});
 
 	/**

@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { SelectAll } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Store } from '@ngrx/store';
 
@@ -45,9 +44,5 @@ export class LayerCollectionComponent {
 	public show = true;
 
 	constructor(public store: Store<ILayerState>) {
-	}
-
-	public showAll() {
-		this.store.dispatch(new SelectAll(this.collection.type));
 	}
 }

@@ -5,7 +5,10 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { UUID } from 'angular2-uuid';
+import { map } from 'rxjs/operators';
+import { featureCollection } from '@turf/turf';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -17,8 +20,22 @@ export class DataLayersService {
 				@Inject(layersConfig) public config: ILayersManagerConfig) {
 	}
 
-	public getAllLayersInATree(): Observable<ILayer[]> {
+	generateAnnotationLayer(): ILayer {
+		return {
+			id: UUID.UUID(),
+			creationTime: new Date(),
+			layerPluginType: layerPluginType.Annotations,
+			name: 'Default',
+			type: LayerType.annotation,
+			data: featureCollection([])
+		};
+	}
+
+	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {
 		return this.storageService.getPage<ILayer>(this.config.schema, 0, 100)
+			.pipe(
+				map((result: ILayer[]) => result.some(({ type }) => type === LayerType.annotation) ? result : [ this.generateAnnotationLayer(), ...result ])
+			)
 			.catch(err => {
 				return this.errorHandlerService.httpErrorHandle(err);
 			});

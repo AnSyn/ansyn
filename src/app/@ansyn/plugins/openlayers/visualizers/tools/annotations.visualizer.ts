@@ -22,16 +22,15 @@ import { select, Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
 	IAnnotationProperties,
-	selectAnnotationLayer,
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
 	SubMenuEnum
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { Observable } from 'rxjs';
-import { selectDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { combineLatest, Observable } from 'rxjs';
+import { selectDisplayAnnotationsLayer, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
-import { SetAnnotationMode, SetAnnotationsLayer } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
@@ -47,6 +46,10 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
 import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 import { AutoSubscription } from 'auto-subscriptions';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { featureCollection } from '@turf/turf';
+import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { UUID } from 'angular2-uuid';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -59,7 +62,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 
 	/* data */
-	annotationsLayer$: Observable<any> = this.store$.select(selectAnnotationLayer);
+	annotationsLayer$: Observable<ILayer> = this.store$
+		.pipe(
+			select(selectLayers),
+			map((layers: ILayer[]) => {
+				return layers.find(({ type }) => type === LayerType.annotation);
+				// const features = annotationsLayers.map(({ data }) => data.features).reduce((init, arr) => [...init, ...arr], []);
+				// return featureCollection(features);
+			})
+		);
 
 	currentOverlay$ = this.store$.pipe(
 		select(selectMapsList),
@@ -82,16 +93,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
 
 	@AutoSubscription
-	annoatationModeChange$: Observable<any> = Observable.combineLatest(this.annotationMode$, this.isActiveMap$)
-		.do(this.onModeChange.bind(this));
+	annoatationModeChange$: Observable<any> = combineLatest(this.annotationMode$, this.isActiveMap$)
+		.pipe(
+			tap(this.onModeChange.bind(this))
+		)
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
 		.do(this.onAnnotationPropertiesChange.bind(this));
 
 	@AutoSubscription
-	onAnnotationsChange$ = Observable
-		.combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
+	onAnnotationsChange$ = combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
 		.mergeMap(this.onAnnotationsChange.bind(this));
 
 	modeDictionary = {
@@ -146,7 +158,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onAnnotationsChange([annotationsLayer, annotationFlag, displayAnnotationsLayer, isActiveMap]: [any, boolean, boolean, boolean]): Observable<any> {
 		if (displayAnnotationsLayer || (isActiveMap && annotationFlag)) {
-			return this.showAnnotation(annotationsLayer);
+			return this.showAnnotation(annotationsLayer.data);
 		}
 		this.clearEntities();
 		return Observable.of(true);
@@ -254,7 +266,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		feature.setGeometry(cloneGeometry);
 
 		feature.setProperties({
-			id: `${Date.now()}`,
+			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle)
 		});
 
@@ -265,18 +277,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				withLatestFrom(this.annotationsLayer$, this.currentOverlay$),
 				tap(([featureCollection, annotationsLayer, overlay]: [FeatureCollection<GeometryObject>, any, IOverlay]) => {
 					const [geoJsonFeature] = featureCollection.features;
-					const updatedAnnotationsLayer = <FeatureCollection<any>> { ...annotationsLayer };
-					updatedAnnotationsLayer.features.push(geoJsonFeature);
+					const data = <FeatureCollection<any>> { ...annotationsLayer.data };
+					data.features.push(geoJsonFeature);
 					if (overlay) {
 						geoJsonFeature.properties = {
 							...geoJsonFeature.properties,
 							overlayId: overlay.id,
 							pixels: new OLGeoJSON().writeFeatureObject(feature),
-							...this.projectionService.getProjectionProperties(this.communicator, updatedAnnotationsLayer)
+							...this.projectionService.getProjectionProperties(this.communicator, data)
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
-					this.store$.dispatch(new SetAnnotationsLayer(updatedAnnotationsLayer));
+					this.store$.dispatch(new UpdateLayer({ ...annotationsLayer, data }));
 				})
 			).subscribe();
 

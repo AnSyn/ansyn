@@ -66,7 +66,7 @@ describe('LayersEffects', () => {
 	};
 
 		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of([staticLayer]));
-		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction() });
+		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });
 		const expectedResults = cold('--a--', {
 			a: new LayerCollectionLoadedAction([staticLayer])
 		});

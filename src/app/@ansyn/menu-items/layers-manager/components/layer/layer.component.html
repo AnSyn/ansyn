@@ -1,0 +1,25 @@
+<div class="layers">
+	<div class="left-side">
+
+		<div class="checkbox">
+			<ansyn-checkbox
+				class="regular-checkbox"
+				[id]="'checkbox' + layer.id"
+				(change)="onCheckboxClicked()"
+				[checked]="selectedLayersIds.includes(layer.id)">
+			</ansyn-checkbox>
+		</div>
+
+		<div class="layer-row">
+			<div class="field-name-container">
+				<span class="field-name" [title]="layer.name">{{layer.name}}</span>
+			</div>
+			<span class="only-filter" (click)="selectOnly()" >only</span>
+		</div>
+		<!--<button *ngIf="collection.onDownload"-->
+				<!--class="download-layer"-->
+				<!--(click)="collection.onDownload()">-->
+			<!--<i class="icon icon-download-layer"></i>-->
+		<!--</button>-->
+	</div>
+</div>

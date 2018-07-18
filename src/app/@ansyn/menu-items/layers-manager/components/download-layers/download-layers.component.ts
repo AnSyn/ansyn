@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { selectAnnotationLayer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+// import { selectAnnotationLayer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Observable } from 'rxjs/index';
 import { select, Store } from '@ngrx/store';
 import { take, tap } from 'rxjs/internal/operators';
@@ -14,7 +14,8 @@ import { cloneDeep } from '@ansyn/core/utils/rxjs-operators/cloneDeep';
 })
 export class DownloadLayersComponent {
 	@Output() onFinish = new EventEmitter();
-	annotationsLayer$: Observable<any> = this.store.pipe(select(selectAnnotationLayer), take(1), cloneDeep());
+	// select(selectAnnotationLayer)
+	annotationsLayer$: Observable<any> = this.store.pipe(take(1), cloneDeep());
 
 	constructor(protected store: Store<any>) {
 	}

@@ -1,5 +1,8 @@
 import { ILayerState } from '../reducers/layers.reducer';
-import { LayerCollectionLoadedAction, LayersActions, LayersActionTypes } from '../actions/layers.actions';
+import {
+	BeginLayerCollectionLoadAction, LayerCollectionLoadedAction, LayersActions,
+	LayersActionTypes
+} from '../actions/layers.actions';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/switchMap';
@@ -8,7 +11,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
@@ -28,9 +31,9 @@ export class LayersEffects {
 	 */
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
-		.ofType(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD)
 		.pipe(
-			mergeMap(() => this.dataLayersService.getAllLayersInATree()),
+			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
+			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
 			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
 		);
 

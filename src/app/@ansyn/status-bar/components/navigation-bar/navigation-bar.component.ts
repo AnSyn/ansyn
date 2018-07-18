@@ -1,5 +1,5 @@
 import { Component, HostListener, Inject } from '@angular/core';
-import { GoAdjacentOverlay } from '@ansyn/core/actions/core.actions';
+import { GoAdjacentOverlay, GoNextPresetOverlay } from '@ansyn/core/actions/core.actions';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { ExpandAction } from '@ansyn/status-bar/actions/status-bar.actions';
@@ -47,12 +47,27 @@ export class NavigationBarComponent {
 		}
 	}
 
+	@HostListener('window:keypress', ['$event'])
+	onkeypress($event: KeyboardEvent) {
+		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
+			return;
+		}
+
+		if ([70, 102].indexOf($event.which) !== -1 ) { // F or f
+			this.clickGoNextPresetOverlay();
+		}
+	}
+
 	constructor(protected store: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
 	}
 
 	clickGoAdjacent(isNext): void {
 		this.store.dispatch(new GoAdjacentOverlay({ isNext }));
+	}
+
+	clickGoNextPresetOverlay(): void {
+		this.store.dispatch(new GoNextPresetOverlay());
 	}
 
 	clickTime(): void {

@@ -5,7 +5,7 @@ import {
 	BackToWorldView,
 	ToggleFavoriteAction,
 	ToggleMapLayersAction,
-	TogglePresetAction
+	TogglePresetOverlayAction
 } from '../../actions/core.actions';
 import {
 	AlertMsg,
@@ -49,7 +49,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	private _subscriptions: Subscription[] = [];
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
-	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays);
+	presetOverlays$: Observable<string[]> = this.store$.select(selectPresetOverlays);
 
 	alertMsg: AlertMsg;
 
@@ -64,7 +64,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isFavorite: boolean;
 	favoritesButtonText: string;
 
-	presetOverlays: IOverlay[];
+	presetOverlays: string[];
 	isPreset: boolean;
 	presetsButtonText: string;
 
@@ -121,7 +121,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	togglePreset() {
-		this.store$.dispatch(new TogglePresetAction(this.overlay));
+		this.store$.dispatch(new TogglePresetOverlayAction(this.overlay.id));
 	}
 
 	updateFavoriteStatus() {
@@ -135,7 +135,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	updatePresetStatus() {
 		this.isPreset = false;
 		if (this.overlay && this.presetOverlays && this.presetOverlays.length > 0) {
-			this.isPreset = this.presetOverlays.some(o => o.id === this.overlay.id);
+			this.isPreset = this.presetOverlays.indexOf(this.overlay.id) !== -1;
 		}
 		this.presetsButtonText = this.isPreset ? 'Remove from presets' : 'Add to presets';
 	}

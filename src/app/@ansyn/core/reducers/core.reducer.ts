@@ -24,7 +24,7 @@ export interface IToastMessage {
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: IOverlay[];
-	presetOverlays: IOverlay[];
+	presetOverlays: string[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;

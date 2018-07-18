@@ -34,13 +34,14 @@
 </div>
 
 <div class="description">
-	<div dir="auto" *ngIf="overlay"
-		 [attr.tooltip-value]="description"
-		 [attr.tooltip-class]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
-		{{description}} {{overlay.sensorName | translate}}
-	</div>
+	<ansyn-hover-click *ngIf="overlay" [text]="overlayDescription"
+					   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
+		<button class="share-link" (click)="copyOverlayDescription()">
+			<span>{{overlayDescription}}</span>
+		</button>
+	</ansyn-hover-click>
 	<div *ngIf="!overlay">
-		Base Map
+		{{baseMapDescription}}
 	</div>
 </div>
 

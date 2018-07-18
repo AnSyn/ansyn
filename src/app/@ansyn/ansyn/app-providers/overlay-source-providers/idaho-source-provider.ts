@@ -136,6 +136,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.azimuth = toRadians(180 - idahoElement.properties.satAzimuth);
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
+		overlay.tag = idahoElement;
+		(<any>overlay).catalogID = idahoElement.properties.catalogID;
 
 		return overlay;
 	}

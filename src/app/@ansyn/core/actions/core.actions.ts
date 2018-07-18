@@ -7,8 +7,10 @@ import { LayoutKey } from '../models/layout-options.model';
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
 	TOGGLE_OVERLAY_FAVORITE: type('[Core] TOGGLE_FAVORITE'),
+	TOGGLE_OVERLAY_PRESET: type('[Core] TOGGLE_PRESET'),
 	SET_TOAST_MESSAGE: type('[Core] SET_TOAST_MESSAGE'),
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
+	SET_PRESET_OVERLAYS: type('[Core] SET_PRESET_OVERLAYS'),
 	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
 	ADD_ALERT_MSG: 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG: 'REMOVE_ALERT_MSG',
@@ -60,6 +62,13 @@ export class ToggleFavoriteAction implements Action {
 	}
 }
 
+export class TogglePresetAction implements Action {
+	type: string = CoreActionTypes.TOGGLE_OVERLAY_PRESET;
+
+	constructor(public payload: IOverlay) {
+	}
+}
+
 export class SetToastMessageAction implements Action {
 	type = CoreActionTypes.SET_TOAST_MESSAGE;
 
@@ -69,6 +78,13 @@ export class SetToastMessageAction implements Action {
 
 export class SetFavoriteOverlaysAction implements Action {
 	type = CoreActionTypes.SET_FAVORITE_OVERLAYS;
+
+	constructor(public payload: IOverlay[]) {
+	}
+}
+
+export class SetPresetOverlaysAction implements Action {
+	type = CoreActionTypes.SET_PRESET_OVERLAYS;
 
 	constructor(public payload: IOverlay[]) {
 	}

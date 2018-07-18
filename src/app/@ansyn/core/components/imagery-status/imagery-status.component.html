@@ -31,6 +31,14 @@
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon icon-favorites"></i>
 	</button>
+
+	<button *ngIf="overlay" class="small-icon-button set-preset"
+			[class.active2]="isPreset"
+			(click)="togglePreset()"
+			[attr.tooltip-value]="presetsButtonText"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+		<i class="icon icon-presets"></i>
+	</button>
 </div>
 
 <div class="description">

@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import {
-	CoreActionTypes, GoAdjacentOverlay, SetFavoriteOverlaysAction, SetOverlaysCriteriaAction,
-	ToggleFavoriteAction
+	CoreActionTypes, GoAdjacentOverlay, SetFavoriteOverlaysAction, SetOverlaysCriteriaAction, SetPresetOverlaysAction,
+	ToggleFavoriteAction, TogglePresetAction
 } from '@ansyn/core/actions/core.actions';
 import { DisplayOverlayFromStoreAction, LoadOverlaysAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
@@ -44,6 +44,29 @@ export class CoreAppEffects {
 
 	/**
 	 * @type Effect
+	 * @name onPreset$
+	 * @ofType TogglePresetAction
+	 * @dependencies cases
+	 * @action SetPresetOverlaysAction
+	 */
+	@Effect()
+	onPreset$: Observable<Action> = this.actions$
+		.ofType<TogglePresetAction>(CoreActionTypes.TOGGLE_OVERLAY_PRESET)
+		.withLatestFrom(this.store$.select(coreStateSelector))
+		.map(([action, { presetOverlays }]: [TogglePresetAction, ICoreState]) => {
+			const updatedPresetOverlays = [...presetOverlays];
+			const toggledPreset = updatedPresetOverlays.find(o => o.id === action.payload.id);
+			const indexOfPayload = updatedPresetOverlays.indexOf(toggledPreset);
+			if (indexOfPayload === -1) {
+				updatedPresetOverlays.push(action.payload);
+			} else {
+				updatedPresetOverlays.splice(indexOfPayload, 1);
+			}
+			return new SetPresetOverlaysAction(updatedPresetOverlays);
+		});
+
+	/**
+	 * @type Effect
 	 * @name setFavoriteOverlaysUpdateCase$
 	 * @ofType SetFavoriteOverlaysAction
 	 * @action OverlaysMarkupAction
@@ -54,6 +77,24 @@ export class CoreAppEffects {
 		.map(({ payload }: SetFavoriteOverlaysAction) => payload.map(overlay => overlay.id))
 		.map((overlayIds) => new SetMarkUp({
 				classToSet: MarkUpClass.favorites,
+				dataToSet: {
+					overlaysIds: overlayIds
+				}
+			}
+		));
+
+	/**
+	 * @type Effect
+	 * @name setPresetOverlaysUpdateCase$
+	 * @ofType SetPresetOverlaysAction
+	 * @action OverlaysMarkupAction
+	 */
+	@Effect()
+	setPresetOverlaysUpdateCase$: Observable<any> = this.actions$
+		.ofType<SetPresetOverlaysAction>(CoreActionTypes.SET_PRESET_OVERLAYS)
+		.map(({ payload }: SetPresetOverlaysAction) => payload.map(overlay => overlay.id))
+		.map((overlayIds) => new SetMarkUp({
+				classToSet: MarkUpClass.presets,
 				dataToSet: {
 					overlaysIds: overlayIds
 				}

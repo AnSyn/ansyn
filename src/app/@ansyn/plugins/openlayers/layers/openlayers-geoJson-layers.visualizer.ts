@@ -66,6 +66,10 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	constructor(protected store$: Store<any>,
 				protected http: HttpClient) {
-		super();
+		super({
+			initial: {
+				'fill-opacity': 0
+			}
+		});
 	}
 }

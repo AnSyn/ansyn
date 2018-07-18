@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 
 import { LayerComponent } from './layer.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { UpdateSelectedLayersIds } from '../../actions/layers.actions';
+import { SelectOnlyLayer, UpdateSelectedLayersIds } from '../../actions/layers.actions';
 import { AnsynCheckboxComponent } from '../../../../core/components/ansyn-checkbox/ansyn-checkbox.component';
 
 describe('LayerComponent', () => {
@@ -33,6 +33,6 @@ describe('LayerComponent', () => {
 		spyOn(store, 'dispatch');
 		component.layer = <any> { id: 'layerId' };
 		component.selectOnly();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateSelectedLayersIds(['layerId']));
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectOnlyLayer('layerId'));
 	});
 });

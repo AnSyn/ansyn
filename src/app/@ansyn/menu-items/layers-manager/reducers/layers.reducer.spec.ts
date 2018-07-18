@@ -17,7 +17,7 @@ describe('LayersReducer', () => {
 		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);
-		expect(result.layers).toEqual([staticLayer]);
+		expect(result.ids).toEqual(['staticLayerId']);
 	});
 
 });

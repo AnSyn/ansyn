@@ -33,7 +33,7 @@ import {
 } from '@ansyn/core/models/case.model';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { CoreConfig } from '@ansyn/core/models/core.config';
@@ -79,7 +79,7 @@ describe('SelectCaseAppEffects', () => {
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: ICaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
+				layers: ICaseLayersState = { activeLayersIds: [] },
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}]
@@ -113,18 +113,17 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijk)--', {
+			const expectedResult = cold('--(abcdefghij)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
-				f: new BeginLayerCollectionLoadAction(),
-				g: new SetAnnotationsLayer(layers.annotationsLayer),
-				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				i: new UpdateFacetsAction(facets),
-				j: new UpdateSelectedLayersIds([]),
-				k: new SetContextParamsAction({ contextEntities })
+				f: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				g: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				h: new UpdateFacetsAction(facets),
+				i: new UpdateSelectedLayersIds([]),
+				j: new SetContextParamsAction({ contextEntities })
 
 		});
 

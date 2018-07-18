@@ -56,19 +56,19 @@ describe('LayersEffects', () => {
 	});
 
 	it('beginLayerTreeLoad$ should dispatch LayerCollectionLoadedAction', () => {
-		let staticLayer: ILayer = {
+		const layers: ILayer[] = [{
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
 			name: 'staticLayer',
 			type: LayerType.static,
 			creationTime: new Date(),
 			layerPluginType: layerPluginType.OSM
-	};
+		}, dataLayersService.generateAnnotationLayer()];
 
-		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of([staticLayer]));
-		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction() });
+		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(layers));
+		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });
 		const expectedResults = cold('--a--', {
-			a: new LayerCollectionLoadedAction([staticLayer])
+			a: new LayerCollectionLoadedAction(layers)
 		});
 		expect(layersEffects.beginLayerTreeLoad$).toBeObservable(expectedResults);
 	});

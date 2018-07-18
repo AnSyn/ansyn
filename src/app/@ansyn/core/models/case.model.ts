@@ -113,8 +113,6 @@ export interface ICaseFacetsState {
 }
 
 export interface ICaseLayersState {
-	annotationsLayer: FeatureCollection<any>,
-	displayAnnotationsLayer?: boolean,
 	activeLayersIds: string[]
 }
 

@@ -10,6 +10,8 @@ import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
 import { LayerCollectionComponent } from '@ansyn/menu-items/layers-manager/components/layers-collection/layer-collection.component';
 import { CoreModule } from '@ansyn/core/core.module';
 import { DownloadLayersComponent } from './components/download-layers/download-layers.component';
+import { AnnotationsCollectionComponent } from './components/annotations-collection/annotations-collection.component';
+import { LayerComponent } from './components/layer/layer.component';
 
 @NgModule({
 	imports: [
@@ -18,7 +20,7 @@ import { DownloadLayersComponent } from './components/download-layers/download-l
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
 		EffectsModule.forFeature([LayersEffects])
 	],
-	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, AnnotationsCollectionComponent, LayerComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })

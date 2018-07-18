@@ -25,7 +25,6 @@ export const ToolsActionsTypes = {
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
-	ANNOTATIONS_SET_LAYER: type('ANNOTATIONS_SET_LAYER'),
 	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
@@ -33,13 +32,6 @@ export const ToolsActionsTypes = {
 	}
 
 };
-
-export class SetAnnotationsLayer implements Action {
-	type = ToolsActionsTypes.ANNOTATIONS_SET_LAYER;
-
-	constructor(public payload: FeatureCollection<any>) {
-	}
-}
 
 export class UpdateOverlaysManualProcessArgs implements Action {
 	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;

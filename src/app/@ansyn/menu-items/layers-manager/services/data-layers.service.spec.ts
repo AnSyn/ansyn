@@ -71,7 +71,7 @@ describe('DataLayersService', () => {
 		};
 
 		spyOn(http, 'get').and.returnValue(Observable.of(new Response(serverResponse)));
-		dataLayersService.getAllLayersInATree();
+		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
 		expect(http.get).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}`,
 			{ params: { from: '0', limit: '100'}}
 		);

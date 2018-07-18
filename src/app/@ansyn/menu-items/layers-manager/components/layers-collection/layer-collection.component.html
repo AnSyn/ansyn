@@ -1,34 +1,23 @@
 <div class="container">
 
 	<div class="title-row">
-		<span class="title">{{ collection.name }} Layers</span>
-		<button *ngIf="!collection.hideArrow" [@rotateArrow]="show" #downArrow class="down-arrow"
+		<span class="title">{{ collection.type }} Layers</span>
+		<button *ngIf="!collection.hideArrow"
+				[@rotateArrow]="show"
+				#downArrow class="down-arrow"
 				(click)="show = !show">
 		</button>
 	</div>
 
-	<div class="layers" *ngFor="let layer of collection.data" [@layersTrigger]="show">
-		<div class="left-side">
-			<div class="checkbox">
-				<ansyn-checkbox
-					id="checkbox{{ layer.id }}"
-					class="regular-checkbox"
-					(change)="onCheckboxClicked($event,layer)"
-					[checked]="activeLayersIds.includes(layer.id)"></ansyn-checkbox>
-				<label for="checkbox{{ layer.id }}"></label>
-			</div>
-			<div class="layer-row">
-				<div class="field-name-container">
-					<span class="field-name" [title]="layer.name">{{layer.name}}</span>
-				</div>
-				<span class="only-filter" (click)="selectOnly(layer.id)" [hidden]="collection.data.length < 2">only</span>
-			</div>
-			<button *ngIf="collection.onDownload"
-					class="download-layer"
-					(click)="collection.onDownload()">
-				<i class="icon icon-download-layer"></i>
-			</button>
-		</div>
-	</div>
+	<ansyn-layer *ngFor="let layer of collection.data"
+				 [@layersTrigger]="show"
+				 [layer]="layer"
+				 [showOnly]="collection.data.length < 2">
+				<button *ngIf="collection.onDownload"
+						class="download-layer"
+						(click)="collection.onDownload()">
+					<i class="icon icon-download-layer"></i>
+				</button>
+	</ansyn-layer>
 
 </div>

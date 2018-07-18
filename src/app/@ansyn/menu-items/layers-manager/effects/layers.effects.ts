@@ -14,8 +14,9 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { map, mergeMap } from 'rxjs/operators';
+import { ToggleLayerSelection } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 
 
@@ -34,7 +35,19 @@ export class LayersEffects {
 		.pipe(
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
-			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
+			mergeMap((layers: ILayer[]) => {
+				if ( layers.some(({ type }) => type === LayerType.annotation) ) {
+					return [
+						new LayerCollectionLoadedAction(layers)
+					]
+				}
+				const defaultAnnotationLayer = this.dataLayersService.generateAnnotationLayer();
+				return [
+					new LayerCollectionLoadedAction([ defaultAnnotationLayer, ...layers ]),
+					new ToggleLayerSelection(defaultAnnotationLayer.id)
+				];
+
+			})
 		);
 
 

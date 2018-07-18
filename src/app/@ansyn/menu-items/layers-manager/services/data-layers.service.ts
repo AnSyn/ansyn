@@ -33,9 +33,6 @@ export class DataLayersService {
 
 	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {
 		return this.storageService.getPage<ILayer>(this.config.schema, 0, 100)
-			.pipe(
-				map((result: ILayer[]) => result.some(({ type }) => type === LayerType.annotation) ? result : [ this.generateAnnotationLayer(), ...result ])
-			)
 			.catch(err => {
 				return this.errorHandlerService.httpErrorHandle(err);
 			});

@@ -8,7 +8,7 @@ import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/pro
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
@@ -80,6 +80,10 @@ export class AnsynApi {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
 
+	setOverlays(overlays: IOverlay[]) {
+		this.store.dispatch(new LoadOverlaysSuccessAction(overlays));
+	}
+
 	changeMapLayout(layout: LayoutKey) {
 		this.store.dispatch(new SetLayoutAction(layout));
 	}
@@ -87,7 +91,6 @@ export class AnsynApi {
 	loadDefaultCase() {
 		this.store.dispatch(new SelectCaseAction(this.casesConfig.defaultCase));
 	}
-
 
 	changeWindowLayout(windowLayout: IWindowLayout) {
 		this.store.dispatch(new SetWindowLayout(windowLayout));

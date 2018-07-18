@@ -31,8 +31,8 @@ export class LayerComponent {
 	constructor(protected store$: Store<any>) {
 	}
 
-	public onCheckboxClicked($event: any): void {
-		this.store$.dispatch(new SetLayerSelection({ id: this.layer.id, value: $event.target.checked }));
+	public onCheckboxClicked(checked: boolean): void {
+		this.store$.dispatch(new SetLayerSelection({ id: this.layer.id, value: checked }));
 	}
 
 	public selectOnly() {

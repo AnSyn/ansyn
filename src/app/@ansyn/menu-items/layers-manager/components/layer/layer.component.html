@@ -5,7 +5,7 @@
 			<ansyn-checkbox
 				class="regular-checkbox"
 				[id]="'checkbox' + layer?.id"
-				(change)="onCheckboxClicked($event)"
+				(change)="onCheckboxClicked($event.target.checked)"
 				[checked]="selectedLayersIds.includes(layer?.id)">
 			</ansyn-checkbox>
 		</div>

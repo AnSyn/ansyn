@@ -75,7 +75,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get overlayDescription() {
-		// {{description}} {{overlay.sensorName | translate}}
 		if (!this.overlay) {
 			return this.baseMapDescription;
 		}

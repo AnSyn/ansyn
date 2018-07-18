@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AnsynHoverClickComponent } from './ansyn-hover-click.component';
+import { AnsynPopoverComponent } from './ansyn-popover.component';
 
-describe('AnsynHoverClickComponent', () => {
-	let component: AnsynHoverClickComponent;
-	let fixture: ComponentFixture<AnsynHoverClickComponent>;
+describe('AnsynPopoverComponent', () => {
+	let component: AnsynPopoverComponent;
+	let fixture: ComponentFixture<AnsynPopoverComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnsynHoverClickComponent]
+			declarations: [AnsynPopoverComponent]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(AnsynHoverClickComponent);
+		fixture = TestBed.createComponent(AnsynPopoverComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

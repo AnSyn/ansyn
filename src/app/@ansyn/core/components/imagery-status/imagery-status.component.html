@@ -34,12 +34,12 @@
 </div>
 
 <div class="description">
-	<ansyn-hover-click *ngIf="overlay" [text]="overlayDescription"
+	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
 					   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription}}</span>
 		</button>
-	</ansyn-hover-click>
+	</ansyn-popover>
 	<div *ngIf="!overlay">
 		{{baseMapDescription}}
 	</div>

@@ -7,12 +7,12 @@
 
 <div class="status-bar" [class.separated-state]="!hideOverlay">
 	<div class="selected-case">
-		<ansyn-hover-click [text]="selectedCaseName" [icon]="icon">>
+		<ansyn-popover [text]="selectedCaseName" [icon]="icon">>
 			<button class="share-link" (click)="copyLink()">
 				<i class="icon-status-bar-share-link"></i>
 				<span>Share link</span>
 			</button>
-		</ansyn-hover-click>
+		</ansyn-popover>
 	</div>
 	<div class="status">
 		<ansyn-combo-boxes></ansyn-combo-boxes>

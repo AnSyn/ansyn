@@ -12,7 +12,6 @@ import { TreeviewModule } from 'ngx-treeview';
 import { TreeViewComponent } from '@ansyn/status-bar/components/tree-view/tree-view.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
-import { SelectedCaseBarComponent } from './components/selected-case-bar/selected-case-bar.component';
 import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 
@@ -24,7 +23,7 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, SelectedCaseBarComponent, ComboBoxTriggerComponent, ClickOutsideDirective],
+	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, ComboBoxTriggerComponent, ClickOutsideDirective],
 	providers: [
 		{
 			provide: ORIENTATIONS,

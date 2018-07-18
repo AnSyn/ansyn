@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-	selector: 'ansyn-hover-click',
-	templateUrl: './ansyn-hover-click.component.html',
-	styleUrls: ['./ansyn-hover-click.component.less']
+	selector: 'ansyn-popover',
+	templateUrl: './ansyn-popover.component.html',
+	styleUrls: ['./ansyn-popover.component.less']
 })
-export class AnsynHoverClickComponent {
+export class AnsynPopoverComponent {
 
 	@Input() readonly icon: string;
 

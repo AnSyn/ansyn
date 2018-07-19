@@ -8,7 +8,12 @@ import { ICase } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
+import {
+	selectFavoriteOverlays,
+	selectLayout,
+	selectOverlaysCriteria,
+	selectPresetOverlays
+} from '@ansyn/core/reducers/core.reducer';
 import {
 	selectDisplayAnnotationsLayer,
 	selectSelectedLayersIds
@@ -25,6 +30,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
+		this.store$.select(selectPresetOverlays),
 		this.store$.select(selectComboBoxesProperties),
 		this.store$.select(selectAnnotationLayer),
 		this.store$.select(selectDisplayAnnotationsLayer),
@@ -52,6 +58,7 @@ export class UpdateCaseAppEffects {
 				activeLayersIds,
 				facets,
 				favoriteOverlays,
+				presetOverlays,
 				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				annotationsLayer,
 				displayAnnotationsLayer,
@@ -87,6 +94,7 @@ export class UpdateCaseAppEffects {
 						displayAnnotationsLayer
 					},
 					favoriteOverlays,
+					presetOverlays,
 					region,
 					dataInputFilters,
 					time,

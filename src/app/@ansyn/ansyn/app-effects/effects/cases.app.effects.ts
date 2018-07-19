@@ -8,7 +8,8 @@ import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actio
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
-	SelectCaseAction, SelectDilutedCaseAction
+	SelectCaseAction,
+	SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
@@ -62,8 +63,10 @@ export class CasesAppEffects {
 			let resultObservable = Observable.of([]);
 
 			const observablesArray = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
-				.map((mapData) => mapData.data.overlay)
-				.concat(caseValue.state.favoriteOverlays), 'id')
+					.map((mapData) => mapData.data.overlay)
+					.concat(caseValue.state.favoriteOverlays,
+						caseValue.state.presetOverlays || [])
+				, 'id')
 				.map(({ id, sourceType }: IOverlay) => this.overlaysService.getOverlayById(id, sourceType));
 
 			if (observablesArray.length > 0) {
@@ -75,6 +78,9 @@ export class CasesAppEffects {
 				.map((mapOverlay: Map<string, IOverlay>) => {
 					caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
 						.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
+
+					caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
+						.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
 
 					caseValue.state.maps.data
 						.filter(mapData => Boolean(Boolean(mapData.data.overlay)))

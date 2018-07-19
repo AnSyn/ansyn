@@ -107,6 +107,12 @@ export class CasesService {
 					sourceType: overlay.sourceType
 				}));
 			}
+			if (Array.isArray(dilutedState.presetOverlays)) {
+				dilutedState.presetOverlays = dilutedState.presetOverlays.map(overlay => ({
+					id: overlay.id,
+					sourceType: overlay.sourceType
+				}));
+			}
 
 			if (Array.isArray(dilutedState.maps.data)) {
 				dilutedState.maps.data.forEach((mapData: any) => {

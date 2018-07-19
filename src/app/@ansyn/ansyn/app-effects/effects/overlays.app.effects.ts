@@ -31,7 +31,7 @@ import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '@ansyn/imagery/model/base-map-source-provider';
 import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
@@ -220,6 +220,12 @@ export class OverlaysAppEffects {
 			this.getPositionFromCommunicator,
 			this.getOverlayWithNewThumbnail,
 			this.getHoveredOverlayAction
+		)
+		.pipe(
+			catchError(err => {
+				console.error(err);
+				return Observable.of(err);
+			})
 		);
 
 	@Effect()

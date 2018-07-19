@@ -14,7 +14,12 @@ import {
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/core/actions/core.actions';
-import { DisplayOverlayFromStoreAction, LoadOverlaysAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	LoadOverlaysAction,
+	SetMarkUp
+} from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -169,19 +174,19 @@ export class CoreAppEffects {
 	@Effect()
 	onNextPresetOverlay$: Observable<any> = this.actions$
 		.ofType<GoNextPresetOverlay>(CoreActionTypes.GO_NEXT_PRESET_OVERLAY)
-		.withLatestFrom(this.store$.select(mapStateSelector), (Action , mapState: IMapState): string => {
+		.withLatestFrom(this.store$.select(mapStateSelector), (Action , mapState: IMapState): {overlayId: string, mapId: string} => {
 			const activeMap = MapFacadeService.activeMap(mapState);
-			return activeMap.data.overlay && activeMap.data.overlay.id;
+			return {overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId};
 		})
-		.withLatestFrom(this.store$.select(coreStateSelector), (overlayId: string, { presetOverlays }): IOverlay => {
+		.withLatestFrom(this.store$.select(coreStateSelector), ({overlayId , mapId}, { presetOverlays }): {overlay: IOverlay, mapId: string} => {
 			const length = presetOverlays.length;
 			if (length === 0) { return }
 			const index = presetOverlays.findIndex(overlay => overlay.id === overlayId),
 				nextIndex = index === -1 ? 0 : index >= length - 1 ? 0 : index + 1;
-			return presetOverlays[nextIndex];
+			return {overlay: presetOverlays[nextIndex], mapId};
 		})
 		.filter(Boolean)
-		.map(overlay => new DisplayOverlayFromStoreAction(overlay));
+		.map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId }));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

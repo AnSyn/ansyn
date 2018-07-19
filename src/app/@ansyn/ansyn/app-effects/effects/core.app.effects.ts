@@ -22,6 +22,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 
 @Injectable()
 export class CoreAppEffects {
@@ -61,7 +62,7 @@ export class CoreAppEffects {
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([action, { presetOverlays }]: [TogglePresetOverlayAction, ICoreState]) => {
 			const updatedPresetOverlays = [...presetOverlays];
-			const toggledPreset = updatedPresetOverlays.find(o => o === action.payload);
+			const toggledPreset = updatedPresetOverlays.find(o => o.id === action.payload.id);
 			const indexOfPayload = updatedPresetOverlays.indexOf(toggledPreset);
 			if (indexOfPayload === -1) {
 				updatedPresetOverlays.push(action.payload);
@@ -98,7 +99,7 @@ export class CoreAppEffects {
 	@Effect()
 	setPresetOverlaysUpdateCase$: Observable<any> = this.actions$
 		.ofType<SetPresetOverlaysAction>(CoreActionTypes.SET_PRESET_OVERLAYS)
-		.map(({ payload }: SetPresetOverlaysAction) => payload)
+		.map(({ payload }: SetPresetOverlaysAction) => payload.map(overlay => overlay.id))
 		.map((overlayIds) => new SetMarkUp({
 				classToSet: MarkUpClass.presets,
 				dataToSet: {
@@ -172,15 +173,15 @@ export class CoreAppEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return activeMap.data.overlay && activeMap.data.overlay.id;
 		})
-		.withLatestFrom(this.store$.select(coreStateSelector), (overlayId: string, { presetOverlays }): string => {
+		.withLatestFrom(this.store$.select(coreStateSelector), (overlayId: string, { presetOverlays }): IOverlay => {
 			const length = presetOverlays.length;
 			if (length === 0) { return }
-			const index = presetOverlays.indexOf(overlayId),
+			const index = presetOverlays.findIndex(overlay => overlay.id === overlayId),
 				nextIndex = index === -1 ? 0 : index >= length - 1 ? 0 : index + 1;
 			return presetOverlays[nextIndex];
 		})
 		.filter(Boolean)
-		.map(id => new DisplayOverlayFromStoreAction({ id }));
+		.map(overlay => new DisplayOverlayFromStoreAction(overlay));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

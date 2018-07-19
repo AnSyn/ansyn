@@ -73,7 +73,7 @@ export class ToggleFavoriteAction implements Action {
 export class TogglePresetOverlayAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_PRESET;
 
-	constructor(public payload: string) {
+	constructor(public payload: IOverlay) {
 	}
 }
 
@@ -94,7 +94,7 @@ export class SetFavoriteOverlaysAction implements Action {
 export class SetPresetOverlaysAction implements Action {
 	type = CoreActionTypes.SET_PRESET_OVERLAYS;
 
-	constructor(public payload: string[]) {
+	constructor(public payload: IOverlay[]) {
 	}
 }
 

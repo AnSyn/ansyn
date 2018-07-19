@@ -5,7 +5,11 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { cold, hot } from 'jasmine-marbles';
-import { SetFavoriteOverlaysAction, ToggleFavoriteAction } from '@ansyn/core/actions/core.actions';
+import {
+	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
+} from '@ansyn/core/actions/core.actions';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { ICase } from '@ansyn/core/models/case.model';
@@ -84,6 +88,24 @@ describe('CoreAppEffects', () => {
 		});
 	});
 
+	describe('onPreset$ should toggle preset id and update presetOverlays value', () => {
+		it('not exist in presets ', () => {
+			const preset = overlays1to4[3];
+			coreState.presetOverlays = overlays1to3;
+			actions = hot('--a--', { a: new TogglePresetOverlayAction(preset) });
+			const expectedResult = cold('--b--', { b: new SetPresetOverlaysAction(overlays1to4) });
+			expect(coreAppEffects.onPreset$).toBeObservable(expectedResult);
+		});
+
+		it('exist in presets ', () => {
+			const preset = overlays1to4[3];
+			coreState.presetOverlays = overlays1to4;
+			actions = hot('--a--', { a: new TogglePresetOverlayAction(preset) });
+			const expectedResult = cold('--b--', { b: new SetPresetOverlaysAction(overlays1to3) });
+			expect(coreAppEffects.onPreset$).toBeObservable(expectedResult);
+		});
+	});
+
 	it('setFavoriteOverlaysUpdateCase$ should update selected case and overlay markup', () => {
 		casesState.selectedCase = <ICase> { state: { favoriteOverlays: overlays1to3 } };
 		const markupsResult = {
@@ -99,5 +121,23 @@ describe('CoreAppEffects', () => {
 		});
 
 		expect(coreAppEffects.setFavoriteOverlaysUpdateCase$).toBeObservable(expectedResult);
+	});
+
+
+	it('setPresetOverlaysUpdateCase$ should update selected case and overlay markup', () => {
+		casesState.selectedCase = <ICase> { state: { presetOverlays: overlays1to3 } };
+		const markupsResult = {
+			classToSet: MarkUpClass.presets,
+			dataToSet: {
+				overlaysIds: overlays1to3.map(overlay => overlay.id)
+			}
+		};
+		actions = hot('--a--', { a: new SetPresetOverlaysAction(overlays1to3) });
+
+		const expectedResult = cold('--b--', {
+			b: new SetMarkUp(markupsResult)
+		});
+
+		expect(coreAppEffects.setPresetOverlaysUpdateCase$).toBeObservable(expectedResult);
 	});
 });

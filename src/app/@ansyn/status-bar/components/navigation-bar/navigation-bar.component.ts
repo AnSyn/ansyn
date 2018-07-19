@@ -19,6 +19,8 @@ export class NavigationBarComponent {
 		return this.statusBarConfig.toolTips || {};
 	}
 
+	private _nextPresetOverlayKeys = 'fFכ'.split("").map(char => char.charCodeAt(0));
+
 	@HostListener('window:keyup', ['$event'])
 	onkeyup($event: KeyboardEvent) {
 		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
@@ -53,7 +55,7 @@ export class NavigationBarComponent {
 			return;
 		}
 
-		if ([70, 102].indexOf($event.which) !== -1 ) { // F or f
+		if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1 ) {
 			this.clickGoNextPresetOverlay();
 		}
 	}

@@ -31,6 +31,11 @@ const mockAnsynWelcomeNotification = MockComponent({
 	selector: 'ansyn-welcome-notification'
 });
 
+const mockAnsynPopoverComponent = MockComponent({
+	selector: 'ansyn-popover',
+	inputs: ['text', 'icon', 'popDirection']
+});
+
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
 	let fixture: ComponentFixture<ImageriesManagerComponent>;
@@ -57,6 +62,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,
 				mockAnsynWelcomeNotification,
+				mockAnsynPopoverComponent,
 				ImageryStatusComponent,
 				AlertComponentDirective
 			]

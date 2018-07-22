@@ -82,9 +82,7 @@ describe('SelectCaseAppEffects', () => {
 				presetOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
-					activeLayersIds: [],
-					displayAnnotationsLayer: false,
-					annotationsLayer: <any> {}
+					activeLayersIds: []
 				},
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
@@ -120,19 +118,18 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijkl)--', {
+			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
 				f: new SetPresetOverlaysAction(presetOverlays),
-				g: new BeginLayerCollectionLoadAction(),
-				h: new SetAnnotationsLayer(layers.annotationsLayer),
-				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				j: new UpdateFacetsAction(facets),
-				k: new UpdateSelectedLayersIds([]),
-				l: new SetContextParamsAction({ contextEntities })
+				g: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				i: new UpdateFacetsAction(facets),
+				j: new UpdateSelectedLayersIds([]),
+				k: new SetContextParamsAction({ contextEntities })
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

@@ -20,7 +20,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.ac
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
@@ -34,7 +34,7 @@ export class SelectCaseAppEffects {
 	 * @type Effect
 	 * @name selectCase$
 	 * @ofType SelectCaseAction
-	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, SetAnnotationsLayer, ToggleDisplayAnnotation
+	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, ToggleDisplayAnnotation
 	 */
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
@@ -68,7 +68,7 @@ export class SelectCaseAppEffects {
 			time.to = new Date(time.to);
 		}
 		// layers
-		const { annotationsLayer, activeLayersIds } = state.layers;
+		const { activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
 		return [

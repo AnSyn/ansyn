@@ -19,7 +19,7 @@ import {
 	selectSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectAnnotationLayer, selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
@@ -32,7 +32,6 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectPresetOverlays),
 		this.store$.select(selectComboBoxesProperties),
-		this.store$.select(selectAnnotationLayer),
 		this.store$.select(selectDisplayAnnotationsLayer),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMapsList),
@@ -60,7 +59,6 @@ export class UpdateCaseAppEffects {
 				favoriteOverlays,
 				presetOverlays,
 				{ timeFilter, orientation }, /* -> comboBoxesProperties */
-				annotationsLayer,
 				displayAnnotationsLayer,
 				activeMapId,
 				mapsList,
@@ -89,9 +87,7 @@ export class UpdateCaseAppEffects {
 						activeMapId
 					},
 					layers: {
-						activeLayersIds,
-						annotationsLayer,
-						displayAnnotationsLayer
+						activeLayersIds
 					},
 					favoriteOverlays,
 					presetOverlays,

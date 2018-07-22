@@ -1,25 +1,15 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
-import {
-	BackToWorldView,
-	ToggleFavoriteAction,
-	ToggleMapLayersAction,
-	TogglePresetOverlayAction
-} from '../../actions/core.actions';
-import {
-	AlertMsg,
-	coreStateSelector,
-	ICoreState,
-	selectFavoriteOverlays,
-	selectPresetOverlays
-} from '../../reducers/core.reducer';
+import { BackToWorldView, SetToastMessageAction, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
+import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '../../utils/time';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { copyFromContent } from '../../utils/clipboard';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -36,9 +26,18 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@Input() set overlay(overlay: IOverlay) {
 		this._overlay = overlay;
+		if (!this._overlay) {
+			this.translatedOverlaySensorName = '';
+		} else {
+			this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
+				this.translatedOverlaySensorName = res;
+			});
+		}
 		this.updateFavoriteStatus();
 		this.updatePresetStatus();
 	};
+
+	translatedOverlaySensorName = '';
 
 	get overlay() {
 		return this._overlay;
@@ -75,6 +74,23 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	get description() {
 		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) : null;
+	}
+
+	get baseMapDescription() {
+		return 'Base Map';
+	}
+
+	get overlayDescription() {
+		if (!this.overlay) {
+			return this.baseMapDescription;
+		}
+		const catalogId = (<any>this.overlay).catalogID ? (' catalogId ' + (<any>this.overlay).catalogID) : '';
+		return `${this.description} ${this.translatedOverlaySensorName}${catalogId}`;
+	}
+
+	copyOverlayDescription() {
+		copyFromContent(this.overlayDescription);
+		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
 	}
 
 	get noGeoRegistration() {

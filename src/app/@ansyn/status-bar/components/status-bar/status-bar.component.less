@@ -28,12 +28,39 @@
 		margin-left: auto;
 		justify-content: space-between;
 		border-left: 2px solid transparent;
+
+		.selected-case {
+			button.share-link {
+				padding: 5px;
+				background: black;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				border: solid black 1px;
+				cursor: pointer;
+				transition: .3s;
+				display: flex;
+				align-items: center;
+				height: 34px;
+
+				span.icon-status-bar-share-link {
+					margin-right: 3px;
+					font-size: 18px;
+				}
+
+				&:hover {
+					border-top-color: white;
+					border-bottom-color: white;
+				}
+			}
+		}
+
 		.selected-case, .status {
 			width: 100%;
 			height: 100%;
 			display: flex;
 		}
-		.status  {
+		.status {
 			justify-content: flex-end;
 		}
 		&.separated-state {

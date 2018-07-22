@@ -28,6 +28,7 @@ export interface IOverlay extends IDilutedOverlay {
 	approximateTransform?: any;
 	csmState?: string;
 	isGeoRegistered: boolean;
+	tag?: any; // original metadata
 }
 
 export interface IOverlaysCriteria {

@@ -1,0 +1,8 @@
+<div class="block pop-hover">
+	<i *ngIf="icon" [ngClass]="icon"></i>
+	<span>{{text}}</span>
+
+	<div class="pop-content" [ngClass]="popDirection" (click)="$event.stopPropagation()">
+		<ng-content></ng-content>
+	</div>
+</div>

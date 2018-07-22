@@ -78,6 +78,29 @@
 			white-space: nowrap;
 			overflow: hidden;
 		}
+
+		button.share-link {
+			padding: 5px;
+			background: black;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			border: solid black 1px;
+			cursor: pointer;
+			transition: .3s;
+			display: flex;
+			align-items: center;
+
+			span.icon-status-bar-share-link {
+				margin-right: 3px;
+				font-size: 18px;
+			}
+
+			&:hover {
+				border-top-color: white;
+				border-bottom-color: white;
+			}
+		}
 	}
 
 	.notification {

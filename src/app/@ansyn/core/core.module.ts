@@ -20,6 +20,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MissingTranslationLogging } from './utils/missing-translation-logging';
 import { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
+import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -56,6 +57,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		WelcomeNotificationComponent,
 		SliderCheckboxComponent,
 		AnsynModalComponent,
+		AnsynPopoverComponent,
 		TranslateModule
 	],
 	declarations:  [
@@ -65,7 +67,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		ToastComponent,
 		WelcomeNotificationComponent,
 		SliderCheckboxComponent,
-		AnsynModalComponent
+		AnsynModalComponent,
+		AnsynPopoverComponent
 	]
 })
 

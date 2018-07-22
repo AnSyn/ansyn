@@ -1,4 +1,4 @@
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
@@ -296,6 +296,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		overlay.azimuth = toRadians(element.properties.view_angle);
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
+		overlay.tag = element;
 
 		return overlay;
 	}

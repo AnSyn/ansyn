@@ -32,7 +32,6 @@ export interface IToolsState {
 	annotationProperties: IAnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
-	annotationsLayer: FeatureCollection<any>
 }
 
 export const toolsInitialState: IToolsState = {
@@ -48,8 +47,7 @@ export const toolsInitialState: IToolsState = {
 		fillColor: '#ffffff'
 	},
 	manualImageProcessingParams: undefined,
-	overlaysManualProcessArgs: {},
-	annotationsLayer: <FeatureCollection<any>> turf.featureCollection([])
+	overlaysManualProcessArgs: {}
 };
 
 export const toolsFeatureKey = 'tools';
@@ -142,9 +140,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_SUB_MENU:
 			return { ...state, subMenu: action.payload };
 
-		case ToolsActionsTypes.ANNOTATIONS_SET_LAYER:
-			return { ...state, annotationsLayer: action.payload };
-
 		default:
 			return state;
 
@@ -153,6 +148,5 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
 export const selectOverlaysManualProcessArgs = createSelector(toolsStateSelector, (tools: IToolsState) => tools.overlaysManualProcessArgs);
-export const selectAnnotationLayer = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationsLayer );
 export const selectAnnotationMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationMode);
 export const selectAnnotationProperties = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationProperties);

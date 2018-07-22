@@ -125,6 +125,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.azimuth = toRadians(180);
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
+		overlay.tag = openAerialElement;
 
 		return overlay;
 	}

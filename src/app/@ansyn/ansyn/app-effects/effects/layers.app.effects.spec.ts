@@ -54,8 +54,6 @@ describe('LayersAppEffects', () => {
 		casesState.selectedCase = <any> {
 			state: {
 				layers: {
-					displayAnnotationsLayer: false,
-					annotationsLayer: <any>''
 				}
 			}
 		};

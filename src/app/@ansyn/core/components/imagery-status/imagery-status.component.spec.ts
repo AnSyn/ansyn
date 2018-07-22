@@ -7,7 +7,8 @@ import { LoggerConfig } from '../../models/logger.config';
 import { CoreModule } from '../../core.module';
 import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
-
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY } from 'rxjs/internal/observable/empty';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -16,7 +17,10 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [CoreModule, HttpClientModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
-			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: ALERTS, useValue: [] }]
+			providers: [
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: ALERTS, useValue: [] },
+				{ provide: TranslateService, useValue: { get: () => EMPTY, setDefaultLang(arg) {} }}]
 		}).compileComponents();
 	}));
 

@@ -2,12 +2,9 @@ import { ILayerState, selectLayers } from '@ansyn/menu-items/layers-manager/redu
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { groupBy } from 'lodash';
-import { saveAs } from 'file-saver';
-import { map, take } from 'rxjs/internal/operators';
-import { selectAnnotationLayer } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { tap } from 'rxjs/operators';
+import { map } from 'rxjs/internal/operators';
 import { ILayerCollection } from '../layers-collection/layer-collection.component';
 
 
@@ -23,24 +20,14 @@ export class LayersManagerComponent {
 	public layers$: Observable<any> = this.store
 		.pipe(
 			select(selectLayers),
-			map((layers) => {
-				const annotations: ILayer = {
-					id: LayerType.annotation,
-					creationTime: new Date(),
-					layerPluginType: layerPluginType.Annotations,
-					name: 'Annotation',
-					type: LayerType.annotation
-				};
-				return [annotations, ...layers];
-			}),
 			map((layers: ILayer[]): ILayerCollection[] => {
 				const typeGroupedLayers = groupBy(layers, l => l.type);
 				return Object.keys(typeGroupedLayers)
-					.map((name): ILayerCollection => ({
-						name,
-						onDownload: name === LayerType.annotation ? this.downloadAnnotations.bind(this) : null,
-						data: typeGroupedLayers[name],
-						hideArrow: name === LayerType.annotation
+					.map((type: LayerType): ILayerCollection => ({
+						type,
+						onDownload: type === LayerType.annotation ? this.downloadAnnotations.bind(this) : null,
+						data: typeGroupedLayers[type],
+						hideArrow: type === LayerType.annotation
 					}));
 			})
 		);

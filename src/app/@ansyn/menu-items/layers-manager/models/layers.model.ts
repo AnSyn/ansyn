@@ -19,4 +19,5 @@ export interface ILayer extends IEntity {
 	type: LayerType;
 	layerPluginType: layerPluginType;
 	data?: any;
+	caseId?: string;
 }

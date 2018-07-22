@@ -1,6 +1,8 @@
 import { ILayerState } from '../reducers/layers.reducer';
 import {
-	BeginLayerCollectionLoadAction, LayerCollectionLoadedAction, LayersActions,
+	BeginLayerCollectionLoadAction,
+	LayerCollectionLoadedAction,
+	LayersActions,
 	LayersActionTypes
 } from '../actions/layers.actions';
 import 'rxjs/add/operator/map';
@@ -16,8 +18,7 @@ import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { mergeMap } from 'rxjs/operators';
-import { SetLayerSelection } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-
+import { SetActiveAnnotationLayer, SetLayerSelection } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 
 @Injectable()
@@ -36,17 +37,20 @@ export class LayersEffects {
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
 			mergeMap((layers: ILayer[]) => {
-				if ( layers.some(({ type }) => type === LayerType.annotation) ) {
+				const annotationLayer = layers.find(({ type }) => type === LayerType.annotation);
+				if (annotationLayer) {
 					return [
-						new LayerCollectionLoadedAction(layers)
-					]
+						new LayerCollectionLoadedAction(layers),
+						new SetActiveAnnotationLayer(annotationLayer.id)
+					];
 				}
 				const defaultAnnotationLayer = this.dataLayersService.generateAnnotationLayer();
-				return [
-					new LayerCollectionLoadedAction([ defaultAnnotationLayer, ...layers ]),
-					new SetLayerSelection({ id: defaultAnnotationLayer.id, value: true })
-				];
 
+				return [
+					new LayerCollectionLoadedAction([defaultAnnotationLayer, ...layers]),
+					new SetLayerSelection({ id: defaultAnnotationLayer.id, value: true }),
+					new SetActiveAnnotationLayer(defaultAnnotationLayer.id)
+				];
 			})
 		);
 

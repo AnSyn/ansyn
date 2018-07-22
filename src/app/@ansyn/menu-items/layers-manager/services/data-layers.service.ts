@@ -20,12 +20,12 @@ export class DataLayersService {
 				@Inject(layersConfig) public config: ILayersManagerConfig) {
 	}
 
-	generateAnnotationLayer(): ILayer {
+	generateAnnotationLayer(name = 'Default'): ILayer {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
 			layerPluginType: layerPluginType.Annotations,
-			name: 'Default',
+			name,
 			type: LayerType.annotation,
 			data: featureCollection([])
 		};

@@ -6,7 +6,9 @@ import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
+	GoNextPresetOverlay,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/core/actions/core.actions';
@@ -15,7 +17,7 @@ import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/ma
 import { ICase } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
 
 function mockOverlay(id: string): IOverlay {
@@ -140,4 +142,46 @@ describe('CoreAppEffects', () => {
 
 		expect(coreAppEffects.setPresetOverlaysUpdateCase$).toBeObservable(expectedResult);
 	});
+
+	describe('onNextPresetOverlay$ should return an action which displays the next preset overlay', () => {
+		beforeEach(() => {
+			mapsState.activeMapId = 'map_1';
+			mapsState.mapsList = [{
+				id: 'map_1', data: {
+					position: null
+				}, mapType: null, sourceType: null, flags: null
+			}];
+			coreState.presetOverlays = overlays1to3;
+		});
+		it('if no preset overlay currently displays, should display presetOverlays[0]', () => {
+			actions = hot('--a--', { a: new GoNextPresetOverlay() });
+
+			const expectedResult = cold('--b--', {
+				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[0], mapId: 'map_1' })
+			});
+
+			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
+		});
+		it('if presetOverlays[n] overlay currently displays, should display presetOverlays[n+1]', () => {
+			mapsState.mapsList[0].data.overlay = coreState.presetOverlays[0];
+			actions = hot('--a--', { a: new GoNextPresetOverlay() });
+
+			const expectedResult = cold('--b--', {
+				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[1], mapId: 'map_1' })
+			});
+
+			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
+		});
+		it('if presetOverlays[last] overlay currently displays, should display presetOverlays[0]', () => {
+			mapsState.mapsList[0].data.overlay = coreState.presetOverlays[2];
+			actions = hot('--a--', { a: new GoNextPresetOverlay() });
+
+			const expectedResult = cold('--b--', {
+				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[0], mapId: 'map_1' })
+			});
+
+			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
+		});
+	});
+
 });

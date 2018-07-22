@@ -1,7 +1,13 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
-import { BackToWorldView, SetToastMessageAction, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
+import {
+	BackToWorldView,
+	SetToastMessageAction,
+	ToggleFavoriteAction,
+	ToggleMapLayersAction,
+	TogglePresetOverlayAction
+} from '../../actions/core.actions';
 import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';

@@ -77,7 +77,7 @@ export class SelectCaseAppEffects {
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters}, { noInitialSearch }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
-			new SetPresetOverlaysAction(presetOverlays.map(this.parseOverlay.bind(this))),
+			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),

@@ -180,9 +180,9 @@ export class CoreAppEffects {
 		})
 		.withLatestFrom(this.store$.select(coreStateSelector), ({overlayId , mapId}, { presetOverlays }): {overlay: IOverlay, mapId: string} => {
 			const length = presetOverlays.length;
-			if (length === 0) { return }
-			const index = presetOverlays.findIndex(overlay => overlay.id === overlayId),
-				nextIndex = index === -1 ? 0 : index >= length - 1 ? 0 : index + 1;
+			if (length === 0) { return; }
+			const index = presetOverlays.findIndex(overlay => overlay.id === overlayId);
+			const nextIndex = index === -1 ? 0 : index >= length - 1 ? 0 : index + 1;
 			return {overlay: presetOverlays[nextIndex], mapId};
 		})
 		.filter(Boolean)

@@ -7,7 +7,6 @@ import { groupBy } from 'lodash';
 import { map } from 'rxjs/internal/operators';
 import { ILayerCollection } from '../layers-collection/layer-collection.component';
 
-
 @Component({
 	selector: 'ansyn-layer-managers',
 	templateUrl: './layers-manager.component.html',
@@ -15,7 +14,7 @@ import { ILayerCollection } from '../layers-collection/layer-collection.componen
 })
 
 export class LayersManagerComponent {
-	showModal: boolean;
+
 
 	public layers$: Observable<any> = this.store
 		.pipe(
@@ -25,18 +24,12 @@ export class LayersManagerComponent {
 				return Object.keys(typeGroupedLayers)
 					.map((type: LayerType): ILayerCollection => ({
 						type,
-						onDownload: type === LayerType.annotation ? this.downloadAnnotations.bind(this) : null,
-						data: typeGroupedLayers[type],
-						hideArrow: type === LayerType.annotation
+						data: typeGroupedLayers[type]
 					}));
 			})
 		);
 
 	constructor(protected store: Store<ILayerState>) {
-	}
-
-	downloadAnnotations() {
-		this.showModal = true;
 	}
 
 }

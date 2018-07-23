@@ -1,7 +1,10 @@
 import { ILayerState } from '../reducers/layers.reducer';
 import {
-	BeginLayerCollectionLoadAction, LayerCollectionLoadedAction, LayersActions,
-	LayersActionTypes
+	AddLayer,
+	BeginLayerCollectionLoadAction,
+	LayerCollectionLoadedAction,
+	LayersActions,
+	LayersActionTypes, UpdateLayer
 } from '../actions/layers.actions';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -10,14 +13,16 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
-import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { Observable, EMPTY, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { SetLayerSelection } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-
+import { catchError, filter, map, switchMap, withLatestFrom } from 'rxjs/internal/operators';
+import { DataLayersService } from '../services/data-layers.service';
+import { ILayer } from '../models/layers.model';
+import { layer } from 'openlayers';
+import { selectAutoSave } from '../../../core/reducers/core.reducer';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 
 @Injectable()
@@ -35,24 +40,44 @@ export class LayersEffects {
 		.pipe(
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
-			mergeMap((layers: ILayer[]) => {
-				if ( layers.some(({ type }) => type === LayerType.annotation) ) {
-					return [
-						new LayerCollectionLoadedAction(layers)
-					]
-				}
-				const defaultAnnotationLayer = this.dataLayersService.generateAnnotationLayer();
-				return [
-					new LayerCollectionLoadedAction([ defaultAnnotationLayer, ...layers ]),
-					new SetLayerSelection({ id: defaultAnnotationLayer.id, value: true })
-				];
-
-			})
+			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
 		);
 
+	@Effect({ dispatch: false })
+	addLayer$ = this.actions$.pipe(
+		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
+		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
+		filter(([action, autoSave]) => autoSave),
+		mergeMap(([action]) => this.dataLayersService.addLayer(action.payload))
+	);
+
+	@Effect({ dispatch: false })
+	updateLayer$ = this.actions$.pipe(
+		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
+		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
+		filter(([action, autoSave]) => autoSave),
+		mergeMap(([action]) => this.dataLayersService.updateLayer(action.payload)
+			.pipe(
+				catchError(() => of(true))
+			)
+		)
+	);
+
+	@Effect({ dispatch: false })
+	removeLayer$ = this.actions$.pipe(
+		ofType<UpdateLayer>(LayersActionTypes.REMOVE_LAYER),
+		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
+		filter(([action, autoSave]) => autoSave),
+		mergeMap(([action]) => this.dataLayersService.removeLayer(action.payload)
+			.pipe(
+				catchError(() => of(true))
+			)
+		)
+	);
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,
+				protected errorHandlerService: ErrorHandlerService,
 				protected store$: Store<ILayerState>) {
 	}
 }

@@ -18,10 +18,27 @@
 		left: 0;
 		display: flex;
 		flex-direction: column;
+		z-index: 1;
 	}
 	.content {
 		transition: .5s;
+		margin: 50px 0;
 		transform: translateY(-100%);
 		align-self: center;
+		button.close {
+			position: absolute;
+			right: 0;
+			top: 0;
+			border: none;
+			background: transparent;
+			cursor: pointer;
+			outline: none;
+			color: #2e2d46;
+			z-index: 1;
+			&:hover {
+				font-weight: bold;
+				text-decoration: underline;
+			}
+		}
 	}
 }

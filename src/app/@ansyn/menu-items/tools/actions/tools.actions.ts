@@ -29,8 +29,8 @@ export const ToolsActionsTypes = {
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
-	}
-
+	},
+	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER'
 };
 
 export class UpdateOverlaysManualProcessArgs implements Action {

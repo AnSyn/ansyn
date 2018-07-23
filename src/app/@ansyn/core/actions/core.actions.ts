@@ -19,7 +19,8 @@ export const CoreActionTypes = {
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
-	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT'
+	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
+	SET_AUTO_SAVE: 'SET_AUTO_SAVE'
 };
 
 export type CoreActions =
@@ -140,11 +141,15 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 	}
 }
 
-
-
 export class UpdateOverlaysCountAction {
 	type = CoreActionTypes.UPDATE_OVERLAY_COUNT;
 	constructor(public payload: number) {
 
+	}
+}
+
+export class SetAutoSave implements Action  {
+	readonly type = CoreActionTypes.SET_AUTO_SAVE;
+	constructor(public payload: boolean) {
 	}
 }

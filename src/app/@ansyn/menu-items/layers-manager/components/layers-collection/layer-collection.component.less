@@ -3,8 +3,35 @@
 div.container {
 	padding: 0 0 20px 0;
 
+	&.Annotation {
+		button.down-arrow {
+			display: none;
+		}
+
+		div.title-row {
+			button.add-layer {
+				display: block;
+			}
+		}
+
+		ansyn-layer {
+			&:hover {
+				background: rgba(255, 255, 255, 0.4);
+				ansyn-layer-menu {
+					visibility: visible;
+					transform: translateX(0);
+					opacity: 1;
+					pointer-events: auto;
+				}
+			}
+		}
+	}
+
 	div.title-row {
 		padding: 5px 0 10px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
 
 		span.title {
 			font-family: Open Sans;
@@ -33,6 +60,15 @@ div.container {
 				opacity: 0.7;
 			}
 		}
+
+		button.add-layer {
+			display: none;
+			background: transparent;
+			border: none;
+			font-size: 20px;
+			color: white;
+		}
+
 		div.show-all {
 			float: right;
 			font-size: 12px;
@@ -44,13 +80,3 @@ div.container {
 	}
 }
 
-button.download-layer {
-	position: relative;
-	bottom: 4px;
-	background: transparent;
-	border: none;
-	.icon-download-layer {
-		color: white;
-		font-size: 20px;
-	}
-}

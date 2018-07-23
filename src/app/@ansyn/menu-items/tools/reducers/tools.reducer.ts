@@ -32,6 +32,7 @@ export interface IToolsState {
 	annotationProperties: IAnnotationProperties
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
+	activeAnnotationLayer: string;
 }
 
 export const toolsInitialState: IToolsState = {
@@ -47,7 +48,8 @@ export const toolsInitialState: IToolsState = {
 		fillColor: '#ffffff'
 	},
 	manualImageProcessingParams: undefined,
-	overlaysManualProcessArgs: {}
+	overlaysManualProcessArgs: {},
+	activeAnnotationLayer: null
 };
 
 export const toolsFeatureKey = 'tools';

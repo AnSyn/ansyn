@@ -28,7 +28,10 @@ import {
 	SubMenuEnum
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { combineLatest, Observable } from 'rxjs';
-import { selectDisplayAnnotationsLayer, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import {
+	selectActiveAnnotationLayer, selectLayersEntities,
+	selectSelectedLayersIds
+} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
@@ -40,7 +43,7 @@ import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer'
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { Inject } from '@angular/core';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { filter, map, take, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
@@ -50,6 +53,8 @@ import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layer
 import { featureCollection } from '@turf/turf';
 import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { UUID } from 'angular2-uuid';
+import { uniq } from 'lodash';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -61,13 +66,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	disableCache = true;
 	public mode: AnnotationMode;
 
-	/* data */
-	annotationsLayer$: Observable<ILayer> = this.store$
+	activeAnnotationLayer$: Observable<ILayer> = this.store$
 		.pipe(
-			select(selectLayers),
-			map((layers: ILayer[]) => {
-				return layers.find(({ type }) => type === LayerType.annotation);
-			})
+			select(selectActiveAnnotationLayer),
+			withLatestFrom(this.store$.select(selectLayersEntities)),
+			map(([activeAnnotationLayerId, entities]) => entities[activeAnnotationLayerId])
 		);
 
 	currentOverlay$ = this.store$.pipe(
@@ -76,8 +79,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		filter(Boolean),
 		map((map: ICaseMapState) => map.data.overlay)
 	);
-
-	displayAnnotationsLayer$: Observable<any> = this.store$.select(selectDisplayAnnotationsLayer);
 
 	annotationFlag$ = this.store$.select(selectSubMenu)
 		.map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations)
@@ -94,15 +95,22 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	annoatationModeChange$: Observable<any> = combineLatest(this.annotationMode$, this.isActiveMap$)
 		.pipe(
 			tap(this.onModeChange.bind(this))
-		)
+		);
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
 		.do(this.onAnnotationPropertiesChange.bind(this));
 
 	@AutoSubscription
-	onAnnotationsChange$ = combineLatest(this.annotationsLayer$, this.annotationFlag$, this.displayAnnotationsLayer$, this.isActiveMap$)
-		.mergeMap(this.onAnnotationsChange.bind(this));
+	onAnnotationsChange$ = combineLatest(
+		this.store$.pipe(select(selectLayersEntities)),
+		this.annotationFlag$,
+		this.store$.select(selectSelectedLayersIds),
+		this.isActiveMap$,
+		this.store$.select(selectActiveAnnotationLayer)
+	).pipe(
+		mergeMap(this.onAnnotationsChange.bind(this))
+	);
 
 	modeDictionary = {
 		Arrow: {
@@ -154,12 +162,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	onAnnotationsChange([annotationsLayer, annotationFlag, displayAnnotationsLayer, isActiveMap]: [any, boolean, boolean, boolean]): Observable<any> {
-		if (displayAnnotationsLayer || (isActiveMap && annotationFlag)) {
-			return this.showAnnotation(annotationsLayer.data);
-		}
-		this.clearEntities();
-		return Observable.of(true);
+	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [Dictionary<ILayer>, boolean, string[], boolean, string]): Observable<any> {
+		const displayedIds = uniq(
+			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
+		)
+		.filter((id: string) => entities[id] && entities[id].type === LayerType.annotation);
+
+		const features = displayedIds.reduce((array, layerId) => [...array, ...entities[layerId].data.features], []);
+		return this.showAnnotation(featureCollection(features));
 	}
 
 	constructor(public store$: Store<any>, protected projectionService: ProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
@@ -272,10 +282,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.projectCollectionAccurately([feature], this.iMap)
 			.pipe(
 				take(1),
-				withLatestFrom(this.annotationsLayer$, this.currentOverlay$),
-				tap(([featureCollection, annotationsLayer, overlay]: [FeatureCollection<GeometryObject>, any, IOverlay]) => {
+				withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
+				tap(([featureCollection, activeAnnotationLayer, overlay]: [FeatureCollection<GeometryObject>, ILayer, IOverlay]) => {
 					const [geoJsonFeature] = featureCollection.features;
-					const data = <FeatureCollection<any>> { ...annotationsLayer.data };
+					const data = <FeatureCollection<any>> { ...activeAnnotationLayer.data };
 					data.features.push(geoJsonFeature);
 					if (overlay) {
 						geoJsonFeature.properties = {
@@ -286,7 +296,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
-					this.store$.dispatch(new UpdateLayer({ ...annotationsLayer, data }));
+					this.store$.dispatch(new UpdateLayer({ ...activeAnnotationLayer, data }));
 				})
 			).subscribe();
 

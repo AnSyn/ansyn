@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { LayersManagerComponent } from './components/layers-manager/layers-manager.component';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
-import { LayerCollectionComponent } from '@ansyn/menu-items/layers-manager/components/layers-collection/layer-collection.component';
+import { LayerCollectionComponent } from './components/layers-collection/layer-collection.component';
 import { CoreModule } from '@ansyn/core/core.module';
 import { DownloadLayersComponent } from './components/data-layers-modals/download-layers/download-layers.component';
 import { LayerComponent } from './components/layer/layer.component';

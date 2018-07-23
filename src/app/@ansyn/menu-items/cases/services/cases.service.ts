@@ -135,6 +135,7 @@ export class CasesService {
 		selectedCase.id = uuid;
 		selectedCase.creationTime = currentTime;
 		selectedCase.lastModified = currentTime;
+		selectedCase.autoSave = true;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
 			.pipe(
 				map(_ => selectedCase),

@@ -28,6 +28,7 @@ export interface ICoreState {
 	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
+	autoSave: boolean;
 }
 
 export const coreInitialState: ICoreState = {
@@ -40,6 +41,7 @@ export const coreInitialState: ICoreState = {
 	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
+	autoSave: false
 };
 
 export const coreFeatureKey = 'core';
@@ -84,6 +86,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 			const payloadObj = { wasWelcomeNotificationShown: action.payload };
 			return { ...state, ...payloadObj };
 
+		case CoreActionTypes.SET_AUTO_SAVE:
+			return { ...state, autoSave: action.payload };
+
 		default:
 			return state;
 	}
@@ -94,3 +99,4 @@ export const selectLayout = createSelector(coreStateSelector, (core) => core.lay
 export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
 export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectAutoSave = createSelector(coreStateSelector, (core) => core.autoSave);

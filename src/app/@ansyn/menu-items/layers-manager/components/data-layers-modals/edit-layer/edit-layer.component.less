@@ -7,21 +7,6 @@ div.edit-layer {
 	box-sizing: border-box;
 	width: 200px;
 
-	button.close {
-		position: absolute;
-		right: 0;
-		top: 0;
-		border: none;
-		background: transparent;
-		cursor: pointer;
-		outline: none;
-		color: #2e2d46;
-		&:hover {
-			font-weight: bold;
-			text-decoration: underline;
-		}
-	}
-
 	form.edit-layer-form {
 		position: relative;
 		width: 100%;
@@ -84,21 +69,6 @@ div.edit-layer {
 		input:focus ~ .bar:before, input:focus ~ .bar:after {
 			width: 50%;
 			height: 2px;
-		}
-
-		.highlight {
-			display: none;
-			position: absolute;
-			height: 60%;
-			width: 100px;
-			top: 25%;
-			left: 0;
-			pointer-events: none;
-			opacity: 0.5;
-		}
-
-		input:focus ~ .highlight {
-			animation: inputHighlighter 0.3s ease;
 		}
 
 		.bottom-btns {

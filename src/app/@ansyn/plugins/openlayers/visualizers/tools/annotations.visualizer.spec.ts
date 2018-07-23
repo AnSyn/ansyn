@@ -1,17 +1,20 @@
 import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
 import { inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
-import olColor from 'ol/color';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { of } from 'rxjs/index';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { featureCollection } from '@turf/turf';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [AnnotationsVisualizer, { provide: ProjectionService, useValue: { projectCollectionAccurately: of(true) } }, { provide: toolsConfig, useValue: { Annotations: { displayId: true }} }],
+			providers: [AnnotationsVisualizer, {
+				provide: ProjectionService,
+				useValue: { projectCollectionAccurately: of(true) }
+			}, { provide: toolsConfig, useValue: { Annotations: { displayId: true } } }],
 			imports: [StoreModule.forRoot({})]
 		});
 	});
@@ -65,10 +68,10 @@ describe('AnnotationsVisualizer', () => {
 
 	describe('onAnnotationsChange should call removeInteraction, addInteraction', () => {
 
-		it('should clearEntities if displayAnnotationsLayer = false', () => {
-			spyOn(annotationsVisualizer, 'clearEntities');
-			annotationsVisualizer.onAnnotationsChange([{}, false, false, true]);
-			expect(annotationsVisualizer.clearEntities).toHaveBeenCalled();
+		it('should call showAnnotation features collection', () => {
+			spyOn(annotationsVisualizer, 'showAnnotation');
+			annotationsVisualizer.onAnnotationsChange([{}, false, [], true, '']);
+			expect(annotationsVisualizer.showAnnotation).toHaveBeenCalledWith(featureCollection([]));
 		});
 
 	});

@@ -8,6 +8,7 @@ import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
+import { DataLayersService } from '../services/data-layers.service';
 
 export const layersAdapter = createEntityAdapter<ILayer>();
 
@@ -33,7 +34,17 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 	switch (action.type) {
 
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
-			return layersAdapter.addAll(action.payload, state);
+			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
+			let selectedLayersIds = state.selectedLayersIds;
+			let activeAnnotationLayer = state.activeAnnotationLayer;
+			let layers = action.payload;
+			if (!annotationLayer) {
+				annotationLayer = DataLayersService.generateAnnotationLayer();
+				selectedLayersIds = [...selectedLayersIds, annotationLayer.id];
+				layers = [annotationLayer, ...layers];
+			}
+			activeAnnotationLayer = annotationLayer.id;
+			return layersAdapter.addAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
 
 		case LayersActionTypes.SET_LAYER_SELECTION: {
 			const id = action.payload.id, ids = state.selectedLayersIds;

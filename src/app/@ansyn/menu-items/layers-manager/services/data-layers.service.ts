@@ -9,32 +9,77 @@ import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-man
 import { UUID } from 'angular2-uuid';
 import { map } from 'rxjs/operators';
 import { featureCollection } from '@turf/turf';
+import { select, Store } from '@ngrx/store';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
+import { ICase } from '@ansyn/core/models/case.model';
+import { catchError, filter, tap } from 'rxjs/internal/operators';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
 @Injectable()
+@AutoSubscriptions({
+	init: 'init',
+	destroy: 'ngOnDestroy'
+})
 export class DataLayersService {
+	static caseId: string;
 
-	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService,
-				protected storageService: StorageService,
-				@Inject(layersConfig) public config: ILayersManagerConfig) {
-	}
+	@AutoSubscription
+	caseId$ = this.store
+		.pipe(
+			/* SelectedCase should move to core store */
+			select(selectSelectedCase),
+			filter(Boolean),
+			tap(({ id }: ICase) => DataLayersService.caseId = id)
+		);
 
-	generateAnnotationLayer(name = 'Default'): ILayer {
+
+	static generateAnnotationLayer(name = 'Default'): ILayer {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
 			layerPluginType: layerPluginType.Annotations,
 			name,
+			caseId: this.caseId,
 			type: LayerType.annotation,
 			data: featureCollection([])
 		};
 	}
 
+	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService,
+				protected storageService: StorageService,
+				protected store: Store<any>,
+				@Inject(layersConfig) public config: ILayersManagerConfig) {
+		this.init();
+	}
+
+	init() {
+	}
+
 	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {
 		return this.storageService.getPage<ILayer>(this.config.schema, 0, 100)
-			.catch(err => {
-				return this.errorHandlerService.httpErrorHandle(err);
-			});
+			.pipe(
+				map((result: ILayer[]) => result.filter((layer) => !layer.caseId || layer.caseId === caseId)),
+				catchError(err => this.errorHandlerService.httpErrorHandle(err))
+			)
 	}
+
+	addLayer(layer) {
+		return this.storageService.create('layers', { preview: layer })
+			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to create layer')));
+	}
+
+	updateLayer(layer) {
+		return this.storageService
+			.update('layers', { preview: layer, data: null })
+			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Can\'t find layer to update')));
+	}
+
+	removeLayer(layerId) {
+		return this.storageService
+			.delete('layers', layerId)
+			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to remove layer')));
+	}
+
 }

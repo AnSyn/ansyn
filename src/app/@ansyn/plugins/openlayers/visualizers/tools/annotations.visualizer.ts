@@ -219,7 +219,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onSelectFeature(data) {
 		data.target.getFeatures().clear();
-		if (this.mapSearchIsActive) { return; }
+		if (this.mapSearchIsActive || this.mode) { return; }
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();

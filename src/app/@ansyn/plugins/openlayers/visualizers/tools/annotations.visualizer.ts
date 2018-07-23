@@ -47,9 +47,10 @@ import OLGeoJSON from 'ol/format/geojson';
 import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 import { AutoSubscription } from 'auto-subscriptions';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { featureCollection } from '@turf/turf';
 import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { UUID } from 'angular2-uuid';
+import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -60,6 +61,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
 	disableCache = true;
 	public mode: AnnotationMode;
+	mapSearchIsActive = false;
 
 	/* data */
 	annotationsLayer$: Observable<ILayer> = this.store$
@@ -91,10 +93,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
 
 	@AutoSubscription
+	geoFilterSearchMode$ = this.store$.pipe(
+		select(selectGeoFilterSearchMode),
+		tap((searchMode: SearchMode) => {
+			this.mapSearchIsActive = searchMode !== SearchModeEnum.none;
+		})
+	);
+
+	@AutoSubscription
 	annoatationModeChange$: Observable<any> = combineLatest(this.annotationMode$, this.isActiveMap$)
 		.pipe(
 			tap(this.onModeChange.bind(this))
-		)
+		);
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
@@ -209,6 +219,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onSelectFeature(data) {
 		data.target.getFeatures().clear();
+		if (this.mapSearchIsActive) { return; }
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();

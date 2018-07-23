@@ -13,20 +13,21 @@ import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction
 } from '@ansyn/core/actions/core.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
 import {
+	CaseOrientation,
+	CaseRegionState,
+	CaseTimeFilter,
 	ICase,
 	ICaseDataInputFiltersState,
 	ICaseFacetsState,
 	ICaseLayersState,
 	ICaseMapsState,
-	CaseOrientation,
-	CaseRegionState,
 	ICaseState,
-	CaseTimeFilter,
 	ICaseTimeState,
 	IContextEntity,
 	IOverlaysManualProcessArgs
@@ -52,7 +53,7 @@ describe('SelectCaseAppEffects', () => {
 			providers: [
 				SelectCaseAppEffects,
 				provideMockActions(() => actions),
-				{provide: CoreConfig, useValue: {}}
+				{ provide: CoreConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));
@@ -78,11 +79,14 @@ describe('SelectCaseAppEffects', () => {
 				region: CaseRegionState = {},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: IOverlay[] = [],
+				presetOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: ICaseLayersState = { activeLayersIds: [] },
+				layers: ICaseLayersState = {
+					activeLayersIds: []
+				},
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}]
+				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }]
 			;
 
 			let noInitialSearch;
@@ -94,6 +98,7 @@ describe('SelectCaseAppEffects', () => {
 				region,
 				dataInputFilters,
 				favoriteOverlays,
+				presetOverlays,
 				maps,
 				layers,
 				overlaysManualProcessArgs,
@@ -113,19 +118,19 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghij)--', {
+			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
-				f: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-				g: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				h: new UpdateFacetsAction(facets),
-				i: new UpdateSelectedLayersIds([]),
-				j: new SetContextParamsAction({ contextEntities })
-
-		});
+				f: new SetPresetOverlaysAction(presetOverlays),
+				g: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				i: new UpdateFacetsAction(facets),
+				j: new UpdateSelectedLayersIds([]),
+				k: new SetContextParamsAction({ contextEntities })
+			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);
 		});

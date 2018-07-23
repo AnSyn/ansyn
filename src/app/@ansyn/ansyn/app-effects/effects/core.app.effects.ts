@@ -5,10 +5,21 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import {
-	CoreActionTypes, GoAdjacentOverlay, SetFavoriteOverlaysAction, SetOverlaysCriteriaAction,
-	ToggleFavoriteAction
+	CoreActionTypes,
+	GoAdjacentOverlay,
+	GoNextPresetOverlay,
+	SetFavoriteOverlaysAction,
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
 } from '@ansyn/core/actions/core.actions';
-import { DisplayOverlayFromStoreAction, LoadOverlaysAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	LoadOverlaysAction,
+	SetMarkUp
+} from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -16,6 +27,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 
 @Injectable()
 export class CoreAppEffects {
@@ -44,6 +56,29 @@ export class CoreAppEffects {
 
 	/**
 	 * @type Effect
+	 * @name onPreset$
+	 * @ofType TogglePresetOverlayAction
+	 * @dependencies cases
+	 * @action SetPresetOverlaysAction
+	 */
+	@Effect()
+	onPreset$: Observable<Action> = this.actions$
+		.ofType<TogglePresetOverlayAction>(CoreActionTypes.TOGGLE_OVERLAY_PRESET)
+		.withLatestFrom(this.store$.select(coreStateSelector))
+		.map(([action, { presetOverlays }]: [TogglePresetOverlayAction, ICoreState]) => {
+			const updatedPresetOverlays = [...presetOverlays];
+			const toggledPreset = updatedPresetOverlays.find(o => o.id === action.payload.id);
+			const indexOfPayload = updatedPresetOverlays.indexOf(toggledPreset);
+			if (indexOfPayload === -1) {
+				updatedPresetOverlays.push(action.payload);
+			} else {
+				updatedPresetOverlays.splice(indexOfPayload, 1);
+			}
+			return new SetPresetOverlaysAction(updatedPresetOverlays);
+		});
+
+	/**
+	 * @type Effect
 	 * @name setFavoriteOverlaysUpdateCase$
 	 * @ofType SetFavoriteOverlaysAction
 	 * @action OverlaysMarkupAction
@@ -54,6 +89,24 @@ export class CoreAppEffects {
 		.map(({ payload }: SetFavoriteOverlaysAction) => payload.map(overlay => overlay.id))
 		.map((overlayIds) => new SetMarkUp({
 				classToSet: MarkUpClass.favorites,
+				dataToSet: {
+					overlaysIds: overlayIds
+				}
+			}
+		));
+
+	/**
+	 * @type Effect
+	 * @name setPresetOverlaysUpdateCase$
+	 * @ofType SetPresetOverlaysAction
+	 * @action OverlaysMarkupAction
+	 */
+	@Effect()
+	setPresetOverlaysUpdateCase$: Observable<any> = this.actions$
+		.ofType<SetPresetOverlaysAction>(CoreActionTypes.SET_PRESET_OVERLAYS)
+		.map(({ payload }: SetPresetOverlaysAction) => payload.map(overlay => overlay.id))
+		.map((overlayIds) => new SetMarkUp({
+				classToSet: MarkUpClass.presets,
 				dataToSet: {
 					overlaysIds: overlayIds
 				}
@@ -86,11 +139,11 @@ export class CoreAppEffects {
 
 	/**
 	 * @type Effect
-	 * @name onGoPrevNext$
-	 * @ofType GoNextAction, GoPrevAction
+	 * @name onAdjacentOverlay$
+	 * @ofType GoAdjacentOverlay
 	 * @dependencies cases
 	 * @filter There is an active map overlay
-	 * @action GoNextDisplayAction?, GoadjacentDisplayAction?
+	 * @action DisplayOverlayFromStoreAction
 	 */
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$
@@ -109,6 +162,31 @@ export class CoreAppEffects {
 		})
 		.filter(Boolean)
 		.map(id => new DisplayOverlayFromStoreAction({ id }));
+
+	/**
+	 * @type Effect
+	 * @name onNextPresetOverlay$
+	 * @ofType GoAdjacentOverlay
+	 * @dependencies cases
+	 * @filter There is an active map overlay
+	 * @action DisplayOverlayFromStoreAction
+	 */
+	@Effect()
+	onNextPresetOverlay$: Observable<any> = this.actions$
+		.ofType<GoNextPresetOverlay>(CoreActionTypes.GO_NEXT_PRESET_OVERLAY)
+		.withLatestFrom(this.store$.select(mapStateSelector), (Action , mapState: IMapState): {overlayId: string, mapId: string} => {
+			const activeMap = MapFacadeService.activeMap(mapState);
+			return {overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId};
+		})
+		.withLatestFrom(this.store$.select(coreStateSelector), ({overlayId , mapId}, { presetOverlays }): {overlay: IOverlay, mapId: string} => {
+			const length = presetOverlays.length;
+			if (length === 0) { return; }
+			const index = presetOverlays.findIndex(overlay => overlay.id === overlayId);
+			const nextIndex = index === -1 ? 0 : index >= length - 1 ? 0 : index + 1;
+			return {overlay: presetOverlays[nextIndex], mapId};
+		})
+		.filter(Boolean)
+		.map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId }));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

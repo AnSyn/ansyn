@@ -1,7 +1,7 @@
 import {
 	CoreActions,
 	CoreActionTypes,
-	SetFavoriteOverlaysAction,
+	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
@@ -24,6 +24,7 @@ export interface IToastMessage {
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: IOverlay[];
+	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;
@@ -33,6 +34,7 @@ export interface ICoreState {
 export const coreInitialState: ICoreState = {
 	toastMessage: null,
 	favoriteOverlays: [],
+	presetOverlays: [],
 	alertMsg: new Map([
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
@@ -52,6 +54,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
+
+		case CoreActionTypes.SET_PRESET_OVERLAYS:
+			return { ...state, presetOverlays: (action as SetPresetOverlaysAction).payload };
 
 		case  CoreActionTypes.ADD_ALERT_MSG: {
 			const alertKey = action.payload.key;
@@ -90,6 +95,7 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 }
 
 export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
+export const selectPresetOverlays = createSelector(coreStateSelector, (core) => core.presetOverlays);
 export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
 export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
 export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);

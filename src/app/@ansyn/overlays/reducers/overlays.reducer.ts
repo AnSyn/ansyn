@@ -29,7 +29,8 @@ export enum MarkUpClass {
 	hover = 'hover',
 	favorites = 'favorites',
 	displayed = 'displayed',
-	symbole = 'symbole'
+	symbole = 'symbole',
+	presets = 'presets'
 
 }
 

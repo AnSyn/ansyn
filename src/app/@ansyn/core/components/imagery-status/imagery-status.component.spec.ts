@@ -57,6 +57,12 @@ describe('ImageryStatusComponent', () => {
 		expect(component.toggleFavorite).toHaveBeenCalled();
 	});
 
+	it('check click on togglePreset', () => {
+		spyOn(component, 'togglePreset');
+		fixture.nativeElement.querySelector('.set-preset').click();
+		expect(component.togglePreset).toHaveBeenCalled();
+	});
+
 	it('should not show link when 1 map', () => {
 		component.mapsAmount = 1;
 		fixture.detectChanges();

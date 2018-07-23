@@ -1,8 +1,14 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
-import { BackToWorldView, SetToastMessageAction, ToggleFavoriteAction, ToggleMapLayersAction } from '../../actions/core.actions';
-import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays } from '../../reducers/core.reducer';
+import {
+	BackToWorldView,
+	SetToastMessageAction,
+	ToggleFavoriteAction,
+	ToggleMapLayersAction,
+	TogglePresetOverlayAction
+} from '../../actions/core.actions';
+import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '../../utils/time';
@@ -34,6 +40,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			});
 		}
 		this.updateFavoriteStatus();
+		this.updatePresetStatus();
 	};
 
 	translatedOverlaySensorName = '';
@@ -47,6 +54,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	private _subscriptions: Subscription[] = [];
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
+	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays);
 
 	alertMsg: AlertMsg;
 
@@ -60,6 +68,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
 	favoritesButtonText: string;
+
+	presetOverlays: IOverlay[];
+	isPreset: boolean;
+	presetsButtonText: string;
 
 	getFormattedTime(dateTimeSring: string): string {
 		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
@@ -105,6 +117,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				this.favoriteOverlays = favoriteOverlays;
 				this.updateFavoriteStatus();
 			}),
+			this.presetOverlays$.subscribe((presetOverlays) => {
+				this.presetOverlays = presetOverlays;
+				this.updatePresetStatus();
+			}),
 			this.alertMsg$.subscribe()
 		);
 	}
@@ -126,12 +142,24 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new ToggleFavoriteAction(this.overlay));
 	}
 
+	togglePreset() {
+		this.store$.dispatch(new TogglePresetOverlayAction(this.overlay));
+	}
+
 	updateFavoriteStatus() {
 		this.isFavorite = false;
 		if (this.overlay && this.favoriteOverlays && this.favoriteOverlays.length > 0) {
 			this.isFavorite = this.favoriteOverlays.some(o => o.id === this.overlay.id);
 		}
 		this.favoritesButtonText = this.isFavorite ? 'Remove from favorites' : 'Add to favorites';
+	}
+
+	updatePresetStatus() {
+		this.isPreset = false;
+		if (this.overlay && this.presetOverlays && this.presetOverlays.length > 0) {
+			this.isPreset = this.presetOverlays.some(o => o.id === this.overlay.id);
+		}
+		this.presetsButtonText = this.isPreset ? 'Remove from presets' : 'Add to preset overlays (press F to display next preset)';
 	}
 
 	toggleMapLayers() {

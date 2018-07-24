@@ -57,11 +57,19 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays);
 
 	alertMsg: AlertMsg;
+	enableDownloadOriginalOverlayData: boolean;
 
 	alertMsg$: Observable<AlertMsg> = this.core$
 		.pipe(
 			pluck<ICoreState, AlertMsg>('alertMsg'),
 			tap((alertMsg) => this.alertMsg = alertMsg),
+			distinctUntilChanged()
+		);
+
+	copyOriginalOverlayDataFlag$: Observable<boolean> = this.core$
+		.pipe(
+			pluck<ICoreState, boolean>('enableDownloadOriginalOverlayData'),
+			tap((enableDownloadOriginalOverlayData) => this.enableDownloadOriginalOverlayData = enableDownloadOriginalOverlayData),
 			distinctUntilChanged()
 		);
 
@@ -95,8 +103,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	copyOverlayDescription() {
-		copyFromContent(this.overlayDescription);
-		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+		if (this.enableDownloadOriginalOverlayData && this._overlay.tag) {
+			const tagJson = JSON.stringify(this._overlay.tag);
+			copyFromContent(tagJson);
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
+		} else {
+			copyFromContent(this.overlayDescription);
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+		}
 	}
 
 	get noGeoRegistration() {
@@ -121,7 +135,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				this.presetOverlays = presetOverlays;
 				this.updatePresetStatus();
 			}),
-			this.alertMsg$.subscribe()
+			this.alertMsg$.subscribe(),
+			this.copyOriginalOverlayDataFlag$.subscribe()
 		);
 	}
 

@@ -1,6 +1,6 @@
 import {
 	CoreActions,
-	CoreActionTypes,
+	CoreActionTypes, EnableDownloadOriginalOverlayDataAction,
 	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
@@ -29,6 +29,7 @@ export interface ICoreState {
 	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
+	enableDownloadOriginalOverlayData: boolean;
 }
 
 export const coreInitialState: ICoreState = {
@@ -42,6 +43,7 @@ export const coreInitialState: ICoreState = {
 	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
+	enableDownloadOriginalOverlayData: false
 };
 
 export const coreFeatureKey = 'core';
@@ -51,6 +53,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 	switch (action.type) {
 		case CoreActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: (action as SetToastMessageAction).payload };
+
+		case CoreActionTypes.ENABLE_DOWNLOAD_ORIGINAL_OVERLAY_DATA:
+			return { ...state, enableDownloadOriginalOverlayData: (action as EnableDownloadOriginalOverlayDataAction).payload.downloadOriginalData };
 
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };

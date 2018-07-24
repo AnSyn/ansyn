@@ -129,6 +129,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.iMap.mapObject.getView().getRotation();
 	}
 
+	static findFeatureWithMinimumArea(featuresArray: any[]) {
+		return featuresArray.reduce((prevResult, currFeature) => {
+			const currArea = currFeature.getGeometry().getArea();
+			if ( currArea < prevResult.area) {
+				return {feature: currFeature, area: currArea}
+			} else {
+				return prevResult;
+			}
+		}, {feature: null, area: Infinity}).feature;
+	}
+
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id,
@@ -211,7 +222,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const contextMenuInteraction = new Select(<any>{
 			condition: condition.click,
 			layers: [this.vector],
-			hitTolerance: 10
+			hitTolerance: 10,
+			multi: true
 		});
 		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
 		return contextMenuInteraction;
@@ -220,7 +232,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	onSelectFeature(data) {
 		data.target.getFeatures().clear();
 		if (this.mapSearchIsActive || this.mode) { return; }
-		const [selectedFeature] = data.selected;
+		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
 		const contextMenuEvent: IAnnotationsContextMenuEvent = {

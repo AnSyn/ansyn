@@ -97,7 +97,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
 		const renderer = 'canvas';
-		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true });
+		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true, loadTilesWhileAnimating: true });
 		this.initListeners();
 		return this.resetView(layers[0], position);
 	}

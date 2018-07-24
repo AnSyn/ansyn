@@ -222,7 +222,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const contextMenuInteraction = new Select(<any>{
 			condition: condition.click,
 			layers: [this.vector],
-			hitTolerance: 10,
+			hitTolerance: 1,
 			multi: true
 		});
 		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));

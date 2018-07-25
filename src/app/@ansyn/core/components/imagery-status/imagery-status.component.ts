@@ -8,7 +8,14 @@ import {
 	ToggleMapLayersAction,
 	TogglePresetOverlayAction
 } from '../../actions/core.actions';
-import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '../../reducers/core.reducer';
+import {
+	AlertMsg,
+	coreStateSelector,
+	ICoreState,
+	selectEnableCopyOriginalOverlayDataFlag,
+	selectFavoriteOverlays,
+	selectPresetOverlays
+} from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '../../utils/time';
@@ -57,7 +64,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays);
 
 	alertMsg: AlertMsg;
-	enableDownloadOriginalOverlayData: boolean;
+	enableCopyOriginalOverlayData: boolean;
 
 	alertMsg$: Observable<AlertMsg> = this.core$
 		.pipe(
@@ -66,12 +73,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			distinctUntilChanged()
 		);
 
-	copyOriginalOverlayDataFlag$: Observable<boolean> = this.core$
-		.pipe(
-			pluck<ICoreState, boolean>('enableDownloadOriginalOverlayData'),
-			tap((enableDownloadOriginalOverlayData) => this.enableDownloadOriginalOverlayData = enableDownloadOriginalOverlayData),
-			distinctUntilChanged()
-		);
+	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag);
 
 	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
@@ -103,7 +105,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	copyOverlayDescription() {
-		if (this.enableDownloadOriginalOverlayData && this._overlay.tag) {
+		if (this.enableCopyOriginalOverlayData && this._overlay.tag) {
 			const tagJson = JSON.stringify(this._overlay.tag);
 			copyFromContent(tagJson);
 			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
@@ -136,7 +138,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				this.updatePresetStatus();
 			}),
 			this.alertMsg$.subscribe(),
-			this.copyOriginalOverlayDataFlag$.subscribe()
+			this.copyOriginalOverlayDataFlag$.subscribe((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 		);
 	}
 

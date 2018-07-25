@@ -21,7 +21,7 @@ export const CoreActionTypes = {
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
 	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY',
-	ENABLE_DOWNLOAD_ORIGINAL_OVERLAY_DATA: 'ENABLE_DOWNLOAD_ORIGINAL_OVERLAY_DATA',
+	ENABLE_COPY_ORIGINAL_OVERLAY_DATA: 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT'
 };
@@ -57,10 +57,10 @@ export class GoNextPresetOverlay implements Action {
 	}
 }
 
-export class EnableDownloadOriginalOverlayDataAction implements Action {
-	type: string = CoreActionTypes.ENABLE_DOWNLOAD_ORIGINAL_OVERLAY_DATA;
+export class EnableCopyOriginalOverlayDataAction implements Action {
+	type: string = CoreActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA;
 
-	constructor(public payload: {downloadOriginalData: boolean}) {
+	constructor(public payload: boolean) {
 	}
 }
 

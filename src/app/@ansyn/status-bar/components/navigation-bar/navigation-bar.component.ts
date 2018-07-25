@@ -1,6 +1,6 @@
 import { Component, HostListener, Inject } from '@angular/core';
 import {
-	EnableDownloadOriginalOverlayDataAction,
+	EnableCopyOriginalOverlayDataAction,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay
 } from '@ansyn/core/actions/core.actions';
@@ -41,7 +41,7 @@ export class NavigationBarComponent {
 		}
 
 		if (this._overlayHack.indexOf($event.which) !== -1 ) {
-			this.store.dispatch(new EnableDownloadOriginalOverlayDataAction({downloadOriginalData: false}));
+			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
 		}
 	}
 
@@ -58,7 +58,7 @@ export class NavigationBarComponent {
 		}
 
 		if (this._overlayHack.indexOf($event.which) !== -1 ) {
-			this.store.dispatch(new EnableDownloadOriginalOverlayDataAction({downloadOriginalData: true}));
+			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 		}
 	}
 

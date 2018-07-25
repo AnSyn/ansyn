@@ -1,6 +1,6 @@
 import {
 	CoreActions,
-	CoreActionTypes, EnableDownloadOriginalOverlayDataAction,
+	CoreActionTypes, EnableCopyOriginalOverlayDataAction,
 	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
@@ -29,7 +29,7 @@ export interface ICoreState {
 	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
-	enableDownloadOriginalOverlayData: boolean;
+	enableCopyOriginalOverlayData: boolean;
 }
 
 export const coreInitialState: ICoreState = {
@@ -43,7 +43,7 @@ export const coreInitialState: ICoreState = {
 	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
-	enableDownloadOriginalOverlayData: false
+	enableCopyOriginalOverlayData: false
 };
 
 export const coreFeatureKey = 'core';
@@ -54,8 +54,8 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: (action as SetToastMessageAction).payload };
 
-		case CoreActionTypes.ENABLE_DOWNLOAD_ORIGINAL_OVERLAY_DATA:
-			return { ...state, enableDownloadOriginalOverlayData: (action as EnableDownloadOriginalOverlayDataAction).payload.downloadOriginalData };
+		case CoreActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA:
+			return { ...state, enableCopyOriginalOverlayData: (action as EnableCopyOriginalOverlayDataAction).payload };
 
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
@@ -105,3 +105,4 @@ export const selectLayout = createSelector(coreStateSelector, (core) => core.lay
 export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
 export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectEnableCopyOriginalOverlayDataFlag = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);

@@ -8,7 +8,14 @@ import {
 	ToggleMapLayersAction,
 	TogglePresetOverlayAction
 } from '../../actions/core.actions';
-import { AlertMsg, coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '../../reducers/core.reducer';
+import {
+	AlertMsg,
+	coreStateSelector,
+	ICoreState,
+	selectEnableCopyOriginalOverlayDataFlag,
+	selectFavoriteOverlays,
+	selectPresetOverlays
+} from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { getTimeFormat } from '../../utils/time';
@@ -57,6 +64,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays);
 
 	alertMsg: AlertMsg;
+	enableCopyOriginalOverlayData: boolean;
 
 	alertMsg$: Observable<AlertMsg> = this.core$
 		.pipe(
@@ -64,6 +72,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			tap((alertMsg) => this.alertMsg = alertMsg),
 			distinctUntilChanged()
 		);
+
+	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag);
 
 	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
@@ -95,8 +105,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	copyOverlayDescription() {
-		copyFromContent(this.overlayDescription);
-		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+		if (this.enableCopyOriginalOverlayData && this._overlay.tag) {
+			const tagJson = JSON.stringify(this._overlay.tag);
+			copyFromContent(tagJson);
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
+		} else {
+			copyFromContent(this.overlayDescription);
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+		}
 	}
 
 	get noGeoRegistration() {
@@ -121,7 +137,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				this.presetOverlays = presetOverlays;
 				this.updatePresetStatus();
 			}),
-			this.alertMsg$.subscribe()
+			this.alertMsg$.subscribe(),
+			this.copyOriginalOverlayDataFlag$.subscribe((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 		);
 	}
 

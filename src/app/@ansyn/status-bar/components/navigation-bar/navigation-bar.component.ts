@@ -1,5 +1,9 @@
 import { Component, HostListener, Inject } from '@angular/core';
-import { GoAdjacentOverlay, GoNextPresetOverlay } from '@ansyn/core/actions/core.actions';
+import {
+	EnableCopyOriginalOverlayDataAction,
+	GoAdjacentOverlay,
+	GoNextPresetOverlay
+} from '@ansyn/core/actions/core.actions';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { ExpandAction } from '@ansyn/status-bar/actions/status-bar.actions';
@@ -20,6 +24,7 @@ export class NavigationBarComponent {
 	}
 
 	private _nextPresetOverlayKeys = 'fFכ'.split("").map(char => char.charCodeAt(0));
+	private _overlayHack = 'Eeק'.split("").map(char => char.charCodeAt(0));
 
 	@HostListener('window:keyup', ['$event'])
 	onkeyup($event: KeyboardEvent) {
@@ -34,6 +39,10 @@ export class NavigationBarComponent {
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
 		}
+
+		if (this._overlayHack.indexOf($event.which) !== -1 ) {
+			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
+		}
 	}
 
 	@HostListener('window:keydown', ['$event'])
@@ -46,6 +55,10 @@ export class NavigationBarComponent {
 			this.goNextActive = true;
 		} else if ($event.which === 37) { // ArrowLeft
 			this.goPrevActive = true;
+		}
+
+		if (this._overlayHack.indexOf($event.which) !== -1 ) {
+			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 		}
 	}
 

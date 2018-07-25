@@ -16,7 +16,8 @@
 
 	<ansyn-imagery-view [mapComponentSettings]="mapState"></ansyn-imagery-view>
 
-	<ansyn-annotations-context-menu [mapId]="mapState.id"></ansyn-annotations-context-menu>
+	<ansyn-annotations-context-menu [mapId]="mapState.id" interactionType="click"></ansyn-annotations-context-menu>
+	<ansyn-annotations-context-menu [mapId]="mapState.id" interactionType="hover"></ansyn-annotations-context-menu>
 
 	<ansyn-imagery-loader [mapId]="mapState.id"></ansyn-imagery-loader>
 

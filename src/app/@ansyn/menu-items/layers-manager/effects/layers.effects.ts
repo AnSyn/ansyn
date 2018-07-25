@@ -3,8 +3,8 @@ import {
 	AddLayer,
 	BeginLayerCollectionLoadAction,
 	LayerCollectionLoadedAction,
-	LayersActions,
-	LayersActionTypes, UpdateLayer
+	LayersActionTypes,
+	UpdateLayer
 } from '../actions/layers.actions';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -15,12 +15,11 @@ import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, EMPTY, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { catchError, filter, map, switchMap, withLatestFrom } from 'rxjs/internal/operators';
+import { catchError, filter, map, withLatestFrom } from 'rxjs/internal/operators';
 import { DataLayersService } from '../services/data-layers.service';
-import { ILayer } from '../models/layers.model';
-import { layer } from 'openlayers';
+import { ILayer, LayerType } from '../models/layers.model';
 import { selectAutoSave } from '../../../core/reducers/core.reducer';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
@@ -36,11 +35,20 @@ export class LayersEffects {
 	 * @action LayerCollectionLoadedAction?, ErrorLoadingLayersAction?
 	 */
 	@Effect()
-	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
+	beginLayerTreeLoad$: Observable<any> = this.actions$
 		.pipe(
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
-			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
+			mergeMap((layers: ILayer[]) => {
+				let result = new LayerCollectionLoadedAction(layers);
+				let annotationLayer = result.payload.find(({ type }) => type === LayerType.annotation);
+				if (!annotationLayer) {
+					annotationLayer = DataLayersService.generateAnnotationLayer();
+				}
+				result.payload = [annotationLayer, ...result.payload];
+				return Observable.forkJoin([Observable.of(result), this.dataLayersService.addLayer(annotationLayer)]);
+			}),
+			map(([action, layers]: [any, any]) => action)
 		);
 
 	@Effect({ dispatch: false })

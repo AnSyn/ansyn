@@ -14,6 +14,10 @@ import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
 import { cloneDeep as _cloneDeep } from 'lodash';
+import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { UUID } from 'angular2-uuid';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 const animationsDuring = '0.2s';
 
@@ -43,12 +47,27 @@ export class SaveCaseComponent implements OnInit {
 		return true;
 	};
 
+
+	// deleteAllDefaultCaseLayers$: any = this.store.select(casesStateSelector)
+	// 	.pluck<ICasesState, ICase>('selectedCase')
+	// 	.distinctUntilChanged()
+	// 	.mergeMap((state: any) => Observable.forkJoin([Observable.of(state), this.dataLayersService.getAllLayersInATree({ caseId: this.casesService.defaultCase.id })]))
+	// 	.filter(([state, layers]: [any, ILayer[]]) => layers.length > 0)
+	// 	.mergeMap(([state, layers]: [any, ILayer[]]) => {
+	// 		let observers = [];
+	// 		layers.filter((layer: ILayer) => layer.layerPluginType === layerPluginType.Annotations).forEach((layer: ILayer) => observers.push(this.dataLayersService.removeLayer(layer.id)));
+	// 		return Observable.forkJoin(observers);
+	// 	});
+
 	selectedCase$: Observable<ICase> = this.store.select(casesStateSelector)
 		.pluck<ICasesState, ICase>('selectedCase')
 		.distinctUntilChanged()
 		.map(_cloneDeep);
 
 	caseModel: ICase;
+
+
+	layers: ILayer[];
 
 	@ViewChild('nameInput') nameInput: ElementRef;
 
@@ -57,13 +76,16 @@ export class SaveCaseComponent implements OnInit {
 		this.nameInput.nativeElement.select();
 	}
 
-	constructor(protected store: Store<ICasesState>) {
+	constructor(protected store: Store<ICasesState>,
+				protected casesService: CasesService,
+				protected dataLayersService: DataLayersService) {
 	}
 
 	ngOnInit(): void {
 		this.selectedCase$.subscribe((selectedCase: ICase) => {
 			this.caseModel = selectedCase;
 		});
+		// this.deleteAllDefaultCaseLayers$.subscribe();
 	}
 
 	close(): void {
@@ -71,6 +93,13 @@ export class SaveCaseComponent implements OnInit {
 	}
 
 	onSubmitCase() {
+		if (this.layers) {
+			this.layers.forEach((layer) => {
+				layer.id = UUID.UUID();
+				layer.caseId = this.caseModel.id;
+				this.dataLayersService.addLayer(layer);
+			});
+		}
 		this.store.dispatch(new SaveCaseAsAction(this.caseModel));
 		this.close();
 	}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
@@ -8,7 +8,9 @@ import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actio
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
-	SelectCaseAction, SelectDilutedCaseAction
+	OpenModalAction,
+	SelectCaseAction,
+	SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
@@ -20,9 +22,25 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { tap } from 'rxjs/internal/operators';
 
 @Injectable()
 export class CasesAppEffects {
+
+// 	if (this.layers) {
+// 	this.layers.forEach((layer) => {
+// 	layer.id = UUID.UUID();
+// 	layer.caseId = this._selectedCase.id;
+// 	this.dataLayersService.addLayer(layer);
+// });
+// }
+
+	// @Effect({dispatch: false})
+	// onSaveCaseAs$: Observable<any> = this.actions$
+	// 	.pipe(
+	// 		ofType<OpenModalAction>(CasesActionTypes.OPEN_MODAL),
+	// 		tap(({payload}) => console.log(payload))
+	// 	);
 
 	/**
 	 * @type Effect

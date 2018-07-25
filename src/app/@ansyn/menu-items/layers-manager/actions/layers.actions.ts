@@ -13,7 +13,8 @@ export enum LayersActionTypes {
 	UPDATE_LAYER = '[Layers] Update layer',
 	REMOVE_LAYER = '[Layers] Remove layer',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
-	SET_MODAL = '[Layers] Set modal value'
+	SET_MODAL = '[Layers] Set modal value',
+	DELETE_ALL_DEFAULT_CASE_LAYERS = '[Layers] Delete All DefaultCase Layers'
 };
 
 export type LayersActions =
@@ -26,10 +27,19 @@ export type LayersActions =
 	| AddLayer
 	| UpdateLayer
 	| SetLayersModal
-	| CloseLayersModal;
+	| CloseLayersModal
+	| DeleteAllDefaultCaseLayersAction;
+
+export class DeleteAllDefaultCaseLayersAction implements Action {
+	type = LayersActionTypes.DELETE_ALL_DEFAULT_CASE_LAYERS;
+
+	constructor() {
+	}
+}
 
 export class BeginLayerCollectionLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;
+
 	constructor(public payload: { caseId: string }) {
 	}
 }
@@ -57,30 +67,35 @@ export class ErrorLoadingLayersAction implements Action {
 
 export class SetLayerSelection implements Action {
 	readonly type = LayersActionTypes.SET_LAYER_SELECTION;
+
 	constructor(public payload: { id: string, value: boolean }) {
 	}
 }
 
 export class SelectOnlyLayer implements Action {
 	readonly type = LayersActionTypes.SELECT_ONLY;
+
 	constructor(public payload: string) {
 	}
 }
 
 export class AddLayer implements Action {
 	readonly type = LayersActionTypes.ADD_LAYER;
+
 	constructor(public payload: ILayer) {
 	}
 }
 
 export class UpdateLayer implements Action {
 	readonly type = LayersActionTypes.UPDATE_LAYER;
+
 	constructor(public payload: ILayer) {
 	}
 }
 
 export class RemoveLayer implements Action {
 	readonly type = LayersActionTypes.REMOVE_LAYER;
+
 	constructor(public payload: string) {
 
 	}
@@ -104,7 +119,7 @@ export class SetLayersModal implements Action {
 
 export class CloseLayersModal extends SetLayersModal {
 	constructor() {
-		super({ type: SelectedModalEnum.none, layer: null })
+		super({ type: SelectedModalEnum.none, layer: null });
 	}
 }
 

@@ -38,11 +38,6 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let selectedLayersIds = state.selectedLayersIds;
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			let layers = action.payload;
-			if (!annotationLayer) {
-				annotationLayer = DataLayersService.generateAnnotationLayer();
-				selectedLayersIds = [...selectedLayersIds, annotationLayer.id];
-				layers = [annotationLayer, ...layers];
-			}
 			activeAnnotationLayer = annotationLayer.id;
 			return layersAdapter.addAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
 

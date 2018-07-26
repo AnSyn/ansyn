@@ -58,6 +58,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onHoveredOverlay(overlay: IOverlay) {
 		if (overlay) {
+			const isNewOverlay = this.overlayId !== overlay.id;
 			this.overlayId = overlay.id;
 			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);
 			if (hoveredElement) {
@@ -67,7 +68,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.isHoveringOverDrop = true;
 				this.overlay = overlay;
 				this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));
-				this.startedLoadingImage();
+				if (isNewOverlay) {
+					this.startedLoadingImage();
+				}
 			}
 		} else {
 			this.isHoveringOverDrop = false;

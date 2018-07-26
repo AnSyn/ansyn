@@ -4,6 +4,10 @@ import { DataLayersModalsComponent } from './data-layers-modals.component';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { AnsynModalComponent } from '../../../../core/components/ansyn-modal/ansyn-modal.component';
+import { DownloadLayersComponent } from './download-layers/download-layers.component';
+import { EditLayerComponent } from './edit-layer/edit-layer.component';
+import { DeleteLayerComponent } from './delete-layer/delete-layer.component';
+import { FormsModule } from '@angular/forms';
 
 describe('DataLayersModalsComponent', () => {
 	let component: DataLayersModalsComponent;
@@ -11,8 +15,8 @@ describe('DataLayersModalsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DataLayersModalsComponent, AnsynModalComponent],
-			imports: [StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })]
+			declarations: [DataLayersModalsComponent, AnsynModalComponent, DownloadLayersComponent, EditLayerComponent, DeleteLayerComponent],
+			imports: [FormsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })]
 		})
 			.compileComponents();
 	}));

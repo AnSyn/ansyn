@@ -1,6 +1,6 @@
 import { LayerCollectionLoadedAction } from '../actions/layers.actions';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
-import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
 
 describe('LayersReducer', () => {
 
@@ -9,9 +9,9 @@ describe('LayersReducer', () => {
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
 			name: 'staticLayer',
-			type: LayerType.static,
+			type: LayerType.annotation,
 			creationTime: new Date(),
-			layerPluginType: layerPluginType.OSM
+			layerPluginType: layerPluginType.Annotations
 		};
 
 		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);

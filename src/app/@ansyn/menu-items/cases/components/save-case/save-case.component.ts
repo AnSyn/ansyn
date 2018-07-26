@@ -47,18 +47,6 @@ export class SaveCaseComponent implements OnInit {
 		return true;
 	};
 
-
-	// deleteAllDefaultCaseLayers$: any = this.store.select(casesStateSelector)
-	// 	.pluck<ICasesState, ICase>('selectedCase')
-	// 	.distinctUntilChanged()
-	// 	.mergeMap((state: any) => Observable.forkJoin([Observable.of(state), this.dataLayersService.getAllLayersInATree({ caseId: this.casesService.defaultCase.id })]))
-	// 	.filter(([state, layers]: [any, ILayer[]]) => layers.length > 0)
-	// 	.mergeMap(([state, layers]: [any, ILayer[]]) => {
-	// 		let observers = [];
-	// 		layers.filter((layer: ILayer) => layer.layerPluginType === layerPluginType.Annotations).forEach((layer: ILayer) => observers.push(this.dataLayersService.removeLayer(layer.id)));
-	// 		return Observable.forkJoin(observers);
-	// 	});
-
 	selectedCase$: Observable<ICase> = this.store.select(casesStateSelector)
 		.pluck<ICasesState, ICase>('selectedCase')
 		.distinctUntilChanged()
@@ -85,7 +73,6 @@ export class SaveCaseComponent implements OnInit {
 		this.selectedCase$.subscribe((selectedCase: ICase) => {
 			this.caseModel = selectedCase;
 		});
-		// this.deleteAllDefaultCaseLayers$.subscribe();
 	}
 
 	close(): void {

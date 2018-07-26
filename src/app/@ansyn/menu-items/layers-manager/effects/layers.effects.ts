@@ -44,8 +44,8 @@ export class LayersEffects {
 				let annotationLayer = result.payload.find(({ type }) => type === LayerType.annotation);
 				if (!annotationLayer) {
 					annotationLayer = DataLayersService.generateAnnotationLayer();
+					result.payload = [annotationLayer, ...result.payload];
 				}
-				result.payload = [annotationLayer, ...result.payload];
 				return Observable.forkJoin([Observable.of(result), this.dataLayersService.addLayer(annotationLayer)]);
 			}),
 			map(([action, layers]: [any, any]) => action)

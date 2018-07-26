@@ -30,12 +30,10 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { catchError, debounceTime, map, mergeMap, switchMap } from 'rxjs/internal/operators';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { LoadCaseAction, SelectDilutedCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 @Injectable()
 export class CasesEffects {
@@ -230,7 +228,6 @@ export class CasesEffects {
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,
 				protected store: Store<ICasesState>,
-				protected dataLayersService: DataLayersService,
 				protected errorHandlerService: ErrorHandlerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}

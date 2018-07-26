@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
 
 import { DeleteLayerComponent } from './delete-layer.component';
 
@@ -8,7 +9,8 @@ describe('DeleteLayerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DeleteLayerComponent]
+			declarations: [DeleteLayerComponent],
+			imports: [StoreModule.forRoot({})]
 		})
 			.compileComponents();
 	}));

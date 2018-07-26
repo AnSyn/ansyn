@@ -11,6 +11,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction
@@ -113,7 +114,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghij)--', {
+			const expectedResult = cold('--(abcdefghijk)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -123,7 +124,8 @@ describe('SelectCaseAppEffects', () => {
 				g: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				h: new UpdateFacetsAction(facets),
 				i: new UpdateSelectedLayersIds([]),
-				j: new SetContextParamsAction({ contextEntities })
+				j: new SetContextParamsAction({ contextEntities }),
+				k: new SetAutoSave(false)
 
 		});
 

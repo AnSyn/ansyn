@@ -19,8 +19,7 @@
 
 	<ansyn-layer *ngFor="let layer of collection.data"
 				 [@layersTrigger]="show"
-				 [layer]="layer"
-				 [showOnly]="collection.data.length < 2">
+				 [layer]="layer">
 
 			<ansyn-layer-menu [disabledRemove]="collection.data?.length < 2"
 							  (openModal)="openModal($event, layer)">

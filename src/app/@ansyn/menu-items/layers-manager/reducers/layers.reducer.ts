@@ -52,7 +52,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let selectedLayersIds = uniq([...state.selectedLayersIds, layer.id]);
 			selectedLayersIds = selectedLayersIds.filter((layerId) => {
 				const checkLayer = state.entities[layerId];
-				return checkLayer.type !== layer.type || checkLayer.id === layer.id;
+				return checkLayer.type === layer.type && checkLayer.id === layer.id;
 			});
 			return { ...state, selectedLayersIds };
 		}

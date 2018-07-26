@@ -44,6 +44,18 @@
 
 img {
 	height: 150px;
+	box-sizing: border-box;
+
+	&.loading {
+		border: 1px solid transparent;
+		border-radius: 50%;
+		animation: loading-thumbnail 2s linear infinite;
+	}
+}
+
+@keyframes loading-thumbnail {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
 }
 
 footer {

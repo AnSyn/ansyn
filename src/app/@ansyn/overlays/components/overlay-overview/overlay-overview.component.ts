@@ -19,6 +19,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public overlay: any;
 	public formattedTime: string;
 	public overlayId: string;
+	public loading = false;
 
 	protected topElement = this.el.nativeElement.parentElement;
 
@@ -66,6 +67,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.isHoveringOverDrop = true;
 				this.overlay = overlay;
 				this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));
+				this.startedLoadingImage();
 			}
 		} else {
 			this.isHoveringOverDrop = false;
@@ -74,5 +76,13 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onDblClick() {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: this.overlayId }));
+	}
+
+	startedLoadingImage() {
+		this.loading = true;
+	}
+
+	finishedLoadingImage() {
+		this.loading = false;
 	}
 }

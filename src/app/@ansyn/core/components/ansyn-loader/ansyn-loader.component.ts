@@ -7,7 +7,7 @@ import { Component, HostBinding, Input } from '@angular/core';
 })
 export class AnsynLoaderComponent {
 	@Input() show = false;
-	@Input() loaderText = 'Loading';
+	@Input() loaderText = '';
 
 	@HostBinding('class.show')
 	get ShowIt() {

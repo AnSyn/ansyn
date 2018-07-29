@@ -10,7 +10,7 @@ export class AnsynLoaderComponent {
 	@Input() loaderText = '';
 
 	@HostBinding('class.show')
-	get ShowIt() {
+	get showIt() {
 		return this.show;
 	}
 }

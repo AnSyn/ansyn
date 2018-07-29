@@ -8,12 +8,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
+import { MockComponent } from '@ansyn/core/test/mock-component';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
 	let fixture: ComponentFixture<OverlayOverviewComponent>;
 	let store: Store<any>;
 	let document: Document;
+
+	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText'] });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -22,7 +25,7 @@ describe('OverlayOverviewComponent', () => {
 				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
 				EffectsModule.forRoot([])
 			],
-			declarations: [OverlayOverviewComponent]
+			declarations: [OverlayOverviewComponent, mockLoader]
 		})
 			.compileComponents();
 	}));

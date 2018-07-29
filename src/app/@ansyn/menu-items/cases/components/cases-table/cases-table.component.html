@@ -27,7 +27,7 @@
 			 *ngFor="let id of ids"
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
-			 [class.selected]="(selectedCaseId$ | async) === id"
+			 [class.selected]="selectedCaseId === id"
 			 (mouseenter)="onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="cases-table-auto-save-col">
-					<ansyn-cases-auto-save [caseId]="id" [isSelectedCase]="(selectedCaseId$ | async) === id"></ansyn-cases-auto-save>
+					<ansyn-cases-auto-save [caseId]="id" [isSelectedCase]="selectedCaseId === id"></ansyn-cases-auto-save>
 				</div>
 
 				<div class="cases-table-body-col">

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnsynLoaderComponent } from './ansyn-loader.component';
 
-describe('ImageryLoaderComponent', () => {
+describe('AnsynLoaderComponent', () => {
 	let component: AnsynLoaderComponent;
 	let fixture: ComponentFixture<AnsynLoaderComponent>;
 

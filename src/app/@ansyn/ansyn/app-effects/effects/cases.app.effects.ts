@@ -27,21 +27,6 @@ import { tap } from 'rxjs/internal/operators';
 @Injectable()
 export class CasesAppEffects {
 
-// 	if (this.layers) {
-// 	this.layers.forEach((layer) => {
-// 	layer.id = UUID.UUID();
-// 	layer.caseId = this._selectedCase.id;
-// 	this.dataLayersService.addLayer(layer);
-// });
-// }
-
-	// @Effect({dispatch: false})
-	// onSaveCaseAs$: Observable<any> = this.actions$
-	// 	.pipe(
-	// 		ofType<OpenModalAction>(CasesActionTypes.OPEN_MODAL),
-	// 		tap(({payload}) => console.log(payload))
-	// 	);
-
 	/**
 	 * @type Effect
 	 * @name onDisplayOverlay$

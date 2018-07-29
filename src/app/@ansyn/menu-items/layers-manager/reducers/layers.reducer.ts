@@ -38,7 +38,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let selectedLayersIds = state.selectedLayersIds;
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			let layers = action.payload;
-			activeAnnotationLayer = annotationLayer.id;
+			activeAnnotationLayer = annotationLayer && annotationLayer.id;
 			return layersAdapter.addAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
 
 		case LayersActionTypes.SET_LAYER_SELECTION: {
@@ -61,9 +61,14 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			return { ...state, selectedLayersIds: action.payload };
 
 		case LayersActionTypes.ADD_LAYER: {
+			let activeAnnotationLayer = state.activeAnnotationLayer;
+			if (!activeAnnotationLayer && action.payload.type === LayerType.annotation) {
+				activeAnnotationLayer = action.payload.id;
+			}
 			return layersAdapter.addOne(action.payload, {
 				...state,
-				selectedLayersIds: [...state.selectedLayersIds, action.payload.id]
+				selectedLayersIds: [...state.selectedLayersIds, action.payload.id],
+				activeAnnotationLayer
 			});
 		}
 

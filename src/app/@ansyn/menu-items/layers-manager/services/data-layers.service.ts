@@ -1,6 +1,6 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs';
+import { APP_INITIALIZER, Inject, Injectable, InjectionToken } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
@@ -13,7 +13,8 @@ import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
 import { ICase } from '@ansyn/core/models/case.model';
-import { catchError, filter, tap } from 'rxjs/internal/operators';
+import { catchError, filter, mergeMap, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { selectAutoSave } from '../../../core/reducers/core.reducer';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -23,7 +24,7 @@ export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionT
 	destroy: 'ngOnDestroy'
 })
 export class DataLayersService {
-	static caseId: string;
+	caseId: string;
 
 	@AutoSubscription
 	caseId$ = this.store
@@ -31,11 +32,11 @@ export class DataLayersService {
 			/* SelectedCase should move to core store */
 			select(selectSelectedCase),
 			filter(Boolean),
-			tap(({ id }: ICase) => DataLayersService.caseId = id)
+			tap(({ id }: ICase) => this.caseId = id)
 		);
 
 
-	static generateAnnotationLayer(name = 'Default'): ILayer {
+	generateAnnotationLayer(name = 'Default'): ILayer {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
@@ -58,9 +59,8 @@ export class DataLayersService {
 	}
 
 	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {
-		return this.storageService.getPage<ILayer>(this.config.schema, 0, 100)
+		return this.storageService.search<ILayer>(this.config.schema, { caseId })
 			.pipe(
-				map((result: ILayer[]) => result.filter((layer) => !layer.caseId || layer.caseId === caseId)),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err))
 			)
 	}
@@ -82,4 +82,7 @@ export class DataLayersService {
 			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to remove layer')));
 	}
 
+	removeCaseLayers(caseId) {
+		return this.storageService.deleteSearch('layers', { caseId });
+	}
 }

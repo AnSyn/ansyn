@@ -26,7 +26,7 @@ export class EditLayerComponent {
 	}
 
 	addLayer(name) {
-		const layer = DataLayersService.generateAnnotationLayer(name);
+		const layer = this.dataLayersService.generateAnnotationLayer(name);
 		this.store.dispatch(new AddLayer(layer));
 		this.closeModal();
 	}

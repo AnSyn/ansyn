@@ -35,6 +35,16 @@ export class StorageService {
 		return this._buildIdUrl(schema, entity.preview.id);
 	}
 
+	search<P extends IEntity>(schema: string, body): Observable<P[]> {
+		const url = this._buildSchemaUrl(schema);
+		return this._http.post<P[]>(`${url}/search`, body);
+	}
+
+	deleteSearch<P extends IEntity>(schema: string, body): Observable<P[]> {
+		const url = this._buildSchemaUrl(schema);
+		return this._http.post<P[]>(`${url}/delete_search`, body);
+	}
+
 	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
 		return this._http.get<P[]>(url, {

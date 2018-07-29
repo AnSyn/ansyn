@@ -2,7 +2,7 @@ import { ILayerState } from '../reducers/layers.reducer';
 import {
 	AddLayer,
 	BeginLayerCollectionLoadAction,
-	LayerCollectionLoadedAction,
+	LayerCollectionLoadedAction, LayersActions,
 	LayersActionTypes,
 	UpdateLayer
 } from '../actions/layers.actions';
@@ -26,7 +26,6 @@ import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service'
 
 @Injectable()
 export class LayersEffects {
-
 	/**
 	 * @type Effect
 	 * @name beginLayerTreeLoad$
@@ -35,21 +34,22 @@ export class LayersEffects {
 	 * @action LayerCollectionLoadedAction?, ErrorLoadingLayersAction?
 	 */
 	@Effect()
-	beginLayerTreeLoad$: Observable<any> = this.actions$
+	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.pipe(
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
-			mergeMap((layers: ILayer[]) => {
-				let result = new LayerCollectionLoadedAction(layers);
-				let annotationLayer = result.payload.find(({ type }) => type === LayerType.annotation);
-				if (!annotationLayer) {
-					annotationLayer = DataLayersService.generateAnnotationLayer();
-					result.payload = [annotationLayer, ...result.payload];
-				}
-				return Observable.forkJoin([Observable.of(result), this.dataLayersService.addLayer(annotationLayer)]);
-			}),
-			map(([action, layers]: [any, any]) => action)
+			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
 		);
+
+	@Effect()
+	onLayerCollectionLoaded$ = this.actions$.pipe(
+		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
+		filter((action) => !action.payload.some(({ type }) => type === LayerType.annotation )),
+		map(() => {
+			const annotationLayer = this.dataLayersService.generateAnnotationLayer();
+			return new AddLayer(annotationLayer);
+		})
+	);
 
 	@Effect({ dispatch: false })
 	addLayer$ = this.actions$.pipe(

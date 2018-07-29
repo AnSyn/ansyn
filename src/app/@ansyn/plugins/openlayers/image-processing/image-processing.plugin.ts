@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import ImageLayer from 'ol/layer/image';
 import { OpenLayersImageProcessing } from '@ansyn/plugins/openlayers/image-processing/image-processing';
 import Raster from 'ol/source/raster';
@@ -52,7 +52,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		if (this.imageLayer && this.imageLayer.getSource() instanceof Raster) {
 			this._imageProcessing = new OpenLayersImageProcessing((<any>this.imageLayer).getSource());
 		}
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {

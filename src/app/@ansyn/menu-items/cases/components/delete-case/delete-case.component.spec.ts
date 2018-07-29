@@ -51,7 +51,7 @@ describe('DeleteCaseComponent', () => {
 
 	beforeEach(inject([Store, CasesService], (_store: Store<ICasesState>, _casesService: CasesService) => {
 		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
+		spyOn(_store, 'select').and.callFake(() => of(fakeICasesState));
 
 		fixture = TestBed.createComponent(DeleteCaseComponent);
 		component = fixture.componentInstance;
@@ -75,7 +75,7 @@ describe('DeleteCaseComponent', () => {
 	});
 
 	it('onSubmitRemove should call store.dispatch with CloseModalAction', () => {
-		spyOn(casesService, 'removeCase').and.returnValue(Observable.of(component.activeCase));
+		spyOn(casesService, 'removeCase').and.returnValue(of(component.activeCase));
 		spyOn(component, 'close');
 		component.onSubmitRemove();
 		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction(component.activeCase.id));

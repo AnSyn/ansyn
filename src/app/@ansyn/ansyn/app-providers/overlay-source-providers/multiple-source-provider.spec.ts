@@ -12,6 +12,7 @@ import * as turf from '@turf/turf';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Injectable } from '@angular/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { EMPTY, of } from 'rxjs/index';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -41,22 +42,22 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		if (fetchParams.limit <= 0) {
-			return Observable.of(emptyOverlays);
+			return of(emptyOverlays);
 		}
 
-		return Observable.of(overlays);
+		return of(overlays);
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	}
 }
 
@@ -65,19 +66,19 @@ class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = faultySourceType;
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.throw(new Error('Failed to fetch overlays'));
+		return throwError(new Error('Failed to fetch overlays'));
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	}
 }
 

@@ -29,10 +29,8 @@ import {
 } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { combineLatest, Observable } from 'rxjs';
 import { selectDisplayAnnotationsLayer, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import 'rxjs/add/observable/combineLatest';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
@@ -169,7 +167,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			return this.showAnnotation(annotationsLayer.data);
 		}
 		this.clearEntities();
-		return Observable.of(true);
+		return of(true);
 	}
 
 	constructor(public store$: Store<any>, protected projectionService: ProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {

@@ -24,7 +24,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 			controls: [new ScaleLine()]
 		});
 		this.setMainLayer(layers[0], position);
-		return Observable.of(true);
+		return of(true);
 	}
 
 	addLayerIfNotExist(layer: any) {
@@ -42,13 +42,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	setCenter(center: Point, animation: boolean): Observable<boolean> {
-		return Observable.of(true);
+		return of(true);
 	}
 
 
 	resetView(layer: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
-		return Observable.of(true);
+		return of(true);
 	}
 
 	setMainLayer(layer: Layer, position?: ICaseMapPosition) {
@@ -100,11 +100,11 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	setPosition(position: ICaseMapPosition): Observable<boolean> {
-		return Observable.of(true);
+		return of(true);
 	}
 
 	getPosition(): Observable<ICaseMapPosition> {
-		return Observable.of(undefined);
+		return of(undefined);
 	}
 
 	setRotation(rotation: number): void {

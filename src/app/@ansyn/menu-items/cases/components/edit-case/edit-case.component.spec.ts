@@ -50,7 +50,7 @@ describe('EditCaseComponent', () => {
 
 	beforeEach(inject([Store, CasesService], (_store: Store<ICasesState>, _casesService: CasesService) => {
 		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
+		spyOn(_store, 'select').and.callFake(() => of(fakeICasesState));
 
 		fixture = TestBed.createComponent(EditCaseComponent);
 		component = fixture.componentInstance;
@@ -82,7 +82,7 @@ describe('EditCaseComponent', () => {
 			spyOn(component, 'close');
 			spyOn(casesService.queryParamsHelper, 'updateCaseViaContext').and.returnValue(component.caseModel);
 			component.contextsList = ['fakeContext' as any];
-			spyOn(casesService, 'createCase').and.callFake((value) => Observable.of(value));
+			spyOn(casesService, 'createCase').and.callFake((value) => of(value));
 			component.onSubmitCase(0);
 			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith('fakeContext', component.caseModel);
 			expect(store.dispatch).toHaveBeenCalledWith(new AddCaseAction(component.caseModel));

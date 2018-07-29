@@ -143,7 +143,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				return this.extractData(data.features);
 			})
 			.catch((error: HttpErrorResponse) => {
-				return Observable.throw(error);
+				return throwError(error);
 			});
 	}
 

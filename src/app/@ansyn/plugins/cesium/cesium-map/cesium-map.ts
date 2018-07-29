@@ -14,15 +14,15 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = {};
-		return Observable.of(false);
+		return of(false);
 	}
 
 	getCenter(): Observable<Point> {
-		return Observable.throw(new Error('Method not implemented.'));
+		return throwError(new Error('Method not implemented.'));
 	}
 
 	setCenter(center: Point, animation: boolean): Observable<boolean> {
-		return Observable.throw(new Error('Method not implemented.'));
+		return throwError(new Error('Method not implemented.'));
 	}
 
 	toggleGroup(groupName: string, newState: boolean) {
@@ -30,7 +30,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	resetView(layer: any): Observable<boolean> {
-		return Observable.throw(new Error('Method not implemented.'));
+		return throwError(new Error('Method not implemented.'));
 	}
 
 	addLayer(layer: any): void {
@@ -42,11 +42,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	setPosition(position: ICaseMapPosition): Observable<boolean> {
-		return Observable.throw(new Error('Method not implemented.'));
+		return throwError(new Error('Method not implemented.'));
 	}
 
 	getPosition(): Observable<ICaseMapPosition> {
-		return Observable.throw(new Error('Method not implemented.'));
+		return throwError(new Error('Method not implemented.'));
 	}
 
 	setRotation(rotation: number): void {

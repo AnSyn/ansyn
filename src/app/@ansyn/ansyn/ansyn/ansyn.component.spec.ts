@@ -73,7 +73,7 @@ describe('AnsynComponent', () => {
 			[selectSelectedCase, { name: 'Case name' }],
 			[selectIsPinned, true]
 		]);
-		spyOn(store, 'select').and.callFake(type => Observable.of(mockStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
 
 
 	}));

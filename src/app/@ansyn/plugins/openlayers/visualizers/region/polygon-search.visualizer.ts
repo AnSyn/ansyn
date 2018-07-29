@@ -4,7 +4,6 @@ import { UUID } from 'angular2-uuid';
 import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
-import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';

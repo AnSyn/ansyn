@@ -1,8 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { DataLayersService, layersConfig } from './data-layers.service';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
@@ -70,7 +68,7 @@ describe('DataLayersService', () => {
 			]
 		};
 
-		spyOn(http, 'get').and.returnValue(Observable.of(new Response(serverResponse)));
+		spyOn(http, 'get').and.returnValue(of(new Response(serverResponse)));
 		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
 		expect(http.get).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}`,
 			{ params: { from: '0', limit: '100'}}

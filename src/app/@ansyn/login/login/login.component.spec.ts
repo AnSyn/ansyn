@@ -4,16 +4,17 @@ import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/catch';
+import * as rxjs from 'rxjs';
+import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 
 describe('LoginComponent', () => {
 	let component: LoginComponent;
 	let fixture: ComponentFixture<LoginComponent>;
 	let router: Router;
 	let mockAuthService = {
-		login: () => Observable.of('nothing'),
+		login: () => of('nothing'),
 		clear: () => {
 		}
 	};
@@ -46,7 +47,7 @@ describe('LoginComponent', () => {
 	});
 
 	it('login functino should call login$.subscribe', () => {
-		const fakeLogin$ = Observable.of('login');
+		const fakeLogin$ = of('login');
 		spyOn(fakeLogin$, 'subscribe');
 		spyOnProperty(component, 'login$', 'get').and.callFake(() => fakeLogin$);
 		component.login();
@@ -55,18 +56,18 @@ describe('LoginComponent', () => {
 
 
 	describe('login$ should be an Observable with catch or switchMap results', () => {
-		let loginObservable: any = Observable.of('ok');
+		let loginObservable: any = of('ok');
 
 		beforeEach(() => {
 			spyOn(authService, 'login').and.callFake(() => loginObservable);
 			spyOn(router, 'navigateByUrl').and.callFake(() => 'navigation');
-			spyOn(Observable, 'fromPromise').and.callFake(() => Observable.of(''));
-			spyOn(Observable, 'throw').and.callFake(() => Observable.throw);
+			// spyOn(rxjs, 'fromPromise').and.callFake(() => of(''));
+			spyOn(rxjs, 'throwError').and.callFake(() => throwError);
 		});
 
 		it('on switchMap', () => {
 			component.login$.subscribe(() => {
-				expect(Observable.fromPromise).toHaveBeenCalledWith('navigation');
+				expect(fromPromise).toHaveBeenCalledWith('navigation');
 				expect(router.navigateByUrl).toHaveBeenCalled();
 			});
 		});
@@ -78,7 +79,7 @@ describe('LoginComponent', () => {
 			spyOn(component, 'showTryAgainMsg');
 			component.login$.subscribe(() => {
 				expect(component.showTryAgainMsg).toHaveBeenCalled();
-				expect(Observable.throw).toHaveBeenCalledWith('Unauthorized');
+				expect(throwError).toHaveBeenCalledWith('Unauthorized');
 			});
 		});
 

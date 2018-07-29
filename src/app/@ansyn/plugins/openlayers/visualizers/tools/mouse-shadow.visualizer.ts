@@ -47,7 +47,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		});
 
 	@AutoSubscription
-	createShadowMouseProducer$ = Observable.combineLatest(this.isActive$, this.shadowMouseFlag$, this.onEnterMap$)
+	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.onEnterMap$)
 		.do(([isActive, shadowMouseFlag]) => {
 			this.clearEntities();
 			if (isActive && shadowMouseFlag) {
@@ -58,7 +58,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		});
 
 	@AutoSubscription
-	drawPoint$ = Observable.combineLatest(this.mouseShadowProducer$, this.isActive$)
+	drawPoint$ = combineLatest(this.mouseShadowProducer$, this.isActive$)
 		.filter(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => payload.outsideSource || !isActive)
 		.mergeMap(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => this.setEntities([{
 			id: 'shadowMouse',
@@ -81,7 +81,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		if (logicalEntities.length <= 0) {
-			return Observable.of(true);
+			return of(true);
 		}
 
 		const logicalEntitiesCopy = [...logicalEntities];

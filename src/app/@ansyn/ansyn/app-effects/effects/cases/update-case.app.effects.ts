@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import { ICase } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
@@ -49,7 +47,7 @@ export class UpdateCaseAppEffects {
 	 * @dependencies cases, core, tools, statusBar, map, layers, filters
 	 */
 	@Effect()
-	shouldUpdateCase$ = Observable.combineLatest(this.events)
+	shouldUpdateCase$ = combineLatest(this.events)
 		.withLatestFrom(this.store$.select(selectSelectedCase))
 		.filter(([events, selectedCase]) => Boolean(selectedCase))    /* SelectCaseAction(selectedCase) already triggered */
 		.map(([events, selectedCase]: [any, any]) => {

@@ -24,7 +24,6 @@ import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
-import 'rxjs/add/observable/of';
 import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 import { IOverlay } from '@ansyn/core/models/overlay.model';

@@ -77,7 +77,7 @@ describe('CasesEffects', () => {
 				CasesService,
 				{
 					provide: ErrorHandlerService,
-					useValue: { httpErrorHandle: () => Observable.throw(null) }
+					useValue: { httpErrorHandle: () => throwError(null) }
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
@@ -110,7 +110,7 @@ describe('CasesEffects', () => {
 			...caseMock,
 			id: 'loadedCase2'
 		}, { ...caseMock, id: 'loadedCase1' }];
-		spyOn(casesService, 'loadCases').and.callFake(() => Observable.of(loadedCases));
+		spyOn(casesService, 'loadCases').and.callFake(() => of(loadedCases));
 		actions = hot('--a--', { a: new LoadCasesAction() });
 		const expectedResults = cold('--b--', { b: new AddCasesAction(loadedCases) });
 		expect(casesEffects.loadCases$).toBeObservable(expectedResults);
@@ -118,7 +118,7 @@ describe('CasesEffects', () => {
 
 	it('onAddCase$ should call casesService.createCase with action.payload(new case), and return AddCaseSuccessAction', () => {
 		let newCasePayload: ICase = { ...caseMock, id: 'newCaseId', name: 'newCaseName' };
-		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(newCasePayload));
+		spyOn(casesService, 'createCase').and.callFake(() => of(newCasePayload));
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
 		const expectedResults = cold('--a--', { a: new SelectCaseAction(newCasePayload) });
 		expect(casesEffects.onAddCase$).toBeObservable(expectedResults);
@@ -158,7 +158,7 @@ describe('CasesEffects', () => {
 
 	it('onSaveCaseAs$ should add a default case', () => {
 		const selectedCase = { id: 'selectedCaseId' } as ICase;
-		spyOn(casesService, 'createCase').and.returnValue(Observable.of(selectedCase));
+		spyOn(casesService, 'createCase').and.returnValue(of(selectedCase));
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);

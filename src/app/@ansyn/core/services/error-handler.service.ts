@@ -18,7 +18,7 @@ export class ErrorHandlerService {
 			toastText: toastMessage || "Connection Problem",
 			showWarningIcon: true
 		}));
-		return Observable.throw(errMsg);
+		return throwError(errMsg);
 	}
 
 }

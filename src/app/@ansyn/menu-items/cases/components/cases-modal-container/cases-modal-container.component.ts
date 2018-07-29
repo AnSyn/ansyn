@@ -6,8 +6,6 @@ import { ICaseModal, casesStateSelector, ICasesState } from '../../reducers/case
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
 
-import 'rxjs/add/operator/distinctUntilChanged';
-
 const animationsDuring = '0.2s';
 
 const animations: any[] = [

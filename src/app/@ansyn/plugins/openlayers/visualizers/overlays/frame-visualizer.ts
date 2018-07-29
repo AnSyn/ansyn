@@ -59,7 +59,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			const entityToDraw = { id, featureJson };
 			return this.setEntities([entityToDraw]);
 		}
-		return Observable.of(true);
+		return of(true);
 	}
 
 	getStroke() {

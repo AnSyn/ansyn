@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import 'rxjs/add/observable/fromPromise';
 
 @Component({
 	selector: 'ansyn-login',
@@ -37,10 +36,10 @@ export class LoginComponent implements OnInit {
 
 	get login$() {
 		return this.authService.login(this.username, this.password, this.rememberMe)
-			.switchMap(() => Observable.fromPromise(this.router.navigateByUrl(this.returnUrl)))
+			.switchMap(() => fromPromise(this.router.navigateByUrl(this.returnUrl)))
 			.catch(() => {
 				this.showTryAgainMsg();
-				return Observable.throw('Unauthorized');
+				return throwError('Unauthorized');
 			});
 	}
 

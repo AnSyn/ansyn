@@ -133,7 +133,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		const mergedSortedOverlays: Observable<IOverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
+		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.sourceConfigs
 			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => {
 				const dataFiltersOfProvider = Boolean(fetchParams.dataInputFilters) ?
@@ -175,7 +175,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			}, null))
 			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
 
-		return Observable.from(startEnd);
+		return from(startEnd);
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
@@ -195,7 +195,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			}, null))
 			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
 
-		return Observable.from(startEnd);
+		return from(startEnd);
 	}
 }
 

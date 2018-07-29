@@ -25,13 +25,13 @@ export class OpenLayersProjectionService extends ProjectionService {
 	projectApproximatelyToImage<olGeometry>(point: Point, map: BaseImageryMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
 		point.coordinates = proj.fromLonLat(<[number, number]>point.coordinates, projection);
-		return Observable.of(point);
+		return of(point);
 	}
 
 	projectApproximately(point: Point, map: BaseImageryMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
 		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
-		return Observable.of(point);
+		return of(point);
 	}
 
 	/* collections */
@@ -51,7 +51,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 		const dataProjection = 'EPSG:4326';
 		const options = { featureProjection, dataProjection };
 		const features: olFeature[] = <any> this.olGeoJSON.readFeatures(featureCollection, options);
-		return Observable.of(features);
+		return of(features);
 	}
 
 	projectCollectionApproximately<olFeature>(features: olFeature[] | any, map: BaseImageryMap): Observable<FeatureCollection<GeometryObject>> {
@@ -59,7 +59,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 		const dataProjection = 'EPSG:4326';
 		const options = { featureProjection, dataProjection };
 		const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features, options);
-		return Observable.of(geoJsonFeature);
+		return of(geoJsonFeature);
 	}
 
 	getProjectionProperties(communicator: CommunicatorEntity, annotationLayer: any): Object {

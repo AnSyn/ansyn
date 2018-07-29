@@ -32,8 +32,6 @@ import {
 	InitializeFiltersSuccessAction,
 	ResetFiltersAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/observable/of';
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { selectFavoriteOverlays } from '@ansyn/core/reducers/core.reducer';
 import { ICaseFacetsState, ICaseFilter, FilterType } from '@ansyn/core/models/case.model';
@@ -47,7 +45,6 @@ import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resol
 import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -56,7 +53,7 @@ export class FiltersAppEffects {
 	showOnlyFavorite$ = this.store$.select(selectShowOnlyFavorites);
 	favoriteOverlays$ = this.store$.select(selectFavoriteOverlays);
 	overlaysArray$ = this.store$.select(selectOverlaysArray);
-	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[]]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$);
+	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[]]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$);
 	facets$ = this.store$.select(selectFacets);
 	oldFilters$ = this.store$.select(selectOldFilters);
 

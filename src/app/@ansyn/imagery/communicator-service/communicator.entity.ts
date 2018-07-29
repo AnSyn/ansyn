@@ -139,7 +139,7 @@ export class CommunicatorEntity {
 
 	public setPosition(position: ICaseMapPosition): Observable<boolean> {
 		if (!this.ActiveMap) {
-			return Observable.throw(new Error('missing active map'));
+			return throwError(new Error('missing active map'));
 		}
 
 		return this.ActiveMap.setPosition(position);
@@ -147,7 +147,7 @@ export class CommunicatorEntity {
 
 	public getPosition(): Observable<ICaseMapPosition> {
 		if (!this.ActiveMap) {
-			return Observable.throw(new Error('missing active map'));
+			return throwError(new Error('missing active map'));
 		}
 		return this.ActiveMap.getPosition();
 	}

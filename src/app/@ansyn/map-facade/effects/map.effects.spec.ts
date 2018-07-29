@@ -45,7 +45,7 @@ describe('MapEffects', () => {
 		const fakeStore = new Map<any, any>([
 			[mapStateSelector, mapState]
 		]);
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([MapEffects, ImageryCommunicatorService], (_mapEffects: MapEffects, _imageryCommunicatorService: ImageryCommunicatorService) => {
@@ -99,16 +99,16 @@ describe('MapEffects', () => {
 		it('listen to SynchronizeMapsAction', () => {
 			const communicator = {
 				setPosition: () => {
-					return Observable.of(true);
+					return of(true);
 				},
 				getPosition: () => {
-					return Observable.of({});
+					return of({});
 				}
 			};
 			const fakeMap: ICaseMapState = <any> {id: 'imagery2'};
 			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-			spyOn(communicator, 'setPosition').and.callFake(() => Observable.of(true));
+			spyOn(communicator, 'setPosition').and.callFake(() => of(true));
 			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
 			actions = hot('--a--', { a: action });
 			const expectedResults = cold('--b--', { b: [action, mapState] });

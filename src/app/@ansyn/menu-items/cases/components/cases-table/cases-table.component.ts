@@ -12,7 +12,6 @@ import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ICaseModal } from '../../reducers/cases.reducer';

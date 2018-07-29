@@ -19,6 +19,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { DisplayOverlayAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
+import { of } from 'rxjs/index';
 
 function mockOverlay(id: string): IOverlay {
 	const overlay = <IOverlay> {};
@@ -59,7 +60,7 @@ describe('CoreAppEffects', () => {
 			[casesStateSelector, casesState],
 			[mapStateSelector, mapsState]
 		]);
-		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
+		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));
 
 	beforeEach(inject([CoreAppEffects], (_coreAppEffects: CoreAppEffects) => {

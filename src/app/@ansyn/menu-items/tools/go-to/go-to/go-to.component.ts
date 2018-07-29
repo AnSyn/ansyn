@@ -8,7 +8,6 @@ import {
 	SetPinLocationModeAction
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { SetSubMenu } from '../../actions/tools.actions';

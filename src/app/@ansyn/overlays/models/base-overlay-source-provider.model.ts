@@ -93,7 +93,7 @@ export abstract class BaseOverlaySourceProvider {
 
 				return this.fetch(newFetchParams).catch(err => {
 						this.loggerService.error(err);
-						return Observable.of({
+						return of({
 							data: null,
 							limited: -1,
 							errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
@@ -102,10 +102,10 @@ export abstract class BaseOverlaySourceProvider {
 			});
 
 		if (fetchObservables.length <= 0) {
-			return Observable.of({data: [], limited: 0, errors: []});
+			return of({data: [], limited: 0, errors: []});
 		}
 
-		const multipleFetches: Observable<IOverlaysFetchData> = Observable.forkJoin(fetchObservables) // Wait for every fetch to resolve
+		const multipleFetches: Observable<IOverlaysFetchData> = forkJoin(fetchObservables) // Wait for every fetch to resolve
 			.map((data: Array<IOverlaysFetchData>) => {
 				// All failed
 				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {

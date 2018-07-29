@@ -1,8 +1,3 @@
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/pluck';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs';
@@ -18,7 +13,6 @@ import {
 } from '../reducers/overlays.reducer';
 import { IOverlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
-import 'rxjs/add/operator/share';
 import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
@@ -59,7 +53,7 @@ export class OverlaysEffects {
 					}
 					return actions;
 				})
-				.catch(() => Observable.from([new LoadOverlaysSuccessAction([] ), new SetOverlaysStatusMessage('Error on overlays request')]));
+				.catch(() => from([new LoadOverlaysSuccessAction([] ), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
 
 	/**

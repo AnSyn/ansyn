@@ -96,7 +96,7 @@ describe('TreeViewComponent', () => {
 			[coreStateSelector, coreState]
 		]);
 
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(() => {

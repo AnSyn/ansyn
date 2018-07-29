@@ -9,8 +9,6 @@ import {
 	MapActionTypes
 } from '../../actions/map.actions';
 import { uniq as _uniq } from 'lodash';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { CaseGeoFilter, ICaseMapState } from '@ansyn/core/models/case.model';

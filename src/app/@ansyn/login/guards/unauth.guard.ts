@@ -12,6 +12,6 @@ export class UnAuthGuard implements CanDeactivate<any> {
 	canDeactivate(component: any, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 		return this.authService.isLoggedIn()
 			.map(() => false)
-			.catch(() => Observable.of(true));
+			.catch(() => of(true));
 	}
 }

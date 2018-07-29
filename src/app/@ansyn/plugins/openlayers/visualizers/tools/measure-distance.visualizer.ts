@@ -44,7 +44,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged();
 
 	@AutoSubscription
-	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
+	onChanges$ = combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
 		.do(([isActiveMap, isMeasureToolActive]) => {
 			if (isActiveMap && isMeasureToolActive) {
 				this.createInteraction();

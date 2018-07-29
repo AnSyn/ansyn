@@ -1,7 +1,7 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import {
 	ActiveMapChangedAction,
@@ -87,19 +87,19 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	};
 }
 
@@ -249,7 +249,7 @@ describe('MapAppEffects', () => {
 			[toolsStateSelector, toolsState]
 		]);
 
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([MapAppEffects, ImageryCommunicatorService, CasesService, BaseMapSourceProvider], (_mapAppEffects: MapAppEffects, _imageryCommunicatorService: ImageryCommunicatorService, _casesService: CasesService, _baseSourceProviders: BaseMapSourceProvider[]) => {

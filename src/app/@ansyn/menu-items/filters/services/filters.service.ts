@@ -1,7 +1,6 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { IFilter } from '../models/IFilter';
-import 'rxjs/add/observable/of';
 import { Filters, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { CaseFilters } from '@ansyn/core/models/case.model';

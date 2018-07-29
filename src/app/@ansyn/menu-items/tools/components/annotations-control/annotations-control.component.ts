@@ -1,6 +1,4 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {

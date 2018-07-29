@@ -14,7 +14,6 @@ import Style from 'ol/style/style';
 import Feature from 'ol/feature';
 import { Point } from 'geojson';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
 import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
@@ -56,7 +55,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		.mergeMap(this.drawGotoIconOnMap.bind(this));
 
 	@AutoSubscription
-	goToPinAvailable$ = Observable.combineLatest(this.pinLocation$, this.isActiveMap$)
+	goToPinAvailable$ = combineLatest(this.pinLocation$, this.isActiveMap$)
 		.do(([pinLocation, isActiveMap]: [boolean, boolean]) => {
 			if (isActiveMap && pinLocation) {
 				this.createSingleClickEvent();
@@ -105,7 +104,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 			return this.setEntities([{ id: 'goto', featureJson }]);
 		}
 		this.clearEntities();
-		return Observable.of(true);
+		return of(true);
 	}
 
 	onDispose() {

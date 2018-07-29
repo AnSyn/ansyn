@@ -63,7 +63,7 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 	}
 
 	onResetView(): Observable<boolean> {
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public dispose() {

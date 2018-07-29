@@ -7,7 +7,7 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { ICase } from '@ansyn/menu-items/cases/models/case.model';
 import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -22,19 +22,19 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	};
 }
 

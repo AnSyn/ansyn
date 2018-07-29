@@ -31,7 +31,7 @@ describe('CasesService', () => {
 				},
 				{
 					provide: ErrorHandlerService,
-					useValue: { httpErrorHandle: () => Observable.throw(null) }
+					useValue: { httpErrorHandle: () => throwError(null) }
 				},
 				MockCasesConfig
 			]

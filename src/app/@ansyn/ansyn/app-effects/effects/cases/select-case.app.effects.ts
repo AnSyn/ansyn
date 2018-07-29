@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {

@@ -2,15 +2,11 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { intersect, polygon } from '@turf/turf';
-
-import 'rxjs/add/observable/forkJoin';
 import {
 	ActiveMapChangedAction,
 	AnnotationContextMenuTriggerAction,
@@ -227,7 +223,7 @@ export class MapEffects {
 						}
 					});
 				this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-				return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+				return fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.map(() => new BackToWorldSuccess(payload));
 			})
 		);
@@ -332,7 +328,7 @@ export class MapEffects {
 				}
 			});
 
-			return Observable.forkJoin(setPositionObservables).map(() => [action, mapState]);
+			return forkJoin(setPositionObservables).map(() => [action, mapState]);
 		});
 
 	@Effect()

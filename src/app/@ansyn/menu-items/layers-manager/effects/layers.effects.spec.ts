@@ -65,7 +65,7 @@ describe('LayersEffects', () => {
 			layerPluginType: layerPluginType.OSM
 		}, dataLayersService.generateAnnotationLayer()];
 
-		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of(layers));
+		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => of(layers));
 		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });
 		const expectedResults = cold('--a--', {
 			a: new LayerCollectionLoadedAction(layers)

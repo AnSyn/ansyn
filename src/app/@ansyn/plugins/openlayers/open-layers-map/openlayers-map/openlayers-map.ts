@@ -17,11 +17,8 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
-import 'rxjs/add/operator/take';
 import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/of';
 import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
@@ -144,7 +141,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return this.setPosition(position);
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public getLayerById(id: string): Layer {
@@ -246,12 +243,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public getCenter(): Observable<GeoPoint> {
 		if (!this.isValidPosition) {
-			return Observable.of(null);
+			return of(null);
 		}
 		const view = this._mapObject.getView();
 		const center = view.getCenter();
 		if (!areCoordinatesNumeric(center)) {
-			return Observable.of(null);
+			return of(null);
 		}
 		const point = <GeoPoint> turf.geometry('Point', center);
 
@@ -260,7 +257,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	calculateRotateExtent(map: OLMap): Observable<CaseMapExtentPolygon> {
 		if (!this.isValidPosition) {
-			return Observable.of(null);
+			return of(null);
 		}
 		const [width, height] = map.getSize();
 		const topLeft = map.getCoordinateFromPixel([0, 0]);
@@ -270,7 +267,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
 		const someIsNaN = !coordinates[0].every(areCoordinatesNumeric);
 		if (someIsNaN) {
-			return Observable.of(null);
+			return of(null);
 		}
 
 		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], this)
@@ -314,7 +311,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			view.setZoom(zoom);
 			view.setRotation(rotation);
 			this.isValidPosition = true;
-			return Observable.of(true);
+			return of(true);
 		} else {
 			return this.fitRotateExtent(this.mapObject, extentPolygon);
 		}

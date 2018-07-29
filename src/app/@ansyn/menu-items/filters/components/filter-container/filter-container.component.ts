@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { IFiltersConfig } from '@ansyn/menu-items/filters/models/filters-config';
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
 import { FilterType } from '@ansyn/core/models/case.model';

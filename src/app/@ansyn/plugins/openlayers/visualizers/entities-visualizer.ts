@@ -200,7 +200,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		if (logicalEntities.length <= 0) {
-			return Observable.of(true);
+			return of(true);
 		}
 
 		const featuresCollectionToAdd = <FeatureCollection<any>> {

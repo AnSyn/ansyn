@@ -58,7 +58,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.do(this.onContextMenu.bind(this));
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
+	interactionChanges$: Observable<any> = combineLatest(this.onSearchMode$, this.isActiveMap$)
 		.do(this.interactionChanges.bind(this));
 
 	@AutoSubscription

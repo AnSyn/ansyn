@@ -1,14 +1,12 @@
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Observable } from 'rxjs';
-import 'rxjs/add/observable/forkJoin';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions } from '@ngrx/effects';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/operator/retry';
-import { Observer } from 'rxjs/Observer';
+import { Observer } from 'rxjs';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
@@ -101,16 +99,16 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				this.iMap.mapObject.getView().setRotation(northData.actualNorth);
 				this.iMap.mapObject.renderSync();
 				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-					return Observable.throw({ result: northData.actualNorth });
+					return throwError({ result: northData.actualNorth });
 				}
-				return Observable.of(northData.actualNorth);
+				return of(northData.actualNorth);
 			})
 			.retry(this.maxNumberOfRetries)
-			.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
+			.catch((e) => e.result ? of(e.result) : throwError(e));
 	}
 
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
-		return Observable.forkJoin(coordinates.map((coordinate) => {
+		return forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
 			return this.projectionService.projectAccurately(point, this.iMap);
 		}));
@@ -136,7 +134,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	pointNorth(): Observable<any> {
 		this.communicator.updateSize();
 		const currentRotation = this.iMap.mapObject.getView().getRotation();
-		return Observable.of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false })))
+		return of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false })))
 			.mergeMap(() => this.getCorrectedNorth())
 			.do(() => {
 				this.iMap.mapObject.getView().setRotation(currentRotation);
@@ -146,7 +144,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				const error = `setCorrectedNorth failed: ${reason}`;
 				this.loggerService.warn(error);
 				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
-				return Observable.throw(error);
+				return throwError(error);
 			});
 	}
 

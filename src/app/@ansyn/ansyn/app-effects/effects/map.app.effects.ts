@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -50,7 +50,8 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
 import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
-import { debounceTime } from 'rxjs/internal/operators';
+import { catchError, debounceTime } from 'rxjs/internal/operators';
+import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 
 @Injectable()
 export class MapAppEffects {
@@ -313,34 +314,36 @@ export class MapAppEffects {
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ mapType, sourceType });
 
 		if (!sourceLoader) {
-			return Observable.of(new SetToastMessageAction({
+			return of(new SetToastMessageAction({
 				toastText: 'No source loader for ' + overlay.sourceType,
 				showWarningIcon: true
 			}));
 		}
 
 		const changeActiveMap = mergeMap((layer) => {
-			let observable = Observable.of(true);
+			let observable = of(true);
 			const geoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
 			const notGeoRegisteredMap = !overlay.isGeoRegistered && communicator.activeMapName === OpenlayersMapName;
 			const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 			if (newActiveMapName) {
-				observable = Observable.fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, layer));
+				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, layer));
 			}
-			return observable.map(() => layer);
+			return observable.pipe(map(() => layer));
 		});
 
 		const extent = (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
 		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
 		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
 
-		return Observable.fromPromise(sourceLoader.createAsync({ ...caseMapState, data: { ...mapData, overlay } }))
+		return fromPromise(sourceLoader.createAsync({ ...caseMapState, data: { ...mapData, overlay } }))
 			.pipe(changeActiveMap, resetView, displaySuccess)
-			.catch(() => Observable.from([
-				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
-				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
-			]));
+			.pipe(
+				catchError(() => from([
+					new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
+					prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
+				]))
+			)
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {

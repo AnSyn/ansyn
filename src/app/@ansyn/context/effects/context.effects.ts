@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { IContextParams, selectContextsArray, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
@@ -86,7 +86,7 @@ export class ContextEffects {
 			.catch((err) => {
 				console.warn('Error loading context as case', err);
 				const defaultCaseParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
-				return Observable.from([new SelectCaseAction(defaultCaseParams),
+				return from([new SelectCaseAction(defaultCaseParams),
 					new SetToastMessageAction({
 						toastText: 'Failed to load context',
 						showWarningIcon: true
@@ -145,7 +145,7 @@ export class ContextEffects {
 			}
 		));
 
-		let case$: Observable<ICase> = Observable.of(defaultCaseQueryParams).pipe(<any>mapToCase);
+		let case$: Observable<ICase> = of(defaultCaseQueryParams).pipe(<any>mapToCase);
 
 		if (context.imageryCountBefore && !context.imageryCountAfter) {
 			case$ = <any> this.overlaysService.getStartDateViaLimitFacets({

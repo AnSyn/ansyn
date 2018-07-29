@@ -13,24 +13,25 @@ import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { BaseOverlaySourceProvider, IFetchParams } from '../../models//base-overlay-source-provider.model';
 import { createStore, IStoreFixture } from '@ansyn/core/test/mock-store';
 import { MockComponent } from '@ansyn/core/test/mock-component';
+import { EMPTY } from 'rxjs/index';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	};
 }
 

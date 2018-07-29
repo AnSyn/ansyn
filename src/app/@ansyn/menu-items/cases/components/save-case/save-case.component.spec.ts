@@ -47,7 +47,7 @@ describe('SaveCaseComponent', () => {
 
 	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
 		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
+		spyOn(_store, 'select').and.callFake(() => of(fakeICasesState));
 
 		fixture = TestBed.createComponent(SaveCaseComponent);
 		component = fixture.componentInstance;

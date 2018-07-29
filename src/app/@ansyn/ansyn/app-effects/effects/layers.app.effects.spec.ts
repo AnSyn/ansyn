@@ -21,7 +21,6 @@ import {
 import { cloneDeep } from 'lodash';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IAppState } from '../app.effects.module';
-import 'rxjs/add/observable/of';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
@@ -57,7 +56,7 @@ describe('LayersAppEffects', () => {
 				}
 			}
 		};
-		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
+		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));
 
 	beforeEach(inject([LayersAppEffects], (_layersAppEffects: LayersAppEffects) => {

@@ -1,7 +1,3 @@
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -22,8 +18,6 @@ import {
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/cases.reducer';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
 import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';

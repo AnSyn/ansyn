@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
-import { Observable, of, merge } from 'rxjs';
+import { Observable, of, merge, throwError } from 'rxjs';
 import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';

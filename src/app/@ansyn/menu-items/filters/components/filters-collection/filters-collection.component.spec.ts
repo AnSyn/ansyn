@@ -5,7 +5,7 @@ import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { filtersConfig } from '../../services/filters.service';
 import { MockComponent } from '@ansyn/core/test/mock-component';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';

@@ -3,7 +3,7 @@ import { AnsynComponent } from './ansyn.component';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';

@@ -3,7 +3,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { GeocoderService } from '@ansyn/map-facade/services/geocoder.service';
 import { Point } from 'geojson';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-map-search-box',

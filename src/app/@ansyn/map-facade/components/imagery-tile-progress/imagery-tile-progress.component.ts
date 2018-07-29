@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '../../actions/map.actions';
 

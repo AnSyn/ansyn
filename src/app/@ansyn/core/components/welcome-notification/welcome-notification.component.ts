@@ -8,7 +8,7 @@ import {
 	OnDestroy
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/core.actions';
 import { Observable } from 'rxjs';

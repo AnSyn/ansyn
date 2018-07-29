@@ -12,7 +12,7 @@ import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';

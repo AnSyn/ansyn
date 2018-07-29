@@ -6,6 +6,7 @@ import { selectLayout } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { CopySelectedCaseLinkAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { tap } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -17,8 +18,8 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	icon = "block-icon icon-status-bar-case";
 	@Input() selectedCaseName: string;
 	@Input() activeMap: ICaseMapState;
-	layout$: Observable<LayoutKey> = this.store.select(selectLayout)
-		.do((layout) => this.layout = layout);
+	layout$: Observable<LayoutKey> = this.store.select(selectLayout).pipe(
+		tap((layout) => this.layout = layout));
 	layout: LayoutKey;
 	private subscribers = [];
 

@@ -19,7 +19,7 @@ import {
 	DisplayOverlayFromStoreAction, OverlaysActionTypes, RedrawTimelineAction,
 	SetMarkUp, SetTimelineStateAction
 } from '../../actions/overlays.actions';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { schemeCategory10 } from 'd3-scale';
 import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { isEqual } from 'lodash';

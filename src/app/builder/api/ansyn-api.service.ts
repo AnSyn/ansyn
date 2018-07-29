@@ -1,7 +1,7 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';

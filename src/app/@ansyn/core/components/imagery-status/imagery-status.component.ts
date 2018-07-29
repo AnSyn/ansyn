@@ -17,7 +17,7 @@ import {
 	selectPresetOverlays
 } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { getTimeFormat } from '../../utils/time';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';

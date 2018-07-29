@@ -1,6 +1,6 @@
 // From https://angular.io/guide/testing
 
-import { defer } from 'rxjs/observable/defer';
+import { defer } from 'rxjs';
 
 /** Create a truly async observable that emits-once and completes
  *  after a JS engine turn */

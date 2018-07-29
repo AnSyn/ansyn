@@ -5,8 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { HttpClient } from '@angular/common/http';
 import { asyncData } from '@ansyn/core/test/async-observable-helpers';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable, of  } from 'rxjs';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 

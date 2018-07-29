@@ -3,7 +3,7 @@ import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { SelectOnlyLayer, SetLayerSelection } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { select, Store } from '@ngrx/store';
 import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 

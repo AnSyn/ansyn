@@ -24,7 +24,7 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { catchError, debounceTime, map, switchMap } from 'rxjs/internal/operators';
+import { catchError, debounceTime, filter, map, share, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { LoadCaseAction, SelectDilutedCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
@@ -40,14 +40,16 @@ export class CasesEffects {
 	 * @action LoadCasesSuccessAction
 	 */
 	@Effect()
-	loadCases$: Observable<AddCasesAction | {}> = this.actions$
-		.ofType(CasesActionTypes.LOAD_CASES)
-		.withLatestFrom(this.store.select(selectCaseTotal), (action, total) => total)
-		.switchMap((total: number) => {
-			return this.casesService.loadCases(total)
-				.map(cases => new AddCasesAction(cases))
-				.catch(() => EMPTY);
-		}).share();
+	loadCases$: Observable<AddCasesAction | {}> = this.actions$.pipe(
+		ofType(CasesActionTypes.LOAD_CASES),
+		withLatestFrom(this.store.select(selectCaseTotal), (action, total) => total),
+		switchMap((total: number) => {
+			return this.casesService.loadCases(total).pipe(
+				map(cases => new AddCasesAction(cases)),
+				catchError(() => EMPTY)
+			)
+		}),
+		share());
 
 	/**
 	 * @type Effect
@@ -56,10 +58,10 @@ export class CasesEffects {
 	 * @action SelectCaseAction
 	 */
 	@Effect()
-	onAddCase$: Observable<SelectCaseAction> = this.actions$
-		.ofType<AddCaseAction>(CasesActionTypes.ADD_CASE)
-		.map((action: AddCaseAction) => new SelectCaseAction(action.payload))
-		.share();
+	onAddCase$: Observable<SelectCaseAction> = this.actions$.pipe(
+		ofType<AddCaseAction>(CasesActionTypes.ADD_CASE),
+		map((action: AddCaseAction) => new SelectCaseAction(action.payload)),
+		share());
 
 	/**
 	 * @type Effect
@@ -69,11 +71,11 @@ export class CasesEffects {
 	 * @action LoadDefaultCaseAction?, DeleteCaseBackendAction
 	 */
 	@Effect()
-	onDeleteCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id])
-		.filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId)
-		.map(() => new LoadDefaultCaseAction());
+	onDeleteCase$: Observable<any> = this.actions$.pipe(
+		ofType(CasesActionTypes.DELETE_CASE),
+		withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id]),
+		filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId),
+		map(() => new LoadDefaultCaseAction()));
 
 	/**
 	 * @type Effect
@@ -84,12 +86,12 @@ export class CasesEffects {
 	 * @action LoadCasesAction
 	 */
 	@Effect()
-	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$
-		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select(selectCaseTotal), (action, total) => total)
-		.filter((total: number) => total <= this.casesService.paginationLimit)
-		.map(() => new LoadCasesAction())
-		.share();
+	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$.pipe(
+		ofType(CasesActionTypes.DELETE_CASE),
+		withLatestFrom(this.store.select(selectCaseTotal), (action, total) => total),
+		filter((total: number) => total <= this.casesService.paginationLimit),
+		map(() => new LoadCasesAction()),
+		share());
 
 	/**
 	 * @type Effect
@@ -100,12 +102,12 @@ export class CasesEffects {
 	 * @action UpdateCaseBackendAction
 	 */
 	@Effect()
-	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
-		.ofType(CasesActionTypes.UPDATE_CASE)
-		.map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id])
-		.filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.updatedCase.id !== defaultCaseId && (action.payload.updatedCase.autoSave || action.payload.forceUpdate))
-		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload.updatedCase))
-		.share();
+	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$.pipe(
+		ofType(CasesActionTypes.UPDATE_CASE),
+		map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id]),
+		filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.updatedCase.id !== defaultCaseId && (action.payload.updatedCase.autoSave || action.payload.forceUpdate)),
+		map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload.updatedCase)),
+		share());
 
 	/**
 	 * @type Effect
@@ -136,7 +138,6 @@ export class CasesEffects {
 	@Effect({ dispatch: false })
 	openModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.OPEN_MODAL)
-		.share();
 
 	/**
 	 * @type Effect
@@ -146,7 +147,6 @@ export class CasesEffects {
 	@Effect({ dispatch: false })
 	closeModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.CLOSE_MODAL)
-		.share();
 
 	/**
 	 * @type Effect
@@ -156,13 +156,14 @@ export class CasesEffects {
 	 * @action SelectCaseAction
 	 */
 	@Effect()
-	loadDefaultCase$: Observable<SelectCaseAction> = this.actions$
-		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
-		.filter((action: LoadDefaultCaseAction) => !action.payload.context)
-		.map((action: LoadDefaultCaseAction) => {
+	loadDefaultCase$: Observable<SelectCaseAction> = this.actions$.pipe(
+		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
+		filter((action: LoadDefaultCaseAction) => !action.payload.context),
+		map((action: LoadDefaultCaseAction) => {
 			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
 			return new SelectCaseAction(defaultCaseQueryParams);
-		}).share();
+		}),
+		share());
 
 	/**
 	 * @type Effect
@@ -171,13 +172,13 @@ export class CasesEffects {
 	 * @action AddCaseAction
 	 */
 	@Effect()
-	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$
-		.ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS)
-		.map(({ payload }) => payload)
-		.switchMap((savedCase: ICase) => {
+	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
+		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
+		map(({ payload }) => payload),
+		switchMap((savedCase: ICase) => {
 			return this.casesService.createCase(savedCase)
-				.map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase));
-		});
+				.pipe(map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase)));
+		}));
 
 	/**
 	 * @type Effect
@@ -187,14 +188,14 @@ export class CasesEffects {
 	 * @action SetToastMessageAction
 	 */
 	@Effect()
-	onCopyShareCaseIdLink$ = this.actions$
-		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
-		.filter(action => !Boolean(action.payload.shareCaseAsQueryParams))
-		.map((action) => {
+	onCopyShareCaseIdLink$ = this.actions$.pipe(
+		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
+		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
+		map((action) => {
 			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
 			copyFromContent(shareLink);
 			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
-		});
+		}));
 
 	/**
 	 * @type Effect
@@ -202,11 +203,11 @@ export class CasesEffects {
 	 * @ofType LoadDefaultCaseIfNoActiveCaseAction
 	 */
 	@Effect()
-	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector))
-		.filter(([action, casesState]: [LoadDefaultCaseAction, ICasesState]) => !Boolean(casesState.selectedCase))
-		.map(() => new LoadDefaultCaseAction());
+	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$.pipe(
+		ofType(CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE),
+		withLatestFrom(this.store.select(casesStateSelector)),
+		filter(([action, casesState]: [LoadDefaultCaseAction, ICasesState]) => !Boolean(casesState.selectedCase)),
+		map(() => new LoadDefaultCaseAction()));
 
 	@Effect()
 	loadCase$: Observable<any> = this.actions$

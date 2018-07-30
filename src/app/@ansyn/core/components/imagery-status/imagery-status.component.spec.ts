@@ -7,7 +7,8 @@ import { LoggerConfig } from '../../models/logger.config';
 import { CoreModule } from '../../core.module';
 import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
-
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY } from 'rxjs/internal/observable/empty';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -16,7 +17,10 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [CoreModule, HttpClientModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
-			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: ALERTS, useValue: [] }]
+			providers: [
+				{ provide: LoggerConfig, useValue: {} },
+				{ provide: ALERTS, useValue: [] },
+				{ provide: TranslateService, useValue: { get: () => EMPTY, setDefaultLang(arg) {} }}]
 		}).compileComponents();
 	}));
 
@@ -51,6 +55,12 @@ describe('ImageryStatusComponent', () => {
 		spyOn(component, 'toggleFavorite');
 		fixture.nativeElement.querySelector('.set-favorite').click();
 		expect(component.toggleFavorite).toHaveBeenCalled();
+	});
+
+	it('check click on togglePreset', () => {
+		spyOn(component, 'togglePreset');
+		fixture.nativeElement.querySelector('.set-preset').click();
+		expect(component.togglePreset).toHaveBeenCalled();
 	});
 
 	it('should not show link when 1 map', () => {

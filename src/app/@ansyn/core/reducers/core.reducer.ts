@@ -1,7 +1,7 @@
 import {
 	CoreActions,
-	CoreActionTypes,
-	SetFavoriteOverlaysAction,
+	CoreActionTypes, EnableCopyOriginalOverlayDataAction,
+	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
@@ -24,16 +24,19 @@ export interface IToastMessage {
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: IOverlay[];
+	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
+	enableCopyOriginalOverlayData: boolean;
 	autoSave: boolean;
 }
 
 export const coreInitialState: ICoreState = {
 	toastMessage: null,
 	favoriteOverlays: [],
+	presetOverlays: [],
 	alertMsg: new Map([
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
@@ -41,7 +44,8 @@ export const coreInitialState: ICoreState = {
 	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
-	autoSave: false
+	autoSave: false,
+	enableCopyOriginalOverlayData: false
 };
 
 export const coreFeatureKey = 'core';
@@ -52,8 +56,14 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: (action as SetToastMessageAction).payload };
 
+		case CoreActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA:
+			return { ...state, enableCopyOriginalOverlayData: (action as EnableCopyOriginalOverlayDataAction).payload };
+
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
+
+		case CoreActionTypes.SET_PRESET_OVERLAYS:
+			return { ...state, presetOverlays: (action as SetPresetOverlaysAction).payload };
 
 		case  CoreActionTypes.ADD_ALERT_MSG: {
 			const alertKey = action.payload.key;
@@ -95,8 +105,10 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 }
 
 export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
+export const selectPresetOverlays = createSelector(coreStateSelector, (core) => core.presetOverlays);
 export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
 export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
 export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectEnableCopyOriginalOverlayDataFlag = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
 export const selectAutoSave = createSelector(coreStateSelector, (core) => core.autoSave);

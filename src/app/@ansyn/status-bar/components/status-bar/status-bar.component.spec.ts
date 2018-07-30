@@ -16,8 +16,8 @@ describe('StatusBarComponent', () => {
 		outputs: ['backToWorldView']
 	});
 	const mockSelectedCaseBarComponent = MockComponent({
-		selector: 'ansyn-selected-case-bar',
-		inputs: ['selectedCaseName']
+		selector: 'ansyn-popover',
+		inputs: ['text', 'icon']
 	});
 	const mockComboBoxes = MockComponent({ selector: 'ansyn-combo-boxes' });
 	const mockNavigationBar = MockComponent({ selector: 'ansyn-navigation-bar' });

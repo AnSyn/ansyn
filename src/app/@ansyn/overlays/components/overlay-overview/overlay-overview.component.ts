@@ -19,6 +19,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public overlay: any;
 	public formattedTime: string;
 	public overlayId: string;
+	public loading = false;
 
 	protected topElement = this.el.nativeElement.parentElement;
 
@@ -57,6 +58,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onHoveredOverlay(overlay: IOverlay) {
 		if (overlay) {
+			const isNewOverlay = this.overlayId !== overlay.id;
 			this.overlayId = overlay.id;
 			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);
 			if (hoveredElement) {
@@ -66,6 +68,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.isHoveringOverDrop = true;
 				this.overlay = overlay;
 				this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));
+				if (isNewOverlay) {
+					this.startedLoadingImage();
+				}
 			}
 		} else {
 			this.isHoveringOverDrop = false;
@@ -74,5 +79,13 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onDblClick() {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: this.overlayId }));
+	}
+
+	startedLoadingImage() {
+		this.loading = true;
+	}
+
+	finishedLoadingImage() {
+		this.loading = false;
 	}
 }

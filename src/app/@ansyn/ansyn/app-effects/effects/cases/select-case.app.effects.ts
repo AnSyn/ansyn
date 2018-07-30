@@ -9,7 +9,7 @@ import {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction, SetPresetOverlaysAction
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
@@ -54,7 +54,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
-		const { favoriteOverlays, region, dataInputFilters, contextEntities } = state;
+		const { favoriteOverlays, presetOverlays, region, dataInputFilters, contextEntities } = state;
 		let {  time } = state;
 		const { layout } = state.maps;
 
@@ -78,6 +78,7 @@ export class SelectCaseAppEffects {
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters}, { noInitialSearch }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
+			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),

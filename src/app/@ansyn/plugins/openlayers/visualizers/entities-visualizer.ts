@@ -72,7 +72,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.vector = new VectorLayer(<any>{
 			source: this.source,
 			style: this.featureStyle.bind(this),
-			opacity: this.visualizerStyle.opacity
+			opacity: this.visualizerStyle.opacity,
+			renderBuffer: 5000
 		});
 
 		if (!this.isHidden) {

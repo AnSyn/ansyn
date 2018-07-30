@@ -7,8 +7,10 @@ import { LayoutKey } from '../models/layout-options.model';
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
 	TOGGLE_OVERLAY_FAVORITE: type('[Core] TOGGLE_FAVORITE'),
+	TOGGLE_OVERLAY_PRESET: type('[Core] TOGGLE_OVERLAY_PRESET'),
 	SET_TOAST_MESSAGE: type('[Core] SET_TOAST_MESSAGE'),
 	SET_FAVORITE_OVERLAYS: type('[Core] SET_FAVORITE_OVERLAYS'),
+	SET_PRESET_OVERLAYS: type('[Core] SET_PRESET_OVERLAYS'),
 	CLEAR_ACTIVE_INTERACTIONS: type('[Core] CLEAR_ACTIVE_INTERACTIONS'),
 	ADD_ALERT_MSG: 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG: 'REMOVE_ALERT_MSG',
@@ -18,6 +20,8 @@ export const CoreActionTypes = {
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
+	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY',
+	ENABLE_COPY_ORIGINAL_OVERLAY_DATA: 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_AUTO_SAVE: 'SET_AUTO_SAVE'
@@ -26,17 +30,19 @@ export const CoreActionTypes = {
 export type CoreActions =
 	ToggleMapLayersAction
 	| ToggleFavoriteAction
+	| TogglePresetOverlayAction
 	| SetToastMessageAction
 	| SetFavoriteOverlaysAction
+	| SetPresetOverlaysAction
 	| ClearActiveInteractionsAction
 	| AddAlertMsg
 	| RemoveAlertMsg
 	| BackToWorldView
 	| BackToWorldSuccess
 	| GoAdjacentOverlay
+	| GoNextPresetOverlay
 	| SetWasWelcomeNotificationShownFlagAction
 	| UpdateOverlaysCountAction
-
 
 export class GoAdjacentOverlay implements Action {
 	type: string = CoreActionTypes.GO_ADJACENT_OVERLAY;
@@ -45,7 +51,19 @@ export class GoAdjacentOverlay implements Action {
 	}
 }
 
+export class GoNextPresetOverlay implements Action {
+	type: string = CoreActionTypes.GO_NEXT_PRESET_OVERLAY;
 
+	constructor() {
+	}
+}
+
+export class EnableCopyOriginalOverlayDataAction implements Action {
+	type: string = CoreActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA;
+
+	constructor(public payload: boolean) {
+	}
+}
 
 export class ToggleMapLayersAction implements Action {
 	type = CoreActionTypes.TOGGLE_MAP_LAYERS;
@@ -61,6 +79,13 @@ export class ToggleFavoriteAction implements Action {
 	}
 }
 
+export class TogglePresetOverlayAction implements Action {
+	type: string = CoreActionTypes.TOGGLE_OVERLAY_PRESET;
+
+	constructor(public payload: IOverlay) {
+	}
+}
+
 export class SetToastMessageAction implements Action {
 	type = CoreActionTypes.SET_TOAST_MESSAGE;
 
@@ -70,6 +95,13 @@ export class SetToastMessageAction implements Action {
 
 export class SetFavoriteOverlaysAction implements Action {
 	type = CoreActionTypes.SET_FAVORITE_OVERLAYS;
+
+	constructor(public payload: IOverlay[]) {
+	}
+}
+
+export class SetPresetOverlaysAction implements Action {
+	type = CoreActionTypes.SET_PRESET_OVERLAYS;
 
 	constructor(public payload: IOverlay[]) {
 	}

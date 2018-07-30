@@ -8,7 +8,12 @@ import { ICase } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
+import {
+	selectFavoriteOverlays,
+	selectLayout,
+	selectOverlaysCriteria,
+	selectPresetOverlays
+} from '@ansyn/core/reducers/core.reducer';
 import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
@@ -22,6 +27,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
+		this.store$.select(selectPresetOverlays),
 		this.store$.select(selectComboBoxesProperties),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMapsList),
@@ -47,6 +53,7 @@ export class UpdateCaseAppEffects {
 				activeLayersIds,
 				facets,
 				favoriteOverlays,
+				presetOverlays,
 				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				activeMapId,
 				mapsList,
@@ -78,6 +85,7 @@ export class UpdateCaseAppEffects {
 						activeLayersIds
 					},
 					favoriteOverlays,
+					presetOverlays,
 					region,
 					dataInputFilters,
 					time,

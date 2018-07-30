@@ -50,11 +50,13 @@ import OLGeoJSON from 'ol/format/geojson';
 import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 import { AutoSubscription } from 'auto-subscriptions';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { featureCollection } from '@turf/turf';
 import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { UUID } from 'angular2-uuid';
 import { uniq } from 'lodash';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { featureCollection } from '@turf/turf';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -65,6 +67,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
 	disableCache = true;
 	public mode: AnnotationMode;
+	mapSearchIsActive = false;
 
 	activeAnnotationLayer$: Observable<ILayer> = this.store$
 		.pipe(
@@ -90,6 +93,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
+
+	@AutoSubscription
+	geoFilterSearchMode$ = this.store$.pipe(
+		select(selectGeoFilterSearchMode),
+		tap((searchMode: SearchMode) => {
+			this.mapSearchIsActive = searchMode !== SearchModeEnum.none;
+		})
+	);
 
 	@AutoSubscription
 	annoatationModeChange$: Observable<any> = combineLatest(this.annotationMode$, this.isActiveMap$)
@@ -219,6 +230,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onSelectFeature(data) {
 		data.target.getFeatures().clear();
+		if (this.mapSearchIsActive || this.mode) { return; }
 		const [selectedFeature] = data.selected;
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();

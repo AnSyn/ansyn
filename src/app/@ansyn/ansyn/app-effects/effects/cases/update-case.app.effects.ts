@@ -9,6 +9,7 @@ import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
+	selectAutoSave,
 	selectFavoriteOverlays,
 	selectLayout,
 	selectOverlaysCriteria,
@@ -20,9 +21,15 @@ import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducer
 import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
+import { pipe } from 'rxjs/Rx';
+import { tap } from 'rxjs/internal/operators';
 
 @Injectable()
 export class UpdateCaseAppEffects {
+	isAutoSaveTriggered: boolean;
+	clearIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = false));
+	setIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = true));
+
 	events: any[] = [
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
@@ -35,7 +42,9 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectContextEntities)
-	];
+	]
+		.map(event => event.pipe(this.clearIsAutoSave))
+		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
 	/**
 	 * @type Effect
@@ -60,10 +69,11 @@ export class UpdateCaseAppEffects {
 				layout,
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
-				contextEntities
+				contextEntities,
+				autoSave
 			] = events;
 
-			const { id, name, lastModified, owner, creationTime, selectedContextId, autoSave } = selectedCase;
+			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
@@ -95,7 +105,7 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase });
+			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
 		});
 
 	constructor(protected store$: Store<IAppState>) {

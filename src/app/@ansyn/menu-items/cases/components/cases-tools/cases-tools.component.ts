@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/internal/operators';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { get } from 'lodash';
 
 @Component({
 	selector: 'ansyn-cases-tools',
@@ -29,6 +30,10 @@ export class CasesToolsComponent {
 				this._selectedCase = selectedCase;
 			})
 		);
+
+	get isDefaultCaseId() {
+		return get(this.casesService, 'defaultCase.id') === get(this._selectedCase, 'id');
+	}
 
 	constructor(protected store: Store<ICasesState>,
 				protected casesService: CasesService) {

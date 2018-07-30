@@ -42,9 +42,16 @@
 					{{entities[id].name}}
 				</div>
 
-				<div class="cases-table-auto-save-col">
-					<ansyn-cases-auto-save [caseId]="id" [isSelectedCase]="selectedCaseId === id"></ansyn-cases-auto-save>
-				</div>
+				<ansyn-cases-auto-save  class="cases-table-auto-save-col"
+										*ngIf="selectedCaseId === id; else notSelected"
+										[caseId]="id">
+				</ansyn-cases-auto-save>
+
+				<ng-template #notSelected>
+					<div class="cases-table-case-name-col">
+						{{ entities[id].autoSave ? 'ON' : 'OFF' }}
+					</div>
+				</ng-template>
 
 				<div class="cases-table-body-col">
 					{{entities[id].owner}}

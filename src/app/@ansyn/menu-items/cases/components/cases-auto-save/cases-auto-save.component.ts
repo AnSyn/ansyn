@@ -20,7 +20,6 @@ import { SetAutoSave } from '@ansyn/core/actions/core.actions';
 })
 export class CasesAutoSaveComponent {
 	@Input() caseId: string;
-	@Input() isSelectedCase: boolean;
 	currentCase;
 
 	@AutoSubscription
@@ -36,13 +35,7 @@ export class CasesAutoSaveComponent {
 	}
 
 	onChange(autoSave) {
-		this.store$.dispatch(new UpdateCaseAction({
-			updatedCase: <ICase> { ...this.currentCase, autoSave },
-			forceUpdate: true
-		}));
-		if (this.isSelectedCase) {
-			this.store$.dispatch(new SetAutoSave(autoSave));
-		}
+		this.store$.dispatch(new SetAutoSave(autoSave));
 	}
 
 	constructor(protected store$: Store<any>) {

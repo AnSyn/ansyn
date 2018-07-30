@@ -10,7 +10,7 @@ import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 import { DataLayersService } from '../services/data-layers.service';
 
-export const layersAdapter = createEntityAdapter<ILayer>({ sortComparer: (layerA, layerB) => layerA.type === LayerType.annotation ? -1 : 1 });
+export const layersAdapter = createEntityAdapter<ILayer>();
 
 export interface ILayerState extends EntityState<ILayer> {
 	selectedLayersIds: string[];

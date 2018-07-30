@@ -267,9 +267,14 @@ export class CasesEffects {
 	@Effect()
 	manualSave$ = this.actions$.pipe(
 		ofType<ManualSaveAction>(CasesActionTypes.MANUAL_SAVE),
-		filter((action) => action.payload.id === this.casesService.defaultCase.id),
+		filter((action) => action.payload.id !== this.casesService.defaultCase.id),
 		this.saveLayers,
-		map((action: ManualSaveAction) => new UpdateCaseAction({ updatedCase: action.payload, forceUpdate: true }))
+		mergeMap((action: ManualSaveAction) => [
+			new UpdateCaseAction({ updatedCase: action.payload, forceUpdate: true }),
+			new SetToastMessageAction({ toastText: 'Case saved successfully' })
+		]),
+		catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to update case')),
+		catchError(() => EMPTY)
 	);
 
 	constructor(protected actions$: Actions,

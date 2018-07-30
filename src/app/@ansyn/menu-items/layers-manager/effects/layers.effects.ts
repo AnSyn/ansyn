@@ -2,7 +2,8 @@ import { ILayerState } from '../reducers/layers.reducer';
 import {
 	AddLayer,
 	BeginLayerCollectionLoadAction,
-	LayerCollectionLoadedAction, LayersActions,
+	LayerCollectionLoadedAction,
+	LayersActions,
 	LayersActionTypes,
 	UpdateLayer
 } from '../actions/layers.actions';
@@ -15,13 +16,12 @@ import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { catchError, filter, map, withLatestFrom } from 'rxjs/internal/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
-import { selectAutoSave } from '../../../core/reducers/core.reducer';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { selectAutoSave } from '@ansyn/core/reducers/core.reducer';
 
 
 @Injectable()
@@ -44,7 +44,7 @@ export class LayersEffects {
 	@Effect()
 	onLayerCollectionLoaded$ = this.actions$.pipe(
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
-		filter((action) => !action.payload.some(({ type }) => type === LayerType.annotation )),
+		filter((action) => !action.payload.some(({ type }) => type === LayerType.annotation)),
 		map(() => {
 			const annotationLayer = this.dataLayersService.generateAnnotationLayer();
 			return new AddLayer(annotationLayer);
@@ -78,14 +78,13 @@ export class LayersEffects {
 		filter(([action, autoSave]) => autoSave),
 		mergeMap(([action]) => this.dataLayersService.removeLayer(action.payload)
 			.pipe(
-				catchError(() => of(true))
+				catchError(() => EMPTY)
 			)
 		)
 	);
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,
-				protected errorHandlerService: ErrorHandlerService,
 				protected store$: Store<ILayerState>) {
 	}
 }

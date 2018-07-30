@@ -11,7 +11,7 @@ export interface IEntity {
 
 export interface IStoredEntity<P extends IEntity, D> {
 	preview: P;
-	data: D;
+	data?: D;
 }
 
 /*
@@ -33,6 +33,16 @@ export class StorageService {
 
 	private _buildEntityUrl<P extends IEntity, D>(schema: string, entity: IStoredEntity<P, D>) {
 		return this._buildIdUrl(schema, entity.preview.id);
+	}
+
+	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
+		const url = this._buildSchemaUrl(schema);
+		return this._http.post<P[]>(`${url}/search_by_case`, body);
+	}
+
+	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
+		const url = this._buildSchemaUrl(schema);
+		return this._http.post<P[]>(`${url}/delete_by_case`, body);
 	}
 
 	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number): Observable<P[]> {

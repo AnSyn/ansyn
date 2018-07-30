@@ -11,6 +11,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction,
@@ -118,7 +119,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijk)--', {
+			const expectedResult = cold('--(abcdefghijkl)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -129,7 +130,8 @@ describe('SelectCaseAppEffects', () => {
 				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				i: new UpdateFacetsAction(facets),
 				j: new UpdateSelectedLayersIds([]),
-				k: new SetContextParamsAction({ contextEntities })
+				k: new SetContextParamsAction({ contextEntities }),
+				l: new SetAutoSave(false)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

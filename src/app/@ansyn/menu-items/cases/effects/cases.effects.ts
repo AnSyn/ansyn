@@ -5,7 +5,7 @@ import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -30,10 +30,21 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { catchError, debounceTime, map, switchMap } from 'rxjs/internal/operators';
+import { catchError, debounceTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import { LoadCaseAction, SelectDilutedCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import {
+	DeleteCaseAction,
+	LoadCaseAction,
+	ManualSaveAction,
+	SelectDilutedCaseAction
+} from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { forkJoin } from 'rxjs/index';
+import { UUID } from 'angular2-uuid';
+import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { pipe } from 'rxjs/Rx';
 
 @Injectable()
 export class CasesEffects {
@@ -75,11 +86,13 @@ export class CasesEffects {
 	 * @action LoadDefaultCaseAction?, DeleteCaseBackendAction
 	 */
 	@Effect()
-	onDeleteCase$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.DELETE_CASE)
-		.withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id])
-		.filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId)
-		.map(() => new LoadDefaultCaseAction());
+	onDeleteCase$: Observable<any> = this.actions$.pipe(
+		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
+		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
+		withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id]),
+		filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId),
+		map(() => new LoadDefaultCaseAction())
+	);
 
 	/**
 	 * @type Effect
@@ -120,7 +133,7 @@ export class CasesEffects {
 	 * @action UpdateCaseBackendSuccessAction
 	 */
 	@Effect()
-	onUpdateCaseBackend$: Observable< UpdateCaseBackendSuccessAction | any> = this.actions$
+	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
 		.pipe(
 			ofType(CasesActionTypes.UPDATE_CASE_BACKEND),
 			debounceTime(this.casesService.config.updateCaseDebounceTime),
@@ -129,7 +142,7 @@ export class CasesEffects {
 					.pipe(
 						map((updatedCase: IStoredEntity<ICasePreview, IDilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
 						catchError(() => EMPTY)
-					)
+					);
 
 			})
 		);
@@ -177,13 +190,29 @@ export class CasesEffects {
 	 * @action AddCaseAction
 	 */
 	@Effect()
-	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$
-		.ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS)
-		.map(({ payload }) => payload)
-		.switchMap((savedCase: ICase) => {
-			return this.casesService.createCase(savedCase)
-				.map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase));
-		});
+	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
+		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
+		withLatestFrom(this.store.select(selectLayers)),
+		mergeMap(([{ payload }, layers]: [SaveCaseAsAction, ILayer[]]) => this.casesService
+			.createCase(payload).pipe(
+				mergeMap((addedCase: ICase) => forkJoin(layers
+						.filter(({ type }) => type === LayerType.annotation)
+						.map((layer) => {
+							const newId = UUID.UUID();
+							const oldId = layer.id;
+
+							addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
+								return id === oldId ? newId : id;
+							});
+
+							return { ...layer, id: newId, caseId: addedCase.id };
+						}).map((layer) => this.dataLayersService.addLayer(layer))
+					)
+						.pipe(map((_) => addedCase))
+				),
+				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase))
+			)
+		));
 
 	/**
 	 * @type Effect
@@ -222,12 +251,36 @@ export class CasesEffects {
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => EMPTY),
 			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase))
-			);
+		);
 
+	saveLayers = pipe(
+		mergeMap((action: ManualSaveAction) => this.dataLayersService
+			.removeCaseLayers(action.payload.id).pipe(
+				withLatestFrom(this.store.select(selectLayers)),
+				mergeMap(([deletedLayersIds, layers]: [string[], ILayer[]]) => forkJoin(layers.filter((layer) => layer.type === LayerType.annotation)
+					.map((layer) => this.dataLayersService.addLayer(layer)))
+					.pipe(map(() => action))
+				)
+			))
+	);
+
+	@Effect()
+	manualSave$ = this.actions$.pipe(
+		ofType<ManualSaveAction>(CasesActionTypes.MANUAL_SAVE),
+		filter((action) => action.payload.id !== this.casesService.defaultCase.id),
+		this.saveLayers,
+		mergeMap((action: ManualSaveAction) => [
+			new UpdateCaseAction({ updatedCase: action.payload, forceUpdate: true }),
+			new SetToastMessageAction({ toastText: 'Case saved successfully' })
+		]),
+		catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to update case')),
+		catchError(() => EMPTY)
+	);
 
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,
 				protected store: Store<ICasesState>,
+				protected dataLayersService: DataLayersService,
 				protected errorHandlerService: ErrorHandlerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}

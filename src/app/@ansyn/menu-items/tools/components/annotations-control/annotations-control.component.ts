@@ -2,15 +2,23 @@ import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
 	AnnotationSetProperties,
 	SetAnnotationMode
 } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { IAnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import {
+	IAnnotationProperties, IToolsState,
+	toolsStateSelector
+} from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { selectActiveAnnotationLayer, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { SetActiveAnnotationLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 export interface IModeList {
 	mode: AnnotationMode;
@@ -34,6 +42,15 @@ export class AnnotationsControlComponent implements OnInit {
 	get SelectionBoxTypes() {
 		return SelectionBoxTypes;
 	}
+
+	annotationLayerIds$ = this.store.pipe(
+		select(selectLayers),
+		map((layers: ILayer[]) => layers.filter(({ type }) => type === LayerType.annotation))
+	);
+
+	activeAnnotationLayer$ = this.store.pipe(
+		select(selectActiveAnnotationLayer)
+	);
 
 	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
 		.pluck<IToolsState, AnnotationMode>('annotationMode')
@@ -76,6 +93,10 @@ export class AnnotationsControlComponent implements OnInit {
 	ngOnInit() {
 		this.mode$.subscribe(value => this.mode = value);
 		this.annotationProperties$.subscribe(value => this.annotationProperties = value);
+	}
+
+	setSelectedAnnotationLayer(id) {
+		this.store.dispatch(new SetActiveAnnotationLayer(id));
 	}
 
 	toggleSelection(selected: SelectionBoxTypes) {

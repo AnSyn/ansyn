@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { CoreConfig } from '@ansyn/core/models/core.config';
+import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;
@@ -37,10 +38,12 @@ describe('SaveCaseComponent', () => {
 				RouterTestingModule
 			],
 			providers: [
+				DataLayersService,
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {}
-			}]
+				{ provide: CoreConfig, useValue: {} },
+				{ provide: layersConfig, useValue: {}}
+				]
 		})
 			.compileComponents();
 	}));
@@ -48,7 +51,6 @@ describe('SaveCaseComponent', () => {
 	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
 		spyOn(_store, 'dispatch');
 		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
-
 		fixture = TestBed.createComponent(SaveCaseComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

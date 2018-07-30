@@ -3,8 +3,38 @@
 div.container {
 	padding: 0 0 20px 0;
 
+	&.Annotation {
+		button.down-arrow {
+			display: none;
+		}
+
+		div.title-row {
+			button.add-layer {
+				display: flex;
+			}
+			div.actions .show-all {
+				display: block;
+			}
+		}
+
+		ansyn-layer {
+			&:hover {
+				background: rgba(255, 255, 255, 0.4);
+				ansyn-layer-menu {
+					visibility: visible;
+					transform: translateX(0);
+					opacity: 1;
+					pointer-events: auto;
+				}
+			}
+		}
+	}
+
 	div.title-row {
 		padding: 5px 0 10px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
 
 		span.title {
 			font-family: Open Sans;
@@ -14,7 +44,10 @@ div.container {
 			line-height: 100%;
 			color: #FFFFFF;
 		}
-
+		div.actions {
+			display: flex;
+			align-items: center;
+		}
 		button.down-arrow {
 			width: 10px;
 			height: 10px;
@@ -24,7 +57,7 @@ div.container {
 			border-bottom: 2px solid #FFFFFF;
 			border-left: 2px solid #FFFFFF;
 			float: right;
-			margin-right: 10px;
+			margin-right: 17px;
 			margin-top: 4px;
 			cursor: pointer;
 			outline: none;
@@ -33,7 +66,17 @@ div.container {
 				opacity: 0.7;
 			}
 		}
+
+		button.add-layer {
+			display: none;
+			background: transparent;
+			border: none;
+			font-size: 20px;
+			color: white;
+		}
+
 		div.show-all {
+			display: none;
 			float: right;
 			font-size: 12px;
 			font-style: normal;
@@ -44,13 +87,3 @@ div.container {
 	}
 }
 
-button.download-layer {
-	position: relative;
-	bottom: 4px;
-	background: transparent;
-	border: none;
-	.icon-download-layer {
-		color: white;
-		font-size: 20px;
-	}
-}

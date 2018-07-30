@@ -17,6 +17,8 @@ import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ICaseModal } from '../../reducers/cases.reducer';
 import { ICasePreview } from '@ansyn/core/models/case.model';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -31,6 +33,10 @@ const animations: any[] = [
 	styleUrls: ['./cases-table.component.less'],
 	animations
 })
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
 export class CasesTableComponent implements OnInit {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
@@ -44,9 +50,14 @@ export class CasesTableComponent implements OnInit {
 		.distinctUntilChanged()
 		.pluck<ICaseModal, string>('id');
 
-	selectedCaseId$: Observable<string> = this.caseState$
-		.map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null)
-		.distinctUntilChanged();
+	@AutoSubscription
+	selectedCaseId$: Observable<string> = this.caseState$.pipe(
+		map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null),
+		distinctUntilChanged(),
+		tap((selectedCaseId) => this.selectedCaseId = selectedCaseId)
+	);
+
+	selectedCaseId: string;
 
 	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {
 		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
@@ -95,7 +106,9 @@ export class CasesTableComponent implements OnInit {
 	}
 
 	selectCase(caseId: string): void {
-		this.store$.dispatch(new LoadCaseAction(caseId));
+		if (this.selectedCaseId !== caseId) {
+			this.store$.dispatch(new LoadCaseAction(caseId));
+		}
 	}
 
 }

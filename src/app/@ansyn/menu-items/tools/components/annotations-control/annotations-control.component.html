@@ -1,3 +1,13 @@
+<div class="selected-layer"
+	 *ngIf="(annotationLayerIds$ | async)?.length > 1">
+	<select class="active-annotation-layer" (change)="setSelectedAnnotationLayer($event.target.value)">
+		<option
+			[selected]="(activeAnnotationLayer$ | async) === layer?.id"
+			[value]="layer?.id"
+			*ngFor="let layer of annotationLayerIds$ | async">{{ layer.name }}</option>
+	</select>
+</div>
+
 <ul class="annotations-options">
 
 	<li *ngFor="let modeList of modesList"

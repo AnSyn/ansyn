@@ -28,11 +28,14 @@ import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service'
 import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
 import { IOverlay } from '@ansyn/overlays/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
 	let loggerService: LoggerService;
+	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
 
@@ -75,21 +78,34 @@ describe('CasesEffects', () => {
 				CasesEffects,
 				StorageService,
 				CasesService,
+				DataLayersService,
+				{ provide: layersConfig, useValue: {} },
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: () => Observable.throw(null) }
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
-				{ provide: CoreConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
-				{ provide: OverlaysConfig, useValue: {} }
+				{ provide: OverlaysConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]
 		}).compileComponents();
 	}));
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
+		let selectLayersState =
+			[
+				{ type: LayerType.annotation }
+			]
+
+
+		spyOn(store, 'select').and.callFake(() => Observable.of(selectLayersState));
+	}));
+
+	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
+		dataLayersService = _dataLayersService;
 	}));
 
 	beforeEach(inject([LoggerService], (_loggerService: LoggerService) => {
@@ -157,8 +173,36 @@ describe('CasesEffects', () => {
 	});
 
 	it('onSaveCaseAs$ should add a default case', () => {
-		const selectedCase = { id: 'selectedCaseId' } as ICase;
-		spyOn(casesService, 'createCase').and.returnValue(Observable.of(selectedCase));
+		const selectedCase = {
+			id: 'selectedCaseId',
+			selectedContextId: 'selectedContextId',
+			state: {
+				layers: {
+					activeLayersIds: [
+						'111',
+						'222'
+					],
+				}
+			}
+		} as ICase;
+
+		let serverResponse = [
+			{
+				id: 'caseId',
+				name: 'caseId',
+				type: 'Static',
+				dataLayers: [
+					{
+						'id': 'layerId_1234',
+						'name': 'New York Roads',
+						'isChecked': true
+					}
+				]
+			}
+		];
+
+		spyOn(dataLayersService, 'addLayer').and.returnValue(Observable.of(serverResponse));
+		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(selectedCase));
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);

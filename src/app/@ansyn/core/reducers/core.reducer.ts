@@ -30,6 +30,7 @@ export interface ICoreState {
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
 	enableCopyOriginalOverlayData: boolean;
+	autoSave: boolean;
 }
 
 export const coreInitialState: ICoreState = {
@@ -43,6 +44,7 @@ export const coreInitialState: ICoreState = {
 	overlaysCriteria: {},
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	layout: 'layout1',
+	autoSave: false,
 	enableCopyOriginalOverlayData: false
 };
 
@@ -94,6 +96,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 			const payloadObj = { wasWelcomeNotificationShown: action.payload };
 			return { ...state, ...payloadObj };
 
+		case CoreActionTypes.SET_AUTO_SAVE:
+			return { ...state, autoSave: action.payload };
+
 		default:
 			return state;
 	}
@@ -106,3 +111,4 @@ export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) =
 export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectEnableCopyOriginalOverlayDataFlag = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
+export const selectAutoSave = createSelector(coreStateSelector, (core) => core.autoSave);

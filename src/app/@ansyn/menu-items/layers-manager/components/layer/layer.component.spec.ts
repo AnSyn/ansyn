@@ -1,9 +1,8 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-
 import { LayerComponent } from './layer.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { SelectOnlyLayer, UpdateSelectedLayersIds } from '../../actions/layers.actions';
-import { AnsynCheckboxComponent } from '../../../../core/components/ansyn-checkbox/ansyn-checkbox.component';
+import { SelectOnlyLayer } from '../../actions/layers.actions';
+import { AnsynCheckboxComponent } from '@ansyn/core/components/ansyn-checkbox/ansyn-checkbox.component';
 
 describe('LayerComponent', () => {
 	let component: LayerComponent;

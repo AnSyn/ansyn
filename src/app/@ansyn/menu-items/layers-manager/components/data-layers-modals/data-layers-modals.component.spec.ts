@@ -3,11 +3,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DataLayersModalsComponent } from './data-layers-modals.component';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
-import { AnsynModalComponent } from '../../../../core/components/ansyn-modal/ansyn-modal.component';
 import { DownloadLayersComponent } from './download-layers/download-layers.component';
 import { EditLayerComponent } from './edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './delete-layer/delete-layer.component';
 import { FormsModule } from '@angular/forms';
+import { AnsynModalComponent } from '@ansyn/core/components/ansyn-modal/ansyn-modal.component';
 
 describe('DataLayersModalsComponent', () => {
 	let component: DataLayersModalsComponent;

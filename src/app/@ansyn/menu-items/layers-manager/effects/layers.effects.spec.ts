@@ -9,10 +9,10 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
-import { CoreConfig } from '../../../core/models/core.config';
-import { StorageService } from '../../../core/services/storage/storage.service';
-import { LoggerService } from '../../../core/services/logger.service';
-import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;

@@ -1,20 +1,18 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
-import { APP_INITIALIZER, Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';
-import { map } from 'rxjs/operators';
 import { featureCollection } from '@turf/turf';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
 import { ICase } from '@ansyn/core/models/case.model';
-import { catchError, filter, mergeMap, tap, withLatestFrom } from 'rxjs/internal/operators';
-import { selectAutoSave } from '../../../core/reducers/core.reducer';
+import { catchError, filter, tap } from 'rxjs/internal/operators';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -62,7 +60,7 @@ export class DataLayersService {
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
 				catchError(err => this.errorHandlerService.httpErrorHandle(err))
-			)
+			);
 	}
 
 	addLayer(layer) {

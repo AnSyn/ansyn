@@ -42,17 +42,25 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				.subscribe((action: AnnotationContextMenuTriggerAction) => {
 					this.action = action;
 					const {boundingRect} = <any> this.action.payload;
-					this.contextMenuWrapperStyle = {
-						top: `${boundingRect.top}px`,
-						left: `${boundingRect.left}px`,
-						width: `${boundingRect.width}px`,
-						height: `${boundingRect.height}px`,
-						transform: `rotate(${boundingRect.rotation}deg)`
-					};
-					if (this.interactionType === 'hover') {
-						this.host.nativeElement.classList.add('visible');
+					if (boundingRect) {
+						this.contextMenuWrapperStyle = {
+							top: `${boundingRect.top}px`,
+							left: `${boundingRect.left}px`,
+							width: `${boundingRect.width}px`,
+							height: `${boundingRect.height}px`,
+							transform: `rotate(${boundingRect.rotation}deg)`
+						};
+						if (this.interactionType === 'hover') {
+							this.host.nativeElement.classList.add('visible');
+						} else {
+							this.host.nativeElement.focus();
+						}
 					} else {
-						this.host.nativeElement.focus();
+						if (this.interactionType === 'hover') {
+							this.host.nativeElement.classList.remove('visible');
+						} else {
+							this.host.nativeElement.blur();
+						}
 					}
 				}),
 

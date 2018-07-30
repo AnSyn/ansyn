@@ -12,7 +12,6 @@ import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visual
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
-	AnnotationInteractionType,
 	AnnotationMode,
 	IAnnotationsContextMenuBoundingRect,
 	IAnnotationsContextMenuEvent
@@ -133,7 +132,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	get interactionParams() {
 		return {
 			layers: [this.vector],
-			hitTolerance: 1,
+			hitTolerance: 0,
+			style: (feature) => feature.styleCache,
 			multi: true
 		};
 	}
@@ -235,24 +235,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			condition: condition.click,
 			...this.interactionParams
 		});
-		contextMenuInteraction.on('select', this.onSelectFeature.bind(this, 'click'));
+		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
 		return contextMenuInteraction;
 	}
 
-	createAnnotationHoverInteraction() {
-		const annotationHoverInteraction = new Select(<any>{
-			condition: condition.pointerMove,
-			...this.interactionParams
-		});
-		annotationHoverInteraction.on('select', this.onSelectFeature.bind(this, 'hover'));
-		return annotationHoverInteraction;
-	}
-
-	onSelectFeature(interactionType: AnnotationInteractionType, data) {
-		data.target.getFeatures().clear();
+	onSelectFeature(data) {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
+		data.target.getFeatures().clear();
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
@@ -260,11 +251,38 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
-			interactionType
+			interactionType: 'click'
 		};
-		if (interactionType === 'click') {
-			this.store$.dispatch(new SetAnnotationMode());
+		this.store$.dispatch(new SetAnnotationMode());
+		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
+	}
+
+	createAnnotationHoverInteraction() {
+		const annotationHoverInteraction = new Select(<any>{
+			condition: condition.pointerMove,
+			...this.interactionParams
+		});
+		annotationHoverInteraction.on('select', this.onHoverFeature.bind(this));
+		return annotationHoverInteraction;
+	}
+
+	onHoverFeature(data) {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
 		}
+		let selectedFeature, boundingRect, id;
+		let selected = data.target.getFeatures().getArray();
+		if (selected.length > 0) {
+			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
+			boundingRect = this.getFeatureBoundingRect(selectedFeature);
+			id = selectedFeature.getProperties().id;
+		}
+		const contextMenuEvent: IAnnotationsContextMenuEvent = {
+			mapId: this.mapId,
+			featureId: id,
+			boundingRect,
+			interactionType: 'hover'
+		};
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
 

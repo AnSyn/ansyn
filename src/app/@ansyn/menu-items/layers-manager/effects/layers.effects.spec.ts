@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerCollectionLoadAction, LayerCollectionLoadedAction } from '../actions/layers.actions';
 import { Observable } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
@@ -13,7 +13,6 @@ import { CoreConfig } from '../../../core/models/core.config';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { HttpClient } from '@angular/common/http';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -59,35 +58,30 @@ describe('LayersEffects', () => {
 		expect(layersEffects).toBeDefined();
 	});
 
-	fit('beginLayerTreeLoad$ should dispatch LayerCollectionLoadedAction', () => {
+	it('beginLayerTreeLoad$ should dispatch LayerCollectionLoadedAction', () => {
+		const timeOfCreation = new Date();
 		const layers: ILayer[] = [{
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
 			name: 'staticLayer',
 			type: LayerType.annotation,
-			creationTime: new Date(),
+			creationTime: timeOfCreation,
 			layerPluginType: layerPluginType.Annotations
 		}];
 
-		let serverResponse = {
-			json: () => [
-				{
-					'id': 'layersContainerId_1234',
-					'name': 'Roads',
-					'type': 'Annotation',
-					'layerPluginType': 'Annotations',
-					'dataLayers': [
-						{
-							'id': 'layerId_1234',
-							'name': 'New York Roads',
-							'isChecked': true
-						}
-					]
-				}
-			]
-		};
+		let serverResponse = [
+			{
+				url: 'fakeStaticUrl',
+				id: 'staticLayerId',
+				name: 'staticLayer',
+				type: 'Annotation',
+				layerPluginType: 'Annotations',
+				creationTime: timeOfCreation
+			}
+		];
 
-		spyOn(dataLayersService, 'getAllLayersInATree').and.returnValue(Observable.of(new Response(serverResponse)));
+
+		spyOn(dataLayersService, 'getAllLayersInATree').and.returnValue(Observable.of(serverResponse));
 		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
 
 		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });

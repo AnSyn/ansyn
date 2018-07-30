@@ -34,7 +34,8 @@ import { catchError, debounceTime, filter, map, mergeMap, switchMap, withLatestF
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import {
 	DeleteCaseAction,
-	LoadCaseAction, ManualSaveAction,
+	LoadCaseAction,
+	ManualSaveAction,
 	SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
@@ -194,7 +195,7 @@ export class CasesEffects {
 		withLatestFrom(this.store.select(selectLayers)),
 		mergeMap(([{ payload }, layers]: [SaveCaseAsAction, ILayer[]]) => this.casesService
 			.createCase(payload).pipe(
-					mergeMap((addedCase: ICase) => forkJoin(layers
+				mergeMap((addedCase: ICase) => forkJoin(layers
 						.filter(({ type }) => type === LayerType.annotation)
 						.map((layer) => {
 							const newId = UUID.UUID();
@@ -204,13 +205,13 @@ export class CasesEffects {
 								return id === oldId ? newId : id;
 							});
 
-							return { ...layer, id: newId, caseId: addedCase.id }
-						}).map((layer) => this.dataLayersService.addLayer(layer)),
-						)
+							return { ...layer, id: newId, caseId: addedCase.id };
+						}).map((layer) => this.dataLayersService.addLayer(layer))
+					)
 						.pipe(map((_) => addedCase))
-					),
-					map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase))
-				)
+				),
+				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase))
+			)
 		));
 
 	/**

@@ -24,13 +24,13 @@ describe('DataLayersService', () => {
 			providers: [
 				{
 					provide: CoreConfig,
-					useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' }}
+					useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' } }
 				},
 				StorageService,
 				DataLayersService,
 				{
 					provide: layersConfig,
-					useValue: { 'schema': 'layers'}
+					useValue: { 'schema': 'layers' }
 				},
 				{
 					provide: LoggerService,
@@ -47,37 +47,35 @@ describe('DataLayersService', () => {
 
 	beforeEach(inject([StorageService, DataLayersService, HttpClient],
 		(_storageService: StorageService, _dataLayersService: DataLayersService, _http: HttpClient) => {
-		storageService = _storageService;
-		dataLayersService = _dataLayersService;
-		http = _http;
-	}));
+			storageService = _storageService;
+			dataLayersService = _dataLayersService;
+			http = _http;
+		}));
 
 	it('should be created', inject([DataLayersService], (service: DataLayersService) => {
 		expect(service).toBeTruthy();
 	}));
 
 	it('getAllLayersInATree get request', () => {
-		let serverResponse = {
-			json: () => [
-				{
-					'id': 'layersContainerId_1234',
-					'name': 'Roads',
-					'type': 'Static',
-					'dataLayers': [
-						{
-							'id': 'layerId_1234',
-							'name': 'New York Roads',
-							'isChecked': true
-						}
-					]
-				}
-			]
-		};
+		let serverResponse = [
+			{
+				id: 'caseId',
+				name: 'caseId',
+				type: 'Static',
+				dataLayers: [
+					{
+						'id': 'layerId_1234',
+						'name': 'New York Roads',
+						'isChecked': true
+					}
+				]
+			}
+		];
 
-		spyOn(http, 'get').and.returnValue(Observable.of(new Response(serverResponse)));
+		spyOn(http, 'post').and.returnValue(Observable.of(serverResponse));
 		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
-		expect(http.get).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}`,
-			{ params: { from: '0', limit: '100'}}
+		expect(http.post).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}/search`,
+			{ caseId: 'caseId' }
 		);
 	});
 });

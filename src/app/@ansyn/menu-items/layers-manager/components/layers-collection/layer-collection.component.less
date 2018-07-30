@@ -12,6 +12,9 @@ div.container {
 			button.add-layer {
 				display: flex;
 			}
+			div.actions .show-all {
+				display: block;
+			}
 		}
 
 		ansyn-layer {
@@ -41,7 +44,10 @@ div.container {
 			line-height: 100%;
 			color: #FFFFFF;
 		}
-
+		div.actions {
+			display: flex;
+			align-items: center;
+		}
 		button.down-arrow {
 			width: 10px;
 			height: 10px;
@@ -70,6 +76,7 @@ div.container {
 		}
 
 		div.show-all {
+			display: none;
 			float: right;
 			font-size: 12px;
 			font-style: normal;

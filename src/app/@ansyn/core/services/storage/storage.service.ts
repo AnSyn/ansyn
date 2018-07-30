@@ -35,14 +35,14 @@ export class StorageService {
 		return this._buildIdUrl(schema, entity.preview.id);
 	}
 
-	search<P extends IEntity>(schema: string, body): Observable<P[]> {
+	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		return this._http.post<P[]>(`${url}/search`, body);
+		return this._http.post<P[]>(`${url}/search_by_case`, body);
 	}
 
-	deleteSearch<P extends IEntity>(schema: string, body): Observable<P[]> {
+	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		return this._http.post<P[]>(`${url}/delete_search`, body);
+		return this._http.post<P[]>(`${url}/delete_by_case`, body);
 	}
 
 	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number): Observable<P[]> {

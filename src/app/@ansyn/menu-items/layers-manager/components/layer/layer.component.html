@@ -14,7 +14,7 @@
 			<span class="field-name" [title]="layer?.name">{{layer?.name}}</span>
 		</div>
 
-		<button class="only-filter" (click)="selectOnly()">only</button>
+		<button class="only-filter" (click)="selectOnly()" [hidden]="showOnly">only</button>
 	</div>
 
 	<ng-content></ng-content>

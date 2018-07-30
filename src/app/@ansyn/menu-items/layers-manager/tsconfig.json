@@ -5,6 +5,7 @@
       "@ansyn/core/*": [
         "src/app/@ansyn/core/*"
       ]
-    }
+    },
+    "experimentalDecorators": true
   }
 }

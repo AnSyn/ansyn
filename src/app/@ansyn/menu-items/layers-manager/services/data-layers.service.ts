@@ -59,7 +59,7 @@ export class DataLayersService {
 	}
 
 	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {
-		return this.storageService.search<ILayer>(this.config.schema, { caseId })
+		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
 				catchError(err => this.errorHandlerService.httpErrorHandle(err))
 			)
@@ -83,6 +83,6 @@ export class DataLayersService {
 	}
 
 	removeCaseLayers(caseId) {
-		return this.storageService.deleteSearch('layers', { caseId });
+		return this.storageService.deleteByCase('layers', { caseId });
 	}
 }

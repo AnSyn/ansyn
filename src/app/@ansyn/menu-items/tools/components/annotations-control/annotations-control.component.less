@@ -18,7 +18,26 @@
 	.selected-layer{
 		visibility: hidden;
 		display: flex;
-		justify-content: center;
+		position: absolute;
+		width: 100%;
+		transform: translateY(-100%);
+		background: #27b2cf;
+		padding: 0 5px;
+		box-sizing: border-box;
+
+		.active-annotation-layer{
+			background: transparent;
+			border: none;
+			color: white;
+			outline: none;
+			border-bottom: 1px solid white;
+			box-shadow: 0 0 1px 0 white;
+			margin-top: 2px;
+
+			option {
+				color: black;
+			}
+		}
 	}
 	&.expand {
 		.selected-layer{

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ILayer } from '../models/layers.model';
+import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
 
 export enum LayersActionTypes {
@@ -14,7 +14,8 @@ export enum LayersActionTypes {
 	REMOVE_LAYER = '[Layers] Remove layer',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
-	DELETE_ALL_DEFAULT_CASE_LAYERS = '[Layers] Delete All DefaultCase Layers'
+	DELETE_ALL_DEFAULT_CASE_LAYERS = '[Layers] Delete All DefaultCase Layers',
+	SHOW_ALL_LAYERS = '[Layers] Show all layers'
 };
 
 export type LayersActions =
@@ -123,3 +124,10 @@ export class CloseLayersModal extends SetLayersModal {
 	}
 }
 
+export class ShowAllLayers implements Action{
+	type = LayersActionTypes.SHOW_ALL_LAYERS;
+
+	constructor(public payload: LayerType) {
+
+	}
+}

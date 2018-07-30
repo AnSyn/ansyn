@@ -10,7 +10,7 @@ import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 import { DataLayersService } from '../services/data-layers.service';
 
-export const layersAdapter = createEntityAdapter<ILayer>();
+export const layersAdapter = createEntityAdapter<ILayer>({ sortComparer: (layerA, layerB) => layerA.type === LayerType.annotation ? -1 : 1 });
 
 export interface ILayerState extends EntityState<ILayer> {
 	selectedLayersIds: string[];
@@ -52,7 +52,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let selectedLayersIds = uniq([...state.selectedLayersIds, layer.id]);
 			selectedLayersIds = selectedLayersIds.filter((layerId) => {
 				const checkLayer = state.entities[layerId];
-				return checkLayer.type === layer.type && checkLayer.id === layer.id;
+				return checkLayer && (checkLayer.type !== layer.type || checkLayer.id === layer.id);
 			});
 			return { ...state, selectedLayersIds };
 		}
@@ -81,6 +81,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			if (action.payload === state.activeAnnotationLayer) {
 				activeAnnotationLayer = (<string[]> state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
+				activeAnnotationLayer = (<string[]> state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
 			}
 			return layersAdapter.removeOne(action.payload, { ...state, selectedLayersIds, activeAnnotationLayer });
 		}
@@ -90,6 +91,12 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 		case LayersActionTypes.SET_MODAL:
 			return { ...state, modal: action.payload };
+
+		case LayersActionTypes.SHOW_ALL_LAYERS: {
+			const selectedLayersIds = state.selectedLayersIds;
+			const layersToShow = (<string[]>state.ids).filter((id) => state.entities[id].type === action.payload);
+			return { ...state, selectedLayersIds: uniq([...selectedLayersIds, ...layersToShow]) }
+		}
 
 		default:
 			return state;

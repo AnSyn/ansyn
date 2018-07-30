@@ -3,11 +3,15 @@
 	<div class="title-row">
 		<span class="title">{{ collection.type }} Layers</span>
 
-		<div>
+		<div class="actions">
 			<button [@rotateArrow]="show"
 					#downArrow class="down-arrow"
 					(click)="show = !show">
 			</button>
+
+			<div class="show-all">
+				<span (click)="showAll()">Show all</span>
+			</div>
 
 			<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)">
 				<i class="icon-layer-add"></i>
@@ -15,11 +19,14 @@
 
 		</div>
 
+
+
 	</div>
 
 	<ansyn-layer *ngFor="let layer of collection.data"
 				 [@layersTrigger]="show"
-				 [layer]="layer">
+				 [layer]="layer"
+				 [showOnly]="collection.data.length < 2">
 
 			<ansyn-layer-menu [disabledRemove]="collection.data?.length < 2"
 							  (openModal)="openModal($event, layer)">

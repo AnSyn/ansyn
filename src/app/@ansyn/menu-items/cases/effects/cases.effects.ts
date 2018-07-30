@@ -267,6 +267,7 @@ export class CasesEffects {
 	@Effect()
 	manualSave$ = this.actions$.pipe(
 		ofType<ManualSaveAction>(CasesActionTypes.MANUAL_SAVE),
+		filter((action) => action.payload.id === this.casesService.defaultCase.id),
 		this.saveLayers,
 		map((action: ManualSaveAction) => new UpdateCaseAction({ updatedCase: action.payload, forceUpdate: true }))
 	);

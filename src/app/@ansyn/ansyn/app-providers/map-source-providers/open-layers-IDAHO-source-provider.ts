@@ -56,8 +56,14 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
+		if (metaData.data.overlay.imageUrl) {
+			let layer = this.createOrGetFromCache(metaData);
+			return Promise.resolve(layer[0]);
+		}
+
 		if (metaData.data.overlay.channel === 1) {
-			this.addBands(metaData.data.overlay, '0');
+			const bands = this.getBandsSection(metaData.data.overlay, '0');
+			metaData.data.overlay.imageUrl = metaData.data.overlay.baseImageUrl + bands;
 			let layer = this.createOrGetFromCache(metaData);
 			return Promise.resolve(layer[0]);
 		}
@@ -79,36 +85,43 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 			});
 
 		return Promise.all([getImagePromise, getAssociationPromise]).then(() => {
+			let imageUrl = metaData.data.overlay.baseImageUrl;
+			let bands;
 			if (imageData) {
-				this.setColorChannel(metaData.data.overlay, imageData.bandAliases);
+				bands = this.getColorChannel(metaData.data.overlay, imageData.bandAliases);
 			} else {
-				this.addBands(metaData.data.overlay, '0');
+				bands = this.getBandsSection(metaData.data.overlay, '0');
 			}
+			imageUrl += bands;
 
 			if (associationData) {
-				this.setPannedUrl(metaData.data.overlay, associationData);
+				const panned = this.getPannedSection(metaData.data.overlay, associationData);
+				imageUrl += panned;
 			}
+			metaData.data.overlay.imageUrl = imageUrl;
 			let layer = this.createOrGetFromCache(metaData);
 			return Promise.resolve(layer[0]);
 		});
 	}
 
-	setColorChannel(overlay: IOverlay, colorChannels: string) {
+	getColorChannel(overlay: IOverlay, colorChannels: string): string {
 		const rIndex = colorChannels.indexOf('R');
 		const gIndex = colorChannels.indexOf('G');
 		const bIndex = colorChannels.indexOf('B');
 		const bands = `${rIndex},${gIndex},${bIndex}`;
-		this.addBands(overlay, bands);
+		return this.getBandsSection(overlay, bands);
 	}
 
-	addBands(overlay: IOverlay, bands: string) {
-		overlay.imageUrl = (<any>overlay).baseImageUrl + '&bands=' + bands;
+	getBandsSection(overlay: IOverlay, bands: string): string {
+		return '&bands=' + bands;
 	}
 
-	setPannedUrl(overlay: IOverlay, associationData: any) {
+	getPannedSection(overlay: IOverlay, associationData: any): string {
 		if (associationData.associations && associationData.associations.length > 0) {
-			overlay.imageUrl = (<any>overlay).baseImageUrl + '&panId=' + associationData.associations[0].imageId;
+			// overlay.imageUrl = overlay.baseImageUrl + '&panId=' + associationData.associations[0].imageId;
+			return '&panId=' + associationData.associations[0].imageId;
 		}
+		return '';
 	}
 
 	getImageData(overlay: IOverlay, token, fileName: string): Promise<any> {

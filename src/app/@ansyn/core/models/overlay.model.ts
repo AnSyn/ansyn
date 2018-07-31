@@ -21,6 +21,7 @@ export interface IOverlay extends IDilutedOverlay {
 	isStereo?: boolean;
 	name: string;
 	imageUrl?: string;
+	baseImageUrl?: string;
 	thumbnailUrl?: string;
 	photoTime: string;
 	date: Date;

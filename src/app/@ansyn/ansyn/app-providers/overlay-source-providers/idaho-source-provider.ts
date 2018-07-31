@@ -128,7 +128,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
 		overlay.tag = idahoElement;
-		(<any>overlay).baseImageUrl = 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true';
+		overlay.baseImageUrl = 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true';
 		(<any>overlay).token = token;
 		(<any>overlay).catalogID = idahoElement.properties.catalogID;
 

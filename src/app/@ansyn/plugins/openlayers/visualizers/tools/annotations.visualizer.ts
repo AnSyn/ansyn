@@ -12,6 +12,7 @@ import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visual
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
+	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationsContextMenuBoundingRect,
 	IAnnotationsContextMenuEvent
@@ -138,6 +139,27 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.iMap.mapObject.getView().getRotation();
 	}
 
+	get interactionParams() {
+		return {
+			layers: [this.vector],
+			hitTolerance: 0,
+			style: (feature) => feature.styleCache,
+			multi: true
+		};
+	}
+
+	static findFeatureWithMinimumArea(featuresArray: any[]) {
+		return featuresArray.reduce((prevResult, currFeature) => {
+			const currGeometry = currFeature.getGeometry();
+			const currArea = currGeometry.getArea ? currGeometry.getArea() : 0;
+			if (currArea < prevResult.area) {
+				return { feature: currFeature, area: currArea }
+			} else {
+				return prevResult;
+			}
+		}, { feature: null, area: Infinity }).feature;
+	}
+
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id,
@@ -216,13 +238,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new SetAnnotationMode());
 		this.removeInteraction(VisualizerInteractions.contextMenu);
 		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+		this.addInteraction(VisualizerInteractions.pointerMove, this.createAnnotationHoverInteraction());
 	}
 
 	createContextMenuInteraction() {
 		const contextMenuInteraction = new Select(<any>{
 			condition: condition.click,
-			layers: [this.vector],
-			hitTolerance: 10
+			...this.interactionParams
 		});
 		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
 		return contextMenuInteraction;
@@ -230,16 +253,47 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onSelectFeature(data) {
 		data.target.getFeatures().clear();
-		if (this.mapSearchIsActive || this.mode) { return; }
-		const [selectedFeature] = data.selected;
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
 		const contextMenuEvent: IAnnotationsContextMenuEvent = {
 			mapId: this.mapId,
 			featureId: id,
-			boundingRect
+			boundingRect,
+			interactionType: AnnotationInteraction.click
 		};
-		this.store$.dispatch(new SetAnnotationMode());
+		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
+	}
+
+	createAnnotationHoverInteraction() {
+		const annotationHoverInteraction = new Select(<any>{
+			condition: condition.pointerMove,
+			...this.interactionParams
+		});
+		annotationHoverInteraction.on('select', this.onHoverFeature.bind(this));
+		return annotationHoverInteraction;
+	}
+
+	onHoverFeature(data) {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		let selectedFeature, boundingRect, id;
+		let selected = data.target.getFeatures().getArray();
+		if (selected.length > 0) {
+			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
+			boundingRect = this.getFeatureBoundingRect(selectedFeature);
+			id = selectedFeature.getProperties().id;
+		}
+		const contextMenuEvent: IAnnotationsContextMenuEvent = {
+			mapId: this.mapId,
+			featureId: id,
+			boundingRect,
+			interactionType: AnnotationInteraction.hover
+		};
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
 

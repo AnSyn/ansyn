@@ -16,8 +16,10 @@
 		visibility: hidden;
 		transform-origin: left top;
 		z-index: 2;
+		pointer-events: none;
 		.remove-feature-wrapper {
 			position: absolute;
+			pointer-events: all;
 			width: 20px;
 			height: 20px;
 			background-color: @application-main-color;
@@ -40,7 +42,7 @@
 
 	}
 
-	&:focus {
+	&:focus, &.visible {
 		.context-menu-wrapper {
 			visibility: visible;
 		}

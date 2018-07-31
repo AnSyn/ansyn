@@ -1,0 +1,7 @@
+<label class="import-layer" for="import-layer">
+	<input id="import-layer"
+		   type="file"
+		   accept=".kml, .geojson"
+		   (change)="importLayer($event.target.files)"/>
+	<i class="icon-layer-import"></i>
+</label>

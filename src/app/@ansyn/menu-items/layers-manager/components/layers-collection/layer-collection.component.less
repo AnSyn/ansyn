@@ -9,7 +9,7 @@ div.container {
 		}
 
 		div.title-row {
-			button.add-layer {
+			button.add-layer, ansyn-import-layer {
 				display: flex;
 			}
 			div.actions .show-all {
@@ -68,11 +68,15 @@ div.container {
 		}
 
 		button.add-layer {
-			display: none;
+			cursor: pointer;
 			background: transparent;
 			border: none;
 			font-size: 20px;
 			color: white;
+		}
+
+		button.add-layer, ansyn-import-layer {
+			display: none;
 		}
 
 		div.show-all {

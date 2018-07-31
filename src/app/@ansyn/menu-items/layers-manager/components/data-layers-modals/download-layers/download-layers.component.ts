@@ -20,8 +20,8 @@ export class DownloadLayersComponent {
 
 	downloadGeojson() {
 		const annotationsLayer = cloneDeep(this.layer.data);
-		const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/json' });
-		saveAs(blob, 'annotations.json');
+		const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/geo+json' });
+		saveAs(blob, 'annotations.geojson');
 		this.store.dispatch(new CloseLayersModal());
 	}
 

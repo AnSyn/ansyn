@@ -13,7 +13,8 @@ export interface IToolTipsConfig {
 	backwards?: string,
 	forward?: string,
 	reset?: string,
-	enlarge?: string
+	enlarge?: string,
+	quickloop?: string
 }
 
 export interface IDataInputFiltersConfig {

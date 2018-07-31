@@ -14,7 +14,6 @@ export enum LayersActionTypes {
 	REMOVE_LAYER = '[Layers] Remove layer',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
-	DELETE_ALL_DEFAULT_CASE_LAYERS = '[Layers] Delete All DefaultCase Layers',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers'
 };
 
@@ -28,15 +27,7 @@ export type LayersActions =
 	| AddLayer
 	| UpdateLayer
 	| SetLayersModal
-	| CloseLayersModal
-	| DeleteAllDefaultCaseLayersAction;
-
-export class DeleteAllDefaultCaseLayersAction implements Action {
-	type = LayersActionTypes.DELETE_ALL_DEFAULT_CASE_LAYERS;
-
-	constructor() {
-	}
-}
+	| CloseLayersModal;
 
 export class BeginLayerCollectionLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;

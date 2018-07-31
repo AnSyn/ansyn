@@ -3,16 +3,15 @@
 		<span>×</span>
 	</button>
 
-	<form class="save-case-form" (submit)="onSubmitCase()">
+	<form #f="ngForm" class="save-case-form" (ngSubmit)="onSubmitCase()">
 
-		<input type="text" name="name" required [(ngModel)]="caseModel.name" #nameInput>
-		<span class="highlight"></span>
+		<input id="save-case-as-name" type="text" name="name" autocomplete="off" [(ngModel)]="caseName" required #nameInput>
 		<span class="bar"></span>
-		<label>Name</label>
+		<label for="save-case-as-name">Name</label>
 
 		<div class="bottom-btns">
 			<button type="button" (click)="close()">Cancel</button>
-			<button type="submit">OK</button>
+			<button type="submit" [disabled]="f.invalid">OK</button>
 		</div>
 	</form>
 </div>

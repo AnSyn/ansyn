@@ -1,7 +1,7 @@
 <div class="context-menu-wrapper"
 	[ngStyle]="contextMenuWrapperStyle">
 
-	<div class="remove-feature-wrapper" *ngIf="interactionType === 'click'">
+	<div class="remove-feature-wrapper" *ngIf="!fromHover">
 		<button class='removeFeature' (mousedown)="removeFeature($event)">x</button>
 	</div>
 

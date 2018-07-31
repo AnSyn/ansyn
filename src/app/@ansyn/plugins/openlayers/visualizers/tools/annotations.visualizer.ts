@@ -12,6 +12,7 @@ import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visual
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
+	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationsContextMenuBoundingRect,
 	IAnnotationsContextMenuEvent
@@ -251,7 +252,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
-			interactionType: 'click'
+			interactionType: AnnotationInteraction.click
 		};
 		this.store$.dispatch(new SetAnnotationMode());
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
@@ -281,7 +282,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
-			interactionType: 'hover'
+			interactionType: AnnotationInteraction.hover
 		};
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}

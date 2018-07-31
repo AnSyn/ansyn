@@ -4,7 +4,7 @@ import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../../actions/map.actions';
 import { Subscription } from 'rxjs/Subscription';
-import { AnnotationInteractionType } from '@ansyn/core/models/visualizers/annotations.model';
+import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -17,7 +17,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	private _subscriptions: Subscription[] = [];
 
 	@Input() mapId;
-	@Input() interactionType: AnnotationInteractionType;
+	@Input() interactionType: AnnotationInteraction;
+
+	get fromHover() {
+		return this.interactionType === AnnotationInteraction.hover;
+	}
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {
@@ -50,13 +54,13 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 							height: `${boundingRect.height}px`,
 							transform: `rotate(${boundingRect.rotation}deg)`
 						};
-						if (this.interactionType === 'hover') {
+						if (this.fromHover) {
 							this.host.nativeElement.classList.add('visible');
 						} else {
 							this.host.nativeElement.focus();
 						}
 					} else {
-						if (this.interactionType === 'hover') {
+						if (this.fromHover) {
 							this.host.nativeElement.classList.remove('visible');
 						} else {
 							this.host.nativeElement.blur();
@@ -65,7 +69,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				}),
 
 			this.mapEffect.positionChanged$.subscribe(() => {
-				if (this.interactionType === 'hover') {
+				if (this.fromHover) {
 					this.host.nativeElement.classList.remove('visible');
 				} else {
 					this.host.nativeElement.blur();

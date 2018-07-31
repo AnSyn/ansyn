@@ -10,9 +10,12 @@ export interface IAnnotationsContextMenuEvent {
 	mapId: string;
 	featureId: string;
 	boundingRect: IAnnotationsContextMenuBoundingRect;
-	interactionType: AnnotationInteractionType;
+	interactionType: AnnotationInteraction;
 }
 
 export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;
 
-export type AnnotationInteractionType = 'click' | 'hover' | undefined;
+export enum AnnotationInteraction {
+	click = 'click',
+	hover = 'hover'
+}

@@ -6,6 +6,7 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer } from '../../actions/layers.actions';
 import * as toGeoJSON from 'togeojson';
+import { fromEvent } from 'rxjs/index';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -17,12 +18,11 @@ import * as toGeoJSON from 'togeojson';
 	destroy: 'ngOnDestroy'
 })
 export class ImportLayerComponent {
-	reader: FileReader;
-	fileLoad$ = new EventEmitter<void>();
+	reader = new FileReader();
 	file: File;
 
 	@AutoSubscription
-	onFileLoad$ = this.fileLoad$.pipe(
+	onFileLoad$ = fromEvent(this.reader, 'load').pipe(
 		tap(() => {
 			const layerName = this.file.name.slice(0, this.file.name.lastIndexOf('.'));
 			const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
@@ -50,8 +50,6 @@ export class ImportLayerComponent {
 	);
 
 	constructor(private store: Store<any>, private dataLayersService: DataLayersService) {
-		this.reader = new FileReader();
-		this.reader.onload = () => this.fileLoad$.emit();
 	}
 
 	importLayer(files: FileList) {

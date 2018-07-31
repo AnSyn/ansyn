@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
-	IStartAndEndDate
+	IStartAndEndDate, UNKNOWN_NAME
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { toRadians } from '@ansyn/core/utils/math';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
@@ -115,8 +115,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;
 		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
-		overlay.sensorType = idahoElement.properties.sensorName;
-		overlay.sensorName = idahoElement.properties.platformName;
+		overlay.sensorType = idahoElement.properties.sensorName ? idahoElement.properties.sensorName : UNKNOWN_NAME;
+		overlay.sensorName = idahoElement.properties.platformName ? idahoElement.properties.platformName : UNKNOWN_NAME;
 		overlay.channel = idahoElement.properties.numBands;
 		overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
 		overlay.name = idahoElement.properties.catalogID;

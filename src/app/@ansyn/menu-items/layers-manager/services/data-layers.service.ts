@@ -34,7 +34,7 @@ export class DataLayersService {
 		);
 
 
-	generateAnnotationLayer(name = 'Default'): ILayer {
+	generateAnnotationLayer(name = 'Default', data = featureCollection([])): ILayer {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
@@ -42,7 +42,7 @@ export class DataLayersService {
 			name,
 			caseId: this.caseId,
 			type: LayerType.annotation,
-			data: featureCollection([])
+			data
 		};
 	}
 

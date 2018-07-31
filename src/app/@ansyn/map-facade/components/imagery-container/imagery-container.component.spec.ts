@@ -37,7 +37,7 @@ describe('ImageryContainerComponent', () => {
 					inputs: ['mapState']
 				}),
 				MockComponent({
-					selector: 'ansyn-annotations-context-menu', inputs: ['mapId']
+					selector: 'ansyn-annotations-context-menu', inputs: ['mapId', 'interactionType']
 				}),
 				MockComponent({
 					selector: 'ansyn-imagery-loader', inputs: ['mapId']

@@ -145,7 +145,7 @@ export class CasesService {
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
 			.pipe(
 				map(_ => selectedCase),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err))
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
 			)
 	}
 

@@ -99,93 +99,26 @@ div.save-case {
 			height: 2px;
 		}
 
-		.highlight {
-			display: none;
-			position: absolute;
-			height: 60%;
-			width: 100px;
-			top: 25%;
-			left: 0;
-			pointer-events: none;
-			opacity: 0.5;
-		}
-
-		input:focus ~ .highlight {
-			-webkit-animation: inputHighlighter 0.3s ease;
-			-moz-animation: inputHighlighter 0.3s ease;
-			animation: inputHighlighter 0.3s ease;
-		}
-
-		@-webkit-keyframes inputHighlighter {
-			from {
-				background: #5264AE;
-			}
-			to {
-				width: 0;
-				background: transparent;
-			}
-		}
-		@-moz-keyframes inputHighlighter {
-			from {
-				background: #5264AE;
-			}
-			to {
-				width: 0;
-				background: transparent;
-			}
-		}
-		@keyframes inputHighlighter {
-			from {
-				background: #5264AE;
-			}
-			to {
-				width: 0;
-				background: transparent;
-			}
-		}
-
-		div.select-context {
-			display: flex;
-			margin: 15px 0;
-
-			h4 {
-				margin: 0 15px 0 0;
-
-			}
-			select {
-				outline: none;
-				cursor: pointer;
-				margin: 0 0 0 15px;
-				width: 100%;
-				background: #F7F7F7;
-				border: 0.5px solid rgba(0, 0, 0, 0.1);
-				box-sizing: border-box;
-				box-shadow: 0 1px 1px rgba(0, 0, 0, 0.314764);
-				font-family: "Open Sans";
-				font-style: normal;
-				font-weight: normal;
-				font-size: 11px;
-				color: rgba(0, 0, 0, 0.75);
-				text-align: center;
-				option {
-					text-align: center;
-				}
-				&:disabled {
-					opacity: .5;
-					cursor: default;
-				}
-			}
-		}
 		.bottom-btns {
+			margin-top: 10px;
 			display: flex;
 			justify-content: flex-end;
 			button {
-				cursor: pointer;
 				background: transparent;
 				border: none;
-				color: @application-main-color;
+				-webkit-text-fill-color: @application-main-color;
+				-webkit-text-stroke-width: 0.4px;
+				-webkit-text-stroke-color: transparent;
+				outline: none;
 				&:hover {
 					font-weight: bold;
+				}
+				&:disabled {
+					opacity: .6;
+				}
+				&:hover:not(:disabled) {
+					cursor: pointer;
+					-webkit-text-stroke-color: @application-main-color;;
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
-	IStartAndEndDate
+	IStartAndEndDate, UNKNOWN_NAME
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { HttpClient } from '@angular/common/http';
@@ -114,8 +114,8 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);
-		overlay.sensorType = openAerialElement.platform;
-		overlay.sensorName = openAerialElement.properties.sensor;
+		overlay.sensorType = openAerialElement.platform ? openAerialElement.platform : UNKNOWN_NAME;
+		overlay.sensorName = openAerialElement.properties.sensor ? openAerialElement.properties.sensor : UNKNOWN_NAME;
 		overlay.bestResolution = openAerialElement.gsd;
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms;

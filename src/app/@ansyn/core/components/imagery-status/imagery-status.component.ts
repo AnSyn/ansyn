@@ -176,7 +176,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (this.overlay && this.presetOverlays && this.presetOverlays.length > 0) {
 			this.isPreset = this.presetOverlays.some(o => o.id === this.overlay.id);
 		}
-		this.presetsButtonText = this.isPreset ? 'Remove from presets' : 'Add to preset overlays (press F to display next preset)';
+		this.presetsButtonText = this.isPreset ? 'Remove from overlays quick loop' : 'Add to overlays quick loop (press Q to display next one)';
 	}
 
 	toggleMapLayers() {

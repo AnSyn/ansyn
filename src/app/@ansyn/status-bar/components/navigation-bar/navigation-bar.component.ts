@@ -23,7 +23,7 @@ export class NavigationBarComponent {
 		return this.statusBarConfig.toolTips || {};
 	}
 
-	private _nextPresetOverlayKeys = 'fFכ'.split("").map(char => char.charCodeAt(0));
+	private _nextPresetOverlayKeys = 'qQ/'.split("").map(char => char.charCodeAt(0));
 	private _overlayHack = 'Eeק'.split("").map(char => char.charCodeAt(0));
 
 	@HostListener('window:keyup', ['$event'])

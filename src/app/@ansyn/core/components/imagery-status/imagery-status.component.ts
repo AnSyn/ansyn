@@ -42,9 +42,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (!this._overlay) {
 			this.translatedOverlaySensorName = '';
 		} else {
-			this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
-				this.translatedOverlaySensorName = res;
-			});
+			if (this.overlay.sensorName) {
+				this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
+					this.translatedOverlaySensorName = res;
+				});
+			}
 		}
 		this.updateFavoriteStatus();
 		this.updatePresetStatus();

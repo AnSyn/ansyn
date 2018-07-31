@@ -227,8 +227,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new SetAnnotationMode());
 		this.removeInteraction(VisualizerInteractions.contextMenu);
 		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
-		this.removeInteraction(VisualizerInteractions.annotationHover);
-		this.addInteraction(VisualizerInteractions.annotationHover, this.createAnnotationHoverInteraction());
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+		this.addInteraction(VisualizerInteractions.pointerMove, this.createAnnotationHoverInteraction());
 	}
 
 	createContextMenuInteraction() {
@@ -241,10 +241,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	onSelectFeature(data) {
+		data.target.getFeatures().clear();
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		data.target.getFeatures().clear();
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
@@ -254,7 +254,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			boundingRect,
 			interactionType: AnnotationInteraction.click
 		};
-		this.store$.dispatch(new SetAnnotationMode());
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
 

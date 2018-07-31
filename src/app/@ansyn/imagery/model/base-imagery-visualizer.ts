@@ -3,14 +3,13 @@ import { BaseImageryPlugin } from './base-imagery-plugin';
 import { IImageryPluginMetaData } from './base-imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
-export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler' | 'annotationHover';
+export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
 	pointerMove: 'pointerMove',
 	doubleClick: 'doubleClick',
 	contextMenu: 'contextMenu',
-	drawInteractionHandler: 'drawInteractionHandler',
-	annotationHover: 'annotationHover'
+	drawInteractionHandler: 'drawInteractionHandler'
 };
 
 

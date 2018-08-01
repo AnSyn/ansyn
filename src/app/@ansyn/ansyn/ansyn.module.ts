@@ -25,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@ansyn/core/core.module';
 import { HelpModule } from '@ansyn/menu-items/help/help.module';
+import { Auth0Service } from '@ansyn/login/services/auth0.service';
 
 @NgModule({
 	imports: [
@@ -52,6 +53,7 @@ import { HelpModule } from '@ansyn/menu-items/help/help.module';
 		AnsynRouterModule,
 		HelpModule
 	],
+	providers: [Auth0Service],
 	declarations: [AnsynComponent],
 	exports: [AnsynComponent]
 })

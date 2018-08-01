@@ -50,6 +50,8 @@
     "@types/geojson": "^7946.0.3",
     "@types/openlayers": "^4.6.2",
     "angular2-uuid": "1.1.1",
+    "auth0-js": "^9.7.3",
+    "auth0-lock": "^11.8.1",
     "auto-subscriptions": "^1.0.3",
     "core-js": "^2.5.4",
     "crypto-js": "3.1.9-1",

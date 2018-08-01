@@ -11,6 +11,7 @@ import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service'
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
 
 describe('EditLayerComponent', () => {
 	let component: EditLayerComponent;
@@ -28,7 +29,7 @@ describe('EditLayerComponent', () => {
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: LoggerConfig, useValue: {} }
 			],
-			declarations: [EditLayerComponent]
+			declarations: [EditLayerComponent, AnsynInputComponent]
 		})
 			.compileComponents();
 	}));

@@ -4,10 +4,13 @@
 	</button>
 
 	<form #f="ngForm" class="save-case-form" (ngSubmit)="onSubmitCase()">
-
-		<input id="save-case-as-name" type="text" name="name" autocomplete="off" [(ngModel)]="caseName" required #nameInput>
-		<span class="bar"></span>
-		<label for="save-case-as-name">Name</label>
+		<ansyn-input
+			#nameInput
+			[(ngModel)]="caseModel"
+			name="name"
+			[required]="true"
+			label="Name">
+		</ansyn-input>
 
 		<div class="bottom-btns">
 			<button type="button" (click)="close()">Cancel</button>

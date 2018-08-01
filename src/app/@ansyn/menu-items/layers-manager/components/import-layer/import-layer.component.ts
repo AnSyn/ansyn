@@ -28,25 +28,30 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 			const layerName = this.file.name.slice(0, this.file.name.lastIndexOf('.'));
 			const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
 			let layerData;
+			try {
+				switch (fileType) {
+					case 'kml':
+						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(this.reader.result, 'text/xml'));
+						this.simpleStyleToVisualizer(layerData);
+						break;
+					case 'json':
+					case 'geojson':
+						layerData = JSON.parse(this.reader.result);
+						break;
 
-			switch (fileType) {
-				case 'kml':
-					layerData = toGeoJSON.kml((new DOMParser()).parseFromString(this.reader.result, 'text/xml'));
-					this.simpleStyleToVisualizer(layerData);
-					break;
+					default:
+						throw new Error('Can\'t read file type');
+				}
 
-				case 'geojson':
-					layerData = JSON.parse(this.reader.result);
-					break;
-
-				default:
-					this.store.dispatch(new SetToastMessageAction({ showWarningIcon: true, toastText: 'Can\'t read file type' }))
-			}
-
-			if (layerData) {
-				this.generateFeaturesIds(layerData);
-				const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
-				this.store.dispatch(new AddLayer(layer));
+				if (this.isFeatureCollection(layerData)) {
+					this.generateFeaturesIds(layerData);
+					const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
+					this.store.dispatch(new AddLayer(layer));
+				} else {
+					throw new Error('Not a feature collection');
+				}
+			} catch (toastText) {
+				this.store.dispatch(new SetToastMessageAction({ showWarningIcon: true, toastText: toastText || 'Failed to import file' }))
 			}
 		})
 	);
@@ -63,6 +68,10 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	isFeatureCollection(json): boolean {
+		return json && json.type === 'FeatureCollection' && Array.isArray(json.features);
 	}
 
 	generateFeaturesIds(annotationsLayer): void {

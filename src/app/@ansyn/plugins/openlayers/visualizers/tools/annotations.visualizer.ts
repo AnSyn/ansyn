@@ -477,6 +477,20 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						})
 					}));
 				}
+				break;
+			case 'Polygon':
+				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates()[0];
+				for (let i = 0; i < coordinates.length - 1; i++) {
+					const line: OlLineString = new OlLineString([coordinates[i], coordinates[i + 1]]);
+					moreStyles.push(new OlStyle({
+						geometry: line,
+						text: new OlText({
+							...this.measuresTextStyle,
+							text: this.formatLength(line, projection)
+						})
+					}));
+				}
+				break;
 		}
 		console.log(feature, style, mode, feature.getProperties(), feature.getGeometry());
 		return [style, ...moreStyles];

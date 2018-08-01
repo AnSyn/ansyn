@@ -45,7 +45,7 @@ describe('HelpComponent', () => {
 		it('should invoke a call to the store', () => {
 			let checkboxElement = fixture.debugElement.query(By.directive(AnsynCheckboxComponent));
 			spyOn(component.helpLocalStorageService, 'setHelpLocalStorageData');
-			checkboxElement.triggerEventHandler('inputClicked', { data: { isChecked: true } });
+			checkboxElement.triggerEventHandler('checkedChange', true );
 			expect(component.helpLocalStorageService.setHelpLocalStorageData).toHaveBeenCalledWith({ dontShowHelpOnStartup: true });
 		});
 	});

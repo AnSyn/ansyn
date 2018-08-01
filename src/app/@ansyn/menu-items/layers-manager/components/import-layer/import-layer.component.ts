@@ -7,6 +7,7 @@ import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer } from '../../actions/layers.actions';
 import * as toGeoJSON from 'togeojson';
 import { fromEvent } from 'rxjs/index';
+import { UUID } from 'angular2-uuid';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -43,6 +44,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 			}
 
 			if (layerData) {
+				this.generateFeaturesIds(layerData);
 				const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
 				this.store.dispatch(new AddLayer(layer));
 			}
@@ -61,6 +63,14 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	generateFeaturesIds(annotationsLayer): void {
+		/* reference */
+		annotationsLayer.features.filter(({ properties }) => !properties.id)
+			.forEach((feature) => {
+				feature.properties.id = UUID.UUID();
+		});
 	}
 
 	simpleStyleToVisualizer(annotationsLayer): void {

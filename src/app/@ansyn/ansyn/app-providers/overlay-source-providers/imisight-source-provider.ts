@@ -37,6 +37,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
+		const token = localStorage.getItem('access_token');
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
@@ -61,7 +62,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		const httpOptions = {
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9VUkdSRVJHTXpjMlJqZEdNekl5TnpNNE5qTTRPREJGTlVaRU1rUXpNalJHTTBORVJrWXpRdyJ9.eyJpc3MiOiJodHRwczovL2ltaXNpZ2h0LXNhdC5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWI2MTczMmE3NTBmMjcyYjc5MzI5OGRiIiwiYXVkIjpbImh0dHBzOi8vZ3cuc2F0LmltaXNpZ2h0Lm5ldCIsImh0dHBzOi8vaW1pc2lnaHQtc2F0LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MzMxMzc0MzgsImV4cCI6MTUzMzE0NDYzOCwiYXpwIjoiS1hMVGJzMDhMdExxcmJQd1NnbjdJb2VqMGFNQjd0ZjYiLCJzY29wZSI6Im9wZW5pZCJ9.QSpSiQb6eu-Cm_z-ta40yeKgJp3raRjxGiUphzD8HAi9s1_uiamrRqC36KjpXNgLQlKkhPqe_jwGlZ3LY-5q34h6JcoROswZoYgbD_4y61ExHOSA_egWMg9jpclgGMx9V21CW8pFDYemfxDMggiLjZvuKvq0dIMWL05SnrOhZYb3UkidckXqDqTqqSmjHR0vmR8ZA9mwhe8XMG5IO1ppEgzOadbObVYSoOr7XxX5iuonttmFmGhPQxLkZn87ue91eLncSkg5nMGkDUjZIMlZ2iexB6xeDfDR5UFpugpsbHTcrLeN36G5xw08nhU4mDBSXhbNIRlw7h0tEDPBVzXXxg'
+				'Authorization': 'Bearer ' + token
 			}
 		};
 		return this.http.post<any>(baseUrl, { params: params }, httpOptions)

@@ -26,6 +26,7 @@ import { OpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/overlay-sou
 import { OpenLayerOpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-open-aerial-source-provider';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { IdahoSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/idaho-source-provider';
+import { ImisightSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/imisight-source-provider';
 
 @NgModule({
 	imports: [
@@ -54,6 +55,7 @@ import { IdahoSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-p
 		{ provide: MultipleOverlaysSource, useClass: NotGeoRegisteredPlaneSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: ImisightSourceProvider, multi: true },
 
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },

@@ -326,7 +326,20 @@
             }
           }
         ]
-      }
+      },
+      "IMISIGHT": {
+         "text":"Imisight",
+         "value": 1,
+         "collapsed": true,
+         "children": [
+           {
+             "text": "All",
+             "value": {
+               "sensorType": "All"
+             }
+           }
+         ]
+       }
     }
 
   },
@@ -1041,6 +1054,47 @@
 			}
 		],
 		"blacklist": []
+	},
+    "IMISIGHT": {
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": "{{ getv "/ansyn/overlay/open/aerial/sensor/names" "[ null ]" }}",
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": []
 	}
   },
   "idahoOverlaysSourceConfig": {
@@ -1050,6 +1104,9 @@
   },
   "openAerialOverlaysSourceConfig": {
   	"baseUrl": "https://api.openaerialmap.org/meta"
+  },
+  "imisightOverlaysSourceConfig": {
+    "baseUrl": "https://gw.sat.imisight.net/a3/search"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",

@@ -8,6 +8,7 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { take } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
 import { cloneDeep } from '@ansyn/core/utils/rxjs-operators/cloneDeep';
+import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
 
 const animationsDuring = '0.2s';
 
@@ -39,11 +40,11 @@ export class SaveCaseComponent {
 
 	caseName: string;
 
-	@ViewChild('nameInput') nameInput: ElementRef;
+	@ViewChild('nameInput') nameInput: AnsynInputComponent;
 
 	@HostListener('@modalContent.done')
 	selectText() {
-		this.nameInput.nativeElement.select();
+		this.nameInput.select();
 	}
 
 	constructor(protected store: Store<ICasesState>,

@@ -5,9 +5,13 @@
 
 	<form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase(selectContextElement.selectedIndex)">
 
-		<input id="caseName" name="name" required [(ngModel)]="caseModel.name" #nameInput>
-		<span class="bar"></span>
-		<label class="case-name" for="caseName">Name</label>
+		<ansyn-input
+			#nameInput
+			[(ngModel)]="caseModel.name"
+			name="name"
+			[required]="true"
+			label="Name">
+		</ansyn-input>
 
 		<div class="select-context">
 			<label for="context">Context</label>

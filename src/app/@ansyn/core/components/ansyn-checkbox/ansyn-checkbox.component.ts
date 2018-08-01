@@ -1,4 +1,5 @@
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { UUID } from 'angular2-uuid';
 
 @Component({
 	selector: 'ansyn-checkbox',
@@ -6,45 +7,10 @@ import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@an
 	styleUrls: ['./ansyn-checkbox.component.less']
 })
 
-export class AnsynCheckboxComponent implements OnInit {
-	public _checked;
-	public _disabled = false;
-
-
-	@Output() inputClicked = new EventEmitter<any>();
-	@Input() id;
-
-	@Input()
-	set checked(value) {
-		this._checked = value;
-	}
-
-	get checked() {
-		return this._checked;
-	}
-
-	@HostBinding('class.disabled')
-	@Input()
-	set disabled(value) {
-		this._disabled = value;
-	}
-
-	get disabled() {
-		return this._disabled;
-	}
-
+export class AnsynCheckboxComponent {
+	@Input() id = UUID.UUID();
+	@Input() readonly checked: boolean;
+	@Input() readonly disabled: boolean;
+	@Output() readonly checkedChange = new EventEmitter<boolean>();
 	@Input() text;
-
-	constructor() {
-	}
-
-	ngOnInit() {
-	}
-
-	onInputClicked(event) {
-		if (this._disabled) {
-			return false;
-		}
-		this.inputClicked.emit({ event: event, data: { id: this.id, isChecked: !this._checked } });
-	}
 }

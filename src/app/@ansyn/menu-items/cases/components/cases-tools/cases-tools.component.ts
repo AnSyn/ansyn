@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { SaveCaseComponent } from '../save-case/save-case.component';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
@@ -20,7 +20,7 @@ import { get } from 'lodash';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class CasesToolsComponent {
+export class CasesToolsComponent implements OnInit, OnDestroy {
 	_selectedCase;
 
 	@AutoSubscription
@@ -49,5 +49,11 @@ export class CasesToolsComponent {
 
 	manualSave(): void {
 		this.store.dispatch(new ManualSaveAction(this._selectedCase));
+	}
+
+	ngOnInit(): void {
+	}
+
+	ngOnDestroy(): void {
 	}
 }

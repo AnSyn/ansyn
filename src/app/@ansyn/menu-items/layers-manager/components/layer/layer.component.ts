@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { SelectOnlyLayer, SetLayerSelection } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectSelectedLayersIds } from '../../reducers/layers.reducer';
+import { ILayer } from '../../models/layers.model';
+import { SelectOnlyLayer, SetLayerSelection } from '../../actions/layers.actions';
 
 @Component({
 	selector: 'ansyn-layer',
@@ -16,17 +16,23 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class LayerComponent {
+export class LayerComponent implements OnInit, OnDestroy {
 	@Input() layer: ILayer;
 	@Input() showOnly: boolean;
-	selectedLayersIds: string[] = [];
+	isChecked: boolean;
 
 	@AutoSubscription
 	selectedLayersIds$: Observable<any> = this.store$
 		.pipe(
 			select(selectSelectedLayersIds),
-			tap(selectedLayersIds => this.selectedLayersIds = selectedLayersIds)
+			tap(selectedLayersIds => this.isChecked = selectedLayersIds.includes(this.layer.id))
 		);
+
+	ngOnInit() {
+	}
+
+	ngOnDestroy() {
+	}
 
 	constructor(protected store$: Store<any>) {
 	}

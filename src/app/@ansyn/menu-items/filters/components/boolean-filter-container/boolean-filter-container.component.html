@@ -1,15 +1,11 @@
 <ng-container *ngFor="let properties of metadataValues">
 	<div class="enum-fields-enumerator" [hidden]="!properties.count">
 		<div class="left-side">
-			<div class="checkbox">
-				<input type="checkbox"
-					   [disabled]="properties.disabled"
-					   [id]="metadata?.baseFilter?.modelName + properties.name"
-					   class="regular-checkbox"
-					   [checked]="properties.value"
-					   (change)="onInputClicked(properties.name, $event.target.checked)"/>
-				<label [for]="metadata?.baseFilter?.modelName + properties.name"></label>
-			</div>
+			<ansyn-checkbox
+				[disabled]="properties.disabled"
+				[checked]="properties.value"
+				(checkedChange)='onInputClicked(properties.name, $event)'>
+			</ansyn-checkbox>
 			<div class="filter-row">
 				<div class="field-name-container">
 					<span class="field-name" [title]="true">{{properties.displayName}}</span>

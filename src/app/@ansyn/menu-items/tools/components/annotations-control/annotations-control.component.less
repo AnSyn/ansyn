@@ -16,26 +16,30 @@
 	transition-duration: 0.1s;
 	z-index: @z-index-annotations-control;
 	.selected-layer{
+		color: white;
 		visibility: hidden;
 		display: flex;
 		position: absolute;
 		width: 100%;
 		transform: translateY(-100%);
 		background: #27b2cf;
-		padding: 0 5px;
+		padding: 0 10px;
 		box-sizing: border-box;
+		div {
+			width: 100%;
+			border-bottom: 1px solid;
+			padding: 7px 0;
+			.active-annotation-layer{
+				background: transparent;
+				border: none;
+				color: white;
+				outline: none;
+				border-bottom: 1px solid white;
+				margin-top: 2px;
 
-		.active-annotation-layer{
-			background: transparent;
-			border: none;
-			color: white;
-			outline: none;
-			border-bottom: 1px solid white;
-			box-shadow: 0 0 1px 0 white;
-			margin-top: 2px;
-
-			option {
-				color: black;
+				option {
+					color: black;
+				}
 			}
 		}
 	}

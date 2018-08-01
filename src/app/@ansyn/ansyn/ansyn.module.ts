@@ -26,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@ansyn/core/core.module';
 import { HelpModule } from '@ansyn/menu-items/help/help.module';
 import { Auth0Service } from '@ansyn/login/services/auth0.service';
+import { CallbackComponent } from '@ansyn/ansyn/callback/callback.component';
 
 @NgModule({
 	imports: [
@@ -54,8 +55,8 @@ import { Auth0Service } from '@ansyn/login/services/auth0.service';
 		HelpModule
 	],
 	providers: [Auth0Service],
-	declarations: [AnsynComponent],
-	exports: [AnsynComponent]
+	declarations: [AnsynComponent, CallbackComponent],
+	exports: [AnsynComponent, CallbackComponent]
 })
 
 export class AnsynModule {

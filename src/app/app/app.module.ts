@@ -18,7 +18,7 @@ import { LoginModule } from '@ansyn/login/login.module';
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),
 		AnsynModule,
 		LoginModule,
-		AppRoutingModule
+		AppRoutingModule,
 	],
 	providers: [
 		{

@@ -10,8 +10,8 @@ interface IAuthConfig {
 }
 
 export const AUTH_CONFIG: IAuthConfig = {
-	clientID: 'XtI-4B1EfV_6EbKGZilSIjLTiUuy5fhR',
-	domain: 'satimisighta.auth0.com',
+	clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
+	domain: 'imisight-sat.auth0.com',
 	callbackURL: 'http://localhost:4200/callback'
 };
 

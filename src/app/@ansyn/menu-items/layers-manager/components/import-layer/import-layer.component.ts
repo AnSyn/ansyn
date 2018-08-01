@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { fromEvent } from 'rxjs/index';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class ImportLayerComponent {
+export class ImportLayerComponent implements OnInit, OnDestroy {
 	reader = new FileReader();
 	file: File;
 
@@ -55,6 +55,12 @@ export class ImportLayerComponent {
 	importLayer(files: FileList) {
 		this.file = files.item(0);
 		this.reader.readAsText(this.file, 'UTF-8')
+	}
+
+	ngOnInit(): void {
+	}
+
+	ngOnDestroy(): void {
 	}
 
 	simpleStyleToVisualizer(annotationsLayer): void {

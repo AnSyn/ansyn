@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
@@ -37,7 +37,7 @@ const animations: any[] = [
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class CasesTableComponent implements OnInit {
+export class CasesTableComponent implements OnInit, OnDestroy {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
 	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
@@ -65,6 +65,9 @@ export class CasesTableComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.loadCases();
+	}
+
+	ngOnDestroy(): void {
 	}
 
 	loadCases() {

@@ -45,8 +45,10 @@
 		&.active {
 			opacity: 1;
 		}
-
-		&:hover:not(.active) {
+		&:disabled {
+			cursor: not-allowed;
+		}
+		&:hover:not(.active):not(:disabled) {
 			opacity: .8;
 		}
 	}

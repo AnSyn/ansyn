@@ -160,7 +160,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return {
 			layers: [this.vector],
 			hitTolerance: 0,
-			style: (feature) => feature.styleCache,
+			style: (feature) => this.featureStyle(feature),
 			multi: true
 		};
 	}
@@ -467,7 +467,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (entity && entity.showMeasures) {
 			return [style, ...this.getMeasuresAsStyles(feature)]
 		} else {
-			return [style];
+			return style;
 		}
 	}
 

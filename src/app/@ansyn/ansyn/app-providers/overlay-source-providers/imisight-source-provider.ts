@@ -12,6 +12,7 @@ import { bboxFromGeoJson, geojsonMultiPolygonToPolygon, getPolygonByPointAndRadi
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { Auth0Service } from '@ansyn/login/services/auth0.service';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 
@@ -28,6 +29,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = ImisightOverlaySourceType;
 
 	constructor(
+		protected auth0Service: Auth0Service,
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
@@ -38,6 +40,11 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
 		const token = localStorage.getItem('access_token');
+		const expiresAteTime = new Date(Number(localStorage.getItem("expires_at")));
+		const now = new Date();
+		if (now > expiresAteTime) {
+			this.auth0Service.login();
+		}
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
@@ -65,7 +72,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 				'Authorization': 'Bearer ' + token
 			}
 		};
-		return this.http.post<any>(baseUrl, { params: params }, httpOptions)
+		return this.http.post<any>(baseUrl, params , httpOptions)
 
 			.map(data => {
 				return this.extractArrayData(data.results);

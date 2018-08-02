@@ -34,7 +34,7 @@ export class CasesAppEffects {
 	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
 

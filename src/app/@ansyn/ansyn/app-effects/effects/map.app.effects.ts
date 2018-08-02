@@ -341,7 +341,7 @@ export class MapAppEffects {
 				console.error(exception);
 				return Observable.from([
 				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
-				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay, forceFirstDisplay: true }) : new BackToWorldView({ mapId })
+				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
 				]);
 			}
 		)

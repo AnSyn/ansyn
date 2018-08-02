@@ -286,22 +286,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
 
-	changeStrokeColor(color) {
-		this.updateStyle({ initial: { stroke: color } });
-	}
-
-	changeFillColor(fillColor) {
-		this.updateStyle({ initial: { fill: fillColor, 'marker-color': fillColor } });
-	}
-
-	changeStrokeWidth(width) {
-		this.updateStyle({ initial: { 'stroke-width': width } });
-	}
-
-	changeStrokeOpacity(opacity) {
-
-	}
-
 	getFeatureBoundingRect(selectedFeature): IAnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();

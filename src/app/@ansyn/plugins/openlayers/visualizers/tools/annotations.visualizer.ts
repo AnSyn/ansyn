@@ -464,7 +464,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	featureStyle(feature: OlFeature, state: string = VisualizerStates.INITIAL) {
 		const style: OlStyle = super.featureStyle(feature, state);
 		const entity = this.getEntity(feature);
-		if (entity.showMeasures) {
+		if (entity && entity.showMeasures) {
 			return [style, ...this.getMeasuresAsStyles(feature)]
 		} else {
 			return [style];

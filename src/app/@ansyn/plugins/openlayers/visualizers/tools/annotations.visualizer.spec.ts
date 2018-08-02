@@ -33,31 +33,6 @@ describe('AnnotationsVisualizer', () => {
 		expect(annotationsVisualizer.removeDrawInteraction).toHaveBeenCalled();
 	});
 
-	it('changeStrokeWidth should call updateStyle with new stroke "width" value', () => {
-		const width = 10;
-		const expectedResult = { initial: { 'stroke-width': width } };
-		spyOn(annotationsVisualizer, 'updateStyle');
-		annotationsVisualizer.changeStrokeWidth(10);
-		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);
-	});
-
-	it('changeStrokeColor should call updateStyle with new stroke "color" value', () => {
-		const color = 'green';
-		const expectedResult = { initial: { stroke: color } };
-		spyOn(annotationsVisualizer, 'updateStyle');
-		annotationsVisualizer.changeStrokeColor(color);
-		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);
-	});
-
-
-	it('changeFillColor should call updateStyle with new fill "color" value', () => {
-		const fill = 'red';
-		const expectedResult = { initial: { fill, 'marker-color': fill } };
-		spyOn(annotationsVisualizer, 'updateStyle');
-		annotationsVisualizer.changeFillColor(fill);
-		expect(annotationsVisualizer.updateStyle).toHaveBeenCalledWith(expectedResult);
-	});
-
 	it('resetInteractions should call removeInteraction, addInteraction', () => {
 		spyOn(annotationsVisualizer, 'addInteraction');
 		spyOn(annotationsVisualizer, 'removeInteraction');

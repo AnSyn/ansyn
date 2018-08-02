@@ -37,7 +37,7 @@
 			<div
 				class="item"
 				*ngFor="let width of lineWidthList"
-				[class.selected]="width === annotationProperties.strokeWidth"
+				[class.selected]="width === annotationProperties['stroke-width']"
 				(click)="selectLineWidth(width)">
 				<svg height="20" width="20">
 					<line [style.stroke-width]="width" style="stroke:white" x1="0" x2="20" y1="10" y2="10"></line>
@@ -55,29 +55,24 @@
 
 		<div class="list color-selection-expand" *ngIf="selectedBox === SelectionBoxTypes.ColorPicker">
 
-			<div class="item color-picker-item">
-				<label for="color-fill-picker">
-					<span class="text">Fill</span>
-					<span class="color" [style.background]="annotationProperties.fillColor"></span>
-				</label>
-				<input
-					id="color-fill-picker"
-					type="color"
-					[value]="annotationProperties.fillColor"
-					(change)="changeFillColor($event.target.value)" title="fill"/>
-			</div>
+			<ansyn-color-picker
+				label="Fill"
+				[color]="annotationProperties.fill"
+				[shown]="Boolean(annotationProperties['fill-opacity'])"
+				[shownDisabled]="!(annotationProperties['stroke-opacity'])"
+				(shownChange)="changeFillShown($event)"
+				(colorChange)="changeFillColor($event)">
+			</ansyn-color-picker>
 
-			<div class="item color-picker-item">
-				<label for="color-stroke-picker">
-					<span class="text">Stroke</span>
-					<span class="color" [style.background]="annotationProperties.strokeColor"></span>
-				</label>
-				<input id="color-stroke-picker"
-					   type="color"
-					   [value]="annotationProperties.strokeColor"
-					   (change)="changeStrokeColor($event.target.value)"
-					   title="stroke"/>
-			</div>
+			<ansyn-color-picker
+				label="Stroke"
+				[color]="annotationProperties.stroke"
+				[shown]="Boolean(annotationProperties['stroke-opacity'])"
+				[shownDisabled]="!(annotationProperties['fill-opacity'])"
+				(colorChange)="changeStrokeColor($event)"
+				(shownChange)="changeStrokeShown($event)">
+			</ansyn-color-picker>
+
 		</div>
 	</li>
 

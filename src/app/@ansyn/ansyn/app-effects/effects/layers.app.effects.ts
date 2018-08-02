@@ -6,9 +6,18 @@ import { mergeMap } from 'rxjs/internal/operators';
 import { Store } from '@ngrx/store';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import {
-	BeginLayerCollectionLoadAction,
+	BeginLayerCollectionLoadAction, UpdateLayer,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { Feature } from 'geojson';
+import {
+	AnnotationRemoveFeature,
+	AnnotationUpdateFeature,
+	MapActionTypes
+} from '@ansyn/map-facade/actions/map.actions';
+import { Observable } from 'rxjs/index';
 
 
 @Injectable()
@@ -24,6 +33,33 @@ export class LayersAppEffects {
 				]
 			)
 		);
+
+	@Effect()
+	removeAnnotationFeature$: Observable<any> = this.actions$
+		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
+		.withLatestFrom(this.store$.select(selectLayers))
+		.map(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
+			const layer = layers
+				.filter(({ type }) => type === LayerType.annotation)
+				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
+			return new UpdateLayer({
+				...layer,
+				data: { ...layer.data, features: layer.data.features.filter(({properties}) => properties.id !== action.payload) }
+			});
+		});
+
+	@Effect()
+	updateAnnotationFeature$: Observable<any> = this.actions$
+		.ofType<AnnotationUpdateFeature>(MapActionTypes.TRIGGER.ANNOTATION_UPDATE_FEATURE)
+		.withLatestFrom(this.store$.select(selectLayers))
+		.map(([action, layers]: [AnnotationUpdateFeature, ILayer[]]) => {
+			const layer = layers
+				.filter(({ type }) => type === LayerType.annotation)
+				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload.featureId));
+			const feature = layer.data.features.find(({ properties }: Feature<any>) => properties.id === action.payload.featureId);
+			feature.properties = {...feature.properties, ...action.payload.properties};
+			return new UpdateLayer(layer);
+		});
 
 	constructor(protected casesService: CasesService,
 				protected actions$: Actions,

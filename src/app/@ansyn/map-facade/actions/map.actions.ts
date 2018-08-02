@@ -5,7 +5,7 @@ import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.comp
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { IAnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { IAnnotationsContextMenuEvent, IUpdateFeatureEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -40,6 +40,7 @@ export const MapActionTypes = {
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU',
 		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
+		ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE',
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
 	},
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
@@ -168,6 +169,14 @@ export class AnnotationRemoveFeature implements Action {
 	type = MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE;
 
 	constructor(public payload: string) {
+
+	};
+}
+
+export class AnnotationUpdateFeature implements Action {
+	type = MapActionTypes.TRIGGER.ANNOTATION_UPDATE_FEATURE;
+
+	constructor(public payload: IUpdateFeatureEvent) {
 
 	};
 }

@@ -181,7 +181,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id,
 			featureJson: feature,
-			style: feature.properties.style
+			style: feature.properties.style,
+			showMeasures: feature.properties.showMeasures
 		}));
 	}
 
@@ -192,10 +193,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
 			.forEach(({ id }) => this.removeEntity(id));
 
-		const entities = this.getEntities();
+		// const entities = this.getEntities();
 
 		const entitiesToAdd = annotationsLayerEntities
-			.filter((entity) => !entities.some(({ id }) => id === entity.id));
+			.filter((entity) => {
+				const oldEntity = this.idToEntity.get(entity.id);
+				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+			});
 
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
@@ -275,12 +279,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id } = selectedFeature.getProperties();
+		const { id, showMeasures } = selectedFeature.getProperties();
 		const contextMenuEvent: IAnnotationsContextMenuEvent = {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
-			interactionType: AnnotationInteraction.click
+			interactionType: AnnotationInteraction.click,
+			showMeasures
 		};
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
@@ -458,8 +463,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	featureStyle(feature: OlFeature, state: string = VisualizerStates.INITIAL) {
 		const style: OlStyle = super.featureStyle(feature, state);
-		const { mode } = feature.getProperties();
+		const entity = this.getEntity(feature);
+		if (entity.showMeasures) {
+			return [style, ...this.getMeasuresAsStyles(feature)]
+		} else {
+			return [style];
+		}
+	}
 
+	getMeasuresAsStyles(feature: OlFeature): OlStyle[] {
+		const { mode } = feature.getProperties();
 		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
 		let coordinates: any[] = [];
@@ -492,8 +505,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 				break;
 		}
-		console.log(feature, style, mode, feature.getProperties(), feature.getGeometry());
-		return [style, ...moreStyles];
+		return moreStyles
 	}
 
 	/**

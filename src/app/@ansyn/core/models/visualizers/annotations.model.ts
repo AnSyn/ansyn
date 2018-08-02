@@ -7,10 +7,16 @@ export interface IAnnotationsContextMenuBoundingRect {
 }
 
 export interface IAnnotationsContextMenuEvent {
-	mapId: string;
 	featureId: string;
+	mapId: string;
 	boundingRect: IAnnotationsContextMenuBoundingRect;
-	interactionType: AnnotationInteraction;
+	interactionType?: AnnotationInteraction;
+	showMeasures?: boolean;
+}
+
+export interface IUpdateFeatureEvent {
+	featureId: string;
+	properties: { [k: string]: any }
 }
 
 export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;

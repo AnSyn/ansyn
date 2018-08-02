@@ -1,7 +1,7 @@
 <div class="color-picker-item">
 	<input [id]="id"
 		   type="color"
-		   [disabled]="noFill"
+		   [disabled]="!shown"
 		   [value]="color"
 		   (change)="colorChange.emit($event.target.value)"
 		   [title]="label"/>

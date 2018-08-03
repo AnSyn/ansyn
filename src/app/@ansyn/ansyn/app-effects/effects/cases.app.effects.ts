@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -34,7 +34,7 @@ export class CasesAppEffects {
 	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector))
 		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
 

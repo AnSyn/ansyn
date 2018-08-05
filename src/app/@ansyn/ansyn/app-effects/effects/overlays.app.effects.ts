@@ -1,6 +1,6 @@
 import { Actions, Effect } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
@@ -15,24 +15,29 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
+	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
-	IMarkUpData,
-	overlaysStateSelector,
-	selectDropMarkup,
-	selectOverlaysMap
+	overlaysStateSelector
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import {
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction,
+	SynchronizeMapsAction
+} from '@ansyn/map-facade/actions/map.actions';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { CoreActionTypes, SetLayoutAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '@ansyn/imagery/model/base-map-source-provider';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import {
+	BaseMapSourceProvider,
+	IBaseMapSourceProviderConstructor
+} from '@ansyn/imagery/model/base-map-source-provider';
 import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContextEntity } from '@ansyn/core/models/case.model';
@@ -198,35 +203,36 @@ export class OverlaysAppEffects {
 			return [overlay];
 		}
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
-		return (<any>sourceProvider).getThumbnailUrl(overlay, position)
-			.map(thumbnailUrl => ({ ...overlay, thumbnailUrl }))
-			.catch(err => {
+		return (<any>sourceProvider).getThumbnailUrl(overlay, position).pipe(
+			map(thumbnailUrl => ({ ...overlay, thumbnailUrl })),
+			catchError(err => {
 				this.store$.dispatch(new SetToastMessageAction({
 					toastText: 'Failed to load overlay preview',
 					showWarningIcon: true
 				}));
-				return null;
-			});
-	});
-	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
-
-	@Effect()
-	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
-		.pipe(
-			withLatestFrom(this.store$.select(selectOverlaysMap)),
-			this.getOverlayFromDropMarkup,
-			withLatestFrom(this.store$.select(selectActiveMapId)),
-			this.getCommunicatorForActiveMap,
-			this.getPositionFromCommunicator,
-			this.getOverlayWithNewThumbnail,
-			this.getHoveredOverlayAction
-		)
-		.pipe(
-			catchError(err => {
-				console.error(err);
-				return Observable.of(err);
+				return EMPTY;
 			})
 		);
+	});
+	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
+	//
+	// @Effect()
+	// setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
+	// 	.pipe(
+	// 		withLatestFrom(this.store$.select(selectOverlaysMap)),
+	// 		this.getOverlayFromDropMarkup,
+	// 		withLatestFrom(this.store$.select(selectActiveMapId)),
+	// 		this.getCommunicatorForActiveMap,
+	// 		this.getPositionFromCommunicator,
+	// 		this.getOverlayWithNewThumbnail,
+	// 		this.getHoveredOverlayAction
+	// 	)
+	// 	.pipe(
+	// 		catchError(err => {
+	// 			console.error(err);
+	// 			return Observable.of(err);
+	// 		})
+	// 	);
 
 	@Effect()
 	setSpecialObjectsFromContextEntities$: Observable<any> = this.store$.select(selectContextEntities)

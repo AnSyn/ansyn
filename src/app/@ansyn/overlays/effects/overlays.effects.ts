@@ -59,7 +59,9 @@ export class OverlaysEffects {
 					}
 					return actions;
 				})
-				.catch(() => Observable.from([new LoadOverlaysSuccessAction([] ), new SetOverlaysStatusMessage('Error on overlays request')]));
+				.catch((err) => {
+					return Observable.from([new LoadOverlaysSuccessAction([] ), new SetOverlaysStatusMessage('Error on overlays request')])
+				});
 		});
 
 	/**

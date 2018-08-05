@@ -23,6 +23,7 @@ import { OpenLayerOpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/ma
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ImisightSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/imisight-source-provider';
 import { Auth0Service } from '@ansyn/login/services/auth0.service';
+import { OpenLayersImisiteSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-imisite-source-provider';
 
 @NgModule({
 	imports: [
@@ -37,7 +38,8 @@ import { Auth0Service } from '@ansyn/login/services/auth0.service';
 				OpenLayerNotGeoRegisteredPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
-				OpenLayerOpenAerialSourceProvider
+				OpenLayerOpenAerialSourceProvider,
+				OpenLayersImisiteSourceProvider
 			],
 			plugins: [],
 			maps: []

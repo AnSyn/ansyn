@@ -5,14 +5,22 @@ import {
 	IStartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { empty, Observable } from 'rxjs/index';
+	import { EMPTY, Observable } from 'rxjs/index';
 import { limitArray } from '@ansyn/core/utils/i-limited-array';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { bboxFromGeoJson, geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import {
+	bboxFromGeoJson,
+	geojsonMultiPolygonToPolygon,
+	geojsonPolygonToMultiPolygon,
+	getPolygonByPointAndRadius
+} from '@ansyn/core/utils/geo';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { Auth0Service } from '@ansyn/login/services/auth0.service';
+import { toRadians } from '@ansyn/core/utils/math';
+import { IOverlaysPlanetFetchData } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
+import { catchError, map } from 'rxjs/internal/operators';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 
@@ -22,6 +30,19 @@ export const ImisightOverlaySourceConfig: InjectionToken<IImisightOverlaySourceC
 
 export interface IImisightOverlaySourceConfig {
 	baseUrl: string;
+}
+
+export interface ImiSightElement {
+	s3Id: string;
+	geojson: object;
+	timestamp: string;
+	available: boolean;
+	geoServerUrl: string;
+	urls: object;
+	geoFile: string;
+	metaData: object;
+	source: string;
+	_id: string;
 }
 
 @Injectable()
@@ -40,10 +61,14 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
 		const token = localStorage.getItem('access_token');
-		const expiresAteTime = new Date(Number(localStorage.getItem("expires_at")));
 		const now = new Date();
-		if (now > expiresAteTime) {
+		if (!Boolean(token)) {
 			this.auth0Service.login();
+		} else {
+			const expiresAteTime = new Date(Number(localStorage.getItem('expires_at')));
+			if (now > expiresAteTime) {
+				this.auth0Service.login();
+			}
 		}
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
@@ -72,12 +97,10 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 				'Authorization': 'Bearer ' + token
 			}
 		};
-		return this.http.post<any>(baseUrl, params , httpOptions)
+		return this.http.post<any>(baseUrl, params, httpOptions)
 
-			.map(data => {
-				return this.extractArrayData(data.results);
-			})
-			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map(data => this.extractData(data))
+			.map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -88,42 +111,64 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		let baseUrl = this.imisightOverlaysSourceConfig.baseUrl;
-		return this.http.get<any>(baseUrl, { params: { _id: id } })
-			.map(data => {
-				return this.extractData(data.results);
-			})
-			.catch((error: any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
-			});
+		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe(
+			map(data => this.extractData(data.results)),
+			map(([overaly]): any => overaly),
+			catchError((error: any) => this.errorHandlerService.httpErrorHandle(error))
+		)
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return empty();
+		return EMPTY;
 	}
 
 	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return empty();
+		return EMPTY;
 	}
 
-	private extractArrayData(overlays: Array<any>): Array<IOverlay> {
+	// private extractArrayData(overlays: Array<any>): Array<IOverlay> {
+	// 	if (!overlays) {
+	// 		return [];
+	// 	}
+	// 	if (!Array.isArray(overlays)) {
+	// 		overlays = [overlays];
+	// 	}
+	// 	return overlays.map((element) => this.parseData(element));
+	// }
+
+
+	private extractData(overlays: Array<ImiSightElement>): IOverlay[] {
+		// if (overlays.length > 0) {
+		// 	return this.parseData(overlays[0]);
+		// }
 		if (!overlays) {
 			return [];
 		}
-
-		return overlays.filter(meta => meta.properties && meta.properties.tms && !meta.properties.tms.includes('mapbox'))
-			.map((element) => this.parseData(element));
-	}
-
-	private extractData(overlays: Array<any>): IOverlay {
-		if (overlays.length > 0) {
-			return this.parseData(overlays[0]);
+		if (!Array.isArray(overlays)) {
+			overlays = [overlays];
 		}
+		return overlays.map((element) => this.parseData(element));
 	}
 
-	protected parseData(openAerialElement: any): IOverlay {
+	protected parseData(imiSightElement: ImiSightElement): IOverlay {
+		const companyId = 1;
+		const gatewayUrl = 'https://gw.sat.imisight.net';
 		let overlay: IOverlay = <IOverlay> {};
-
-
+		const footprint: any = imiSightElement.geojson;
+		overlay.id = imiSightElement._id;
+		overlay.footprint = geojsonPolygonToMultiPolygon(footprint ? footprint : footprint);
+		overlay.sensorType = 'shai';
+		overlay.sensorName = 'veze';
+		overlay.bestResolution = 1;
+		overlay.name = imiSightElement.s3Id;
+		overlay.imageUrl =  `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;
+		overlay.thumbnailUrl = `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;
+		overlay.date = new Date(imiSightElement.timestamp);
+		overlay.photoTime = imiSightElement.timestamp;
+		overlay.azimuth = toRadians(180);
+		overlay.sourceType = this.sourceType;
+		overlay.isGeoRegistered = true;
+		overlay.tag = imiSightElement;
 		return overlay;
 	}
 }

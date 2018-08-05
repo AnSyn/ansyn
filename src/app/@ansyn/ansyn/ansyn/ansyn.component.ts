@@ -9,7 +9,9 @@ import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
 import { Auth0Service } from '@ansyn/login/services/auth0.service';
+
 declare function require(name: string);
+
 const packageJson = require('../../../../../package.json');
 
 @Component({
@@ -33,7 +35,6 @@ export class AnsynComponent {
 
 	version = (<any>packageJson).version;
 
-	constructor(protected store$: Store<IAppState>, public auth0: Auth0Service) {
-		// this.auth0.handleAuthentication();
+	constructor(protected store$: Store<IAppState>, protected auth0Service: Auth0Service) {
 	}
 }

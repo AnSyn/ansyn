@@ -505,6 +505,44 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					}));
 				}
 				break;
+			case 'Rectangle':
+				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates()[0];
+				for (let i = 0; i < 2; i++) {
+					const line: OlLineString = new OlLineString([coordinates[i], coordinates[i + 1]]);
+					moreStyles.push(new OlStyle({
+						geometry: line,
+						text: new OlText({
+							...this.measuresTextStyle,
+							text: this.formatLength(line, projection)
+						})
+					}));
+				}
+				break;
+			case 'Circle':
+				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates()[0];
+				const leftright = coordinates.reduce((prevResult, currCoord) => {
+					if (currCoord[0] > prevResult.right[0]) {
+						return { left: prevResult.left, right: currCoord };
+					} else if (currCoord[0] < prevResult.left[0]) {
+							return {left: currCoord, right: prevResult.right};
+					} else {
+						return prevResult;
+					}
+				}, {left: [Infinity, 0], right: [-Infinity, 0]});
+				console.log('circle', feature, coordinates, leftright);
+				const line: OlLineString = new OlLineString([leftright.left, leftright.right]);
+				moreStyles.push(new OlStyle({
+					geometry: line,
+					stroke: new OlStroke({
+						color: '#27b2cfe6',
+						width: 1
+					}),
+					text: new OlText({
+						...this.measuresTextStyle,
+						text: this.formatLength(line, projection)
+					})
+				}));
+				break;
 		}
 		return moreStyles
 	}

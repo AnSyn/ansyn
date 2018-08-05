@@ -11,9 +11,9 @@ export class ColorPickerComponent {
 	@Input() color: string;
 	@Output() colorChange = new EventEmitter();
 	@Input() label: string;
-	@Input() shown: boolean;
-	@Input() shownDisabled: boolean;
+	@Input() active: boolean;
+	@Input() activeDisabled: boolean;
 
-	@Output() shownChange = new EventEmitter();
+	@Output() activeChange = new EventEmitter();
 
 }

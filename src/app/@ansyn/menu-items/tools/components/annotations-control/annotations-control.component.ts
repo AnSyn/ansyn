@@ -140,12 +140,12 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new AnnotationSetProperties({ fill }));
 	}
 
-	changeFillShown(shown: boolean) {
-		this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': shown ? this.fillAlpah : 0 }));
+	changeFillShown(active: boolean) {
+		this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': active ? this.fillAlpah : 0 }));
 	}
 
-	changeStrokeShown(shown: boolean) {
-		this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': shown ? this.strokeAlpah : 0 }));
+	changeStrokeShown(active: boolean) {
+		this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': active ? this.strokeAlpah : 0 }));
 	}
 
 }

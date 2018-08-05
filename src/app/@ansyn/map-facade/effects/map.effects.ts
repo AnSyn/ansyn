@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/do';
@@ -39,6 +39,7 @@ import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { pipe } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class MapEffects {
@@ -145,20 +146,9 @@ export class MapEffects {
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		});
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
-	@Effect()
-	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
-		.ofType<any>(MapActionTypes.POSITION_CHANGED, CoreActionTypes.BACK_TO_WORLD_SUCCESS)
-		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
-		.filter(Boolean)
-		.map((map: ICaseMapState) => {
+	checkOverlaysOutOfBounds$ = pipe(
+		filter(Boolean),
+		map((map: ICaseMapState) => {
 			const key = AlertMsgTypes.OverlaysOutOfBounds;
 			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
 			let isInBound;
@@ -178,7 +168,40 @@ export class MapEffects {
 
 			return new AddAlertMsg({ key, value: map.id });
 
-		});
+		})
+	);
+
+	/**
+	 * @type Effect
+	 * @name checkImageOutOfBounds$
+	 * @ofType PositionChangedAction
+	 * @dependencies map
+	 * @filter There is a selected map
+	 * @action RemoveAlertMsg?, AddAlertMsg?
+	 */
+	@Effect()
+	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
+		.pipe(
+			ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED),
+			withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id)),
+			this.checkOverlaysOutOfBounds$.bind(this)
+		);
+
+	/**
+	 * @type Effect
+	 * @name checkImageOutOfBoundsFromBackToWorlds$
+	 * @ofType BackToWorldSuccess
+	 * @dependencies map
+	 * @filter There is a selected map
+	 * @action RemoveAlertMsg?, AddAlertMsg?
+	 */
+	@Effect()
+	checkImageOutOfBoundsFromBackToWorlds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
+		.pipe(
+			ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS),
+			withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.mapId)),
+			this.checkOverlaysOutOfBounds$.bind(this)
+		);
 
 	/**
 	 * @type Effect

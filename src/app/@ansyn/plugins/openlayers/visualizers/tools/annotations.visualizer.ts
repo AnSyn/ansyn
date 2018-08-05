@@ -493,6 +493,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 				break;
 			case 'Polygon':
+			case 'Arrow':
 				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: OlLineString = new OlLineString([coordinates[i], coordinates[i + 1]]);
@@ -529,7 +530,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						return prevResult;
 					}
 				}, {left: [Infinity, 0], right: [-Infinity, 0]});
-				console.log('circle', feature, coordinates, leftright);
 				const line: OlLineString = new OlLineString([leftright.left, leftright.right]);
 				moreStyles.push(new OlStyle({
 					geometry: line,

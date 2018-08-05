@@ -7,6 +7,7 @@
 
 	input:disabled + label {
 		opacity: .4;
+		cursor: default;
 	}
 
 	label {
@@ -40,16 +41,13 @@
 		font-size: 20px;
 		padding-left: 5px;
 		box-sizing: border-box;
-		opacity: .4;
+		opacity: .9;
 		outline: none;
-		&.active {
-			opacity: 1;
-		}
 		&:disabled {
-			cursor: not-allowed;
+			opacity: .5;
 		}
 		&:hover:not(.active):not(:disabled) {
-			opacity: .8;
+			opacity: 1;
 		}
 	}
 

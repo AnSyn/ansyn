@@ -58,19 +58,19 @@
 			<ansyn-color-picker
 				label="Fill"
 				[color]="annotationProperties.fill"
-				[shown]="Boolean(annotationProperties['fill-opacity'])"
-				[shownDisabled]="!(annotationProperties['stroke-opacity'])"
-				(shownChange)="changeFillShown($event)"
+				[active]="Boolean(annotationProperties['fill-opacity'])"
+				[activeDisabled]="!(annotationProperties['stroke-opacity'])"
+				(activeChange)="changeFillShown($event)"
 				(colorChange)="changeFillColor($event)">
 			</ansyn-color-picker>
 
 			<ansyn-color-picker
 				label="Stroke"
 				[color]="annotationProperties.stroke"
-				[shown]="Boolean(annotationProperties['stroke-opacity'])"
-				[shownDisabled]="!(annotationProperties['fill-opacity'])"
+				[active]="Boolean(annotationProperties['stroke-opacity'])"
+				[activeDisabled]="!(annotationProperties['fill-opacity'])"
 				(colorChange)="changeStrokeColor($event)"
-				(shownChange)="changeStrokeShown($event)">
+				(activeChange)="changeStrokeShown($event)">
 			</ansyn-color-picker>
 
 		</div>

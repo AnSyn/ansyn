@@ -1,7 +1,7 @@
 <div class="color-picker-item">
 	<input [id]="id"
 		   type="color"
-		   [disabled]="!shown"
+		   [disabled]="!active"
 		   [value]="color"
 		   (change)="colorChange.emit($event.target.value)"
 		   [title]="label"/>
@@ -11,8 +11,8 @@
 		<div class="color" [style.background]="color"></div>
 	</label>
 
-	<button class="no-fill" [disabled]="shownDisabled" (click)="shownChange.emit(!shown)">
-		<i [ngClass]="shown ? 'icon-annotation-no-fill-inactive' : 'icon-annotation-no-fill'" ></i>
+	<button class="no-fill" [disabled]="activeDisabled" (click)="activeChange.emit(!active)">
+		<i [ngClass]="active ? 'icon-annotation-no-fill-inactive' : 'icon-annotation-no-fill'" ></i>
 	</button>
 
 </div>

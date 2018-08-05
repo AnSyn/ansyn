@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
-	IStartAndEndDate
+	IStartAndEndDate, UNKNOWN_NAME
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
@@ -284,8 +284,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 		overlay.id = element.id;
 		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);
-		overlay.sensorType = element.properties.item_type;
-		overlay.sensorName = element.properties.satellite_id;
+		overlay.sensorType = element.properties.item_type ? element.properties.item_type : UNKNOWN_NAME;
+		overlay.sensorName = element.properties.satellite_id ? element.properties.satellite_id : UNKNOWN_NAME;
 		overlay.bestResolution = element.properties.gsd;
 		overlay.name = element.id;
 		overlay.imageUrl = this.appendApiKey(

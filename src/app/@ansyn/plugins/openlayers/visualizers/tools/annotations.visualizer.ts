@@ -12,6 +12,7 @@ import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visual
 import { cloneDeep } from 'lodash';
 import * as ol from 'openlayers';
 import {
+	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationsContextMenuBoundingRect,
 	IAnnotationsContextMenuEvent
@@ -21,7 +22,6 @@ import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
-	IAnnotationProperties,
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
@@ -47,7 +47,7 @@ import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
-import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { IVisualizerStyle, MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 import { AutoSubscription } from 'auto-subscriptions';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
@@ -57,6 +57,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { featureCollection } from '@turf/turf';
+import { IVisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -92,7 +93,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged();
 
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
-	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
 
 	@AutoSubscription
 	geoFilterSearchMode$ = this.store$.pipe(
@@ -109,8 +109,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		);
 
 	@AutoSubscription
-	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
-		.do(this.onAnnotationPropertiesChange.bind(this));
+	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
+		select(selectAnnotationProperties),
+		tap((changes: Partial<IVisualizerStyle>) => this.updateStyle({ initial: { ...changes } }))
+	);
 
 	@AutoSubscription
 	onAnnotationsChange$ = combineLatest(
@@ -138,6 +140,27 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.iMap.mapObject.getView().getRotation();
 	}
 
+	get interactionParams() {
+		return {
+			layers: [this.vector],
+			hitTolerance: 0,
+			style: (feature) => feature.styleCache,
+			multi: true
+		};
+	}
+
+	static findFeatureWithMinimumArea(featuresArray: any[]) {
+		return featuresArray.reduce((prevResult, currFeature) => {
+			const currGeometry = currFeature.getGeometry();
+			const currArea = currGeometry.getArea ? currGeometry.getArea() : 0;
+			if (currArea < prevResult.area) {
+				return { feature: currFeature, area: currArea }
+			} else {
+				return prevResult;
+			}
+		}, { feature: null, area: Infinity }).feature;
+	}
+
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id,
@@ -159,18 +182,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.filter((entity) => !entities.some(({ id }) => id === entity.id));
 
 		return this.addOrUpdateEntities(entitiesToAdd);
-	}
-
-	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: IAnnotationProperties) {
-		if (fillColor) {
-			this.changeFillColor(fillColor);
-		}
-		if (strokeWidth) {
-			this.changeStrokeWidth(strokeWidth);
-		}
-		if (strokeColor) {
-			this.changeStrokeColor(strokeColor);
-		}
 	}
 
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [Dictionary<ILayer>, boolean, string[], boolean, string]): Observable<any> {
@@ -216,13 +227,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new SetAnnotationMode());
 		this.removeInteraction(VisualizerInteractions.contextMenu);
 		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+		this.addInteraction(VisualizerInteractions.pointerMove, this.createAnnotationHoverInteraction());
 	}
 
 	createContextMenuInteraction() {
 		const contextMenuInteraction = new Select(<any>{
 			condition: condition.click,
-			layers: [this.vector],
-			hitTolerance: 10
+			...this.interactionParams
 		});
 		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
 		return contextMenuInteraction;
@@ -230,31 +242,49 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onSelectFeature(data) {
 		data.target.getFeatures().clear();
-		if (this.mapSearchIsActive || this.mode) { return; }
-		const [selectedFeature] = data.selected;
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id } = selectedFeature.getProperties();
 		const contextMenuEvent: IAnnotationsContextMenuEvent = {
 			mapId: this.mapId,
 			featureId: id,
-			boundingRect
+			boundingRect,
+			interactionType: AnnotationInteraction.click
 		};
-		this.store$.dispatch(new SetAnnotationMode());
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
 
-	changeStrokeColor(color) {
-		this.updateStyle({ initial: { stroke: color } });
+	createAnnotationHoverInteraction() {
+		const annotationHoverInteraction = new Select(<any>{
+			condition: condition.pointerMove,
+			...this.interactionParams
+		});
+		annotationHoverInteraction.on('select', this.onHoverFeature.bind(this));
+		return annotationHoverInteraction;
 	}
 
-	changeFillColor(fillColor) {
-		this.updateStyle({ initial: { fill: fillColor, 'marker-color': fillColor } });
+	onHoverFeature(data) {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		let selectedFeature, boundingRect, id;
+		let selected = data.target.getFeatures().getArray();
+		if (selected.length > 0) {
+			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
+			boundingRect = this.getFeatureBoundingRect(selectedFeature);
+			id = selectedFeature.getProperties().id;
+		}
+		const contextMenuEvent: IAnnotationsContextMenuEvent = {
+			mapId: this.mapId,
+			featureId: id,
+			boundingRect,
+			interactionType: AnnotationInteraction.hover
+		};
+		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
-
-	changeStrokeWidth(width) {
-		this.updateStyle({ initial: { 'stroke-width': width } });
-	}
-
 
 	getFeatureBoundingRect(selectedFeature): IAnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);

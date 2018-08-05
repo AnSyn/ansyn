@@ -16,6 +16,7 @@ import { LayerMenuComponent } from './components/layer-menu/layer-menu.component
 import { DataLayersModalsComponent } from './components/data-layers-modals/data-layers-modals.component';
 import { EditLayerComponent } from './components/data-layers-modals/edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
+import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 
 @NgModule({
 	imports: [
@@ -25,7 +26,7 @@ import { DeleteLayerComponent } from './components/data-layers-modals/delete-lay
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
 		EffectsModule.forFeature([LayersEffects])
 	],
-	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })

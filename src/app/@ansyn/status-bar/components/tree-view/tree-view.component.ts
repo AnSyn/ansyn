@@ -71,9 +71,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 						leaf.value.providerName = providerName;
 					});
 					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
-						this.translate.get(leaf.text, {value: 'sns'}).subscribe((res: string) => {
-							leaf.text = res;
-						});
+						if (leaf.text) {
+							this.translate.get(leaf.text, {value: 'sns'}).subscribe((res: string) => {
+								leaf.text = res;
+							});
+						}
 					})
 				}
 			);

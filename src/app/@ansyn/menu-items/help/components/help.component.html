@@ -19,7 +19,7 @@
 		<ansyn-checkbox
 			text="Don't show on startup"
 			[checked]="helpLocalStorageService.getHelpLocalStorageData().dontShowHelpOnStartup"
-			(inputClicked)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event.data.isChecked})"
+			(checkedChange)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event })"
 		></ansyn-checkbox>
 	</label>
 </footer>

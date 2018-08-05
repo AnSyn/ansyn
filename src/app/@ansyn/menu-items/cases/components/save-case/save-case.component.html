@@ -3,16 +3,18 @@
 		<span>×</span>
 	</button>
 
-	<form class="save-case-form" (submit)="onSubmitCase()">
-
-		<input type="text" name="name" required [(ngModel)]="caseModel.name" #nameInput>
-		<span class="highlight"></span>
-		<span class="bar"></span>
-		<label>Name</label>
+	<form #f="ngForm" class="save-case-form" (ngSubmit)="onSubmitCase()">
+		<ansyn-input
+			#nameInput
+			[(ngModel)]="caseName"
+			name="name"
+			[required]="true"
+			label="Name">
+		</ansyn-input>
 
 		<div class="bottom-btns">
 			<button type="button" (click)="close()">Cancel</button>
-			<button type="submit">OK</button>
+			<button type="submit" [disabled]="f.invalid">OK</button>
 		</div>
 	</form>
 </div>

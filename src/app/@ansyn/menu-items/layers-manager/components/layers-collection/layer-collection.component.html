@@ -13,7 +13,10 @@
 				<span (click)="showAll()">Show all</span>
 			</div>
 
-			<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)">
+			<ansyn-import-layer tooltip-value="Import layer" tooltip-class="bottom right"></ansyn-import-layer>
+
+			<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
+					tooltip-value="Create new layer" tooltip-class="bottom right">
 				<i class="icon-layer-add"></i>
 			</button>
 

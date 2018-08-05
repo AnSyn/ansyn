@@ -7,6 +7,7 @@ import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.redu
 import { Observable } from 'rxjs';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -24,6 +25,10 @@ export class ImageryContainerComponent {
 
 	get overlay(): IOverlay {
 		return this.mapState.data.overlay;
+	}
+
+	get AnnotationInteraction() {
+		return AnnotationInteraction;
 	}
 
 	constructor(protected store: Store<any>,

@@ -1,4 +1,4 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ICase, ICasePreview } from '@ansyn/core/models/case.model';
@@ -18,7 +18,7 @@ import { SetAutoSave } from '@ansyn/core/actions/core.actions';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class CasesAutoSaveComponent {
+export class CasesAutoSaveComponent implements OnInit, OnDestroy {
 	@Input() caseId: string;
 	currentCase;
 
@@ -38,6 +38,11 @@ export class CasesAutoSaveComponent {
 		this.store$.dispatch(new SetAutoSave(autoSave));
 	}
 
+	ngOnInit(): void {
+	}
+
+	ngOnDestroy(): void {
+	}
 	constructor(protected store$: Store<any>) {
 	}
 

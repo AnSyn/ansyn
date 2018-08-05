@@ -67,7 +67,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			}
 			return layersAdapter.addOne(action.payload, {
 				...state,
-				selectedLayersIds: [...state.selectedLayersIds, action.payload.id],
+				selectedLayersIds: uniq([...state.selectedLayersIds, action.payload.id]),
 				activeAnnotationLayer
 			});
 		}

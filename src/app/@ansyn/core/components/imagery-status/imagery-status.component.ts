@@ -42,9 +42,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (!this._overlay) {
 			this.translatedOverlaySensorName = '';
 		} else {
-			this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
-				this.translatedOverlaySensorName = res;
-			});
+			if (this.overlay.sensorName) {
+				this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
+					this.translatedOverlaySensorName = res;
+				});
+			}
 		}
 		this.updateFavoriteStatus();
 		this.updatePresetStatus();
@@ -176,7 +178,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (this.overlay && this.presetOverlays && this.presetOverlays.length > 0) {
 			this.isPreset = this.presetOverlays.some(o => o.id === this.overlay.id);
 		}
-		this.presetsButtonText = this.isPreset ? 'Remove from presets' : 'Add to preset overlays (press F to display next preset)';
+		this.presetsButtonText = this.isPreset ? 'Remove from overlays quick loop' : 'Add to overlays quick loop';
 	}
 
 	toggleMapLayers() {

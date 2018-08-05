@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
-	IStartAndEndDate
+	IStartAndEndDate, UNKNOWN_NAME
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { toRadians } from '@ansyn/core/utils/math';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
@@ -115,21 +115,12 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;
 		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
-		let bands = '0';
-		if (idahoElement.properties.numBands > 1 && idahoElement.properties.numBands < 5) {
-			bands = '2,1,0';
-		} else if (idahoElement.properties.numBands >= 5) {
-			bands = '4,2,1';
-		}
-		overlay.sensorType = idahoElement.properties.sensorName;
-		overlay.sensorName = idahoElement.properties.platformName;
+		overlay.sensorType = idahoElement.properties.sensorName ? idahoElement.properties.sensorName : UNKNOWN_NAME;
+		overlay.sensorName = idahoElement.properties.platformName ? idahoElement.properties.platformName : UNKNOWN_NAME;
 		overlay.channel = idahoElement.properties.numBands;
 		overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
 		overlay.name = idahoElement.properties.catalogID;
 
-		// https://gbdxdocs.digitalglobe.com/v1/docs/get-a-tms-tile
-		// https://idaho.geobigdata.io/v1/tile/:bucket_name/:idaho_id/:tileZ/:tileX/:TileY
-		overlay.imageUrl = 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}?bands=' + bands + '&token=' + token;
 		overlay.thumbnailUrl = 'https://api.discover.digitalglobe.com/show?id=' + idahoElement.properties.catalogID + '&f=jpeg';
 		overlay.date = new Date(idahoElement.properties.acquisitionDate);
 		overlay.photoTime = idahoElement.properties.acquisitionDate;
@@ -137,6 +128,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
 		overlay.tag = idahoElement;
+		overlay.baseImageUrl = 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true';
+		(<any>overlay).token = token;
 		(<any>overlay).catalogID = idahoElement.properties.catalogID;
 
 		return overlay;

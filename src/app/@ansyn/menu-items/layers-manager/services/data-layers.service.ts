@@ -1,5 +1,5 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -18,10 +18,10 @@ export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionT
 
 @Injectable()
 @AutoSubscriptions({
-	init: 'init',
+	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class DataLayersService {
+export class DataLayersService implements OnInit, OnDestroy {
 	caseId: string;
 
 	@AutoSubscription
@@ -34,7 +34,7 @@ export class DataLayersService {
 		);
 
 
-	generateAnnotationLayer(name = 'Default'): ILayer {
+	generateAnnotationLayer(name = 'Default', data = featureCollection([])): ILayer {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
@@ -42,7 +42,7 @@ export class DataLayersService {
 			name,
 			caseId: this.caseId,
 			type: LayerType.annotation,
-			data: featureCollection([])
+			data
 		};
 	}
 
@@ -50,10 +50,13 @@ export class DataLayersService {
 				protected storageService: StorageService,
 				protected store: Store<any>,
 				@Inject(layersConfig) public config: ILayersManagerConfig) {
-		this.init();
+		this.ngOnInit();
 	}
 
-	init() {
+	ngOnInit(): void {
+	}
+
+	ngOnDestroy(): void {
 	}
 
 	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {

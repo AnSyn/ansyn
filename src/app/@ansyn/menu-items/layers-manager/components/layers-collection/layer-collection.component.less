@@ -1,4 +1,5 @@
 @import "core/less/common";
+@import 'core/less/tooltip';
 
 div.container {
 	padding: 0 0 20px 0;
@@ -9,11 +10,11 @@ div.container {
 		}
 
 		div.title-row {
-			button.add-layer {
+			button.add-layer, ansyn-import-layer {
 				display: flex;
 			}
 			div.actions .show-all {
-				display: block;
+				/* display: block; */
 			}
 		}
 
@@ -22,7 +23,7 @@ div.container {
 				background: rgba(255, 255, 255, 0.4);
 				ansyn-layer-menu {
 					visibility: visible;
-					transform: translateX(0);
+					transform: translateX(70%);
 					opacity: 1;
 					pointer-events: auto;
 				}
@@ -68,11 +69,16 @@ div.container {
 		}
 
 		button.add-layer {
-			display: none;
+			cursor: pointer;
 			background: transparent;
 			border: none;
 			font-size: 20px;
 			color: white;
+		}
+
+		button.add-layer, ansyn-import-layer {
+			display: none;
+			position: relative;
 		}
 
 		div.show-all {

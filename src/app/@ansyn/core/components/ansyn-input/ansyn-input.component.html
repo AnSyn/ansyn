@@ -1,0 +1,11 @@
+<input [(ngModel)]="value"
+	   [id]="id"
+	   [required]="required"
+	   #input
+	   name="ansyn-input"
+	   class="form-control"
+	   (blur)="onBlur()" >
+
+<span class="bar"></span>
+
+<label class="case-name" [for]="id">{{label}}</label>

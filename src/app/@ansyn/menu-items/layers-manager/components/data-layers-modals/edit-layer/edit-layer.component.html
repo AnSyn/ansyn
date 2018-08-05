@@ -1,13 +1,15 @@
 <div class="edit-layer">
 	<form #f="ngForm" class="edit-layer-form" (ngSubmit)="layer ? editLayer(layerName.value) : addLayer(layerName.value)">
-
-		<input id="layerName" name="name" required [value]="layer?.name" autocomplete="off" #layerName>
-		<span class="bar"></span>
-		<label class="case-name" for="layerName">Name</label>
+		<ansyn-input
+			#layerName
+			[ngModel]="layer?.name"
+			name="name"
+			label="Name">
+		</ansyn-input>
 
 		<div class="bottom-btns">
 			<button type="button" (click)="closeModal()">Cancel</button>
-			<button [disabled]="f.invalid">OK</button>
+			<button [disabled]="!layerName.value">OK</button>
 		</div>
 	</form>
 </div>

@@ -4,6 +4,8 @@ import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model
 import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
 import { FeatureCollection } from 'geojson';
 import * as turf from '@turf/turf';
+import { IVisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
+import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -17,19 +19,13 @@ export enum toolsFlags {
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
-export interface IAnnotationProperties {
-	strokeWidth?: number;
-	strokeColor?: string;
-	fillColor?: string;
-}
-
 export interface IToolsState {
 	flags: Map<toolsFlags, boolean>;
 	subMenu: SubMenuEnum;
 	activeCenter: number[];
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	annotationMode: AnnotationMode;
-	annotationProperties: IAnnotationProperties
+	annotationProperties: Partial<IVisualizerStyle>;
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	activeAnnotationLayer: string;
@@ -43,9 +39,11 @@ export const toolsInitialState: IToolsState = {
 	activeCenter: [0, 0],
 	annotationMode: undefined,
 	annotationProperties: {
-		strokeWidth: 1,
-		strokeColor: '#27b2cf',
-		fillColor: '#ffffff'
+		'stroke-width': 1,
+		'fill-opacity': 0.4,
+		'stroke-opacity': 1,
+		stroke: '#27b2cf',
+		fill: '#ffffff'
 	},
 	manualImageProcessingParams: undefined,
 	overlaysManualProcessArgs: {},

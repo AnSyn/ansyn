@@ -1,0 +1,16 @@
+<div class="color-picker-item">
+	<input [id]="id"
+		   type="color"
+		   [disabled]="!shown"
+		   [value]="color"
+		   (change)="colorChange.emit($event.target.value)"
+		   [title]="label"/>
+
+	<label [for]="id">
+		<div class="text">{{ label }}</div>
+		<div class="color" [style.background]="color"></div>
+	</label>
+
+	<button class="no-fill" [disabled]="shownDisabled" [class.active]="shown" (click)="shownChange.emit(!shown)"><i class="icon-annotation-no-fill"></i></button>
+
+</div>

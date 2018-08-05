@@ -22,7 +22,6 @@ import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
-	IAnnotationProperties,
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
@@ -48,7 +47,7 @@ import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
-import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { IVisualizerStyle, MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 import { AutoSubscription } from 'auto-subscriptions';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
@@ -58,6 +57,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { featureCollection } from '@turf/turf';
+import { IVisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -93,7 +93,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged();
 
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
-	annotationProperties$: Observable<any> = this.store$.pipe(select(selectAnnotationProperties));
 
 	@AutoSubscription
 	geoFilterSearchMode$ = this.store$.pipe(
@@ -110,8 +109,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		);
 
 	@AutoSubscription
-	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
-		.do(this.onAnnotationPropertiesChange.bind(this));
+	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
+		select(selectAnnotationProperties),
+		tap((changes: Partial<IVisualizerStyle>) => this.updateStyle({ initial: { ...changes } }))
+	);
 
 	@AutoSubscription
 	onAnnotationsChange$ = combineLatest(
@@ -181,18 +182,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.filter((entity) => !entities.some(({ id }) => id === entity.id));
 
 		return this.addOrUpdateEntities(entitiesToAdd);
-	}
-
-	onAnnotationPropertiesChange({ fillColor, strokeWidth, strokeColor }: IAnnotationProperties) {
-		if (fillColor) {
-			this.changeFillColor(fillColor);
-		}
-		if (strokeWidth) {
-			this.changeStrokeWidth(strokeWidth);
-		}
-		if (strokeColor) {
-			this.changeStrokeColor(strokeColor);
-		}
 	}
 
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [Dictionary<ILayer>, boolean, string[], boolean, string]): Observable<any> {
@@ -296,19 +285,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		};
 		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
 	}
-
-	changeStrokeColor(color) {
-		this.updateStyle({ initial: { stroke: color } });
-	}
-
-	changeFillColor(fillColor) {
-		this.updateStyle({ initial: { fill: fillColor, 'marker-color': fillColor } });
-	}
-
-	changeStrokeWidth(width) {
-		this.updateStyle({ initial: { 'stroke-width': width } });
-	}
-
 
 	getFeatureBoundingRect(selectedFeature): IAnnotationsContextMenuBoundingRect {
 		const rotation = toDegrees(this.mapRotation);

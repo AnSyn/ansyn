@@ -4,7 +4,6 @@ import { CasesActionTypes, SaveCaseAsSuccessAction } from '@ansyn/menu-items/cas
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { mergeMap } from 'rxjs/internal/operators';
 import { Store } from '@ngrx/store';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -25,8 +24,7 @@ export class LayersAppEffects {
 			)
 		);
 
-	constructor(protected casesService: CasesService,
-				protected actions$: Actions,
+	constructor(protected actions$: Actions,
 				protected store$: Store<any>) {
 
 	}

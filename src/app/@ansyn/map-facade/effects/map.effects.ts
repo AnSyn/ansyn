@@ -155,7 +155,7 @@ export class MapEffects {
 	 */
 	@Effect()
 	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
-		.ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED)
+		.ofType<any>(MapActionTypes.POSITION_CHANGED, CoreActionTypes.BACK_TO_WORLD_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
 		.filter(Boolean)
 		.map((map: ICaseMapState) => {

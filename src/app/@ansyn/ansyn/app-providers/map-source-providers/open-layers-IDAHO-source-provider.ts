@@ -86,12 +86,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 
 		return Promise.all([getImagePromise, getAssociationPromise]).then(() => {
 			let imageUrl = metaData.data.overlay.baseImageUrl;
-			let bands;
-			if (imageData) {
-				bands = this.getColorChannel(metaData.data.overlay, imageData.bandAliases);
-			} else {
-				bands = this.getBandsSection(metaData.data.overlay, '0');
-			}
+			let bands = this.getColorChannel(metaData.data.overlay, imageData);
 			imageUrl += bands;
 
 			if (associationData) {
@@ -104,12 +99,22 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		});
 	}
 
-	getColorChannel(overlay: IOverlay, colorChannels: string): string {
-		const rIndex = colorChannels.indexOf('R');
-		const gIndex = colorChannels.indexOf('G');
-		const bIndex = colorChannels.indexOf('B');
-		const bands = `${rIndex},${gIndex},${bIndex}`;
-		return this.getBandsSection(overlay, bands);
+	getColorChannel(overlay: IOverlay, imageData: any): string {
+		let rgbBans: string;
+		if (imageData && imageData.bandAliases) {
+			const rIndex = imageData.bandAliases.indexOf('R');
+			const gIndex = imageData.bandAliases.indexOf('G');
+			const bIndex = imageData.bandAliases.indexOf('B');
+			rgbBans = `${rIndex},${gIndex},${bIndex}`;
+		} else {
+			rgbBans = '0';
+			if (overlay.channel > 1 && overlay.channel < 5) {
+				rgbBans = '2,1,0';
+			} else if (overlay.channel >= 5) {
+				rgbBans = '4,2,1';
+			}
+		}
+		return this.getBandsSection(overlay, rgbBans);
 	}
 
 	getBandsSection(overlay: IOverlay, bands: string): string {

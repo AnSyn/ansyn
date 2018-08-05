@@ -2,7 +2,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { ContextModule } from '@ansyn/context/context.module';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
@@ -144,7 +144,7 @@ describe('CasesAppEffects', () => {
 		const activeMapId = 'map1';
 		const overlay = <IOverlay> { id: 'tmp' };
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
-		const action = new DisplayOverlayAction({ overlay, mapId: "map1"});
+		const action = new DisplayOverlaySuccessAction({ overlay, mapId: "map1"});
 		actions = hot('--a--', { a: action });
 		const updatedMapsList = [...mapsList];
 		updatedMapsList.forEach((map) => {

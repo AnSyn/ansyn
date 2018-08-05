@@ -27,7 +27,6 @@ import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
 import {
-	IAnnotationProperties,
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
@@ -54,7 +53,7 @@ import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import OLGeoJSON from 'ol/format/geojson';
-import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { IVisualizerStyle, MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 import { AutoSubscription } from 'auto-subscriptions';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
@@ -63,7 +62,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { featureCollection } from '@turf/turf';
-import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { IVisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -128,8 +127,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		);
 
 	@AutoSubscription
-	annotationPropertiesChange$: Observable<any> = this.annotationProperties$
-		.do(this.onAnnotationPropertiesChange.bind(this));
+	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
+		select(selectAnnotationProperties),
+		tap((changes: Partial<IVisualizerStyle>) => this.updateStyle({ initial: { ...changes } }))
+	);
 
 	@AutoSubscription
 	onAnnotationsChange$ = combineLatest(
@@ -194,7 +195,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
 			.forEach(({ id }) => this.removeEntity(id));
 
-		// const entities = this.getEntities();
+		const entities = this.getEntities();
 
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {

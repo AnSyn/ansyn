@@ -31,6 +31,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 				fill: null,
 				'stroke-width': 4,
 				'marker-size': MarkerSize.small,
+				'marker-color': '#f32ee1'
 			}
 		});
 	}

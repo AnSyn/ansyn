@@ -2,8 +2,9 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Select from 'ol/interaction/select';
 import Sphere from 'ol/sphere';
-import OlCircle from 'ol/style/circle';
+import OlCircle from 'ol/geom/circle';
 import OlLineString from 'ol/geom/linestring';
+import OlMultiLineString from 'ol/geom/multilinestring';
 import OlPolygon from 'ol/geom/polygon';
 import OlFeature from 'ol/feature';
 import OlStyle from 'ol/style/style';
@@ -143,11 +144,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	modeDictionary = {
 		Arrow: {
-			type: 'OlLineString',
+			type: 'LineString',
 			geometryFunction: this.arrowGeometryFunction.bind(this)
 		},
 		Rectangle: {
-			type: 'OlCircle',
+			type: 'Circle',
 			geometryFunction: this.rectangleGeometryFunction.bind(this)
 		}
 	};
@@ -451,7 +452,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			lineStr2.rotate(rotation, end);
 			geometry.setCoordinates([coordinates, lineStr1.getCoordinates(), lineStr2.getCoordinates()]);
 		} else {
-			geometry = new OlLineString([coordinates]);
+			geometry = new OlMultiLineString([coordinates]);
 		}
 		return geometry;
 	}

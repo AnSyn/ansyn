@@ -11,6 +11,8 @@
 		<div class="color" [style.background]="color"></div>
 	</label>
 
-	<button class="no-fill" [disabled]="shownDisabled" [class.active]="shown" (click)="shownChange.emit(!shown)"><i class="icon-annotation-no-fill"></i></button>
+	<button class="no-fill" [disabled]="shownDisabled" (click)="shownChange.emit(!shown)">
+		<i [ngClass]="shown ? 'icon-annotation-no-fill-inactive' : 'icon-annotation-no-fill'" ></i>
+	</button>
 
 </div>

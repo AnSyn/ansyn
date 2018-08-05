@@ -141,8 +141,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 
 	}
 
-	toggleDataInputFilterIcon($event) {
-		console.log("sadlkjsadlksdajldkasj", $event);
+	toggleDataInputFilterIcon() {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
 

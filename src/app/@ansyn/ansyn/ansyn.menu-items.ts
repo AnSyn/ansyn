@@ -9,12 +9,6 @@ import { HelpComponent } from '@ansyn/menu-items/help/components/help.component'
 
 export const ansynMenuItems: IMenuItem[] = [
 	{
-		name: 'Cases',
-		component: CasesComponent,
-		iconClass: 'icon-main-cases',
-		production: true
-	},
-	{
 		name: 'Filters',
 		component: FiltersCollectionComponent,
 		iconClass: 'icon-main-filters',

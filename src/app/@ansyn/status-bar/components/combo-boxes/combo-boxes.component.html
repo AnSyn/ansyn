@@ -5,7 +5,7 @@
 			<ansyn-combo-box-trigger
 				#trigger
 				class="combo-box-width"
-				(click)="toggleDataInputFilterIcon()"
+				(click)="toggleDataInputFilterIcon($event)"
 				icon="icon-status-bar-input-data"
 				[isActive]="dataInputFilterExpand"
 				[comboBoxToolTipDescription]="toolTips.dataInputFilter"

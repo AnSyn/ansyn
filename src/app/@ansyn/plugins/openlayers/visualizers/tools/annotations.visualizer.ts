@@ -19,13 +19,13 @@ import * as ol from 'openlayers';
 import {
 	AnnotationInteraction,
 	AnnotationMode,
-	IAnnotationsContextMenuBoundingRect,
-	IAnnotationsContextMenuEvent
+	IAnnotationBoundingRect,
+	IAnnotationsSelectionEventData
 } from '@ansyn/core/models/visualizers/annotations.model';
 import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
-import { AnnotationContextMenuTriggerAction } from '@ansyn/map-facade/actions/map.actions';
+import { AnnotationSelectAction } from '@ansyn/map-facade/actions/map.actions';
 import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
@@ -244,22 +244,22 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	resetInteractions(): void {
 		this.store$.dispatch(new SetAnnotationMode());
-		this.removeInteraction(VisualizerInteractions.contextMenu);
-		this.addInteraction(VisualizerInteractions.contextMenu, this.createContextMenuInteraction());
+		this.removeInteraction(VisualizerInteractions.click);
+		this.addInteraction(VisualizerInteractions.click, this.createClickInteraction());
 		this.removeInteraction(VisualizerInteractions.pointerMove);
-		this.addInteraction(VisualizerInteractions.pointerMove, this.createAnnotationHoverInteraction());
+		this.addInteraction(VisualizerInteractions.pointerMove, this.createHoverInteraction());
 	}
 
-	createContextMenuInteraction() {
-		const contextMenuInteraction = new Select(<any>{
+	createClickInteraction() {
+		const interaction = new Select(<any>{
 			condition: condition.click,
 			...this.interactionParams
 		});
-		contextMenuInteraction.on('select', this.onSelectFeature.bind(this));
-		return contextMenuInteraction;
+		interaction.on('select', this.onClickAnnotation.bind(this));
+		return interaction;
 	}
 
-	onSelectFeature(data) {
+	onClickAnnotation(data) {
 		data.target.getFeatures().clear();
 		if (this.mapSearchIsActive || this.mode) {
 			return;
@@ -267,26 +267,26 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id, showMeasures } = selectedFeature.getProperties();
-		const contextMenuEvent: IAnnotationsContextMenuEvent = {
+		const eventData: IAnnotationsSelectionEventData = {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
 			interactionType: AnnotationInteraction.click,
 			showMeasures
 		};
-		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
+		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
 
-	createAnnotationHoverInteraction() {
+	createHoverInteraction() {
 		const annotationHoverInteraction = new Select(<any>{
 			condition: condition.pointerMove,
 			...this.interactionParams
 		});
-		annotationHoverInteraction.on('select', this.onHoverFeature.bind(this));
+		annotationHoverInteraction.on('select', this.onHoverAnnotation.bind(this));
 		return annotationHoverInteraction;
 	}
 
-	onHoverFeature(data) {
+	onHoverAnnotation(data) {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
@@ -297,16 +297,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
 			id = selectedFeature.getProperties().id;
 		}
-		const contextMenuEvent: IAnnotationsContextMenuEvent = {
+		const eventData: IAnnotationsSelectionEventData = {
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
 			interactionType: AnnotationInteraction.hover
 		};
-		this.store$.dispatch(new AnnotationContextMenuTriggerAction(contextMenuEvent));
+		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
 
-	getFeatureBoundingRect(selectedFeature): IAnnotationsContextMenuBoundingRect {
+	getFeatureBoundingRect(selectedFeature): IAnnotationBoundingRect {
 		const rotation = toDegrees(this.mapRotation);
 		const extent = selectedFeature.getGeometry().getExtent();
 		// [bottomLeft, bottomRight, topRight, topLeft]

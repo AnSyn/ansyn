@@ -3,12 +3,12 @@ import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import {
-	AnnotationContextMenuTriggerAction,
+	AnnotationSelectAction,
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature
 } from '../../actions/map.actions';
 import { Subscription } from 'rxjs/Subscription';
-import { AnnotationInteraction, IAnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core/models/visualizers/annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -16,7 +16,7 @@ import { AnnotationInteraction, IAnnotationsContextMenuEvent } from '@ansyn/core
 	styleUrls: ['./annotation-context-menu.component.less']
 })
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
-	action: AnnotationContextMenuTriggerAction;
+	action: AnnotationSelectAction;
 	contextMenuWrapperStyle;
 	private _subscriptions: Subscription[] = [];
 
@@ -47,9 +47,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this._subscriptions.push(
 			this.mapEffect.annotationContextMenuTrigger$
 				.filter(({ payload }) => payload.mapId === this.mapId && payload.interactionType === this.interactionType)
-				.subscribe((action: AnnotationContextMenuTriggerAction) => {
+				.subscribe((action: AnnotationSelectAction) => {
 					this.action = action;
-					const { boundingRect } = <IAnnotationsContextMenuEvent> this.action.payload;
+					const { boundingRect } = <IAnnotationsSelectionEventData> this.action.payload;
 					if (boundingRect) {
 						this.contextMenuWrapperStyle = {
 							top: `${boundingRect.top}px`,

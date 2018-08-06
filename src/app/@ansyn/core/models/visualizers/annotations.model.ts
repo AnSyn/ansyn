@@ -1,4 +1,4 @@
-export interface IAnnotationsContextMenuBoundingRect {
+export interface IAnnotationBoundingRect {
 	top: number;
 	left: number;
 	width: number;
@@ -6,10 +6,10 @@ export interface IAnnotationsContextMenuBoundingRect {
 	rotation: number;
 }
 
-export interface IAnnotationsContextMenuEvent {
+export interface IAnnotationsSelectionEventData {
 	featureId: string;
 	mapId: string;
-	boundingRect: IAnnotationsContextMenuBoundingRect;
+	boundingRect: IAnnotationBoundingRect;
 	interactionType?: AnnotationInteraction;
 	showMeasures?: boolean;
 }

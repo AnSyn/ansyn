@@ -5,7 +5,7 @@ import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.comp
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { IAnnotationsContextMenuEvent, IUpdateFeatureEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -38,7 +38,7 @@ export const MapActionTypes = {
 		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU',
+		ANNOTATION_SELECT: 'ANNOTATION_SELECT',
 		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
 		ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE',
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
@@ -157,10 +157,10 @@ export class MapsListChangedAction implements Action {
 	}
 }
 
-export class AnnotationContextMenuTriggerAction implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU;
+export class AnnotationSelectAction implements Action {
+	type = MapActionTypes.TRIGGER.ANNOTATION_SELECT;
 
-	constructor(public payload: IAnnotationsContextMenuEvent) {
+	constructor(public payload: IAnnotationsSelectionEventData) {
 
 	}
 }

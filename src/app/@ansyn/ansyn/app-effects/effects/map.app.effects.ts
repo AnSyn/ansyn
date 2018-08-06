@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
@@ -55,22 +55,34 @@ import { debounceTime } from 'rxjs/internal/operators';
 @Injectable()
 export class MapAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.pipe(
+			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
 			startWith(null),
 			pairwise(),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			filter(this.onDisplayOverlayFilter.bind(this))
 		);
 
-	@Effect()
+
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
 		.pipe(
-			filter((data) => this.displayShouldSwitch(data)),
-			debounceTime(50),
+			filter((data) => this.displayShouldSwitch(data))
+		);
+
+	@Effect()
+	onDisplayOverlaySwitchMapWithAbort$ = this.onDisplayOverlaySwitchMap$
+		.pipe(
+			filter((data) => this.shouldAbortDisplay(data)),
 			switchMap(this.onDisplayOverlay.bind(this))
 		);
 
+	@Effect()
+	onDisplayOverlaySwitchMapWithDebounce$ = this.onDisplayOverlaySwitchMap$
+		.pipe(
+			debounceTime(this.config.displayDebounceTime),
+			filter(this.onDisplayOverlayFilter.bind(this)),
+			switchMap(this.onDisplayOverlay.bind(this))
+		);
 
 	@Effect()
 	onDisplayOverlayMergeMap$ = this.onDisplayOverlay$
@@ -297,6 +309,28 @@ export class MapAppEffects {
 				return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
 			})
 		);
+
+	displayedItems = new Map<string, Date>();
+
+	shouldAbortDisplay([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
+		const currentTime = new Date();
+
+		// remove prev layers
+		const mapIdsToDelete = [];
+		this.displayedItems.forEach(( value: Date, key: string) => {
+			const isTimePassed = (currentTime.getTime() - this.displayedItems.get(action.payload.mapId).getTime()) > this.config.displayDebounceTime;
+			if (isTimePassed) {
+				mapIdsToDelete.push(key);
+			}
+		});
+		for (let i = 0; i < mapIdsToDelete.length; i++) {
+			this.displayedItems.delete(mapIdsToDelete[i]);
+		}
+
+		let result = this.displayedItems.has(action.payload.mapId) ? false : true;
+		this.displayedItems.set(action.payload.mapId, currentTime);
+		return result;
+	}
 
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;

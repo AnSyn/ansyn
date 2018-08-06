@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
+import { map } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -20,8 +21,9 @@ export class ImageryContainerComponent {
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
 
-	isHidden$: Observable<boolean> = this.store.select(mapStateSelector)
-		.map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id));
+	isHidden$: Observable<boolean> = this.store.select(mapStateSelector).pipe(
+		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))
+	);
 
 	get overlay(): IOverlay {
 		return this.mapState.data.overlay;

@@ -1,5 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Inject } from '@angular/core';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { Actions, ofType } from '@ngrx/effects';

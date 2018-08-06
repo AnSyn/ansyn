@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { intersect, area } from '@turf/turf';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { ILimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/i-limited-array';
@@ -7,6 +7,7 @@ import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
+import { catchError, map } from 'rxjs/internal/operators';
 
 export interface IDateRange {
 	start: Date;
@@ -93,14 +94,15 @@ export abstract class BaseOverlaySourceProvider {
 					newFetchParams.sensors = [f.sensor];
 				}
 
-				return this.fetch(newFetchParams).catch(err => {
+				return this.fetch(newFetchParams).pipe(
+					catchError(err => {
 						this.loggerService.error(err);
 						return of({
 							data: null,
 							limited: -1,
 							errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
 						});
-					});
+					}));
 			});
 
 		if (fetchObservables.length <= 0) {
@@ -108,14 +110,14 @@ export abstract class BaseOverlaySourceProvider {
 		}
 
 		const multipleFetches: Observable<IOverlaysFetchData> = forkJoin(fetchObservables) // Wait for every fetch to resolve
-			.map((data: Array<IOverlaysFetchData>) => {
-				// All failed
-				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
-					return { data: null, limited: -1, errors: data[0].errors };
-				}
-
-				return this.mergeOverlaysFetchData(data, fetchParams.limit)
-			});
+			.pipe(map((data: Array<IOverlaysFetchData>) => {
+					// All failed
+					if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
+						return { data: null, limited: -1, errors: data[0].errors };
+					}
+					return this.mergeOverlaysFetchData(data, fetchParams.limit)
+				})
+			);
 
 		return multipleFetches;
 	}

@@ -32,7 +32,6 @@ import {
 	selectActiveAnnotationLayer, selectLayersEntities,
 	selectSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';

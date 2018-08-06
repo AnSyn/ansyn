@@ -24,7 +24,10 @@ import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { catchError, debounceTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/internal/operators';
+import {
+	catchError, debounceTime, filter, map, mergeMap, share, switchMap,
+	withLatestFrom
+} from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import {
 	DeleteCaseAction,
@@ -38,7 +41,7 @@ import { forkJoin } from 'rxjs/index';
 import { UUID } from 'angular2-uuid';
 import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { pipe } from 'rxjs/Rx';
+import { pipe } from 'rxjs';
 
 @Injectable()
 export class CasesEffects {
@@ -58,7 +61,7 @@ export class CasesEffects {
 			return this.casesService.loadCases(total).pipe(
 				map(cases => new AddCasesAction(cases)),
 				catchError(() => EMPTY)
-			)
+			);
 		}),
 		share());
 
@@ -150,7 +153,7 @@ export class CasesEffects {
 	 */
 	@Effect({ dispatch: false })
 	openModal$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.OPEN_MODAL)
+		.ofType(CasesActionTypes.OPEN_MODAL);
 
 	/**
 	 * @type Effect
@@ -159,7 +162,7 @@ export class CasesEffects {
 	 */
 	@Effect({ dispatch: false })
 	closeModal$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.CLOSE_MODAL)
+		.ofType(CasesActionTypes.CLOSE_MODAL);
 
 	/**
 	 * @type Effect

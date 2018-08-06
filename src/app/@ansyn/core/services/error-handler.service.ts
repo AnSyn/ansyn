@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SetToastMessageAction } from '../actions/core.actions';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { LoggerService } from './logger.service';
 
 @Injectable()

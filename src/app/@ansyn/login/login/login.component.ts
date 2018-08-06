@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { fromPromise } from 'rxjs/internal/observable/fromPromise';
+import { catchError, filter, map, switchMap } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-login',
@@ -16,9 +18,10 @@ export class LoginComponent implements OnInit {
 	rememberMe: boolean;
 	returnUrl = this.authService.authorizedPath;
 	returnUrl$: Observable<string> = this.activatedRoute
-		.queryParamMap
-		.map((map: ParamMap) => map.get('returnUrl'))
-		.filter(_returnUrl => Boolean(_returnUrl));
+		.queryParamMap.pipe(
+			map((map: ParamMap) => map.get('returnUrl')),
+			filter(_returnUrl => Boolean(_returnUrl))
+		);
 
 	tryAgainMsg: boolean;
 
@@ -35,12 +38,13 @@ export class LoginComponent implements OnInit {
 	}
 
 	get login$() {
-		return this.authService.login(this.username, this.password, this.rememberMe)
-			.switchMap(() => fromPromise(this.router.navigateByUrl(this.returnUrl)))
-			.catch(() => {
+		return this.authService.login(this.username, this.password, this.rememberMe).pipe(
+			switchMap(() => fromPromise(this.router.navigateByUrl(this.returnUrl))),
+			catchError(() => {
 				this.showTryAgainMsg();
 				return throwError('Unauthorized');
-			});
+			})
+	)
 	}
 
 	hideTryAgainMsg() {

@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import * as turf from '@turf/turf';
-import { empty, Observable } from 'rxjs';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
@@ -73,13 +73,13 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	drawChanges([geoFilter, region, geoFilterIndicator]) {
 		if (!geoFilterIndicator) {
 			this.clearEntities();
-			return empty();
+			return EMPTY;
 		}
 		if (geoFilter === this.geoFilter) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();
-		return empty();
+		return EMPTY;
 	}
 
 	onDrawEndEvent({ feature }) {

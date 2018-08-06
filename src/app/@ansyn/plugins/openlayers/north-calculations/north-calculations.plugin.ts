@@ -1,5 +1,5 @@
 import { toDegrees } from '@ansyn/core/utils/math';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
@@ -21,6 +21,7 @@ import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
+import { catchError, mergeMap, tap } from 'rxjs/internal/operators';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -134,18 +135,19 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	pointNorth(): Observable<any> {
 		this.communicator.updateSize();
 		const currentRotation = this.iMap.mapObject.getView().getRotation();
-		return of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false })))
-			.mergeMap(() => this.getCorrectedNorth())
-			.do(() => {
+		return of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false }))).pipe(
+			mergeMap(() => this.getCorrectedNorth()),
+			tap(() => {
 				this.iMap.mapObject.getView().setRotation(currentRotation);
 				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
-			})
-			.catch(reason => {
+			}),
+			catchError(reason => {
 				const error = `setCorrectedNorth failed: ${reason}`;
 				this.loggerService.warn(error);
 				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
 				return throwError(error);
-			});
+			})
+		);
 	}
 
 }

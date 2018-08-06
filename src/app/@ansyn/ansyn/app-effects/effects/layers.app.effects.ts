@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/withLatestFrom';
 import { CasesActionTypes, SaveCaseAsSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { mergeMap } from 'rxjs/internal/operators';

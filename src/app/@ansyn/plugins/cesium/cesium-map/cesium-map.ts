@@ -1,5 +1,5 @@
 import { GeoJsonObject, Point } from 'geojson';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';

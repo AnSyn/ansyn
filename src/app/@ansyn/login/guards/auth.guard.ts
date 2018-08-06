@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/internal/operators';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -10,11 +11,12 @@ export class AuthGuard implements CanActivate {
 	}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-		return this.authService.isLoggedIn()
-			.map(() => true)
-			.catch(() => {
+		return this.authService.isLoggedIn().pipe(
+			map(() => true),
+			catchError(() => {
 				this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
 				return of(false);
-			});
+			})
+		)
 	}
 }

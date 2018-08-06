@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
+import { forkJoin, Observable, of } from 'rxjs';
 import { DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	CasesActionTypes,
@@ -35,11 +33,10 @@ export class CasesAppEffects {
 	 * @dependencies map
 	 */
 	@Effect()
-	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
-
+	onDisplayOverlay$: Observable<any> = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
 			const updatedMapsList = [...mapState.mapsList];
 			const mapId = action.payload.mapId || mapState.activeMapId;
 
@@ -49,7 +46,10 @@ export class CasesAppEffects {
 				}
 			});
 			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
-		}).share();
+		}),
+		share()
+
+	);
 
 	/**
 	 * @type Effect

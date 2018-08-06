@@ -15,7 +15,7 @@ import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Store } from '@ngrx/store';

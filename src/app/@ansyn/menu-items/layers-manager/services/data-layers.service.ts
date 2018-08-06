@@ -59,7 +59,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 
 	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
-			.pipe(
+			.pipe <any> (
 				catchError(err => this.errorHandlerService.httpErrorHandle(err))
 			);
 	}

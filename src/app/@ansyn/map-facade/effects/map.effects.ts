@@ -36,6 +36,8 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { pipe } from 'rxjs/internal-compatibility';
+import { mergeMap, share, tap } from 'rxjs/internal/operators';
+import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 
 @Injectable()
 export class MapEffects {

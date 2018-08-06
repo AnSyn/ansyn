@@ -5,7 +5,7 @@ import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { ManualSaveAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/internal/operators';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';

@@ -15,6 +15,7 @@ import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
 import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { distinctUntilChanged, map } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -39,9 +40,10 @@ export class GoToComponent implements OnInit {
 		to: []
 	};
 
-	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector)
-		.map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation))
-		.distinctUntilChanged();
+	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
+		map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation)),
+		distinctUntilChanged()
+	)
 
 	pinLocationMode: boolean;
 

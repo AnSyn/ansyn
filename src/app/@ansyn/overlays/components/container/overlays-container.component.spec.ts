@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService } from '../../services/overlays.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { IOverlay } from '../../models/overlay.model';
 import { OverlaysEffects } from '../../effects/overlays.effects';

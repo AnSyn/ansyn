@@ -5,7 +5,7 @@ import {
 	MultipleOverlaysSourceConfig
 } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
 import { IOverlay } from '@ansyn/overlays/models/overlay.model';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';

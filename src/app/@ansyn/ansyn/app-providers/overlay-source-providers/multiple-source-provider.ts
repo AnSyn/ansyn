@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { forkJoin, from, Observable } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
@@ -12,6 +12,7 @@ import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, difference, intersect } from '@turf/turf';
 import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
+import { map } from 'rxjs/internal/operators';
 
 export interface IFiltersList {
 	name: string,
@@ -139,8 +140,8 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				const dataFiltersOfProvider = Boolean(fetchParams.dataInputFilters) ?
 					fetchParams.dataInputFilters.filter((f) => f.providerName === s.provider.sourceType) : [];
 				return s.provider.fetchMultiple({ ...fetchParams, dataInputFilters: dataFiltersOfProvider }, s.filters);
-			}))
-			.map(overlays => {
+			})).pipe(
+			map(overlays => {
 				const allFailed = overlays.every(overlay => this.isFaulty(overlay));
 				const errors = this.mergeErrors(overlays);
 
@@ -153,7 +154,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				}
 
 				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
-			}); // merge the overlays
+			})); // merge the overlays
 
 		return mergedSortedOverlays;
 	}

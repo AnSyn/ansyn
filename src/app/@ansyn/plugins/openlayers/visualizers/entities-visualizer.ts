@@ -13,7 +13,7 @@ import ol_Layer from 'ol/layer/layer';
 import { IVisualizerStyle, MarkerSizeDic } from '@ansyn/core/models/visualizers/visualizer-style';
 import { IVisualizerStateStyle, VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
 	BaseImageryVisualizer,
 	IBaseImageryVisualizerClass,

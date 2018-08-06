@@ -14,6 +14,8 @@ import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';
+import { catchError } from 'rxjs/internal/operators';
+import { map } from 'rxjs/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';
@@ -51,10 +53,12 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
 		return <Observable<IOverlay>>this.httpClient.get(url)
-			.map(this.extractData.bind(this))
-			.catch((error: any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			.pipe(
+				map(this.extractData.bind(this)),
+				catchError((error: any) => {
+					return this.errorHandlerService.httpErrorHandle(error);
+				})
+			);
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
@@ -87,17 +91,17 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
 		return <Observable<IStartAndEndDate>>this.httpClient.post<IStartAndEndDate>(url, params)
-			.catch((error: any) => {
+			.pipe(catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			}));
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<IStartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDateRange');
 		return <Observable<IStartAndEndDate>>this.httpClient.post<IStartAndEndDate>(url, params)
-			.catch((error: any) => {
+			.pipe(catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			}));
 	}
 
 	private extractArrayData(data: IIdahoResponse): Array<IOverlay> {

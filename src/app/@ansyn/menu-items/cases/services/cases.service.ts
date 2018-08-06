@@ -1,10 +1,6 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { EMPTY, Observable, of } from 'rxjs';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/observable/of';
 import { ICase } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
@@ -143,16 +139,15 @@ export class CasesService {
 		selectedCase.lastModified = currentTime;
 		selectedCase.autoSave = true;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
-			.pipe(
+			.pipe<any>(
 				map(_ => selectedCase),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
 			)
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
-		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase)).catch(err => {
-			return this.errorHandlerService.httpErrorHandle(err);
-		});
+		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase))
+			.pipe<any>(catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
 	removeCase(selectedCaseId: string): Observable<any> {

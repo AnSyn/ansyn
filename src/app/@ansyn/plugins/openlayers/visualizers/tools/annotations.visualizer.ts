@@ -266,7 +266,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures } = selectedFeature.getProperties();
+		const { id, showMeasures } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
 			mapId: this.mapId,
 			featureId: id,
@@ -295,7 +295,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (selected.length > 0) {
 			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
-			id = selectedFeature.getProperties().id;
+			id = this.getEntity(selectedFeature).id;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
 			mapId: this.mapId,
@@ -449,8 +449,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const { mode } = feature.getProperties();
 		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
+		const moreStyles: OlStyle[] = [];
 		let coordinates: any[] = [];
-		let moreStyles: OlStyle[] = [];
 		switch (mode) {
 			case 'LineString':
 				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates();

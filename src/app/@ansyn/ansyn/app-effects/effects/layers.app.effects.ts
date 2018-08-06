@@ -5,7 +5,8 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { mergeMap } from 'rxjs/internal/operators';
 import { Store } from '@ngrx/store';
 import {
-	BeginLayerCollectionLoadAction, UpdateLayer,
+	BeginLayerCollectionLoadAction,
+	UpdateLayer,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
@@ -43,7 +44,10 @@ export class LayersAppEffects {
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
 			return new UpdateLayer({
 				...layer,
-				data: { ...layer.data, features: layer.data.features.filter(({properties}) => properties.id !== action.payload) }
+				data: {
+					...layer.data,
+					features: layer.data.features.filter(({ properties }) => properties.id !== action.payload)
+				}
 			});
 		});
 
@@ -55,9 +59,15 @@ export class LayersAppEffects {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload.featureId));
-			const feature = layer.data.features.find(({ properties }: Feature<any>) => properties.id === action.payload.featureId);
-			feature.properties = {...feature.properties, ...action.payload.properties};
-			return new UpdateLayer(layer);
+			return new UpdateLayer({
+				...layer,
+				data: {
+					...layer.data,
+					features: layer.data.features.map((feature) => feature.properties.id === action.payload.featureId ?
+						{ ...feature, properties: { ...feature.properties, ...action.payload.properties } } :
+						feature)
+				}
+			});
 		});
 
 	constructor(protected actions$: Actions,

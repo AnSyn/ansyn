@@ -5,7 +5,7 @@ import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.action
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
-import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { CoreActionTypes, SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 
 export interface ITimelineRange {
 	start: Date;
@@ -86,7 +86,7 @@ export const overlaysStatusMessages = {
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 		case CoreActionTypes.SET_OVERLAYS_CRITERIA:
-			if (action.payload.options.noInitialSearch) {
+			if ((<SetOverlaysCriteriaAction> action).options.noInitialSearch) {
 				return { ...state, loading: false }
 			}
 			return state;

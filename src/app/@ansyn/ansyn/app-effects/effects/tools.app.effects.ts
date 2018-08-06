@@ -24,7 +24,6 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import 'rxjs/add/operator/withLatestFrom';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
-	AnnotationRemoveFeature,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
 	SetMapsDataActionStore
@@ -33,7 +32,7 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
-import { Feature, FeatureCollection, Point } from 'geojson';
+import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
@@ -43,9 +42,6 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { differenceWith, isEqual } from 'lodash';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
-import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 
 
 @Injectable()
@@ -267,27 +263,6 @@ export class ToolsAppEffects {
 				];
 			}
 			return [new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }])];
-		});
-
-	/**
-	 * @type Effect
-	 * @name removeFeature$
-	 * @ofType AnnotationRemoveFeature
-	 * @dependencies layers
-	 * @action SetAnnotationsLayer
-	 */
-	@Effect()
-	removeAnnotationFeature$: Observable<any> = this.actions$
-		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
-		.withLatestFrom(this.store$.select(selectLayers))
-		.map(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
-			const layer = layers
-				.filter(({ type }) => type === LayerType.annotation)
-				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
-			return new UpdateLayer({
-				...layer,
-				data: { ...layer.data, features: layer.data.features.filter(({properties}) => properties.id !== action.payload) }
-			});
 		});
 
 	/**

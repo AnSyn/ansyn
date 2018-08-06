@@ -15,15 +15,14 @@
 		outline-offset: 10px;
 		visibility: hidden;
 		transform-origin: left top;
-		z-index: 2;
 		pointer-events: none;
 		.remove-feature-wrapper {
 			position: absolute;
 			pointer-events: all;
-			width: 20px;
 			height: 20px;
 			background-color: @application-main-color;
 			color: white;
+			display: flex;
 			align-items: center;
 			right: 0;
 			top: 0;
@@ -37,6 +36,10 @@
 				font-size: 19px;
 				font-weight: bold;
 				outline: none;
+
+				&.active {
+					background-color: rgb(41, 127, 155);
+				}
 			}
 		}
 

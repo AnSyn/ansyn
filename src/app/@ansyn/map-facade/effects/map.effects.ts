@@ -13,7 +13,7 @@ import { intersect, polygon } from '@turf/turf';
 import 'rxjs/add/observable/forkJoin';
 import {
 	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
+	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
@@ -51,7 +51,7 @@ export class MapEffects {
 	 */
 	@Effect({ dispatch: false })
 	annotationContextMenuTrigger$ = this.actions$
-		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)
+		.ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT)
 		.share();
 
 	/**

@@ -2,9 +2,13 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../../actions/map.actions';
+import {
+	AnnotationSelectAction,
+	AnnotationRemoveFeature,
+	AnnotationUpdateFeature
+} from '../../actions/map.actions';
 import { Subscription } from 'rxjs/Subscription';
-import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core/models/visualizers/annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -12,7 +16,7 @@ import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotation
 	styleUrls: ['./annotation-context-menu.component.less']
 })
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
-	action: AnnotationContextMenuTriggerAction;
+	action: AnnotationSelectAction;
 	contextMenuWrapperStyle;
 	private _subscriptions: Subscription[] = [];
 
@@ -42,10 +46,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._subscriptions.push(
 			this.mapEffect.annotationContextMenuTrigger$
-				.filter(({payload}) => payload.mapId === this.mapId && payload.interactionType === this.interactionType)
-				.subscribe((action: AnnotationContextMenuTriggerAction) => {
+				.filter(({ payload }) => payload.mapId === this.mapId && payload.interactionType === this.interactionType)
+				.subscribe((action: AnnotationSelectAction) => {
 					this.action = action;
-					const {boundingRect} = <any> this.action.payload;
+					const { boundingRect } = <IAnnotationsSelectionEventData> this.action.payload;
 					if (boundingRect) {
 						this.contextMenuWrapperStyle = {
 							top: `${boundingRect.top}px`,
@@ -84,7 +88,13 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	removeFeature($event) {
 		$event.stopPropagation();
-		const {featureId} = this.action.payload;
+		const { featureId } = this.action.payload;
 		this.store.dispatch(new AnnotationRemoveFeature(featureId));
+	}
+
+	toggleMeasures($event) {
+		$event.stopPropagation();
+		const { featureId, showMeasures } = this.action.payload;
+		this.store.dispatch(new AnnotationUpdateFeature({ featureId, properties: { showMeasures: !showMeasures}}));
 	}
 }

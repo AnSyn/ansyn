@@ -327,7 +327,7 @@ export class MapAppEffects {
 			this.displayedItems.delete(mapIdsToDelete[i]);
 		}
 
-		let result = this.displayedItems.has(action.payload.mapId) ? false : true;
+		let result = !this.displayedItems.has(action.payload.mapId);
 		this.displayedItems.set(action.payload.mapId, currentTime);
 		return result;
 	}

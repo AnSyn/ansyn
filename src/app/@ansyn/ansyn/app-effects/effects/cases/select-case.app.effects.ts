@@ -4,6 +4,7 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction, SetPresetOverlaysAction
@@ -45,7 +46,7 @@ export class SelectCaseAppEffects {
 	}
 
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
-		const { state } = payload;
+		const { state, autoSave } = payload;
 		// status-bar
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
@@ -80,7 +81,8 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			new SetContextParamsAction({ contextEntities })
+			new SetContextParamsAction({ contextEntities }),
+			new SetAutoSave(autoSave)
 		];
 	}
 

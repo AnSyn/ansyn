@@ -3,7 +3,8 @@ import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { AnnotationContextMenuTriggerAction, AnnotationRemoveFeature } from '../../actions/map.actions';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
+import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -16,6 +17,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	private _subscriptions: Subscription[] = [];
 
 	@Input() mapId;
+	@Input() interactionType: AnnotationInteraction;
+
+	get fromHover() {
+		return this.interactionType === AnnotationInteraction.hover;
+	}
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {
@@ -36,22 +42,38 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._subscriptions.push(
 			this.mapEffect.annotationContextMenuTrigger$
-				.filter(({payload}) => payload.mapId === this.mapId)
+				.filter(({payload}) => payload.mapId === this.mapId && payload.interactionType === this.interactionType)
 				.subscribe((action: AnnotationContextMenuTriggerAction) => {
 					this.action = action;
 					const {boundingRect} = <any> this.action.payload;
-					this.contextMenuWrapperStyle = {
-						top: `${boundingRect.top}px`,
-						left: `${boundingRect.left}px`,
-						width: `${boundingRect.width}px`,
-						height: `${boundingRect.height}px`,
-						transform: `rotate(${boundingRect.rotation}deg)`
-					};
-					this.host.nativeElement.focus();
+					if (boundingRect) {
+						this.contextMenuWrapperStyle = {
+							top: `${boundingRect.top}px`,
+							left: `${boundingRect.left}px`,
+							width: `${boundingRect.width}px`,
+							height: `${boundingRect.height}px`,
+							transform: `rotate(${boundingRect.rotation}deg)`
+						};
+						if (this.fromHover) {
+							this.host.nativeElement.classList.add('visible');
+						} else {
+							this.host.nativeElement.focus();
+						}
+					} else {
+						if (this.fromHover) {
+							this.host.nativeElement.classList.remove('visible');
+						} else {
+							this.host.nativeElement.blur();
+						}
+					}
 				}),
 
 			this.mapEffect.positionChanged$.subscribe(() => {
-				this.host.nativeElement.blur();
+				if (this.fromHover) {
+					this.host.nativeElement.classList.remove('visible');
+				} else {
+					this.host.nativeElement.blur();
+				}
 			})
 		);
 	}

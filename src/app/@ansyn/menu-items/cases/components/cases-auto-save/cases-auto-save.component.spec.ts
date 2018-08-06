@@ -5,6 +5,7 @@ import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ICase } from '@ansyn/core/models/case.model';
 import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
+import { SetAutoSave } from '@ansyn/core/actions/core.actions';
 
 describe('CasesAutoSaveComponent', () => {
 	let component: CasesAutoSaveComponent;
@@ -40,6 +41,6 @@ describe('CasesAutoSaveComponent', () => {
 		spyOn(store, 'dispatch');
 		component.onChange(true);
 		fixture.detectChanges();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({ updatedCase: fakeCase, forceUpdate: true }));
+		expect(store.dispatch).toHaveBeenCalledWith(new SetAutoSave(true));
 	});
 });

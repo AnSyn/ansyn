@@ -7,6 +7,7 @@ import {
 	AnnotationSetProperties,
 	SetAnnotationMode
 } from '../../actions/tools.actions';
+import { ColorPickerComponent } from '../color-picker/color-picker.component';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -15,7 +16,7 @@ describe('AnnotationsControlComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnnotationsControlComponent],
+			declarations: [AnnotationsControlComponent, ColorPickerComponent],
 			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })]
 		})
 			.compileComponents();
@@ -67,7 +68,7 @@ describe('AnnotationsControlComponent', () => {
 		const strokeWidth = 5;
 		component.selectLineWidth(strokeWidth);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
-			strokeWidth
+			'stroke-width': strokeWidth
 		}));
 	});
 
@@ -75,15 +76,15 @@ describe('AnnotationsControlComponent', () => {
 		const strokeColor = 'white';
 		component.changeStrokeColor(strokeColor);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
-			strokeColor
+			'stroke': strokeColor
 		}));
 	});
 
 	it('change fill color', () => {
-		const fillColor = 'black';
-		component.changeFillColor(fillColor);
+		const fill = 'black';
+		component.changeFillColor(fill);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
-			fillColor
+			fill
 		}));
 	});
 

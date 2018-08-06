@@ -1,12 +1,11 @@
-import { ILayerState, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { groupBy } from 'lodash';
 import { map } from 'rxjs/internal/operators';
 import { ILayerCollection } from '../layers-collection/layer-collection.component';
-
+import { ILayer, LayerType } from '../../models/layers.model';
+import { ILayerState, selectLayers } from '../../reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-layer-managers',
@@ -15,7 +14,6 @@ import { ILayerCollection } from '../layers-collection/layer-collection.componen
 })
 
 export class LayersManagerComponent {
-	showModal: boolean;
 
 	public layers$: Observable<any> = this.store
 		.pipe(
@@ -23,20 +21,15 @@ export class LayersManagerComponent {
 			map((layers: ILayer[]): ILayerCollection[] => {
 				const typeGroupedLayers = groupBy(layers, l => l.type);
 				return Object.keys(typeGroupedLayers)
+					.sort()
 					.map((type: LayerType): ILayerCollection => ({
 						type,
-						onDownload: type === LayerType.annotation ? this.downloadAnnotations.bind(this) : null,
-						data: typeGroupedLayers[type],
-						hideArrow: type === LayerType.annotation
+						data: typeGroupedLayers[type]
 					}));
 			})
 		);
 
 	constructor(protected store: Store<ILayerState>) {
-	}
-
-	downloadAnnotations() {
-		this.showModal = true;
 	}
 
 }

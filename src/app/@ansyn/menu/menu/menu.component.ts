@@ -5,7 +5,7 @@ import {
 	ElementRef,
 	Inject,
 	Input,
-	isDevMode,
+	isDevMode, OnDestroy,
 	OnInit,
 	Renderer2,
 	ViewChild,
@@ -68,7 +68,7 @@ const animations: any[] = [
 	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
 */
 
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 
@@ -266,5 +266,9 @@ export class MenuComponent implements OnInit {
 			}
 		}).observe(this.container.nativeElement, { childList: true });
 	}
+
+	ngOnDestroy(): void {
+	}
+
 }
 

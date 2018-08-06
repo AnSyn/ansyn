@@ -1,23 +1,40 @@
-<div class="container">
+<div class="container" [ngClass]="collection.type">
 
 	<div class="title-row">
 		<span class="title">{{ collection.type }} Layers</span>
-		<button *ngIf="!collection.hideArrow"
-				[@rotateArrow]="show"
-				#downArrow class="down-arrow"
-				(click)="show = !show">
-		</button>
+
+		<div class="actions">
+			<button [@rotateArrow]="show"
+					#downArrow class="down-arrow"
+					(click)="show = !show">
+			</button>
+
+			<div class="show-all">
+				<span (click)="showAll()">Show all</span>
+			</div>
+
+			<ansyn-import-layer tooltip-value="Import layer" tooltip-class="bottom right"></ansyn-import-layer>
+
+			<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
+					tooltip-value="Create new layer" tooltip-class="bottom right">
+				<i class="icon-layer-add"></i>
+			</button>
+
+		</div>
+
+
+
 	</div>
 
 	<ansyn-layer *ngFor="let layer of collection.data"
 				 [@layersTrigger]="show"
 				 [layer]="layer"
 				 [showOnly]="collection.data.length < 2">
-				<button *ngIf="collection.onDownload"
-						class="download-layer"
-						(click)="collection.onDownload()">
-					<i class="icon icon-download-layer"></i>
-				</button>
+
+			<ansyn-layer-menu [disabledRemove]="collection.data?.length < 2"
+							  (openModal)="openModal($event, layer)">
+			</ansyn-layer-menu>
+
 	</ansyn-layer>
 
 </div>

@@ -1,19 +1,14 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	ElementRef,
-	HostBinding,
-	HostListener,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, ViewChild } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Observable } from 'rxjs';
 import { ICase } from '../../models/case.model';
 import { Store } from '@ngrx/store';
-import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
+import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
-import { cloneDeep as _cloneDeep } from 'lodash';
+import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { take } from 'rxjs/internal/operators';
+import { tap } from 'rxjs/operators';
+import { cloneDeep } from '@ansyn/core/utils/rxjs-operators/cloneDeep';
+import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
 
 const animationsDuring = '0.2s';
 
@@ -37,33 +32,23 @@ const animations: any[] = [
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations
 })
-export class SaveCaseComponent implements OnInit {
+export class SaveCaseComponent {
 	@HostBinding('@modalContent')
 	get modalContent() {
 		return true;
 	};
 
-	selectedCase$: Observable<ICase> = this.store.select(casesStateSelector)
-		.pluck<ICasesState, ICase>('selectedCase')
-		.distinctUntilChanged()
-		.map(_cloneDeep);
+	caseName: string;
 
-	caseModel: ICase;
-
-	@ViewChild('nameInput') nameInput: ElementRef;
+	@ViewChild('nameInput') nameInput: AnsynInputComponent;
 
 	@HostListener('@modalContent.done')
 	selectText() {
-		this.nameInput.nativeElement.select();
+		this.nameInput.select();
 	}
 
-	constructor(protected store: Store<ICasesState>) {
-	}
-
-	ngOnInit(): void {
-		this.selectedCase$.subscribe((selectedCase: ICase) => {
-			this.caseModel = selectedCase;
-		});
+	constructor(protected store: Store<ICasesState>,
+				protected casesService: CasesService) {
 	}
 
 	close(): void {
@@ -71,8 +56,15 @@ export class SaveCaseComponent implements OnInit {
 	}
 
 	onSubmitCase() {
-		this.store.dispatch(new SaveCaseAsAction(this.caseModel));
-		this.close();
+		this.store.select(selectSelectedCase)
+			.pipe(
+				take(1),
+				cloneDeep(),
+				tap((selectedCase: ICase) => {
+					this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
+					this.close();
+				})
+			).subscribe();
 	}
 }
 

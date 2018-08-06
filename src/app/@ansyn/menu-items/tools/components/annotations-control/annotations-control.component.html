@@ -1,3 +1,16 @@
+<div class="selected-layer"
+	 *ngIf="(annotationLayerIds$ | async)?.length > 1">
+	<div>
+		Layer:
+		<select class="active-annotation-layer" (change)="setSelectedAnnotationLayer($event.target.value)">
+			<option
+				[selected]="(activeAnnotationLayer$ | async) === layer?.id"
+				[value]="layer?.id"
+				*ngFor="let layer of annotationLayerIds$ | async">{{ layer.name }}</option>
+		</select>
+	</div>
+</div>
+
 <ul class="annotations-options">
 
 	<li *ngFor="let modeList of modesList"
@@ -24,7 +37,7 @@
 			<div
 				class="item"
 				*ngFor="let width of lineWidthList"
-				[class.selected]="width === annotationProperties.strokeWidth"
+				[class.selected]="width === annotationProperties['stroke-width']"
 				(click)="selectLineWidth(width)">
 				<svg height="20" width="20">
 					<line [style.stroke-width]="width" style="stroke:white" x1="0" x2="20" y1="10" y2="10"></line>
@@ -42,29 +55,24 @@
 
 		<div class="list color-selection-expand" *ngIf="selectedBox === SelectionBoxTypes.ColorPicker">
 
-			<div class="item color-picker-item">
-				<label for="color-fill-picker">
-					<span class="text">Fill</span>
-					<span class="color" [style.background]="annotationProperties.fillColor"></span>
-				</label>
-				<input
-					id="color-fill-picker"
-					type="color"
-					[value]="annotationProperties.fillColor"
-					(change)="changeFillColor($event.target.value)" title="fill"/>
-			</div>
+			<ansyn-color-picker
+				label="Fill"
+				[color]="annotationProperties.fill"
+				[active]="Boolean(annotationProperties['fill-opacity'])"
+				[activeDisabled]="!(annotationProperties['stroke-opacity'])"
+				(activeChange)="changeFillShown($event)"
+				(colorChange)="changeFillColor($event)">
+			</ansyn-color-picker>
 
-			<div class="item color-picker-item">
-				<label for="color-stroke-picker">
-					<span class="text">Stroke</span>
-					<span class="color" [style.background]="annotationProperties.strokeColor"></span>
-				</label>
-				<input id="color-stroke-picker"
-					   type="color"
-					   [value]="annotationProperties.strokeColor"
-					   (change)="changeStrokeColor($event.target.value)"
-					   title="stroke"/>
-			</div>
+			<ansyn-color-picker
+				label="Stroke"
+				[color]="annotationProperties.stroke"
+				[active]="Boolean(annotationProperties['stroke-opacity'])"
+				[activeDisabled]="!(annotationProperties['fill-opacity'])"
+				(colorChange)="changeStrokeColor($event)"
+				(activeChange)="changeStrokeShown($event)">
+			</ansyn-color-picker>
+
 		</div>
 	</li>
 

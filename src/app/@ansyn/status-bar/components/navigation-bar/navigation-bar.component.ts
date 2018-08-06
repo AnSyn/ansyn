@@ -18,12 +18,13 @@ import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 export class NavigationBarComponent {
 	goPrevActive = false;
 	goNextActive = false;
+	goNextQuickLoop = false;
 
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
 	}
 
-	private _nextPresetOverlayKeys = 'fFכ'.split("").map(char => char.charCodeAt(0));
+	private _nextPresetOverlayKeys = 'qQ/'.split("").map(char => char.charCodeAt(0));
 	private _overlayHack = 'Eeק'.split("").map(char => char.charCodeAt(0));
 
 	@HostListener('window:keyup', ['$event'])
@@ -38,6 +39,9 @@ export class NavigationBarComponent {
 		} else if ($event.which === 37) { // ArrowLeft
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
+		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1 ) {
+			this.clickGoNextPresetOverlay();
+			this.goNextQuickLoop = false;
 		}
 
 		if (this._overlayHack.indexOf($event.which) !== -1 ) {
@@ -55,21 +59,12 @@ export class NavigationBarComponent {
 			this.goNextActive = true;
 		} else if ($event.which === 37) { // ArrowLeft
 			this.goPrevActive = true;
+		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1 ) {
+			this.goNextQuickLoop = true;
 		}
 
 		if (this._overlayHack.indexOf($event.which) !== -1 ) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
-		}
-	}
-
-	@HostListener('window:keypress', ['$event'])
-	onkeypress($event: KeyboardEvent) {
-		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
-			return;
-		}
-
-		if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1 ) {
-			this.clickGoNextPresetOverlay();
 		}
 	}
 

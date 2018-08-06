@@ -15,7 +15,7 @@ import {
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	LoadOverlaysAction,
+	LoadOverlaysAction, OverlaysActionTypes,
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
@@ -75,6 +75,18 @@ export class CoreAppEffects {
 			}
 			return new SetPresetOverlaysAction(updatedPresetOverlays);
 		}));
+
+	/**
+	 * @type Effect
+	 * @name clearPresets$
+	 * @ofType LoadOverlaysAction
+	 * @dependencies core
+	 * @action SetPresetOverlaysAction
+	 */
+	@Effect()
+	clearPresets$: Observable<any> = this.actions$
+		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
+		.map(() => new SetPresetOverlaysAction([]));
 
 	/**
 	 * @type Effect

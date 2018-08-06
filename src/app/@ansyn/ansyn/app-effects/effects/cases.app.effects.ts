@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { forkJoin, Observable, of } from 'rxjs';
-import { DisplayOverlayAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/do';
+import { DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -34,21 +36,20 @@ export class CasesAppEffects {
 	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.pipe(
-			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
-				const updatedMapsList = [...mapState.mapsList];
-				const mapId = action.payload.mapId || mapState.activeMapId;
-				updatedMapsList.forEach((map) => {
-					if (mapId === map.id) {
-						map.data.overlay = action.payload.overlay;
-					}
-				});
-				return new SetMapsDataActionStore({ mapsList: updatedMapsList });
-			}),
-			share()
-		);
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.withLatestFrom(this.store$.select(mapStateSelector))
+		.map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
+
+			const updatedMapsList = [...mapState.mapsList];
+			const mapId = action.payload.mapId || mapState.activeMapId;
+
+			updatedMapsList.forEach((map) => {
+				if (mapId === map.id) {
+					map.data.overlay = action.payload.overlay;
+				}
+			});
+			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
+		}).share();
 
 	/**
 	 * @type Effect

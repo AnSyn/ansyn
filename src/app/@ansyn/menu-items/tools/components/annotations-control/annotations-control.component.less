@@ -7,7 +7,6 @@
 
 :host {
 	width: 0;
-	height: @tools-box-height;
 	position: absolute;
 	top: -6px;
 	right: 0;
@@ -16,10 +15,39 @@
 	transition-property: width, visibility;
 	transition-duration: 0.1s;
 	z-index: @z-index-annotations-control;
+	.selected-layer{
+		color: white;
+		visibility: hidden;
+		display: flex;
+		position: absolute;
+		width: 100%;
+		transform: translateY(-100%);
+		background: #27b2cf;
+		padding: 0 10px;
+		box-sizing: border-box;
+		div {
+			width: 100%;
+			border-bottom: 1px solid;
+			padding: 7px 0;
+			.active-annotation-layer{
+				background: transparent;
+				border: none;
+				color: white;
+				outline: none;
+				border-bottom: 1px solid white;
+				margin-top: 2px;
 
+				option {
+					color: black;
+				}
+			}
+		}
+	}
 	&.expand {
+		.selected-layer{
+			visibility: visible;
+		}
 		width: @tools-box-width;
-		height: @tools-box-height;
 		transition-delay: 0.1s;
 		ul.annotations-options {
 			visibility: visible;
@@ -53,8 +81,7 @@
 				color: white;
 				font-size: 35px;
 			}
-			&:hover,
-			&.mode-on {
+			&:hover:not(.mode-on), &.mode-on {
 				background-color: rgb(41, 127, 155);
 			}
 
@@ -112,45 +139,6 @@
 					outline: none;
 				}
 
-				&.color-selection-expand {
-					width: 80px;
-					left: -39px;
-
-					.color-picker-item {
-						font-size: 14px;
-						color: white;
-						label {
-							width: 100%;
-							height: 100%;
-							display: flex;
-							justify-content: space-between;
-							align-items: center;
-							box-sizing: border-box;
-							padding: 4px 7px 4px 12px;
-							cursor: pointer;
-							font-size: 14px;
-						}
-						span.color {
-							display: inline-block;
-							width: 10px;
-							height: 10px;
-							box-shadow: 0 0 1px 1px #297f9b;
-						}
-						span.text {
-							font-size: 14px;
-						}
-						input {
-							display: block;
-							visibility: hidden;
-							width: 0;
-							height: 0;
-							padding: 0;
-							margin: 0;
-							border: none;
-						}
-
-					}
-				}
 				&.color-selection-expand.open {
 					visibility: visible;
 				}

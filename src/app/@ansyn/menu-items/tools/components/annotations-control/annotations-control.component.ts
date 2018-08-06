@@ -1,14 +1,25 @@
-import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
 	AnnotationSetProperties,
 	SetAnnotationMode
 } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { IAnnotationProperties, IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import {
+	IToolsState, selectAnnotationMode, selectAnnotationProperties,
+	toolsStateSelector
+} from '../../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { selectActiveAnnotationLayer, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { SetActiveAnnotationLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
 
 export interface IModeList {
 	mode: AnnotationMode;
@@ -26,23 +37,47 @@ export enum SelectionBoxTypes {
 	templateUrl: './annotations-control.component.html',
 	styleUrls: ['./annotations-control.component.less']
 })
-export class AnnotationsControlComponent implements OnInit {
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
+export class AnnotationsControlComponent implements OnInit, OnDestroy {
+	fillAlpah = 0.4;
+	strokeAlpah = 1;
+
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;
 	get SelectionBoxTypes() {
 		return SelectionBoxTypes;
 	}
 
-	public mode$: Observable<AnnotationMode> = this.store.select<IToolsState>(toolsStateSelector)
-		.pluck<IToolsState, AnnotationMode>('annotationMode')
-		.distinctUntilChanged();
+	get Boolean() {
+		return Boolean;
+	}
 
-	public annotationProperties$: Observable<IAnnotationProperties> = this.store.select<IToolsState>(toolsStateSelector)
-		.pluck<IToolsState, IAnnotationProperties>('annotationProperties')
-		.distinctUntilChanged();
+	annotationLayerIds$ = this.store.pipe(
+		select(selectLayers),
+		map((layers: ILayer[]) => layers.filter(({ type }) => type === LayerType.annotation))
+	);
+
+	activeAnnotationLayer$ = this.store.pipe(
+		select(selectActiveAnnotationLayer)
+	);
+
+	@AutoSubscription
+	mode$: Observable<AnnotationMode> = this.store.pipe(
+		select(selectAnnotationMode),
+		tap(mode => this.mode = mode)
+	);
+
+	@AutoSubscription
+	annotationProperties$: Observable<Partial<IVisualizerStyle>> = this.store.pipe(
+		select(selectAnnotationProperties),
+		tap(annotationProperties => this.annotationProperties = annotationProperties)
+	);
 
 	public mode: AnnotationMode;
-	public annotationProperties: IAnnotationProperties;
+	public annotationProperties: Partial<IVisualizerStyle>;
 
 	public modesList: IModeList[] = [
 		{ mode: 'Point', icon: 'point' },
@@ -72,8 +107,13 @@ export class AnnotationsControlComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.mode$.subscribe(value => this.mode = value);
-		this.annotationProperties$.subscribe(value => this.annotationProperties = value);
+	}
+
+	ngOnDestroy(): void {
+	}
+
+	setSelectedAnnotationLayer(id) {
+		this.store.dispatch(new SetActiveAnnotationLayer(id));
 	}
 
 	toggleSelection(selected: SelectionBoxTypes) {
@@ -89,15 +129,23 @@ export class AnnotationsControlComponent implements OnInit {
 	}
 
 	selectLineWidth(strokeWidth: number) {
-		this.store.dispatch(new AnnotationSetProperties({ strokeWidth }));
+		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': strokeWidth }));
 	}
 
-	changeStrokeColor(strokeColor: string) {
-		this.store.dispatch(new AnnotationSetProperties({ strokeColor }));
+	changeStrokeColor(stroke: string) {
+		this.store.dispatch(new AnnotationSetProperties({ stroke }));
 	}
 
-	changeFillColor(fillColor: string) {
-		this.store.dispatch(new AnnotationSetProperties({ fillColor }));
+	changeFillColor(fill: string) {
+		this.store.dispatch(new AnnotationSetProperties({ fill }));
+	}
+
+	changeFillShown(active: boolean) {
+		this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': active ? this.fillAlpah : 0 }));
+	}
+
+	changeStrokeShown(active: boolean) {
+		this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': active ? this.strokeAlpah : 0 }));
 	}
 
 }

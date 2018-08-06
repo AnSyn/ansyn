@@ -8,11 +8,13 @@ export class ClickOutsideDirective {
 	@Input() trigger: any;
 
 	@HostListener("window:click", ['$event']) clickOutside($event) {
-		const self = $event.path.includes(this.elementRef.nativeElement);
-		const trigger = $event.path.includes(this.trigger);
-		if (!self && !trigger) {
-			this.ansynClickOutside.emit($event)
-		}
+		setTimeout(() => {
+			const self = $event.path.includes(this.elementRef.nativeElement);
+			const trigger = $event.path.includes(this.trigger);
+			if (!self && !trigger) {
+				this.ansynClickOutside.emit($event)
+			}
+		}, 0);
 	}
 
 	constructor(public elementRef: ElementRef) {

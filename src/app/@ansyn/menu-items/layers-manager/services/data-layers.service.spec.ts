@@ -2,9 +2,10 @@ import { inject, TestBed } from '@angular/core/testing';
 import { DataLayersService, layersConfig } from './data-layers.service';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { StoreModule } from '@ngrx/store';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 
 describe('DataLayersService', () => {
@@ -14,17 +15,20 @@ describe('DataLayersService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule],
+			imports: [
+				HttpClientModule,
+				StoreModule.forRoot({})
+			],
 			providers: [
 				{
 					provide: CoreConfig,
-					useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' }}
+					useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' } }
 				},
 				StorageService,
 				DataLayersService,
 				{
 					provide: layersConfig,
-					useValue: { 'schema': 'layers'}
+					useValue: { 'schema': 'layers' }
 				},
 				{
 					provide: LoggerService,
@@ -41,37 +45,35 @@ describe('DataLayersService', () => {
 
 	beforeEach(inject([StorageService, DataLayersService, HttpClient],
 		(_storageService: StorageService, _dataLayersService: DataLayersService, _http: HttpClient) => {
-		storageService = _storageService;
-		dataLayersService = _dataLayersService;
-		http = _http;
-	}));
+			storageService = _storageService;
+			dataLayersService = _dataLayersService;
+			http = _http;
+		}));
 
-	it('should ...', inject([DataLayersService], (service: DataLayersService) => {
+	it('should be created', inject([DataLayersService], (service: DataLayersService) => {
 		expect(service).toBeTruthy();
 	}));
 
 	it('getAllLayersInATree get request', () => {
-		let serverResponse = {
-			json: () => [
-				{
-					'id': 'layersContainerId_1234',
-					'name': 'Roads',
-					'type': 'Static',
-					'dataLayers': [
-						{
-							'id': 'layerId_1234',
-							'name': 'New York Roads',
-							'isChecked': true
-						}
-					]
-				}
-			]
-		};
+		let serverResponse = [
+			{
+				id: 'caseId',
+				name: 'caseId',
+				type: 'Static',
+				dataLayers: [
+					{
+						'id': 'layerId_1234',
+						'name': 'New York Roads',
+						'isChecked': true
+					}
+				]
+			}
+		];
 
-		spyOn(http, 'get').and.returnValue(of(new Response(serverResponse)));
+		spyOn(http, 'post').and.returnValue(Observable.of(serverResponse));
 		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
-		expect(http.get).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}`,
-			{ params: { from: '0', limit: '100'}}
+		expect(http.post).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}/search_by_case`,
+			{ caseId: 'caseId' }
 		);
 	});
 });

@@ -11,6 +11,7 @@ import { ICasePreview } from '../../models/case.model';
 import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
 import { IContext } from '@ansyn/core/models/context.model';
 import { catchError } from 'rxjs/internal/operators';
+import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
 
 const animationsDuring = '0.2s';
 
@@ -54,11 +55,11 @@ export class EditCaseComponent implements OnInit {
 	caseModel: ICase;
 	editMode = false;
 
-	@ViewChild('nameInput') nameInput: ElementRef;
+	@ViewChild('nameInput') nameInput: AnsynInputComponent;
 
 	@HostListener('@modalContent.done')
 	selectText() {
-		this.nameInput.nativeElement.select();
+		this.nameInput.select();
 	}
 
 	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {

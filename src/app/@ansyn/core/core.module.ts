@@ -21,6 +21,9 @@ import { MissingTranslationLogging } from './utils/missing-translation-logging';
 import { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
+import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
+import { AnsynInputComponent } from './components/ansyn-input/ansyn-input.component';
+import { FormsModule } from '@angular/forms';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -30,6 +33,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
 	imports: [
 		CommonModule,
+		FormsModule,
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
 		EffectsModule.forFeature([CoreEffects]),
 		TranslateModule.forRoot({
@@ -58,7 +62,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 		SliderCheckboxComponent,
 		AnsynModalComponent,
 		AnsynPopoverComponent,
-		TranslateModule
+		TranslateModule,
+		AnsynLoaderComponent,
+		AnsynInputComponent
 	],
 	declarations:  [
 		AnsynCheckboxComponent,
@@ -68,7 +74,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 		WelcomeNotificationComponent,
 		SliderCheckboxComponent,
 		AnsynModalComponent,
-		AnsynPopoverComponent
+		AnsynPopoverComponent,
+		AnsynLoaderComponent,
+		AnsynInputComponent
 	]
 })
 

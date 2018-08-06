@@ -63,7 +63,7 @@
 				tooltip-value="Annotations"
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
 				(click)="toggleSubMenu(subMenuEnum.annotations)"
-				[disabled]="isGeoOptionsDisabled">
+				[disabled]="!(isActiveAnnotationLayer$ | async) || isGeoOptionsDisabled">
 			<span class="icon-annotation"></span>
 		</button>
 		<ansyn-annotations-control [expand]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"></ansyn-annotations-control>

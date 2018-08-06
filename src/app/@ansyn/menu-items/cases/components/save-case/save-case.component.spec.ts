@@ -6,11 +6,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CasesModule } from '../../cases.module';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { CoreConfig } from '@ansyn/core/models/core.config';
+import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;
@@ -37,18 +38,17 @@ describe('SaveCaseComponent', () => {
 				RouterTestingModule
 			],
 			providers: [
+				DataLayersService,
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {}
-			}]
+				{ provide: CoreConfig, useValue: {} },
+				{ provide: layersConfig, useValue: {}}
+				]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
-		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => of(fakeICasesState));
-
 		fixture = TestBed.createComponent(SaveCaseComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -60,9 +60,11 @@ describe('SaveCaseComponent', () => {
 	});
 
 	it('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
+		spyOn(store, 'dispatch');
 		spyOn(component, 'close');
+		spyOn(store, 'select').and.callFake(() => of({}));
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(component.caseModel));
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any> { name: component.caseName }));
 		expect(component.close).toHaveBeenCalled();
 	});
 });

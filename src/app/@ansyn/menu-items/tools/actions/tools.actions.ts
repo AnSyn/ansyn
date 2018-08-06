@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
-import { IAnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
+import { SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { toolsFlags } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { FeatureCollection } from 'geojson';
+import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -29,8 +30,8 @@ export const ToolsActionsTypes = {
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
-	}
-
+	},
+	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER'
 };
 
 export class UpdateOverlaysManualProcessArgs implements Action {
@@ -175,7 +176,7 @@ export class SetManualImageProcessing implements Action {
 export class AnnotationSetProperties implements Action {
 	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
 
-	constructor(public payload: IAnnotationProperties) {
+	constructor(public payload: Partial<IVisualizerStyle>) {
 
 	}
 }

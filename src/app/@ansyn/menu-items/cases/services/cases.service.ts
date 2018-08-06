@@ -1,6 +1,10 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/observable/of';
 import { ICase } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
@@ -137,10 +141,11 @@ export class CasesService {
 		selectedCase.id = uuid;
 		selectedCase.creationTime = currentTime;
 		selectedCase.lastModified = currentTime;
+		selectedCase.autoSave = true;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
 			.pipe(
 				map(_ => selectedCase),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err))
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
 			)
 	}
 
@@ -151,9 +156,9 @@ export class CasesService {
 	}
 
 	removeCase(selectedCaseId: string): Observable<any> {
-		return this.storageService.delete(this.config.schema, selectedCaseId).catch(err => {
-			return this.errorHandlerService.httpErrorHandle(err);
-		});
+		return this.storageService.delete(this.config.schema, selectedCaseId).pipe(
+			catchError(err => this.errorHandlerService.httpErrorHandle(err, `Case cannot be deleted`))
+		);
 	}
 
 	loadCase(selectedCaseId: string): Observable<any> {

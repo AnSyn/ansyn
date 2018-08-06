@@ -11,6 +11,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -42,10 +43,12 @@ describe('DeleteCaseComponent', () => {
 				RouterTestingModule
 			],
 			providers: [
+				DataLayersService,
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {}
-			}]
+				{ provide: CoreConfig, useValue: {} },
+				{ provide: layersConfig, useValue: {}}
+			]
 		}).compileComponents();
 	}));
 

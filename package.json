@@ -72,6 +72,8 @@
     "reselect": "3.0.0",
     "rison": "0.1.1",
     "rxjs": "^6.2.1",
+    "rxjs-compat": "^6.2.1",
+    "togeojson": "^0.16.0",
     "tokml": "^0.4.0",
     "wellknown": "0.5.0",
     "zone.js": "^0.8.26"

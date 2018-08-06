@@ -1,6 +1,7 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
 	<main>
-		<img [src]="overlay?.thumbnailUrl || ''">
+		<img [src]="overlay?.thumbnailUrl || ''" (load)="finishedLoadingImage()" [class.loading]="loading">
+		<ansyn-loader [show]="loading"></ansyn-loader>
 	</main>
 	<footer>
 		<div dir="rtl">{{overlay?.sensorName | translate}}</div>

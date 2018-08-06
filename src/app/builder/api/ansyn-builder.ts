@@ -28,6 +28,7 @@ import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
 import { AnsynApi } from '@builder/api/ansyn-api.service';
+import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
 
 export interface IAnsynBuilderOptions {
 	providers?: any[];
@@ -88,6 +89,12 @@ export class AnsynBuilder {
 		const customProviders = this.options.sourceProviders || [];
 		const customModules = this.options.customModules || [];
 
+		class BuilderDataLayersService extends DataLayersService {
+			getAllLayersInATree(){
+				return Observable.of([]);
+			}
+		}
+
 		const options: NgModule = <any> {
 			imports: [
 				AnsynBuilderModule,
@@ -95,23 +102,13 @@ export class AnsynBuilder {
 				AppProvidersModule,
 				FiltersModule,
 				ToolsModule,
+				LayersManagerModule,
 				OverlaysModule,
 				FormsModule,
 				HttpClientModule,
 				BrowserAnimationsModule,
 				AnsynPluginsModule,
 				CoreModule,
-				FormsModule,
-				HttpClientModule,
-				BrowserAnimationsModule,
-				OverlaysModule,
-				AnsynPluginsModule,
-				CoreModule,
-				AlertsModule.provideAlerts(ansynAlerts),
-				AppEffectsModule,
-				MapFacadeModule,
-				ImageryModule,
-				StatusBarModule,
 				AlertsModule.provideAlerts(ansynAlerts),
 				AppEffectsModule,
 				MapFacadeModule,
@@ -125,8 +122,8 @@ export class AnsynBuilder {
 				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },
 				...configProviders,
 				customProviders,
-				{ provide: ContextService, useValue: { loadContexts: () => of([]) } },
-				{ provide: DataLayersService, useValue: { getAllLayersInATree: () => of([]) } },
+				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
+				{ provide: DataLayersService, useClass: BuilderDataLayersService },
 			],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],

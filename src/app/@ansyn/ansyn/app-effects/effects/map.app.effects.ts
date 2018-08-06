@@ -338,13 +338,15 @@ export class MapAppEffects {
 
 		return fromPromise(sourceLoader.createAsync({ ...caseMapState, data: { ...mapData, overlay } }))
 			.pipe(changeActiveMap, resetView, displaySuccess)
-			.pipe(
-				catchError(() => from([
-					new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
-					prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
-				]))
-			)
-	}
+			.catch((exception) => {
+				console.error(exception);
+				return Observable.from([
+				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
+				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
+				]);
+			}
+		)
+	};
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const isFull = OverlaysService.isFullOverlay(payload.overlay);

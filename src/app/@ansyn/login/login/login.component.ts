@@ -3,7 +3,6 @@ import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/fromPromise';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
 
 @Component({
 	selector: 'ansyn-login',

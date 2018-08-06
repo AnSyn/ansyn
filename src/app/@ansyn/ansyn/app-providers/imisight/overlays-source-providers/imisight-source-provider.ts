@@ -5,7 +5,7 @@ import {
 	IStartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-	import { EMPTY, Observable } from 'rxjs/index';
+import { EMPTY, Observable } from 'rxjs/index';
 import { limitArray } from '@ansyn/core/utils/i-limited-array';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import {
@@ -17,7 +17,7 @@ import {
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
+import { Auth0Service } from '@ansyn/ansyn/app-providers/imisight/services/auth0.service';
 import { toRadians } from '@ansyn/core/utils/math';
 import { IOverlaysPlanetFetchData } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
 import { catchError, map } from 'rxjs/internal/operators';
@@ -60,16 +60,11 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
-		const token = localStorage.getItem('access_token');
-		const now = new Date();
-		if (!Boolean(token)) {
+		if (!this.auth0Service.isValidToken()) {
 			this.auth0Service.login();
-		} else {
-			const expiresAteTime = new Date(Number(localStorage.getItem('expires_at')));
-			if (now > expiresAteTime) {
-				this.auth0Service.login();
-			}
+			return;
 		}
+		const token = localStorage.getItem('access_token');
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
@@ -97,16 +92,18 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 				'Authorization': 'Bearer ' + token
 			}
 		};
-		return this.http.post<any>(baseUrl, params, httpOptions)
-
-			.map(data => this.extractData(data))
-			.map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
+			map(data => this.extractData(data)),
+			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
-			}))
-			.catch((error: Response | any) => {
+			})),
+			catchError((error: Response | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
+
+
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
@@ -115,7 +112,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 			map(data => this.extractData(data.results)),
 			map(([overaly]): any => overaly),
 			catchError((error: any) => this.errorHandlerService.httpErrorHandle(error))
-		)
+		);
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
@@ -161,7 +158,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sensorName = 'veze';
 		overlay.bestResolution = 1;
 		overlay.name = imiSightElement.s3Id;
-		overlay.imageUrl =  `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;
+		overlay.imageUrl = `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;
 		overlay.thumbnailUrl = `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;
 		overlay.date = new Date(imiSightElement.timestamp);
 		overlay.photoTime = imiSightElement.timestamp;

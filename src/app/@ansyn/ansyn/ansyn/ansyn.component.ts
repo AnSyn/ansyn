@@ -8,7 +8,6 @@ import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
 
 declare function require(name: string);
 
@@ -35,6 +34,6 @@ export class AnsynComponent {
 
 	version = (<any>packageJson).version;
 
-	constructor(protected store$: Store<IAppState>, protected auth0Service: Auth0Service) {
+	constructor(protected store$: Store<IAppState>) {
 	}
 }

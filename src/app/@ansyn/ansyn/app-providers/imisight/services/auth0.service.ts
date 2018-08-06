@@ -16,7 +16,7 @@ export const AUTH_CONFIG: IAuthConfig = {
 	clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
 	domain: 'imisight-sat.auth0.com',
 	responseType: 'token id_token',
-	audience:  'https://gw.sat.imisight.net',
+	audience: 'https://gw.sat.imisight.net',
 	callbackURL: 'http://localhost:4200/#/callback/',
 	scope: 'openid'
 };
@@ -25,7 +25,6 @@ export const AUTH_CONFIG: IAuthConfig = {
 
 @Injectable()
 export class Auth0Service {
-
 	auth0 = new auth0.WebAuth({
 		clientID: AUTH_CONFIG.clientID,
 		domain: AUTH_CONFIG.domain,
@@ -42,6 +41,10 @@ export class Auth0Service {
 		this.auth0.authorize();
 	}
 
+	get access_token() {
+		return localStorage.getItem('access_token');
+	}
+
 	public handleAuthentication(): void {
 		this.auth0.parseHash((err, authResult) => {
 			if (authResult && authResult.accessToken && authResult.idToken) {
@@ -49,10 +52,16 @@ export class Auth0Service {
 				this.router.navigate(['']);
 			} else if (err) {
 				this.router.navigate(['']);
-				console.log(err);
 				alert(`Error: ${err.error}. Check the console for further details.`);
 			}
 		});
+	}
+
+	isValidToken() {
+		const token = this.access_token;
+		const expiresAteTime = new Date(Number(localStorage.getItem('expires_at') || 0));
+		const now = new Date();
+		return token && now < expiresAteTime;
 	}
 
 	private setSession(authResult): void {
@@ -62,21 +71,4 @@ export class Auth0Service {
 		localStorage.setItem('id_token', authResult.idToken);
 		localStorage.setItem('expires_at', expiresAt);
 	}
-
-	public logout(): void {
-		// Remove tokens and expiry time from localStorage
-		localStorage.removeItem('access_token');
-		localStorage.removeItem('id_token');
-		localStorage.removeItem('expires_at');
-		// Go back to the home route
-		this.router.navigate(['']);
-	}
-
-	public isAuthenticated(): boolean {
-		// Check whether the current time is past the
-		// access token's expiry time
-		const expiresAt = JSON.parse(localStorage.getItem('expires_at') || '{}');
-		return new Date().getTime() < expiresAt;
-	}
-
 }

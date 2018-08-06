@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UnAuthGuard } from './guards/unauth.guard';
 import { LoginConfigService } from './services/login-config.service';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
 
 @NgModule({
 	imports: [
@@ -16,7 +15,7 @@ import { Auth0Service } from '@ansyn/login/services/auth0.service';
 		HttpClientModule
 	],
 	declarations: [LoginComponent],
-	providers: [AuthGuard, AuthService, Auth0Service, UnAuthGuard, LoginConfigService]
+	providers: [AuthGuard, AuthService, UnAuthGuard, LoginConfigService]
 })
 
 export class LoginModule {

@@ -17,7 +17,7 @@ import { LoginConfig } from '@ansyn/login/services/login-config.service';
 import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
 import { configuration } from '../../../../configuration/configuration';
 import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
-import { ImisightOverlaySourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/imisight-source-provider';
+import { ImisightOverlaySourceConfig } from '@ansyn/ansyn/app-providers/imisight/overlays-source-providers/imisight-source-provider';
 
 export const getProviders = (conf): any[] => {
 	return [

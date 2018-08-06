@@ -5,7 +5,7 @@ import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
-import { ImisightOverlaySourceType } from '@ansyn/ansyn/app-providers/overlay-source-providers/imisight-source-provider';
+import { ImisightOverlaySourceType } from '@ansyn/ansyn/app-providers/imisight/overlays-source-providers/imisight-source-provider';
 import { HttpClient } from '@angular/common/http';
 import {
 	IMapSourceProvidersConfig,
@@ -19,7 +19,7 @@ import { Inject } from '@angular/core';
 	sourceType: ImisightOverlaySourceType,
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
-export class OpenLayersImisiteSourceProvider extends OpenLayersMapSourceProvider {
+export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvider {
 	companyId = 1;
 	gatewayUrl = 'https://gw.sat.imisight.net';
 

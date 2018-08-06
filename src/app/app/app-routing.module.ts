@@ -5,7 +5,8 @@ import { UnAuthGuard } from '@ansyn/login/guards/unauth.guard';
 import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { AuthGuard } from '@ansyn/login/guards/auth.guard';
 import { LoginComponent } from '@ansyn/login/login/login.component';
-import { CallbackComponent } from '@ansyn/ansyn/callback/callback.component';
+import { CallbackComponent } from '@ansyn/ansyn/app-providers/imisight/components/callback/callback.component';
+import { Auth0Service } from '@ansyn/ansyn/app-providers/imisight/services/auth0.service';
 
 export const routes: Routes = [
 	{
@@ -30,12 +31,7 @@ export const routes: Routes = [
 		path: 'login',
 		component: LoginComponent
 	},
-	{
-		path: 'callback',
-		component: CallbackComponent
-	},
-	{ path: '**', redirectTo: '' }
-
+	{ path: 'access_token', component: CallbackComponent }
 ];
 
 @NgModule({

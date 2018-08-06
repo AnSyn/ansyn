@@ -21,13 +21,13 @@ import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/
 import { OpenLayersProjectionService } from '@ansyn/plugins/openlayers/open-layers-map/projection/open-layers-projection.service';
 import { OpenLayerOpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-open-aerial-source-provider';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { ImisightSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/imisight-source-provider';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
-import { OpenLayersImisiteSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers-imisite-source-provider';
+import { ImisightSourceProvider } from '@ansyn/ansyn/app-providers/imisight/overlays-source-providers/imisight-source-provider';
+import { ImisightModule } from '@ansyn/ansyn/app-providers/imisight/imisight.module';
 
 @NgModule({
 	imports: [
 		HttpClientModule,
+		ImisightModule,
 		ImageryModule.provide({
 			mapSourceProviders: [
 				OpenLayerTileWMSSourceProvider,
@@ -38,8 +38,7 @@ import { OpenLayersImisiteSourceProvider } from '@ansyn/ansyn/app-providers/map-
 				OpenLayerNotGeoRegisteredPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
-				OpenLayerOpenAerialSourceProvider,
-				OpenLayersImisiteSourceProvider
+				OpenLayerOpenAerialSourceProvider
 			],
 			plugins: [],
 			maps: []
@@ -60,8 +59,7 @@ import { OpenLayersImisiteSourceProvider } from '@ansyn/ansyn/app-providers/map-
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
 
-		{ provide: ProjectionService, useClass: OpenLayersProjectionService },
-		Auth0Service
+		{ provide: ProjectionService, useClass: OpenLayersProjectionService }
 	]
 })
 export class AppProvidersModule {

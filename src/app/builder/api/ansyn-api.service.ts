@@ -1,11 +1,11 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { Observable } from 'rxjs';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -22,18 +22,30 @@ import { IWindowLayout } from '@builder/reducers/builder.reducer';
 import { SetWindowLayout } from '@builder/actions/builder.actions';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '@ansyn/menu-items/cases/models/cases-config';
+import { map, take, tap } from 'rxjs/internal/operators';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 @Injectable()
+@AutoSubscriptions({
+	init: 'init',
+	destroy: 'destroy'
+})
 export class AnsynApi {
 	activeMapId;
-	activateMap$ = <Observable<string>>this.store.select(mapStateSelector)
-		.pluck<IMapState, string>('activeMapId')
-		.do(activeMapId => {
-			this.activeMapId = activeMapId;
-		})
-		.distinctUntilChanged();
+	mapsList;
 
-	private subscriptions: Array<Subscription> = [];
+	@AutoSubscription
+	activateMap$ = <Observable<string>>this.store.select(selectActiveMapId).pipe(
+		tap((activeMapId) => this.activeMapId = activeMapId)
+	);
+
+	@AutoSubscription
+	maps$ = this.store.pipe(
+		select(selectMapsList),
+		tap((mapsList) => this.mapsList = mapsList)
+	);
+
 	pointerMove$ = new EventEmitter();
 	private iMap: BaseImageryMap;
 
@@ -43,10 +55,7 @@ export class AnsynApi {
 				protected projectionService: ProjectionService,
 				protected projectionConverterService: ProjectionConverterService,
 				@Inject(casesConfig) public casesConfig: ICasesConfig) {
-
-		this.subscriptions.push(
-			this.activateMap$.subscribe()
-		);
+		this.init();
 	}
 
 	setOutSourceMouseShadow(coordinates) {
@@ -104,7 +113,19 @@ export class AnsynApi {
 
 	}
 
+	getMapPosition() {
+		return MapFacadeService.mapById(this.mapsList, this.activeMapId).data.position;
+	}
+
 	goToPosition(position: Array<number>) {
 		this.store.dispatch(new GoToAction(position));
+	}
+
+	init() {
+
+	}
+
+	destroy() {
+
 	}
 }

@@ -86,7 +86,8 @@ export const overlaysStatusMessages = {
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 		case CoreActionTypes.SET_OVERLAYS_CRITERIA:
-			if ((<SetOverlaysCriteriaAction> action).options.noInitialSearch) {
+			const options = (<SetOverlaysCriteriaAction> action).options;
+			if (options && options.noInitialSearch) {
 				return { ...state, loading: false }
 			}
 			return state;

@@ -1,7 +1,7 @@
 import { IOverlay } from '../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
 import { IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
+import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
@@ -126,7 +126,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
-			const overlays = new Map(state.overlays);
+			const overlays = (<LoadOverlaysSuccessAction>action).clearExistingOverlays ? new Map() : new Map(state.overlays);
 			const filteredOverlays = [];
 			action.payload.forEach(overlay => {
 				if (!overlays.has(overlay.id)) {

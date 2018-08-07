@@ -86,7 +86,7 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 export class LoadOverlaysSuccessAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
-	constructor(public payload: IOverlay[]) {
+	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
 	}
 }
 

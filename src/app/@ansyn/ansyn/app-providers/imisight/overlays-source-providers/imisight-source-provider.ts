@@ -21,16 +21,14 @@ import { Auth0Service } from '@ansyn/ansyn/app-providers/imisight/services/auth0
 import { toRadians } from '@ansyn/core/utils/math';
 import { IOverlaysPlanetFetchData } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
 import { catchError, map } from 'rxjs/internal/operators';
+import {
+	IImisightOverlaySourceConfig,
+	ImisightOverlaySourceConfig
+} from '@ansyn/ansyn/app-providers/imisight/imisight.model';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
-
-export const ImisightOverlaySourceConfig: InjectionToken<IImisightOverlaySourceConfig> = new InjectionToken('imisight-overlays-source-config');
-
-export interface IImisightOverlaySourceConfig {
-	baseUrl: string;
-}
 
 export interface ImiSightElement {
 	s3Id: string;

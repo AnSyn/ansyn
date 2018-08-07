@@ -1,7 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 // import { AUTH_CONFIG } from './auth0-variables';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
+import {
+	IImisightOverlaySourceConfig,
+	ImisightOverlaySourceConfig
+} from '@ansyn/ansyn/app-providers/imisight/imisight.model';
 
 interface IAuthConfig {
 	clientID: string;
@@ -17,7 +21,7 @@ export const AUTH_CONFIG: IAuthConfig = {
 	domain: 'imisight-sat.auth0.com',
 	responseType: 'token id_token',
 	audience: 'https://gw.sat.imisight.net',
-	callbackURL: 'http://localhost:4200/#/callback/',
+	callbackURL: 'http://www.google.com',
 	scope: 'openid'
 };
 
@@ -30,11 +34,14 @@ export class Auth0Service {
 		domain: AUTH_CONFIG.domain,
 		responseType: AUTH_CONFIG.responseType,
 		audience: AUTH_CONFIG.audience,
-		redirectUri: AUTH_CONFIG.callbackURL,
+		redirectUri: this.imisightOverlaysSourceConfig.callbackURL,
 		scope: AUTH_CONFIG.scope
 	});
 
-	constructor(public router: Router) {
+	constructor(
+		public router: Router,
+		@Inject(ImisightOverlaySourceConfig)
+		protected imisightOverlaysSourceConfig: IImisightOverlaySourceConfig) {
 	}
 
 	public login(): void {

@@ -1045,7 +1045,8 @@
   	"baseUrl": "https://api.openaerialmap.org/meta"
   },
   "imisightOverlaysSourceConfig": {
-    "baseUrl": "https://gw.sat.imisight.net/a3/search"
+    "baseUrl": "https://gw.sat.imisight.net/a3/search",
+    "callbackURL":"{{ getv "/ansyn/imisight/callback/url" "http://localhost:4200/#/callback/" }}"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",

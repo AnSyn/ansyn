@@ -17,7 +17,9 @@ import {
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	LoadOverlaysAction, OverlaysActionTypes,
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
@@ -89,6 +91,12 @@ export class CoreAppEffects {
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new SetPresetOverlaysAction([]));
 
+	@Effect()
+	clearPresetsOnClearOverlays$: Observable<any> = this.actions$
+		.ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
+		.filter(({ clearExistingOverlays }) => clearExistingOverlays)
+		.map(() => new SetPresetOverlaysAction([]));
+
 	/**
 	 * @type Effect
 	 * @name setFavoriteOverlaysUpdateCase$
@@ -137,7 +145,7 @@ export class CoreAppEffects {
 			CasesActionTypes.UPDATE_CASE,
 			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
 			CasesActionTypes.SELECT_CASE
-			)
+		)
 		.do((action) => {
 			this.loggerService.info(JSON.stringify(action));
 		});
@@ -186,16 +194,18 @@ export class CoreAppEffects {
 	@Effect()
 	onNextPresetOverlay$: Observable<any> = this.actions$
 		.ofType<GoNextPresetOverlay>(CoreActionTypes.GO_NEXT_PRESET_OVERLAY)
-		.withLatestFrom(this.store$.select(mapStateSelector), (Action , mapState: IMapState): {overlayId: string, mapId: string} => {
+		.withLatestFrom(this.store$.select(mapStateSelector), (Action, mapState: IMapState): { overlayId: string, mapId: string } => {
 			const activeMap = MapFacadeService.activeMap(mapState);
-			return {overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId};
+			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
 		})
-		.withLatestFrom(this.store$.select(coreStateSelector), ({overlayId , mapId}, { presetOverlays }): {overlay: IOverlay, mapId: string} => {
+		.withLatestFrom(this.store$.select(coreStateSelector), ({ overlayId, mapId }, { presetOverlays }): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;
-			if (length === 0) { return; }
+			if (length === 0) {
+				return;
+			}
 			const index = presetOverlays.findIndex(overlay => overlay.id === overlayId);
 			const nextIndex = index === -1 ? 0 : index >= length - 1 ? 0 : index + 1;
-			return {overlay: presetOverlays[nextIndex], mapId};
+			return { overlay: presetOverlays[nextIndex], mapId };
 		})
 		.filter(Boolean)
 		.map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId }));

@@ -81,7 +81,7 @@ export class AnsynApi {
 	}
 
 	setOverlays(overlays: IOverlay[]) {
-		this.store.dispatch(new LoadOverlaysSuccessAction(overlays));
+		this.store.dispatch(new LoadOverlaysSuccessAction(overlays, true));
 	}
 
 	changeMapLayout(layout: LayoutKey) {

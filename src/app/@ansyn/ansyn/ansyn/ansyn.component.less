@@ -132,8 +132,12 @@
 
 }
 
-
 @media screen and (max-width: 959px) {
+	div.app > div.menu {
+		box-shadow: 0 0 10px black;
+		z-index: @z-index-menu-container;
+	}
+
 	ansyn-menu {
 		display: none;
 	}
@@ -142,6 +146,7 @@
 	}
 
 }
+
 @media screen and (min-width: 959px) {
 	ansyn-menu {
 		display: auto;

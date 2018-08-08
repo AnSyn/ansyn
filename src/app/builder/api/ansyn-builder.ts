@@ -83,6 +83,13 @@ export class AnsynBuilder {
 		elem.appendChild(document.createElement(this.id));
 	}
 
+	removeElement() {
+		const elem: HTMLElement = <any> document.getElementById(this.id);
+		if (elem) {
+			elem.innerHTML = '';
+		}
+	}
+
 	buildModule(): any {
 		const AnsynCustomComponenet = buildAnsynCustomComponent(this.id);
 		const configProviders = getProviders(this.config);
@@ -151,4 +158,8 @@ export class AnsynBuilder {
 			});
 	}
 
+	destroy() {
+		this.moduleRef.destroy();
+		this.removeElement()
+	}
 }

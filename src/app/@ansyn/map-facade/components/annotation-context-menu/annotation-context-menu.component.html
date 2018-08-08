@@ -1,10 +1,10 @@
 <div class="context-menu-wrapper"
 	[ngStyle]="contextMenuWrapperStyle">
 
-	<div class="remove-feature-wrapper" *ngIf="!fromHover">
+	<div class="buttons" *ngIf="!fromHover">
 		<!-- Don't change "mousedown" to "click"! -->
-		<button [class.active]="this.action?.payload?.showMeasures"><i class="icon-tools-ruler" (mousedown)="toggleMeasures($event)"></i></button>
-		<button class='removeFeature' (mousedown)="removeFeature($event)">x</button>
+		<button [class.active]="this.action?.payload?.showMeasures" (mousedown)="toggleMeasures($event)"><i class="icon-tools-ruler"></i></button>
+		<button class='removeFeature' (mousedown)="removeFeature($event)"><i class="icon-close"></i></button>
 	</div>
 
 </div>

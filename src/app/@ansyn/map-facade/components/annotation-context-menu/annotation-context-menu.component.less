@@ -16,10 +16,11 @@
 		visibility: hidden;
 		transform-origin: left top;
 		pointer-events: none;
-		.remove-feature-wrapper {
+		.buttons {
 			position: absolute;
 			pointer-events: all;
-			height: 20px;
+			border: 1px solid white;
+			box-sizing: border-box;
 			background-color: @application-main-color;
 			color: white;
 			display: flex;
@@ -27,18 +28,34 @@
 			right: 0;
 			top: 0;
 
-			transform: translate(calc(~'100% + 15px'), calc(~'-100% + 7.5px'));
+			transform: translate(calc(~'100% + 15px'), -12px);
 
 			button {
-				background: @application-main-color;
+				background-color: @application-main-color;
 				color: white;
-				border: 1px solid #2E2D46;
-				font-size: 19px;
-				font-weight: bold;
+				border: none;
 				outline: none;
+				padding: 2px 6px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 20px;
+
+				&.removeFeature {
+					font-size: 19px;
+					margin-bottom: 1px;
+
+					i.icon-close:before {
+						content: '\2715'; // MULTIPLICATION X
+					}
+				}
 
 				&.active {
 					background-color: rgb(41, 127, 155);
+				}
+
+				&:hover {
+					color: yellow;
 				}
 			}
 		}

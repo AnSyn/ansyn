@@ -7,11 +7,26 @@ if (Boolean(0)) {
 	platformBrowserDynamic().bootstrapModule(AppAnsynModule);
 }
 
+let ansynBuilder: AnsynBuilder;
+let config;
+
+export const init = () => {
+	ansynBuilder = new AnsynBuilder({ id: 'ansynMap', config, callback: _callback, options: { sourceProviders: [] } });
+};
+
+const _callback = () => {
+	document.querySelector('#destroy').addEventListener('click', () => {
+		ansynBuilder.destroy();
+	});
+
+	document.querySelector('#init').addEventListener('click', () => {
+		init();
+	});
+};
 
 fetch(configuration.configPath)
 	.then(response => response.json())
-	.then(config => {
-		const ansynBuilder = new AnsynBuilder({ id: 'ansynMap', config, callback: (api) => {}, options: { sourceProviders: [] } });
+	.then(_config => {
+		config = _config;
+		init()
 	});
-
-

@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
@@ -25,6 +25,7 @@ import {
 	IImisightOverlaySourceConfig,
 	ImisightOverlaySourceConfig
 } from '@ansyn/ansyn/app-providers/imisight/imisight.model';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 
@@ -41,11 +42,14 @@ export interface ImiSightElement {
 	metaData: object;
 	source: string;
 	_id: string;
+	sensorName: string;
 }
 
 @Injectable()
 export class ImisightSourceProvider extends BaseOverlaySourceProvider {
+
 	sourceType = ImisightOverlaySourceType;
+
 
 	constructor(
 		protected auth0Service: Auth0Service,
@@ -58,11 +62,14 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
+
 		if (!this.auth0Service.isValidToken()) {
 			this.auth0Service.login();
 			return;
 		}
-		const token = localStorage.getItem('access_token');
+		const helper = new JwtHelperService();
+		const token = localStorage.getItem('id_token');
+
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
@@ -121,21 +128,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		return EMPTY;
 	}
 
-	// private extractArrayData(overlays: Array<any>): Array<IOverlay> {
-	// 	if (!overlays) {
-	// 		return [];
-	// 	}
-	// 	if (!Array.isArray(overlays)) {
-	// 		overlays = [overlays];
-	// 	}
-	// 	return overlays.map((element) => this.parseData(element));
-	// }
-
-
 	private extractData(overlays: Array<ImiSightElement>): IOverlay[] {
-		// if (overlays.length > 0) {
-		// 	return this.parseData(overlays[0]);
-		// }
 		if (!overlays) {
 			return [];
 		}
@@ -152,8 +145,8 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		const footprint: any = imiSightElement.geojson;
 		overlay.id = imiSightElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint ? footprint : footprint);
-		overlay.sensorType = 'shai';
-		overlay.sensorName = 'veze';
+		overlay.sensorType = '';
+		overlay.sensorName = imiSightElement.sensorName;
 		overlay.bestResolution = 1;
 		overlay.name = imiSightElement.s3Id;
 		overlay.imageUrl = `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;

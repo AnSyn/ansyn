@@ -14,13 +14,13 @@ import {
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { Inject } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvider {
-	companyId = 1;
 	gatewayUrl = 'https://gw.sat.imisight.net';
 
 	constructor(protected cacheService: CacheService,
@@ -34,9 +34,12 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
 		const projection = 'EPSG:3857';
-
+		const token = localStorage.getItem('id_token');
+		const helper = new JwtHelperService();
+		const decodedToken = this.parseTokenObjects(helper.decodeToken(token));
+		const companyId = decodedToken.user_metadata.companyId;
 		const source = new TileWMS({
-			url: `${this.gatewayUrl}/geo/geoserver/company_${this.companyId}/wms`,
+			url: `${this.gatewayUrl}/geo/geoserver/company_${companyId}/wms`,
 			params: {
 				TRANSPARENT: true,
 				VERSION: '1.1.1',
@@ -72,5 +75,11 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		return this.httpClient
 			.get(url, { headers: headers, responseType: 'blob' })
 			.map(blob => URL.createObjectURL(blob));
+	}
+
+	parseTokenObjects(obj: any): any {
+		const str = JSON.stringify(obj);
+		const trimmedStr = str.replace(new RegExp('https://imisight.net/', 'g'), '');
+		return JSON.parse(trimmedStr);
 	}
 }

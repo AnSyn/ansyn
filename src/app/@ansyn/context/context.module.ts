@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IContext } from '@ansyn/core/models/context.model';
 import { EffectsModule } from '@ngrx/effects';
 import { ContextEffects } from '@ansyn/context/effects/context.effects';
+import { Observable } from 'rxjs';
 
 
 @NgModule({
@@ -16,7 +17,7 @@ import { ContextEffects } from '@ansyn/context/effects/context.effects';
 		StoreModule.forFeature(contextFeatureKey, ContextReducer),
 		EffectsModule.forFeature([ContextEffects])
 	],
-	providers: [ContextService]
+	providers: [{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } }]
 })
 export class ContextModule {
 

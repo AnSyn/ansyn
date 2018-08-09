@@ -17,6 +17,13 @@ import { DataLayersModalsComponent } from './components/data-layers-modals/data-
 import { EditLayerComponent } from './components/data-layers-modals/edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
+import { Observable } from 'rxjs';
+
+class BuilderDataLayersService extends DataLayersService {
+	getAllLayersInATree() {
+		return Observable.of([]);
+	}
+}
 
 @NgModule({
 	imports: [
@@ -28,15 +35,17 @@ import { ImportLayerComponent } from './components/import-layer/import-layer.com
 	],
 	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
 	entryComponents: [LayersManagerComponent],
-	providers: [DataLayersService]
+	providers: [{ provide: DataLayersService, useClass: BuilderDataLayersService }]
 })
 
 export class LayersManagerModule {
 	static forRoot(config: ILayersManagerConfig): ModuleWithProviders {
+
+
 		return {
 			ngModule: LayersManagerModule,
 			providers: [
-				DataLayersService,
+				{ provide: DataLayersService, useClass: BuilderDataLayersService },
 				{ provide: layersConfig, useValue: config }
 			]
 		};

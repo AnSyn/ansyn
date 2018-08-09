@@ -10,6 +10,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { ContextEffects } from '@ansyn/context/effects/context.effects';
 import { Observable } from 'rxjs';
 
+export class ImisightContextService extends ContextService {
+	loadContexts() {
+		return Observable.of([]);
+	}
+}
 
 @NgModule({
 	imports: [
@@ -17,7 +22,7 @@ import { Observable } from 'rxjs';
 		StoreModule.forFeature(contextFeatureKey, ContextReducer),
 		EffectsModule.forFeature([ContextEffects])
 	],
-	providers: [{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } }]
+	providers: [{ provide: ContextService, useClass: ImisightContextService }]
 })
 export class ContextModule {
 

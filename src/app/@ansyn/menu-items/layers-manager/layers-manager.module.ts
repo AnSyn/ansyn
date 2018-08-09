@@ -19,7 +19,7 @@ import { DeleteLayerComponent } from './components/data-layers-modals/delete-lay
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 import { Observable } from 'rxjs';
 
-class BuilderDataLayersService extends DataLayersService {
+export class ImisightDataLayersService extends DataLayersService {
 	getAllLayersInATree() {
 		return Observable.of([]);
 	}
@@ -35,7 +35,7 @@ class BuilderDataLayersService extends DataLayersService {
 	],
 	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
 	entryComponents: [LayersManagerComponent],
-	providers: [{ provide: DataLayersService, useClass: BuilderDataLayersService }]
+	providers: [{ provide: DataLayersService, useClass: ImisightDataLayersService }]
 })
 
 export class LayersManagerModule {
@@ -45,7 +45,7 @@ export class LayersManagerModule {
 		return {
 			ngModule: LayersManagerModule,
 			providers: [
-				{ provide: DataLayersService, useClass: BuilderDataLayersService },
+				{ provide: DataLayersService, useClass: ImisightDataLayersService },
 				{ provide: layersConfig, useValue: config }
 			]
 		};

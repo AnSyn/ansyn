@@ -24,7 +24,9 @@ export const CoreActionTypes = {
 	ENABLE_COPY_ORIGINAL_OVERLAY_DATA: 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
-	SET_AUTO_SAVE: 'SET_AUTO_SAVE'
+	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
+	REMOVE_OVERLAY: 'REMOVE_OVERLAY',
+	REMOVED_OVERLAYS_VISIBILITY: 'REMOVED_OVERLAYS_VISIBILITY'
 };
 
 export type CoreActions =
@@ -43,11 +45,13 @@ export type CoreActions =
 	| GoNextPresetOverlay
 	| SetWasWelcomeNotificationShownFlagAction
 	| UpdateOverlaysCountAction
+	| RemoveOverlayAction
+	| RemovedOverlaysVisibilityAction
 
 export class GoAdjacentOverlay implements Action {
 	type: string = CoreActionTypes.GO_ADJACENT_OVERLAY;
 
-	constructor(public payload: {isNext: boolean}) {
+	constructor(public payload: { isNext: boolean }) {
 	}
 }
 
@@ -130,7 +134,6 @@ export class RemoveAlertMsg implements Action {
 }
 
 
-
 export class SetOverlaysCriteriaAction implements Action {
 	type = CoreActionTypes.SET_OVERLAYS_CRITERIA;
 
@@ -175,13 +178,31 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 
 export class UpdateOverlaysCountAction {
 	type = CoreActionTypes.UPDATE_OVERLAY_COUNT;
+
 	constructor(public payload: number) {
 
 	}
 }
 
-export class SetAutoSave implements Action  {
+export class RemoveOverlayAction implements Action {
+	type = CoreActionTypes.REMOVE_OVERLAY;
+
+	constructor(public payload: IOverlay) {
+
+	}
+}
+
+export class RemovedOverlaysVisibilityAction implements Action {
+	type = CoreActionTypes.REMOVED_OVERLAYS_VISIBILITY;
+
+	constructor(public payload: boolean) {
+
+	}
+}
+
+export class SetAutoSave implements Action {
 	readonly type = CoreActionTypes.SET_AUTO_SAVE;
+
 	constructor(public payload: boolean) {
 	}
 }

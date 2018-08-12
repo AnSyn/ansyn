@@ -39,6 +39,14 @@
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon icon-presets"></i>
 	</button>
+
+	<button *ngIf="overlay" class="small-icon-button remove-overlay"
+			[class.active2]="isFavorite"
+			(click)="removeOverlay()"
+			tooltip-value="Remove overlay"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+		<i class="icon icon-remove-overlay"></i>
+	</button>
 </div>
 
 <div class="description">

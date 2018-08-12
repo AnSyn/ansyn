@@ -8,5 +8,11 @@
 			*ngFor="let filter of filters"
 			[filter]="filter">
 		</ansyn-filter-container>
+		<div class="removed-show-hide" *ngIf="!removedOverlaysVisibility">
+			<span (click)="ShowRemoved()">Hide removed overlays ({{removedOverlaysCount}})</span>
+		</div>
+		<div class="removed-show-hide" *ngIf="removedOverlaysVisibility">
+			<span (click)="ShowRemoved()">Show removed overlays ({{removedOverlaysCount}})</span>
+		</div>
 	</div>
 </div>

@@ -1,7 +1,9 @@
 import {
 	CoreActions,
-	CoreActionTypes, EnableCopyOriginalOverlayDataAction,
-	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
+	CoreActionTypes,
+	EnableCopyOriginalOverlayDataAction,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
@@ -24,6 +26,8 @@ export interface IToastMessage {
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: IOverlay[];
+	removedOverlays: IOverlay[];
+	removedOverlaysVisibility: boolean;
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: IOverlaysCriteria;
@@ -36,6 +40,8 @@ export interface ICoreState {
 export const coreInitialState: ICoreState = {
 	toastMessage: null,
 	favoriteOverlays: [],
+	removedOverlays: [],
+	removedOverlaysVisibility: true,
 	presetOverlays: [],
 	alertMsg: new Map([
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
@@ -61,6 +67,12 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
+
+		case CoreActionTypes.REMOVE_OVERLAY:
+			return { ...state, removedOverlays: [...state.removedOverlays, action.payload] };
+
+		case CoreActionTypes.REMOVED_OVERLAYS_VISIBILITY:
+			return { ...state, removedOverlaysVisibility: action.payload };
 
 		case CoreActionTypes.SET_PRESET_OVERLAYS:
 			return { ...state, presetOverlays: (action as SetPresetOverlaysAction).payload };
@@ -105,6 +117,8 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 }
 
 export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
+export const selectRemovedOverlays = createSelector(coreStateSelector, (core) => core.removedOverlays);
+export const selectRemovedOverlaysVisibility = createSelector(coreStateSelector, (core) => core.removedOverlaysVisibility);
 export const selectPresetOverlays = createSelector(coreStateSelector, (core) => core.presetOverlays);
 export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
 export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);

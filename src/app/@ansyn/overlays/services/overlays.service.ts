@@ -2,8 +2,8 @@ import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-over
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IOverlay } from '../models/overlay.model';
-import { IOverlaysState, OverlayDrop, ITimelineRange } from '../reducers/overlays.reducer';
-import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
+import { IDilutedOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -16,11 +16,15 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 @Injectable()
 export class OverlaysService {
 
-	static buildFilteredOverlays(overlays: IOverlay[], parsedFilters: IFilterModel[], favorites: IOverlay[], showOnlyFavorite: boolean): string[] {
+	static buildFilteredOverlays(overlays: IOverlay[], parsedFilters: IFilterModel[], favorites: IOverlay[], showOnlyFavorite: boolean, removedOverlays: IDilutedOverlay[], removedOverlaysVisibility: boolean): string[] {
 		let parsedOverlays: IOverlay[] = favorites;
 		if (!showOnlyFavorite) {
 			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
 			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
+		}
+
+		if (removedOverlaysVisibility) {
+			parsedOverlays = parsedOverlays.filter((overlay) => !removedOverlays.some((removeOverlay) => overlay.id === removeOverlay.id));
 		}
 		parsedOverlays.sort(sortByDateDesc);
 		return union(parsedOverlays.map(({ id }) => id));

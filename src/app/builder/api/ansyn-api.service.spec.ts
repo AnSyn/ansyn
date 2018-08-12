@@ -13,7 +13,7 @@ import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
-import { AnsynApi } from './ansyn-api.service';
+import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';
 import { builderFeatureKey, BuilderReducer, builderStateSelector, IWindowLayout } from '../reducers/builder.reducer';
 
 
@@ -55,6 +55,10 @@ describe('apiService', () => {
 						}
 					}
 				},
+				{
+					provide: ANSYN_BUILDER_ID,
+					useValue: 'fakeId'
+				}
 				{
 					provide: casesConfig,
 					useValue: { defaultCase : {} }

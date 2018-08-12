@@ -259,12 +259,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return interaction;
 	}
 
-	onClickAnnotation(data) {
-		data.target.getFeatures().clear();
+	onClickAnnotation(event) {
+		this.clearCurrentHoverSelection();
+		event.target.getFeatures().clear();
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(data.selected);
+		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id, showMeasures } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
@@ -277,6 +278,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
 
+	clearCurrentHoverSelection() {
+		const hoverInteraction = this.getInteraction(VisualizerInteractions.pointerMove);
+		hoverInteraction.getFeatures().clear();
+		this.onHoverInteraction(hoverInteraction);
+	}
+
 	createHoverInteraction() {
 		const annotationHoverInteraction = new Select(<any>{
 			condition: condition.pointerMove,
@@ -286,12 +293,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return annotationHoverInteraction;
 	}
 
-	onHoverAnnotation(data) {
+	onHoverAnnotation(event) {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		return this.onHoverInteraction(event.target);
+	}
+
+	onHoverInteraction(interaction) {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
 		let selectedFeature, boundingRect, id;
-		let selected = data.target.getFeatures().getArray();
+		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);

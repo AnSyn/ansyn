@@ -1,4 +1,3 @@
-import { AnsynApi } from '@builder/api/ansyn-api.service';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Store, StoreModule } from '@ngrx/store';
@@ -13,11 +12,9 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	builderFeatureKey, BuilderReducer, builderStateSelector,
-	IWindowLayout
-} from '@builder/reducers/builder.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
+import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';
+import { builderFeatureKey, BuilderReducer, builderStateSelector, IWindowLayout } from '../reducers/builder.reducer';
 
 
 describe('apiService', () => {
@@ -57,6 +54,10 @@ describe('apiService', () => {
 							ed50Customized: ''
 						}
 					}
+				},
+				{
+					provide: ANSYN_BUILDER_ID,
+					useValue: 'fakeId'
 				},
 				{
 					provide: casesConfig,

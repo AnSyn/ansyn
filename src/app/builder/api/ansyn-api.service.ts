@@ -1,4 +1,4 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable, InjectionToken, NgModuleRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
@@ -18,13 +18,16 @@ import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IWindowLayout } from '@builder/reducers/builder.reducer';
-import { SetWindowLayout } from '@builder/actions/builder.actions';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '@ansyn/menu-items/cases/models/cases-config';
 import { map, take, tap } from 'rxjs/internal/operators';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { DynamicsAnsynModule } from '../dynamic-ansyn/dynamic-ansyn.module';
+import { IWindowLayout } from '../reducers/builder.reducer';
+import { SetWindowLayout } from '../actions/builder.actions';
+
+export const ANSYN_BUILDER_ID = new InjectionToken('ANSYN_BUILDER_ID');
 
 @Injectable()
 @AutoSubscriptions({
@@ -54,8 +57,17 @@ export class AnsynApi {
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected projectionService: ProjectionService,
 				protected projectionConverterService: ProjectionConverterService,
-				@Inject(casesConfig) public casesConfig: ICasesConfig) {
+				@Inject(casesConfig) public casesConfig: ICasesConfig,
+				protected moduleRef: NgModuleRef<DynamicsAnsynModule>,
+				@Inject(ANSYN_BUILDER_ID) public id: string) {
 		this.init();
+	}
+
+	removeElement(id) {
+		const elem: HTMLElement = <any> document.getElementById(id);
+		if (elem) {
+			elem.innerHTML = '';
+		}
 	}
 
 	setOutSourceMouseShadow(coordinates) {
@@ -126,6 +138,7 @@ export class AnsynApi {
 	}
 
 	destroy() {
-
+		this.moduleRef.destroy();
+		this.removeElement(this.id)
 	}
 }

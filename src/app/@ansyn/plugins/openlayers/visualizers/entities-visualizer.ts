@@ -151,7 +151,28 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 
 		if (styleSettings.label) {
-			firstStyle.text = new Text(this.createStyle(feature, false, styleSettings.label));
+			const color = this.colorWithAlpha(styleSettings.fill, 1);
+			const fill = new Fill({ color });
+
+			firstStyle.text = new Text({
+				font: styleSettings.label.font,
+				// maxAngle: (<any>styleSettings.label).maxAngle ? (<any>styleSettings.label).maxAngle : undefined,
+				offsetX: styleSettings.label.offsetX,
+				offsetY: styleSettings.label.offsetY,
+				// overflow: styleSettings.label.overflow,
+				// placement: styleSettings.label.placement,
+				// scale: styleSettings.label.scale,
+				// rotateWithView: styleSettings.label.rotateWithView,
+				// rotation: styleSettings.label.rotation,
+				text: <any>styleSettings.label.text,
+				// textAlign: styleSettings.label.textAlign,
+				// textBaseline: styleSettings.label.textBaseline,
+				fill: fill
+				// stroke: styleSettings.label.stroke,
+				// backgroundFill: styleSettings.label.backgroundFill,
+				// backgroundStroke: styleSettings.label.backgroundStroke,
+				// padding: styleSettings.label.padding
+			});
 		}
 
 		if (styleSettings['marker-color'] || styleSettings['marker-size']) {

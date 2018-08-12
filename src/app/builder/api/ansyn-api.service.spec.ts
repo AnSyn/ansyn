@@ -58,7 +58,7 @@ describe('apiService', () => {
 				{
 					provide: ANSYN_BUILDER_ID,
 					useValue: 'fakeId'
-				}
+				},
 				{
 					provide: casesConfig,
 					useValue: { defaultCase : {} }

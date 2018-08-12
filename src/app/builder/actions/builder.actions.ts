@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IWindowLayout } from '@builder/reducers/builder.reducer';
+import { IWindowLayout } from '../reducers/builder.reducer';
 
 export enum BuilderActionTypes {
 	SET_WINDOW_LAYOUT = '[builder] SET_WINDOW_LAYOUT'

@@ -1,6 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { DynamicsAnsynModule } from '../dynamic-ansyn/dynamic-ansyn.module';
-import { NgModule, NgModuleRef, Provider } from '@angular/core';
+import { InjectionToken, NgModule, NgModuleRef, Provider } from '@angular/core';
 import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -8,9 +8,6 @@ import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers'
 import { ContextService } from '@ansyn/context/services/context.service';
 import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { AnsynBuilderModule } from '@builder/api/ansyn-builder.module';
-import { IWindowLayout } from '@builder/reducers/builder.reducer';
-import { buildAnsynCustomComponent } from '@builder/dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
 import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
 import { CommonModule } from '@angular/common';
@@ -27,8 +24,11 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
-import { AnsynApi } from '@builder/api/ansyn-api.service';
 import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
+import { IWindowLayout } from '../reducers/builder.reducer';
+import { AnsynApi } from './ansyn-api.service';
+import { buildAnsynCustomComponent } from '../dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
+import { AnsynBuilderModule } from './ansyn-builder.module';
 
 export interface IAnsynBuilderOptions {
 	providers?: any[];
@@ -83,13 +83,6 @@ export class AnsynBuilder {
 		elem.appendChild(document.createElement(this.id));
 	}
 
-	removeElement() {
-		const elem: HTMLElement = <any> document.getElementById(this.id);
-		if (elem) {
-			elem.innerHTML = '';
-		}
-	}
-
 	buildModule(): any {
 		const AnsynCustomComponenet = buildAnsynCustomComponent(this.id);
 		const configProviders = getProviders(this.config);
@@ -97,14 +90,14 @@ export class AnsynBuilder {
 		const customModules = this.options.customModules || [];
 
 		class BuilderDataLayersService extends DataLayersService {
-			getAllLayersInATree(){
+			getAllLayersInATree() {
 				return Observable.of([]);
 			}
 		}
 
 		const options: NgModule = <any> {
 			imports: [
-				AnsynBuilderModule,
+				AnsynBuilderModule.provideId(this.id),
 				CommonModule,
 				AppProvidersModule,
 				FiltersModule,
@@ -126,11 +119,12 @@ export class AnsynBuilder {
 				EffectsModule.forRoot([])
 			],
 			providers: [
+				AnsynApi,
 				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },
 				...configProviders,
 				customProviders,
 				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
-				{ provide: DataLayersService, useClass: BuilderDataLayersService },
+				{ provide: DataLayersService, useClass: BuilderDataLayersService }
 			],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],
@@ -156,10 +150,5 @@ export class AnsynBuilder {
 					this.callback(moduleRef.instance.api);
 				}
 			});
-	}
-
-	destroy() {
-		this.moduleRef.destroy();
-		this.removeElement()
 	}
 }

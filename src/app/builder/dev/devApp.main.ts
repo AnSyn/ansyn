@@ -16,7 +16,7 @@ export const init = () => {
 
 const _callback = () => {
 	document.querySelector('#destroy').addEventListener('click', () => {
-		ansynBuilder.destroy();
+		ansynBuilder.api.destroy();
 	});
 
 	document.querySelector('#init').addEventListener('click', () => {

@@ -40,8 +40,8 @@ import {
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core/reducers/core.reducer';
-import { ICaseFacetsState, ICaseFilter, FilterType } from '@ansyn/core/models/case.model';
-import { IDilutedOverlay, IOverlay } from '@ansyn/core/models/overlay.model';
+import { FilterType, ICaseFacetsState, ICaseFilter } from '@ansyn/core/models/case.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 import { IFilterModel } from '@ansyn/core/models/IFilterModel';
@@ -190,7 +190,7 @@ export class FiltersAppEffects {
 					metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
 				});
 				if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
-					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState );
+					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);
 				}
 			});
 		});
@@ -199,7 +199,6 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
-				protected overlaysService: OverlaysService,
 				protected filtersService: FiltersService) {
 	}
 

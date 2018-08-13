@@ -5,9 +5,14 @@ import { Store } from '@ngrx/store';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../actions/filters.actions';
 import { selectRemovedOverlays, selectRemovedOverlaysVisibility } from '@ansyn/core/reducers/core.reducer';
-import { distinctUntilChanged, map } from 'rxjs/internal/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/internal/operators';
 import { RemovedOverlaysVisibilityAction } from '@ansyn/core/actions/core.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { selectOverlaysArray } from '@ansyn/overlays/reducers/overlays.reducer';
+import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { ICase } from '@ansyn/menu-items/cases/models/case.model';
+import { Observable } from 'rxjs';
+
 
 @Component({
 	selector: 'ansyn-filters',
@@ -19,13 +24,20 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
 	public filters: IFilter[] = this.filtersService.getFilters();
-	private removedOverlaysVisibility;
-	private removedOverlaysCount = 0;
+	removedOverlaysCount = 0;
 	subscribers = [];
+	removedOverlaysVisibility;
+	removedOverlays$ = this.store.select(selectRemovedOverlays);
+	selectedCase$ = this.store.select(selectSelectedCase);
+	overlaysArray$ = this.store.select(selectOverlaysArray);
+	countRemoveOverlays$: Observable<[string[], ICase, IOverlay[]]> = Observable.combineLatest(this.removedOverlays$, this.selectedCase$, this.overlaysArray$);
 
-	removedOverlaysCount$ = this.store.select(selectRemovedOverlays).pipe(
+	removedOverlaysCount$ = this.countRemoveOverlays$.pipe(
 		distinctUntilChanged(),
-		map((overlays: IOverlay[]) => overlays.length)
+		filter(([removedOverlaysIds]: [string[], ICase, IOverlay[]]) => Boolean(removedOverlaysIds[0])),
+		map(([removedOverlaysIds, _, overlays]: [string[], ICase, IOverlay[]]) => {
+			return removedOverlaysIds.filter((removedId) => overlays.some((overlay) => overlay.id === removedId)).length;
+		})
 	);
 
 	removedOverlaysVisibility$ = this.store.select(selectRemovedOverlaysVisibility);

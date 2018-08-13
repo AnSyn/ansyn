@@ -13,7 +13,7 @@ import {
 	selectFavoriteOverlays,
 	selectLayout,
 	selectOverlaysCriteria,
-	selectPresetOverlays
+	selectPresetOverlays, selectRemovedOverlays, selectRemovedOverlaysVisibility
 } from '@ansyn/core/reducers/core.reducer';
 import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
@@ -34,6 +34,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
+		this.store$.select(selectRemovedOverlays),
 		this.store$.select(selectPresetOverlays),
 		this.store$.select(selectComboBoxesProperties),
 		this.store$.select(selectActiveMapId),
@@ -62,6 +63,7 @@ export class UpdateCaseAppEffects {
 				activeLayersIds,
 				facets,
 				favoriteOverlays,
+				removedOverlaysIds,
 				presetOverlays,
 				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				activeMapId,
@@ -95,6 +97,7 @@ export class UpdateCaseAppEffects {
 						activeLayersIds
 					},
 					favoriteOverlays,
+					removedOverlaysIds,
 					presetOverlays,
 					region,
 					dataInputFilters,

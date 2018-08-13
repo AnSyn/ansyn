@@ -59,6 +59,7 @@ export interface IDilutedCaseState {
 	dataInputFilters: ICaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
 	favoriteOverlays?: IDilutedOverlay[],
+	removedOverlaysIds?: string[],
 	presetOverlays?: IDilutedOverlay[],
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs,
 	layers?: ICaseLayersState

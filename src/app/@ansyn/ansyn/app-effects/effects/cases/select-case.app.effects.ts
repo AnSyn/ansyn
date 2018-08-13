@@ -9,7 +9,9 @@ import {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetOverlaysCriteriaAction, SetPresetOverlaysAction
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
@@ -54,7 +56,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
-		const { favoriteOverlays, presetOverlays, region, dataInputFilters, contextEntities } = state;
+		const { favoriteOverlays, removedOverlaysIds, presetOverlays, region, dataInputFilters, contextEntities } = state;
 		let {  time } = state;
 		const { layout } = state.maps;
 
@@ -72,6 +74,7 @@ export class SelectCaseAppEffects {
 		const { activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
+
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
@@ -84,7 +87,8 @@ export class SelectCaseAppEffects {
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetContextParamsAction({ contextEntities }),
-			new SetAutoSave(autoSave)
+			new SetAutoSave(autoSave),
+			new SetRemovedOverlaysIdsAction({idsToRemove: removedOverlaysIds, resetFirst: true})
 		];
 	}
 

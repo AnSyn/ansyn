@@ -25,7 +25,7 @@ export const CoreActionTypes = {
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
-	REMOVE_OVERLAY: 'REMOVE_OVERLAY',
+	SET_REMOVED_OVERLAY_IDS: 'SET_REMOVED_OVERLAY_IDS',
 	REMOVED_OVERLAYS_VISIBILITY: 'REMOVED_OVERLAYS_VISIBILITY'
 };
 
@@ -45,7 +45,7 @@ export type CoreActions =
 	| GoNextPresetOverlay
 	| SetWasWelcomeNotificationShownFlagAction
 	| UpdateOverlaysCountAction
-	| RemoveOverlayAction
+	| SetRemovedOverlaysIdsAction
 	| RemovedOverlaysVisibilityAction
 
 export class GoAdjacentOverlay implements Action {
@@ -184,10 +184,10 @@ export class UpdateOverlaysCountAction {
 	}
 }
 
-export class RemoveOverlayAction implements Action {
-	type = CoreActionTypes.REMOVE_OVERLAY;
+export class SetRemovedOverlaysIdsAction implements Action {
+	type = CoreActionTypes.SET_REMOVED_OVERLAY_IDS;
 
-	constructor(public payload: IOverlay) {
+	constructor(public payload: {idsToRemove: string[], resetFirst?: boolean}) {
 
 	}
 }

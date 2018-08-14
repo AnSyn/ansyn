@@ -35,6 +35,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectRemovedOverlays),
+		this.store$.select(selectRemovedOverlaysVisibility),
 		this.store$.select(selectPresetOverlays),
 		this.store$.select(selectComboBoxesProperties),
 		this.store$.select(selectActiveMapId),
@@ -64,6 +65,7 @@ export class UpdateCaseAppEffects {
 				facets,
 				favoriteOverlays,
 				removedOverlaysIds,
+				removedOverlaysVisibility,
 				presetOverlays,
 				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				activeMapId,
@@ -98,6 +100,7 @@ export class UpdateCaseAppEffects {
 					},
 					favoriteOverlays,
 					removedOverlaysIds,
+					removedOverlaysVisibility,
 					presetOverlays,
 					region,
 					dataInputFilters,

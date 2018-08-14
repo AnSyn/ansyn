@@ -6,6 +6,7 @@ import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	RemovedOverlaysVisibilityAction,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
@@ -56,8 +57,8 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
-		const { favoriteOverlays, removedOverlaysIds, presetOverlays, region, dataInputFilters, contextEntities } = state;
-		let {  time } = state;
+		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities } = state;
+		let { time } = state;
 		const { layout } = state.maps;
 
 		if (!time) {
@@ -78,7 +79,7 @@ export class SelectCaseAppEffects {
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters}, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
@@ -88,7 +89,8 @@ export class SelectCaseAppEffects {
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetContextParamsAction({ contextEntities }),
 			new SetAutoSave(autoSave),
-			new SetRemovedOverlaysIdsAction({idsToRemove: removedOverlaysIds, resetFirst: true})
+			new SetRemovedOverlaysIdsAction({ idsToRemove: removedOverlaysIds, resetFirst: true }),
+			new RemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 		];
 	}
 

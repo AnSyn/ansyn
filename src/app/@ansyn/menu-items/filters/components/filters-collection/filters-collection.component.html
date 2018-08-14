@@ -1,18 +1,24 @@
 <div class="collection">
-	<ansyn-slider-checkbox [checked]="onlyFavorite"  (checkedChange)="showOnlyFavorites($event)" [disabled]="disableShowOnlyFavoritesSelection">
+	<ansyn-slider-checkbox [checked]="onlyFavorite" (checkedChange)="showOnlyFavorites($event)"
+						   [disabled]="disableShowOnlyFavoritesSelection">
 		Show only favorites
 	</ansyn-slider-checkbox>
 
 	<div class="allFilters">
-			<ansyn-filter-container
+		<ansyn-filter-container
 			*ngFor="let filter of filters"
 			[filter]="filter">
 		</ansyn-filter-container>
-		<div class="removed-show-hide" *ngIf="!removedOverlaysVisibility">
-			<span (click)="ShowRemoved()">Hide removed overlays ({{removedOverlaysCount}})</span>
-		</div>
-		<div class="removed-show-hide" *ngIf="removedOverlaysVisibility">
-			<span (click)="ShowRemoved()">Show removed overlays ({{removedOverlaysCount}})</span>
+		<div class="removed-show-hide">
+			<div class="show-hide-filtered-overlays">
+				<ansyn-slider-checkbox [checked]="!removedOverlaysVisibility" (checkedChange)="ShowRemoved($event)"></ansyn-slider-checkbox>
+				<div class="show-hide-filtered-overlays-text">
+					<span>Show manually filtered overlays ({{removedOverlaysCount}})</span>
+				</div>
+			</div>
+			<div class="reset-list">
+				<span (click)="showAll()">Reset list</span>
+			</div>
 		</div>
 	</div>
 </div>

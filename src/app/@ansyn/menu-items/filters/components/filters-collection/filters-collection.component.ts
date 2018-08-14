@@ -5,8 +5,8 @@ import { Store } from '@ngrx/store';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../actions/filters.actions';
 import { selectRemovedOverlays, selectRemovedOverlaysVisibility } from '@ansyn/core/reducers/core.reducer';
-import { distinctUntilChanged, filter, map } from 'rxjs/internal/operators';
-import { RemovedOverlaysVisibilityAction } from '@ansyn/core/actions/core.actions';
+import { distinctUntilChanged, filter, map, withLatestFrom } from 'rxjs/internal/operators';
+import { RemovedOverlaysVisibilityAction, SetRemovedOverlaysIdsAction } from '@ansyn/core/actions/core.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { selectOverlaysArray } from '@ansyn/overlays/reducers/overlays.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
@@ -30,12 +30,13 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	removedOverlays$ = this.store.select(selectRemovedOverlays);
 	selectedCase$ = this.store.select(selectSelectedCase);
 	overlaysArray$ = this.store.select(selectOverlaysArray);
-	countRemoveOverlays$: Observable<[string[], ICase, IOverlay[]]> = Observable.combineLatest(this.removedOverlays$, this.selectedCase$, this.overlaysArray$);
+	countRemoveOverlays$: Observable<[string[], ICase]> = Observable.combineLatest(this.removedOverlays$, this.selectedCase$);
 
 	removedOverlaysCount$ = this.countRemoveOverlays$.pipe(
+		withLatestFrom(this.overlaysArray$),
 		distinctUntilChanged(),
-		filter(([removedOverlaysIds]: [string[], ICase, IOverlay[]]) => Boolean(removedOverlaysIds[0])),
-		map(([removedOverlaysIds, _, overlays]: [string[], ICase, IOverlay[]]) => {
+		filter(([removedOverlaysIds, _]: [[string[], ICase], IOverlay[]]) => Boolean(removedOverlaysIds[0])),
+		map(([[removedOverlaysIds, _], overlays]: [[string[], ICase], IOverlay[]]) => {
 			return removedOverlaysIds.filter((removedId) => overlays.some((overlay) => overlay.id === removedId)).length;
 		})
 	);
@@ -87,6 +88,10 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 
 	ShowRemoved() {
 		this.store.dispatch(new RemovedOverlaysVisibilityAction(!this.removedOverlaysVisibility));
+	}
+
+	showAll() {
+		this.store.dispatch(new SetRemovedOverlaysIdsAction({idsToRemove: [], resetFirst: true }));
 	}
 
 }

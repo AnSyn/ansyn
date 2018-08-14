@@ -11,6 +11,7 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	RemovedOverlaysVisibilityAction,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
@@ -82,6 +83,7 @@ describe('SelectCaseAppEffects', () => {
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: IOverlay[] = [],
 				removedOverlaysIds: string[] = [],
+				removedOverlaysVisibility = true,
 				presetOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
@@ -101,6 +103,7 @@ describe('SelectCaseAppEffects', () => {
 				region,
 				dataInputFilters,
 				favoriteOverlays,
+				removedOverlaysVisibility,
 				removedOverlaysIds,
 				presetOverlays,
 				maps,
@@ -122,7 +125,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklm)--', {
+			const expectedResult = cold('--(abcdefghijklmn)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -135,8 +138,8 @@ describe('SelectCaseAppEffects', () => {
 				j: new UpdateSelectedLayersIds([]),
 				k: new SetContextParamsAction({ contextEntities }),
 				l: new SetAutoSave(false),
-				m: new SetRemovedOverlaysIdsAction({ idsToRemove: removedOverlaysIds, resetFirst: true })
-
+				m: new SetRemovedOverlaysIdsAction({ idsToRemove: removedOverlaysIds, resetFirst: true }),
+				n: new RemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

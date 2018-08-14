@@ -4,14 +4,9 @@ import { IFilter } from '../../models/IFilter';
 import { Store } from '@ngrx/store';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../actions/filters.actions';
-import { selectRemovedOverlays, selectRemovedOverlaysVisibility } from '@ansyn/core/reducers/core.reducer';
-import { distinctUntilChanged, filter, map, withLatestFrom } from 'rxjs/internal/operators';
-import { RemovedOverlaysVisibilityAction, SetRemovedOverlaysIdsAction } from '@ansyn/core/actions/core.actions';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { selectOverlaysArray } from '@ansyn/overlays/reducers/overlays.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { ICase } from '@ansyn/menu-items/cases/models/case.model';
-import { Observable } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/internal/operators';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { tap } from 'rxjs/operators';
 
 
 @Component({
@@ -19,31 +14,17 @@ import { Observable } from 'rxjs';
 	templateUrl: './filters-collection.component.html',
 	styleUrls: ['./filters-collection.component.less']
 })
-
+@AutoSubscriptions({
+	destroy: 'ngOnDestroy',
+	init: 'ngOnInit'
+})
 export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
 	public filters: IFilter[] = this.filtersService.getFilters();
-	removedOverlaysCount = 0;
-	subscribers = [];
-	removedOverlaysVisibility;
-	removedOverlays$ = this.store.select(selectRemovedOverlays);
-	selectedCase$ = this.store.select(selectSelectedCase);
-	overlaysArray$ = this.store.select(selectOverlaysArray);
-	countRemoveOverlays$: Observable<[string[], ICase]> = Observable.combineLatest(this.removedOverlays$, this.selectedCase$);
-
-	removedOverlaysCount$ = this.countRemoveOverlays$.pipe(
-		withLatestFrom(this.overlaysArray$),
-		distinctUntilChanged(),
-		filter(([removedOverlaysIds, _]: [[string[], ICase], IOverlay[]]) => Boolean(removedOverlaysIds[0])),
-		map(([[removedOverlaysIds, _], overlays]: [[string[], ICase], IOverlay[]]) => {
-			return removedOverlaysIds.filter((removedId) => overlays.some((overlay) => overlay.id === removedId)).length;
-		})
-	);
-
-	removedOverlaysVisibility$ = this.store.select(selectRemovedOverlaysVisibility);
 
 
+	@AutoSubscription
 	filters$ = this.store.select(filtersStateSelector).pipe(
 		distinctUntilChanged(),
 		map((state: IFiltersState) => {
@@ -51,6 +32,14 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 				showOnlyFavorites: state.facets.showOnlyFavorites,
 				enableOnlyFavoritesSelection: state.enableOnlyFavoritesSelection
 			};
+		}),
+		tap((result) => {
+			this.onlyFavorite = result.showOnlyFavorites;
+			if (this.onlyFavorite && !result.enableOnlyFavoritesSelection) {
+				return;
+			}
+
+			this.disableShowOnlyFavoritesSelection = !result.enableOnlyFavoritesSelection;
 		})
 	);
 
@@ -63,35 +52,8 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	}
 
 	ngOnDestroy() {
-		this.subscribers.forEach((sub) => sub.unsubscribe());
 	}
 
 	ngOnInit(): void {
-		this.subscribers.push(
-			this.filters$.subscribe(result => {
-				this.onlyFavorite = result.showOnlyFavorites;
-				if (this.onlyFavorite && !result.enableOnlyFavoritesSelection) {
-					return;
-				}
-
-				this.disableShowOnlyFavoritesSelection = !result.enableOnlyFavoritesSelection;
-			}),
-			this.removedOverlaysVisibility$.subscribe((visibility) => {
-				this.removedOverlaysVisibility = visibility;
-			}),
-			this.removedOverlaysCount$.subscribe((count) => {
-					this.removedOverlaysCount = count;
-				}
-			)
-		);
 	}
-
-	ShowRemoved() {
-		this.store.dispatch(new RemovedOverlaysVisibilityAction(!this.removedOverlaysVisibility));
-	}
-
-	showAll() {
-		this.store.dispatch(new SetRemovedOverlaysIdsAction({idsToRemove: [], resetFirst: true }));
-	}
-
 }

@@ -4,13 +4,13 @@ import {
 	EnableCopyOriginalOverlayDataAction,
 	SetFavoriteOverlaysAction,
 	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IOverlay, IOverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
+import { uniq } from 'lodash';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -70,13 +70,17 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
 
 		case CoreActionTypes.SET_REMOVED_OVERLAY_IDS:
-			const isResetRemovedOverlaysIds = (action as SetRemovedOverlaysIdsAction).payload.resetFirst;
-			return {
-				...state,
-				removedOverlaysIds: isResetRemovedOverlaysIds ? action.payload.idsToRemove : [...state.removedOverlaysIds, ...action.payload.idsToRemove]
-			};
+			return { ...state, removedOverlaysIds: action.payload };
 
-		case CoreActionTypes.REMOVED_OVERLAYS_VISIBILITY:
+		case CoreActionTypes.SET_REMOVED_OVERLAY_ID:
+			const { id, value } = action.payload;
+			const removedOverlaysIds = value ? uniq([...state.removedOverlaysIds, id]) : state.removedOverlaysIds.filter(_id => id !== _id);
+			return { ...state, removedOverlaysIds };
+
+		case CoreActionTypes.RESET_REMOVED_OVERLAY_IDS:
+			return { ...state, removedOverlaysIds: [] };
+
+		case CoreActionTypes.SET_REMOVED_OVERLAYS_VISIBILITY:
 			return { ...state, removedOverlaysVisibility: action.payload };
 
 		case CoreActionTypes.SET_PRESET_OVERLAYS:

@@ -24,6 +24,7 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 import { AnsynInputComponent } from './components/ansyn-input/ansyn-input.component';
 import { FormsModule } from '@angular/forms';
+import { ManualRemovedOverlaysComponent } from './components/manual-removed-overlays/manual-removed-overlays.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -64,7 +65,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		AnsynPopoverComponent,
 		TranslateModule,
 		AnsynLoaderComponent,
-		AnsynInputComponent
+		AnsynInputComponent,
+		ManualRemovedOverlaysComponent
 	],
 	declarations:  [
 		AnsynCheckboxComponent,
@@ -76,7 +78,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		AnsynModalComponent,
 		AnsynPopoverComponent,
 		AnsynLoaderComponent,
-		AnsynInputComponent
+		AnsynInputComponent,
+		ManualRemovedOverlaysComponent
 	]
 })
 

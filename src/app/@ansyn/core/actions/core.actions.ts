@@ -26,7 +26,9 @@ export const CoreActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
 	SET_REMOVED_OVERLAY_IDS: 'SET_REMOVED_OVERLAY_IDS',
-	REMOVED_OVERLAYS_VISIBILITY: 'REMOVED_OVERLAYS_VISIBILITY'
+	SET_REMOVED_OVERLAY_ID: 'SET_REMOVED_OVERLAY_ID',
+	RESET_REMOVED_OVERLAY_IDS: 'RESET_REMOVED_OVERLAY_IDS',
+	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY'
 };
 
 export type CoreActions =
@@ -46,7 +48,8 @@ export type CoreActions =
 	| SetWasWelcomeNotificationShownFlagAction
 	| UpdateOverlaysCountAction
 	| SetRemovedOverlaysIdsAction
-	| RemovedOverlaysVisibilityAction
+	| SetRemovedOverlaysIdAction
+	| SetRemovedOverlaysVisibilityAction
 
 export class GoAdjacentOverlay implements Action {
 	type: string = CoreActionTypes.GO_ADJACENT_OVERLAY;
@@ -187,13 +190,25 @@ export class UpdateOverlaysCountAction {
 export class SetRemovedOverlaysIdsAction implements Action {
 	type = CoreActionTypes.SET_REMOVED_OVERLAY_IDS;
 
-	constructor(public payload: {idsToRemove: string[], resetFirst?: boolean}) {
+	constructor(public payload: string[]) {
 
 	}
 }
 
-export class RemovedOverlaysVisibilityAction implements Action {
-	type = CoreActionTypes.REMOVED_OVERLAYS_VISIBILITY;
+export class ResetRemovedOverlaysIdsAction implements Action {
+	type = CoreActionTypes.RESET_REMOVED_OVERLAY_IDS;
+}
+
+export class SetRemovedOverlaysIdAction implements Action {
+	type = CoreActionTypes.SET_REMOVED_OVERLAY_ID;
+
+	constructor(public payload: { id: string, value: boolean }) {
+
+	}
+}
+
+export class SetRemovedOverlaysVisibilityAction implements Action {
+	type = CoreActionTypes.SET_REMOVED_OVERLAYS_VISIBILITY;
 
 	constructor(public payload: boolean) {
 

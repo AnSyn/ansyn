@@ -42,10 +42,9 @@
 
 	<button *ngIf="overlay" class="small-icon-button remove-overlay"
 			(click)="removeOverlay()"
-			[attr.tooltip-value]="isRemoved() ? 'Restore overlay' : 'Remove overlay'"
+			[attr.tooltip-value]="isRemoved ? 'Restore overlay' : 'Remove overlay'"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i *ngIf="!isRemoved()" class="icon icon-remove-overlay"></i>
-		<i *ngIf="isRemoved()" class="icon icon-restore-overlay"></i>
+		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
 	</button>
 </div>
 

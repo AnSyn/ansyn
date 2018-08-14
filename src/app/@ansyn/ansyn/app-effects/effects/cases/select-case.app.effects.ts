@@ -6,7 +6,7 @@ import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
-	RemovedOverlaysVisibilityAction,
+	SetRemovedOverlaysVisibilityAction,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
@@ -89,8 +89,8 @@ export class SelectCaseAppEffects {
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetContextParamsAction({ contextEntities }),
 			new SetAutoSave(autoSave),
-			new SetRemovedOverlaysIdsAction({ idsToRemove: removedOverlaysIds, resetFirst: true }),
-			new RemovedOverlaysVisibilityAction(removedOverlaysVisibility)
+			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 		];
 	}
 

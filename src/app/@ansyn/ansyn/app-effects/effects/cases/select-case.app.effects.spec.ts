@@ -15,7 +15,8 @@ import {
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction
 } from '@ansyn/core/actions/core.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
@@ -80,6 +81,8 @@ describe('SelectCaseAppEffects', () => {
 				region: CaseRegionState = {},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
 				favoriteOverlays: IOverlay[] = [],
+				removedOverlaysIds: string[] = [],
+				removedOverlaysVisibility = true,
 				presetOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
@@ -99,6 +102,8 @@ describe('SelectCaseAppEffects', () => {
 				region,
 				dataInputFilters,
 				favoriteOverlays,
+				removedOverlaysVisibility,
+				removedOverlaysIds,
 				presetOverlays,
 				maps,
 				layers,
@@ -119,7 +124,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijkl)--', {
+			const expectedResult = cold('--(abcdefghijklmn)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -131,7 +136,9 @@ describe('SelectCaseAppEffects', () => {
 				i: new UpdateFacetsAction(facets),
 				j: new UpdateSelectedLayersIds([]),
 				k: new SetContextParamsAction({ contextEntities }),
-				l: new SetAutoSave(false)
+				l: new SetAutoSave(false),
+				m: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+				n: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

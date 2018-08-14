@@ -24,7 +24,11 @@ export const CoreActionTypes = {
 	ENABLE_COPY_ORIGINAL_OVERLAY_DATA: 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
-	SET_AUTO_SAVE: 'SET_AUTO_SAVE'
+	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
+	SET_REMOVED_OVERLAY_IDS: 'SET_REMOVED_OVERLAY_IDS',
+	SET_REMOVED_OVERLAY_ID: 'SET_REMOVED_OVERLAY_ID',
+	RESET_REMOVED_OVERLAY_IDS: 'RESET_REMOVED_OVERLAY_IDS',
+	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY'
 };
 
 export type CoreActions =
@@ -43,11 +47,14 @@ export type CoreActions =
 	| GoNextPresetOverlay
 	| SetWasWelcomeNotificationShownFlagAction
 	| UpdateOverlaysCountAction
+	| SetRemovedOverlaysIdsAction
+	| SetRemovedOverlaysIdAction
+	| SetRemovedOverlaysVisibilityAction
 
 export class GoAdjacentOverlay implements Action {
 	type: string = CoreActionTypes.GO_ADJACENT_OVERLAY;
 
-	constructor(public payload: {isNext: boolean}) {
+	constructor(public payload: { isNext: boolean }) {
 	}
 }
 
@@ -130,7 +137,6 @@ export class RemoveAlertMsg implements Action {
 }
 
 
-
 export class SetOverlaysCriteriaAction implements Action {
 	type = CoreActionTypes.SET_OVERLAYS_CRITERIA;
 
@@ -175,13 +181,43 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 
 export class UpdateOverlaysCountAction {
 	type = CoreActionTypes.UPDATE_OVERLAY_COUNT;
+
 	constructor(public payload: number) {
 
 	}
 }
 
-export class SetAutoSave implements Action  {
+export class SetRemovedOverlaysIdsAction implements Action {
+	type = CoreActionTypes.SET_REMOVED_OVERLAY_IDS;
+
+	constructor(public payload: string[]) {
+
+	}
+}
+
+export class ResetRemovedOverlaysIdsAction implements Action {
+	type = CoreActionTypes.RESET_REMOVED_OVERLAY_IDS;
+}
+
+export class SetRemovedOverlaysIdAction implements Action {
+	type = CoreActionTypes.SET_REMOVED_OVERLAY_ID;
+
+	constructor(public payload: { id: string, value: boolean }) {
+
+	}
+}
+
+export class SetRemovedOverlaysVisibilityAction implements Action {
+	type = CoreActionTypes.SET_REMOVED_OVERLAYS_VISIBILITY;
+
+	constructor(public payload: boolean) {
+
+	}
+}
+
+export class SetAutoSave implements Action {
 	readonly type = CoreActionTypes.SET_AUTO_SAVE;
+
 	constructor(public payload: boolean) {
 	}
 }

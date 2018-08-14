@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ManualRemovedOverlaysComponent } from './manual-removed-overlays.component';
 import { StoreModule } from '@ngrx/store';
+import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
 
 describe('ManualRemovedOverlaysComponent', () => {
 	let component: ManualRemovedOverlaysComponent;
@@ -9,7 +10,7 @@ describe('ManualRemovedOverlaysComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ManualRemovedOverlaysComponent],
+			declarations: [SliderCheckboxComponent, ManualRemovedOverlaysComponent],
 			imports: [StoreModule.forRoot({})]
 		})
 			.compileComponents();

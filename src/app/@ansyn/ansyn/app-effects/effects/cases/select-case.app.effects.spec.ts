@@ -11,13 +11,12 @@ import {
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
-	RemovedOverlaysVisibilityAction,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction
+	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction
 } from '@ansyn/core/actions/core.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
@@ -138,8 +137,8 @@ describe('SelectCaseAppEffects', () => {
 				j: new UpdateSelectedLayersIds([]),
 				k: new SetContextParamsAction({ contextEntities }),
 				l: new SetAutoSave(false),
-				m: new SetRemovedOverlaysIdsAction({ idsToRemove: removedOverlaysIds, resetFirst: true }),
-				n: new RemovedOverlaysVisibilityAction(removedOverlaysVisibility)
+				m: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+				n: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

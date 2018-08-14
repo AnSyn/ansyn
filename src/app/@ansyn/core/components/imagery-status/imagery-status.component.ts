@@ -15,7 +15,8 @@ import {
 	ICoreState,
 	selectEnableCopyOriginalOverlayDataFlag,
 	selectFavoriteOverlays,
-	selectPresetOverlays
+	selectPresetOverlays,
+	selectRemovedOverlays
 } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
@@ -65,6 +66,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
 	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays);
+	removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays);
 
 	alertMsg: AlertMsg;
 	enableCopyOriginalOverlayData: boolean;
@@ -80,6 +82,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
+	removedOverlaysIds = [];
+
 	favoritesButtonText: string;
 
 	presetOverlays: IOverlay[];
@@ -141,7 +145,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				this.updatePresetStatus();
 			}),
 			this.alertMsg$.subscribe(),
-			this.copyOriginalOverlayDataFlag$.subscribe((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
+			this.copyOriginalOverlayDataFlag$.subscribe((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData),
+			this.removedOverlays$.subscribe((removedOverlaysIds) => {
+				this.removedOverlaysIds = removedOverlaysIds;
+			})
 		);
 	}
 
@@ -193,8 +200,17 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	removeOverlay() {
 		if (this.overlay && this.overlay.id) {
-			this.store$.dispatch(new SetRemovedOverlaysIdsAction({idsToRemove: [this.overlay.id]}));
+			if (this.isRemoved()) {
+				const newRemovedOverlaysIds = this.removedOverlaysIds.filter((id) => id !== this.overlay.id);
+				this.store$.dispatch(new SetRemovedOverlaysIdsAction({idsToRemove: newRemovedOverlaysIds, resetFirst: true }));
+			} else {
+				this.store$.dispatch(new SetRemovedOverlaysIdsAction({ idsToRemove: [this.overlay.id] }));
+				this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
+			}
 		}
-		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
+	}
+
+	isRemoved() {
+		return this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
 	}
 }

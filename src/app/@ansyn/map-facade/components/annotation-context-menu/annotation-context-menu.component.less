@@ -9,8 +9,11 @@
 	top: 0;
 	left: 0;
 	.context-menu-wrapper {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
 		z-index: @z-index-annotation-cotext-menu;
-		position: absolute;
+		position: absolute ;
 		outline: 2px dashed #27B2CF;
 		outline-offset: 10px;
 		visibility: hidden;
@@ -54,6 +57,18 @@
 					background-color: rgb(41, 127, 155);
 				}
 			}
+		}
+
+		.annotation-label {
+			position: absolute;
+			pointer-events: all;
+			border: 1px solid white;
+			box-sizing: border-box;
+			background-color: @application-main-color;
+			color: white;
+			display: flex;
+			align-items: center;
+			top: calc(~'100% + 15px');
 		}
 
 	}

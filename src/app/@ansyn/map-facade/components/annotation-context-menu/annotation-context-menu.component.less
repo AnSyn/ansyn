@@ -13,7 +13,7 @@
 		align-items: center;
 		flex-direction: column;
 		z-index: @z-index-annotation-cotext-menu;
-		position: absolute ;
+		position: absolute;
 		outline: 2px dashed #27B2CF;
 		outline-offset: 10px;
 		visibility: hidden;
@@ -58,25 +58,41 @@
 				}
 			}
 		}
+	}
 
-		.annotation-label {
-			position: absolute;
-			pointer-events: all;
-			border: 1px solid white;
-			box-sizing: border-box;
-			background-color: @application-main-color;
-			color: white;
-			display: flex;
-			align-items: center;
-			top: calc(~'100% + 15px');
+	.annotation-label {
+		min-width: 200px;
+		height: 32px;
+		position: absolute;
+		pointer-events: all;
+		border: 1px solid white;
+		box-sizing: border-box;
+		background-color: rgba(255, 255, 255, 0.7);
+		color: black;
+		display: flex;
+		align-items: center;
+		top: calc(~'100% + 15px');
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		.icon-edit {
+			font-size: 27px;
 		}
-
+		form {
+			visibility: visible;
+			background-color: transparent;
+			display: flex;
+			justify-content: space-between;
+		}
 	}
 
 	&:focus, &.visible {
 		.context-menu-wrapper {
 			visibility: visible;
 		}
-	}
 
+		form {
+			visibility: visible;
+		}
+	}
 }

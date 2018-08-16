@@ -6,8 +6,16 @@
 		<button [class.active]="this.action?.payload?.showMeasures" (mousedown)="toggleMeasures($event)"><i class="icon-tools-ruler"></i></button>
 		<button class='removeFeature' (mousedown)="removeFeature($event)"><i class="icon-close"></i></button>
 	</div>
-	<div class="annotation-label">
-		<span>dasldjhaskjdhsakj</span>
+	<div class="annotation-label" *ngIf="true">
+		<input type="text" placeholder="Edit Label..." [(ngModel)]="searchString" name="searchString" (input)="resetError()">
+		<i class="icon-edit"></i>
+
+		<!--<div class="annotation-label">-->
+			<!--<form (submit)="onSubmit()">-->
+				<!--<input type="text" placeholder="Edit Label..." [(ngModel)]="searchString" name="searchString" (input)="resetError()">-->
+			<!--</form>-->
+			<!--<i class="icon-edit"></i>-->
+		<!--</div>-->
 	</div>
 </div>
 

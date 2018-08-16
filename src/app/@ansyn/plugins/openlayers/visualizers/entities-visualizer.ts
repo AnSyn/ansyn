@@ -291,6 +291,10 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.purgeCache(feature);
 	}
 
+	getInteraction(type: VisualizerInteractionTypes) {
+		return this.interactions.get(type);
+	}
+
 	addInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void {
 		this.iMap.mapObject.addInteraction(interactionInstance);
 		this.interactions.set(type, interactionInstance);

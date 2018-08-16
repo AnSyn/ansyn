@@ -18,6 +18,7 @@ export class ClickOutsideDirective {
 	}
 
 	constructor(public elementRef: ElementRef) {
+		console.log("here!!!!!!!!!!!!!!!!!!!!!!!!!!!", elementRef)
 	}
 
 }

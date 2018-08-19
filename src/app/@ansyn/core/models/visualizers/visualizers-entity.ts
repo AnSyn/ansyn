@@ -3,6 +3,7 @@ import { Feature } from 'geojson';
 
 export interface IVisualizerEntity {
 	id: string;
+	label?: string;
 	featureJson: Feature<any>;
 	state?: 'static' | 'activeDisplad';
 	type?: string;

@@ -1,22 +1,26 @@
 <div class="context-menu-wrapper"
-	[ngStyle]="contextMenuWrapperStyle">
+	 *ngIf="clickMenuProps"
+	 [ngStyle]="clickMenuProps.style"
+	 eventListener="mousedown"
+	 (ansynClickOutside)="clickoutside()">
 
-	<div class="buttons" *ngIf="!fromHover">
-		<!-- Don't change "mousedown" to "click"! -->
-		<button [class.active]="this.action?.payload?.showMeasures" (mousedown)="toggleMeasures($event)"><i class="icon-tools-ruler"></i></button>
-		<button class='removeFeature' (mousedown)="removeFeature($event)"><i class="icon-close"></i></button>
+	<div class="context-menu">
+		<div class="buttons">
+			<button [class.active]="showMeasures" (click)="toggleMeasures()"><i class="icon-tools-ruler"></i></button>
+			<button class='removeFeature' (click)="removeFeature()"><i class="icon-close"></i></button>
+		</div>
 	</div>
-	<div class="annotation-label" *ngIf="true">
-		<input type="text" placeholder="Edit Label..." [(ngModel)]="searchString" name="searchString" (input)="resetError()">
+
+	<form class="annotation-label-edit" (ngSubmit)="updateLabel()">
+		<input class="label-input" type="text" placeholder="{{clickMenuProps.label}}" [(ngModel)]="clickMenuProps.label"  name="EditLabel">
 		<i class="icon-edit"></i>
+	</form>
 
-		<!--<div class="annotation-label">-->
-			<!--<form (submit)="onSubmit()">-->
-				<!--<input type="text" placeholder="Edit Label..." [(ngModel)]="searchString" name="searchString" (input)="resetError()">-->
-			<!--</form>-->
-			<!--<i class="icon-edit"></i>-->
-		<!--</div>-->
-	</div>
 </div>
 
-
+<div class="context-menu-wrapper"
+	 *ngIf="hoverMenuProps"
+	 [ngStyle]="hoverMenuProps.style">
+	<div class="context-menu"></div>
+	<span class="annotation-label"> {{ hoverMenuProps.label }}</span>
+</div>

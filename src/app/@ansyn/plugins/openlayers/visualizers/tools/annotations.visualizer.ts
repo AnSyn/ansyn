@@ -180,10 +180,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
-			id: feature.properties.id,
 			featureJson: feature,
+			id: feature.properties.id,
 			style: feature.properties.style,
-			showMeasures: feature.properties.showMeasures
+			showMeasures: feature.properties.showMeasures,
+			label: feature.properties.label
 		}));
 	}
 
@@ -197,7 +198,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {
 				const oldEntity = this.idToEntity.get(entity.id);
-				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures || oldEntity.originalEntity.label !== entity.label;
 			});
 
 		return this.addOrUpdateEntities(entitiesToAdd);
@@ -267,8 +268,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures } = this.getEntity(selectedFeature);
+		const { id, showMeasures, label } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
+			label: label,
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
@@ -304,14 +306,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		let selectedFeature, boundingRect, id;
+		let selectedFeature, boundingRect, id, label;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
 			id = this.getEntity(selectedFeature).id;
+			label = this.getEntity(selectedFeature).label;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
+			label: label,
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
@@ -355,6 +359,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
+			label: '',
 			mode
 		});
 

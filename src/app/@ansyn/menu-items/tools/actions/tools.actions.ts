@@ -176,7 +176,7 @@ export class SetManualImageProcessing implements Action {
 export class AnnotationSetProperties implements Action {
 	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
 
-	constructor(public payload: Partial<IVisualizerStyle>) {
+	constructor(public payload: any) {
 
 	}
 }

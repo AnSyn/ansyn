@@ -6,11 +6,14 @@ import { AnnotationRemoveFeature, AnnotationSelectAction, AnnotationUpdateFeatur
 import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
+import { AnnotationSetProperties } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 export interface IMenuProps {
 	style: any;
 	featureId: string;
-	label: string
+	label: string,
+	showLabel?: boolean
+	showMeasures?: boolean;
 }
 
 @Component({
@@ -26,8 +29,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	clickMenuProps: IMenuProps;
 	hoverMenuProps: IMenuProps;
 	@Input() mapId;
-	showMeasures = false;
-	label: string;
 
 	@AutoSubscription
 	positionChanged$ = this.mapEffect.positionChanged$.pipe(
@@ -39,7 +40,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		filter(({ payload }) => payload.mapId === this.mapId),
 		tap((action: AnnotationSelectAction) => {
 			const { boundingRect } = action.payload;
-			this.showMeasures = action.payload.showMeasures;
 			switch (action.payload.interactionType) {
 				case AnnotationInteraction.click:
 					this.clickMenuProps = {
@@ -51,7 +51,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 							transform: `rotate(${boundingRect.rotation}deg)`
 						},
 						featureId: action.payload.featureId,
-						label: action.payload.label
+						label: action.payload.label,
+						showLabel: action.payload.showLabel,
+						showMeasures: action.payload.showMeasures
 					};
 					break;
 				case AnnotationInteraction.hover:
@@ -64,6 +66,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 								height: `${boundingRect.height}px`,
 								transform: `rotate(${boundingRect.rotation}deg)`
 							},
+							showLabel: action.payload.showLabel,
 							featureId: action.payload.featureId,
 							label: action.payload.label
 						};
@@ -109,18 +112,32 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	toggleMeasures() {
 		const { featureId } = this.clickMenuProps;
+		const showMeasures = !this.clickMenuProps.showMeasures;
 		this.store.dispatch(new AnnotationUpdateFeature({
 			featureId,
-			properties: { showMeasures: !this.showMeasures }
+			properties: { showMeasures }
 		}));
-		this.showMeasures = !this.showMeasures;
+		this.clickMenuProps.showMeasures = showMeasures;
+	}
+
+	toggleLabel() {
+		const { featureId } = this.clickMenuProps;
+		const showLabel = !this.clickMenuProps.showLabel;
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { showLabel }
+		}));
+
+		this.clickMenuProps.showLabel = showLabel;
 	}
 
 	updateLabel() {
 		const { featureId } = this.clickMenuProps;
+
 		this.store.dispatch(new AnnotationUpdateFeature({
 			featureId,
-			properties: { label: this.clickMenuProps.label }
+			properties: {
+				label: this.clickMenuProps.label }
 		}));
 		this.clickoutside();
 	}

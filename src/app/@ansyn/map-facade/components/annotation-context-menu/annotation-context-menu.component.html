@@ -6,12 +6,13 @@
 
 	<div class="context-menu">
 		<div class="buttons">
-			<button [class.active]="showMeasures" (click)="toggleMeasures()"><i class="icon-tools-ruler"></i></button>
+			<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()"><i class="icon-tools-ruler"></i></button>
+			<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel()"><i class="icon-annotation-label"></i></button>
 			<button class='removeFeature' (click)="removeFeature()"><i class="icon-close"></i></button>
 		</div>
 	</div>
 
-	<form class="annotation-label-edit" (ngSubmit)="updateLabel()">
+	<form class="annotation-label-edit" (ngSubmit)="updateLabel()" *ngIf="clickMenuProps.showLabel">
 		<input class="label-input" type="text" placeholder="{{clickMenuProps.label}}" [(ngModel)]="clickMenuProps.label"  name="EditLabel">
 		<i class="icon-edit"></i>
 	</form>
@@ -22,5 +23,5 @@
 	 *ngIf="hoverMenuProps"
 	 [ngStyle]="hoverMenuProps.style">
 	<div class="context-menu"></div>
-	<span class="annotation-label"> {{ hoverMenuProps.label }}</span>
+	<span *ngIf="hoverMenuProps.showLabel" class="annotation-label"> {{ hoverMenuProps.label }}</span>
 </div>

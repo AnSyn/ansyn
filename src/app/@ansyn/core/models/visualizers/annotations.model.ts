@@ -3,7 +3,6 @@ export interface IAnnotationBoundingRect {
 	left: number;
 	width: number;
 	height: number;
-	rotation: number;
 }
 
 export interface IAnnotationsSelectionEventData {

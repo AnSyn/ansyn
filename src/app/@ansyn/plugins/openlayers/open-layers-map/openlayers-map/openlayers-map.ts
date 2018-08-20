@@ -88,7 +88,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this._mapLayers = [...layers];
 		const controls = [
-			new ScaleLine(),
+			// new ScaleLine(),
 			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
@@ -324,8 +324,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
-		return this.calculateRotateExtent(this.mapObject).map(extentPolygon => {
+		return this.calculateRotateExtent(this.mapObject).map((extentPolygon: Polygon) => {
 			if (!extentPolygon) {
+				return null;
+			}
+
+			const someIsNaN = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
+			if (someIsNaN) {
+				console.warn('ol map getPosition failed invalid coordinates ', extentPolygon);
 				return null;
 			}
 			return { extentPolygon, projectedState };

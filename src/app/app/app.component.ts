@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Inject, Renderer2 } from '@angular/core';
-import * as packageJson from '../../../package.json';
+// import * as packageJson from '../../../package.json';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
@@ -13,9 +13,9 @@ export class AppAnsynComponent implements AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		const metaTag = this.renderer.createElement('meta');
-		metaTag.setAttribute('version', (<any>packageJson).version);
-		this.renderer.appendChild(this.document.head, metaTag);
+		// const metaTag = this.renderer.createElement('meta');
+		// metaTag.setAttribute('version', (<any>packageJson).version);
+		// this.renderer.appendChild(this.document.head, metaTag);
 	}
 
 }

@@ -63,7 +63,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 	public getAllLayersInATree({ caseId }): Observable<{} | ILayer[]> {
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
-				catchError(err => this.errorHandlerService.httpErrorHandle(err)),
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers')),
 				rxPreventCrash()
 			);
 	}

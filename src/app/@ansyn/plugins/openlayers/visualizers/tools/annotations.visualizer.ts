@@ -370,9 +370,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					if (overlay) {
 						geoJsonFeature.properties = {
 							...geoJsonFeature.properties,
-							overlayId: overlay.id,
-							pixels: new OLGeoJSON().writeFeatureObject(feature),
-							...this.projectionService.getProjectionProperties(this.communicator, data)
+							...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay)
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };

@@ -62,7 +62,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 		return Observable.of(geoJsonFeature);
 	}
 
-	getProjectionProperties(communicator: CommunicatorEntity, annotationLayer: any): Object {
+	getProjectionProperties(communicator: CommunicatorEntity, annotationLayer: any, feature: any, overlay: any): Object {
 		return undefined;
 	}
 

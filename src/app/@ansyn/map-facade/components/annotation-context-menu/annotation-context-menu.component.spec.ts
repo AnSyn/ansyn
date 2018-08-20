@@ -8,7 +8,10 @@ import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
+import {
+	AnnotationInteraction,
+	IAnnotationsSelectionEventData
+} from '@ansyn/core/models/visualizers/annotations.model';
 
 
 describe('AnnotationContextMenuComponent', () => {
@@ -69,11 +72,11 @@ describe('AnnotationContextMenuComponent', () => {
 
 			(<Subject<any>>component.mapEffect.annotationContextMenuTrigger$).next(actionPayload);
 
-			expect(component.clickMenuProps.style).toEqual({
-				top: '100px',
-				height: '100px',
-				left: '100px',
-				width: '100px'
+			expect((<IAnnotationsSelectionEventData>component.clickMenuProps).boundingRect).toEqual({
+				top: 100,
+				height: 100,
+				left: 100,
+				width: 100
 			});
 
 		});
@@ -89,12 +92,12 @@ describe('AnnotationContextMenuComponent', () => {
 			showLabel: true,
 			featureId: 'featureId',
 			label: 'label',
-			style: {
-				top: '100px',
-				height: '100px',
-				left: '100px',
-				width: '100px',
-				transform: `rotate(${30}deg)`
+			mapId: 'id',
+			boundingRect: {
+				top: 100,
+				height: 100,
+				left: 100,
+				width: 100
 			},
 		};
 		fixture.detectChanges();

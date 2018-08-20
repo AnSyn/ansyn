@@ -3,17 +3,12 @@ import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { AnnotationRemoveFeature, AnnotationSelectAction, AnnotationUpdateFeature } from '../../actions/map.actions';
-import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
+import {
+	AnnotationInteraction,
+	IAnnotationsSelectionEventData
+} from '@ansyn/core/models/visualizers/annotations.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
-
-export interface IMenuProps {
-	style: any;
-	featureId: string;
-	label?: string,
-	showLabel?: boolean
-	showMeasures?: boolean;
-}
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -25,8 +20,8 @@ export interface IMenuProps {
 	destroy: 'ngOnDestroy'
 })
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
-	clickMenuProps: IMenuProps;
-	hoverMenuProps: IMenuProps;
+	clickMenuProps: IAnnotationsSelectionEventData;
+	hoverMenuProps: IAnnotationsSelectionEventData;
 	@Input() mapId;
 
 	@AutoSubscription
@@ -41,30 +36,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			const { boundingRect } = action.payload;
 			switch (action.payload.interactionType) {
 				case AnnotationInteraction.click:
-					this.clickMenuProps = {
-						style: {
-							top: `${boundingRect.top}px`,
-							left: `${boundingRect.left}px`,
-							width: `${boundingRect.width}px`,
-							height: `${boundingRect.height}px`
-						},
-						featureId: action.payload.featureId,
-						label: action.payload.label,
-						showLabel: action.payload.showLabel,
-						showMeasures: action.payload.showMeasures
-					};
+					this.clickMenuProps = action.payload;
 					break;
 				case AnnotationInteraction.hover:
 					if ((!this.clickMenuProps || this.clickMenuProps.featureId !== action.payload.featureId) && boundingRect) {
-						this.hoverMenuProps = {
-							style: {
-								top: `${boundingRect.top}px`,
-								left: `${boundingRect.left}px`,
-								width: `${boundingRect.width}px`,
-								height: `${boundingRect.height}px`
-							},
-							featureId: action.payload.featureId
-						};
+						this.hoverMenuProps = action.payload;
 					} else {
 						this.hoverMenuProps = null;
 					}
@@ -83,7 +59,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	@HostListener('window:mousewheel') onMousewheel() {
-		this.clickMenuProps = null;
+		this.close();
 	}
 
 	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
@@ -92,7 +68,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 	}
 
-	clickoutside() {
+	close() {
 		this.clickMenuProps = null;
 	}
 
@@ -101,7 +77,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	removeFeature() {
 		const { featureId } = this.clickMenuProps;
-		this.clickMenuProps = null;
+		this.close();
 		this.store.dispatch(new AnnotationRemoveFeature(featureId));
 	}
 
@@ -135,6 +111,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				label: this.clickMenuProps.label
 			}
 		}));
-		this.clickoutside();
+		this.close();
 	}
 }

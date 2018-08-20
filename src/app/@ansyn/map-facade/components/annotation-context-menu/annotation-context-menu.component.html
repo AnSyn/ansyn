@@ -1,8 +1,11 @@
 <div class="context-menu-wrapper"
 	 *ngIf="clickMenuProps"
-	 [ngStyle]="clickMenuProps.style"
+	 [style.top.px]="clickMenuProps.boundingRect.top"
+	 [style.width.px]="clickMenuProps .boundingRect.width"
+	 [style.height.px]="clickMenuProps.boundingRect.height"
+	 [style.left.px]="clickMenuProps.boundingRect.left"
 	 eventListener="mousedown"
-	 (ansynClickOutside)="clickoutside()">
+	 (ansynClickOutside)="close()">
 
 	<div class="context-menu">
 		<div class="buttons">
@@ -21,6 +24,9 @@
 
 <div class="context-menu-wrapper"
 	 *ngIf="hoverMenuProps"
-	 [ngStyle]="hoverMenuProps.style">
+	 [style.top.px]="hoverMenuProps.boundingRect.top"
+	 [style.width.px]="hoverMenuProps .boundingRect.width"
+	 [style.height.px]="hoverMenuProps.boundingRect.height"
+	 [style.left.px]="hoverMenuProps.boundingRect.left">
 	<div class="context-menu"></div>
 </div>

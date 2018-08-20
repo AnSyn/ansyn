@@ -46,8 +46,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 							top: `${boundingRect.top}px`,
 							left: `${boundingRect.left}px`,
 							width: `${boundingRect.width}px`,
-							height: `${boundingRect.height}px`,
-							transform: `rotate(${boundingRect.rotation}deg)`
+							height: `${boundingRect.height}px`
 						},
 						featureId: action.payload.featureId,
 						label: action.payload.label,
@@ -62,8 +61,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 								top: `${boundingRect.top}px`,
 								left: `${boundingRect.left}px`,
 								width: `${boundingRect.width}px`,
-								height: `${boundingRect.height}px`,
-								transform: `rotate(${boundingRect.rotation}deg)`
+								height: `${boundingRect.height}px`
 							},
 							featureId: action.payload.featureId
 						};

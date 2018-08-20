@@ -63,12 +63,9 @@ export class LayersAppEffects {
 				...layer,
 				data: {
 					...layer.data,
-					features: layer.data.features.map((feature) => {
-						console.log(feature);
-						return feature.properties.id === action.payload.featureId ?
-							{ ...feature, properties: { ...feature.properties, ...action.payload.properties } } :
-							feature;
-					})
+					features: layer.data.features.map((feature) => feature.properties.id === action.payload.featureId ?
+						{ ...feature, properties: { ...feature.properties, ...action.payload.properties } } :
+						feature)
 				}
 			});
 		});

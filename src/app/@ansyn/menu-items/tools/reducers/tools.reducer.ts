@@ -135,7 +135,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, activeOverlaysFootprintMode: action.payload };
 
 		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
-			console.log(action.payload);
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
 		case ToolsActionsTypes.SET_SUB_MENU:

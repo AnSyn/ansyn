@@ -6,12 +6,11 @@ import { AnnotationRemoveFeature, AnnotationSelectAction, AnnotationUpdateFeatur
 import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
-import { AnnotationSetProperties } from '@ansyn/menu-items/tools/actions/tools.actions';
 
 export interface IMenuProps {
 	style: any;
 	featureId: string;
-	label: string,
+	label?: string,
 	showLabel?: boolean
 	showMeasures?: boolean;
 }
@@ -66,9 +65,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 								height: `${boundingRect.height}px`,
 								transform: `rotate(${boundingRect.rotation}deg)`
 							},
-							showLabel: action.payload.showLabel,
-							featureId: action.payload.featureId,
-							label: action.payload.label
+							featureId: action.payload.featureId
 						};
 					} else {
 						this.hoverMenuProps = null;
@@ -137,7 +134,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new AnnotationUpdateFeature({
 			featureId,
 			properties: {
-				label: this.clickMenuProps.label }
+				label: this.clickMenuProps.label
+			}
 		}));
 		this.clickoutside();
 	}

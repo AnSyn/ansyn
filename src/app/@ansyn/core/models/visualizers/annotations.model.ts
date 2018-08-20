@@ -6,10 +6,12 @@ export interface IAnnotationBoundingRect {
 }
 
 export interface IAnnotationsSelectionEventData {
+	label: string
 	featureId: string;
 	mapId: string;
 	boundingRect: IAnnotationBoundingRect;
 	interactionType?: AnnotationInteraction;
+	showLabel?: boolean;
 	showMeasures?: boolean;
 }
 

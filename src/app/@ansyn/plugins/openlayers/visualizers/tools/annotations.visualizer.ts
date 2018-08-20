@@ -11,6 +11,8 @@ import OlStyle from 'ol/style/style';
 import OlFill from 'ol/style/fill';
 import OlText from 'ol/style/text';
 import OlStroke from 'ol/style/stroke';
+import Stroke from 'ol/style/stroke';
+
 
 import condition from 'ol/events/condition';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
@@ -179,10 +181,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
-			id: feature.properties.id,
 			featureJson: feature,
+			id: feature.properties.id,
 			style: feature.properties.style,
-			showMeasures: feature.properties.showMeasures
+			showMeasures: feature.properties.showMeasures,
+			showLabel: feature.properties.showLabel,
+			label: feature.properties.label
 		}));
 	}
 
@@ -196,7 +200,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {
 				const oldEntity = this.idToEntity.get(entity.id);
-				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures || oldEntity.originalEntity.label !== entity.label || oldEntity.originalEntity.showLabel !== entity.showLabel;
 			});
 
 		return this.addOrUpdateEntities(entitiesToAdd);
@@ -221,7 +225,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				fill: `white`,
 				'fill-opacity': AnnotationsVisualizer.fillAlpha,
 				'marker-size': MarkerSize.medium,
-				'marker-color': `white`
+				'marker-color': `white`,
+				label: {
+					overflow: true,
+					font: '27px Calibri,sans-serif',
+					stroke: '#000',
+					fill: 'white',
+					text: (feature: OlFeature) => {
+						const properties = feature.getProperties();
+						const { showLabel, label } = properties;
+						return showLabel ? label : '';
+					}
+				}
 			}
 		});
 
@@ -232,7 +247,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					label: {
 						font: '12px Calibri,sans-serif',
 						fill: '#fff',
-						stroke: '#000',
 						'stroke-width': 3,
 						text: (feature) => feature.getId() || ''
 					}
@@ -266,13 +280,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures } = this.getEntity(selectedFeature);
+		const { id, showMeasures, label, showLabel } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
+			label: label,
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
 			interactionType: AnnotationInteraction.click,
-			showMeasures
+			showMeasures,
+			showLabel
 		};
 		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
@@ -303,18 +319,22 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		let selectedFeature, boundingRect, id;
+		let selectedFeature, boundingRect, id, label, showLabel;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
 			id = this.getEntity(selectedFeature).id;
+			label = this.getEntity(selectedFeature).label;
+			showLabel = this.getEntity(selectedFeature).showLabel;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
+			label: label,
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
-			interactionType: AnnotationInteraction.hover
+			interactionType: AnnotationInteraction.hover,
+			showLabel: showLabel
 		};
 		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
@@ -379,6 +399,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
+			showLabel: false,
+			label: '',
 			mode
 		});
 

@@ -1,4 +1,4 @@
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -15,24 +15,36 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
+	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
-	IMarkUpData,
 	overlaysStateSelector,
 	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
+import {
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction,
+	SynchronizeMapsAction
+} from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { CoreActionTypes, SetLayoutAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import {
+	AddOverlayToDisplayedListAction,
+	CoreActionTypes,
+	SetLayoutAction,
+	SetToastMessageAction
+} from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '@ansyn/imagery/model/base-map-source-provider';
+import {
+	BaseMapSourceProvider,
+	IBaseMapSourceProviderConstructor
+} from '@ansyn/imagery/model/base-map-source-provider';
 import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContextEntity } from '@ansyn/core/models/case.model';
@@ -168,14 +180,14 @@ export class OverlaysAppEffects {
 	 * @action DisplayOverlayAction
 	 */
 	@Effect()
-	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
-		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
-		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
-		.map(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
+	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
+		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
+		withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
+		mergeMap(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({ overlay, mapId });
-		});
+			return [new DisplayOverlayAction({ overlay, mapId }), new AddOverlayToDisplayedListAction({overlay, mapId})];
+		}));
 
 	/**
 	 * @type Effect

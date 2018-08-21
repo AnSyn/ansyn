@@ -1,4 +1,14 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	HostBinding,
+	HostListener,
+	Inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output
+} from '@angular/core';
 import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
@@ -39,6 +49,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_overlay: IOverlay;
 
 	@HostBinding('class.active') @Input() active: boolean;
+
 	@Input() mapId: string = null;
 	@Input() mapsAmount = 1;
 	@Input() layerFlag = false;
@@ -120,6 +131,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isPreset: boolean;
 	presetsButtonText: string;
 	isRemoved: boolean;
+
+	@HostListener('window:keydown', ['$event'])
+	deleteKeyPressed($event: KeyboardEvent) {
+		if (this.overlay && $event.which === 46 && !this.isRemoved) {
+			this.removeOverlay();
+		}
+	}
 
 	getFormattedTime(dateTimeSring: string): string {
 		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));

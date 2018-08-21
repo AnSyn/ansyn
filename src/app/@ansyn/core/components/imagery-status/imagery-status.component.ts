@@ -134,7 +134,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:keydown', ['$event'])
 	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.overlay && $event.keyCode === 46 && !this.isRemoved) {
+		if (this.overlay && $event.which === 46 && !this.isRemoved) {
 			this.removeOverlay();
 		}
 	}

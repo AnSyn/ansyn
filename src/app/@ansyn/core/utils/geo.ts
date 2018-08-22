@@ -34,5 +34,5 @@ export function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
 }
 
 export function areCoordinatesNumeric(coord) {
-	return coord && !isNaN(coord[0]) && !isNaN(coord[1]);
+	return coord && !isNaN(coord[0]) && !isNaN(coord[1]) && (Math.abs(coord[0]) !== 999999) && (Math.abs(coord[1]) !== 999999);
 }

@@ -32,12 +32,7 @@ import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 import { catchError, debounceTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import {
-	DeleteCaseAction,
-	LoadCaseAction,
-	ManualSaveAction,
-	SelectDilutedCaseAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+import { DeleteCaseAction, LoadCaseAction, ManualSaveAction, SelectDilutedCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { forkJoin } from 'rxjs/index';
@@ -45,6 +40,7 @@ import { UUID } from 'angular2-uuid';
 import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { pipe } from 'rxjs/Rx';
+import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
 
 @Injectable()
 export class CasesEffects {
@@ -91,7 +87,8 @@ export class CasesEffects {
 		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
 		withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id]),
 		filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId),
-		map(() => new LoadDefaultCaseAction())
+		map(() => new LoadDefaultCaseAction()),
+		rxPreventCrash()
 	);
 
 	/**
@@ -211,7 +208,7 @@ export class CasesEffects {
 						.pipe(map((_) => addedCase))
 				),
 				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase))
-			)
+			).catch(() => EMPTY)
 		));
 
 	/**

@@ -13,7 +13,7 @@ import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
 import { Point as GeoPoint } from 'geojson';
-import * as turf from '@turf/turf';
+import { geometry } from '@turf/turf';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
@@ -88,7 +88,7 @@ export class AnsynApi {
 
 
 	private onPointerMove({ coordinate }: any) {
-		const point = <GeoPoint> turf.geometry('Point', coordinate);
+		const point = <GeoPoint>geometry('Point', coordinate);
 		return this.projectionService.projectApproximately(point, this.iMap)
 			.take(1)
 			.do((projectedPoint) => {

@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { type } from '../utils/type';
-import { AlertMsgTypes, IDisplayedOverlayListItem, IToastMessage } from '../reducers/core.reducer';
+import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 
@@ -28,8 +28,7 @@ export const CoreActionTypes = {
 	SET_REMOVED_OVERLAY_IDS: 'SET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAY_ID: 'SET_REMOVED_OVERLAY_ID',
 	RESET_REMOVED_OVERLAY_IDS: 'RESET_REMOVED_OVERLAY_IDS',
-	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY',
-	ADD_OVERLAY_TO_DISPLAYED_LIST: 'ADD_OVERLAY_TO_DISPLAYED_LIST'
+	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY'
 };
 
 export type CoreActions =
@@ -203,7 +202,7 @@ export class ResetRemovedOverlaysIdsAction implements Action {
 export class SetRemovedOverlaysIdAction implements Action {
 	type = CoreActionTypes.SET_REMOVED_OVERLAY_ID;
 
-	constructor(public payload: { id: string, value: boolean, mapId?: string, overlayToShow?: IDisplayedOverlayListItem }) {
+	constructor(public payload: { id: string, value: boolean, mapId: string }) {
 
 	}
 }
@@ -212,14 +211,6 @@ export class SetRemovedOverlaysVisibilityAction implements Action {
 	type = CoreActionTypes.SET_REMOVED_OVERLAYS_VISIBILITY;
 
 	constructor(public payload: boolean) {
-
-	}
-}
-
-export class AddOverlayToDisplayedListAction implements Action {
-	type = CoreActionTypes.ADD_OVERLAY_TO_DISPLAYED_LIST;
-
-	constructor(public payload: {overlay: IOverlay, mapId: string}) {
 
 	}
 }

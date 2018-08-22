@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import {
-	BackToWorldView,
 	CoreActionTypes,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
 	SetFavoriteOverlaysAction,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/core/actions/core.actions';
@@ -32,7 +30,6 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CoreAppEffects {
@@ -212,29 +209,6 @@ export class CoreAppEffects {
 		})
 		.filter(Boolean)
 		.map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId }));
-
-	/**
-	 * @type Effect
-	 * @name onSetRemovedOverlaysIdAction$
-	 * @ofType SetRemovedOverlaysIdAction
-	 * @dependencies overlays
-	 * @filter
-	 * @action DisplayOverlayFromStoreAction | BackToWorldView
-	 */
-	@Effect()
-	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
-		ofType<SetRemovedOverlaysIdAction>(CoreActionTypes.SET_REMOVED_OVERLAY_ID),
-		map(({ payload }) => {
-			if (Boolean(payload.overlayToShow)) {
-				return new DisplayOverlayAction({
-					overlay: payload.overlayToShow.overlay,
-					mapId: payload.overlayToShow.mapId
-				});
-			} else {
-				return new BackToWorldView({ mapId: payload.mapId });
-			}
-		})
-	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

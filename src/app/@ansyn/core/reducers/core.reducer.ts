@@ -24,17 +24,11 @@ export interface IToastMessage {
 	showWarningIcon?: boolean;
 }
 
-export interface IDisplayedOverlayListItem {
-	overlay: IOverlay,
-	mapId: string
-}
-
 export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: IOverlay[];
 	removedOverlaysIds: string[];
 	removedOverlaysVisibility: boolean;
-	displayedOverlaysList: IDisplayedOverlayListItem[];
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: IOverlaysCriteria;
@@ -49,7 +43,6 @@ export const coreInitialState: ICoreState = {
 	favoriteOverlays: [],
 	removedOverlaysIds: [],
 	removedOverlaysVisibility: true,
-	displayedOverlaysList: [],
 	presetOverlays: [],
 	alertMsg: new Map([
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
@@ -82,8 +75,7 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_REMOVED_OVERLAY_ID:
 			const { id, value } = action.payload;
 			const removedOverlaysIds = value ? uniq([...state.removedOverlaysIds, id]) : state.removedOverlaysIds.filter(_id => id !== _id);
-			const displayedOverlaysList = state.displayedOverlaysList.filter((listItem: IDisplayedOverlayListItem) => listItem.overlay.id !== action.payload.id);
-			return { ...state, removedOverlaysIds, displayedOverlaysList };
+			return { ...state, removedOverlaysIds };
 
 		case CoreActionTypes.RESET_REMOVED_OVERLAY_IDS:
 			return { ...state, removedOverlaysIds: [] };
@@ -128,9 +120,6 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_AUTO_SAVE:
 			return { ...state, autoSave: action.payload };
 
-		case CoreActionTypes.ADD_OVERLAY_TO_DISPLAYED_LIST:
-			return { ...state, displayedOverlaysList: [action.payload, ...state.displayedOverlaysList] };
-
 		default:
 			return state;
 	}
@@ -146,5 +135,4 @@ export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (ove
 export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectEnableCopyOriginalOverlayDataFlag = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
 export const selectAutoSave = createSelector(coreStateSelector, (core) => core.autoSave);
-export const selectDisplayedOverlaysList = createSelector(coreStateSelector, (core) => core.displayedOverlaysList);
 

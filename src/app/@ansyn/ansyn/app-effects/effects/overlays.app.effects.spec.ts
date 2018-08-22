@@ -48,11 +48,7 @@ import {
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
-import {
-	AddOverlayToDisplayedListAction,
-	SetLayoutAction,
-	SetLayoutSuccessAction
-} from '@ansyn/core/actions/core.actions';
+import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import {
@@ -365,9 +361,8 @@ describe('OverlaysAppEffects', () => {
 					mapId: '4444'
 				})
 			});
-			const expectedResults = cold('--(bc)--', {
+			const expectedResults = cold('--b--', {
 				b: new DisplayOverlayAction({ overlay: <any> firstOverlay, mapId: '4444' }),
-				c: new AddOverlayToDisplayedListAction({ overlay: <any> firstOverlay, mapId: '4444' })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -383,9 +378,8 @@ describe('OverlaysAppEffects', () => {
 				})
 			});
 
-			const expectedResults = cold('--(bc)--', {
+			const expectedResults = cold('--b--', {
 				b: new DisplayOverlayAction({ overlay: <any> lastOverlay, mapId: 'activeMapId' }),
-				c: new AddOverlayToDisplayedListAction({ overlay: <any> lastOverlay, mapId: 'activeMapId'})
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});

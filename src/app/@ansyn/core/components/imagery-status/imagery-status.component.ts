@@ -23,8 +23,6 @@ import {
 	AlertMsg,
 	coreStateSelector,
 	ICoreState,
-	IDisplayedOverlayListItem,
-	selectDisplayedOverlaysList,
 	selectEnableCopyOriginalOverlayDataFlag,
 	selectFavoriteOverlays,
 	selectPresetOverlays,
@@ -123,14 +121,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	@AutoSubscription
-	lastDisplayedOverlay$ = this.store$.select(selectDisplayedOverlaysList).pipe(
-		tap((displayedOverlayList: IDisplayedOverlayListItem[]) => {
-			const allOverlaysWithThisMapId = displayedOverlayList.filter((item) => item.mapId === this.mapId);
-			this.lastDisplayedOverlayFromList = allOverlaysWithThisMapId[1];
-		})
-	);
-
 	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
 	removedOverlaysIds = [];
@@ -141,11 +131,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isPreset: boolean;
 	presetsButtonText: string;
 	isRemoved: boolean;
-	lastDisplayedOverlayFromList: IDisplayedOverlayListItem;
 
 	@HostListener('window:keydown', ['$event'])
 	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.overlay && $event.which === 46 && !this.isRemoved) {
+		if (this.active && this.overlay && $event.which === 46 && !this.isRemoved) {
 			this.removeOverlay();
 		}
 	}
@@ -250,8 +239,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetRemovedOverlaysIdAction({
 			id: this.overlay.id,
 			value: !this.isRemoved,
-			mapId: this.mapId,
-			overlayToShow: this.lastDisplayedOverlayFromList
+			mapId: this.mapId
 		}));
 	}
 }

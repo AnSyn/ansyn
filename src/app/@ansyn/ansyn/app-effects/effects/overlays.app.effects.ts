@@ -19,6 +19,7 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	overlaysStateSelector,
+	selectdisplayOverlayHistory,
 	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
@@ -28,19 +29,20 @@ import {
 	SetPendingOverlaysAction,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
-	AddOverlayToDisplayedListAction,
+	BackToWorldView,
 	CoreActionTypes,
 	SetLayoutAction,
+	SetRemovedOverlaysIdAction,
 	SetToastMessageAction
 } from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import {
 	BaseMapSourceProvider,
 	IBaseMapSourceProviderConstructor
@@ -180,14 +182,41 @@ export class OverlaysAppEffects {
 	 * @action DisplayOverlayAction
 	 */
 	@Effect()
-	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
-		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
-		withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
-		mergeMap(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
+	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
+		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
+		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
+		.map(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return [new DisplayOverlayAction({ overlay, mapId }), new AddOverlayToDisplayedListAction({overlay, mapId})];
-		}));
+			return new DisplayOverlayAction({ overlay, mapId });
+		});
+
+	/**
+	 * @type Effect
+	 * @name onSetRemovedOverlaysIdAction$
+	 * @ofType SetRemovedOverlaysIdAction
+	 * @dependencies overlays
+	 * @filter
+	 * @action DisplayOverlayFromStoreAction | BackToWorldView
+	 */
+	@Effect()
+	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
+		ofType<SetRemovedOverlaysIdAction>(CoreActionTypes.SET_REMOVED_OVERLAY_ID),
+		filter(({ payload }) => payload.value),
+		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
+		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
+			return mapsList
+				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id))
+				.map((map) => {
+					const mapId = map.id;
+					const id = (displayOverlayHistory[mapId] || []).pop();
+					if (Boolean(id)) {
+						return new DisplayOverlayFromStoreAction({ mapId, id });
+					}
+					return new BackToWorldView({ mapId });
+				});
+		})
+	);
 
 	/**
 	 * @type Effect

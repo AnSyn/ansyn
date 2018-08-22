@@ -236,9 +236,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	removeOverlay() {
+		if (!this.isRemoved && this.isPreset) {
+			this.togglePreset();
+		}
+
 		this.store$.dispatch(new SetRemovedOverlaysIdAction({
 			id: this.overlay.id,
-			value: !this.isRemoved,
+			value: !this.isRemoved
 		}));
 	}
 }

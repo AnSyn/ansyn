@@ -44,7 +44,7 @@ export function HttpLoaderFactory(http: HttpClient, translationProviders: Transl
 	exports: [TranslateModule]
 })
 export class AnsynTranslationModule {
-	static forRoot(providers: Array<{ new(...args): TranslateLoader }>): ModuleWithProviders {
+	static addLoader(providers: Array<{ new(...args): TranslateLoader }>): ModuleWithProviders {
 		return {
 			ngModule: AnsynTranslationModule,
 			providers: [

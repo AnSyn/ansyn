@@ -32,7 +32,7 @@ import { DefaultTranslateLoader } from './translation/default-translate-loader';
 		FormsModule,
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
 		EffectsModule.forFeature([CoreEffects]),
-		AnsynTranslationModule.forRoot([DefaultTranslateLoader]),
+		AnsynTranslationModule.addLoader([DefaultTranslateLoader]),
 		AlertsModule
 	],
 	providers: [

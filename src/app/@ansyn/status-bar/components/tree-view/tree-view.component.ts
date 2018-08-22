@@ -51,7 +51,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 				private translate: TranslateService) {
 
 		this.dataFilters.forEach((f) => {
-			translate.get(f.text, {value: 'sns'}).subscribe((res: string) => {
+			translate.get(f.text).subscribe((res: string) => {
 				f.text = res;
 				this.dataInputFiltersItems.push(new TreeviewItem(f));
 			});
@@ -72,7 +72,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 					});
 					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
 						if (leaf.text) {
-							this.translate.get(leaf.text, {value: 'sns'}).subscribe((res: string) => {
+							this.translate.get(leaf.text).subscribe((res: string) => {
 								leaf.text = res;
 							});
 						}

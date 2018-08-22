@@ -259,9 +259,23 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				Object.entries(displayOverlayHistory).forEach(([key, value]) => {
 					displayOverlayHistory[key] = value.filter((id) => id !== action.payload.id);
 				});
-				return { ...state, displayOverlayHistory }
+				return { ...state, displayOverlayHistory };
 			}
 			return state;
+
+		case CoreActionTypes.SET_MAPS_DATA:
+			const { mapsList } = action.payload;
+			if (mapsList) {
+				const { displayOverlayHistory } = state;
+				Object.keys(displayOverlayHistory).forEach((key) => {
+					if (!mapsList.some((map) => map.id === key)) {
+						delete displayOverlayHistory[key];
+					}
+				});
+				return { ...state, displayOverlayHistory };
+			}
+			return state;
+
 		default :
 			return state;
 	}

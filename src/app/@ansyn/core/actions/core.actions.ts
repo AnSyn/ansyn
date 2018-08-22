@@ -3,6 +3,8 @@ import { type } from '../utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { ICaseMapState } from '../models/case.model';
+import { MapActionTypes } from '../../map-facade/actions/map.actions';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -28,7 +30,8 @@ export const CoreActionTypes = {
 	SET_REMOVED_OVERLAY_IDS: 'SET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAY_ID: 'SET_REMOVED_OVERLAY_ID',
 	RESET_REMOVED_OVERLAY_IDS: 'RESET_REMOVED_OVERLAY_IDS',
-	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY'
+	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY',
+	SET_MAPS_DATA: 'SET_MAPS_DATA'
 };
 
 export type CoreActions =
@@ -202,7 +205,7 @@ export class ResetRemovedOverlaysIdsAction implements Action {
 export class SetRemovedOverlaysIdAction implements Action {
 	type = CoreActionTypes.SET_REMOVED_OVERLAY_ID;
 
-	constructor(public payload: { id: string, value: boolean, mapId: string }) {
+	constructor(public payload: { id: string, value: boolean }) {
 
 	}
 }
@@ -219,5 +222,13 @@ export class SetAutoSave implements Action {
 	readonly type = CoreActionTypes.SET_AUTO_SAVE;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+
+export class SetMapsDataActionStore implements Action {
+	type = CoreActionTypes.SET_MAPS_DATA;
+
+	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
 	}
 }

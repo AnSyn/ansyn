@@ -239,7 +239,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetRemovedOverlaysIdAction({
 			id: this.overlay.id,
 			value: !this.isRemoved,
-			mapId: this.mapId
 		}));
 	}
 }

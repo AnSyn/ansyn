@@ -25,8 +25,7 @@ import { ICase } from '@ansyn/core/models/case.model';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
-	ActiveMapChangedAction,
-	SetMapsDataActionStore
+	ActiveMapChangedAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	casesFeatureKey,
@@ -42,7 +41,11 @@ import {
 	initialLayersState,
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { BackToWorldView, ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import {
+	BackToWorldView,
+	ClearActiveInteractionsAction,
+	SetMapsDataActionStore
+} from '@ansyn/core/actions/core.actions';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';

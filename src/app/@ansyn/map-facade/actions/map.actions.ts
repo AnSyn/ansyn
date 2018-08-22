@@ -23,9 +23,6 @@ export const MapActionTypes = {
 		HOVER_FEATURE: 'HOVER_FEATURE'
 	},
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
-	STORE: {
-		SET_MAPS_DATA: 'SET_MAPS_DATA'
-	},
 	VIEW: {
 		SET_IS_LOADING: 'SET_IS_LOADING',
 		SET_IS_VISIBLE: 'SET_IS_VISIBLE',
@@ -136,13 +133,6 @@ export class ContextMenuDisplayAction implements Action {
 	}
 }
 
-export class SetMapsDataActionStore implements Action {
-	type = MapActionTypes.STORE.SET_MAPS_DATA;
-
-	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
-	}
-}
-
 export class PinLocationModeTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_LOCATION_MODE;
 
@@ -226,7 +216,7 @@ export class SetIsVisibleAcion implements Action {
 	}
 }
 
-export class ClickOutsideMap implements Action  {
+export class ClickOutsideMap implements Action {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
 
 	constructor(public payload: any) {

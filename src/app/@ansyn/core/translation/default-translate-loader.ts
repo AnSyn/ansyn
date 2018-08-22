@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { ICoreConfig } from '../models/core.config.model';
 import { Inject, Injectable } from '@angular/core';
 import { CoreConfig } from '../models/core.config';
+import { get } from 'lodash';
 
 @Injectable()
 export class DefaultTranslateLoader implements TranslateLoader {
@@ -11,7 +12,7 @@ export class DefaultTranslateLoader implements TranslateLoader {
 	}
 
 	getTranslation(lang: string): Observable<any> {
-		return of(this.coreConfig.translation.default);
+		return of(get(this.coreConfig, 'translation.default'));
 	}
 
 }

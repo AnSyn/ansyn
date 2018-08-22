@@ -4,7 +4,6 @@ import { Action, Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetRemovedOverlaysVisibilityAction,
 	SetAutoSave,
@@ -12,7 +11,7 @@ import {
 	SetLayoutAction,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction
+	SetRemovedOverlaysIdsAction, SetMapsDataActionStore
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,

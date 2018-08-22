@@ -21,7 +21,6 @@ import {
 	MapsListChangedAction,
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
-	SetMapsDataActionStore,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -30,7 +29,7 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	RemoveAlertMsg,
-	SetLayoutSuccessAction
+	SetLayoutSuccessAction, SetMapsDataActionStore
 } from '@ansyn/core/actions/core.actions';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -264,7 +263,7 @@ export class MapEffects {
 	 */
 	@Effect()
 	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$
-		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
 		.map(({ payload }) => payload)
 		.filter(({ activeMapId }) => Boolean(activeMapId))
 		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
@@ -278,7 +277,7 @@ export class MapEffects {
 	 */
 	@Effect()
 	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$
-		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
 		.map(({ payload }) => payload)
 		.filter(({ mapsList }) => Boolean(mapsList))
 		.map(({ mapsList }) => new MapsListChangedAction(mapsList));

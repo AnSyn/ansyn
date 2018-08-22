@@ -134,7 +134,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:keydown', ['$event'])
 	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.overlay && $event.which === 46 && !this.isRemoved) {
+		if (this.active && this.overlay && $event.which === 46 && !this.isRemoved) {
 			this.removeOverlay();
 		}
 	}
@@ -236,6 +236,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	removeOverlay() {
-		this.store$.dispatch(new SetRemovedOverlaysIdAction({ id: this.overlay.id, value: !this.isRemoved }));
+		this.store$.dispatch(new SetRemovedOverlaysIdAction({
+			id: this.overlay.id,
+			value: !this.isRemoved,
+		}));
 	}
 }

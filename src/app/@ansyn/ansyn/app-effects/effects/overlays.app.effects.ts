@@ -1,4 +1,4 @@
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -15,24 +15,38 @@ import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
+	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
-	IMarkUpData,
 	overlaysStateSelector,
+	selectdisplayOverlayHistory,
 	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction, SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import {
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction,
+	SynchronizeMapsAction
+} from '@ansyn/map-facade/actions/map.actions';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { CoreActionTypes, SetLayoutAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import {
+	BackToWorldView,
+	CoreActionTypes,
+	SetLayoutAction,
+	SetRemovedOverlaysIdAction,
+	SetToastMessageAction
+} from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '@ansyn/imagery/model/base-map-source-provider';
+import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import {
+	BaseMapSourceProvider,
+	IBaseMapSourceProviderConstructor
+} from '@ansyn/imagery/model/base-map-source-provider';
 import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContextEntity } from '@ansyn/core/models/case.model';
@@ -176,6 +190,33 @@ export class OverlaysAppEffects {
 			const overlay = overlays.get(payload.id);
 			return new DisplayOverlayAction({ overlay, mapId });
 		});
+
+	/**
+	 * @type Effect
+	 * @name onSetRemovedOverlaysIdAction$
+	 * @ofType SetRemovedOverlaysIdAction
+	 * @dependencies overlays
+	 * @filter
+	 * @action DisplayOverlayFromStoreAction | BackToWorldView
+	 */
+	@Effect()
+	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
+		ofType<SetRemovedOverlaysIdAction>(CoreActionTypes.SET_REMOVED_OVERLAY_ID),
+		filter(({ payload }) => payload.value),
+		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
+		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
+			return mapsList
+				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id))
+				.map((map) => {
+					const mapId = map.id;
+					const id = (displayOverlayHistory[mapId] || []).pop();
+					if (Boolean(id)) {
+						return new DisplayOverlayFromStoreAction({ mapId, id });
+					}
+					return new BackToWorldView({ mapId });
+				});
+		})
+	);
 
 	/**
 	 * @type Effect

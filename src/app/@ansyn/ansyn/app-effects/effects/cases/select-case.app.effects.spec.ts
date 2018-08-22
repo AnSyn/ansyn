@@ -9,11 +9,10 @@ import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
-	SetLayoutAction,
+	SetLayoutAction, SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction

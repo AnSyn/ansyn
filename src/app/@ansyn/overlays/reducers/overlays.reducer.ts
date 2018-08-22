@@ -44,6 +44,7 @@ export interface IOverlaysState {
 	loaded: boolean;
 	loading: boolean;
 	overlays: Map<string, IOverlay>;
+	displayOverlayHistory: { [mapId: string]: string[] };
 	selectedOverlays: string[];
 	specialObjects: Map<string, IOverlaySpecialObject>;
 	filteredOverlays: string[];
@@ -64,6 +65,7 @@ export const overlaysInitialState: IOverlaysState = {
 	loading: true,
 	// "loading: true" prevents a "no overlays found" message, when starting the app with a context
 	overlays: new Map(),
+	displayOverlayHistory: {},
 	selectedOverlays: [],
 	specialObjects: new Map<string, IOverlaySpecialObject>(),
 	timeLineRange: { start: new Date(), end: new Date() },
@@ -88,9 +90,9 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case CoreActionTypes.SET_OVERLAYS_CRITERIA:
 			const options = (<SetOverlaysCriteriaAction> action).options;
 			if (options && options.noInitialSearch) {
-				return { ...state, loading: false }
+				return { ...state, loading: false, displayOverlayHistory: {} };
 			}
-			return state;
+			return { ...state, displayOverlayHistory: {} };
 		case OverlaysActionTypes.SELECT_OVERLAY:
 
 			const selected = state.selectedOverlays.slice();
@@ -240,6 +242,40 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				hoveredOverlay: action.payload
 			};
 
+		case OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS:
+			const { mapId, overlay } = action.payload;
+			const mapHistory = state.displayOverlayHistory[mapId] || [];
+			return {
+				...state,
+				displayOverlayHistory: {
+					...state.displayOverlayHistory,
+					[mapId]: [...mapHistory, overlay.id]
+				}
+			};
+
+		case CoreActionTypes.SET_REMOVED_OVERLAY_ID:
+			if (action.payload.value) {
+				const displayOverlayHistory = { ...state.displayOverlayHistory };
+				Object.entries(displayOverlayHistory).forEach(([key, value]) => {
+					displayOverlayHistory[key] = value.filter((id) => id !== action.payload.id);
+				});
+				return { ...state, displayOverlayHistory };
+			}
+			return state;
+
+		case CoreActionTypes.SET_MAPS_DATA:
+			const { mapsList } = action.payload;
+			if (mapsList) {
+				const { displayOverlayHistory } = state;
+				Object.keys(displayOverlayHistory).forEach((key) => {
+					if (!mapsList.some((map) => map.id === key)) {
+						delete displayOverlayHistory[key];
+					}
+				});
+				return { ...state, displayOverlayHistory };
+			}
+			return state;
+
 		default :
 			return state;
 	}
@@ -254,3 +290,4 @@ export const selectLoading = createSelector(overlaysStateSelector, (overlays: IO
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay => overlays.hoveredOverlay);
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
+export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);

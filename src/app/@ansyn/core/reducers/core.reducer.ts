@@ -135,3 +135,4 @@ export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (ove
 export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectEnableCopyOriginalOverlayDataFlag = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
 export const selectAutoSave = createSelector(coreStateSelector, (core) => core.autoSave);
+

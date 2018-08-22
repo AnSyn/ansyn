@@ -95,7 +95,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, ...action.payload };
 		}
 
-		case MapActionTypes.STORE.SET_MAPS_DATA:
+		case CoreActionTypes.SET_MAPS_DATA:
 			return { ...state, ...action.payload };
 
 		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:

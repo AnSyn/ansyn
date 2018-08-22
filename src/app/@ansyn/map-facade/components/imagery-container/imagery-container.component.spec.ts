@@ -9,6 +9,7 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reduce
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -24,6 +25,7 @@ describe('ImageryContainerComponent', () => {
 			],
 			providers: [
 				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: {} },
 				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig> { mapSearch: {} } }
 			],
 			declarations: [

@@ -88,7 +88,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this._mapLayers = [...layers];
 		const controls = [
-			// new ScaleLine(),
+			new ScaleLine(),
 			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',

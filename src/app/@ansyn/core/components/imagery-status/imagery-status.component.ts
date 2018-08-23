@@ -208,7 +208,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	togglePreset() {
 		const overlay = this.overlay;
 		const { id } = overlay;
-		const value = !this.isFavorite;
+		const value = !this.isPreset;
 		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
 	}
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -16,18 +16,16 @@ import {
 	DisplayOverlayFromStoreAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
-	SetMarkUp
+	OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
-import { coreStateSelector, selectFavoriteOverlays } from '@ansyn/core/reducers/core.reducer';
-import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CoreAppEffects {
@@ -48,44 +46,6 @@ export class CoreAppEffects {
 		.ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
 		.filter(({ clearExistingOverlays }) => clearExistingOverlays)
 		.map(() => new SetPresetOverlaysAction([]));
-
-	/**
-	 * @type Effect
-	 * @name setFavoriteOverlaysUpdateCase$
-	 * @ofType SetFavoriteOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
-	@Effect()
-	setFavoriteOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
-		select(selectFavoriteOverlays),
-		map((favoriteOverlays: IOverlay[]) => favoriteOverlays.map(overlay => overlay.id)),
-		map((overlayIds) => new SetMarkUp({
-				classToSet: MarkUpClass.favorites,
-				dataToSet: {
-					overlaysIds: overlayIds
-				}
-			}
-		))
-	);
-
-
-	/**
-	 * @type Effect
-	 * @name setPresetOverlaysUpdateCase$
-	 * @ofType SetPresetOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
-	@Effect()
-	setPresetOverlaysUpdateCase$: Observable<any> = this.actions$
-		.ofType<SetPresetOverlaysAction>(CoreActionTypes.SET_PRESET_OVERLAYS)
-		.map(({ payload }: SetPresetOverlaysAction) => payload.map(overlay => overlay.id))
-		.map((overlayIds) => new SetMarkUp({
-				classToSet: MarkUpClass.presets,
-				dataToSet: {
-					overlaysIds: overlayIds
-				}
-			}
-		));
 
 	@Effect({ dispatch: false })
 	actionsLogger$ = this.actions$

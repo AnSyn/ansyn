@@ -5,14 +5,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { cold, hot } from 'jasmine-marbles';
-import { GoNextPresetOverlay, SetPresetOverlaysAction } from '@ansyn/core/actions/core.actions';
+import { GoNextPresetOverlay } from '@ansyn/core/actions/core.actions';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { ICase } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { DisplayOverlayAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 
 function mockOverlay(id: string): IOverlay {
 	const overlay = <IOverlay> {};
@@ -66,23 +64,6 @@ describe('CoreAppEffects', () => {
 		expect(coreAppEffects).toBeDefined();
 	});
 
-
-	it('setPresetOverlaysUpdateCase$ should update selected case and overlay markup', () => {
-		casesState.selectedCase = <ICase> { state: { presetOverlays: overlays1to3 } };
-		const markupsResult = {
-			classToSet: MarkUpClass.presets,
-			dataToSet: {
-				overlaysIds: overlays1to3.map(overlay => overlay.id)
-			}
-		};
-		actions = hot('--a--', { a: new SetPresetOverlaysAction(overlays1to3) });
-
-		const expectedResult = cold('--b--', {
-			b: new SetMarkUp(markupsResult)
-		});
-
-		expect(coreAppEffects.setPresetOverlaysUpdateCase$).toBeObservable(expectedResult);
-	});
 
 	describe('onNextPresetOverlay$ should return an action which displays the next preset overlay', () => {
 		beforeEach(() => {

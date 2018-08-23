@@ -25,8 +25,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	MapActionTypes,
-	PinLocationModeTriggerAction,
-	SetMapsDataActionStore
+	PinLocationModeTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
@@ -35,7 +34,11 @@ import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/cor
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import {
+	ClearActiveInteractionsAction,
+	CoreActionTypes,
+	SetMapsDataActionStore
+} from '@ansyn/core/actions/core.actions';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';

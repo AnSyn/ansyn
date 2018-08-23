@@ -21,7 +21,7 @@
 .help-slide {
 	box-sizing: border-box;
 	height: @ansyn-help-slide-height;
-	padding: @ansyn-help-slide-padding-top 1vh 0 1vh;
+	padding: calc(~"(100vh - @{ansyn-help-footer-height}) * 0.022") 1vh 0 1vh;
 	display: flex;
 	justify-content: stretch;
 	flex-direction: column;
@@ -37,7 +37,7 @@
 
 	.header2 {
 		font-size: @ansyn-help-font-size-head2;
-		margin: @ansyn-help-header-vertical-margin 0;
+		margin: calc(~"(100vh - @{ansyn-help-footer-height}) * 0.031") 0;
 	}
 
 	img {

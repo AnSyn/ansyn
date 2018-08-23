@@ -21,7 +21,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
-			controls: [new ScaleLine()]
+			controls: [/*new ScaleLine()*/]
 		});
 		this.setMainLayer(layers[0], position);
 		return Observable.of(true);

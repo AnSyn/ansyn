@@ -14,8 +14,7 @@ import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.re
 import {
 	ImageryCreatedAction,
 	MapActionTypes,
-	SetIsLoadingAcion,
-	SetMapsDataActionStore
+	SetIsLoadingAcion
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
@@ -31,7 +30,7 @@ import {
 	AddAlertMsg,
 	BackToWorldView,
 	CoreActionTypes,
-	RemoveAlertMsg,
+	RemoveAlertMsg, SetMapsDataActionStore,
 	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
@@ -215,7 +214,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, CoreActionTypes.SET_MAPS_DATA)
 		.pipe(
 			withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
 			mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {

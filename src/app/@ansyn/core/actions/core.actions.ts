@@ -3,6 +3,7 @@ import { type } from '../utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { ICaseMapState } from '../models/case.model';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -28,7 +29,8 @@ export const CoreActionTypes = {
 	SET_REMOVED_OVERLAY_IDS: 'SET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAY_ID: 'SET_REMOVED_OVERLAY_ID',
 	RESET_REMOVED_OVERLAY_IDS: 'RESET_REMOVED_OVERLAY_IDS',
-	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY'
+	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY',
+	SET_MAPS_DATA: 'SET_MAPS_DATA'
 };
 
 export type CoreActions =
@@ -82,14 +84,14 @@ export class ToggleMapLayersAction implements Action {
 export class ToggleFavoriteAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload: IOverlay) {
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
 	}
 }
 
 export class TogglePresetOverlayAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_PRESET;
 
-	constructor(public payload: IOverlay) {
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
 	}
 }
 
@@ -219,5 +221,13 @@ export class SetAutoSave implements Action {
 	readonly type = CoreActionTypes.SET_AUTO_SAVE;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+
+export class SetMapsDataActionStore implements Action {
+	type = CoreActionTypes.SET_MAPS_DATA;
+
+	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
 	}
 }

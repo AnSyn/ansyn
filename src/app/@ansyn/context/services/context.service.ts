@@ -19,7 +19,7 @@ export class ContextService {
 	loadContexts(): Observable<any> {
 		return this.storageService.getPage<any>(this.config.schema, 0, 100)
 			.pipe(
-				catchError(err => this.errorHandlerService.httpErrorHandle(err)),
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'failed to load contexts')),
 				rxPreventCrash()
 			);
 	}

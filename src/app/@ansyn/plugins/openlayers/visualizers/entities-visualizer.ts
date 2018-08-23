@@ -22,6 +22,7 @@ import {
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import ol_color from 'ol/color';
+
 export interface IFeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
@@ -151,27 +152,20 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 
 		if (styleSettings.label) {
-			const color = this.colorWithAlpha(styleSettings.fill, 1);
-			const fill = new Fill({ color });
+			const fill = new Fill({ color: styleSettings.label.fill });
+			const stroke = new Stroke({
+				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
+				width: styleSettings.label.stroke ? 4 : 0
+			});
 
 			firstStyle.text = new Text({
 				font: styleSettings.label.font,
-				// maxAngle: (<any>styleSettings.label).maxAngle ? (<any>styleSettings.label).maxAngle : undefined,
 				offsetX: styleSettings.label.offsetX,
 				offsetY: styleSettings.label.offsetY,
-				// overflow: styleSettings.label.overflow,
-				// placement: styleSettings.label.placement,
-				// scale: styleSettings.label.scale,
-				// rotateWithView: styleSettings.label.rotateWithView,
-				// rotation: styleSettings.label.rotation,
+				overflow: styleSettings.label.overflow,
 				text: <any>styleSettings.label.text,
-				// textAlign: styleSettings.label.textAlign,
-				// textBaseline: styleSettings.label.textBaseline,
-				fill: fill
-				// stroke: styleSettings.label.stroke,
-				// backgroundFill: styleSettings.label.backgroundFill,
-				// backgroundStroke: styleSettings.label.backgroundStroke,
-				// padding: styleSettings.label.padding
+				fill,
+				stroke
 			});
 		}
 

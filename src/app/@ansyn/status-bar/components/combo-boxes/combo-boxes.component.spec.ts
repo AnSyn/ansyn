@@ -7,7 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-timepicker.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { ClickOutsideDirective } from '@ansyn/status-bar/directives/click-outside.directive';
+import { ClickOutsideDirective } from '@ansyn/core/directives/click-outside.directive';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';

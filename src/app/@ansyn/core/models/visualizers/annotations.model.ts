@@ -3,14 +3,15 @@ export interface IAnnotationBoundingRect {
 	left: number;
 	width: number;
 	height: number;
-	rotation: number;
 }
 
 export interface IAnnotationsSelectionEventData {
+	label: string
 	featureId: string;
 	mapId: string;
 	boundingRect: IAnnotationBoundingRect;
 	interactionType?: AnnotationInteraction;
+	showLabel?: boolean;
 	showMeasures?: boolean;
 }
 

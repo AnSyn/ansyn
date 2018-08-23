@@ -11,6 +11,8 @@ import OlStyle from 'ol/style/style';
 import OlFill from 'ol/style/fill';
 import OlText from 'ol/style/text';
 import OlStroke from 'ol/style/stroke';
+import Stroke from 'ol/style/stroke';
+
 
 import condition from 'ol/events/condition';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
@@ -22,7 +24,6 @@ import {
 	IAnnotationBoundingRect,
 	IAnnotationsSelectionEventData
 } from '@ansyn/core/models/visualizers/annotations.model';
-import { toDegrees } from '@ansyn/core/utils/math';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationSelectAction } from '@ansyn/map-facade/actions/map.actions';
@@ -171,7 +172,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			const currGeometry = currFeature.getGeometry();
 			const currArea = currGeometry.getArea ? currGeometry.getArea() : 0;
 			if (currArea < prevResult.area) {
-				return { feature: currFeature, area: currArea }
+				return { feature: currFeature, area: currArea };
 			} else {
 				return prevResult;
 			}
@@ -180,10 +181,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
-			id: feature.properties.id,
 			featureJson: feature,
+			id: feature.properties.id,
 			style: feature.properties.style,
-			showMeasures: feature.properties.showMeasures
+			showMeasures: feature.properties.showMeasures,
+			showLabel: feature.properties.showLabel,
+			label: feature.properties.label
 		}));
 	}
 
@@ -197,7 +200,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {
 				const oldEntity = this.idToEntity.get(entity.id);
-				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures || oldEntity.originalEntity.label !== entity.label || oldEntity.originalEntity.showLabel !== entity.showLabel;
 			});
 
 		return this.addOrUpdateEntities(entitiesToAdd);
@@ -222,7 +225,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				fill: `white`,
 				'fill-opacity': AnnotationsVisualizer.fillAlpha,
 				'marker-size': MarkerSize.medium,
-				'marker-color': `white`
+				'marker-color': `white`,
+				label: {
+					overflow: true,
+					font: '27px Calibri,sans-serif',
+					stroke: '#000',
+					fill: 'white',
+					text: (feature: OlFeature) => {
+						const properties = feature.getProperties();
+						const { showLabel, label } = properties;
+						return showLabel ? label : '';
+					}
+				}
 			}
 		});
 
@@ -233,7 +247,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					label: {
 						font: '12px Calibri,sans-serif',
 						fill: '#fff',
-						stroke: '#000',
 						'stroke-width': 3,
 						text: (feature) => feature.getId() || ''
 					}
@@ -267,13 +280,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures } = this.getEntity(selectedFeature);
+		const { id, showMeasures, label, showLabel } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
+			label: label,
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
 			interactionType: AnnotationInteraction.click,
-			showMeasures
+			showMeasures,
+			showLabel
 		};
 		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
@@ -304,38 +319,67 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		let selectedFeature, boundingRect, id;
+		let selectedFeature, boundingRect, id, label, showLabel;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
 			id = this.getEntity(selectedFeature).id;
+			label = this.getEntity(selectedFeature).label;
+			showLabel = this.getEntity(selectedFeature).showLabel;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
+			label: label,
 			mapId: this.mapId,
 			featureId: id,
 			boundingRect,
-			interactionType: AnnotationInteraction.hover
+			interactionType: AnnotationInteraction.hover,
+			showLabel: showLabel
 		};
 		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
 
 	getFeatureBoundingRect(selectedFeature): IAnnotationBoundingRect {
-		const rotation = toDegrees(this.mapRotation);
-		const extent = selectedFeature.getGeometry().getExtent();
-		// [bottomLeft, bottomRight, topRight, topLeft]
-		const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = this.getExtentAsPixels(extent);
-		const width = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y3 - y4, 2));
-		const height = Math.sqrt(Math.pow(y4 - y1, 2) + Math.pow(x4 - x1, 2));
-		return { left: x4, top: y4, width, height, rotation };
+		const { geometry }: any = new OLGeoJSON().writeFeatureObject(selectedFeature);
+		const { maxX, maxY, minX, minY } = this.findMinMax(geometry.coordinates);
+		const width = maxX - minX;
+		const left = minX;
+		const height = maxY - minY;
+		const top = maxY - height;
+		return { left, top, width, height };
 	}
 
-	getExtentAsPixels([x1, y1, x2, y2]) {
-		const bottomLeft = this.iMap.mapObject.getPixelFromCoordinate([x1, y1]);
-		const bottomRight = this.iMap.mapObject.getPixelFromCoordinate([x2, y1]);
-		const topRight = this.iMap.mapObject.getPixelFromCoordinate([x2, y2]);
-		const topLeft = this.iMap.mapObject.getPixelFromCoordinate([x1, y2]);
-		return [bottomLeft, bottomRight, topRight, topLeft];
+	private isNumArray([first, second]) {
+		return typeof first === 'number' && typeof second === 'number';
+	}
+
+	private findMinMaxHelper(array, prev = { maxX: -Infinity, maxY: -Infinity, minX: Infinity, minY: Infinity }) {
+		const [x, y] = this.iMap.mapObject.getPixelFromCoordinate(array);
+		return {
+			maxX: Math.max(x, prev.maxX),
+			maxY: Math.max(y, prev.maxY),
+			minX: Math.min(x, prev.minX),
+			minY: Math.min(y, prev.minY)
+		};
+	}
+
+	findMinMax(array) {
+		if (this.isNumArray(array)) {
+			return this.findMinMaxHelper(array);
+		}
+		return array.reduce((prev = { maxX: -Infinity, maxY: -Infinity, minX: Infinity, minY: Infinity }, item) => {
+			if (this.isNumArray(item)) {
+				return this.findMinMaxHelper(item, prev);
+			}
+			const { maxX, maxY, minX, minY } = this.findMinMax(item);
+			return {
+				maxX: Math.max(maxX, prev.maxX),
+				maxY: Math.max(maxY, prev.maxY),
+				minX: Math.min(minX, prev.minX),
+				minY: Math.min(minY, prev.minY)
+			};
+
+		}, undefined);
 	}
 
 	onDrawEndEvent({ feature }) {
@@ -355,6 +399,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
+			showLabel: false,
+			label: '',
 			mode
 		});
 
@@ -370,9 +416,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					if (overlay) {
 						geoJsonFeature.properties = {
 							...geoJsonFeature.properties,
-							overlayId: overlay.id,
-							pixels: new OLGeoJSON().writeFeatureObject(feature),
-							...this.projectionService.getProjectionProperties(this.communicator, data)
+							...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay)
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
@@ -453,7 +497,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const style: OlStyle = super.featureStyle(feature, state);
 		const entity = this.getEntity(feature);
 		if (entity && entity.showMeasures) {
-			return [style, ...this.getMeasuresAsStyles(feature)]
+			return [style, ...this.getMeasuresAsStyles(feature)];
 		} else {
 			return style;
 		}
@@ -512,11 +556,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					if (currCoord[0] > prevResult.right[0]) {
 						return { left: prevResult.left, right: currCoord };
 					} else if (currCoord[0] < prevResult.left[0]) {
-							return {left: currCoord, right: prevResult.right};
+						return { left: currCoord, right: prevResult.right };
 					} else {
 						return prevResult;
 					}
-				}, {left: [Infinity, 0], right: [-Infinity, 0]});
+				}, { left: [Infinity, 0], right: [-Infinity, 0] });
 				const line: OlLineString = new OlLineString([leftright.left, leftright.right]);
 				moreStyles.push(new OlStyle({
 					geometry: line,
@@ -531,7 +575,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}));
 				break;
 		}
-		return moreStyles
+		return moreStyles;
 	}
 
 	/**

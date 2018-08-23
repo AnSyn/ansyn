@@ -22,7 +22,6 @@ export class AnsynComponent {
 		.map((selectSelected: ICase) => selectSelected ? selectSelected.name : 'Default Case');
 
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned)
-		.skip(1)
 		.map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned');
 
 	activeMap$: Observable<ICaseMapState> = this.store$.select(mapStateSelector)

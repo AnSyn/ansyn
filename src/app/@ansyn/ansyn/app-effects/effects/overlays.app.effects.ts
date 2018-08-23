@@ -36,7 +36,8 @@ import {
 	CoreActionTypes,
 	SetLayoutAction,
 	SetRemovedOverlaysIdAction,
-	SetToastMessageAction
+	SetToastMessageAction,
+	ToggleFavoriteAction, TogglePresetOverlayAction
 } from '@ansyn/core/actions/core.actions';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -205,7 +206,11 @@ export class OverlaysAppEffects {
 		filter(({ payload }) => payload.value),
 		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
 		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
-			return mapsList
+			let actions = [
+				new ToggleFavoriteAction({ value: false, id: payload.id }),
+				new TogglePresetOverlayAction({ value: false, id: payload.id })
+			];
+			const mapActions = mapsList
 				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id))
 				.map((map) => {
 					const mapId = map.id;
@@ -215,6 +220,7 @@ export class OverlaysAppEffects {
 					}
 					return new BackToWorldView({ mapId });
 				});
+			return [...actions, ...mapActions];
 		})
 	);
 

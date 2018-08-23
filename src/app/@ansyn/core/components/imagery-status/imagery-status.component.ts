@@ -199,11 +199,17 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleFavorite() {
-		this.store$.dispatch(new ToggleFavoriteAction(this.overlay));
+		const overlay = this.overlay;
+		const { id } = overlay;
+		const value = !this.isFavorite;
+		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
 	}
 
 	togglePreset() {
-		this.store$.dispatch(new TogglePresetOverlayAction(this.overlay));
+		const overlay = this.overlay;
+		const { id } = overlay;
+		const value = !this.isFavorite;
+		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
 	}
 
 	updateFavoriteStatus() {
@@ -236,13 +242,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	removeOverlay() {
-		if (!this.isRemoved && this.isPreset) {
-			this.togglePreset();
-		}
-
-		this.store$.dispatch(new SetRemovedOverlaysIdAction({
-			id: this.overlay.id,
-			value: !this.isRemoved
-		}));
+		this.store$.dispatch(new SetRemovedOverlaysIdAction({ id: this.overlay.id, value: !this.isRemoved }));
 	}
 }

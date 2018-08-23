@@ -4,7 +4,6 @@ import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { ICaseMapState } from '../models/case.model';
-import { MapActionTypes } from '../../map-facade/actions/map.actions';
 
 export const CoreActionTypes = {
 	TOGGLE_MAP_LAYERS: type('[Core] TOGGLE_MAP_LAYERS'),
@@ -85,14 +84,14 @@ export class ToggleMapLayersAction implements Action {
 export class ToggleFavoriteAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload: IOverlay) {
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
 	}
 }
 
 export class TogglePresetOverlayAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_PRESET;
 
-	constructor(public payload: IOverlay) {
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
 	}
 }
 

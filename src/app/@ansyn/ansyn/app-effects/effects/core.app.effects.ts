@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
@@ -8,11 +8,8 @@ import {
 	CoreActionTypes,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
-	SetFavoriteOverlaysAction,
 	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
+	SetPresetOverlaysAction
 } from '@ansyn/core/actions/core.actions';
 import {
 	DisplayOverlayAction,
@@ -22,7 +19,7 @@ import {
 	OverlaysActionTypes,
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { coreStateSelector, selectFavoriteOverlays } from '@ansyn/core/reducers/core.reducer';
 import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '@ansyn/core/services/logger.service';
@@ -30,55 +27,10 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CoreAppEffects {
-	/**
-	 * @type Effect
-	 * @name onFavorite$
-	 * @ofType ToggleFavoriteAction
-	 * @dependencies cases
-	 * @action SetFavoriteOverlaysAction
-	 */
-	@Effect()
-	onFavorite$: Observable<Action> = this.actions$
-		.ofType<ToggleFavoriteAction>(CoreActionTypes.TOGGLE_OVERLAY_FAVORITE)
-		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([action, { favoriteOverlays }]: [ToggleFavoriteAction, ICoreState]) => {
-			const updatedFavoriteOverlays = [...favoriteOverlays];
-			const toggledFavorite = updatedFavoriteOverlays.find(o => o.id === action.payload.id);
-			const indexOfPayload = updatedFavoriteOverlays.indexOf(toggledFavorite);
-			if (indexOfPayload === -1) {
-				updatedFavoriteOverlays.push(action.payload);
-			} else {
-				updatedFavoriteOverlays.splice(indexOfPayload, 1);
-			}
-			return new SetFavoriteOverlaysAction(updatedFavoriteOverlays);
-		});
-
-	/**
-	 * @type Effect
-	 * @name onPreset$
-	 * @ofType TogglePresetOverlayAction
-	 * @dependencies cases
-	 * @action SetPresetOverlaysAction
-	 */
-	@Effect()
-	onPreset$: Observable<Action> = this.actions$
-		.ofType<TogglePresetOverlayAction>(CoreActionTypes.TOGGLE_OVERLAY_PRESET)
-		.withLatestFrom(this.store$.select(coreStateSelector))
-		.map(([action, { presetOverlays }]: [TogglePresetOverlayAction, ICoreState]) => {
-			const updatedPresetOverlays = [...presetOverlays];
-			const toggledPreset = updatedPresetOverlays.find(o => o.id === action.payload.id);
-			const indexOfPayload = updatedPresetOverlays.indexOf(toggledPreset);
-			if (indexOfPayload === -1) {
-				updatedPresetOverlays.push(action.payload);
-			} else {
-				updatedPresetOverlays.splice(indexOfPayload, 1);
-			}
-			return new SetPresetOverlaysAction(updatedPresetOverlays);
-		});
-
 	/**
 	 * @type Effect
 	 * @name clearPresets$
@@ -104,16 +56,18 @@ export class CoreAppEffects {
 	 * @action OverlaysMarkupAction
 	 */
 	@Effect()
-	setFavoriteOverlaysUpdateCase$: Observable<any> = this.actions$
-		.ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS)
-		.map(({ payload }: SetFavoriteOverlaysAction) => payload.map(overlay => overlay.id))
-		.map((overlayIds) => new SetMarkUp({
+	setFavoriteOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
+		select(selectFavoriteOverlays),
+		map((favoriteOverlays: IOverlay[]) => favoriteOverlays.map(overlay => overlay.id)),
+		map((overlayIds) => new SetMarkUp({
 				classToSet: MarkUpClass.favorites,
 				dataToSet: {
 					overlaysIds: overlayIds
 				}
 			}
-		));
+		))
+	);
+
 
 	/**
 	 * @type Effect

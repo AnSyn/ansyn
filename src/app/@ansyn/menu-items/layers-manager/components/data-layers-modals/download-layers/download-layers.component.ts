@@ -6,6 +6,7 @@ import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
 import { CloseLayersModal } from '../../../actions/layers.actions';
+import { UUID } from 'angular2-uuid';
 
 @Component({
 	selector: 'ansyn-download-layers',
@@ -20,6 +21,7 @@ export class DownloadLayersComponent {
 
 	downloadGeojson() {
 		const annotationsLayer = cloneDeep(this.layer.data);
+		this.generateFeaturesIds(annotationsLayer);
 		const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/geo+json' });
 		saveAs(blob, `${this.layer.name}.geojson`);
 		this.store.dispatch(new CloseLayersModal());
@@ -27,10 +29,19 @@ export class DownloadLayersComponent {
 
 	downloadKml() {
 		const annotationsLayer = cloneDeep(this.layer.data);
+		this.generateFeaturesIds(annotationsLayer);
 		this.visualizerToSimpleStyle(annotationsLayer);
 		const blob = new Blob([tokml(annotationsLayer, { simplestyle: true })], { type: 'application/vnd.google-earth.kml+xml' });
 		saveAs(blob, `${this.layer.name}.kml`);
 		this.store.dispatch(new CloseLayersModal());
+	}
+
+	generateFeaturesIds(annotationsLayer): void {
+		/* reference */
+		annotationsLayer.features.forEach((feature) => {
+			feature.properties = { ...feature.properties, id: UUID.UUID() };
+		});
+
 	}
 
 	visualizerToSimpleStyle(annotationsLayer): void {

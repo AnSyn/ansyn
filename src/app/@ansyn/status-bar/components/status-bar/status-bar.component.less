@@ -100,3 +100,15 @@
 }
 
 .screens(@screens-list);
+
+
+@media screen and (max-width: 1600px) {
+	:host {
+		/deep/ .buttons button.back-to-world-view {
+			font-size: 0;
+			i {
+				font-size: 13.33px;
+			}
+		}
+	}
+}

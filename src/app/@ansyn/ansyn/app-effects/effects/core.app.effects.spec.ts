@@ -5,20 +5,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { cold, hot } from 'jasmine-marbles';
-import {
-	GoNextPresetOverlay,
-	SetFavoriteOverlaysAction,
-	SetPresetOverlaysAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
-} from '@ansyn/core/actions/core.actions';
+import { GoNextPresetOverlay } from '@ansyn/core/actions/core.actions';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { ICase } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { DisplayOverlayAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { MarkUpClass } from '@ansyn/overlays/reducers/overlays.reducer';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 
 function mockOverlay(id: string): IOverlay {
 	const overlay = <IOverlay> {};
@@ -72,76 +64,6 @@ describe('CoreAppEffects', () => {
 		expect(coreAppEffects).toBeDefined();
 	});
 
-	describe('onFavorite$ should toggle favorite id and update favoriteOverlays value', () => {
-		it('not exist in favorites ', () => {
-			const favorite = overlays1to4[3];
-			coreState.favoriteOverlays = overlays1to3;
-			actions = hot('--a--', { a: new ToggleFavoriteAction(favorite) });
-			const expectedResult = cold('--b--', { b: new SetFavoriteOverlaysAction(overlays1to4) });
-			expect(coreAppEffects.onFavorite$).toBeObservable(expectedResult);
-		});
-
-		it('exist in favorites ', () => {
-			const favorite = overlays1to4[3];
-			coreState.favoriteOverlays = overlays1to4;
-			actions = hot('--a--', { a: new ToggleFavoriteAction(favorite) });
-			const expectedResult = cold('--b--', { b: new SetFavoriteOverlaysAction(overlays1to3) });
-			expect(coreAppEffects.onFavorite$).toBeObservable(expectedResult);
-		});
-	});
-
-	describe('onPreset$ should toggle preset id and update presetOverlays value', () => {
-		it('not exist in presets ', () => {
-			const preset = overlays1to4[3];
-			coreState.presetOverlays = overlays1to3;
-			actions = hot('--a--', { a: new TogglePresetOverlayAction(preset) });
-			const expectedResult = cold('--b--', { b: new SetPresetOverlaysAction(overlays1to4) });
-			expect(coreAppEffects.onPreset$).toBeObservable(expectedResult);
-		});
-
-		it('exist in presets ', () => {
-			const preset = overlays1to4[3];
-			coreState.presetOverlays = overlays1to4;
-			actions = hot('--a--', { a: new TogglePresetOverlayAction(preset) });
-			const expectedResult = cold('--b--', { b: new SetPresetOverlaysAction(overlays1to3) });
-			expect(coreAppEffects.onPreset$).toBeObservable(expectedResult);
-		});
-	});
-
-	it('setFavoriteOverlaysUpdateCase$ should update selected case and overlay markup', () => {
-		casesState.selectedCase = <ICase> { state: { favoriteOverlays: overlays1to3 } };
-		const markupsResult = {
-			classToSet: MarkUpClass.favorites,
-			dataToSet: {
-				overlaysIds: overlays1to3.map(overlay => overlay.id)
-			}
-		};
-		actions = hot('--a--', { a: new SetFavoriteOverlaysAction(overlays1to3) });
-
-		const expectedResult = cold('--b--', {
-			b: new SetMarkUp(markupsResult)
-		});
-
-		expect(coreAppEffects.setFavoriteOverlaysUpdateCase$).toBeObservable(expectedResult);
-	});
-
-
-	it('setPresetOverlaysUpdateCase$ should update selected case and overlay markup', () => {
-		casesState.selectedCase = <ICase> { state: { presetOverlays: overlays1to3 } };
-		const markupsResult = {
-			classToSet: MarkUpClass.presets,
-			dataToSet: {
-				overlaysIds: overlays1to3.map(overlay => overlay.id)
-			}
-		};
-		actions = hot('--a--', { a: new SetPresetOverlaysAction(overlays1to3) });
-
-		const expectedResult = cold('--b--', {
-			b: new SetMarkUp(markupsResult)
-		});
-
-		expect(coreAppEffects.setPresetOverlaysUpdateCase$).toBeObservable(expectedResult);
-	});
 
 	describe('onNextPresetOverlay$ should return an action which displays the next preset overlay', () => {
 		beforeEach(() => {
@@ -184,4 +106,5 @@ describe('CoreAppEffects', () => {
 		});
 	});
 
-});
+})
+;

@@ -66,6 +66,18 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA:
 			return { ...state, enableCopyOriginalOverlayData: (action as EnableCopyOriginalOverlayDataAction).payload };
 
+		case CoreActionTypes.TOGGLE_OVERLAY_FAVORITE: {
+			const { overlay, id, value } = action.payload;
+			const fo = [...state.favoriteOverlays];
+			return { ...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id) };
+		}
+
+		case CoreActionTypes.TOGGLE_OVERLAY_PRESET: {
+			const { overlay, id, value } = action.payload;
+			const po = [...state.presetOverlays];
+			return { ...state, presetOverlays: value ? uniq([...po, overlay]) : po.filter((o) => o.id !== id) };
+		}
+
 		case CoreActionTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
 

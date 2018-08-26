@@ -17,7 +17,7 @@
 
 	<form class="annotation-label-edit" (ngSubmit)="updateLabel()" *ngIf="clickMenuProps.showLabel">
 		<input class="label-input" type="text" placeholder="{{clickMenuProps.label}}" [(ngModel)]="clickMenuProps.label"  name="EditLabel">
-		<i class="icon-edit"></i>
+		<i (click)="updateLabel()" class="icon-edit"></i>
 	</form>
 
 </div>

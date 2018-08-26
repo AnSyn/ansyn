@@ -3,10 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
-import {
-	AnnotationSetProperties,
-	SetAnnotationMode
-} from '../../actions/tools.actions';
+import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
 import { ColorPickerComponent } from '../color-picker/color-picker.component';
 
 describe('AnnotationsControlComponent', () => {
@@ -67,7 +64,7 @@ describe('AnnotationsControlComponent', () => {
 	it('select line width', () => {
 		const strokeWidth = 5;
 		component.selectLineWidth(strokeWidth);
-		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			'stroke-width': strokeWidth
 		}));
 	});
@@ -75,7 +72,7 @@ describe('AnnotationsControlComponent', () => {
 	it('change stroke color', () => {
 		const strokeColor = 'white';
 		component.changeStrokeColor(strokeColor);
-		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			'stroke': strokeColor
 		}));
 	});
@@ -83,9 +80,9 @@ describe('AnnotationsControlComponent', () => {
 	it('change fill color', () => {
 		const fill = 'black';
 		component.changeFillColor(fill);
-		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			fill,
-			"marker-color": fill
+			'marker-color': fill
 		}));
 	});
 

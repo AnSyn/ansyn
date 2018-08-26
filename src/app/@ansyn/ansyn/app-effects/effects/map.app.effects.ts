@@ -317,7 +317,7 @@ export class MapAppEffects {
 		// remove prev layers
 		const mapIdsToDelete = [];
 		this.displayedItems.forEach(( value: Date, key: string) => {
-			const isTimePassed = (currentTime.getTime() - this.displayedItems.get(action.payload.mapId).getTime()) > this.config.displayDebounceTime;
+			const isTimePassed = (currentTime.getTime() - (this.displayedItems.get(action.payload.mapId) || currentTime).getTime()) > this.config.displayDebounceTime;
 			if (isTimePassed) {
 				mapIdsToDelete.push(key);
 			}

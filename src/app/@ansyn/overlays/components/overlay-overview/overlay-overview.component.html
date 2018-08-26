@@ -1,10 +1,14 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
 	<main>
-		<img [src]="overlay?.thumbnailUrl || ''" (load)="finishedLoadingImage()" [class.loading]="loading">
+		<img [src]="imageSrc"
+			 (error)="imageSrc = errorSrc"
+			 (load)="finishedLoadingImage()"
+			 [class.loading]="loading">
+		<p class="error-text" *ngIf="imageSrc === errorSrc">Preview is not available</p>
 		<ansyn-loader [show]="loading"></ansyn-loader>
 	</main>
 	<footer>
-		<div dir="rtl">{{overlay?.sensorName | translate}}</div>
+		<div dir="rtl">{{sensorName | translate}}</div>
 		<div>{{formattedTime}}</div>
 	</footer>
 </div>

@@ -1,4 +1,6 @@
+import { constConfigurations } from './const/configuration.const';
+
 export const configuration = {
 	production: true,
-	configPath: 'assets/config/app.config.json'
+	...constConfigurations
 };

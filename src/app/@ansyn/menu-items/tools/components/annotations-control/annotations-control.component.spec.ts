@@ -84,7 +84,8 @@ describe('AnnotationsControlComponent', () => {
 		const fill = 'black';
 		component.changeFillColor(fill);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
-			fill
+			fill,
+			"marker-color": fill
 		}));
 	});
 

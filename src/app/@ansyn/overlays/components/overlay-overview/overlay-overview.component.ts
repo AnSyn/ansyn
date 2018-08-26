@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { getTimeFormat } from '@ansyn/core/utils/time';
@@ -8,18 +8,27 @@ import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { tap } from 'rxjs/operators';
+import { configuration } from '../../../../../configuration/configuration';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
 	templateUrl: './overlay-overview.component.html',
 	styleUrls: ['./overlay-overview.component.less']
 })
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
-	private _subscriptions: Subscription[] = [];
-	public overlay: any;
+	public sensorName: string;
 	public formattedTime: string;
+	public imageSrc: string;
 	public overlayId: string;
+
 	public loading = false;
+	public errorSrc = configuration.overlays.overlayOverviewFailed;
 
 	protected topElement = this.el.nativeElement.parentElement;
 
@@ -31,7 +40,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
 
-	hoveredOverlay$: Observable<any> = this.store$.select(selectHoveredOverlay);
+	@AutoSubscription
+	hoveredOverlay$: Observable<any> = this.store$.pipe(
+		select(selectHoveredOverlay),
+		tap(this.onHoveredOverlay.bind(this))
+	);
 
 	// Mark the original overlay as un-hovered when mouse leaves
 	@HostListener('mouseleave')
@@ -47,13 +60,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this._subscriptions.push(
-			this.hoveredOverlay$.subscribe(this.onHoveredOverlay.bind(this))
-		);
 	}
 
 	ngOnDestroy(): void {
-		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 
 	onHoveredOverlay(overlay: IOverlay) {
@@ -66,8 +75,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.left = hoveredElementBounds.left - 50;
 				this.top = hoveredElementBounds.top;
 				this.isHoveringOverDrop = true;
-				this.overlay = overlay;
-				this.formattedTime = getTimeFormat(new Date(this.overlay.photoTime));
+
+				this.sensorName = overlay.sensorName;
+				this.imageSrc = overlay.thumbnailUrl;
+				this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
 				if (isNewOverlay) {
 					this.startedLoadingImage();
 				}

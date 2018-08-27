@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
-import { centroid, geometry } from '@turf/turf';
+import { centroid, geometry, transformScale } from '@turf/turf';
 import {
 	ICaseMapsState,
 	ICaseMapState,
@@ -19,6 +19,7 @@ import { IContext } from '@ansyn/core/models/context.model';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import { point } from '@turf/turf';
 import { UUID } from 'angular2-uuid';
+
 
 export class QueryParamsHelper {
 
@@ -99,20 +100,25 @@ export class QueryParamsHelper {
 									'properties': {}
 								};
 								const centroidOfGeometry = centroid(feature);
+
 								const [x1, y1, x2, y2]: CaseMapExtent = extentFromGeojson(geoPolygon);
+
+								let extentPolygon: Polygon = {
+									type: 'Polygon',
+									coordinates: [[
+										[x1, y1],
+										[x2, y1],
+										[x2, y2],
+										[x1, y2],
+										[x1, y1]
+									]]
+								};
+
+
 
 								updatedCaseModel.state.maps.data.forEach(map => {
 									map.data.position.projectedState = null;
-									map.data.position.extentPolygon = {
-										type: 'Polygon',
-										coordinates: [[
-											[x1, y1],
-											[x2, y1],
-											[x2, y2],
-											[x1, y2],
-											[x1, y1]
-										]]
-									};
+									map.data.position.extentPolygon = transformScale(extentPolygon, 2.2);
 								});
 
 								updatedCaseModel.state.region = geoPolygon;

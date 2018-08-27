@@ -45,7 +45,6 @@ export class AnsynApi {
 		tap((mapsList) => this.mapsList = mapsList)
 	);
 
-	@AutoSubscription
 	onShadowMouseProduce$ = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
 		map(({ payload }: ShadowMouseProducer) => {

@@ -1,3 +1,4 @@
+///<reference path="../../../../../../node_modules/@types/lodash/index.d.ts"/>
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -52,6 +53,7 @@ import { IContextEntity } from '@ansyn/core/models/case.model';
 import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
+import { get } from 'lodash';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -97,9 +99,13 @@ export class OverlaysAppEffects {
 			const overlaysBefore = overlays.get(overlaysBeforeId);
 			const overlaysAfterId = filteredOverlays.find(overlayId => overlays.get(overlayId).photoTime > params.time);
 			const overlaysAfter = overlays.get(overlaysAfterId);
-			const featureJsonScale = transformScale(params.contextEntities[0].featureJson, 1.1);
-			const extent = olExtent.boundingExtent(featureJsonScale.geometry.coordinates[0]);
-			const payload = [{ overlay: overlaysBefore, extent }, { overlay: overlaysAfter, extent }].filter(Boolean);
+			const featureJson = get(params, 'contextEntities[0].featureJson');
+			let extent;
+			if (featureJson) {
+				const featureJsonScale = transformScale(featureJson, 1.1);
+				extent = olExtent.boundingExtent(featureJsonScale.geometry.coordinates[0]);
+			}
+			const payload = [{ overlay: overlaysBefore, extent }, { overlay: overlaysAfter, extent }].filter( ({ overlay }) => Boolean(overlay));
 			return new DisplayMultipleOverlaysFromStoreAction(payload);
 		})
 		.share();

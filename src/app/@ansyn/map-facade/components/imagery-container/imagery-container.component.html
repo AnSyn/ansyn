@@ -5,7 +5,7 @@
 						  [mapId]="mapState.id"
 						  [overlay]="overlay"
 						  [active]="active"
-						  [layerFlag]="mapState.flags.layers"
+						  [layerFlag]="mapState.flags.displayLayers"
 						  [mapsAmount]="mapsAmount"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
@@ -16,7 +16,7 @@
 
 	<ansyn-imagery-view [mapComponentSettings]="mapState"></ansyn-imagery-view>
 
-	<ansyn-annotations-context-menu [mapId]="mapState.id"></ansyn-annotations-context-menu>
+	<ansyn-annotations-context-menu [mapId]="mapState.id" ></ansyn-annotations-context-menu>
 
 	<ansyn-imagery-loader [mapId]="mapState.id"></ansyn-imagery-loader>
 

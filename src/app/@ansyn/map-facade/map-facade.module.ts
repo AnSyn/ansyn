@@ -17,6 +17,7 @@ import { ImageryTileProgressComponent } from '@ansyn/map-facade/components/image
 import { OverlaySourceTypeNoticeComponent } from '@ansyn/map-facade/components/overlay-source-type-notice/overlay-source-type-notice.component';
 import { CoreModule } from '@ansyn/core/core.module';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
+import { GeocoderService } from './services/geocoder.service';
 
 @NgModule({
 	imports: [
@@ -27,7 +28,7 @@ import { MapSearchBoxComponent } from './components/map-search-box/map-search-bo
 		CoreModule,
 		FormsModule
 	],
-	providers: [MapFacadeService],
+	providers: [MapFacadeService, GeocoderService],
 	declarations: [
 		ImageriesManagerComponent,
 		ImageryRotationComponent,

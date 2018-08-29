@@ -1,8 +1,12 @@
-import { CaseFacetsState, CaseRegionState, CaseTimeState } from './case.model';
-import { Entity } from '@ansyn/core/services/storage/storage.service';
-import { DisplayedOverlay } from '@ansyn/context/reducers/context.reducer';
+import { ICaseFacetsState, CaseRegionState, ICaseTimeState } from './case.model';
+import { IEntity } from '../services/storage/storage.service';
 
-export interface Context extends Entity{
+export enum DisplayedOverlay {
+	nearest = 'nearest',
+	latest = 'latest',
+}
+
+export interface IContext extends IEntity {
 	id: string;
 	name: string;
 	creationTime: Date;
@@ -14,8 +18,8 @@ export interface Context extends Entity{
 	imageryCountAfter?: number;
 	timeFilter?: string;
 	orientation?: string;
-	time?: CaseTimeState;
-	facets?: CaseFacetsState;
+	time?: ICaseTimeState;
+	facets?: ICaseFacetsState;
 	region?: CaseRegionState;
 	requires?: string[]
 	defaultOverlay?: DisplayedOverlay;

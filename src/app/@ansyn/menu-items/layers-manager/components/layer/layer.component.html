@@ -1,0 +1,22 @@
+<div class="layer">
+
+	<div class="checkbox">
+		<ansyn-checkbox
+			class="regular-checkbox"
+			[id]="'checkbox' + layer?.id"
+			(checkedChange)="onCheckboxClicked($event)"
+			[checked]="isChecked">
+		</ansyn-checkbox>
+	</div>
+
+	<div class="layer-row">
+		<div class="field-name-container">
+			<span class="field-name" [title]="layer?.name">{{layer?.name}}</span>
+		</div>
+
+		<button class="only-filter" (click)="selectOnly()" [hidden]="showOnly">only</button>
+	</div>
+
+	<ng-content></ng-content>
+
+</div>

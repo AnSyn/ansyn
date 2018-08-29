@@ -9,13 +9,13 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	AnnotationContextMenuTriggerAction,
+	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
 	ImageryRemovedAction
 } from '../actions/map.actions';
 import { SynchronizeMapsAction } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -59,7 +59,7 @@ describe('MapEffects', () => {
 
 	it('check that the action annotationContextMenuTrigger$ was triggerd', () => {
 
-		const action = new AnnotationContextMenuTriggerAction((<any>{}));
+		const action = new AnnotationSelectAction((<any>{}));
 
 
 		actions = hot('--a--', { a: action });
@@ -105,7 +105,7 @@ describe('MapEffects', () => {
 					return Observable.of({});
 				}
 			};
-			const fakeMap: CaseMapState = <any> {id: 'imagery2'};
+			const fakeMap: ICaseMapState = <any> {id: 'imagery2'};
 			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'setPosition').and.callFake(() => Observable.of(true));

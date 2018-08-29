@@ -3,7 +3,9 @@ import { CasesAutoSaveComponent } from './cases-auto-save.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
+import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
+import { SetAutoSave } from '@ansyn/core/actions/core.actions';
 
 describe('CasesAutoSaveComponent', () => {
 	let component: CasesAutoSaveComponent;
@@ -12,14 +14,14 @@ describe('CasesAutoSaveComponent', () => {
 
 	const fakeCase = {
 		autoSave: true
-	} as Case;
+	} as ICase;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer })
 			],
-			declarations: [CasesAutoSaveComponent]
+			declarations: [CasesAutoSaveComponent, SliderCheckboxComponent]
 		})
 			.compileComponents();
 	}));
@@ -39,6 +41,6 @@ describe('CasesAutoSaveComponent', () => {
 		spyOn(store, 'dispatch');
 		component.onChange(true);
 		fixture.detectChanges();
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({ updatedCase: fakeCase, forceUpdate: true }));
+		expect(store.dispatch).toHaveBeenCalledWith(new SetAutoSave(true));
 	});
 });

@@ -1,20 +1,19 @@
 import { EventEmitter } from '@angular/core';
-import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
+import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { IMap } from '../model/imap';
-import { Observable, of } from 'rxjs';
-import { CaseMapExtent, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
+import { Observable, of, merge } from 'rxjs';
+import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
-import 'rxjs/add/observable/merge';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { BaseImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter } from 'rxjs/operators';
 
 export class CommunicatorEntity {
 	private _managerSubscriptions = [];
 
-	public positionChanged = new EventEmitter<{ id: string, position: CaseMapPosition }>();
-	public mapInstanceChanged = new EventEmitter<MapInstanceChanged>();
+	public positionChanged = new EventEmitter<{ id: string, position: ICaseMapPosition }>();
+	public mapInstanceChanged = new EventEmitter<IMapInstanceChanged>();
 	private _virtualNorth = 0;
 
 	get imageryCommunicatorService(): ImageryCommunicatorService {
@@ -42,7 +41,7 @@ export class CommunicatorEntity {
 	}
 
 	private registerToManagerEvents() {
-		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: CaseMapPosition) => {
+		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: ICaseMapPosition) => {
 			this.positionChanged.emit({ id: this._manager.id, position });
 		}));
 
@@ -51,7 +50,7 @@ export class CommunicatorEntity {
 		}));
 
 		this._managerSubscriptions.push(
-			Observable.merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
+			merge(this.imageryCommunicatorService.instanceCreated, this._manager.mapInstanceChanged)
 				.pipe(filter(({ id }) => id === this.id))
 				.subscribe(this.initPlugins.bind(this))
 		);
@@ -85,15 +84,21 @@ export class CommunicatorEntity {
 		return '';
 	}
 
-	public loadInitialMapSource(position?: CaseMapPosition): Promise<any> {
+	public loadInitialMapSource(position?: ICaseMapPosition): Promise<any> {
 		return this._manager.loadInitialMapSource(position);
 	}
 
-	public get ActiveMap(): IMap {
+	public get ActiveMap(): BaseImageryMap {
 		if (this._manager) {
 			return this._manager.ActiveMap;
 		}
 		return null;
+	}
+
+	public get mapType() {
+		if (this.ActiveMap) {
+			return (<IBaseImageryMapConstructor> this.ActiveMap.constructor).mapType;
+		}
 	}
 
 	public getCenter(): Observable<Point> {
@@ -132,7 +137,7 @@ export class CommunicatorEntity {
 		return of(true);
 	}
 
-	public setPosition(position: CaseMapPosition): Observable<boolean> {
+	public setPosition(position: ICaseMapPosition): Observable<boolean> {
 		if (!this.ActiveMap) {
 			return Observable.throw(new Error('missing active map'));
 		}
@@ -140,7 +145,7 @@ export class CommunicatorEntity {
 		return this.ActiveMap.setPosition(position);
 	}
 
-	public getPosition(): Observable<CaseMapPosition> {
+	public getPosition(): Observable<ICaseMapPosition> {
 		if (!this.ActiveMap) {
 			return Observable.throw(new Error('missing active map'));
 		}
@@ -165,7 +170,7 @@ export class CommunicatorEntity {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this._manager) {
 			return this._manager.resetView(layer, position, extent);

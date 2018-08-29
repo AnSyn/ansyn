@@ -1,7 +1,7 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
-	StartAndEndDate
+	IStartAndEndDate, UNKNOWN_NAME
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { HttpClient } from '@angular/common/http';
@@ -10,9 +10,9 @@ import {
 	bboxFromGeoJson, geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius
 } from '@ansyn/core/utils/geo';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { limitArray } from '@ansyn/core/utils/limited-array';
+import { limitArray } from '@ansyn/core/utils/i-limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import * as wellknown from "wellknown";
 import { LoggerService } from '@ansyn/core/services/logger.service';
@@ -66,7 +66,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			.map(data => {
 				return this.extractArrayData(data.results);
 			})
-			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -75,7 +75,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	getById(id: string, sourceType: string): Observable<Overlay> {
+	getById(id: string, sourceType: string): Observable<IOverlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		return this.http.get<any>(baseUrl, { params: { _id: id } })
 			.map(data => {
@@ -86,7 +86,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<StartAndEndDate> {
+	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
 		return empty();
 	}
 
@@ -94,7 +94,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		return empty();
 	}
 
-	private extractArrayData(overlays: Array<any>): Array<Overlay> {
+	private extractArrayData(overlays: Array<any>): Array<IOverlay> {
 		if (!overlays) {
 			return [];
 		}
@@ -103,19 +103,19 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			.map((element) => this.parseData(element));
 	}
 
-	private extractData(overlays: Array<any>): Overlay {
+	private extractData(overlays: Array<any>): IOverlay {
 		if (overlays.length > 0) {
 			return this.parseData(overlays[0]);
 		}
 	}
 
-	protected parseData(openAerialElement: any): Overlay {
-		let overlay: Overlay = <Overlay> {};
+	protected parseData(openAerialElement: any): IOverlay {
+		let overlay: IOverlay = <IOverlay> {};
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);
-		overlay.sensorType = openAerialElement.platform;
-		overlay.sensorName = openAerialElement.properties.sensor;
+		overlay.sensorType = openAerialElement.platform ? openAerialElement.platform : UNKNOWN_NAME;
+		overlay.sensorName = openAerialElement.properties.sensor ? openAerialElement.properties.sensor : UNKNOWN_NAME;
 		overlay.bestResolution = openAerialElement.gsd;
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms;
@@ -125,6 +125,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.azimuth = toRadians(180);
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
+		overlay.tag = openAerialElement;
 
 		return overlay;
 	}

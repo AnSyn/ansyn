@@ -1,12 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { ILayerState, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { Component, Input } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import {
-	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { Observable } from 'rxjs/Observable';
+import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { Store } from '@ngrx/store';
+import { SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
+import { SelectedModalEnum } from '../../reducers/layers-modal';
+
+export interface ILayerCollection {
+	type: LayerType;
+	data: ILayer[];
+}
 
 @Component({
 	selector: 'ansyn-layer-collection',
@@ -36,42 +39,26 @@ import { Observable } from 'rxjs/Observable';
 	]
 })
 
-export class LayerCollectionComponent implements OnInit {
-	@Input() collection: ILayer[];
-	activeLayersIds = [];
-	selectedLayers$: Observable<any> = this.store.select(selectSelectedLayersIds)
-		.distinctUntilChanged()
-		.do((selectedLayers) => {
-			this.activeLayersIds = selectedLayers;
-		});
-
+export class LayerCollectionComponent {
+	@Input() collection: ILayerCollection;
 	public show = true;
-	subscribers = [];
 
+	get SelectedModalEnum() {
+		return SelectedModalEnum;
+	}
 
-	ngOnInit() {
-		this.subscribers.push(
-			this.selectedLayers$.subscribe()
-		);
+	get LayerType() {
+		return LayerType;
 	}
 
 	constructor(public store: Store<ILayerState>) {
 	}
 
-	public onCheckboxClicked(event, layer: ILayer): void {
-		if (event.target.checked) {
-			this.store.dispatch(new UpdateSelectedLayersIds([...this.activeLayersIds, layer.id]));
-		} else {
-			this.store.dispatch(new UpdateSelectedLayersIds(this.activeLayersIds.filter((id) => id !== layer.id)));
-		}
+	showAll() {
+		this.store.dispatch(new ShowAllLayers(this.collection.type));
 	}
 
-	public selectOnly(layerId: string) {
-		this.store.dispatch(new UpdateSelectedLayersIds([layerId]));
-	}
-
-	public showAll(collection: ILayer[]) {
-		const layerIds: string[] = collection.map((layer) => {return layer.id});
-		this.store.dispatch(new UpdateSelectedLayersIds(layerIds));
+	openModal(type: SelectedModalEnum, layer?: ILayer): void {
+		this.store.dispatch(new SetLayersModal ({ type, layer }));
 	}
 }

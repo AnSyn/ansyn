@@ -6,7 +6,7 @@
       "id": "4df64c1a-330b-1332-c286-7d73754bd001",
       "name": "Default case",
       "lastModified": "2018-04-04T13:21:45.616Z",
-      "autoSave": true,
+      "autoSave": false,
       "state": {
         "timeFilter": "Start - End",
         "orientation": "Align North",
@@ -66,14 +66,11 @@
           "activeMapId": "defaultImagery1"
         },
         "layers": {
-          "annotationsLayer": {
-            "type": "FeatureCollection",
-            "features": []
-          },
-          "displayAnnotationsLayer": true,
           "activeLayersIds": []
         },
         "favoriteOverlays": [],
+        "removedOverlaysIds": [],
+        "removedOverlaysVisibility": true,
         "region": {
           "type": "Point",
           "coordinates": [
@@ -131,6 +128,7 @@
   },
   "mapFacadeConfig": {
     "overlayCoverage": 0.1,
+    "displayDebounceTime": 400,
     "sensorTypeShortcuts": {
       "Panchromatic": "P",
       "8-band (Coastal, Blue, Green, Yellow, Red, Red-edge, NIR1, NIR2) Multispectral": "8B",
@@ -199,6 +197,9 @@
     "schema": "contexts"
   },
   "toolsConfig": {
+	"Annotations": {
+	  "displayId":  "{{ getv "/ansyn/tools/displayid" "0" }}"
+	},
     "GoTo": {
       "from": {
         "datum": "wgs84",
@@ -264,7 +265,8 @@
       "backwards": "Previous overlay",
       "forward": "Next overlay",
       "reset": "Reset timeline (according to the time filter)",
-      "enlarge": "Expand timeline"
+      "enlarge": "Expand timeline",
+      "quickloop": "Next overlay from the quick loop (key: Q)"
     },
     "dataInputFiltersConfig": {
       "PLANET": {
@@ -339,6 +341,11 @@
 	},
     "storageService": {
       "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    },
+    "translation": {
+    	"default": {
+		 	"Sentinel-2A": "Sentinel 2A"
+	   	}
     }
   },
   "loginConfig": {
@@ -347,7 +354,7 @@
     "authorizedPath": "/"
   },
   "menuConfig": {
-    "path": "/assets/logo.svg",
+    "path": "assets/logo.svg",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
     "mode": "{{ getv "/ansyn/menu/mode" "" }}",
@@ -421,7 +428,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "{{ getv "/ansyn/overlay/idaho/sensor/names" "[]" }}",
           "coverage": [
             [
               [
@@ -462,7 +469,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "[]",
           "coverage": [
             [
               [
@@ -508,40 +515,15 @@
     "PLANET": {
       "whitelist": [
         {
-          "name": "Entire Earth",
+          "name": "USA",
           "dates": [
             {
               "start": null,
               "end": null
             }
           ],
-          "sensorNames": "[ \"Landsat8L1G\", \"Sentinel2L1C\" ]",
-          "coverage": [
-            [
-              [
-                [
-                  -180,
-                  -90
-                ],
-                [
-                  -180,
-                  90
-                ],
-                [
-                  180,
-                  90
-                ],
-                [
-                  180,
-                  -90
-                ],
-                [
-                  -180,
-                  -90
-                ]
-              ]
-            ]
-          ]
+          "sensorNames": "{{ if exists "/ansyn/overlay/planet/sensor/names" }}{{ getv "/ansyn/overlay/planet/sensor/names" }}{{ else }}[ \"Landsat8L1G\", \"Sentinel2L1C\" ]{{ end }}",
+		  "coverage": [[[[-126.73828125000001,48.195387408333374],[-51.32812500000002,47.9605023889151],[-80.24414062500001,24.166802085303246],[-125.94726562500003,30.41078179084589],[-126.73828125000001,48.195387408333374]]]]
         },
         {
           "name": "California",
@@ -551,7 +533,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" " [ null ]" }}" ,
           "coverage": [
             [
               [
@@ -989,7 +971,7 @@
               "end": null
             }
           ],
-          "sensorNames": "[ null ]",
+          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" "[ null ]" }}",
           "coverage": [
             [
               [
@@ -1038,7 +1020,7 @@
 						"end": null
 					}
 				],
-				"sensorNames": "[ null ]",
+				"sensorNames": "{{ getv "/ansyn/overlay/open/aerial/sensor/names" "[ null ]" }}",
 				"coverage": [
 					[
 						[

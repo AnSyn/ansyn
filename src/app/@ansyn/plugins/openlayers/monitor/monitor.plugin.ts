@@ -1,20 +1,13 @@
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
-import {
-	DisabledOpenLayersMapName,
-	OpenLayersDisabledMap
-} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import TileSource from 'ol/source/tile';
 import { Observable } from 'rxjs';
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import {
-	OpenLayersMap,
-	OpenlayersMapName
-} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
-import { Actions } from '@ngrx/effects';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

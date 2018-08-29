@@ -1,10 +1,6 @@
-import { AnnotationProperties, toolsInitialState, ToolsReducer, toolsFlags } from './tools.reducer';
-import { AnnotationSetProperties, SetAnnotationMode, SetAnnotationsLayer } from '../actions/tools.actions';
+import { toolsFlags, toolsInitialState, ToolsReducer } from './tools.reducer';
+import { AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
-import {
-	ILayerState, initialLayersState,
-	LayersReducer
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 
 describe('ToolsReducer', () => {
 
@@ -19,34 +15,29 @@ describe('ToolsReducer', () => {
 	});
 
 	it('Check SET_ANNOTATION_PROPERTIES', () => {
-		const payload: AnnotationProperties = {
-			fillColor: 'gray',
-			strokeColor: 'blue',
-			strokeWidth: 4
+		const payload = {
+			fill: 'gray',
+			stroke: 'blue',
+			'stroke-width': 4
 		};
 		const action = new AnnotationSetProperties(payload);
 		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
-		expect(result.annotationProperties).toEqual(payload);
+		expect(result.annotationProperties).toEqual({ ...toolsInitialState.annotationProperties, ...payload });
 
 
-		const secPayload: AnnotationProperties = {
-			fillColor: 'green',
+		const secPayload = {
+			fill: 'green'
 		};
 
 		const secAction = new AnnotationSetProperties(secPayload);
 		const secResult = ToolsReducer(cloneDeep(result), secAction);
 
 		expect(secResult.annotationProperties).toEqual({
-			strokeColor: 'blue',
-			strokeWidth: 4,
-			fillColor: 'green'
+			...toolsInitialState.annotationProperties,
+			stroke: 'blue',
+			'stroke-width': 4,
+			fill: 'green'
 		});
-	});
-
-	it('SET_LAYER', () => {
-		const action = new SetAnnotationsLayer(<any>'some geoJSON Object');
-		const result = ToolsReducer(toolsInitialState, action);
-		expect(result.annotationsLayer).toEqual(<any>'some geoJSON Object');
 	});
 
 });

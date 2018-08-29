@@ -1,13 +1,14 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-
 import { OverlayOverviewComponent } from './overlay-overview.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { SetHoveredOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
 import { By } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
+import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
+import { MockComponent } from '@ansyn/core/test/mock-component';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
@@ -15,13 +16,16 @@ describe('OverlayOverviewComponent', () => {
 	let store: Store<any>;
 	let document: Document;
 
+	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText'] });
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				TranslateModule.forRoot(),
 				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
 				EffectsModule.forRoot([])
 			],
-			declarations: [OverlayOverviewComponent]
+			declarations: [OverlayOverviewComponent, mockLoader]
 		})
 			.compileComponents();
 	}));
@@ -44,7 +48,7 @@ describe('OverlayOverviewComponent', () => {
 	describe('Show or hide me', () => {
 		let classExists = (className) => fixture.nativeElement.classList.contains(className);
 		let overlayId = '234';
-		let overlays: Overlay[] = [{
+		let overlays: IOverlay[] = [{
 			id: overlayId,
 			name: 'bcd',
 			photoTime: 'ttt',

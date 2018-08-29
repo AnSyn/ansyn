@@ -1,22 +1,22 @@
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
-	StartAndEndDate
+	IStartAndEndDate, UNKNOWN_NAME
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from '@ansyn/core/utils/geo';
-import { limitArray } from '@ansyn/core/utils/limited-array';
+import { limitArray } from '@ansyn/core/utils/i-limited-array';
 import { toRadians } from '@ansyn/core/utils/math';
 import { HttpResponseBase } from '@angular/common/http/src/response';
-import { OverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
+import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import * as moment from 'moment';
-import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
 
@@ -77,7 +77,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return `${url}?api_key=${this.planetOverlaysSourceConfig.apiKey}`;
 	}
 
-	fetch(fetchParams: IFetchParams): Observable<OverlaysPlanetFetchData> {
+	fetch(fetchParams: IFetchParams): Observable<IOverlaysPlanetFetchData> {
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
@@ -98,7 +98,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
 			const configFilters = [];
 			const preFilter = { type: 'OrFilter', config: configFilters };
-			fetchParams.dataInputFilters.forEach((aFilter: DataInputFilterValue) => {
+			fetchParams.dataInputFilters.forEach((aFilter: IDataInputFilterValue) => {
 				const sensorTypeFilter = {
 					type: 'StringInFilter',
 					field_name: 'item_type',
@@ -119,10 +119,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			filters.push(preFilter);
 		}
 
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
+		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
 			{ headers: this.httpHeaders, params: { _page_size: limit } })
-			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: Overlay[]) => <OverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
+			.map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -131,10 +131,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	getById(id: string, sourceType: string): Observable<Overlay> {
+	getById(id: string, sourceType: string): Observable<IOverlay> {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
 		const body = this.buildFilters([{ type: 'StringInFilter', field_name: 'id', config: [id] }]);
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders })
+		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders })
 			.map(data => {
 				if (data.features.length <= 0) {
 					throw new HttpErrorResponse({ status: 404 });
@@ -147,7 +147,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<StartAndEndDate> {
+	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
 		const filters = this.parsePlanetFilters(params.facets);
 		const bboxFilter = this._getBboxFilter(params.region);
@@ -158,11 +158,11 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		const pageLimit: any = params.limit ? params.limit : DEFAULT_OVERLAYS_LIMIT;
 
-		return this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.pipe(
-				map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features)),
-				map((overlays: Overlay[]): StartAndEndDate => {
+				map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
+				map((overlays: IOverlay[]): IStartAndEndDate => {
 					let startDate: string, endDate: string;
 					if (overlays.length === 0) {
 						startDate = moment().subtract(1, 'month').toISOString();  // month ago
@@ -209,7 +209,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<StartAndEndDate> {
+	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<IStartAndEndDate> {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
 		const filters = this.parsePlanetFilters(params.facets);
 		const bboxFilter = this._getBboxFilter(params.region);
@@ -220,10 +220,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		let pageLimit: any = params.limitBefore ? params.limitBefore : DEFAULT_OVERLAYS_LIMIT / 2;
 
-		const startDate$: Observable<Date> = this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		const startDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
-			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: Overlay[]) => {
+			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
+			.map((overlays: IOverlay[]) => {
 				let startDate: Date;
 				if (overlays.length === 0) {
 					startDate = moment(params.date).subtract(1, 'month').toDate();  // a month before
@@ -243,10 +243,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		pageLimit = params.limitAfter ? params.limitAfter : DEFAULT_OVERLAYS_LIMIT / 2;
 
-		const endDate$: Observable<Date> = this.http.post<OverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		const endDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
-			.map((data: OverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: Overlay[]) => {
+			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
+			.map((overlays: IOverlay[]) => {
 				let endDate: Date;
 				if (overlays.length === 0) {
 					endDate = moment.min([moment(params.date).add(1, 'month'), moment()]).toDate();  // a month after
@@ -264,7 +264,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			.map(([start, end]: [Date, Date]) => ({startDate: start.toISOString(), endDate: end.toString()}));
 	}
 
-	private extractArrayData(overlays: PlanetOverlay[]): Overlay[] {
+	private extractArrayData(overlays: PlanetOverlay[]): IOverlay[] {
 		if (!overlays) {
 			return [];
 		}
@@ -273,19 +273,19 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			.map((element) => this.parseData(element));
 	}
 
-	private extractData(overlays: Array<any>): Overlay {
+	private extractData(overlays: Array<any>): IOverlay {
 		if (overlays.length > 0) {
 			return this.parseData(overlays[0]);
 		}
 	}
 
-	protected parseData(element: PlanetOverlay): Overlay {
-		const overlay: Overlay = <Overlay> {};
+	protected parseData(element: PlanetOverlay): IOverlay {
+		const overlay: IOverlay = <IOverlay> {};
 
 		overlay.id = element.id;
 		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);
-		overlay.sensorType = element.properties.item_type;
-		overlay.sensorName = element.properties.satellite_id;
+		overlay.sensorType = element.properties.item_type ? element.properties.item_type : UNKNOWN_NAME;
+		overlay.sensorName = element.properties.satellite_id ? element.properties.satellite_id : UNKNOWN_NAME;
 		overlay.bestResolution = element.properties.gsd;
 		overlay.name = element.id;
 		overlay.imageUrl = this.appendApiKey(
@@ -296,6 +296,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		overlay.azimuth = toRadians(element.properties.view_angle);
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
+		overlay.tag = element;
 
 		return overlay;
 	}

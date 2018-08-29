@@ -1,4 +1,4 @@
-import { LimitedArray } from '@ansyn/core/utils/limited-array';
+import { ILimitedArray } from '@ansyn/core/utils/i-limited-array';
 import { MultiPolygon, Polygon } from 'geojson';
 
 export class PlanetOverlay {
@@ -37,7 +37,7 @@ export class PlanetOverlay {
 	};
 }
 
-export interface OverlaysPlanetFetchData extends LimitedArray {
+export interface IOverlaysPlanetFetchData extends ILimitedArray {
 	_links: {
 		_first: string,
 		_next: string,

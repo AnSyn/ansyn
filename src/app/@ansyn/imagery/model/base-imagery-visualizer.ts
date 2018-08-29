@@ -1,27 +1,17 @@
-import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
-import { Feature } from 'geojson';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
-import { ImageryPlugin, ImageryPluginMetaData } from '@ansyn/imagery/model/base-imagery-plugin';
+import { IImageryPluginMetaData } from './base-imagery-plugin';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
-export interface IVisualizerEntity {
-	id: string;
-	featureJson: Feature<any>;
-	state?: 'static' | 'activeDisplad';
-	type?: string,
-	style?: Partial<VisualizerStateStyle>
-}
-
-export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
+export type VisualizerInteractionTypes = 'click' | 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
+	click: 'click',
 	pointerMove: 'pointerMove',
 	doubleClick: 'doubleClick',
 	contextMenu: 'contextMenu',
 	drawInteractionHandler: 'drawInteractionHandler'
 };
-
-
 
 
 export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
@@ -82,16 +72,10 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
 }
 
-export interface ImageryVisualizerMetaData extends ImageryPluginMetaData {
+export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
 	isHideable?: boolean;
 }
 
-export interface BaseImageryVisualizerClass extends ImageryVisualizerMetaData {
+export interface IBaseImageryVisualizerClass extends IImageryVisualizerMetaData {
 	new(...args): BaseImageryVisualizer;
-}
-
-export function ImageryVisualizer(metaData: ImageryVisualizerMetaData) {
-	return function (constructor: BaseImageryVisualizerClass) {
-		ImageryPlugin(metaData)(constructor);
-	}
 }

@@ -10,20 +10,20 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import {
-	OpenLayersMap,
-	OpenlayersMapName
-} from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CaseOrientation } from '@ansyn/core/models/case.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
+import { AutoSubscription } from 'auto-subscriptions';
+import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -42,6 +42,47 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
+	@AutoSubscription
+	pointNorth$ = this.actions$
+		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
+		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
+		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
+			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
+		})
+		.filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+			return comboBoxesOptions.orientations.includes(orientation);
+		})
+		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+			return this.pointNorth()
+				.do(virtualNorth => {
+					this.communicator.setVirtualNorth(virtualNorth);
+					if (!forceFirstDisplay) {
+						switch (orientation) {
+							case 'Align North':
+								this.communicator.setRotation(virtualNorth);
+								break;
+							case 'Imagery Perspective':
+								this.communicator.setRotation(overlay.azimuth);
+								break;
+						}
+					}
+				});
+		});
+
+	@AutoSubscription
+	backToWorldSuccessSetNorth$ = this.actions$
+		.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
+		.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)
+		.withLatestFrom(this.store$.select(statusBarStateSelector))
+		.do(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+			this.communicator.setVirtualNorth(0);
+			switch (comboBoxesProperties.orientation) {
+				case 'Align North':
+				case 'Imagery Perspective':
+					this.communicator.setRotation(0);
+			}
+		});
+
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
 				public store$: Store<any>,
@@ -56,7 +97,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
 				const northOffsetDeg = toDegrees(northOffsetRad);
-				const view = (<IMap>this.iMap).mapObject.getView();
+				const view = (<BaseImageryMap>this.iMap).mapObject.getView();
 				const actualNorth = northOffsetRad + view.getRotation();
 				return { northOffsetRad, northOffsetDeg, actualNorth };
 			})
@@ -94,46 +135,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
 			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
-	}
-
-	onInit() {
-		const pointNorth = this.actions$
-			.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-			.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
-			.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-				return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
-			})
-			.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
-				return this.pointNorth()
-					.do(virtualNorth => {
-						this.communicator.setVirtualNorth(virtualNorth);
-						if (!forceFirstDisplay) {
-							switch (orientation) {
-								case 'Align North':
-									this.communicator.setRotation(virtualNorth);
-									break;
-								case 'Imagery Perspective':
-									this.communicator.setRotation(overlay.azimuth);
-									break;
-							}
-						}
-					});
-			}).subscribe();
-
-		const backToWorldSuccessSetNorth = this.actions$
-			.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
-			.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)
-			.withLatestFrom(this.store$.select(statusBarStateSelector))
-			.do(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
-				this.communicator.setVirtualNorth(0);
-				switch (comboBoxesProperties.orientation) {
-					case 'Align North':
-					case 'Imagery Perspective':
-						this.communicator.setRotation(0);
-				}
-			}).subscribe();
-
-		this.subscriptions.push(pointNorth, backToWorldSuccessSetNorth);
 	}
 
 	pointNorth(): Observable<any> {

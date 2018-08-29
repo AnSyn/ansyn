@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
+import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import {
 	Component,
 	ComponentFactoryResolver,
@@ -10,11 +10,11 @@ import {
 	ViewChild,
 	ViewContainerRef
 } from '@angular/core';
-import { ImageryComponentManager } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { IMapConstructor } from '@ansyn/imagery/model/imap';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
+import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
+import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { IBaseImageryMapConstructor } from '../model/base-imagery-map';
+import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 
 @Component({
 	selector: 'ansyn-imagery-view',
@@ -25,7 +25,7 @@ import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
 export class ImageryComponent implements OnInit, OnDestroy {
 
 	@ViewChild('mapComponentElem', { read: ViewContainerRef }) mapComponentElem: ViewContainerRef;
-	@Input() public mapComponentSettings: CaseMapState;
+	@Input() public mapComponentSettings: ICaseMapState;
 
 	private _mapComponentRef: ComponentRef<any>;
 	private _manager: ImageryComponentManager;
@@ -54,7 +54,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected componentFactoryResolver: ComponentFactoryResolver,
-				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[],
+				@Inject(IMAGERY_MAPS) protected iMapConstructors: IBaseImageryMapConstructor[],
 				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
 				protected injector: Injector) {
 	}

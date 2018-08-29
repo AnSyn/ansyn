@@ -1,34 +1,40 @@
-<div class="container">
+<div class="container" [ngClass]="collection.type">
 
 	<div class="title-row">
-		<span class="title">{{ collection[0].type }} Layers</span>
-		<button [@rotateArrow]="show" #downArrow class="down-arrow"
-				(click)="show = !show">
-		</button>
+		<span class="title">{{ collection.type }} Layers</span>
 
-		<div class="show-all">
-			<span (click)="showAll(collection)">Show all</span>
+		<div class="actions">
+			<button [@rotateArrow]="show"
+					#downArrow class="down-arrow"
+					(click)="show = !show">
+			</button>
+
+			<div class="show-all">
+				<span (click)="showAll()">Show all</span>
+			</div>
+
+			<ansyn-import-layer tooltip-value="Import layer" tooltip-class="bottom right"></ansyn-import-layer>
+
+			<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
+					tooltip-value="Create new layer" tooltip-class="bottom right">
+				<i class="icon-layer-add"></i>
+			</button>
+
 		</div>
+
+
+
 	</div>
 
-	<div class="layers" *ngFor="let layer of collection" [@layersTrigger]="show">
-		<div class="left-side">
-			<div class="checkbox">
-				<ansyn-checkbox
-					id="checkbox{{ layer.id }}"
-					class="regular-checkbox"
-					(change)="onCheckboxClicked($event,layer)"
-					[checked]="activeLayersIds.includes(layer.id)"></ansyn-checkbox>
-				<label for="checkbox{{ layer.id }}"></label>
-			</div>
-			<div class="layer-row">
-				<div class="field-name-container">
-					<span class="field-name" [title]="layer.name">{{layer.name}}</span>
-				</div>
-				<span class="only-filter"
-					  (click)="selectOnly(layer.id)">only</span>
-			</div>
-		</div>
-	</div>
+	<ansyn-layer *ngFor="let layer of collection.data"
+				 [@layersTrigger]="show"
+				 [layer]="layer"
+				 [showOnly]="collection.data.length < 2">
+
+			<ansyn-layer-menu [disabledRemove]="collection.data?.length < 2"
+							  (openModal)="openModal($event, layer)">
+			</ansyn-layer-menu>
+
+	</ansyn-layer>
 
 </div>

@@ -5,19 +5,20 @@ import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerCollectionLoadAction, LayerCollectionLoadedAction } from '../actions/layers.actions';
 import { Observable } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
+	let http: HttpClient;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -36,6 +37,7 @@ describe('LayersEffects', () => {
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: (some) => null }
 				},
+				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' } } },
 				provideMockActions(() => actions),
 				LayersEffects,
 				DataLayersService, {
@@ -45,9 +47,10 @@ describe('LayersEffects', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([LayersEffects, DataLayersService], (_layersEffects: LayersEffects, _dataLayersService: DataLayersService) => {
+	beforeEach(inject([LayersEffects, DataLayersService, HttpClient], (_layersEffects: LayersEffects, _dataLayersService: DataLayersService, _http: HttpClient) => {
 		layersEffects = _layersEffects;
 		dataLayersService = _dataLayersService;
+		http = _http;
 
 	}));
 
@@ -56,18 +59,34 @@ describe('LayersEffects', () => {
 	});
 
 	it('beginLayerTreeLoad$ should dispatch LayerCollectionLoadedAction', () => {
-		let staticLayer: ILayer = {
+		const timeOfCreation = new Date();
+		const layers: ILayer[] = [{
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
 			name: 'staticLayer',
-			type: LayerType.static,
-			creationTime: new Date()
-		};
+			type: LayerType.annotation,
+			creationTime: timeOfCreation,
+			layerPluginType: layerPluginType.Annotations
+		}];
 
-		spyOn(dataLayersService, 'getAllLayersInATree').and.callFake(() => Observable.of([staticLayer]));
-		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction() });
+		let serverResponse = [
+			{
+				url: 'fakeStaticUrl',
+				id: 'staticLayerId',
+				name: 'staticLayer',
+				type: 'Annotation',
+				layerPluginType: 'Annotations',
+				creationTime: timeOfCreation
+			}
+		];
+
+
+		spyOn(dataLayersService, 'getAllLayersInATree').and.returnValue(Observable.of(serverResponse));
+		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
+
+		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });
 		const expectedResults = cold('--a--', {
-			a: new LayerCollectionLoadedAction([staticLayer])
+			a: new LayerCollectionLoadedAction(layers)
 		});
 		expect(layersEffects.beginLayerTreeLoad$).toBeObservable(expectedResults);
 	});

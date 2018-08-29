@@ -1,25 +1,25 @@
 import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
-import { Case } from '../models/case.model';
+import { ICase } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CasesService } from '../services/cases.service';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { Operator } from 'rxjs/Operator';
-import { CasePreview } from '@ansyn/core/models/case.model';
+import { ICasePreview } from '@ansyn/core/models/case.model';
 
-export interface CaseModal {
+export interface ICaseModal {
 	show: boolean,
 	id?: string
 }
 
-export interface ICasesState extends EntityState<CasePreview> {
-	selectedCase: Case;
-	modal: CaseModal
+export interface ICasesState extends EntityState<ICasePreview> {
+	selectedCase: ICase;
+	modal: ICaseModal
 }
 
 export const casesFeatureKey = 'cases';
 
-export const casesAdapter = createEntityAdapter<CasePreview>({ sortComparer: (ob1: CasePreview, ob2: CasePreview): number => +ob2.creationTime - +ob1.creationTime });
+export const casesAdapter = createEntityAdapter<ICasePreview>({ sortComparer: (ob1: ICasePreview, ob2: ICasePreview): number => +ob2.creationTime - +ob1.creationTime });
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
 	selectedCase: null,
@@ -67,6 +67,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 export const { selectEntities, selectAll, selectTotal, selectIds } = casesAdapter.getSelectors();
 export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
-export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<CasePreview>>>createSelector(casesStateSelector, selectEntities);
+export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<ICasePreview>>>createSelector(casesStateSelector, selectEntities);
 export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);

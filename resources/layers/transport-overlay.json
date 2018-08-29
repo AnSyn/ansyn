@@ -1,10 +1,11 @@
 {
-	"preview":{
-		"id": "2682d4f0-e6e6-4d13-864e-713033a2f975",
-		"name": "Transport overlay",
-		"url": "http://www.openptmap.org/tiles/{z}/{x}/{y}.png",
-		"type": "Static"
-	},
-	"data":{
-	}
+  "preview":{
+    "id": "2682d4f0-e6e6-4d13-864e-713033a2f975",
+    "name": "Transport overlay",
+    "url": "http://www.openptmap.org/tiles/{z}/{x}/{y}.png",
+    "type": "Static",
+    "layerPluginType": "OSM"
+  },
+  "data":{
+  }
 }

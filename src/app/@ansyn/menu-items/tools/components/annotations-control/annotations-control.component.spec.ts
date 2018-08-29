@@ -3,10 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
-import {
-	AnnotationSetProperties,
-	SetAnnotationMode
-} from '../../actions/tools.actions';
+import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
+import { ColorPickerComponent } from '../color-picker/color-picker.component';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -15,7 +13,7 @@ describe('AnnotationsControlComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnnotationsControlComponent],
+			declarations: [AnnotationsControlComponent, ColorPickerComponent],
 			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })]
 		})
 			.compileComponents();
@@ -40,14 +38,14 @@ describe('AnnotationsControlComponent', () => {
 	describe('toggleSelection should toggle selectionBox', () => {
 		it('select', () => {
 			component.selectedBox = undefined;
-			component.toggleSelection(component.SelectionBoxes.lineWidth);
-			expect(component.selectedBox).toEqual(component.SelectionBoxes.lineWidth);
+			component.toggleSelection(component.SelectionBoxTypes.LineWidth);
+			expect(component.selectedBox).toEqual(component.SelectionBoxTypes.LineWidth);
 		});
 
 		it('unselect', () => {
-			component.selectedBox = component.SelectionBoxes.colorPicker;
-			component.toggleSelection(component.SelectionBoxes.colorPicker);
-			expect(component.selectedBox).toBeUndefined();
+			component.selectedBox = component.SelectionBoxTypes.ColorPicker;
+			component.toggleSelection(component.SelectionBoxTypes.ColorPicker);
+			expect(component.selectedBox).toEqual(component.SelectionBoxTypes.None);
 		});
 	});
 
@@ -66,24 +64,25 @@ describe('AnnotationsControlComponent', () => {
 	it('select line width', () => {
 		const strokeWidth = 5;
 		component.selectLineWidth(strokeWidth);
-		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
-			strokeWidth
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
+			'stroke-width': strokeWidth
 		}));
 	});
 
 	it('change stroke color', () => {
 		const strokeColor = 'white';
 		component.changeStrokeColor(strokeColor);
-		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
-			strokeColor
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
+			'stroke': strokeColor
 		}));
 	});
 
 	it('change fill color', () => {
-		const fillColor = 'black';
-		component.changeFillColor(fillColor);
-		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties( {
-			fillColor
+		const fill = 'black';
+		component.changeFillColor(fill);
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
+			fill,
+			'marker-color': fill
 		}));
 	});
 

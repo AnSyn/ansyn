@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
-import { ImageManualProcessArgs, OverlayDisplayMode, OverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
-import { AnnotationProperties, SubMenuEnum } from '../reducers/tools.reducer';
+import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
+import { SubMenuEnum } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
 import { toolsFlags } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { FeatureCollection } from 'geojson';
+import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -25,26 +26,18 @@ export const ToolsActionsTypes = {
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
-	ANNOTATIONS_SET_LAYER: type('ANNOTATIONS_SET_LAYER'),
 	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
-	}
-
+	},
+	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER'
 };
-
-export class SetAnnotationsLayer implements Action {
-	type = ToolsActionsTypes.ANNOTATIONS_SET_LAYER;
-
-	constructor(public payload: FeatureCollection<any>) {
-	}
-}
 
 export class UpdateOverlaysManualProcessArgs implements Action {
 	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
 
-	constructor(public payload: { override?: boolean, data: OverlaysManualProcessArgs }) {
+	constructor(public payload: { override?: boolean, data: IOverlaysManualProcessArgs }) {
 
 	}
 }
@@ -183,7 +176,7 @@ export class SetManualImageProcessing implements Action {
 export class AnnotationSetProperties implements Action {
 	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
 
-	constructor(public payload: AnnotationProperties) {
+	constructor(public payload: Partial<IVisualizerStyle>) {
 
 	}
 }

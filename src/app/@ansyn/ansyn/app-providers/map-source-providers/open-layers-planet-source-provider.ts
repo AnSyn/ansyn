@@ -1,27 +1,30 @@
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
-import { Injectable } from '@angular/core';
 import proj from 'ol/proj';
-import { Overlay } from '@ansyn/core/models/overlay.model';
 import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
+import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 
 export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 
-@Injectable()
+@ImageryMapSource({
+	sourceType: OpenLayerPlanetSourceProviderSourceType,
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
+})
 export class OpenLayerPlanetSourceProvider extends OpenLayersMapSourceProvider {
-	public sourceType = OpenLayerPlanetSourceProviderSourceType;
-
-	create(metaData: Overlay): any[] {
+	create(metaData: ICaseMapState): any[] {
 		const source = new XYZ({
-			url: metaData.imageUrl,
+			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'Anonymous',
 			projection: 'EPSG:3857'
 		});
 
 
-		let [x, y, x1, y1] = extentFromGeojson(metaData.footprint);
+		let [x, y, x1, y1] = extentFromGeojson(metaData.data.overlay.footprint);
 		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
 		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
 
@@ -35,7 +38,7 @@ export class OpenLayerPlanetSourceProvider extends OpenLayersMapSourceProvider {
 		})];
 	}
 
-	createAsync(metaData: any): Promise<any> {
+	createAsync(metaData: ICaseMapState): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer[0]);
 	}

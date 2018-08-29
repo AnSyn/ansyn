@@ -12,9 +12,9 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

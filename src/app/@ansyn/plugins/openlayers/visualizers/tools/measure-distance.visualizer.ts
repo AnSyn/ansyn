@@ -1,4 +1,4 @@
-import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import Feature from 'ol/feature';
 import Draw from 'ol/interaction/draw';
 import Text from 'ol/style/text';
@@ -13,24 +13,24 @@ import VectorSource from 'ol/source/vector';
 import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
-import {
-	ImageryVisualizer, IVisualizerEntity,
-	VisualizerInteractions
-} from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { Observable } from 'rxjs';
-import { SetMeasureDistanceToolState, ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { ActiveMapChangedAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store]
+	deps: [Store, ProjectionService]
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
@@ -43,6 +43,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		.map((flags) => flags.get(toolsFlags.isMeasureToolActive))
 		.distinctUntilChanged();
 
+	@AutoSubscription
 	onChanges$ = Observable.combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
 		.do(([isActiveMap, isMeasureToolActive]) => {
 			if (isActiveMap && isMeasureToolActive) {
@@ -106,34 +107,19 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected store$: Store<any>) {
+	constructor(protected store$: Store<any>, protected projectionService: ProjectionService) {
 		super(null, {
 			initial: {
-				stroke: {
-					color: '#3399CC',
-					width: 2
-				},
-				fill: {
-					color: '#FFFFFF'
-				},
-				point: {
-					radius: 4
-				},
-				line: {
-					width: 2
-				},
+				stroke: '#3399CC',
+				'stroke-width': 2,
+				fill: '#FFFFFF',
+				'marker-size': MarkerSize.small,
+				'marker-color': '#FFFFFF',
 				zIndex: 5
 			}
 		});
 
 		this.geoJsonFormat = new GeoJSON();
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.onChanges$.subscribe()
-		);
 	}
 
 	onResetView(): Observable<boolean> {
@@ -171,7 +157,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent(data) {
-		this.iMap.projectionService.projectCollectionAccurately([data.feature], this.iMap)
+		this.projectionService.projectCollectionAccurately([data.feature], this.iMap)
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [featureJson] = featureCollection.features;
 				const newEntity: IVisualizerEntity = {
@@ -204,13 +190,21 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	// Line style (after DBClick)
 	mainStyle(feature) {
-		const styles = [new Style({ stroke: new Stroke(this.visualizerStyle.initial.stroke) })];
+		const styles = [new Style({
+			stroke: new Stroke({
+				color: this.visualizerStyle.initial.stroke,
+				width: this.visualizerStyle.initial['stroke-width']
+			})
+		})];
 		// Points
 		const pointsStyle = new Style({
 			image: new Circle({
 				radius: 5,
-				stroke: new Stroke(this.visualizerStyle.initial.stroke),
-				fill: new Fill(this.visualizerStyle.initial.fill)
+				stroke: new Stroke({
+					color: this.visualizerStyle.initial.stroke,
+					width: this.visualizerStyle.initial['stroke-width']
+				}),
+				fill: new Fill({ color: this.visualizerStyle.initial.fill })
 			}),
 			geometry: function (feature) {
 				// return the coordinates of the first ring of the polygon

@@ -9,6 +9,8 @@ import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 
 @NgModule({
 	imports: [
@@ -17,7 +19,8 @@ import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer)
 	],
-	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
+	providers: [ProjectionConverterService],
+	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, ColorPickerComponent],
 	entryComponents: [ToolsComponent],
 	exports: [ToolsComponent]
 })

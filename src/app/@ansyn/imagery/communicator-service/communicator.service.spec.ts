@@ -1,29 +1,27 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
-import { ImageryComponentManager, MapInstanceChanged } from '../imagery/manager/imagery.component.manager';
+import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Point } from 'geojson';
 
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	const componentManager1: ImageryComponentManager = <any>{
 		id: '1',
-		positionChanged: new EventEmitter<{ id: string, position: CaseMapPosition }>(),
+		positionChanged: new EventEmitter<{ id: string, position: ICaseMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
-		mapInstanceChanged: new EventEmitter<MapInstanceChanged>(),
+		mapInstanceChanged: new EventEmitter<IMapInstanceChanged>(),
 		plugins: []
 	};
 
 	const componentManager2: ImageryComponentManager = <any>{
 		id: '2',
-		positionChanged: new EventEmitter<{ id: string, position: CaseMapPosition }>(),
-		pointerMove: new EventEmitter<any>(),
-		contextMenu: new EventEmitter<any>(),
+		positionChanged: new EventEmitter<{ id: string, position: ICaseMapPosition }>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
-		mapInstanceChanged: new EventEmitter<MapInstanceChanged>(),
+		mapInstanceChanged: new EventEmitter<IMapInstanceChanged>(),
 		plugins: []
 	};
 

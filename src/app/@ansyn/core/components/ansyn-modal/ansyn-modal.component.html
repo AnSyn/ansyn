@@ -1,0 +1,9 @@
+<div class="blackscreen" (click)="close()">
+	<div class="content" (click)="$event.stopPropagation()">
+		<button (click)="close()" class="close" type="button">
+			<span>×</span>
+		</button>
+
+		<ng-content></ng-content>
+	</div>
+</div>

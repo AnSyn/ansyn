@@ -1,12 +1,11 @@
-import { ILayerState, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { layersStateSelector } from '../../reducers/layers.reducer';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { ToggleDisplayAnnotationsLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { select, Store } from '@ngrx/store';
 import { groupBy } from 'lodash';
-
+import { map } from 'rxjs/internal/operators';
+import { ILayerCollection } from '../layers-collection/layer-collection.component';
+import { ILayer, LayerType } from '../../models/layers.model';
+import { ILayerState, selectLayers } from '../../reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-layer-managers',
@@ -14,29 +13,23 @@ import { groupBy } from 'lodash';
 	styleUrls: ['./layers-manager.component.less']
 })
 
-export class LayersManagerComponent implements OnInit {
-	annotationLayerChecked;
+export class LayersManagerComponent {
 
-	public layers$: Observable<any> = this.store.select(selectLayers)
-		.map((layers: ILayer[]) => {
-			const typeGroupedLayers = groupBy(layers, l => l.type);
-			return Object.keys(typeGroupedLayers).map(layer => typeGroupedLayers[layer]);
-		});
+	public layers$: Observable<any> = this.store
+		.pipe(
+			select(selectLayers),
+			map((layers: ILayer[]): ILayerCollection[] => {
+				const typeGroupedLayers = groupBy(layers, l => l.type);
+				return Object.keys(typeGroupedLayers)
+					.sort()
+					.map((type: LayerType): ILayerCollection => ({
+						type,
+						data: typeGroupedLayers[type]
+					}));
+			})
+		);
 
 	constructor(protected store: Store<ILayerState>) {
-	}
-
-	ngOnInit() {
-		this.store.select<ILayerState>(layersStateSelector)
-			.pluck<ILayerState, boolean>('displayAnnotationsLayer')
-			.subscribe(result => {
-				this.annotationLayerChecked = result;
-			});
-		this.layers$.subscribe();
-	}
-
-	annotationLayerClick() {
-		this.store.dispatch(new ToggleDisplayAnnotationsLayer(!this.annotationLayerChecked));
 	}
 
 }

@@ -1,8 +1,32 @@
 <div class="context-menu-wrapper"
-	[ngStyle]="contextMenuWrapperStyle">
+	 *ngIf="clickMenuProps"
+	 [style.top.px]="clickMenuProps.boundingRect.top"
+	 [style.width.px]="clickMenuProps .boundingRect.width"
+	 [style.height.px]="clickMenuProps.boundingRect.height"
+	 [style.left.px]="clickMenuProps.boundingRect.left"
+	 eventListener="mousedown"
+	 (ansynClickOutside)="close()">
 
-	<div class="remove-feature-wrapper">
-		<button class='removeFeature' (mousedown)="removeFeature($event)">x</button>
+	<div class="context-menu">
+		<div class="buttons">
+			<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()"><i class="icon-tools-ruler"></i></button>
+			<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel()"><i class="icon-annotation-label"></i></button>
+			<button class='removeFeature' (click)="removeFeature()"><i class="icon-close"></i></button>
+		</div>
 	</div>
 
+	<form class="annotation-label-edit" (ngSubmit)="updateLabel()" *ngIf="clickMenuProps.showLabel">
+		<input class="label-input" type="text" placeholder="{{clickMenuProps.label}}" [(ngModel)]="clickMenuProps.label"  name="EditLabel">
+		<i (click)="updateLabel()" class="icon-edit"></i>
+	</form>
+
+</div>
+
+<div class="context-menu-wrapper"
+	 *ngIf="hoverMenuProps"
+	 [style.top.px]="hoverMenuProps.boundingRect.top"
+	 [style.width.px]="hoverMenuProps .boundingRect.width"
+	 [style.height.px]="hoverMenuProps.boundingRect.height"
+	 [style.left.px]="hoverMenuProps.boundingRect.left">
+	<div class="context-menu"></div>
 </div>

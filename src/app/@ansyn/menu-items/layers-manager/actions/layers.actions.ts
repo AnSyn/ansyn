@@ -1,32 +1,39 @@
 import { Action } from '@ngrx/store';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, LayerType } from '../models/layers.model';
+import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
 
-export const LayersActionTypes = {
-	BEGIN_LAYER_COLLECTION_LOAD: 'BEGIN_LAYER_COLLECTION_LOAD',
-	LAYER_COLLECTION_LOADED: 'LAYER_COLLECTION_LOADED',
-	ERROR_LOADING_LAYERS: 'ERROR_LOADING_LAYERS',
-	ANNOTATIONS: {
-		TOGGLE_DISPLAY_LAYER: 'TOGGLE_LAYER'
-	},
-	UPDATE_SELECTED_LAYERS_IDS: 'UPDATE_SELECTED_LAYERS_IDS',
+export enum LayersActionTypes {
+	BEGIN_LAYER_COLLECTION_LOAD = '[Layers] Begin layer collection load',
+	LAYER_COLLECTION_LOADED = '[Layers] Layer collection loaded',
+	ERROR_LOADING_LAYERS = '[Layers] Error loading layers',
+	UPDATE_SELECTED_LAYERS_IDS = '[Layers] Update selected layers ids',
+	SET_LAYER_SELECTION = '[Layers] Set layer selection',
+	SELECT_ONLY = '[Layers] Select only',
+	ADD_LAYER = '[Layers] Add layer',
+	UPDATE_LAYER = '[Layers] Update layer',
+	REMOVE_LAYER = '[Layers] Remove layer',
+	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
+	SET_MODAL = '[Layers] Set modal value',
+	SHOW_ALL_LAYERS = '[Layers] Show all layers'
 };
 
 export type LayersActions =
-	| ToggleDisplayAnnotationsLayer
 	| BeginLayerCollectionLoadAction
 	| LayerCollectionLoadedAction
 	| ErrorLoadingLayersAction
-	| UpdateSelectedLayersIds;
-
-export class ToggleDisplayAnnotationsLayer implements Action {
-	type = LayersActionTypes.ANNOTATIONS.TOGGLE_DISPLAY_LAYER;
-
-	constructor(public payload: boolean) {
-	}
-}
+	| UpdateSelectedLayersIds
+	| SetLayerSelection
+	| SelectOnlyLayer
+	| AddLayer
+	| UpdateLayer
+	| SetLayersModal
+	| CloseLayersModal;
 
 export class BeginLayerCollectionLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;
+
+	constructor(public payload: { caseId: string }) {
+	}
 }
 
 export class LayerCollectionLoadedAction implements Action {
@@ -50,3 +57,68 @@ export class ErrorLoadingLayersAction implements Action {
 	}
 }
 
+export class SetLayerSelection implements Action {
+	readonly type = LayersActionTypes.SET_LAYER_SELECTION;
+
+	constructor(public payload: { id: string, value: boolean }) {
+	}
+}
+
+export class SelectOnlyLayer implements Action {
+	readonly type = LayersActionTypes.SELECT_ONLY;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class AddLayer implements Action {
+	readonly type = LayersActionTypes.ADD_LAYER;
+
+	constructor(public payload: ILayer) {
+	}
+}
+
+export class UpdateLayer implements Action {
+	readonly type = LayersActionTypes.UPDATE_LAYER;
+
+	constructor(public payload: ILayer) {
+	}
+}
+
+export class RemoveLayer implements Action {
+	readonly type = LayersActionTypes.REMOVE_LAYER;
+
+	constructor(public payload: string) {
+
+	}
+}
+
+export class SetActiveAnnotationLayer implements Action {
+	type = LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER;
+
+	constructor(public payload: string) {
+
+	}
+}
+
+export class SetLayersModal implements Action {
+	type = LayersActionTypes.SET_MODAL;
+
+	constructor(public payload: ILayerModal) {
+
+	}
+}
+
+export class CloseLayersModal extends SetLayersModal {
+	constructor() {
+		super({ type: SelectedModalEnum.none, layer: null });
+	}
+}
+
+export class ShowAllLayers implements Action{
+	type = LayersActionTypes.SHOW_ALL_LAYERS;
+
+	constructor(public payload: LayerType) {
+
+	}
+}

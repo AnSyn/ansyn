@@ -3,16 +3,21 @@ import Point from 'ol/geom/point';
 import Polygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
-import { IContextEntity } from '@ansyn/core/models/case.model';
+import { ICaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
-import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -22,9 +27,26 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	referenceDate: Date;
 	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
 	geoJsonFormat: GeoJSON;
+
+	@AutoSubscription
 	contextEntites$ = this.store$.select(selectContextEntities)
 		.filter(Boolean)
 		.mergeMap(this.setEntities.bind(this));
+
+	@AutoSubscription
+	referenceDate$ = this.store$
+		.pipe(
+			select(mapStateSelector),
+			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
+			filter(Boolean),
+			map((map: ICaseMapState) => map.data.overlay && map.data.overlay.date),
+			distinctUntilChanged(),
+			tap((referenceDate) => {
+				this.referenceDate = referenceDate;
+				this.purgeCache();
+				this.source.refresh();
+			})
+		);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>) {
@@ -32,23 +54,20 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 
 		this.updateStyle({
 			initial: {
-				stroke: {
-					color: '#3DCC33'
-				},
+				stroke: '#3DCC33',
+				fill: '#3DCC33',
+				'fill-opacity': 0,
 				icon: {
 					scale: 1,
-					src: 'assets/icons/map/entity-marker.svg'
+					src: 'assets/icons/map/entity-marker.svg',
+					anchor: [0.5, 1]
 				},
 				geometry: this.getGeometry.bind(this),
 				label: {
 					font: '12px Calibri,sans-serif',
-					fill: {
-						color: '#fff'
-					},
-					stroke: {
-						color: '#000',
-						width: 3
-					},
+					fill: '#fff',
+					stroke: '#000',
+					'stroke-width': 3,
 					offsetY: 30,
 					text: this.getText.bind(this)
 				}
@@ -58,14 +77,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new GeoJSON();
 	}
 
-	public onInit(): void {
-		super.onInit();
-		this.subscriptions.push(
-			this.contextEntites$.subscribe())
-	}
-
 	private getText(feature) {
-		if (!this.referenceDate) {
+		if (!this.referenceDate || !(this.getGeometry(feature) instanceof Point)) {
 			return '';
 		}
 		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
@@ -82,17 +95,15 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		}
 
 		const entityMap = this.idToEntity.get(featureId);
-		const view = (<any>this.iMap.mapObject).getView();
-		const projection = view.getProjection();
 
-		if (<any>entityMap.originalEntity.featureJson.type === 'Point') {
+		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
 			const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
 			const centroid = getPointByGeometry(featureGeoJson.geometry);
 			const point = new Point(<[number, number]> centroid.coordinates);
 
 			this.idToCachedCenter.set(featureId, point);
 			return point;
-		} else if (<any>entityMap.originalEntity.featureJson.type === 'Polygon') {
+		} else if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Polygon') {
 			const projectedPolygon = entityMap.feature.getGeometry() as Polygon;
 
 			this.idToCachedCenter.set(featureId, projectedPolygon);
@@ -107,10 +118,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			}
 		});
 		return super.addOrUpdateEntities(logicalEntities);
-	}
-
-	setReferenceDate(date: Date) {
-		this.referenceDate = date;
 	}
 
 }

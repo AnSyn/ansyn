@@ -7,35 +7,38 @@ import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/sel
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer, UpdateSelectedLayersIds
+	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	SetAutoSave,
 	SetFavoriteOverlaysAction,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction
+	SetLayoutAction, SetMapsDataActionStore,
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction
 } from '@ansyn/core/actions/core.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { HttpClientModule } from '@angular/common/http';
 import {
-	Case,
-	CaseDataInputFiltersState,
-	CaseFacetsState,
-	CaseLayersState,
-	CaseMapsState,
 	CaseOrientation,
 	CaseRegionState,
-	CaseState,
 	CaseTimeFilter,
-	CaseTimeState,
+	ICase,
+	ICaseDataInputFiltersState,
+	ICaseFacetsState,
+	ICaseLayersState,
+	ICaseMapsState,
+	ICaseState,
+	ICaseTimeState,
 	IContextEntity,
-	OverlaysManualProcessArgs
+	IOverlaysManualProcessArgs
 } from '@ansyn/core/models/case.model';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -50,7 +53,8 @@ describe('SelectCaseAppEffects', () => {
 			],
 			providers: [
 				SelectCaseAppEffects,
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{ provide: CoreConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));
@@ -72,23 +76,34 @@ describe('SelectCaseAppEffects', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
 				timeFilter: CaseTimeFilter = 'Start - End',
-				time: CaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
+				time: ICaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
-				dataInputFilters: CaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
-				favoriteOverlays: Overlay[] = [],
-				maps: CaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
-				layers: CaseLayersState = { activeLayersIds: [], displayAnnotationsLayer: false, annotationsLayer: <any> {} },
-				overlaysManualProcessArgs: OverlaysManualProcessArgs = {},
-				facets: CaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{id: '234', date: new Date(), featureJson: null}];
+				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
+				favoriteOverlays: IOverlay[] = [],
+				removedOverlaysIds: string[] = [],
+				removedOverlaysVisibility = true,
+				presetOverlays: IOverlay[] = [],
+				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
+				layers: ICaseLayersState = {
+					activeLayersIds: []
+				},
+				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
+				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
+				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }]
+			;
 
-			const state: CaseState = <any> {
+			let noInitialSearch;
+
+			const state: ICaseState = <any> {
 				orientation,
 				timeFilter,
 				time,
 				region,
 				dataInputFilters,
 				favoriteOverlays,
+				removedOverlaysVisibility,
+				removedOverlaysIds,
+				presetOverlays,
 				maps,
 				layers,
 				overlaysManualProcessArgs,
@@ -96,7 +111,7 @@ describe('SelectCaseAppEffects', () => {
 				contextEntities
 			};
 
-			const payload: Case = {
+			const payload: ICase = {
 				id: 'caseId',
 				name: 'caseName',
 				owner: 'ownerName',
@@ -108,21 +123,22 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijkl)--', {
+			const expectedResult = cold('--(abcdefghijklmn)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
-				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
+				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
 				e: new SetFavoriteOverlaysAction(favoriteOverlays),
-				f: new BeginLayerCollectionLoadAction(),
-				g: new SetAnnotationsLayer(layers.annotationsLayer),
-				h: new ToggleDisplayAnnotationsLayer(layers.displayAnnotationsLayer),
-				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				j: new UpdateFacetsAction(facets),
-				k: new UpdateSelectedLayersIds([]),
-				l: new SetContextParamsAction({ contextEntities })
-
-		});
+				f: new SetPresetOverlaysAction(presetOverlays),
+				g: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				i: new UpdateFacetsAction(facets),
+				j: new UpdateSelectedLayersIds([]),
+				k: new SetContextParamsAction({ contextEntities }),
+				l: new SetAutoSave(false),
+				m: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+				n: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
+			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);
 		});

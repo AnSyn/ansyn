@@ -1,6 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { DynamicsAnsynModule } from '../dynamic-ansyn/dynamic-ansyn.module';
-import { NgModule, NgModuleRef, Provider } from '@angular/core';
+import { InjectionToken, NgModule, NgModuleRef, Provider } from '@angular/core';
 import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -8,9 +8,6 @@ import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers'
 import { ContextService } from '@ansyn/context/services/context.service';
 import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { AnsynBuilderModule } from '@builder/api/ansyn-builder.module';
-import { WindowLayout } from '@builder/reducers/builder.reducer';
-import { buildAnsynCustomComponent } from '@builder/dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
 import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
 import { CommonModule } from '@angular/common';
@@ -27,19 +24,24 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
-import { AnsynApi } from '@builder/api/ansyn-api.service';
+import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
+import { IWindowLayout } from '../reducers/builder.reducer';
+import { AnsynApi } from './ansyn-api.service';
+import { buildAnsynCustomComponent } from '../dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
+import { AnsynBuilderModule } from './ansyn-builder.module';
 
-export interface AnsynBuilderOptions {
+export interface IAnsynBuilderOptions {
 	providers?: any[];
-	windowLayout?: WindowLayout,
+	windowLayout?: IWindowLayout,
 	customModules?: any[],
-	sourceProviders?: Array<Provider>
+	sourceProviders?: Array<Provider>,
+	doInitialSearch?: boolean
 }
 
-export interface AnsynBuilderConstructor {
+export interface IAnsynBuilderConstructor {
 	id: string;
 	config: any;
-	options: AnsynBuilderOptions;
+	options: IAnsynBuilderOptions;
 	callback: any;
 }
 
@@ -48,7 +50,7 @@ export class AnsynBuilder {
 
 	id: string;
 	config: any;
-	options: AnsynBuilderOptions;
+	options: IAnsynBuilderOptions;
 	callback: any;
 	moduleRef: NgModuleRef<DynamicsAnsynModule>;
 
@@ -56,7 +58,7 @@ export class AnsynBuilder {
 		return this.moduleRef && this.moduleRef.instance.api;
 	}
 
-	constructor({ id, config, options, callback }: AnsynBuilderConstructor) {
+	constructor({ id, config, options, callback }: IAnsynBuilderConstructor) {
 		if (!id || !config) {
 			throw new Error('Ansyn waiting for params');
 		}
@@ -87,30 +89,26 @@ export class AnsynBuilder {
 		const customProviders = this.options.sourceProviders || [];
 		const customModules = this.options.customModules || [];
 
+		class BuilderDataLayersService extends DataLayersService {
+			getAllLayersInATree() {
+				return Observable.of([]);
+			}
+		}
+
 		const options: NgModule = <any> {
 			imports: [
-				AnsynBuilderModule,
+				AnsynBuilderModule.provideId(this.id),
 				CommonModule,
 				AppProvidersModule,
 				FiltersModule,
 				ToolsModule,
+				LayersManagerModule,
 				OverlaysModule,
 				FormsModule,
 				HttpClientModule,
 				BrowserAnimationsModule,
 				AnsynPluginsModule,
 				CoreModule,
-				FormsModule,
-				HttpClientModule,
-				BrowserAnimationsModule,
-				OverlaysModule,
-				AnsynPluginsModule,
-				CoreModule,
-				AlertsModule.provideAlerts(ansynAlerts),
-				AppEffectsModule,
-				MapFacadeModule,
-				ImageryModule,
-				StatusBarModule,
 				AlertsModule.provideAlerts(ansynAlerts),
 				AppEffectsModule,
 				MapFacadeModule,
@@ -121,11 +119,12 @@ export class AnsynBuilder {
 				EffectsModule.forRoot([])
 			],
 			providers: [
+				AnsynApi,
 				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },
 				...configProviders,
 				customProviders,
 				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
-				{ provide: DataLayersService, useValue: { getAllLayersInATree: () => Observable.of([]) } },
+				{ provide: DataLayersService, useClass: BuilderDataLayersService }
 			],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],
@@ -152,5 +151,4 @@ export class AnsynBuilder {
 				}
 			});
 	}
-
 }

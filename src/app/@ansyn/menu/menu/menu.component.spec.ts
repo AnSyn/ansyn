@@ -5,7 +5,7 @@ import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reduce
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerChangedTriggerAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
-import { MenuItem } from '@ansyn/menu/models/menu-item.model';
+import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -43,9 +43,9 @@ describe('MenuComponent', () => {
 
 	it('buildCurrentComponent should create factory from selectedMenuItem component, and createComponent from factory', () => {
 		spyOn(menuComponent, 'anyMenuItemSelected').and.returnValue(true);
-		const mockMenuItem: MenuItem = {
+		const mockMenuItem: IMenuItem = {
 			component: 'fakeComp'
-		} as MenuItem;
+		} as IMenuItem;
 		const fakeFactory = 'fakeFactory';
 		spyOnProperty(menuComponent, 'selectedMenuItem', 'get').and.returnValue(mockMenuItem);
 		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => fakeFactory);

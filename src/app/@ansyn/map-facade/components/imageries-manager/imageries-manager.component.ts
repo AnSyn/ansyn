@@ -5,13 +5,14 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { SetMapsDataActionStore, UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
+import { UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { MapsLayout } from '@ansyn/core/models/maps-layout';
+import { IMapsLayout } from '@ansyn/core/models/i-maps-layout';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
+import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -23,17 +24,17 @@ export class ImageriesManagerComponent implements OnInit {
 	public core$: Observable<ICoreState> = this.store.select(coreStateSelector);
 	public mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
 
-	public selectedLayout$: Observable<MapsLayout> = this.core$
+	public selectedLayout$: Observable<IMapsLayout> = this.core$
 		.pluck<ICoreState, LayoutKey>('layout')
 		.distinctUntilChanged()
-		.map((layout: LayoutKey) => <MapsLayout> layoutOptions.get(layout));
+		.map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout));
 
 	public activeMapId$: Observable<string> = this.mapState$
 		.pluck<IMapState, string>('activeMapId')
 		.distinctUntilChanged();
 
-	public mapsList$: Observable<CaseMapState[]> = this.mapState$
-		.pluck<IMapState, CaseMapState[]>('mapsList')
+	public mapsList$: Observable<ICaseMapState[]> = this.mapState$
+		.pluck<IMapState, ICaseMapState[]>('mapsList')
 		.distinctUntilChanged();
 
 	public showWelcomeNotification$ = this.store.select(coreStateSelector)
@@ -51,7 +52,7 @@ export class ImageriesManagerComponent implements OnInit {
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
-	mapsList: CaseMapState[];
+	mapsList: ICaseMapState[];
 	activeMapId: string;
 
 	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>, @Inject(DOCUMENT) protected document: Document) {
@@ -74,7 +75,7 @@ export class ImageriesManagerComponent implements OnInit {
 	initSubscribers() {
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
-		this.mapsList$.subscribe((_mapsList: CaseMapState[]) => this.mapsList = _mapsList);
+		this.mapsList$.subscribe((_mapsList: ICaseMapState[]) => this.mapsList = _mapsList);
 	}
 
 
@@ -86,7 +87,7 @@ export class ImageriesManagerComponent implements OnInit {
 		this.store.dispatch(new UpdateMapSizeAction());
 	}
 
-	setSelectedLayout(_selectedLayout: MapsLayout) {
+	setSelectedLayout(_selectedLayout: IMapsLayout) {
 		this.setClassImageriesContainer(_selectedLayout.id, this.selectedLayout && this.selectedLayout.id);
 		this.selectedLayout = _selectedLayout;
 	}

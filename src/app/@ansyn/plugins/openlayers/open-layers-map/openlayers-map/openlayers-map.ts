@@ -1,4 +1,3 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
 import OLMap from 'ol/map';
 import View from 'ol/view';
 import ScaleLine from 'ol/control/scaleline';
@@ -6,9 +5,7 @@ import Group from 'ol/layer/group';
 import olGeoJSON from 'ol/format/geojson';
 import OLGeoJSON from 'ol/format/geojson';
 import Vector from 'ol/source/vector';
-import OSM from 'ol/source/osm';
 import Layer from 'ol/layer/layer';
-import TileLayer from 'ol/layer/tile';
 import VectorLayer from 'ol/layer/vector';
 import olFeature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
@@ -21,25 +18,29 @@ import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
-import { CaseMapExtent, CaseMapExtentPolygon, CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
+import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 
 export const OpenlayersMapName = 'openLayersMap';
+
+enum StaticGroupsKeys {
+	layers = 'layers'
+}
 
 @ImageryMap({
 	mapType: OpenlayersMapName,
 	deps: [ProjectionService]
 })
-export class OpenLayersMap extends IMap<OLMap> {
-	static groupLayers = new Map<string, Group>();
-	private showGroups = new Map<string, boolean>();
-	public mapType: string = OpenlayersMapName;
+export class OpenLayersMap extends BaseImageryMap<OLMap> {
+	static groupsKeys = StaticGroupsKeys;
+	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
+	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
-	public positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
 
 	private _subscriptions: Subscription[] = [];
 	private _moveEndListener: () => void;
@@ -47,62 +48,44 @@ export class OpenLayersMap extends IMap<OLMap> {
 	private _mapLayers = [];
 	public isValidPosition;
 
-	static addGroupLayer(layer: any, groupName: string) {
-		const group = OpenLayersMap.groupLayers.get(groupName);
-		if (!group) {
-			throw new Error('Tried to add a layer to a non-existent group');
-		}
-
-		group.getLayers().push(layer);
-	}
-
-	static removeGroupLayer(id: string, groupName: string) {
-		const group = OpenLayersMap.groupLayers.get(groupName);
-		if (!group) {
-			throw new Error('Tried to remove a layer to a non-existent group');
-		}
-
-		const layersArray: any[] = group.getLayers().getArray();
-		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
-		if (removeIdx >= 0) {
-			group.getLayers().removeAt(removeIdx);
-		}
-	}
-
-	static addGroupVectorLayer(layer: ILayer, groupName: string) {
-		const vectorLayer = new TileLayer({
-			zIndex: 1,
-			source: new OSM({
-				attributions: [
-					layer.name
-				],
-				opaque: false,
-				url: layer.url,
-				crossOrigin: null
-			})
-		});
-		vectorLayer.set('id', layer.id);
-		OpenLayersMap.addGroupLayer(vectorLayer, groupName);
-	}
 
 	constructor(public projectionService: ProjectionService) {
 		super();
+	}
 
-		if (!OpenLayersMap.groupLayers.get('layers')) {
-			OpenLayersMap.groupLayers.set('layers', new Group(<any>{
-				layers: [],
-				name: 'layers'
-			}));
+	/**
+	 * add layer to the map if it is not already exists the layer must have an id set
+	 * @param layer
+	 */
+	public addLayerIfNotExist(layer): Layer {
+		const layerId = layer.get('id');
+		if (!layerId) {
+			return;
 		}
+		const existingLayer: Layer = this.getLayerById(layerId);
+		if (!existingLayer) {
+			// layer.set('visible',false);
+			this.addLayer(layer);
+			return layer;
+		}
+		return existingLayer;
+	}
 
-		this.showGroups.set('layers', true);
+	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
+		const group = OpenLayersMap.groupLayers.get(groupName);
+		if (newState) {
+			this.addLayer(group);
+		} else {
+			this.removeLayer(group);
+		}
+		this.showGroups.set(groupName, newState);
 	}
 
 	getLayers(): any[] {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this._mapLayers = [...layers];
 		const controls = [
 			new ScaleLine(),
@@ -114,9 +97,8 @@ export class OpenLayersMap extends IMap<OLMap> {
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
 		const renderer = 'canvas';
-		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true });
+		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true, loadTilesWhileAnimating: true });
 		this.initListeners();
-		this.setGroupLayers();
 		return this.resetView(layers[0], position);
 	}
 
@@ -140,7 +122,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: CaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		this.isValidPosition = false;
 		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
@@ -177,17 +159,6 @@ export class OpenLayersMap extends IMap<OLMap> {
 		});
 	}
 
-	toggleGroup(groupName: string) {
-		const newState = !this.showGroups.get(groupName);
-		const group = OpenLayersMap.groupLayers.get(groupName);
-		if (newState) {
-			this.addLayer(group);
-		} else {
-			this._mapObject.removeLayer(group);
-		}
-		this.showGroups.set(groupName, newState);
-	}
-
 	setMainLayer(layer: Layer) {
 		layer.set('name', 'main');
 		this.removeAllLayers();
@@ -205,26 +176,11 @@ export class OpenLayersMap extends IMap<OLMap> {
 	}
 
 	public addLayer(layer: any) {
-		this._mapLayers.push(layer);
-		this._mapObject.addLayer(layer);
-	}
 
-	/**
-	 * add layer to the map if it is not already exists the layer must have an id set
-	 * @param layer
-	 */
-	public addLayerIfNotExist(layer): Layer {
-		const layerId = layer.get('id');
-		if (!layerId) {
-			return;
+		if (!this._mapLayers.includes(layer)) {
+			this._mapLayers.push(layer);
+			this._mapObject.addLayer(layer);
 		}
-		const existingLayer: Layer = this.getLayerById(layerId);
-		if (!existingLayer) {
-			// layer.set('visible',false);
-			this.addLayer(layer);
-			return layer;
-		}
-		return existingLayer;
 	}
 
 	public removeAllLayers() {
@@ -241,6 +197,10 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this._mapLayers = [];
 	}
 
+	private isRasterLayer(layer): boolean {
+		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster
+	}
+
 	public removeLayer(layer: any): void {
 		if (!layer) {
 			return;
@@ -250,6 +210,9 @@ export class OpenLayersMap extends IMap<OLMap> {
 		if (index > -1) {
 			this._mapLayers.splice(index, 1);
 			this._mapObject.removeLayer(layer);
+			if (this.isRasterLayer(layer)) {
+				layer.getSource().destroy();
+			}
 			this._mapObject.renderSync();
 		}
 	}
@@ -336,7 +299,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 			});
 	}
 
-	public setPosition(position: CaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
+	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
 		const rotation = this._mapObject.getView().getRotation();
 		view.setCenter([0, 0]);
 		view.setRotation(rotation ? rotation : 0);
@@ -357,12 +320,18 @@ export class OpenLayersMap extends IMap<OLMap> {
 		}
 	}
 
-	public getPosition(): Observable<CaseMapPosition> {
+	public getPosition(): Observable<ICaseMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
-		return this.calculateRotateExtent(this.mapObject).map(extentPolygon => {
+		return this.calculateRotateExtent(this.mapObject).map((extentPolygon: Polygon) => {
 			if (!extentPolygon) {
+				return null;
+			}
+
+			const someIsNaN = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
+			if (someIsNaN) {
+				console.warn('ol map getPosition failed invalid coordinates ', extentPolygon);
 				return null;
 			}
 			return { extentPolygon, projectedState };
@@ -395,7 +364,7 @@ export class OpenLayersMap extends IMap<OLMap> {
 		this.mapObject.addLayer(layer);
 	}
 
-	// IMap End
+	// BaseImageryMap End
 	public dispose() {
 		this.removeAllLayers();
 

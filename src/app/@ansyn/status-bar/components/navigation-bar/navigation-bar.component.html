@@ -7,6 +7,14 @@
 		<i class="icon-status-bar-prev"></i>
 	</button>
 
+	<button (click)="clickGoNextPresetOverlay()"
+			[class.active]="goNextQuickLoop"
+			[attr.tooltip-value]="toolTips.quickloop"
+			tooltip-class="top left"
+	>
+		<i class="icon-presets"></i>
+	</button>
+
 	<button (click)="clickGoAdjacent(true)"
 			[class.active]="goNextActive"
 			[attr.tooltip-value]="toolTips.forward"

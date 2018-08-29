@@ -1,8 +1,5 @@
-import { EntitiesVisualizer, VisualizerStates } from '../entities-visualizer';
-import {
-	ImageryVisualizer, IVisualizerEntity,
-	VisualizerInteractions
-} from '@ansyn/imagery/model/base-imagery-visualizer';
+import { EntitiesVisualizer } from '../entities-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
@@ -13,26 +10,33 @@ import Select from 'ol/interaction/select';
 import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { Inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
-import { Store } from '@ngrx/store';
+import { combineLatest, Observable } from 'rxjs';
+import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
+import { select, Store } from '@ngrx/store';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { Actions } from '@ngrx/effects';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import {
+	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
-	MarkUpData,
-	overlaysStateSelector
+	overlaysStateSelector,
+	selectFilteredOveralys,
+	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { empty } from 'rxjs';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
+import { EMPTY } from 'rxjs/internal/observable/empty';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -40,31 +44,40 @@ import { empty } from 'rxjs';
 })
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
-	markups: ExtendMap<MarkUpClass, MarkUpData>;
+	markups: ExtendMap<MarkUpClass, IMarkUpData>;
 
 	protected disableCache = true;
 
-	currentMap$ = this.store.select(mapStateSelector)
-		.map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId))
-		.filter(Boolean);
+	overlayDisplayMode$: Observable<string> = this.store
+		.pipe(
+			select(mapStateSelector),
+			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
+			filter(Boolean),
+			map((map: ICaseMapState) => map.data.overlayDisplayMode),
+			distinctUntilChanged()
+		);
 
-	drawOverlaysOnMap$: Observable<any> = this.currentMap$
-		.withLatestFrom(this.store.select(overlaysStateSelector))
-		.mergeMap(([map, { overlays, filteredOverlays }]: [CaseMapState, IOverlaysState]) => {
-			if (map.data.overlayDisplayMode === 'Polygon') {
-				const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
-				const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
-				return this.setEntities(entitiesToDraw);
-			} else if (this.getEntities().length > 0) {
-				this.clearEntities();
-			}
-			return empty();
-		});
+	@AutoSubscription
+	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.pipe(select(selectFilteredOveralys)))
+		.pipe(
+			withLatestFrom(this.store.select(selectOverlaysMap)),
+			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, IOverlay>]) => {
+				if (overlayDisplayMode === 'Polygon') {
+					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
+					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
+					return this.setEntities(entitiesToDraw);
+				} else if (this.getEntities().length > 0) {
+					this.clearEntities();
+				}
+				return EMPTY;
+			})
+		);
 
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
 
-	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, MarkUpData>> = this.overlaysState$
-		.pluck <IOverlaysState, ExtendMap<MarkUpClass, MarkUpData>>('dropsMarkUp')
+	@AutoSubscription
+	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.overlaysState$
+		.pluck <IOverlaysState, ExtendMap<MarkUpClass, IMarkUpData>>('dropsMarkUp')
 		.distinctUntilChanged()
 		.do((markups) => this.markups = markups)
 		.do(this.onMarkupsChange.bind(this));
@@ -77,20 +90,17 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			opacity: 0.5,
 			initial: {
 				zIndex: this.getZIndex.bind(this),
-				fill: null,
-				stroke: {
-					width: this.getStrokeWidth.bind(this),
-					color: this.getStrokeColor.bind(this)
-				},
+				fill: 'transparent',
+				stroke: this.getStrokeColor.bind(this),
+				'stroke-width': this.getStrokeWidth.bind(this),
 				shadow: this.getShadow.bind(this)
 			},
 			hover: {
 				zIndex: 4,
-				fill: { color: 'rgba(255, 255, 255, 0.4)' },
-				stroke: {
-					width: (feature) => this.getStrokeWidth(feature, 5),
-					color: (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
-				}
+				fill: 'white',
+				'fill-opacity': 0.4,
+				'stroke-width': (feature) => this.getStrokeWidth(feature, 5),
+				'stroke': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
 			}
 		});
 	}
@@ -150,8 +160,8 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		}
 
 		return {
-			width: 5,
-			color: this.visualizerStyle.colors.favorite
+			'stroke-width': 5,
+			stroke: this.visualizerStyle.colors.favorite
 		};
 	}
 
@@ -277,13 +287,5 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			}
 			features.forEach(f => this.purgeCache(f));
 		}
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.drawOverlaysOnMap$.subscribe(),
-			this.dropsMarkUp$.subscribe()
-		);
 	}
 }

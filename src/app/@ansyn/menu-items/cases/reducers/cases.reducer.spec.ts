@@ -5,14 +5,12 @@ import {
 	SelectCaseAction,
 	UpdateCaseAction
 } from '../actions/cases.actions';
-import { Case } from '../models/case.model';
+import { ICase } from '../models/case.model';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 
 describe('CasesReducer', () => {
-	const caseMock: Case = {
+	const caseMock: ICase = {
 		id: 'fakeId',
 		name: 'fakeName',
 		owner: 'owner',
@@ -25,6 +23,8 @@ describe('CasesReducer', () => {
 				from: new Date(),
 				to: new Date()
 			},
+			removedOverlaysVisibility: true,
+			removedOverlaysIds: [],
 			orientation: 'Align North',
 			dataInputFilters: { fullyChecked: true, filters: [], active: true },
 			timeFilter: 'Start - End',
@@ -52,7 +52,7 @@ describe('CasesReducer', () => {
 	});
 
 	it('SELECT_CASE action should set selectedCase from payload', () => {
-		const fakeCase = { id: 'fakeCaseId', state: {} } as Case;
+		const fakeCase = { id: 'fakeCaseId', state: {} } as ICase;
 
 		let action: SelectCaseAction = new SelectCaseAction(fakeCase);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
@@ -70,7 +70,7 @@ describe('CasesReducer', () => {
 		state.modal.id = 'id2';
 		state.selectedCase = { ...caseMock, id: 'id2' };
 
-		let newCase: Case = {
+		let newCase: ICase = {
 			...caseMock, id: 'id2', name: 'name2 lastname2'
 		};
 

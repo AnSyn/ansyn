@@ -4,15 +4,14 @@ import { MapEffects } from '../../effects/map.effects';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
-import { SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
 import { AlertComponentDirective } from '@ansyn/core/alerts/alert-component.directive';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
-import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { SetLayoutAction, SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
+import { TranslateModule } from '@ngx-translate/core';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -28,6 +27,11 @@ const mockAnnotationContextMenu = MockComponent({
 });
 const mockAnsynWelcomeNotification = MockComponent({
 	selector: 'ansyn-welcome-notification'
+});
+
+const mockAnsynPopoverComponent = MockComponent({
+	selector: 'ansyn-popover',
+	inputs: ['text', 'icon', 'popDirection']
 });
 
 describe('ImageriesManagerComponent', () => {
@@ -47,6 +51,7 @@ describe('ImageriesManagerComponent', () => {
 				MapFacadeService
 			],
 			imports: [
+				TranslateModule.forRoot(),
 				StoreModule.forRoot({[mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer})
 			],
 			declarations: [
@@ -55,6 +60,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,
 				mockAnsynWelcomeNotification,
+				mockAnsynPopoverComponent,
 				ImageryStatusComponent,
 				AlertComponentDirective
 			]
@@ -84,8 +90,6 @@ describe('ImageriesManagerComponent', () => {
 
 	beforeEach(() => {
 		const communicator = jasmine.createSpyObj('communicator', ['stopMouseShadowVectorLayer', 'setMouseShadowListener', 'drawShadowMouse', 'startMouseShadowVectorLayer']);
-		communicator.pointerMove = Observable.create(observer => {
-		});
 
 		// spyOn(communicator,'pointerMove').and.returnValue(Observable.create(observer => {} ));
 		communicatorProvider.communicators = {

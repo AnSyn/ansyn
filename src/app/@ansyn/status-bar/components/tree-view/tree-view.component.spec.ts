@@ -13,11 +13,11 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
-import { OverlaysCriteria } from '@ansyn/core/models/overlay.model';
+import { IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { By } from '@angular/platform-browser';
-import { MockComponent } from '@ansyn/core/test/mock-component';
-import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -28,12 +28,17 @@ describe('TreeViewComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [TreeViewComponent],
-			imports: [StoreModule.forRoot({}), TreeviewModule.forRoot()],
+			declarations: [TreeViewComponent, SliderCheckboxComponent],
+			imports: [
+				TranslateModule.forRoot(),
+				StoreModule.forRoot({}),
+				TreeviewModule.forRoot()],
 			providers: [
+				{ provide: USE_DEFAULT_LANG },
+				MissingTranslationHandler,
 				{
 					provide: StatusBarConfig,
-					useValue: { toolTips: {}, dataInputFiltersConfig: { } }
+					useValue: { toolTips: {}, dataInputFiltersConfig: {} }
 				},
 				provideMockActions(() => actions),
 				{
@@ -46,7 +51,7 @@ describe('TreeViewComponent', () => {
 			.compileComponents();
 	}));
 
-	let searchParams: OverlaysCriteria = {
+	let searchParams: IOverlaysCriteria = {
 		region: {
 			'type': 'Polygon',
 			'coordinates': [
@@ -88,7 +93,7 @@ describe('TreeViewComponent', () => {
 		statusBarState = cloneDeep(StatusBarInitialState);
 		const fakeStore = new Map<any, any>([
 			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState],
+			[coreStateSelector, coreState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));

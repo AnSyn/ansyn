@@ -3,11 +3,11 @@ import { selectDropMarkup, selectLoading } from '@ansyn/overlays/reducers/overla
 import { Store } from '@ngrx/store';
 import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { selectWindowLayout, WindowLayout } from '@builder/reducers/builder.reducer';
+import { IWindowLayout, selectWindowLayout } from '../../reducers/builder.reducer';
 
 @Injectable()
 export class AnsynCustomComponent extends AnsynComponent implements OnInit {
-	windowLayout$: Observable<WindowLayout> = this.store$.select(selectWindowLayout);
+	windowLayout$: Observable<IWindowLayout> = this.store$.select(selectWindowLayout);
 
 	isLoading$: Observable<boolean> = this.store$.select(selectLoading)
 		.skip(1)

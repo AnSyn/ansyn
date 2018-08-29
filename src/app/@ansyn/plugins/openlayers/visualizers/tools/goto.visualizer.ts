@@ -18,11 +18,13 @@ import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
 import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store]
+	deps: [Store, ProjectionService]
 })
 export class GoToVisualizer extends EntitiesVisualizer {
 	/* data */
@@ -48,10 +50,12 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		.distinctUntilChanged();
 
 	/* events */
+	@AutoSubscription
 	drawPinPoint$ = Observable
 		.combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$)
 		.mergeMap(this.drawGotoIconOnMap.bind(this));
 
+	@AutoSubscription
 	goToPinAvailable$ = Observable.combineLatest(this.pinLocation$, this.isActiveMap$)
 		.do(([pinLocation, isActiveMap]: [boolean, boolean]) => {
 			if (isActiveMap && pinLocation) {
@@ -70,7 +74,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 	});
 
 	public singleClickListener(e) {
-		this.iMap.projectionService
+		this.projectionService
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap)
 			.take(1)
 			.subscribe((point: Point) => {
@@ -79,18 +83,9 @@ export class GoToVisualizer extends EntitiesVisualizer {
 			});
 	}
 
-	constructor(public store$: Store<any>) {
+	constructor(public store$: Store<any>, protected projectionService: ProjectionService) {
 		super();
 	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.drawPinPoint$.subscribe(),
-			this.goToPinAvailable$.subscribe()
-		);
-	}
-
 
 	featureStyle(feature: Feature, resolution) {
 		return this._iconSrc;

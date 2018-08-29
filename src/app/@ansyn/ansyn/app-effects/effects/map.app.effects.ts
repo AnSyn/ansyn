@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
@@ -14,8 +14,7 @@ import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.re
 import {
 	ImageryCreatedAction,
 	MapActionTypes,
-	SetIsLoadingAcion,
-	SetMapsDataActionStore
+	SetIsLoadingAcion
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
@@ -31,12 +30,12 @@ import {
 	AddAlertMsg,
 	BackToWorldView,
 	CoreActionTypes,
-	RemoveAlertMsg,
+	RemoveAlertMsg, SetMapsDataActionStore,
 	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { CaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
@@ -48,30 +47,41 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { IMAGERY_IMAP } from '@ansyn/imagery/model/imap-collection';
-import { IMapConstructor } from '@ansyn/imagery/model/imap';
+import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
+import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
+import { debounceTime } from 'rxjs/internal/operators';
 
 @Injectable()
 export class MapAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.pipe(
+			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
 			startWith(null),
 			pairwise(),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			filter(this.onDisplayOverlayFilter.bind(this))
 		);
 
-	@Effect()
+
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
 		.pipe(
-			filter((data) => this.displayShouldSwitch(data)),
+			filter((data) => this.displayShouldSwitch(data))
+		);
+
+	@Effect()
+	onDisplayOverlaySwitchMapWithAbort$ = this.onDisplayOverlaySwitchMap$
+		.pipe(
+			filter((data) => this.shouldAbortDisplay(data)),
 			switchMap(this.onDisplayOverlay.bind(this))
 		);
 
+	@Effect()
+	onDisplayOverlaySwitchMapWithDebounce$ = this.onDisplayOverlaySwitchMap$
+		.pipe(
+			debounceTime(this.config.displayDebounceTime),
+			filter(this.onDisplayOverlayFilter.bind(this)),
+			switchMap(this.onDisplayOverlay.bind(this))
+		);
 
 	@Effect()
 	onDisplayOverlayMergeMap$ = this.onDisplayOverlay$
@@ -116,8 +126,8 @@ export class MapAppEffects {
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
-			filter(([activeMap]: [CaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
-			mergeMap(([activeMap, action, mapState]: [CaseMapState, SetManualImageProcessing, IMapState]) => {
+			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
+			mergeMap(([activeMap, action, mapState]: [ICaseMapState, SetManualImageProcessing, IMapState]) => {
 				const updatedMapList = [...mapState.mapsList];
 				activeMap.data.imageManualProcessArgs = action.payload;
 				const overlayId = activeMap.data.overlay.id;
@@ -145,8 +155,8 @@ export class MapAppEffects {
 				return mapsState.mapsList
 					.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
 			}),
-			filter((caseMapState: CaseMapState) => Boolean(caseMapState)),
-			map((caseMapState: CaseMapState) => {
+			filter((caseMapState: ICaseMapState) => Boolean(caseMapState)),
+			map((caseMapState: ICaseMapState) => {
 				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
@@ -195,40 +205,6 @@ export class MapAppEffects {
 			}))
 		);
 
-
-	/**
-	 * @type Effect
-	 * @name updateSelectedLayers$
-	 * @ofType combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)
-	 */
-	@Effect({ dispatch: false })
-	updateSelectedLayers$: Observable<[ILayer[], string[]]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
-		.pipe(
-			tap(([layers, selectedLayersIds]: [ILayer[], string[]]): void => {
-				this.iMapConstructors
-					.filter((iMapConstructor: IMapConstructor) => iMapConstructor.groupLayers.get('layers'))
-					.forEach((iMapConstructor: IMapConstructor) => {
-						const displayedLayers: any = iMapConstructor.groupLayers.get('layers').getLayers().getArray();
-						/* remove layer if layerId not includes on selectLayers */
-						displayedLayers.forEach((layer) => {
-							const id = layer.get('id');
-							if (!selectedLayersIds.includes(id)) {
-								iMapConstructor.removeGroupLayer(id, 'layers');
-							}
-						});
-
-						/* add layer if id includes on selectLayers but not on map */
-						selectedLayersIds.forEach((layerId) => {
-							const layer = displayedLayers.some((layer: any) => layer.get('id') === layerId);
-							if (!layer) {
-								const addLayer = layers.find(({ id }) => id === layerId);
-								iMapConstructor.addGroupVectorLayer(addLayer, 'layers');
-							}
-						});
-					});
-			})
-		);
-
 	/**
 	 * @type Effect
 	 * @name setOverlaysNotInCase$
@@ -238,7 +214,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, CoreActionTypes.SET_MAPS_DATA)
 		.pipe(
 			withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
 			mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {
@@ -266,7 +242,7 @@ export class MapAppEffects {
 			map(([action, { mapsList, activeMapId }]: [Action, IMapState]) => {
 					const actives = [];
 					const displayed = [];
-					mapsList.forEach((map: CaseMapState) => {
+					mapsList.forEach((map: ICaseMapState) => {
 						if (Boolean(map.data.overlay)) {
 							if (map.id === activeMapId) {
 								actives.push(map.data.overlay.id);
@@ -309,11 +285,9 @@ export class MapAppEffects {
 		.pipe(
 			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
 			tap((communicator: CommunicatorEntity) => {
-				communicator.ActiveMap.toggleGroup('layers');
 				communicator.visualizers.forEach(v => v.toggleVisibility());
 			})
 		);
-
 
 	/**
 	 * @type Effect
@@ -335,18 +309,41 @@ export class MapAppEffects {
 			})
 		);
 
+	displayedItems = new Map<string, Date>();
+
+	shouldAbortDisplay([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
+		const currentTime = new Date();
+
+		// remove prev layers
+		const mapIdsToDelete = [];
+		this.displayedItems.forEach(( value: Date, key: string) => {
+			const isTimePassed = (currentTime.getTime() - (this.displayedItems.get(action.payload.mapId) || currentTime).getTime()) > this.config.displayDebounceTime;
+			if (isTimePassed) {
+				mapIdsToDelete.push(key);
+			}
+		});
+		for (let i = 0; i < mapIdsToDelete.length; i++) {
+			this.displayedItems.delete(mapIdsToDelete[i]);
+		}
+
+		let result = !this.displayedItems.has(action.payload.mapId);
+		this.displayedItems.set(action.payload.mapId, currentTime);
+		return result;
+	}
+
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
-		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
+		const caseMapState = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId);
+		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
 		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 
 
-		const mapType = communicator.ActiveMap.mapType;
+		const mapType = communicator.mapType;
 		const { sourceType } = overlay;
-		const sourceLoader = communicator.getMapSourceProvider({ mapType, sourceType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ mapType, sourceType });
 
 		if (!sourceLoader) {
 			return Observable.of(new SetToastMessageAction({
@@ -371,13 +368,17 @@ export class MapAppEffects {
 		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
 		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
 
-		return Observable.fromPromise(sourceLoader.createAsync(overlay))
+		return Observable.fromPromise(sourceLoader.createAsync({ ...caseMapState, data: { ...mapData, overlay } }))
 			.pipe(changeActiveMap, resetView, displaySuccess)
-			.catch(() => Observable.from([
+			.catch((exception) => {
+				console.error(exception);
+				return Observable.from([
 				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
 				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
-			]));
-	}
+				]);
+			}
+		)
+	};
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const isFull = OverlaysService.isFullOverlay(payload.overlay);
@@ -394,8 +395,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_IMAP) protected iMapConstructors: IMapConstructor[],
-				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
+				@Inject(IMAGERY_MAPS) protected iMapConstructors: IBaseImageryMapConstructor[],
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

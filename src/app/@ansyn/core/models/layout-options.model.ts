@@ -1,8 +1,8 @@
-import { MapsLayout } from '@ansyn/core/models/maps-layout';
+import { IMapsLayout } from './i-maps-layout';
 
 export type LayoutKey = 'layout1' | 'layout2' | 'layout3' | 'layout4' | 'layout5' | 'layout6';
 
-export const layoutOptions = new Map<LayoutKey, MapsLayout>([
+export const layoutOptions = new Map<LayoutKey, IMapsLayout>([
 	['layout1', { id: 'layout1', mapsCount: 1 }],
 	['layout2', { id: 'layout2', mapsCount: 2 }],
 	['layout3', { id: 'layout3', mapsCount: 2 }],

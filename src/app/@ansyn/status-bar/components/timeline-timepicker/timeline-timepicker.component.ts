@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CaseTimeState } from '@ansyn/core/models/case.model';
+import { ICaseTimeState } from '@ansyn/core/models/case.model';
 declare function require(name: string);
 const flatpickr = require('flatpickr');
 // import flatpikr doesn't work
@@ -23,7 +23,7 @@ export class TimelineTimepickerComponent implements OnInit {
 	@ViewChild('startDatePicker') startDatePicker: ElementRef;
 	@ViewChild('endDatePicker') endDatePicker: ElementRef;
 
-	@Output() applyDate = new EventEmitter<CaseTimeState>();
+	@Output() applyDate = new EventEmitter<ICaseTimeState>();
 	@Output('closeComponent') closeComponent = new EventEmitter();
 
 	@Input()

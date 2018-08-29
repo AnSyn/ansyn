@@ -4,8 +4,10 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
-import { Observable } from 'rxjs';
-import { CasePreview } from '../../models/case.model';
+import { EMPTY, Observable, of } from 'rxjs';
+import { ICasePreview } from '../../models/case.model';
+import { catchError } from 'rxjs/internal/operators';
+import { tap } from 'rxjs/operators';
 
 const animationsDuring = '0.2s';
 
@@ -36,7 +38,7 @@ export class DeleteCaseComponent implements OnInit {
 		.select(casesStateSelector)
 		.map((cases) => cases.entities[cases.modal.id]);
 
-	activeCase: CasePreview;
+	activeCase: ICasePreview;
 
 	@Output() submitCase = new EventEmitter();
 
@@ -52,10 +54,13 @@ export class DeleteCaseComponent implements OnInit {
 	}
 
 	onSubmitRemove() {
-		(<Observable<any>>this.casesService.removeCase(this.activeCase.id)).subscribe(() => {
-			this.store.dispatch(new DeleteCaseAction(this.activeCase.id));
-			this.close();
-		});
+		(<Observable<any>>this.casesService.removeCase(this.activeCase.id))
+			.pipe(
+				tap(() => this.store.dispatch(new DeleteCaseAction(this.activeCase.id))),
+				catchError(() => of(false)),
+				tap(() => this.close())
+			)
+			.subscribe();
 	}
 
 }

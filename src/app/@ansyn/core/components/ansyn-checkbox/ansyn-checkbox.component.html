@@ -1,13 +1,12 @@
 <div>
 	<input type="checkbox"
-		   id="checkbox_{{ id }}"
-		   class="regular-checkbox"
-		   [checked]="checked ? 'checked' : ''"
-		   (click)='onInputClicked(id)'
-		   [disabled]=" disabled ? 'disabled' : '' "
-	/>
-	<label for="checkbox_{{ id }}"></label>
+		   [id]="id"
+		   [checked]="checked"
+		   (change)='checkedChange.emit($event.target.checked)'
+		   [disabled]="disabled"/>
+	<label [for]="id"></label>
 </div>
 <div class="ansyn-checkbox-text">
 	<span>{{text}}</span>
 </div>
+<ng-content></ng-content>

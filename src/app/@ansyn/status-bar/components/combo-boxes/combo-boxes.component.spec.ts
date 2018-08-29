@@ -4,13 +4,13 @@ import { ComboBoxesComponent } from './combo-boxes.component';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { MockComponent } from '../../../core/test/mock-component';
 import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-timepicker.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
-import { coreFeatureKey, CoreReducer } from '../../../core/reducers/core.reducer';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { ClickOutsideDirective } from '@ansyn/status-bar/directives/click-outside.directive';
+import { ClickOutsideDirective } from '@ansyn/core/directives/click-outside.directive';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { MockComponent } from '@ansyn/core/test/mock-component';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;

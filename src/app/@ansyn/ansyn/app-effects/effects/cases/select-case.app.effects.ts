@@ -1,30 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	SetRemovedOverlaysVisibilityAction,
+	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction, SetMapsDataActionStore
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
-	ToggleDisplayAnnotationsLayer,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case, CaseMapState } from '@ansyn/core/models/case.model';
+import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { SetAnnotationsLayer, UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -33,26 +37,27 @@ export class SelectCaseAppEffects {
 	 * @type Effect
 	 * @name selectCase$
 	 * @ofType SelectCaseAction
-	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, SetAnnotationsLayer, ToggleDisplayAnnotation
+	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, ToggleDisplayAnnotation
 	 */
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload));
+		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch));
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>) {
+				protected store$: Store<IAppState>,
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig) {
 	}
 
-	selectCaseActions(payload: Case): Action[] {
-		const { state } = payload;
+	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
+		const { state, autoSave } = payload;
 		// status-bar
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
-		const { favoriteOverlays, region, dataInputFilters, contextEntities } = state;
-		let {  time } = state;
+		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities } = state;
+		let { time } = state;
 		const { layout } = state.maps;
 
 		if (!time) {
@@ -66,33 +71,36 @@ export class SelectCaseAppEffects {
 			time.to = new Date(time.to);
 		}
 		// layers
-		const { annotationsLayer, displayAnnotationsLayer, activeLayersIds } = state.layers;
+		const { activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
+
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
-			new BeginLayerCollectionLoadAction(),
-			new SetAnnotationsLayer(annotationsLayer),
-			new ToggleDisplayAnnotationsLayer(displayAnnotationsLayer),
+			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
+			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			new SetContextParamsAction({ contextEntities })
+			new SetContextParamsAction({ contextEntities }),
+			new SetAutoSave(autoSave),
+			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 		];
 	}
 
-	parseMapData(map: CaseMapState): CaseMapState {
+	parseMapData(map: ICaseMapState): ICaseMapState {
 		if (map.data.overlay) {
 			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } };
 		}
 		return map;
 	}
 
-	parseOverlay(overlay: Overlay): Overlay {
+	parseOverlay(overlay: IOverlay): IOverlay {
 		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
 }

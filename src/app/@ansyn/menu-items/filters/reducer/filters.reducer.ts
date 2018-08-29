@@ -1,22 +1,22 @@
-import { Filter } from '@ansyn/menu-items/filters/models/filter';
+import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { FiltersActions, FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { CaseFacetsState, CaseFilter } from '@ansyn/core/models/case.model';
+import { ICaseFacetsState, ICaseFilter } from '@ansyn/core/models/case.model';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 
-export type Filters = Map<Filter, FilterMetadata>;
+export type Filters = Map<IFilter, FilterMetadata>;
 
 export interface IFiltersState {
 	filters: Filters;
-	oldFilters: Map<Filter, FilterMetadata>;
+	oldFilters: Map<IFilter, FilterMetadata>;
 	isLoading: boolean;
-	facets: CaseFacetsState;
+	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
 }
 
 export const initialFiltersState: IFiltersState = {
-	filters: new Map<Filter, FilterMetadata>(),
+	filters: new Map<IFilter, FilterMetadata>(),
 	oldFilters: null,
 	isLoading: true,
 	facets: {
@@ -35,7 +35,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
 			const filters = action.payload;
-			const facets = { ...state.facets, filters: <CaseFilter[]> FiltersService.buildCaseFilters(filters) };
+			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(filters) };
 			return { ...state, filters, facets, isLoading: false };
 		}
 
@@ -43,11 +43,11 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return { ...state, isLoading: true };
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
-			const actionPayload: { filter: Filter, newMetadata: FilterMetadata } = action.payload;
+			const actionPayload: { filter: IFilter, newMetadata: FilterMetadata } = action.payload;
 			const clonedFilters = new Map(state.filters);
 
 			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
-			const facets = { ...state.facets, filters: <CaseFilter[]> FiltersService.buildCaseFilters(clonedFilters) };
+			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(clonedFilters) };
 			return { ...state, filters: clonedFilters, facets };
 		}
 
@@ -55,7 +55,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return {
 				...state,
 				oldFilters: state.filters,
-				filters: new Map<Filter, FilterMetadata>(),
+				filters: new Map<IFilter, FilterMetadata>(),
 				isLoading: true
 			};
 		}
@@ -74,4 +74,4 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
 export const selectOldFilters = createSelector(filtersStateSelector, ({ oldFilters }) => oldFilters);
 export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
-export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: CaseFacetsState) => showOnlyFavorites);
+export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);

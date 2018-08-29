@@ -8,51 +8,46 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
-import { VisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
-import { VisualizerStateStyle } from '@ansyn/core/models/visualizers/visualizer-state';
+import ol_Layer from 'ol/layer/layer';
+
+import { IVisualizerStyle, MarkerSizeDic } from '@ansyn/core/models/visualizers/visualizer-style';
+import { IVisualizerStateStyle, VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import {
-	BaseImageryVisualizer, BaseImageryVisualizerClass, IVisualizerEntity,
+	BaseImageryVisualizer,
+	IBaseImageryVisualizerClass,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import ol_color from 'ol/color';
 
-export interface FeatureIdentifier {
+export interface IFeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
 }
-
-export const VisualizerStates = {
-	INITIAL: 'initial',
-	HOVER: 'hover'
-};
-
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isHidden = false;
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
-	vector: VectorLayer;
-	protected idToEntity: Map<string, FeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
+	vector: ol_Layer;
+	protected idToEntity: Map<string, IFeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected disableCache = false;
 
-	protected visualizerStyle: VisualizerStateStyle = {
+	protected visualizerStyle: IVisualizerStateStyle = {
 		opacity: 1,
 		initial: {
-			fill: {
-				color: 'transparent'
-			},
-			stroke: {
-				color: 'blue',
-				width: 3
-			}
+			fill: 'transparent',
+			stroke: 'blue',
+			'stroke-width': 3
 		}
 	};
 
 	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
 
-	constructor(visualizerStyle: Partial<VisualizerStateStyle> = {}, defaultStyle: Partial<VisualizerStateStyle> = {}) {
+	constructor(visualizerStyle: Partial<IVisualizerStateStyle> = {}, defaultStyle: Partial<IVisualizerStateStyle> = {}) {
 		super();
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
 	}
@@ -73,12 +68,13 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	protected createStaticLayers() {
 		this.featuresCollection = [];
-		this.source = new SourceVector({ features: this.featuresCollection });
+		this.source = new SourceVector({ features: this.featuresCollection, wrapX: false });
 
 		this.vector = new VectorLayer(<any>{
 			source: this.source,
 			style: this.featureStyle.bind(this),
-			opacity: this.visualizerStyle.opacity
+			opacity: this.visualizerStyle.opacity,
+			renderBuffer: 5000
 		});
 
 		if (!this.isHidden) {
@@ -91,7 +87,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	toggleVisibility() {
-		if (!(<BaseImageryVisualizerClass>this.constructor).isHideable) {
+		if (!(<IBaseImageryVisualizerClass>this.constructor).isHideable) {
 			return;
 		}
 
@@ -127,43 +123,68 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		});
 	}
 
-	protected createStyle(feature: Feature, isStyle, ...styles: Array<Partial<VisualizerStyle>>) {
-		const styleSettings: any = merge({}, ...styles);
+	protected createStyle(feature: Feature, isStyle, ...styles: Array<Partial<IVisualizerStyle>>) {
+		const styleSettings: IVisualizerStyle = merge({}, ...styles);
 		this.fixStyleValues(feature, styleSettings);
 
+		let firstStyle: any = {};
 		let secondaryStyle: any = {};
 
 		if (styleSettings.shadow) {
-			secondaryStyle.stroke = new Stroke(styleSettings.shadow);
-			delete styleSettings.shadow;
+			secondaryStyle.stroke = new Stroke({
+				color: styleSettings.shadow.stroke,
+				width: styleSettings.shadow['stroke-width']
+			});
 		}
 
 		if (styleSettings.stroke) {
-			styleSettings.stroke = new Stroke(styleSettings.stroke);
+			const color = this.colorWithAlpha(styleSettings.stroke, styleSettings['stroke-opacity']);
+			firstStyle.stroke = new Stroke({ color, width: styleSettings['stroke-width'] });
 		}
 
 		if (styleSettings.fill) {
-			styleSettings.fill = new Fill(styleSettings.fill);
+			const color = this.colorWithAlpha(styleSettings.fill, styleSettings['fill-opacity']);
+			firstStyle.fill = new Fill({ color });
 		}
 
 		if (styleSettings.icon) {
-			styleSettings.image = new Icon(styleSettings.icon);
+			firstStyle.image = new Icon(styleSettings.icon);
 		}
 
 		if (styleSettings.label) {
-			styleSettings.text = new Text(this.createStyle(feature, false, styleSettings.label));
+			const fill = new Fill({ color: styleSettings.label.fill });
+			const stroke = new Stroke({
+				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
+				width: styleSettings.label.stroke ? 4 : 0
+			});
+
+			firstStyle.text = new Text({
+				font: styleSettings.label.font,
+				offsetX: styleSettings.label.offsetX,
+				offsetY: styleSettings.label.offsetY,
+				overflow: styleSettings.label.overflow,
+				text: <any>styleSettings.label.text,
+				fill,
+				stroke
+			});
 		}
 
-		if (styleSettings.point) {
-			const { fill, stroke } = styleSettings;
-			styleSettings.image = new Circle({ fill, stroke, ...styleSettings.point });
+		if (styleSettings['marker-color'] || styleSettings['marker-size']) {
+			const color = styleSettings['marker-color'];
+			const radius = MarkerSizeDic[styleSettings['marker-size']];
+			firstStyle.image = new Circle({ fill: new Fill({ color }), stroke: null, radius });
 		}
 
 		if (Object.keys(secondaryStyle).length !== 0) {
-			return [styleSettings, secondaryStyle].map(s => new Style(s));
+			return [firstStyle, secondaryStyle].map(s => new Style(s));
 		}
 
-		return isStyle ? new Style(styleSettings) : styleSettings;
+		return isStyle ? new Style(firstStyle) : firstStyle;
+	}
+
+	colorWithAlpha(color, alpha = 1) {
+		const [r, g, b] = Array.from(ol_color.asArray(color));
+		return ol_color.asString([r, g, b, alpha]);
 	}
 
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
@@ -206,7 +227,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			this.removeEntity(entity.id);
 		});
 
-		return this.iMap.projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
+		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
 			.map((features: Feature[]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
@@ -268,13 +289,13 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return this.addOrUpdateEntities(currentEntities);
 	}
 
-	updateStyle(style: Partial<VisualizerStateStyle>) {
+	updateStyle(style: Partial<IVisualizerStateStyle>) {
 		merge(this.visualizerStyle, style);
 		this.purgeCache();
 	}
 
 
-	updateFeatureStyle(featureId: string, style: Partial<VisualizerStateStyle>) {
+	updateFeatureStyle(featureId: string, style: Partial<IVisualizerStateStyle>) {
 		const feature = this.source.getFeatureById(featureId);
 
 		const entity = this.getEntity(feature);
@@ -283,6 +304,10 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 
 		this.purgeCache(feature);
+	}
+
+	getInteraction(type: VisualizerInteractionTypes) {
+		return this.interactions.get(type);
 	}
 
 	addInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void {

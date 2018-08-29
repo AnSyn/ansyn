@@ -1,14 +1,14 @@
 import { Observable } from 'rxjs';
 import { intersect, area } from '@turf/turf';
-import { Overlay, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { LimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/limited-array';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { ILimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/i-limited-array';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
 
-export interface DateRange {
+export interface IDateRange {
 	start: Date;
 	end: Date;
 }
@@ -17,22 +17,22 @@ export interface IFetchParams {
 	limit: number;
 	region: GeoJsonObject;
 	sensors?: string[];
-	dataInputFilters: DataInputFilterValue[];
-	timeRange: DateRange;
+	dataInputFilters: IDataInputFilterValue[];
+	timeRange: IDateRange;
 }
 
-export interface OverlayFilter {
+export interface IOverlayFilter {
 	sensor: string;
 	coverage: Feature<any>;
-	timeRange: DateRange
+	timeRange: IDateRange
 }
 
-export interface StartAndEndDate {
+export interface IStartAndEndDate {
 	startDate: string,
 	endDate: string
 }
 
-export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): DateRange {
+export function timeIntersection(whiteRange: IDateRange, blackRange: IDateRange): IDateRange {
 	if (!blackRange.end || (whiteRange.end && whiteRange.end <= blackRange.end)) {
 		if (!blackRange.start || whiteRange.end > blackRange.start) {
 			if (whiteRange.start >= blackRange.start) {
@@ -52,13 +52,15 @@ export function timeIntersection(whiteRange: DateRange, blackRange: DateRange): 
 	return null;
 }
 
+export const UNKNOWN_NAME = 'Unknown';
+
 @Injectable()
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
 	constructor(protected loggerService: LoggerService) {}
 
-	fetchMultiple(fetchParams: IFetchParams, filters: OverlayFilter[]): Observable<OverlaysFetchData> {
+	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
 		const regionFeature: Feature<any> = {
 			type: 'Feature',
 			properties: {},
@@ -105,8 +107,8 @@ export abstract class BaseOverlaySourceProvider {
 			return Observable.of({data: [], limited: 0, errors: []});
 		}
 
-		const multipleFetches: Observable<OverlaysFetchData> = Observable.forkJoin(fetchObservables) // Wait for every fetch to resolve
-			.map((data: Array<OverlaysFetchData>) => {
+		const multipleFetches: Observable<IOverlaysFetchData> = Observable.forkJoin(fetchObservables) // Wait for every fetch to resolve
+			.map((data: Array<IOverlaysFetchData>) => {
 				// All failed
 				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
 					return { data: null, limited: -1, errors: data[0].errors };
@@ -118,9 +120,9 @@ export abstract class BaseOverlaySourceProvider {
 		return multipleFetches;
 	}
 
-	mergeOverlaysFetchData(data: OverlaysFetchData[], limit: number, errors?: Error[]): OverlaysFetchData {
+	mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: Error[]): IOverlaysFetchData {
 		return {
-			...mergeLimitedArrays(data.filter(item => !this.isFaulty(item)) as Array<LimitedArray>,
+			...mergeLimitedArrays(data.filter(item => !this.isFaulty(item)) as Array<ILimitedArray>,
 				limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
@@ -129,20 +131,20 @@ export abstract class BaseOverlaySourceProvider {
 		};
 	}
 
-	mergeErrors(data: OverlaysFetchData[]): Error[] {
+	mergeErrors(data: IOverlaysFetchData[]): Error[] {
 		return [].concat.apply([],
 				data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
 	}
 
-	isFaulty(data: OverlaysFetchData): boolean {
+	isFaulty(data: IOverlaysFetchData): boolean {
 		return Array.isArray(data.errors) && data.errors.length > 0;
 	}
 
-	abstract fetch(fetchParams: IFetchParams): Observable<OverlaysFetchData>;
+	abstract fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData>;
 
-	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate>;
+	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate>;
 
-	abstract getById(id: string, sourceType: string): Observable<Overlay>;
+	abstract getById(id: string, sourceType: string): Observable<IOverlay>;
 
 	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
 }

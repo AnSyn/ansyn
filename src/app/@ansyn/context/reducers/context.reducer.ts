@@ -1,31 +1,23 @@
-import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
+import { createEntityAdapter } from '@ngrx/entity';
 import { EntityState } from '@ngrx/entity/src/models';
 import { ContextActionTypes, ContextActions } from '../actions/context.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { Context } from '@ansyn/core/models/context.model';
-import { casesStateSelector } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { IContext, DisplayedOverlay } from '@ansyn/core/models/context.model';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 
 export const contextFeatureKey = 'context';
 
-export enum DisplayedOverlay {
-	nearest = 'nearest',
-	latest = 'latest',
-}
-
-
-export interface ContextParams {
+export interface IContextParams {
 	defaultOverlay?: DisplayedOverlay;
 	contextEntities?: IContextEntity[];
 	time?: any;
 }
 
-export interface IContextState extends EntityState<Context> {
-	params: ContextParams;
+export interface IContextState extends EntityState<IContext> {
+	params: IContextParams;
 }
 
-export const contextAdapter = createEntityAdapter<Context>();
+export const contextAdapter = createEntityAdapter<IContext>();
 export const contextInitialState: IContextState = contextAdapter.getInitialState({
 	params: {
 		defaultOverlay: null,
@@ -37,7 +29,7 @@ export const contextInitialState: IContextState = contextAdapter.getInitialState
 export function ContextReducer(state: IContextState = contextInitialState, action: ContextActions) {
 	switch (action.type) {
 		case ContextActionTypes.ADD_ALL_CONTEXT:
-			return contextAdapter.addAll(<Context[]>action.payload, state);
+			return contextAdapter.addAll(<IContext[]>action.payload, state);
 
 		case ContextActionTypes.SET_CONTEXT_PARAMS:
 			return { ...state, params: { ...state.params, ...action.payload } };
@@ -50,4 +42,4 @@ export function ContextReducer(state: IContextState = contextInitialState, actio
 export const contextFeatureSelector: MemoizedSelector<any, IContextState>  = createFeatureSelector(contextFeatureKey);
 export const selectContextsArray = createSelector(contextFeatureSelector, contextAdapter.getSelectors().selectAll);
 export const selectContextsParams = createSelector(contextFeatureSelector, (context) => context && context.params);
-export const selectContextEntities = createSelector(selectContextsParams, (params: ContextParams) => params && params.contextEntities);
+export const selectContextEntities = createSelector(selectContextsParams, (params: IContextParams) => params && params.contextEntities);

@@ -1,15 +1,4 @@
 [
-	"ansyn",
-	"assets",
-	"context",
 	"core",
-	"imagery",
-	"login",
-	"map-facade",
-	"plugins",
-	"menu",
-	"menu-items",
-	"overlays",
-	"router",
-	"status-bar"
+  "imagery"
 ]

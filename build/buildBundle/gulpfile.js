@@ -27,6 +27,10 @@ gulp.task('clean', function () {
 	], {force: true});
 });
 
+gulp.task('cleanDist', function() {
+	return del([ "./dist" ], { force: true });
+});
+
 gulp.task('removeZone', function (done) {
 	currentDeploy = deploy.noZone;
 	replace({
@@ -57,7 +61,7 @@ gulp.task('webPackcompile', function (done) {
 	const baseHref = process.argv[4];
 	const commend = `npm run build:builder --prefix ../../ ${ baseHref ? '-- --base-href ' + baseHref : ''}`;
 	console.log(commend);
-	exec(commend, function (err, stdout, stderr) {
+	exec(commend, {maxBuffer: 1024 * 1024}, function (err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
 		done(err);
@@ -67,12 +71,11 @@ gulp.task('webPackcompile', function (done) {
 gulp.task('concat', function () {
 	return gulp.src([
 		"./start.txt",
-		path.join(distFolder, 'inline.bundle.js'),
-		path.join(distFolder, 'polyfills.bundle.js'),
-		path.join(distFolder, 'scripts.bundle.js'),
-		path.join(distFolder, 'styles.bundle.js'),
-		path.join(distFolder, 'vendor.bundle.js'),
-		path.join(distFolder, 'main.bundle.js'),
+		path.join(distFolder, 'polyfills.js'),
+		path.join(distFolder, 'runtime.js'),
+		path.join(distFolder, 'styles.js'),
+		path.join(distFolder, 'vendor.js'),
+		path.join(distFolder, 'main.js'),
 		'./end.txt'
 	])
 		.pipe(gp_concat(currentDeploy.fileName))
@@ -83,4 +86,4 @@ gulp.task('sequenceWithZone', gulpSequence('addZone', 'webPackcompile', 'concat'
 
 gulp.task('sequenceNoZone', gulpSequence('removeZone', 'webPackcompile', 'concat', 'addZone'));
 
-gulp.task('createCdn', gulpSequence('clean', 'sequenceWithZone', 'sequenceNoZone'));
+gulp.task('createCdn', gulpSequence('clean', 'sequenceWithZone', 'cleanDist', 'sequenceNoZone'));

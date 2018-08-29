@@ -1,3 +1,4 @@
+import { constConfigurations } from './const/configuration.const';
 import { AlgorithmsComponent } from '@ansyn/menu-items/algorithms/algorithms/algorithms.component';
 import { SettingsComponent } from '@ansyn/menu-items/settings/settings/settings.component';
 import { FiltersCollectionComponent } from '@ansyn/menu-items/filters/components/filters-collection/filters-collection.component';
@@ -45,5 +46,6 @@ export const configuration = {
 			component: HelpComponent,
 			iconClass: 'icon-help-settings'
 		}
-	]
+	],
+	...constConfigurations
 };

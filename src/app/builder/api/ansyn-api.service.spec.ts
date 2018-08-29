@@ -1,9 +1,8 @@
-import { AnsynApi } from '@builder/api/ansyn-api.service';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
@@ -11,13 +10,11 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reduce
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LayoutKey } from '@ansyn/core/models/layout-options.model';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
-import {
-	builderFeatureKey, BuilderReducer, builderStateSelector,
-	WindowLayout
-} from '@builder/reducers/builder.reducer';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
+import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';
+import { builderFeatureKey, BuilderReducer, builderStateSelector, IWindowLayout } from '../reducers/builder.reducer';
 
 
 describe('apiService', () => {
@@ -57,6 +54,10 @@ describe('apiService', () => {
 							ed50Customized: ''
 						}
 					}
+				},
+				{
+					provide: ANSYN_BUILDER_ID,
+					useValue: 'fakeId'
 				},
 				{
 					provide: casesConfig,
@@ -105,7 +106,7 @@ describe('apiService', () => {
 	});
 
 	it('should displayOverLay', () => {
-		const overlay: Overlay = {
+		const overlay: IOverlay = {
 			'id': 'LC80410372018051LGN00',
 			'footprint': {
 				'type': 'MultiPolygon',
@@ -134,7 +135,7 @@ describe('apiService', () => {
 
 
 	it('createCommunicator should raise instanceCreated event', (done) => {
-		const windowLayout: WindowLayout = {
+		const windowLayout: IWindowLayout = {
 			menu: false,
 			statusBar: true,
 			timeLine: true,

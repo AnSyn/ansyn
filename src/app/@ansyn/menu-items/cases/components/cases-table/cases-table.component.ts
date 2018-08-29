@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
@@ -8,6 +8,7 @@ import {
 	OpenModalAction,
 	LoadCaseAction
 } from '../../actions/cases.actions';
+import { getTimeFormat } from '@ansyn/core/utils/time';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
@@ -15,8 +16,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { CaseModal } from '../../reducers/cases.reducer';
-import { CasePreview } from '@ansyn/core/models/case.model';
+import { ICaseModal } from '../../reducers/cases.reducer';
+import { ICasePreview } from '@ansyn/core/models/case.model';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -31,22 +34,31 @@ const animations: any[] = [
 	styleUrls: ['./cases-table.component.less'],
 	animations
 })
-export class CasesTableComponent implements OnInit {
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
+export class CasesTableComponent implements OnInit, OnDestroy {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
 	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
 
 	ids$: Observable<string[] | number[]> = this.store$.select(selectCasesIds);
-	entities$: Observable<Dictionary<CasePreview>> = this.store$.select(selectCaseEntities);
+	entities$: Observable<Dictionary<ICasePreview>> = this.store$.select(selectCaseEntities);
 
 	modalCaseId$: Observable<string> = this.caseState$
-		.pluck<ICasesState, CaseModal>('modal')
+		.pluck<ICasesState, ICaseModal>('modal')
 		.distinctUntilChanged()
-		.pluck<CaseModal, string>('id');
+		.pluck<ICaseModal, string>('id');
 
-	selectedCaseId$: Observable<string> = this.caseState$
-		.map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null)
-		.distinctUntilChanged();
+	@AutoSubscription
+	selectedCaseId$: Observable<string> = this.caseState$.pipe(
+		map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null),
+		distinctUntilChanged(),
+		tap((selectedCaseId) => this.selectedCaseId = selectedCaseId)
+	);
+
+	selectedCaseId: string;
 
 	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {
 		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
@@ -54,6 +66,9 @@ export class CasesTableComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.loadCases();
+	}
+
+	ngOnDestroy(): void {
 	}
 
 	loadCases() {
@@ -95,7 +110,13 @@ export class CasesTableComponent implements OnInit {
 	}
 
 	selectCase(caseId: string): void {
-		this.store$.dispatch(new LoadCaseAction(caseId));
+		if (this.selectedCaseId !== caseId) {
+			this.store$.dispatch(new LoadCaseAction(caseId));
+		}
+	}
+
+	formatTime(timeToFormat: Date): string {
+		return getTimeFormat(timeToFormat);
 	}
 
 }

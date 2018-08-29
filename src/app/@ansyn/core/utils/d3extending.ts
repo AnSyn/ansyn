@@ -3,8 +3,8 @@ import { selection } from 'd3-selection';
 
 
 declare namespace d3 {
-	interface Selection<T, O, N, U> {
-		moveToFront: Selection<T, O, N, U>[];
+	interface ISelection<T, O, N, U> {
+		moveToFront: ISelection<T, O, N, U>[];
 	}
 }
 

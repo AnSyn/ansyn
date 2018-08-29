@@ -1,17 +1,15 @@
 import { FactoryProvider, Injector } from '@angular/core';
-import { BaseImageryPlugin, BaseImageryPluginClass } from '../../model/base-imagery-plugin';
-import { PLUGINS_COLLECTIONS } from '../../model/plugins-collection';
-import { IMap } from '@ansyn/imagery/model/imap';
+import { BaseImageryPlugin, IBaseImageryPluginConstructor } from '../../model/base-imagery-plugin';
+import { ImageryCollectionEntity, PLUGINS_COLLECTIONS } from '../../providers/plugins-collection';
+import { BaseImageryMap } from '../../model/base-imagery-map';
 import { StaticClassProvider } from '@angular/core/src/di/provider';
-import { ImageryCollectionEntity } from '@ansyn/imagery/model/plugins-collection';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 
-export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryCollectionEntity[]>, parent: Injector, map: IMap) {
+export function BaseImageryPluginProviderFactory(pluginsCollections: Array<ImageryCollectionEntity[]>, parent: Injector, map: BaseImageryMap) {
 		const providers: StaticClassProvider[] = pluginsCollections
 			.reduce<ImageryCollectionEntity[]>((previousValue, collection) => [...previousValue, ...collection], [])
-			.filter((value: BaseImageryPluginClass) => value.prototype instanceof BaseImageryPlugin)
-			.filter((value: BaseImageryPluginClass) => value.supported.some(ins => map instanceof ins))
-			.map<StaticClassProvider>((value: BaseImageryPluginClass) => ({
+			.filter((value: IBaseImageryPluginConstructor) => value.prototype instanceof BaseImageryPlugin)
+			.filter((value: IBaseImageryPluginConstructor) => value.supported.some(ins => map instanceof ins))
+			.map<StaticClassProvider>((value: IBaseImageryPluginConstructor) => ({
 				provide: BaseImageryPlugin,
 				useClass: value,
 				multi: true,
@@ -29,5 +27,5 @@ export function BaseImageryPluginProviderFactory(pluginsCollections: Array<Image
 export const BaseImageryPluginProvider: FactoryProvider = {
 	provide: BaseImageryPlugin,
 	useFactory: BaseImageryPluginProviderFactory,
-	deps: [PLUGINS_COLLECTIONS, Injector, IMap]
+	deps: [PLUGINS_COLLECTIONS, Injector, BaseImageryMap]
 };

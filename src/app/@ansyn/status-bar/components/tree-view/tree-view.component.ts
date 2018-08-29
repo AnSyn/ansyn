@@ -7,8 +7,9 @@ import { IStatusBarConfig } from '@ansyn/status-bar/models/statusBar-config.mode
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { isEqual } from 'lodash';
-import { DataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -17,8 +18,7 @@ import { Observable } from 'rxjs';
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
-
-	_selectedFilters: DataInputFilterValue[];
+	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
 
@@ -35,7 +35,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			}
 		});
 
-
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: false,
 		hasFilter: false,
@@ -48,9 +47,14 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	public dataInputFiltersActive: boolean;
 
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				public store: Store<IStatusBarState>) {
+				public store: Store<IStatusBarState>,
+				private translate: TranslateService) {
+
 		this.dataFilters.forEach((f) => {
-			this.dataInputFiltersItems.push(new TreeviewItem(f));
+			translate.get(f.text).subscribe((res: string) => {
+				f.text = res;
+				this.dataInputFiltersItems.push(new TreeviewItem(f));
+			});
 		});
 	}
 
@@ -66,6 +70,13 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 						this.leavesCount++;
 						leaf.value.providerName = providerName;
 					});
+					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
+						if (leaf.text) {
+							this.translate.get(leaf.text).subscribe((res: string) => {
+								leaf.text = res;
+							});
+						}
+					})
 				}
 			);
 
@@ -80,11 +91,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		cb(curr);
 	}
 
-	updateFiltersTreeActivation(activate: boolean): void {
+	updateFiltersTreeActivation(disabled: boolean = !this.dataInputFiltersActive): void {
 		this.dataInputFiltersItems.forEach((dataInputItem) => {
-			dataInputItem.disabled = activate;
+			dataInputItem.disabled = disabled;
 			dataInputItem.children.forEach((sensor) => {
-				sensor.disabled = activate;
+				sensor.disabled = disabled;
 			});
 		});
 	}
@@ -137,7 +148,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.setSubscribers();
-		this.updateFiltersTreeActivation(!this.dataInputFiltersActive);
+		this.updateFiltersTreeActivation();
 	}
 
 	ngOnDestroy(): void {
@@ -150,6 +161,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	activateDataInputFilters($event) {
 		this.dataInputFiltersActive = !this.dataInputFiltersActive;
-		this.updateFiltersTreeActivation(!this.dataInputFiltersActive);
+		this.updateFiltersTreeActivation();
 	}
 }

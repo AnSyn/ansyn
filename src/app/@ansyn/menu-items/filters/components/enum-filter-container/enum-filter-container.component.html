@@ -1,18 +1,14 @@
 <div class="enum-fields-enumerator" *ngFor="let enumMetadata of metadata && metadata.enumsFields | mapIterator | sort | showMore:isLongFiltersList ">
 
 	<div class="left-side">
-		<div class="checkbox">
-			<input type="checkbox"
-				   [disabled]="enumMetadata.value.disabled"
-				   id="checkbox{{ enumMetadata.key }}"
-				   class="regular-checkbox"
-				   [checked]="enumMetadata.value.isChecked ? 'checked' : ''"
-				   (click)='onInputClicked(enumMetadata.key)'/>
-			<label for="checkbox{{ enumMetadata.key }}"></label>
-		</div>
+		<ansyn-checkbox
+			[disabled]="enumMetadata.value.disabled"
+			[checked]="enumMetadata.value.isChecked"
+			(checkedChange)='onInputClicked(enumMetadata.key)'>
+		</ansyn-checkbox>
 		<div class="filter-row">
 			<div class="field-name-container">
-				<span class="field-name" [title]="enumMetadata.key">{{enumMetadata.key}}</span>
+				<span class="field-name">{{enumMetadata.key | translate}}</span>
 			</div>
 			<span class="only-filter"
 				  [hidden]="enumMetadata.value.disabled"

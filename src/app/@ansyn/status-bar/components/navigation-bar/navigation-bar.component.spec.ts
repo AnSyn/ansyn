@@ -4,8 +4,8 @@ import { NavigationBarComponent } from './navigation-bar.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { GoAdjacentOverlay } from '../../../core/actions/core.actions';
 import { ExpandAction } from '../../actions/status-bar.actions';
+import { GoAdjacentOverlay } from '@ansyn/core/actions/core.actions';
 
 describe('NavigationBarComponent', () => {
 	let component: NavigationBarComponent;

@@ -7,8 +7,10 @@ import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.action
 import { CoreModule } from '@ansyn/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { ProjectionConverterService } from '@ansyn/core/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { HttpClientModule } from '@angular/common/http';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -18,9 +20,11 @@ describe('GoToComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [GoToModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), CoreModule, EffectsModule.forRoot([])],
+			imports: [GoToModule, HttpClientModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), CoreModule, EffectsModule.forRoot([])],
 			providers: [
+				ProjectionConverterService,
 				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: {}},
 				{
 					provide: toolsConfig, useValue: {
 					GoTo: {

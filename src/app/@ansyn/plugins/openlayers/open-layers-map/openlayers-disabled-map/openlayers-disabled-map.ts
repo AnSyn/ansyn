@@ -1,38 +1,36 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import * as ol from 'openlayers';
 import Map from 'ol/map';
 import View from 'ol/view';
-import proj from 'ol/proj';
 import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
-import ImageLayer from 'ol/layer/image';
-import Raster from 'ol/source/raster';
-import { CaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import * as turf from '@turf/turf';
+import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryMap, IMap } from '@ansyn/imagery/model/imap';
+import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
+import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 @ImageryMap({
 	mapType: DisabledOpenLayersMapName
 })
-export class OpenLayersDisabledMap extends IMap<Map> {
-	positionChanged: EventEmitter<CaseMapPosition> = new EventEmitter<CaseMapPosition>();
-	pointerMove: EventEmitter<any> = new EventEmitter<any>();
-	contextMenu: EventEmitter<any> = new EventEmitter<any>();
-	mapType: string = DisabledOpenLayersMapName;
-	mapObject: Map;
+export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 
-	initMap(element: HTMLElement, layers: any, position?: CaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
-			controls: [new ScaleLine()]
+			controls: [/*new ScaleLine()*/]
 		});
 		this.setMainLayer(layers[0], position);
 		return Observable.of(true);
+	}
+
+	addLayerIfNotExist(layer: any) {
+	}
+
+	toggleGroup(groupName: string, newState: boolean) {
 	}
 
 	getLayers(): any[] {
@@ -40,30 +38,20 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	}
 
 	public getCenter(): Observable<Point> {
-		const view = this.mapObject.getView();
-		const center = view.getCenter();
-		const point = <Point> turf.geometry('Point', center);
-
-		return this.projectionService.projectAccurately(point, this);
+		return of(null);
 	}
 
 	setCenter(center: Point, animation: boolean): Observable<boolean> {
 		return Observable.of(true);
 	}
 
-	addLayerIfNotExist(layer: Layer) {
 
-	}
-
-	toggleGroup(groupName: string) {
-	}
-
-	resetView(layer: any, position?: CaseMapPosition): Observable<boolean> {
+	resetView(layer: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
 		return Observable.of(true);
 	}
 
-	setMainLayer(layer: Layer, position?: CaseMapPosition) {
+	setMainLayer(layer: Layer, position?: ICaseMapPosition) {
 		if (this.mainLayer) {
 			this.mapObject.removeLayer(this.mainLayer);
 			this.mapObject.render();
@@ -79,7 +67,7 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 		}
 	}
 
-	generateNewView(layer: Layer, position?: CaseMapPosition): View {
+	generateNewView(layer: Layer, position?: ICaseMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
 
 		// for outside only
@@ -111,11 +99,11 @@ export class OpenLayersDisabledMap extends IMap<Map> {
 	removeLayer(layer: any): void {
 	}
 
-	setPosition(position: CaseMapPosition): Observable<boolean> {
+	setPosition(position: ICaseMapPosition): Observable<boolean> {
 		return Observable.of(true);
 	}
 
-	getPosition(): Observable<CaseMapPosition> {
+	getPosition(): Observable<ICaseMapPosition> {
 		return Observable.of(undefined);
 	}
 

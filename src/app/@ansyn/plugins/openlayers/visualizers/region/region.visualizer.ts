@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import * as turf from '@turf/turf';
-import { Observable } from 'rxjs';
+import { empty, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
@@ -15,7 +15,7 @@ import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/ac
 import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
-import { empty } from 'rxjs';
+import { AutoSubscription } from 'auto-subscriptions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -33,6 +33,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
 
+	@AutoSubscription
 	toggleOpacity$ = this.geoFilterSearch$
 		.do((geoFilterSearch) => {
 			if (geoFilterSearch !== SearchModeEnum.none) {
@@ -48,6 +49,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 
+	@AutoSubscription
 	onContextMenu$: Observable<any> = this.actions$
 		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
 		.withLatestFrom(this.isActiveGeoFilter$)
@@ -55,25 +57,17 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		.map(([{ payload }]) => payload)
 		.do(this.onContextMenu.bind(this));
 
+	@AutoSubscription
 	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
 		.do(this.interactionChanges.bind(this));
 
+	@AutoSubscription
 	drawChanges$ = Observable
 		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$)
 		.mergeMap(this.drawChanges.bind(this));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.drawChanges$.subscribe(),
-			this.onContextMenu$.subscribe(),
-			this.toggleOpacity$.subscribe(),
-			this.interactionChanges$.subscribe()
-		);
 	}
 
 	drawChanges([geoFilter, region, geoFilterIndicator]) {

@@ -16,7 +16,7 @@ import {
 	overlaysFeatureKey,
 	overlaysInitialState,
 	overlaysStateSelector,
-	selectDropMarkup, selectFilteredOveralys,
+	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs';
@@ -41,7 +41,7 @@ import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.re
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { Case } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import {
 	RemovePendingOverlayAction,
@@ -52,10 +52,13 @@ import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/cor
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import {
-	contextFeatureSelector, contextInitialState, DisplayedOverlay,
+	contextFeatureSelector,
+	contextInitialState,
 	selectContextsParams
 } from '@ansyn/context/reducers/context.reducer';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { DisplayedOverlay } from '@ansyn/core/models/context.model';
+import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -69,7 +72,7 @@ describe('OverlaysAppEffects', () => {
 		provide: () => {
 		}
 	};
-	const caseItem: Case = {
+	const caseItem: ICase = {
 		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
 		'state': {
 			'region': {
@@ -111,7 +114,12 @@ describe('OverlaysAppEffects', () => {
 	} as any;
 
 	const exampleOverlays: any = [
-		['first', { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z'), 'sourceType': 'FIRST', 'thumbnailUrl': 'http://first' }],
+		['first', {
+			id: 'first',
+			'photoTime': new Date('2014-06-27T08:43:03.624Z'),
+			'sourceType': 'FIRST',
+			'thumbnailUrl': 'http://first'
+		}],
 		['last', { id: 'last', 'photoTime': new Date(), 'sourceType': 'LAST', 'thumbnailUrl': 'http://last' }]
 	];
 
@@ -140,10 +148,11 @@ describe('OverlaysAppEffects', () => {
 
 	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 
+	@ImageryMapSource({
+		supported: [],
+		sourceType: 'FIRST'
+	})
 	class MapSourceProviderMock extends BaseMapSourceProvider {
-		sourceType = 'FIRST';
-		supported = [];
-
 		public create(metaData: any): any[] {
 			return [];
 		}
@@ -157,7 +166,7 @@ describe('OverlaysAppEffects', () => {
 					[casesFeatureKey]: CasesReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[toolsFeatureKey]: ToolsReducer,
-					[mapFeatureKey]: MapReducer,
+					[mapFeatureKey]: MapReducer
 				})
 			],
 			providers: [
@@ -167,7 +176,7 @@ describe('OverlaysAppEffects', () => {
 				{
 					provide: CasesService,
 					useValue: {
-						getOverlaysMarkup: () => null,
+						getOverlaysMarkup: () => null
 					}
 				},
 				{
@@ -200,7 +209,8 @@ describe('OverlaysAppEffects', () => {
 				},
 				{
 					provide: CacheService,
-					useClass: () => {}
+					useClass: () => {
+					}
 				}
 			]
 
@@ -352,10 +362,7 @@ describe('OverlaysAppEffects', () => {
 				})
 			});
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({
-					overlay: <any> firstOverlay,
-					mapId: '4444'
-				})
+				b: new DisplayOverlayAction({ overlay: <any> firstOverlay, mapId: '4444' }),
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -370,11 +377,9 @@ describe('OverlaysAppEffects', () => {
 					id: lastOverlayId
 				})
 			});
+
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({
-					overlay: <any> lastOverlay,
-					mapId: 'activeMapId'
-				})
+				b: new DisplayOverlayAction({ overlay: <any> lastOverlay, mapId: 'activeMapId' }),
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -382,10 +387,11 @@ describe('OverlaysAppEffects', () => {
 	});
 
 	describe('setHoveredOverlay$ effect', () => {
-		it ('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
+		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
 			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction(overlaysState.overlays.get('first')) });
 			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});
 	});
 
-});
+})
+;

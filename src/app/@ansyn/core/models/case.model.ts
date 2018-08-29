@@ -1,12 +1,12 @@
-import { CaseMapPosition } from './case-map-position.model';
-import { Overlay } from './overlay.model';
+import { ICaseMapPosition } from './case-map-position.model';
+import { IOverlay } from './overlay.model';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
-import { Entity } from '@ansyn/core/services/storage/storage.service';
-import { IVisualizerEntity } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { LayoutKey } from '@ansyn/core/models/layout-options.model';
-import { DilutedOverlay } from '@ansyn/core/models/overlay.model';
+import { IEntity } from '../services/storage/storage.service';
+import { IVisualizerEntity } from './visualizers/visualizers-entity';
+import { LayoutKey } from './layout-options.model';
+import { IDilutedOverlay } from './overlay.model';
 
-export interface CasePreview extends Entity {
+export interface ICasePreview extends IEntity {
 	creationTime: Date;
 	id: string;
 	name: string;
@@ -16,12 +16,12 @@ export interface CasePreview extends Entity {
 	autoSave: boolean;
 }
 
-export interface Case extends CasePreview {
-	state: CaseState;
+export interface ICase extends ICasePreview {
+	state: ICaseState;
 }
 
-export interface DilutedCase extends CasePreview {
-	state: CaseState;
+export interface IDilutedCase extends ICasePreview {
+	state: ICaseState;
 }
 
 export interface IContextEntity extends IVisualizerEntity {
@@ -45,113 +45,115 @@ export interface ImageManualProcessArgs {
 	Sharpness?: number
 }
 
-export interface OverlaysManualProcessArgs {
+export interface IOverlaysManualProcessArgs {
 	[key: string]: ImageManualProcessArgs
 }
 
-export interface DilutedCaseState {
-	maps?: DilutedCaseMapsState,
-	time: CaseTimeState,
-	facets?: CaseFacetsState,
+export interface IDilutedCaseState {
+	maps?: IDilutedCaseMapsState,
+	time: ICaseTimeState,
+	facets?: ICaseFacetsState,
 	region: CaseRegionState,
 	contextEntities?: IContextEntity[],
 	orientation: CaseOrientation,
-	dataInputFilters: CaseDataInputFiltersState,
+	dataInputFilters: ICaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
-	favoriteOverlays?: DilutedOverlay[],
-	overlaysManualProcessArgs: OverlaysManualProcessArgs,
-	layers?: CaseLayersState
+	favoriteOverlays?: IDilutedOverlay[],
+	removedOverlaysIds?: string[],
+	removedOverlaysVisibility: boolean,
+	presetOverlays?: IDilutedOverlay[],
+	overlaysManualProcessArgs: IOverlaysManualProcessArgs,
+	layers?: ICaseLayersState
 }
 
-export interface CaseState extends DilutedCaseState {
-	favoriteOverlays?: Overlay[];
-	maps?: CaseMapsState;
+export interface ICaseState extends IDilutedCaseState {
+	favoriteOverlays?: IOverlay[];
+	presetOverlays?: IOverlay[];
+	maps?: ICaseMapsState;
 }
 
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
 
-export interface DataInputFilterValue {
+export interface IDataInputFilterValue {
 	providerName: string,
 	sensorType: string,
 	sensorName: string
 }
 
-export interface CaseDataInputFiltersState {
+export interface ICaseDataInputFiltersState {
 	fullyChecked: boolean,
-	filters: DataInputFilterValue[],
+	filters: IDataInputFilterValue[],
 	active: boolean
 }
 
-export interface CaseTimeState {
+export interface ICaseTimeState {
 	type: 'absolute',
 	from: Date,
 	to: Date
 }
 
-export interface CaseBooleanFilterMetadata {
+export interface ICaseBooleanFilterMetadata {
 	displayTrue: boolean;
 	displayFalse: boolean;
 }
 
 export type CaseEnumFilterMetadata = string[];
 
-export type CaseFilterMetadata = CaseBooleanFilterMetadata | CaseEnumFilterMetadata;
+export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata;
 
-export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'};
+export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
 
-export interface CaseFilter {
+export interface ICaseFilter {
 	type: FilterType;
 	fieldName: string;
 	metadata: CaseFilterMetadata;
 }
 
-export type CaseFilters = CaseFilter[];
+export type CaseFilters = ICaseFilter[];
 
-export interface CaseFacetsState {
+export interface ICaseFacetsState {
 	filters?: CaseFilters;
 	showOnlyFavorites?: boolean;
 }
 
-export interface CaseLayersState {
-	annotationsLayer: FeatureCollection<any>,
-	displayAnnotationsLayer?: boolean,
+export interface ICaseLayersState {
 	activeLayersIds: string[]
 }
 
-export interface DilutedCaseMapsState {
+export interface IDilutedCaseMapsState {
 	layout: LayoutKey;
 	activeMapId: string;
-	data: DilutedCaseMapState[];
+	data: IDilutedCaseMapState[];
 }
 
-export interface CaseMapsState extends DilutedCaseMapsState {
-	data: CaseMapState[]
+export interface ICaseMapsState extends IDilutedCaseMapsState {
+	data: ICaseMapState[]
 }
 
 export type OverlayDisplayMode = 'Heatmap' | 'Polygon' | 'None';
 
-export interface DilutedCaseMapData {
-	position: CaseMapPosition,
-	overlay?: DilutedOverlay,
+export interface IDilutedCaseMapData {
+	position: ICaseMapPosition,
+	overlay?: IDilutedOverlay,
 	isAutoImageProcessingActive?: boolean,
 	overlayDisplayMode?: OverlayDisplayMode,
 	imageManualProcessArgs?: ImageManualProcessArgs
 }
 
-export interface CaseMapData extends DilutedCaseMapData {
-	overlay?: Overlay,
+export interface ICaseMapData extends IDilutedCaseMapData {
+	overlay?: IOverlay,
 }
 
-export interface DilutedCaseMapState {
+export interface IDilutedCaseMapState {
 	id: string;
-	data: DilutedCaseMapData;
+	data: IDilutedCaseMapData;
 	mapType: string;
-	sourceType: string
+	sourceType: string;
 	flags: {
-		layers?: boolean
+		displayLayers?: boolean
 	};
 }
 
-export interface CaseMapState extends DilutedCaseMapState {
-	data: CaseMapData;
+export interface ICaseMapState extends IDilutedCaseMapState {
+	data: ICaseMapData;
 }

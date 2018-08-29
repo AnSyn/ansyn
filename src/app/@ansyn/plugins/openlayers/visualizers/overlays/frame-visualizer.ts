@@ -1,14 +1,19 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/core/tokens/visualizers-config.token';
-import { Actions } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { Overlay } from '@ansyn/core/models/overlay.model';
+import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
+import { Actions, ofType } from '@ngrx/effects';
+import { select, Store } from '@ngrx/store';
+import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { AutoSubscription } from 'auto-subscriptions';
+import {
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes
+} from '@ansyn/overlays/actions/overlays.actions';
+import { filter, map, mergeMap, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -16,23 +21,21 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 })
 export class FrameVisualizer extends EntitiesVisualizer {
 	public isActive = false;
-	private overlay;
 
-	overlay$ = this.store$.select(mapStateSelector)
-		.filter(() => Boolean(this.mapId))
-		.map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId))
-		.filter(Boolean)
-		.map((map) => map.data.overlay)
-		.distinctUntilChanged()
-		.do((overlay) => this.overlay = overlay);
+	@AutoSubscription
+	overlay$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		filter((action: DisplayOverlaySuccessAction) => this.mapId === action.payload.mapId),
+		mergeMap((action: DisplayOverlaySuccessAction) => this.setOverlay(action.payload.overlay))
+	);
 
-	isActive$: Observable<boolean> = this.store$
-		.select(mapStateSelector)
-		.pluck<IMapState, string>('activeMapId')
-		.distinctUntilChanged()
-		.map((activeMapId: string) => activeMapId === this.mapId)
-		.do((isActive) => this.isActive = isActive)
-		.do(this.purgeCache.bind(this));
+	@AutoSubscription
+	isActive$: Observable<boolean> = this.store$.pipe(
+		select(selectActiveMapId),
+		map((activeMapId: string) => activeMapId === this.mapId),
+		tap((isActive) => this.isActive = isActive),
+		tap(this.purgeCache.bind(this))
+	);
 
 	constructor(public store$: Store<any>,
 				public actions$: Actions,
@@ -43,15 +46,13 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			initial: {
 				zIndex: 10,
 				fill: null,
-				stroke: {
-					width: 3,
-					color: this.getStroke.bind(this)
-				}
+				stroke: this.getStroke.bind(this),
+				'stroke-width': 3
 			}
 		});
 	}
 
-	setOverlay(overlay: Overlay) {
+	setOverlay(overlay: IOverlay) {
 		if (overlay) {
 			const { id, footprint } = overlay;
 			const featureJson: GeoJSON.Feature<any> = { type: 'Feature', geometry: footprint, properties: {} };
@@ -78,15 +79,6 @@ export class FrameVisualizer extends EntitiesVisualizer {
 
 	onResetView(): Observable<any> {
 		this.clearEntities();
-		this.initLayers();
-		return this.setOverlay(this.overlay)
-	}
-
-	onInit() {
-		super.onInit();
-		this.subscriptions.push(
-			this.overlay$.subscribe(),
-			this.isActive$.subscribe()
-		);
+		return super.onResetView();
 	}
 }

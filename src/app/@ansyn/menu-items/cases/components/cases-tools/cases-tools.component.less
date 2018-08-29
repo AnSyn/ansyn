@@ -3,6 +3,10 @@ div.buttons-group {
 	height: 24px;
 	padding: 15px;
 	button {
+		&:disabled {
+			opacity: .5;
+			cursor: default;
+		}
 		cursor: pointer;
 		border: none;
 		font-style: normal;
@@ -16,12 +20,4 @@ div.buttons-group {
 		color: #156879;
 		width: 93px;
 	}
-}
-
-.save-manual {
-	cursor: pointer;
-	color: white;
-	margin-left: 1.25rem;
-	width: 100px;
-	font-size: 22px;
 }

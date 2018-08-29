@@ -7,17 +7,26 @@ import { CommonModule } from '@angular/common';
 import { LayersManagerComponent } from './components/layers-manager/layers-manager.component';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
-import { LayerCollectionComponent } from '@ansyn/menu-items/layers-manager/components/layers-collection/layer-collection.component';
+import { LayerCollectionComponent } from './components/layers-collection/layer-collection.component';
 import { CoreModule } from '@ansyn/core/core.module';
+import { DownloadLayersComponent } from './components/data-layers-modals/download-layers/download-layers.component';
+import { LayerComponent } from './components/layer/layer.component';
+import { FormsModule } from '@angular/forms';
+import { LayerMenuComponent } from './components/layer-menu/layer-menu.component';
+import { DataLayersModalsComponent } from './components/data-layers-modals/data-layers-modals.component';
+import { EditLayerComponent } from './components/data-layers-modals/edit-layer/edit-layer.component';
+import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
+import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 
 @NgModule({
 	imports: [
 		CoreModule,
 		CommonModule,
+		FormsModule,
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
 		EffectsModule.forFeature([LayersEffects])
 	],
-	declarations: [LayersManagerComponent, LayerCollectionComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
 	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })

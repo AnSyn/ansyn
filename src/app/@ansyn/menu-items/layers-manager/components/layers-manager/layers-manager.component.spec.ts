@@ -9,6 +9,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -25,6 +26,7 @@ describe('LayersManagerComponent', () => {
 			],
 			providers: [
 				{ provide: layersConfig, useValue: { schema: null } },
+				{ provide: LoggerConfig, useValue: {} },
 				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{ provide: CoreConfig, useValue: {} }
 			]

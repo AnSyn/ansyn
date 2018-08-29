@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { casesConfig, CasesService } from './cases.service';
-import { Case } from '../models/case.model';
+import { ICase } from '../models/case.model';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -32,7 +32,7 @@ describe('CasesService', () => {
 	let http: HttpClient;
 	let storageService: StorageService;
 
-	const caseMock: Case = {
+	const caseMock: ICase = {
 		id: 'fakeId',
 		name: 'fakeName',
 		owner: 'owner',
@@ -100,7 +100,7 @@ describe('CasesService', () => {
 
 	it('createCase should send the case as body in ajax("post")', () => {
 		let fakeId = 'fakerId';
-		let selectedCase: Case = { ...caseMock, name: 'fakerName' };
+		let selectedCase: ICase = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
 		spyOn(http, 'post').and.callFake(() => Observable.of(fakeResponse));
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
@@ -120,7 +120,7 @@ describe('CasesService', () => {
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {
-		let selectedCase: Case = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
+		let selectedCase: ICase = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
 		spyOn(http, 'put').and.callFake(() => Observable.of(fakeResponse));
 		casesService.updateCase(selectedCase);
@@ -139,7 +139,7 @@ describe('CasesService', () => {
 	});
 
 	it('deleteCase should send the case id as param in ajax("delete")', () => {
-		let selectedCase: Case = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
+		let selectedCase: ICase = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let caseIdToRemove = selectedCase.id;
 		let fakeResponse = { selectedCase };
 		spyOn(http, 'delete').and.callFake(() => Observable.of(fakeResponse));

@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { BuilderActionTypes } from '@builder/actions/builder.actions';
+import { BuilderActionTypes } from '../actions/builder.actions';
 
-export interface WindowLayout {
+export interface IWindowLayout {
 	menu: boolean,
 	statusBar: boolean,
 	timeLine: boolean,
@@ -10,7 +10,7 @@ export interface WindowLayout {
 }
 
 export interface IBuilderState {
-	windowLayout: WindowLayout;
+	windowLayout: IWindowLayout;
 }
 
 export const builderInitialState: IBuilderState = {

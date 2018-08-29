@@ -10,8 +10,9 @@ import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { ImageryVisualizer } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -26,16 +27,11 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 		this.updateStyle({
 			initial: {
-				stroke: {
-					color: '#f32ee1',
-					width: 4
-				},
-				point: {
-					radius: 4
-				},
-				line: {
-					width: 1
-				}
+				stroke: '#f32ee1',
+				fill: null,
+				'stroke-width': 4,
+				'marker-size': MarkerSize.small,
+				'marker-color': '#f32ee1'
 			}
 		});
 	}

@@ -59,7 +59,7 @@ describe('MapSearchBoxComponent', () => {
 			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));
 			tick();
 			expect(geocoderService.getLocation$).toHaveBeenCalledWith('hehe');
-			expect(component._communicator.setCenter).toHaveBeenCalledWith('blablabla');
+			expect(component._communicator.setCenter).toHaveBeenCalledWith('blablabla', false);
 		}));
 
 		it('should halt the flow, when given an empty string', fakeAsync(() => {

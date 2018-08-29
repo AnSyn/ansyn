@@ -4,37 +4,49 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { Case } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { selectFavoriteOverlays, selectLayout, selectOverlaysCriteria } from '@ansyn/core/reducers/core.reducer';
 import {
-	selectDisplayAnnotationsLayer,
-	selectSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+	selectAutoSave,
+	selectFavoriteOverlays,
+	selectLayout,
+	selectOverlaysCriteria,
+	selectPresetOverlays, selectRemovedOverlays, selectRemovedOverlaysVisibility
+} from '@ansyn/core/reducers/core.reducer';
+import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectAnnotationLayer, selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
+import { pipe } from 'rxjs/Rx';
+import { tap } from 'rxjs/internal/operators';
 
 @Injectable()
 export class UpdateCaseAppEffects {
+	isAutoSaveTriggered: boolean;
+	clearIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = false));
+	setIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = true));
+
 	events: any[] = [
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
+		this.store$.select(selectRemovedOverlays),
+		this.store$.select(selectRemovedOverlaysVisibility),
+		this.store$.select(selectPresetOverlays),
 		this.store$.select(selectComboBoxesProperties),
-		this.store$.select(selectAnnotationLayer),
-		this.store$.select(selectDisplayAnnotationsLayer),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMapsList),
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectContextEntities)
-	];
+	]
+		.map(event => event.pipe(this.clearIsAutoSave))
+		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
 	/**
 	 * @type Effect
@@ -52,20 +64,22 @@ export class UpdateCaseAppEffects {
 				activeLayersIds,
 				facets,
 				favoriteOverlays,
+				removedOverlaysIds,
+				removedOverlaysVisibility,
+				presetOverlays,
 				{ timeFilter, orientation }, /* -> comboBoxesProperties */
-				annotationsLayer,
-				displayAnnotationsLayer,
 				activeMapId,
 				mapsList,
 				layout,
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
-				contextEntities
+				contextEntities,
+				autoSave
 			] = events;
 
-			const { id, name, lastModified, owner, creationTime, selectedContextId, autoSave } = selectedCase;
+			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
 
-			const updatedCase: Case = {
+			const updatedCase: ICase = {
 				id,
 				name,
 				creationTime,
@@ -82,11 +96,12 @@ export class UpdateCaseAppEffects {
 						activeMapId
 					},
 					layers: {
-						activeLayersIds,
-						annotationsLayer,
-						displayAnnotationsLayer
+						activeLayersIds
 					},
 					favoriteOverlays,
+					removedOverlaysIds,
+					removedOverlaysVisibility,
+					presetOverlays,
 					region,
 					dataInputFilters,
 					time,
@@ -96,7 +111,7 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase });
+			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
 		});
 
 	constructor(protected store$: Store<IAppState>) {

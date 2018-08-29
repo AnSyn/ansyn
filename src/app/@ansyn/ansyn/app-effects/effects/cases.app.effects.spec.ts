@@ -2,10 +2,8 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
-import { Overlay } from '@ansyn/core/models/overlay.model';
-import { ContextModule } from '@ansyn/context/context.module';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
+import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import {
@@ -14,7 +12,7 @@ import {
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Case, CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { ICase, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs';
@@ -28,9 +26,8 @@ import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { ContextConfig } from '@ansyn/context/models/context.config';
 import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { CasesEffects } from '@ansyn/menu-items/cases/effects/cases.effects';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -40,7 +37,7 @@ describe('CasesAppEffects', () => {
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 
-	const selectedCase: Case = {
+	const selectedCase: ICase = {
 		id: 'case1',
 		name: 'name',
 		owner: 'owner',
@@ -90,13 +87,13 @@ describe('CasesAppEffects', () => {
 					useValue: {
 						getOverlayById: (id: string) => {
 							if (['uuu', 'eee'].includes(id)) {
-								const overlay = <Overlay> {};
+								const overlay = <IOverlay> {};
 								overlay.id = id;
 
 								return Observable.of(overlay);
 							}
 
-							throw new HttpErrorResponse({ status: 404 });
+							return Observable.throwError(new HttpErrorResponse({ status: 404 }));
 						}
 					}
 				},
@@ -142,9 +139,9 @@ describe('CasesAppEffects', () => {
 	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
 		const mapsList: any[] = [{ id: 'map1', data: {} }, { id: 'map2', data: {} }];
 		const activeMapId = 'map1';
-		const overlay = <Overlay> { id: 'tmp' };
+		const overlay = <IOverlay> { id: 'tmp' };
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
-		const action = new DisplayOverlayAction({ overlay, mapId: "map1"});
+		const action = new DisplayOverlaySuccessAction({ overlay, mapId: "map1"});
 		actions = hot('--a--', { a: action });
 		const updatedMapsList = [...mapsList];
 		updatedMapsList.forEach((map) => {
@@ -157,7 +154,7 @@ describe('CasesAppEffects', () => {
 	});
 
 	describe('loadCase$', () => {
-		const caseMock2: Case = {
+		const caseMock2: ICase = {
 			id: 'fakeId',
 			name: 'fakeName',
 			owner: 'owner',
@@ -204,7 +201,7 @@ describe('CasesAppEffects', () => {
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction( <any> caseItem) });
-			const expectedResults = cold('--(bc|)', {
+			const expectedResults = cold('--(bc)--', {
 				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
 				c: new LoadDefaultCaseIfNoActiveCaseAction()
 			});
@@ -212,7 +209,7 @@ describe('CasesAppEffects', () => {
 		});
 
 		it('loadCase$ should dispatch SelectCaseAction if all case and all its overlays exists', () => {
-			const caseItem: Case = caseMock2;
+			const caseItem: ICase = caseMock2;
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });

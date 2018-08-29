@@ -4,8 +4,8 @@ import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Observable } from 'rxjs';
 import { selectLayout } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { CaseMapState } from '@ansyn/core/models/case.model';
-import { BackToWorldView } from '@ansyn/core/actions/core.actions';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { CopySelectedCaseLinkAction } from '@ansyn/status-bar/actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -14,8 +14,9 @@ import { BackToWorldView } from '@ansyn/core/actions/core.actions';
 })
 
 export class StatusBarComponent implements OnInit, OnDestroy {
+	icon = "block-icon icon-status-bar-case";
 	@Input() selectedCaseName: string;
-	@Input() activeMap: CaseMapState;
+	@Input() activeMap: ICaseMapState;
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout)
 		.do((layout) => this.layout = layout);
 	layout: LayoutKey;
@@ -26,6 +27,10 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(public store: Store<IStatusBarState>) {
+	}
+
+	copyLink(): void {
+		this.store.dispatch(new CopySelectedCaseLinkAction());
 	}
 
 	ngOnInit(): void {

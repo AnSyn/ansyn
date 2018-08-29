@@ -1,14 +1,14 @@
-import { BaseOverlaySourceProvider, StartAndEndDate } from '../models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Overlay } from '../models/overlay.model';
-import { IOverlaysState, OverlayDrop, TimelineRange } from '../reducers/overlays.reducer';
-import { OverlaysCriteria, OverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '../models/overlay.model';
+import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
+import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { union } from 'lodash';
-import { FilterModel } from '@ansyn/core/models/filter.model';
+import { IFilterModel } from '@ansyn/core/models/IFilterModel';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
@@ -16,17 +16,21 @@ export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToke
 @Injectable()
 export class OverlaysService {
 
-	static buildFilteredOverlays(overlays: Overlay[], parsedFilters: FilterModel[], favorites: Overlay[], showOnlyFavorite: boolean): string[] {
-		let parsedOverlays: Overlay[] = favorites;
+	static buildFilteredOverlays(overlays: IOverlay[], parsedFilters: IFilterModel[], favorites: IOverlay[], showOnlyFavorite: boolean, removedOverlaysIds: string[], removedOverlaysVisibility: boolean): string[] {
+		let parsedOverlays: IOverlay[] = favorites;
 		if (!showOnlyFavorite) {
 			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
 			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
+		}
+
+		if (removedOverlaysVisibility) {
+			parsedOverlays = parsedOverlays.filter((overlay) => !removedOverlaysIds.some((overlayId) => overlay.id === overlayId));
 		}
 		parsedOverlays.sort(sortByDateDesc);
 		return union(parsedOverlays.map(({ id }) => id));
 	}
 
-	static isFullOverlay(overlay: Overlay): boolean {
+	static isFullOverlay(overlay: IOverlay): boolean {
 		return Boolean(overlay && overlay.date);
 	}
 
@@ -65,7 +69,7 @@ export class OverlaysService {
 				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
 	}
 
-	search(params: OverlaysCriteria): Observable<OverlaysFetchData> {
+	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
 		let feature = params.region;
 		return this._overlaySourceProvider.fetch({
 			dataInputFilters: Boolean(params.dataInputFilters) && params.dataInputFilters.active ? params.dataInputFilters.filters : null,
@@ -78,11 +82,11 @@ export class OverlaysService {
 		});
 	}
 
-	getOverlayById(id: string, sourceType: string): Observable<Overlay> {
+	getOverlayById(id: string, sourceType: string): Observable<IOverlay> {
 		return this._overlaySourceProvider.getById(id, sourceType);
 	}
 
-	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<StartAndEndDate> {
+	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
 		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
 	}
 
@@ -90,7 +94,7 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
 	}
 
-	getTimeStateByOverlay(displayedOverlay: OverlayDrop, timeLineRange: TimelineRange): TimelineRange {
+	getTimeStateByOverlay(displayedOverlay: OverlayDrop, timeLineRange: ITimelineRange): ITimelineRange {
 		let { start, end } = timeLineRange;
 		const startTime = start.getTime();
 		const endTime = end.getTime();
@@ -108,13 +112,13 @@ export class OverlaysService {
 		return { start, end };
 	}
 
-	private getTenth(timeLineRange: TimelineRange): number {
+	private getTenth(timeLineRange: ITimelineRange): number {
 		let { start, end } = timeLineRange;
 		const delta: number = end.getTime() - start.getTime();
 		return delta === 0 ? 5000 : (delta) * 0.05;
 	}
 
-	private expendByTenth(timeLineRange: TimelineRange) {
+	private expendByTenth(timeLineRange: ITimelineRange) {
 		const tenth = this.getTenth(timeLineRange);
 		return {
 			start: new Date(timeLineRange.start.getTime() - tenth),
@@ -123,7 +127,7 @@ export class OverlaysService {
 	}
 
 
-	getTimeRangeFromDrops(drops: Array<OverlayDrop>): TimelineRange {
+	getTimeRangeFromDrops(drops: Array<OverlayDrop>): ITimelineRange {
 		let start = drops[0].date;
 		let end = drops[0].date;
 		drops.forEach(drop => {

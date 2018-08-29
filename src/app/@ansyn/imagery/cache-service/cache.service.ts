@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { IImageryConfig } from '../model/iimagery-config';
 import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { ICaseMapState } from '@ansyn/core/models/case.model';
 
 @Injectable()
 export class CacheService {
@@ -18,31 +19,30 @@ export class CacheService {
 			.communicatorsAsArray()
 			.some((communicator) => {
 				const communicatorLayers = communicator.getLayers();
-				return layers.some((layer) => communicatorLayers.some((layer) => layer.get('cacheId') === cacheId));
-			})
+				return layers.some((layer) => communicatorLayers.some((layer) => (layer.get && layer.get('cacheId')) === cacheId));
+			});
 	}
 
-	getLayerFromCache(overlay: any): any[] {
-		const cacheId = this.createLayerId(overlay);
+	getLayerFromCache(metaData: ICaseMapState): any[] {
+		const cacheId = this.createLayerId(metaData);
 		const layers = this.cachedLayesrMap.get(cacheId);
-		return layers && !this.isDisplayedLayer(layers, cacheId) ? [ ...layers ] : [];
+		return layers && !this.isDisplayedLayer(layers, cacheId) ? [...layers] : [];
 	}
 
-	addLayerToCache(overlay: any, layers: any[]) {
+	addLayerToCache(caseMapState: ICaseMapState, layers: any[]) {
 		if (this.cachedLayesrMap.size >= this.cacheSize) {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
 		}
-		const cacheId = this.createLayerId(overlay);
-		layers.forEach((layer) => layer.set('cacheId', cacheId));
+		const cacheId = this.createLayerId(caseMapState);
+		layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set('cacheId', cacheId));
 		this.cachedLayesrMap.set(cacheId, [...layers]);
 	}
 
-	removeLayerFromCache(overlay: any) {
-		this.cachedLayesrMap.delete(this.createLayerId(overlay));
-	}
-
-	createLayerId(overlay: any = {}): string {
-		return `${overlay.sourceType}/${JSON.stringify(overlay)}`;
+	createLayerId(caseMapState: ICaseMapState): string {
+		if (caseMapState.data.overlay) {
+			return `${caseMapState.mapType}/${JSON.stringify(caseMapState.data.overlay)}`;
+		}
+		return `${caseMapState.mapType}/${caseMapState.sourceType}`;
 	}
 }

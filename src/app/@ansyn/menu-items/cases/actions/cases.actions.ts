@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
-import { Case } from '../models/case.model';
+import { ICase } from '../models/case.model';
 import { Params } from '@angular/router';
-import { CasePreview, DilutedCase, DilutedCaseState } from '@ansyn/core/models/case.model';
-import { StoredEntity } from '@ansyn/core/services/storage/storage.service';
+import { ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/core/models/case.model';
+import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -35,8 +35,8 @@ export const CasesActionTypes = {
 	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
 	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
 
-	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE'
-
+	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
+	MANUAL_SAVE: 'MANUAL_SAVE'
 };
 
 export type CasesActions = any;
@@ -48,42 +48,42 @@ export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
 export class LoadCasesAction implements Action {
 	type = CasesActionTypes.LOAD_CASES;
 
-	constructor(public payload?: Case[]) {
+	constructor(public payload?: ICase[]) {
 	}
 }
 
 export class AddCasesAction implements Action {
 	type = CasesActionTypes.ADD_CASES;
 
-	constructor(public payload: Case[]) {
+	constructor(public payload: ICase[]) {
 	}
 }
 
 export class AddCaseAction implements Action {
 	type = CasesActionTypes.ADD_CASE;
 
-	constructor(public payload: Case) {
+	constructor(public payload: ICase) {
 	}
 }
 
 export class UpdateCaseAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE;
 
-	constructor(public payload: { updatedCase: Case, forceUpdate?: boolean }) {
+	constructor(public payload: { updatedCase: ICase, forceUpdate?: boolean }) {
 	}
 }
 
 export class UpdateCaseBackendAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE_BACKEND;
 
-	constructor(public payload: Case) {
+	constructor(public payload: ICase) {
 	}
 }
 
 export class UpdateCaseBackendSuccessAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
 
-	constructor(public payload: StoredEntity<CasePreview, DilutedCaseState>) {
+	constructor(public payload: IStoredEntity<ICasePreview, IDilutedCaseState>) {
 	}
 }
 
@@ -111,14 +111,14 @@ export class CloseModalAction implements Action {
 export class SelectCaseAction implements Action {
 	type = CasesActionTypes.SELECT_CASE;
 
-	constructor(public payload: Case) {
+	constructor(public payload: ICase) {
 	}
 }
 
 export class SelectDilutedCaseAction implements Action {
 	type = CasesActionTypes.SELECT_DILUTED_CASE;
 
-	constructor(public payload: DilutedCase) {
+	constructor(public payload: IDilutedCase) {
 	}
 }
 
@@ -139,14 +139,14 @@ export class LoadDefaultCaseAction implements Action {
 export class SaveCaseAsAction implements Action {
 	type = CasesActionTypes.SAVE_CASE_AS;
 
-	constructor(public payload: Case) {
+	constructor(public payload: ICase) {
 	}
 }
 
 export class SaveCaseAsSuccessAction implements Action {
 	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 
-	constructor(public payload: Case) {
+	constructor(public payload: ICase) {
 	}
 }
 
@@ -154,5 +154,11 @@ export class CopyCaseLinkAction implements Action {
 	type = CasesActionTypes.COPY_CASE_LINK;
 
 	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean }) {
+	}
+}
+
+export class ManualSaveAction implements Action {
+	readonly type = CasesActionTypes.MANUAL_SAVE;
+	constructor(public payload: ICase) {
 	}
 }

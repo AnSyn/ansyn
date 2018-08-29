@@ -23,18 +23,15 @@ import {
 	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IOverlay, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
-import {
-	RemovePendingOverlayAction,
-	SetPendingOverlaysAction,
-	SynchronizeMapsAction
-} from '@ansyn/map-facade/actions/map.actions';
+import { IOverlay, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core/models/overlay.model';
+import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import {
 	BackToWorldView,
 	CoreActionTypes,
 	SetLayoutAction,
+	SetLayoutSuccessAction,
 	SetRemovedOverlaysIdAction,
 	SetToastMessageAction,
 	ToggleFavoriteAction,
@@ -53,6 +50,8 @@ import { IContextParams, selectContextEntities, selectContextsParams } from '@an
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 import { DisplayedOverlay } from '@ansyn/core/models/context.model';
+import olExtent from 'ol/extent';
+import { transformScale } from '@turf/turf';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -69,9 +68,9 @@ export class OverlaysAppEffects {
 	displayLatestOverlay$: Observable<any> = this.actions$
 		.ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector))
-		.filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0)
-		.mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const id = filteredOverlays[filteredOverlays.length - 1];
+		.filter(([ action, params, { filteredOverlays } ]: [ SetFilteredOverlaysAction, IContextParams, IOverlaysState ]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0)
+		.mergeMap(([ action, params, { filteredOverlays } ]: [ SetFilteredOverlaysAction, IContextParams, IOverlaysState ]) => {
+			const id = filteredOverlays[ filteredOverlays.length - 1 ];
 			return [
 				new SetContextParamsAction({ defaultOverlay: null }),
 				new DisplayOverlayFromStoreAction({ id })
@@ -92,11 +91,15 @@ export class OverlaysAppEffects {
 	displayTwoNearestOverlay$: Observable<any> = this.actions$
 		.ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS)
 		.withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector))
-		.filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0)
-		.map(([action, params, { overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const overlaysBefore = [...filteredOverlays].reverse().find(overlay => overlays.get(overlay).photoTime < params.time);
-			const overlaysAfter = filteredOverlays.find(overlay => overlays.get(overlay).photoTime > params.time);
-			return new DisplayMultipleOverlaysFromStoreAction([overlaysBefore, overlaysAfter].filter(overlay => overlay));
+		.filter(([ action, params, { filteredOverlays } ]: [ SetFilteredOverlaysAction, IContextParams, IOverlaysState ]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0)
+		.map(([ action, params, { overlays, filteredOverlays } ]: [ SetFilteredOverlaysAction, IContextParams, IOverlaysState ]) => {
+			const overlaysBeforeId = [ ...filteredOverlays ].reverse().find(overlayId => overlays.get(overlayId).photoTime < params.time);
+			const overlaysBefore = overlays.get(overlaysBeforeId);
+			const overlaysAfterId = filteredOverlays.find(overlayId => overlays.get(overlayId).photoTime > params.time);
+			const overlaysAfter = overlays.get(overlaysAfterId);
+			let extent = olExtent.boundingExtent(params.contextEntities[ 0 ].featureJson.geometry.coordinates[ 0 ]);
+			const payload = [ { overlay: overlaysBefore, extent }, { overlay: overlaysAfter, extent } ].filter(Boolean);
+			return new DisplayMultipleOverlaysFromStoreAction(payload);
 		})
 		.share();
 
@@ -113,30 +116,22 @@ export class OverlaysAppEffects {
 		.ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE)
 		.filter((action: DisplayMultipleOverlaysFromStoreAction) => action.payload.length > 0)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.mergeMap(([action, { mapsList }]: [DisplayMultipleOverlaysFromStoreAction, IMapState]) => {
-			const validOverlays = action.payload.filter((overlay) => overlay);
-
-			if (validOverlays.length <= mapsList.length) {
-				const actionsArray = [];
-
-				for (let index = 0; index < validOverlays.length; index++) {
-					let overlay = validOverlays[index];
-					let mapId = mapsList[index].id;
-
-					actionsArray.push(new DisplayOverlayFromStoreAction({ id: overlay, mapId: mapId }));
-				}
-
-				actionsArray.push(new SynchronizeMapsAction({ mapId: mapsList[0].id }));
-
-				return actionsArray;
-			}
-			else {
-				const layout = Array.from(layoutOptions.keys()).find((key: LayoutKey) => {
-					const layout = layoutOptions.get(key);
-					return layout.mapsCount === validOverlays.length;
+		.mergeMap(([ action, { mapsList } ]: [ DisplayMultipleOverlaysFromStoreAction, IMapState ]): any => {
+			const validPendingOverlays = action.payload;
+			/* theoretical situation */
+			if (validPendingOverlays.length <= mapsList.length) {
+				return validPendingOverlays.map((pendingOverlay: IPendingOverlay, index: number) => {
+					let { overlay, extent } = pendingOverlay;
+					let mapId = mapsList[ index ].id;
+					return new DisplayOverlayAction({ overlay, mapId, extent });
 				});
-				return [new SetPendingOverlaysAction(validOverlays), new SetLayoutAction(layout)];
 			}
+
+			const layout = Array.from(layoutOptions.keys()).find((key: LayoutKey) => {
+				const layout = layoutOptions.get(key);
+				return layout.mapsCount === validPendingOverlays.length;
+			});
+			return [ new SetPendingOverlaysAction(validPendingOverlays), new SetLayoutAction(layout) ];
 		});
 
 	/**
@@ -151,28 +146,21 @@ export class OverlaysAppEffects {
 	displayPendingOverlaysOnChangeLayoutSuccess$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.SET_LAYOUT_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapState]) => mapState.pendingOverlays.length > 0)
-		.mergeMap(([action, mapState]) => {
-			const actionsArray = [];
-
-			for (let index = 0; index < mapState.pendingOverlays.length; index++) {
-				let overlay = mapState.pendingOverlays[index];
-				let mapId = mapState.mapsList[index].id;
-
-				actionsArray.push(new DisplayOverlayFromStoreAction({ id: overlay, mapId: mapId }));
-			}
-
-			actionsArray.push(new SynchronizeMapsAction({ mapId: mapState.mapsList[0].id }));
-
-			return actionsArray;
+		.filter(([ action, mapState ]) => mapState.pendingOverlays.length > 0)
+		.mergeMap(([ action, mapState ]: [ SetLayoutSuccessAction, IMapState ]) => {
+			return mapState.pendingOverlays.map((pendingOverlay: any, index: number) => {
+				const { overlay, extent } = pendingOverlay;
+				const mapId = mapState.mapsList[ index ].id;
+				return new DisplayOverlayAction({ overlay, mapId, extent });
+			});
 		});
 
 	@Effect()
 	removePendingOverlayOnDisplay$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
 		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.includes(action.payload.overlay.id))
-		.map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
+		.filter(([ action, mapState ]: [ DisplayOverlaySuccessAction, IMapState ]) => mapState.pendingOverlays.some((pending) => pending.overlay.id === action.payload.overlay.id))
+		.map(([ action, mapState ]: [ DisplayOverlaySuccessAction, IMapState ]) => {
 			return new RemovePendingOverlayAction(action.payload.overlay.id);
 		});
 
@@ -187,10 +175,10 @@ export class OverlaysAppEffects {
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE)
 		.withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector))
-		.map(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
+		.map(([ { payload }, { overlays }, { activeMapId } ]: [ DisplayOverlayFromStoreAction, IOverlaysState, IMapState ]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({ overlay, mapId });
+			return new DisplayOverlayAction({ overlay, mapId, extent: payload.extent });
 		});
 
 	/**
@@ -206,12 +194,12 @@ export class OverlaysAppEffects {
 		ofType<SetRemovedOverlaysIdAction>(CoreActionTypes.SET_REMOVED_OVERLAY_ID),
 		filter(({ payload }) => payload.value),
 		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
-		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
+		mergeMap(([ { payload }, displayOverlayHistory, mapsList ]) => {
 			const mapActions = mapsList
 				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id))
 				.map((map) => {
 					const mapId = map.id;
-					const id = (displayOverlayHistory[mapId] || []).pop();
+					const id = (displayOverlayHistory[ mapId ] || []).pop();
 					if (Boolean(id)) {
 						return new DisplayOverlayFromStoreAction({ mapId, id });
 					}
@@ -231,19 +219,19 @@ export class OverlaysAppEffects {
 	 * @action SetHoveredOverlayAction
 	 */
 
-	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
-		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
+	private getOverlayFromDropMarkup = map(([ markupMap, overlays ]: [ ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any> ]) =>
+		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[ 0 ])
 	);
-	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
-	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [IOverlay, CommunicatorEntity]) => {
+	private getCommunicatorForActiveMap = map(([ overlay, activeMapId ]: [ IOverlay, string ]) => [ overlay, this.imageryCommunicatorService.provide(activeMapId) ]);
+	private getPositionFromCommunicator = mergeMap(([ overlay, communicator ]: [ IOverlay, CommunicatorEntity ]) => {
 		if (!communicator) {
-			return Observable.of([overlay, null]);
+			return Observable.of([ overlay, null ]);
 		}
-		return communicator.getPosition().map((position) => [overlay, position]);
+		return communicator.getPosition().map((position) => [ overlay, position ]);
 	});
-	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
+	private getOverlayWithNewThumbnail = mergeMap(([ overlay, position ]: [ IOverlay, ICaseMapPosition ]) => {
 		if (!overlay) {
-			return [overlay];
+			return [ overlay ];
 		}
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
 		return (<any>sourceProvider).getThumbnailUrl(overlay, position)

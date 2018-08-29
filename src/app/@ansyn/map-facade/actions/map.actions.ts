@@ -4,7 +4,7 @@ import { IImageryChanged } from '@ansyn/imagery/communicator-service/communicato
 import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IPendingOverlay } from '@ansyn/core/models/overlay.model';
 import { IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 export const MapActionTypes = {
@@ -181,7 +181,7 @@ export class DecreasePendingMapsCountAction implements Action {
 export class SetPendingOverlaysAction implements Action {
 	type: string = MapActionTypes.SET_PENDING_OVERLAYS;
 
-	constructor(public payload: string[]) {
+	constructor(public payload: IPendingOverlay[]) {
 	}
 }
 

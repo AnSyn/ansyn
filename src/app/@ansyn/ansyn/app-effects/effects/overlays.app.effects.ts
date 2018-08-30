@@ -42,7 +42,7 @@ import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { catchError, filter, map, mergeMap, share, take, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import {
 	BaseMapSourceProvider,
 	IBaseMapSourceProviderConstructor
@@ -95,8 +95,7 @@ export class OverlaysAppEffects {
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
 		withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector)),
 		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
-		take(1),
-		map(([action, params, { overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
+		mergeMap(([action, params, { overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
 			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays.get(overlayId).photoTime < params.time);
 			const overlaysBefore = overlays.get(overlaysBeforeId);
 			const overlaysAfterId = filteredOverlays.find(overlayId => overlays.get(overlayId).photoTime > params.time);
@@ -111,7 +110,10 @@ export class OverlaysAppEffects {
 				overlay: overlaysAfter,
 				extent
 			}].filter(({ overlay }) => Boolean(overlay));
-			return new DisplayMultipleOverlaysFromStoreAction(payload);
+			return [
+				new DisplayMultipleOverlaysFromStoreAction(payload),
+				new SetContextParamsAction({ defaultOverlay: null })
+			];
 		}),
 		share()
 	);

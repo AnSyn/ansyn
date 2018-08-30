@@ -43,11 +43,7 @@ import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICase } from '@ansyn/core/models/case.model';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import {
-	RemovePendingOverlayAction,
-	SetPendingOverlaysAction,
-	SynchronizeMapsAction
-} from '@ansyn/map-facade/actions/map.actions';
+import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
@@ -113,14 +109,12 @@ describe('OverlaysAppEffects', () => {
 		}
 	} as any;
 
+	const firstOverlay = <any>{ id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z'), 'sourceType': 'FIRST', 'thumbnailUrl': 'http://first' };
+	const secondOverlay = <any> { id: 'last', 'photoTime': new Date(), 'sourceType': 'LAST', 'thumbnailUrl': 'http://last' };
+
 	const exampleOverlays: any = [
-		['first', {
-			id: 'first',
-			'photoTime': new Date('2014-06-27T08:43:03.624Z'),
-			'sourceType': 'FIRST',
-			'thumbnailUrl': 'http://first'
-		}],
-		['last', { id: 'last', 'photoTime': new Date(), 'sourceType': 'LAST', 'thumbnailUrl': 'http://last' }]
+		['first', firstOverlay],
+		['last', secondOverlay ]
 	];
 
 	const toolsState: IToolsState = { ...toolsInitialState };
@@ -267,14 +261,15 @@ describe('OverlaysAppEffects', () => {
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction(['first', 'last'])
+			b: new DisplayMultipleOverlaysFromStoreAction([{ overlay: firstOverlay, extent: undefined }, { overlay: secondOverlay, extent: undefined }])
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
 
 	it(`displayTwoNearestOverlay$ effect with overlay before
 	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		overlaysState.overlays = new Map<string, any>([['first', { 'photoTime': new Date('2014-06-27T08:43:03.624Z') }]]);
+		const overlay = { 'photoTime': new Date('2014-06-27T08:43:03.624Z') };
+		overlaysState.overlays = new Map<string, any>([['first', overlay]]);
 		overlaysState.filteredOverlays = ['first'];
 
 		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
@@ -282,14 +277,15 @@ describe('OverlaysAppEffects', () => {
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction(['first'])
+			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }])
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
 
 	it(`displayTwoNearestOverlay$ effect with overlay after
 	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		overlaysState.overlays = new Map<string, any>([['last', { 'photoTime': new Date('2016-06-27T08:43:03.624Z') }]]);
+		const overlay = { 'photoTime': new Date('2016-06-27T08:43:03.624Z') };
+		overlaysState.overlays = new Map<string, any>([['last', overlay]]);
 		overlaysState.filteredOverlays = ['last'];
 
 		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
@@ -297,27 +293,28 @@ describe('OverlaysAppEffects', () => {
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction(['last'])
+			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }])
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
 
 	it(`displayMultipleOverlays$ effect with overlays count smaller than map count
 	should call DisplayOverlayFromStoreAction`, () => {
-		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(['first', 'last']) });
-		const expectedResults = cold('--(bcd)--', {
-			b: new DisplayOverlayFromStoreAction({ 'id': 'first', 'mapId': '1' }),
-			c: new DisplayOverlayFromStoreAction({ 'id': 'last', 'mapId': '2' }),
-			d: new SynchronizeMapsAction({ mapId: '1' })
+		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction([{ overlay: firstOverlay }, { overlay: secondOverlay }]) });
+		const expectedResults = cold('--(bc)--', {
+			b: new DisplayOverlayAction({ overlay: firstOverlay, 'mapId': '1', extent: undefined }),
+			c: new DisplayOverlayAction({ overlay: secondOverlay, 'mapId': '2' , extent: undefined }),
 		});
 		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
 	});
 
 	it(`displayMultipleOverlays$ effect with overlays count larger than map count
 	should call SetPendingOverlaysAction and ChangeLayoutAction`, () => {
-		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(['one', 'two', 'three']) });
+		const ov1 = <any> { overlay: { id: 'one' }, extent: undefined }, ov2 = <any> { overlay: { id: 'two' }, extent: undefined }, ov3 = <any> { overlay: { id: 'three' }, extent: undefined  };
+		const payload = [ov1, ov2, ov3];
+		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(payload) });
 		const expectedResults = cold('--(bc)--', {
-			b: new SetPendingOverlaysAction(['one', 'two', 'three']),
+			b: new SetPendingOverlaysAction(payload),
 			c: new SetLayoutAction('layout4')
 		});
 		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
@@ -325,22 +322,23 @@ describe('OverlaysAppEffects', () => {
 
 	it(`displayPendingOverlaysOnChangeLayoutSuccess$ effect with overlays
 	should call DisplayOverlayFromStoreAction`, () => {
-		mapState['pendingOverlays'] = ['first', 'last'];
+		const ov1 = <any> { id: 'first' }, ov2 = <any> { id: 'first' };
+		mapState['pendingOverlays'] = [{ overlay: ov1 } , { overlay: ov2 }];
 		actions = hot('--a--', { a: new SetLayoutSuccessAction() });
-		const expectedResults = cold('--(bcd)--', {
-			b: new DisplayOverlayFromStoreAction({ 'id': 'first', 'mapId': '1' }),
-			c: new DisplayOverlayFromStoreAction({ 'id': 'last', 'mapId': '2' }),
-			d: new SynchronizeMapsAction({ mapId: '1' })
+		const expectedResults = cold('--(bc)--', {
+			b: new DisplayOverlayAction({ overlay: <any> ov1, 'mapId': '1', extent: undefined }),
+			c: new DisplayOverlayAction({ overlay: <any> ov2, 'mapId': '2', extent: undefined })
 		});
 		expect(overlaysAppEffects.displayPendingOverlaysOnChangeLayoutSuccess$).toBeObservable(expectedResults);
 	});
 
 	it(`removePendingOverlayOnDisplay$ effect with overlay
 	should call RemovePendingOverlayAction with that overlay`, () => {
-		mapState['pendingOverlays'] = ['first', 'last'];
+		const ov1 = <any> { id: 'first' }, ov2 = <any> { id: 'first' };
+		mapState['pendingOverlays'] = [{ overlay: ov1 } , { overlay: ov2 }];
 		actions = hot('--a--', {
 			a: new DisplayOverlaySuccessAction({
-				overlay: <any> { id: 'first' },
+				overlay: <any> ov1,
 				mapId: mapState.activeMapId
 			})
 		});
@@ -362,7 +360,7 @@ describe('OverlaysAppEffects', () => {
 				})
 			});
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any> firstOverlay, mapId: '4444' }),
+				b: new DisplayOverlayAction({ overlay: <any> firstOverlay, mapId: '4444', extent: undefined })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -379,7 +377,7 @@ describe('OverlaysAppEffects', () => {
 			});
 
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any> lastOverlay, mapId: 'activeMapId' }),
+				b: new DisplayOverlayAction({ overlay: <any> lastOverlay, mapId: 'activeMapId', extent: undefined })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});

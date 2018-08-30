@@ -364,7 +364,7 @@ export class MapAppEffects {
 			return observable.map(() => layer);
 		});
 
-		const extent = (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
+		const extent = payload.extent || (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
 		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
 		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
 

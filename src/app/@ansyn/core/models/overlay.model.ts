@@ -12,6 +12,11 @@ export interface IDilutedOverlay {
 	sourceType?: string;
 }
 
+export interface IPendingOverlay {
+	overlay: IOverlay;
+	extent?: any;
+}
+
 export interface IOverlay extends IDilutedOverlay {
 	footprint?: any; // @TODO add type geojson multipoligon,
 	sensorType?: string;

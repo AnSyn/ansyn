@@ -171,7 +171,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this)
 			.subscribe((features: olFeature[]) => {
-				view.fit(features[0].getGeometry() as olPolygon, { nearest: true });
+				view.fit(features[0].getGeometry() as olPolygon, { nearest: true, constrainResolution: false });
 			});
 	}
 

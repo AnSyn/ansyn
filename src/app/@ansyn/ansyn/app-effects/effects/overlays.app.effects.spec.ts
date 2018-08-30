@@ -260,8 +260,9 @@ describe('OverlaysAppEffects', () => {
 		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([{ overlay: firstOverlay, extent: undefined }, { overlay: secondOverlay, extent: undefined }])
+		const expectedResults = cold('--(bc)--', {
+			b: new DisplayMultipleOverlaysFromStoreAction([{ overlay: firstOverlay, extent: undefined }, { overlay: secondOverlay, extent: undefined }]),
+			c: new SetContextParamsAction({ defaultOverlay: null })
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
@@ -276,8 +277,9 @@ describe('OverlaysAppEffects', () => {
 		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }])
+		const expectedResults = cold('--(bc)--', {
+			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
+			c: new SetContextParamsAction({ defaultOverlay: null })
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
@@ -292,8 +294,9 @@ describe('OverlaysAppEffects', () => {
 		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--b--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }])
+		const expectedResults = cold('--(bc)--', {
+			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
+			c: new SetContextParamsAction({ defaultOverlay: null })
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});

@@ -1,4 +1,3 @@
-///<reference path="../../../../../../node_modules/@types/lodash/index.d.ts"/>
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

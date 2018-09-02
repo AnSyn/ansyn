@@ -8,7 +8,7 @@
 		Back to base map
 	</button>
 
-	<button *ngIf="mapsAmount > 1 && overlay.isGeoRegistered"
+	<button *ngIf="mapsAmount > 1 && (!overlay || (overlay && overlay.isGeoRegistered))"
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"

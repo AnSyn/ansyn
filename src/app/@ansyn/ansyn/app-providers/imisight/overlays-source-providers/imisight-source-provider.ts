@@ -52,7 +52,6 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
 
 	constructor(
-		protected auth0Service: Auth0Service,
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
@@ -63,10 +62,6 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
 
-		if (!this.auth0Service.isValidToken()) {
-			this.auth0Service.login();
-			return;
-		}
 		const helper = new JwtHelperService();
 		const token = localStorage.getItem('id_token');
 

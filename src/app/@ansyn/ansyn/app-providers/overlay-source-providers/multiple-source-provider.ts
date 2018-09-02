@@ -12,6 +12,8 @@ import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, difference, intersect } from '@turf/turf';
 import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
+import { Auth0Service } from '@ansyn/login/services/auth0.service';
+import { Auth0Config, IAuth0Config } from '@ansyn/login/services/auth0.model';
 
 export interface IFiltersList {
 	name: string,
@@ -38,8 +40,10 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
+				@Inject(Auth0Config) protected auth0Config: IAuth0Config,
 				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[],
-				protected loggerService: LoggerService) {
+				protected loggerService: LoggerService,
+				protected auth0Service: Auth0Service) {
 		super(loggerService);
 
 		this.prepareWhitelist();
@@ -133,6 +137,12 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
+
+		if (this.auth0Config.auth0Active === "true" && !this.auth0Service.isValidToken()) {
+			this.auth0Service.login();
+			return;
+		}
+
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
 			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => {

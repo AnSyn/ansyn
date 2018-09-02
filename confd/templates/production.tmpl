@@ -58,17 +58,21 @@
                 }
               },
               "flags": {},
-              "mapType": "openLayersMap",
-              "sourceType": "{{ getv "/ansyn/imagery/mapsource" "BING" }}",
-              "id": "defaultImagery1"
+              "worldView": {
+				"mapType": "openLayersMap",
+				"sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+              },
+              "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
             }
           ],
-          "activeMapId": "defaultImagery1"
+          "activeMapId": "af3b94d2-03ff-44e6-9f73-10d386aff493"
         },
         "layers": {
           "activeLayersIds": []
         },
         "favoriteOverlays": [],
+        "removedOverlaysIds": [],
+        "removedOverlaysVisibility": true,
         "region": {
           "type": "Point",
           "coordinates": [
@@ -126,6 +130,7 @@
   },
   "mapFacadeConfig": {
     "overlayCoverage": 0.1,
+    "displayDebounceTime": 400,
     "sensorTypeShortcuts": {
       "Panchromatic": "P",
       "8-band (Coastal, Blue, Green, Yellow, Red, Red-edge, NIR1, NIR2) Multispectral": "8B",
@@ -267,18 +272,80 @@
     },
     "dataInputFiltersConfig": {
       "IMISIGHT": {
-         "text":"Imisight",
-         "value": 1,
-         "collapsed": true,
-         "children": [
-           {
-             "text": "All",
-             "value": {
-               "sensorType": "All"
-             }
-           }
-         ]
-       }
+        "text":"Imisight",
+        "value": 1,
+        "collapsed": true,
+        "children": [
+          {
+            "text": "All",
+            "value": {
+              "sensorType": "All"
+            }
+          }
+        ]
+      },
+      "PLANET": {
+        "text": "Planet",
+        "value": 1,
+        "collapsed":true,
+        "children": [
+          {
+            "text":"REScene",
+            "value": {
+              "sensorType": "REScene"
+            }
+          },
+          {
+            "text": "PSScene3Band",
+            "value": {
+              "sensorType": "PSScene3Band"
+            }
+          },
+		  {
+            "text": "PSOrthoTile",
+            "value": {
+              "sensorType": "PSOrthoTile"
+            }
+          },
+		  {
+            "text": "REOrthoTile",
+            "value": {
+              "sensorType": "REOrthoTile"
+            }
+          },
+		  {
+            "text": "SkySatScene",
+            "value": {
+              "sensorType": "SkySatScene"
+            }
+          },
+		  {
+            "text": "Landsat8L1G",
+            "value": {
+              "sensorType": "Landsat8L1G"
+            }
+          },
+		  {
+            "text": "Sentinel2L1C",
+            "value": {
+              "sensorType": "Sentinel2L1C"
+            }
+          }
+        ]
+      },
+      "OPEN_AERIAL": {
+        "text":"OpenAerial",
+        "value": 1,
+        "collapsed": true,
+        "children": [
+          {
+            "text": "UAV",
+            "value": {
+              "sensorType": "UAV"
+            }
+          }
+        ]
+      }
     }
 
   },
@@ -289,6 +356,11 @@
 	},
     "storageService": {
       "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    },
+    "translation": {
+    	"default": {
+		 	"Sentinel-2A": "Sentinel 2A"
+	   	}
     }
   },
   "loginConfig": {

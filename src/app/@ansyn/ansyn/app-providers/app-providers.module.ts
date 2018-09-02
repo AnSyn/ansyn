@@ -23,6 +23,10 @@ import { OpenLayerOpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/ma
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ImisightSourceProvider } from '@ansyn/ansyn/app-providers/imisight/overlays-source-providers/imisight-source-provider';
 import { ImisightModule } from '@ansyn/ansyn/app-providers/imisight/imisight.module';
+import { PlanetSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet-source-provider';
+import { OpenAerialSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
+import { NotGeoRegisteredPlaneSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/not-geo-registered-planet-source-provider';
+import { IdahoSourceProvider } from '@ansyn/ansyn/app-providers/overlay-source-providers/idaho-source-provider';
 
 @NgModule({
 	imports: [
@@ -48,10 +52,10 @@ import { ImisightModule } from '@ansyn/ansyn/app-providers/imisight/imisight.mod
 		// Source provider for overlays
 		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
 
-		// { provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
-		// { provide: MultipleOverlaysSource, useClass: NotGeoRegisteredPlaneSourceProvider, multi: true },
-		// { provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
-		// { provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: NotGeoRegisteredPlaneSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: ImisightSourceProvider, multi: true },
 
 		// Source provider for filters

@@ -147,8 +147,10 @@ export interface ICaseMapData extends IDilutedCaseMapData {
 export interface IDilutedCaseMapState {
 	id: string;
 	data: IDilutedCaseMapData;
-	mapType: string;
-	sourceType: string;
+	worldView: {
+		mapType: string;
+		sourceType: string;
+	},
 	flags: {
 		displayLayers?: boolean
 	};

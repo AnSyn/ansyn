@@ -339,11 +339,8 @@ export class MapAppEffects {
 		const prevOverlay = mapData.overlay;
 		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
-
-
-		const mapType = communicator.mapType;
 		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ mapType, sourceType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType });
 
 		if (!sourceLoader) {
 			return Observable.of(new SetToastMessageAction({

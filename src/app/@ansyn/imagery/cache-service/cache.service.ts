@@ -41,8 +41,8 @@ export class CacheService {
 
 	createLayerId(caseMapState: ICaseMapState): string {
 		if (caseMapState.data.overlay) {
-			return `${caseMapState.mapType}/${JSON.stringify(caseMapState.data.overlay)}`;
+			return `${caseMapState.worldView.mapType}/${JSON.stringify(caseMapState.data.overlay)}`;
 		}
-		return `${caseMapState.mapType}/${caseMapState.sourceType}`;
+		return `${caseMapState.worldView.mapType}/${caseMapState.worldView.sourceType}`;
 	}
 }

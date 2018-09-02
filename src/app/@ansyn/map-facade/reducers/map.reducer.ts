@@ -18,8 +18,7 @@ export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsL
 			const mapStateCopy: ICaseMapState = {
 				id: UUID.UUID(),
 				data: { position: null },
-				mapType: activeMap.mapType,
-				sourceType: activeMap.sourceType,
+				worldView: { ...activeMap.worldView },
 				flags: {}
 			};
 			mapsList.push(mapStateCopy);

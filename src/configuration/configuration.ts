@@ -1,6 +1,5 @@
-import { constConfigurations } from './const/configuration.const';
+import { constConfiguration } from './configuration.const';
 
 export const configuration = {
-	production: false,
-	...constConfigurations
+	...constConfiguration
 };

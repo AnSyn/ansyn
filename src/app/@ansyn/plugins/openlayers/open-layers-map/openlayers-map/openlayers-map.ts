@@ -23,7 +23,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import * as olShare from '../shared/openlayers-shared';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -84,7 +84,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
-		this._mapLayers = [...layers];
+		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
 			new AttributionControl(),
@@ -193,24 +193,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
-	private isRasterLayer(layer): boolean {
-		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster
-	}
-
 	public removeLayer(layer: any): void {
 		if (!layer) {
 			return;
 		}
-
-		const index = this._mapLayers.indexOf(layer);
-		if (index > -1) {
-			this._mapLayers.splice(index, 1);
-			this._mapObject.removeLayer(layer);
-			if (this.isRasterLayer(layer)) {
-				layer.getSource().destroy();
-			}
-			this._mapObject.renderSync();
-		}
+		olShare.removeWorkers(layer);
+		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
+		this._mapObject.renderSync();
 	}
 
 	public get mapObject() {

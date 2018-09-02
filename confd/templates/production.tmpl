@@ -58,17 +58,21 @@
                 }
               },
               "flags": {},
-              "mapType": "openLayersMap",
-              "sourceType": "{{ getv "/ansyn/imagery/mapsource" "BING" }}",
-              "id": "defaultImagery1"
+              "worldView": {
+				"mapType": "openLayersMap",
+				"sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+              },
+              "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
             }
           ],
-          "activeMapId": "defaultImagery1"
+          "activeMapId": "af3b94d2-03ff-44e6-9f73-10d386aff493"
         },
         "layers": {
           "activeLayersIds": []
         },
         "favoriteOverlays": [],
+        "removedOverlaysIds": [],
+        "removedOverlaysVisibility": true,
         "region": {
           "type": "Point",
           "coordinates": [
@@ -126,6 +130,7 @@
   },
   "mapFacadeConfig": {
     "overlayCoverage": 0.1,
+    "displayDebounceTime": 400,
     "sensorTypeShortcuts": {
       "Panchromatic": "P",
       "8-band (Coastal, Blue, Green, Yellow, Red, Red-edge, NIR1, NIR2) Multispectral": "8B",
@@ -289,6 +294,11 @@
 	},
     "storageService": {
       "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+    },
+    "translation": {
+    	"default": {
+		 	"Sentinel-2A": "Sentinel 2A"
+	   	}
     }
   },
   "loginConfig": {

@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { BuilderActionTypes } from '@builder/actions/builder.actions';
+import { BuilderActionTypes } from '../actions/builder.actions';
 
 export interface IWindowLayout {
 	menu: boolean,

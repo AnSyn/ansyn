@@ -4,12 +4,14 @@ import { Action, Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import {
+	SetRemovedOverlaysVisibilityAction,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetOverlaysCriteriaAction, SetPresetOverlaysAction
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction, SetMapsDataActionStore
 } from '@ansyn/core/actions/core.actions';
 import {
 	BeginLayerCollectionLoadAction,
@@ -54,8 +56,8 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId } = state.maps;
 		// context
-		const { favoriteOverlays, presetOverlays, region, dataInputFilters, contextEntities } = state;
-		let {  time } = state;
+		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities } = state;
+		let { time } = state;
 		const { layout } = state.maps;
 
 		if (!time) {
@@ -72,10 +74,11 @@ export class SelectCaseAppEffects {
 		const { activeLayersIds } = state.layers;
 		// filters
 		const { facets } = state;
+
 		return [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters}, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
@@ -84,7 +87,9 @@ export class SelectCaseAppEffects {
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetContextParamsAction({ contextEntities }),
-			new SetAutoSave(autoSave)
+			new SetAutoSave(autoSave),
+			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 		];
 	}
 

@@ -12,8 +12,7 @@ import {
 	SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IDilutedCase } from '@ansyn/core/models/case.model';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';

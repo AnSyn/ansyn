@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '../../models/logger.config';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('ToastComponent', () => {
 	let component: ToastComponent;
@@ -19,7 +20,7 @@ describe('ToastComponent', () => {
 				EffectsModule.forRoot([]),
 				CoreModule
 			],
-			providers: [{ provide: LoggerConfig, useValue: {} }]
+			providers: [{ provide: LoggerConfig, useValue: {} }, { provide: CoreConfig, useValue: {} }]
 		}).compileComponents();
 	}));
 

@@ -137,7 +137,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	changeFillColor(fill: string) {
-		this.store.dispatch(new AnnotationSetProperties({ fill }));
+		this.store.dispatch(new AnnotationSetProperties({ fill, 'marker-color': fill }));
 	}
 
 	changeFillShown(active: boolean) {

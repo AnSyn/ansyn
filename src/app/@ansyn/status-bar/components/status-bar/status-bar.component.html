@@ -7,7 +7,7 @@
 
 <div class="status-bar" [class.separated-state]="!hideOverlay">
 	<div class="selected-case">
-		<ansyn-popover [text]="selectedCaseName" [icon]="icon">
+		<ansyn-popover class="default-case" [text]="selectedCaseName" [icon]="icon">
 			<button class="share-link" (click)="copyLink()">
 				<i class="icon-status-bar-share-link"></i>
 				<span>Share link</span>

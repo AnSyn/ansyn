@@ -1,0 +1,18 @@
+Info
+
+http://ansyn.io:81/#/?context=infoEntity&geometry=POINT(34.81265%20-117.91897)&time=2018-05-05T09:25:40
+http://ansyn.io:81/#/?context=infoEntity&geometry=POLYGON((33.72478425368034%20-117.94049546019673,33.7245817907568%20-117.89277205679224,33.703236413961335%20-117.89392898778387,33.70381487945715%20-117.94000376452529,33.72478425368034%20-117.94049546019673))&time=2018-05-05T09:25:40
+
+http://localhost:4200/#/?context=infoEntity&geometry=POLYGON((0%20100,0%20100.2,1%20100.2,1%20100,0%20100))&time=2018-05-05T09:25:40
+http://localhost:4200/#/?context=infoEntity&geometry=POLYGON((0%20100,0%20110,1%20110,1%20100,0%20100))&time=2018-05-05T09:25:40
+
+http://localhost:4200/#/?context=infoEntity&geometry=POLYGON((33%20118,33%20118.5,34%20118.5,34%20118,33%20118))&time=2018-05-05T09:25:40
+
+// reverse
+http://localhost:4200/#/?context=infoEntity&geometry=POLYGON((33%20-118,33%20-118.5,34%20-118.5,34%20-118,33%20-118))&time=2018-05-05T09:25:40
+//
+
+http://localhost:4200/#/?context=infoEntity&geometry=POLYGON%20((-118%2033,%20-118.5%2033,%20-118.5%2034,%20-118%2034,%20-118%2033))&time=2018-05-05T09:25:40
+
+Area
+http://ansyn.io:81/#/?context=areaAnalysis&geopoint=34.81265,-117.91897

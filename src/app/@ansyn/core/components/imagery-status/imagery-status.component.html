@@ -11,6 +11,7 @@
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"
+			[disabled]="!isGeoRegistred"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>
@@ -38,6 +39,13 @@
 			[attr.tooltip-value]="presetsButtonText"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon icon-presets"></i>
+	</button>
+
+	<button *ngIf="overlay" class="small-icon-button remove-overlay"
+			(click)="removeOverlay()"
+			[attr.tooltip-value]="isRemoved ? 'Restore overlay' : 'Remove overlay'"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
 	</button>
 </div>
 

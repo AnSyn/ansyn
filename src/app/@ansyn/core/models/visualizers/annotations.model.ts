@@ -1,16 +1,23 @@
-export interface IAnnotationsContextMenuBoundingRect {
+export interface IAnnotationBoundingRect {
 	top: number;
 	left: number;
 	width: number;
 	height: number;
-	rotation: number;
 }
 
-export interface IAnnotationsContextMenuEvent {
-	mapId: string;
+export interface IAnnotationsSelectionEventData {
+	label: string
 	featureId: string;
-	boundingRect: IAnnotationsContextMenuBoundingRect;
-	interactionType: AnnotationInteraction;
+	mapId: string;
+	boundingRect: IAnnotationBoundingRect;
+	interactionType?: AnnotationInteraction;
+	showLabel?: boolean;
+	showMeasures?: boolean;
+}
+
+export interface IUpdateFeatureEvent {
+	featureId: string;
+	properties: { [k: string]: any }
 }
 
 export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;

@@ -7,16 +7,13 @@ import { ICaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
-import { BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
@@ -44,7 +41,11 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			filter(Boolean),
 			map((map: ICaseMapState) => map.data.overlay && map.data.overlay.date),
 			distinctUntilChanged(),
-			tap((referenceDate) => this.referenceDate = referenceDate)
+			tap((referenceDate) => {
+				this.referenceDate = referenceDate;
+				this.purgeCache();
+				this.source.refresh();
+			})
 		);
 
 	constructor(protected actions$: Actions,
@@ -54,6 +55,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		this.updateStyle({
 			initial: {
 				stroke: '#3DCC33',
+				fill: '#3DCC33',
+				'fill-opacity': 0,
 				icon: {
 					scale: 1,
 					src: 'assets/icons/map/entity-marker.svg',
@@ -64,7 +67,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 					font: '12px Calibri,sans-serif',
 					fill: '#fff',
 					stroke: '#000',
-					"stroke-width": 3,
+					'stroke-width': 3,
 					offsetY: 30,
 					text: this.getText.bind(this)
 				}
@@ -92,8 +95,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		}
 
 		const entityMap = this.idToEntity.get(featureId);
-		const view = (<any>this.iMap.mapObject).getView();
-		const projection = view.getProjection();
 
 		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
 			const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);

@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { IOverlay } from '../models/overlay.model';
 import { MarkUpClass, IMarkUpData, IOverlayDropMarkUp, ITimelineRange } from '../reducers/overlays.reducer';
-import { IOverlaysCriteria, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core/models/overlay.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -86,7 +86,7 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 export class LoadOverlaysSuccessAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
-	constructor(public payload: IOverlay[]) {
+	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
 	}
 }
 
@@ -107,21 +107,21 @@ export class ClearFilterAction implements Action {
 export class DisplayOverlayFromStoreAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE;
 
-	constructor(public payload: { id: string, mapId?: string }) {
+	constructor(public payload: { id: string, mapId?: string, extent?: any }) {
 	}
 }
 
 export class DisplayMultipleOverlaysFromStoreAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE;
 
-	constructor(public payload: string[]) {
+	constructor(public payload: IPendingOverlay[]) {
 	}
 }
 
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: IOverlay, mapId: string, forceFirstDisplay?: boolean }) {
+	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
 	}
 }
 

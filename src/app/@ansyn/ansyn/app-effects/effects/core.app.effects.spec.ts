@@ -71,7 +71,7 @@ describe('CoreAppEffects', () => {
 			mapsState.mapsList = [{
 				id: 'map_1', data: {
 					position: null
-				}, mapType: null, sourceType: null, flags: null
+				}, worldView: { mapType: null, sourceType: null }, flags: null
 			}];
 			coreState.presetOverlays = overlays1to3;
 		});

@@ -78,16 +78,16 @@ export class ImageryComponentManager {
 	}
 
 	private createMapSourceForMapType(mapType: string): Promise<any> {
-		const sourceProvider = this.getMapSourceProvider({ mapType, sourceType: this.mapSettings.sourceType });
+		const sourceProvider = this.getMapSourceProvider({ mapType, sourceType: this.mapSettings.worldView.sourceType });
 		return sourceProvider.createAsync(this.mapSettings);
 	}
 
-	getMapSourceProvider({ mapType, sourceType }: { mapType: string, sourceType?: string }): BaseMapSourceProvider {
+	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
 		return this._baseSourceProviders
 			.find((baseSourceProvider: BaseMapSourceProvider ) => {
 				const baseConstructor = <IBaseMapSourceProviderConstructor> baseSourceProvider.constructor;
 				const source = !sourceType ? true : baseConstructor.sourceType === sourceType;
-				const supported = baseConstructor.supported.some((imageryMapConstructor: IBaseImageryMapConstructor) => imageryMapConstructor.mapType === mapType);
+				const supported = mapType ? baseConstructor.supported.some((imageryMapConstructor: IBaseImageryMapConstructor) => imageryMapConstructor.mapType === mapType) : true;
 				return source && supported;
 		});
 	}
@@ -102,8 +102,6 @@ export class ImageryComponentManager {
 				deps: imapClass.deps || []
 			},
 			BaseImageryPluginProvider];
-
-		this.mapSettings.mapType = imapClass.mapType;
 
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);

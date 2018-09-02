@@ -3,10 +3,10 @@ import { ToolsComponent } from '@ansyn/menu-items/tools/tools/tools.component';
 import { LayersManagerComponent } from '@ansyn/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 import { HelpComponent } from '@ansyn/menu-items/help/components/help.component';
 import { CasesComponent } from '@ansyn/menu-items/cases/components/cases/cases.component';
-import { configuration as constConfiguration } from './configuration.const';
+import { configuration as devConfiguration } from './configuration.dev';
 
 export const configuration = {
-	...constConfiguration,
+	...devConfiguration,
 	production: true,
 	ansynMenuItems: [
 		{

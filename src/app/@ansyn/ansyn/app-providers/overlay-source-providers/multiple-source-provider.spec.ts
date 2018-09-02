@@ -12,6 +12,9 @@ import * as turf from '@turf/turf';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Injectable } from '@angular/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { Auth0Config } from '@ansyn/login/services/auth0.model';
+import { Auth0Service } from '@ansyn/login/services/auth0.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -110,10 +113,10 @@ const regionCoordinates = [
 const fetchParams: any = {
 	limit: 250,
 	region: turf.geometry('Polygon', regionCoordinates),
-	timeRange: {start: new Date().toISOString(), end: new Date().toISOString()}
+	timeRange: { start: new Date().toISOString(), end: new Date().toISOString() }
 };
 
-const fetchParamsWithLimitZero: any = { ...fetchParams, limit: 0};
+const fetchParamsWithLimitZero: any = { ...fetchParams, limit: 0 };
 
 const whitelist = [
 	{
@@ -124,7 +127,7 @@ const whitelist = [
 				end: null
 			}
 		],
-		sensorNames: "[ null ]",
+		sensorNames: '[ null ]',
 		coverage: [regionCoordinates]
 	}
 ];
@@ -134,6 +137,7 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
+			imports: [RouterTestingModule],
 			providers: [
 				{
 					provide: LoggerService,
@@ -143,13 +147,26 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
-						Truthy: {whitelist: whitelist, blacklist: []}
+						Truthy: { whitelist: whitelist, blacklist: [] }
 					}
 				},
 				{
 					provide: MultipleOverlaysSource,
 					useClass: TruthyOverlaySourceProviderMock,
 					multi: true
+				},
+				Auth0Service,
+				{
+					provide: Auth0Config,
+					useValue: {
+						auth0Active: 'false',
+						clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
+						domain: 'imisight-sat.auth0.com',
+						responseType: 'token id_token',
+						audience: 'https://gw.sat.imisight.net',
+						callbackURL: 'http://localhost:4200/#/callback/',
+						scope: 'openid'
+					}
 				}
 			]
 		});
@@ -160,13 +177,13 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 	}));
 
 	it('should return the correct overlays', () => {
-			const expectedResults = cold('(b|)', {b: overlays});
+		const expectedResults = cold('(b|)', { b: overlays });
 
-			expect(this.multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
+		expect(this.multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 	});
 
-	it ('should return an empty array if there are no overlays', () => {
-		const expectedResults = cold('(b|)', {b: emptyOverlays});
+	it('should return an empty array if there are no overlays', () => {
+		const expectedResults = cold('(b|)', { b: emptyOverlays });
 
 		expect(this.multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
 	});
@@ -177,6 +194,7 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
+			imports: [RouterTestingModule],
 			providers: [
 				{
 					provide: LoggerService,
@@ -186,13 +204,26 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
-						Faulty: {whitelist: whitelist, blacklist: []}
+						Faulty: { whitelist: whitelist, blacklist: [] }
 					}
 				},
 				{
 					provide: MultipleOverlaysSource,
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
+				},
+				Auth0Service,
+				{
+					provide: Auth0Config,
+					useValue: {
+						auth0Active: 'false',
+						clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
+						domain: 'imisight-sat.auth0.com',
+						responseType: 'token id_token',
+						audience: 'https://gw.sat.imisight.net',
+						callbackURL: 'http://localhost:4200/#/callback/',
+						scope: 'openid'
+					}
 				}
 			]
 		});
@@ -203,7 +234,7 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 	}));
 
 	it('should return an error', () => {
-		const expectedResults = cold('(b|)', { b: { errors: [faultyError], data: null, limited: -1} });
+		const expectedResults = cold('(b|)', { b: { errors: [faultyError], data: null, limited: -1 } });
 
 		expect(this.multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 	});
@@ -214,6 +245,7 @@ describe('MultipleSourceProvider with one faulty provider and one truthy provide
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
+			imports: [RouterTestingModule],
 			providers: [
 				{
 					provide: LoggerService,
@@ -222,8 +254,8 @@ describe('MultipleSourceProvider with one faulty provider and one truthy provide
 				MultipleOverlaysSourceProvider,
 				{
 					provide: MultipleOverlaysSourceConfig, useValue: {
-						Truthy: {whitelist: whitelist, blacklist: []},
-						Faulty: {whitelist: whitelist, blacklist: []}
+						Truthy: { whitelist: whitelist, blacklist: [] },
+						Faulty: { whitelist: whitelist, blacklist: [] }
 					}
 				},
 				{
@@ -235,23 +267,36 @@ describe('MultipleSourceProvider with one faulty provider and one truthy provide
 					provide: MultipleOverlaysSource,
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
+				},
+				Auth0Service,
+				{
+					provide: Auth0Config,
+					useValue: {
+						auth0Active: 'false',
+						clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
+						domain: 'imisight-sat.auth0.com',
+						responseType: 'token id_token',
+						audience: 'https://gw.sat.imisight.net',
+						callbackURL: 'http://localhost:4200/#/callback/',
+						scope: 'openid'
+					}
 				}
 			]
 		});
 	});
 
 	beforeEach(inject([MultipleOverlaysSourceProvider], _multipleSourceProvider => {
-			this.multipleSourceProvider = _multipleSourceProvider;
+		this.multipleSourceProvider = _multipleSourceProvider;
 	}));
 
 	it('should return the expected overlays with one error', () => {
-		const expectedResults = cold('(b|)', { b: { ...overlays, errors: [faultyError] }});
+		const expectedResults = cold('(b|)', { b: { ...overlays, errors: [faultyError] } });
 
 		expect(this.multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 	});
 
 	it('should return an empty overlays array with one error', () => {
-		const expectedResults = cold('(b|)', { b: { ...emptyOverlays, errors: [faultyError] }});
+		const expectedResults = cold('(b|)', { b: { ...emptyOverlays, errors: [faultyError] } });
 
 		expect(this.multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
 	});

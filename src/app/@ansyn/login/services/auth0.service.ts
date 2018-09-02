@@ -1,46 +1,25 @@
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
-import {
-	IImisightOverlaySourceConfig,
-	ImisightOverlaySourceConfig
-} from '@ansyn/ansyn/app-providers/imisight/imisight.model';
-
-interface IAuthConfig {
-	clientID: string;
-	domain: string;
-	responseType: string;
-	audience: string;
-	callbackURL: string;
-	scope: string;
-}
-
-export const AUTH_CONFIG: IAuthConfig = {
-	clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
-	domain: 'imisight-sat.auth0.com',
-	responseType: 'token id_token',
-	audience: 'https://gw.sat.imisight.net',
-	callbackURL: 'http://www.google.com',
-	scope: 'openid'
-};
+import { Auth0Config, IAuth0Config } from 'src/app/@ansyn/login/services/auth0.model';
 
 (window as any).global = window;
 
 @Injectable()
 export class Auth0Service {
 	auth0 = new auth0.WebAuth({
-		clientID: AUTH_CONFIG.clientID,
-		domain: AUTH_CONFIG.domain,
-		responseType: AUTH_CONFIG.responseType,
-		audience: AUTH_CONFIG.audience,
-		redirectUri: this.imisightOverlaysSourceConfig.callbackURL,
-		scope: AUTH_CONFIG.scope
+		clientID: this.auth0Config.clientID,
+		domain: this.auth0Config.domain,
+		responseType: this.auth0Config.responseType,
+		audience: this.auth0Config.audience,
+		redirectUri: this.auth0Config.callbackURL,
+		scope: this.auth0Config.scope
 	});
 
 	constructor(
 		public router: Router,
-		@Inject(ImisightOverlaySourceConfig)
-		protected imisightOverlaysSourceConfig: IImisightOverlaySourceConfig) {
+		@Inject(Auth0Config)
+		protected auth0Config: IAuth0Config) {
 	}
 
 	public login(): void {

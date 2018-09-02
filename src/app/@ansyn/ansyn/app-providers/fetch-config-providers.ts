@@ -18,6 +18,7 @@ import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overl
 import { configuration } from '../../../../configuration/configuration';
 import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
 import { ImisightOverlaySourceConfig } from '@ansyn/ansyn/app-providers/imisight/imisight.model';
+import { Auth0Config } from '@ansyn/login/services/auth0.model';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -32,6 +33,10 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: ImisightOverlaySourceConfig,
 			useValue: conf.imisightOverlaysSourceConfig
+		},
+		{
+			provide: Auth0Config,
+			useValue: conf.auth0Config
 		},
 		{
 			provide: PlanetOverlaysSourceConfig,

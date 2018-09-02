@@ -17,7 +17,7 @@ import {
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { Auth0Service } from '@ansyn/ansyn/app-providers/imisight/services/auth0.service';
+import { Auth0Service } from '@ansyn/login/services/auth0.service';
 import { toRadians } from '@ansyn/core/utils/math';
 import { IOverlaysPlanetFetchData } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
 import { catchError, map } from 'rxjs/internal/operators';

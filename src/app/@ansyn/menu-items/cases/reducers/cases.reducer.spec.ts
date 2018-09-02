@@ -7,8 +7,6 @@ import {
 } from '../actions/cases.actions';
 import { ICase } from '../models/case.model';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 
 
 describe('CasesReducer', () => {
@@ -25,6 +23,8 @@ describe('CasesReducer', () => {
 				from: new Date(),
 				to: new Date()
 			},
+			removedOverlaysVisibility: true,
+			removedOverlaysIds: [],
 			orientation: 'Align North',
 			dataInputFilters: { fullyChecked: true, filters: [], active: true },
 			timeFilter: 'Start - End',

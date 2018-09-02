@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
@@ -14,8 +14,7 @@ import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.re
 import {
 	ImageryCreatedAction,
 	MapActionTypes,
-	SetIsLoadingAcion,
-	SetMapsDataActionStore
+	SetIsLoadingAcion
 } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
@@ -31,7 +30,7 @@ import {
 	AddAlertMsg,
 	BackToWorldView,
 	CoreActionTypes,
-	RemoveAlertMsg,
+	RemoveAlertMsg, SetMapsDataActionStore,
 	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
@@ -55,22 +54,34 @@ import { debounceTime } from 'rxjs/internal/operators';
 @Injectable()
 export class MapAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
-		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.pipe(
+			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
 			startWith(null),
 			pairwise(),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			filter(this.onDisplayOverlayFilter.bind(this))
 		);
 
-	@Effect()
+
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
 		.pipe(
-			filter((data) => this.displayShouldSwitch(data)),
-			debounceTime(50),
+			filter((data) => this.displayShouldSwitch(data))
+		);
+
+	@Effect()
+	onDisplayOverlaySwitchMapWithAbort$ = this.onDisplayOverlaySwitchMap$
+		.pipe(
+			filter((data) => this.shouldAbortDisplay(data)),
 			switchMap(this.onDisplayOverlay.bind(this))
 		);
 
+	@Effect()
+	onDisplayOverlaySwitchMapWithDebounce$ = this.onDisplayOverlaySwitchMap$
+		.pipe(
+			debounceTime(this.config.displayDebounceTime),
+			filter(this.onDisplayOverlayFilter.bind(this)),
+			switchMap(this.onDisplayOverlay.bind(this))
+		);
 
 	@Effect()
 	onDisplayOverlayMergeMap$ = this.onDisplayOverlay$
@@ -203,7 +214,7 @@ export class MapAppEffects {
 	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, CoreActionTypes.SET_MAPS_DATA)
 		.pipe(
 			withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
 			mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {
@@ -298,6 +309,28 @@ export class MapAppEffects {
 			})
 		);
 
+	displayedItems = new Map<string, Date>();
+
+	shouldAbortDisplay([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
+		const currentTime = new Date();
+
+		// remove prev layers
+		const mapIdsToDelete = [];
+		this.displayedItems.forEach(( value: Date, key: string) => {
+			const isTimePassed = (currentTime.getTime() - (this.displayedItems.get(action.payload.mapId) || currentTime).getTime()) > this.config.displayDebounceTime;
+			if (isTimePassed) {
+				mapIdsToDelete.push(key);
+			}
+		});
+		for (let i = 0; i < mapIdsToDelete.length; i++) {
+			this.displayedItems.delete(mapIdsToDelete[i]);
+		}
+
+		let result = !this.displayedItems.has(action.payload.mapId);
+		this.displayedItems.set(action.payload.mapId, currentTime);
+		return result;
+	}
+
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
@@ -306,11 +339,8 @@ export class MapAppEffects {
 		const prevOverlay = mapData.overlay;
 		const intersection = getFootprintIntersectionRatioInExtent(mapData.position.extentPolygon, overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
-
-
-		const mapType = communicator.mapType;
 		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ mapType, sourceType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType });
 
 		if (!sourceLoader) {
 			return Observable.of(new SetToastMessageAction({
@@ -331,7 +361,7 @@ export class MapAppEffects {
 			return observable.map(() => layer);
 		});
 
-		const extent = (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
+		const extent = payload.extent || (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
 		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
 		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
 

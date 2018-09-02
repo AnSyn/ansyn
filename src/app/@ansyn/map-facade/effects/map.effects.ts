@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/do';
@@ -13,7 +13,7 @@ import { intersect, polygon } from '@turf/turf';
 import 'rxjs/add/observable/forkJoin';
 import {
 	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
+	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
@@ -21,7 +21,6 @@ import {
 	MapsListChangedAction,
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
-	SetMapsDataActionStore,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -30,7 +29,7 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	RemoveAlertMsg,
-	SetLayoutSuccessAction
+	SetLayoutSuccessAction, SetMapsDataActionStore
 } from '@ansyn/core/actions/core.actions';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -39,6 +38,7 @@ import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { pipe } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class MapEffects {
@@ -50,7 +50,7 @@ export class MapEffects {
 	 */
 	@Effect({ dispatch: false })
 	annotationContextMenuTrigger$ = this.actions$
-		.ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU)
+		.ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT)
 		.share();
 
 	/**
@@ -145,20 +145,9 @@ export class MapEffects {
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		});
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
-	@Effect()
-	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
-		.ofType<any>(MapActionTypes.POSITION_CHANGED, CoreActionTypes.BACK_TO_WORLD_SUCCESS)
-		.withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id))
-		.filter(Boolean)
-		.map((map: ICaseMapState) => {
+	checkOverlaysOutOfBounds$ = pipe(
+		filter(Boolean),
+		map((map: ICaseMapState) => {
 			const key = AlertMsgTypes.OverlaysOutOfBounds;
 			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
 			let isInBound;
@@ -178,7 +167,40 @@ export class MapEffects {
 
 			return new AddAlertMsg({ key, value: map.id });
 
-		});
+		})
+	);
+
+	/**
+	 * @type Effect
+	 * @name checkImageOutOfBounds$
+	 * @ofType PositionChangedAction
+	 * @dependencies map
+	 * @filter There is a selected map
+	 * @action RemoveAlertMsg?, AddAlertMsg?
+	 */
+	@Effect()
+	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
+		.pipe(
+			ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED),
+			withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id)),
+			this.checkOverlaysOutOfBounds$.bind(this)
+		);
+
+	/**
+	 * @type Effect
+	 * @name checkImageOutOfBoundsFromBackToWorlds$
+	 * @ofType BackToWorldSuccess
+	 * @dependencies map
+	 * @filter There is a selected map
+	 * @action RemoveAlertMsg?, AddAlertMsg?
+	 */
+	@Effect()
+	checkImageOutOfBoundsFromBackToWorlds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
+		.pipe(
+			ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS),
+			withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.mapId)),
+			this.checkOverlaysOutOfBounds$.bind(this)
+		);
 
 	/**
 	 * @type Effect
@@ -241,7 +263,7 @@ export class MapEffects {
 	 */
 	@Effect()
 	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$
-		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
 		.map(({ payload }) => payload)
 		.filter(({ activeMapId }) => Boolean(activeMapId))
 		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
@@ -255,7 +277,7 @@ export class MapEffects {
 	 */
 	@Effect()
 	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$
-		.ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA)
+		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
 		.map(({ payload }) => payload)
 		.filter(({ mapsList }) => Boolean(mapsList))
 		.map(({ mapsList }) => new MapsListChangedAction(mapsList));

@@ -4,15 +4,13 @@ import { MapEffects } from '../../effects/map.effects';
 import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
-import { SetMapsDataActionStore } from '../../actions/map.actions';
 import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
 import { AlertComponentDirective } from '@ansyn/core/alerts/alert-component.directive';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
-import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
+import { SetLayoutAction, SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
 import { TranslateModule } from '@ngx-translate/core';
 
 const mockAnsynContextMenu = MockComponent({

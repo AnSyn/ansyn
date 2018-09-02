@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
@@ -51,7 +51,10 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 					throw new Error('Not a feature collection');
 				}
 			} catch (toastText) {
-				this.store.dispatch(new SetToastMessageAction({ showWarningIcon: true, toastText: toastText || 'Failed to import file' }))
+				this.store.dispatch(new SetToastMessageAction({
+					showWarningIcon: true,
+					toastText: toastText || 'Failed to import file'
+				}));
 			}
 		})
 	);
@@ -61,7 +64,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 	importLayer(files: FileList) {
 		this.file = files.item(0);
-		this.reader.readAsText(this.file, 'UTF-8')
+		this.reader.readAsText(this.file, 'UTF-8');
 	}
 
 	ngOnInit(): void {
@@ -76,9 +79,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 	generateFeaturesIds(annotationsLayer): void {
 		/* reference */
-		annotationsLayer.features.filter(({ properties }) => !properties.id)
-			.forEach((feature) => {
-				feature.properties.id = UUID.UUID();
+		annotationsLayer.features.forEach((feature) => {
+			feature.properties = { ...feature.properties, id: UUID.UUID() };
 		});
 	}
 

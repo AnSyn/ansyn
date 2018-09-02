@@ -23,6 +23,7 @@ import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
+import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -47,6 +48,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
 		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
 			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
+		})
+		.filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+			return comboBoxesOptions.orientations.includes(orientation);
 		})
 		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return this.pointNorth()

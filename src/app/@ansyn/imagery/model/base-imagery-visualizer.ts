@@ -3,9 +3,10 @@ import { BaseImageryPlugin } from './base-imagery-plugin';
 import { IImageryPluginMetaData } from './base-imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
-export type VisualizerInteractionTypes = 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
+export type VisualizerInteractionTypes = 'click' | 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
+	click: 'click',
 	pointerMove: 'pointerMove',
 	doubleClick: 'doubleClick',
 	contextMenu: 'contextMenu',

@@ -56,7 +56,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
 		this.mainLayer = layer;
-		this.addLayer(this.mainLayer);
+		this.mapObject.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {
 			this.fitToMainLayerExtent(layerExtent);
@@ -89,7 +89,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	addLayer(layer: Layer): void {
-		this.mapObject.addLayer(layer);
+		throw new Error('Can\'t find implementation')
 	}
 
 	removeMainLayer() {
@@ -100,9 +100,6 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	removeLayer(layer: any): void {
-		if (!layer) {
-			return;
-		}
 		olShared.removeWorkers(layer);
 		this.mapObject.removeLayer(layer);
 		this.mapObject.renderSync();

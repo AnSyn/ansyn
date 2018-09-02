@@ -12,7 +12,6 @@ import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
-import { Subscription } from 'rxjs/Subscription';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
@@ -42,7 +41,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
 
-	private _subscriptions: Subscription[] = [];
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
@@ -104,13 +102,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	initListeners() {
 		this._moveEndListener = () => {
-			this._subscriptions.push(
-				this.getPosition().take(1).subscribe(position => {
-					if (position) {
-						this.positionChanged.emit(position);
-					}
-				})
-			);
+			this.getPosition().take(1).subscribe(position => {
+				if (position) {
+					this.positionChanged.emit(position);
+				}
+			})
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
@@ -373,6 +369,5 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._mapObject.setTarget(null);
 		}
 
-		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 }

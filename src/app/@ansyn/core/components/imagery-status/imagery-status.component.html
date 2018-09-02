@@ -8,9 +8,10 @@
 		Back to base map
 	</button>
 
-	<button *ngIf="mapsAmount > 1 && (!overlay || (overlay && overlay.isGeoRegistered))"
+	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"
+			[disabled]="!isGeoRegistred"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>

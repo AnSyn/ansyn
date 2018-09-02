@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@ansyn/login/services/auth.service';
 
 @Component({
 	selector: 'ansyn-callback',

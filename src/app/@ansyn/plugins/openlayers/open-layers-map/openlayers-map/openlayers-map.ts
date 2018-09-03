@@ -12,7 +12,6 @@ import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
-import { of, Subscription } from 'rxjs';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
@@ -21,7 +20,7 @@ import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/co
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import * as olShare from '../shared/openlayers-shared';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -39,7 +38,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
 
-	private _subscriptions: Subscription[] = [];
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
@@ -83,7 +81,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
-		this._mapLayers = [...layers];
+		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
 			new AttributionControl(),
@@ -101,13 +99,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	initListeners() {
 		this._moveEndListener = () => {
-			this._subscriptions.push(
-				this.getPosition().take(1).subscribe(position => {
-					if (position) {
-						this.positionChanged.emit(position);
-					}
-				})
-			);
+			this.getPosition().take(1).subscribe(position => {
+				if (position) {
+					this.positionChanged.emit(position);
+				}
+			})
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
@@ -168,7 +164,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this)
 			.subscribe((features: olFeature[]) => {
-				view.fit(features[0].getGeometry() as olPolygon, { nearest: true });
+				view.fit(features[0].getGeometry() as olPolygon, { nearest: true, constrainResolution: false });
 			});
 	}
 
@@ -194,24 +190,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
-	private isRasterLayer(layer): boolean {
-		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster
-	}
-
 	public removeLayer(layer: any): void {
 		if (!layer) {
 			return;
 		}
-
-		const index = this._mapLayers.indexOf(layer);
-		if (index > -1) {
-			this._mapLayers.splice(index, 1);
-			this._mapObject.removeLayer(layer);
-			if (this.isRasterLayer(layer)) {
-				layer.getSource().destroy();
-			}
-			this._mapObject.renderSync();
-		}
+		olShare.removeWorkers(layer);
+		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
+		this._mapObject.renderSync();
 	}
 
 	public get mapObject() {
@@ -321,8 +306,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
-		return this.calculateRotateExtent(this.mapObject).map(extentPolygon => {
+		return this.calculateRotateExtent(this.mapObject).map((extentPolygon: Polygon) => {
 			if (!extentPolygon) {
+				return null;
+			}
+
+			const someIsNaN = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
+			if (someIsNaN) {
+				console.warn('ol map getPosition failed invalid coordinates ', extentPolygon);
 				return null;
 			}
 			return { extentPolygon, projectedState };
@@ -364,6 +355,5 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._mapObject.setTarget(null);
 		}
 
-		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 }

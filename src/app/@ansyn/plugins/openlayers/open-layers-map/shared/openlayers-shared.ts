@@ -1,0 +1,13 @@
+import Layer from 'ol/layer/layer';
+import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+
+export function isRasterLayer(layer): boolean {
+	return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster
+}
+
+export function removeWorkers(layer) {
+	if (isRasterLayer(layer)) {
+		layer.getSource().destroy();
+	}
+
+}

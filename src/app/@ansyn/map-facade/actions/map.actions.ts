@@ -4,8 +4,8 @@ import { IImageryChanged } from '@ansyn/imagery/communicator-service/communicato
 import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { IAnnotationsContextMenuEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { IOverlay, IPendingOverlay } from '@ansyn/core/models/overlay.model';
+import { IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/core/models/visualizers/annotations.model';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',
@@ -23,9 +23,6 @@ export const MapActionTypes = {
 		HOVER_FEATURE: 'HOVER_FEATURE'
 	},
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
-	STORE: {
-		SET_MAPS_DATA: 'SET_MAPS_DATA'
-	},
 	VIEW: {
 		SET_IS_LOADING: 'SET_IS_LOADING',
 		SET_IS_VISIBLE: 'SET_IS_VISIBLE',
@@ -38,8 +35,9 @@ export const MapActionTypes = {
 		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		ANNOTATION_CONTEXT_MENU: 'ANNOTATION_CONTEXT_MENU',
+		ANNOTATION_SELECT: 'ANNOTATION_SELECT',
 		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
+		ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE',
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
 	},
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
@@ -135,13 +133,6 @@ export class ContextMenuDisplayAction implements Action {
 	}
 }
 
-export class SetMapsDataActionStore implements Action {
-	type = MapActionTypes.STORE.SET_MAPS_DATA;
-
-	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
-	}
-}
-
 export class PinLocationModeTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_LOCATION_MODE;
 
@@ -156,10 +147,10 @@ export class MapsListChangedAction implements Action {
 	}
 }
 
-export class AnnotationContextMenuTriggerAction implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU;
+export class AnnotationSelectAction implements Action {
+	type = MapActionTypes.TRIGGER.ANNOTATION_SELECT;
 
-	constructor(public payload: IAnnotationsContextMenuEvent) {
+	constructor(public payload: IAnnotationsSelectionEventData) {
 
 	}
 }
@@ -168,6 +159,14 @@ export class AnnotationRemoveFeature implements Action {
 	type = MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE;
 
 	constructor(public payload: string) {
+
+	};
+}
+
+export class AnnotationUpdateFeature implements Action {
+	type = MapActionTypes.TRIGGER.ANNOTATION_UPDATE_FEATURE;
+
+	constructor(public payload: IUpdateFeatureEvent) {
 
 	};
 }
@@ -182,7 +181,7 @@ export class DecreasePendingMapsCountAction implements Action {
 export class SetPendingOverlaysAction implements Action {
 	type: string = MapActionTypes.SET_PENDING_OVERLAYS;
 
-	constructor(public payload: string[]) {
+	constructor(public payload: IPendingOverlay[]) {
 	}
 }
 
@@ -217,7 +216,7 @@ export class SetIsVisibleAcion implements Action {
 	}
 }
 
-export class ClickOutsideMap implements Action  {
+export class ClickOutsideMap implements Action {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
 
 	constructor(public payload: any) {

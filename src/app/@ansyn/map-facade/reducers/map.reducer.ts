@@ -5,6 +5,7 @@ import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
 import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
+import { IPendingOverlay } from '@ansyn/core/models/overlay.model';
 
 export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: ICaseMapState[], activeMapId?: string } {
 	const mapsList: ICaseMapState[] = [];
@@ -17,8 +18,7 @@ export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsL
 			const mapStateCopy: ICaseMapState = {
 				id: UUID.UUID(),
 				data: { position: null },
-				mapType: activeMap.mapType,
-				sourceType: activeMap.sourceType,
+				worldView: { ...activeMap.worldView },
 				flags: {}
 			};
 			mapsList.push(mapStateCopy);
@@ -42,7 +42,7 @@ export interface IMapState {
 	isLoadingMaps: Map<string, string>,
 	isHiddenMaps: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened
-	pendingOverlays: string[]; // a list of overlays waiting for maps to be created in order to be displayed
+	pendingOverlays: IPendingOverlay[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
 
 
@@ -95,7 +95,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, ...action.payload };
 		}
 
-		case MapActionTypes.STORE.SET_MAPS_DATA:
+		case CoreActionTypes.SET_MAPS_DATA:
 			return { ...state, ...action.payload };
 
 		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:
@@ -108,10 +108,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, pendingOverlays: action.payload };
 
 		case MapActionTypes.REMOVE_PENDING_OVERLAY:
-			const pendingOverlaysClone = state.pendingOverlays.slice();
-			pendingOverlaysClone.splice(pendingOverlaysClone.indexOf(action.payload), 1);
-
-			return { ...state, pendingOverlays: pendingOverlaysClone };
+			const pendingOverlays = state.pendingOverlays.filter((pending) => pending.overlay.id !== action.payload);
+			return { ...state, pendingOverlays};
 
 		case CoreActionTypes.TOGGLE_MAP_LAYERS: {
 			const mapsList = [ ...state.mapsList ];

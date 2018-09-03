@@ -16,6 +16,7 @@ import { catchError, filter, map, withLatestFrom } from 'rxjs/internal/operators
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { selectAutoSave } from '@ansyn/core/reducers/core.reducer';
+import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
 
 
 @Injectable()
@@ -32,7 +33,11 @@ export class LayersEffects {
 		.pipe(
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
-			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers))
+			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers)),
+			catchError((exception) => {
+				this.store$.dispatch(new LayerCollectionLoadedAction([]));
+				return EMPTY;
+			})
 		);
 
 	@Effect()
@@ -50,7 +55,8 @@ export class LayersEffects {
 		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.addLayer(action.payload))
+		mergeMap(([action]) => this.dataLayersService.addLayer(action.payload)),
+		rxPreventCrash()
 	);
 
 	@Effect({ dispatch: false })

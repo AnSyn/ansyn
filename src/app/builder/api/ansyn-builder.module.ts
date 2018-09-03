@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
+import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import { AnsynApi } from '@builder/api/ansyn-api.service';
-import { builderFeatureKey, BuilderReducer } from '@builder/reducers/builder.reducer';
+import { builderFeatureKey, BuilderReducer } from '../reducers/builder.reducer';
+import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';
 
 @NgModule({
 	imports: [
@@ -14,4 +14,15 @@ import { builderFeatureKey, BuilderReducer } from '@builder/reducers/builder.red
 
 export class AnsynBuilderModule {
 
+	static provideId(id: string): ModuleWithProviders {
+		return {
+			ngModule: AnsynBuilderModule,
+			providers: [
+				{
+					provide: ANSYN_BUILDER_ID,
+					useValue: id
+				}
+			]
+		}
+	}
 }

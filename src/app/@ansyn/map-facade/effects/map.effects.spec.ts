@@ -9,7 +9,7 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	AnnotationContextMenuTriggerAction,
+	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
 	ImageryRemovedAction
 } from '../actions/map.actions';
@@ -59,7 +59,7 @@ describe('MapEffects', () => {
 
 	it('check that the action annotationContextMenuTrigger$ was triggerd', () => {
 
-		const action = new AnnotationContextMenuTriggerAction((<any>{}));
+		const action = new AnnotationSelectAction((<any>{}));
 
 
 		actions = hot('--a--', { a: action });

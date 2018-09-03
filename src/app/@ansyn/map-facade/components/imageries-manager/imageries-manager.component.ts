@@ -3,13 +3,16 @@ import { MapEffects } from '../../effects/map.effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import { SetMapsDataActionStore, UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/distinctUntilChanged';
+import { UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { IMapsLayout } from '@ansyn/core/models/i-maps-layout';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
+import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
 
 @Component({
 	selector: 'ansyn-imageries-manager',

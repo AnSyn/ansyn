@@ -23,28 +23,27 @@ import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
-	AnnotationRemoveFeature,
 	MapActionTypes,
-	PinLocationModeTriggerAction,
-	SetMapsDataActionStore
+	PinLocationModeTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
-import { Feature, FeatureCollection, Point } from 'geojson';
+import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { ClearActiveInteractionsAction, CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import {
+	ClearActiveInteractionsAction,
+	CoreActionTypes,
+	SetMapsDataActionStore
+} from '@ansyn/core/actions/core.actions';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { differenceWith, isEqual } from 'lodash';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
-import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
 
 
 @Injectable()
@@ -272,27 +271,6 @@ export class ToolsAppEffects {
 				];
 			}
 			return [new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }])];
-		}));
-
-	/**
-	 * @type Effect
-	 * @name removeFeature$
-	 * @ofType AnnotationRemoveFeature
-	 * @dependencies layers
-	 * @action SetAnnotationsLayer
-	 */
-	@Effect()
-	removeAnnotationFeature$: Observable<any> = this.actions$.pipe(
-		ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE),
-		withLatestFrom(this.store$.select(selectLayers)),
-		map(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
-			const layer = layers
-				.filter(({ type }) => type === LayerType.annotation)
-				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
-			return new UpdateLayer({
-				...layer,
-				data: { ...layer.data, features: layer.data.features.filter(({properties}) => properties.id !== action.payload) }
-			});
 		}));
 
 	/**

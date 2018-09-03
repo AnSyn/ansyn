@@ -7,6 +7,12 @@ import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer
 import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import {
+	AnnotationInteraction,
+	IAnnotationsSelectionEventData
+} from '@ansyn/core/models/visualizers/annotations.model';
+
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
@@ -28,6 +34,7 @@ describe('AnnotationContextMenuComponent', () => {
 				AnnotationContextMenuComponent
 			],
 			imports: [
+				FormsModule,
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })
 			]
 		}).compileComponents();
@@ -46,47 +53,57 @@ describe('AnnotationContextMenuComponent', () => {
 
 	describe('check annotation context menu trigger the focus and styling', () => {
 		beforeEach(() => {
-			spyOn(component.host.nativeElement, 'focus');
+			spyOn(component.host.nativeElement, 'click');
 		});
 
 		it(`check Circle annotation shape`, () => {
 			const actionPayload = {
 				payload: {
+					interactionType: AnnotationInteraction.click,
 					featureId: 'featureId',
 					boundingRect: {
 						top: 100,
 						height: 100,
 						left: 100,
-						width: 100,
-						rotation: 30
+						width: 100
 					}
 				}
 			};
 
 			(<Subject<any>>component.mapEffect.annotationContextMenuTrigger$).next(actionPayload);
 
-			expect(component.contextMenuWrapperStyle).toEqual({
-				top: '100px',
-				height: '100px',
-				left: '100px',
-				width: '100px',
-				transform: `rotate(${30}deg)`
+			expect((<IAnnotationsSelectionEventData>component.clickMenuProps).boundingRect).toEqual({
+				top: 100,
+				height: 100,
+				left: 100,
+				width: 100
 			});
 
-			expect(component.host.nativeElement.focus).toHaveBeenCalled();
 		});
 	});
 
 	it('positionChanged$ should close context menu (by blur)', () => {
-		spyOn(component.host.nativeElement, 'blur');
 		(<Subject<any>>component.mapEffect.positionChanged$).next();
-		expect(component.host.nativeElement.blur).toHaveBeenCalled();
+		expect(component.clickMenuProps).toBeNull();
 	});
 
 	it('click on remove feature button', () => {
+		component.clickMenuProps = {
+			showLabel: true,
+			featureId: 'featureId',
+			label: 'label',
+			mapId: 'id',
+			boundingRect: {
+				top: 100,
+				height: 100,
+				left: 100,
+				width: 100
+			},
+		};
+		fixture.detectChanges();
 		spyOn(component, 'removeFeature');
 		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));
-		de.triggerEventHandler('mousedown', {});
+		de.triggerEventHandler('click', {});
 		expect(component.removeFeature).toHaveBeenCalled();
 	});
 

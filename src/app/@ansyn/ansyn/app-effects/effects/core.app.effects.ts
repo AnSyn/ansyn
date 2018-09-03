@@ -1,25 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	CoreActionTypes,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
-	SetFavoriteOverlaysAction,
 	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
+	SetPresetOverlaysAction
 } from '@ansyn/core/actions/core.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	LoadOverlaysAction, OverlaysActionTypes,
-	SetMarkUp
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
@@ -32,52 +30,6 @@ import { filter, map, pluck, tap, withLatestFrom } from 'rxjs/internal/operators
 export class CoreAppEffects {
 	/**
 	 * @type Effect
-	 * @name onFavorite$
-	 * @ofType ToggleFavoriteAction
-	 * @dependencies cases
-	 * @action SetFavoriteOverlaysAction
-	 */
-	@Effect()
-	onFavorite$: Observable<Action> = this.actions$.pipe(
-		ofType<ToggleFavoriteAction>(CoreActionTypes.TOGGLE_OVERLAY_FAVORITE),
-		withLatestFrom(this.store$.select(coreStateSelector)),
-		map(([action, { favoriteOverlays }]: [ToggleFavoriteAction, ICoreState]) => {
-			const updatedFavoriteOverlays = [...favoriteOverlays];
-			const toggledFavorite = updatedFavoriteOverlays.find(o => o.id === action.payload.id);
-			const indexOfPayload = updatedFavoriteOverlays.indexOf(toggledFavorite);
-			if (indexOfPayload === -1) {
-				updatedFavoriteOverlays.push(action.payload);
-			} else {
-				updatedFavoriteOverlays.splice(indexOfPayload, 1);
-			}
-			return new SetFavoriteOverlaysAction(updatedFavoriteOverlays);
-		}));
-
-	/**
-	 * @type Effect
-	 * @name onPreset$
-	 * @ofType TogglePresetOverlayAction
-	 * @dependencies cases
-	 * @action SetPresetOverlaysAction
-	 */
-	@Effect()
-	onPreset$: Observable<Action> = this.actions$.pipe(
-		ofType<TogglePresetOverlayAction>(CoreActionTypes.TOGGLE_OVERLAY_PRESET),
-		withLatestFrom(this.store$.select(coreStateSelector)),
-		map(([action, { presetOverlays }]: [TogglePresetOverlayAction, ICoreState]) => {
-			const updatedPresetOverlays = [...presetOverlays];
-			const toggledPreset = updatedPresetOverlays.find(o => o.id === action.payload.id);
-			const indexOfPayload = updatedPresetOverlays.indexOf(toggledPreset);
-			if (indexOfPayload === -1) {
-				updatedPresetOverlays.push(action.payload);
-			} else {
-				updatedPresetOverlays.splice(indexOfPayload, 1);
-			}
-			return new SetPresetOverlaysAction(updatedPresetOverlays);
-		}));
-
-	/**
-	 * @type Effect
 	 * @name clearPresets$
 	 * @ofType LoadOverlaysAction
 	 * @dependencies core
@@ -88,41 +40,11 @@ export class CoreAppEffects {
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new SetPresetOverlaysAction([]));
 
-	/**
-	 * @type Effect
-	 * @name setFavoriteOverlaysUpdateCase$
-	 * @ofType SetFavoriteOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
 	@Effect()
-	setFavoriteOverlaysUpdateCase$: Observable<any> = this.actions$.pipe(
-		ofType<SetFavoriteOverlaysAction>(CoreActionTypes.SET_FAVORITE_OVERLAYS),
-		map(({ payload }: SetFavoriteOverlaysAction) => payload.map(overlay => overlay.id)),
-		map((overlayIds) => new SetMarkUp({
-				classToSet: MarkUpClass.favorites,
-				dataToSet: {
-					overlaysIds: overlayIds
-				}
-			}
-		)));
-
-	/**
-	 * @type Effect
-	 * @name setPresetOverlaysUpdateCase$
-	 * @ofType SetPresetOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
-	@Effect()
-	setPresetOverlaysUpdateCase$: Observable<any> = this.actions$.pipe(
-		ofType<SetPresetOverlaysAction>(CoreActionTypes.SET_PRESET_OVERLAYS),
-		map(({ payload }: SetPresetOverlaysAction) => payload.map(overlay => overlay.id)),
-		map((overlayIds) => new SetMarkUp({
-				classToSet: MarkUpClass.presets,
-				dataToSet: {
-					overlaysIds: overlayIds
-				}
-			}
-		)));
+	clearPresetsOnClearOverlays$: Observable<any> = this.actions$
+		.ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
+		.filter(({ clearExistingOverlays }) => clearExistingOverlays)
+		.map(() => new SetPresetOverlaysAction([]));
 
 	@Effect({ dispatch: false })
 	actionsLogger$ = this.actions$.pipe(
@@ -136,8 +58,8 @@ export class CoreAppEffects {
 			CasesActionTypes.UPDATE_CASE,
 			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
 			CasesActionTypes.SELECT_CASE
-			),
-		tap((action) => {
+		)
+		.do((action) => {
 			this.loggerService.info(JSON.stringify(action));
 		}));
 
@@ -183,21 +105,23 @@ export class CoreAppEffects {
 	 * @action DisplayOverlayFromStoreAction
 	 */
 	@Effect()
-	onNextPresetOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<GoNextPresetOverlay>(CoreActionTypes.GO_NEXT_PRESET_OVERLAY),
-		withLatestFrom(this.store$.select(mapStateSelector), (Action , mapState: IMapState): {overlayId: string, mapId: string} => {
+	onNextPresetOverlay$: Observable<any> = this.actions$
+		.ofType<GoNextPresetOverlay>(CoreActionTypes.GO_NEXT_PRESET_OVERLAY)
+		.withLatestFrom(this.store$.select(mapStateSelector), (Action, mapState: IMapState): { overlayId: string, mapId: string } => {
 			const activeMap = MapFacadeService.activeMap(mapState);
-			return {overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId};
-		}),
-		withLatestFrom(this.store$.select(coreStateSelector), ({overlayId , mapId}, { presetOverlays }): {overlay: IOverlay, mapId: string} => {
+			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
+		})
+		.withLatestFrom(this.store$.select(coreStateSelector), ({ overlayId, mapId }, { presetOverlays }): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;
-			if (length === 0) { return; }
+			if (length === 0) {
+				return;
+			}
 			const index = presetOverlays.findIndex(overlay => overlay.id === overlayId);
 			const nextIndex = index === -1 ? 0 : index >= length - 1 ? 0 : index + 1;
-			return {overlay: presetOverlays[nextIndex], mapId};
-		}),
-		filter(Boolean),
-		map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId })));
+			return { overlay: presetOverlays[nextIndex], mapId };
+		})
+		.filter(Boolean)
+		.map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId }));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

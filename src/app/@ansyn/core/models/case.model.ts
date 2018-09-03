@@ -59,6 +59,8 @@ export interface IDilutedCaseState {
 	dataInputFilters: ICaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
 	favoriteOverlays?: IDilutedOverlay[],
+	removedOverlaysIds?: string[],
+	removedOverlaysVisibility: boolean,
 	presetOverlays?: IDilutedOverlay[],
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs,
 	layers?: ICaseLayersState
@@ -145,8 +147,10 @@ export interface ICaseMapData extends IDilutedCaseMapData {
 export interface IDilutedCaseMapState {
 	id: string;
 	data: IDilutedCaseMapData;
-	mapType: string;
-	sourceType: string;
+	worldView: {
+		mapType: string;
+		sourceType: string;
+	},
 	flags: {
 		displayLayers?: boolean
 	};

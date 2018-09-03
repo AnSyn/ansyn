@@ -10,6 +10,7 @@ import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -23,6 +24,7 @@ describe('GoToComponent', () => {
 			providers: [
 				ProjectionConverterService,
 				{ provide: LoggerConfig, useValue: {} },
+				{ provide: CoreConfig, useValue: {}},
 				{
 					provide: toolsConfig, useValue: {
 					GoTo: {

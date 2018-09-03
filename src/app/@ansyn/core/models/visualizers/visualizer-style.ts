@@ -14,6 +14,7 @@ export interface ILabel extends IStroke {
 	offsetX?: number;
 	offsetY?: number;
 	text?: (feature: any) => string | string;
+	overflow?: boolean;
 }
 
 export interface IVisualizerStyle extends IStroke, IFill {

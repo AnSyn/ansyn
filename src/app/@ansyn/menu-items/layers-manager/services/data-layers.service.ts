@@ -11,6 +11,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
 import { ICase } from '@ansyn/core/models/case.model';
 import { catchError, filter, tap } from 'rxjs/internal/operators';
+import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
 
 export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
 
@@ -57,10 +58,11 @@ export class DataLayersService implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	public getAllLayersInATree({ caseId }): Observable<ILayer[]> {
+	public getAllLayersInATree({ caseId }): Observable<{} | ILayer[]> {
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
-			.pipe <any> (
-				catchError(err => this.errorHandlerService.httpErrorHandle(err))
+			.pipe(
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers')),
+				rxPreventCrash()
 			);
 	}
 

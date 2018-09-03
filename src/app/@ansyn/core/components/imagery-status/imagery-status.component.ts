@@ -1,8 +1,19 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	HostBinding,
+	HostListener,
+	Inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output
+} from '@angular/core';
 import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
 	BackToWorldView,
+	SetRemovedOverlaysIdAction,
 	SetToastMessageAction,
 	ToggleFavoriteAction,
 	ToggleMapLayersAction,
@@ -14,25 +25,31 @@ import {
 	ICoreState,
 	selectEnableCopyOriginalOverlayDataFlag,
 	selectFavoriteOverlays,
-	selectPresetOverlays
+	selectPresetOverlays,
+	selectRemovedOverlays
 } from '../../reducers/core.reducer';
 import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
 import { getTimeFormat } from '../../utils/time';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/internal/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { copyFromContent } from '../../utils/clipboard';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 @Component({
 	selector: 'ansyn-imagery-status',
 	templateUrl: './imagery-status.component.html',
 	styleUrls: ['./imagery-status.component.less']
 })
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_overlay: IOverlay;
 
 	@HostBinding('class.active') @Input() active: boolean;
+
 	@Input() mapId: string = null;
 	@Input() mapsAmount = 1;
 	@Input() layerFlag = false;
@@ -48,8 +65,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				});
 			}
 		}
+		this.updateRemovedStatus();
 		this.updateFavoriteStatus();
 		this.updatePresetStatus();
+
 	};
 
 	translatedOverlaySensorName = '';
@@ -60,14 +79,36 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 
-	private _subscriptions: Subscription[] = [];
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
-	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
-	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays);
+
+	@AutoSubscription
+	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
+		tap((favoriteOverlays) => {
+			this.favoriteOverlays = favoriteOverlays;
+			this.updateFavoriteStatus();
+		})
+	);
+
+	@AutoSubscription
+	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays).pipe(
+		tap((presetOverlays) => {
+			this.presetOverlays = presetOverlays;
+			this.updatePresetStatus();
+		})
+	);
+
+	@AutoSubscription
+	removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays).pipe(
+		tap((removedOverlaysIds) => {
+			this.removedOverlaysIds = removedOverlaysIds;
+			this.updateRemovedStatus();
+		})
+	);
 
 	alertMsg: AlertMsg;
 	enableCopyOriginalOverlayData: boolean;
 
+	@AutoSubscription
 	alertMsg$: Observable<AlertMsg> = this.core$
 		.pipe(
 			pluck<ICoreState, AlertMsg>('alertMsg'),
@@ -75,15 +116,28 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			distinctUntilChanged()
 		);
 
-	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag);
+	@AutoSubscription
+	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
+		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
+	);
 
 	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
+	removedOverlaysIds = [];
+
 	favoritesButtonText: string;
 
 	presetOverlays: IOverlay[];
 	isPreset: boolean;
 	presetsButtonText: string;
+	isRemoved: boolean;
+
+	@HostListener('window:keydown', ['$event'])
+	deleteKeyPressed($event: KeyboardEvent) {
+		if (this.active && this.overlay && $event.which === 46 && !this.isRemoved) {
+			this.removeOverlay();
+		}
+	}
 
 	getFormattedTime(dateTimeSring: string): string {
 		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
@@ -130,22 +184,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this._subscriptions.push(
-			this.favoriteOverlays$.subscribe((favoriteOverlays) => {
-				this.favoriteOverlays = favoriteOverlays;
-				this.updateFavoriteStatus();
-			}),
-			this.presetOverlays$.subscribe((presetOverlays) => {
-				this.presetOverlays = presetOverlays;
-				this.updatePresetStatus();
-			}),
-			this.alertMsg$.subscribe(),
-			this.copyOriginalOverlayDataFlag$.subscribe((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
-		);
 	}
 
 	ngOnDestroy(): void {
-		this._subscriptions.forEach(observable$ => observable$.unsubscribe());
 	}
 
 	showAlert(alertKey) {
@@ -158,11 +199,17 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleFavorite() {
-		this.store$.dispatch(new ToggleFavoriteAction(this.overlay));
+		const overlay = this.overlay;
+		const { id } = overlay;
+		const value = !this.isFavorite;
+		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
 	}
 
 	togglePreset() {
-		this.store$.dispatch(new TogglePresetOverlayAction(this.overlay));
+		const overlay = this.overlay;
+		const { id } = overlay;
+		const value = !this.isPreset;
+		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
 	}
 
 	updateFavoriteStatus() {
@@ -181,6 +228,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		this.presetsButtonText = this.isPreset ? 'Remove from overlays quick loop' : 'Add to overlays quick loop';
 	}
 
+	updateRemovedStatus() {
+		this.isRemoved = this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
+	}
+
 	toggleMapLayers() {
 		this.layerFlag = !this.layerFlag;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
@@ -188,5 +239,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	backToWorldView() {
 		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
+	}
+
+	removeOverlay() {
+		this.store$.dispatch(new SetRemovedOverlaysIdAction({ id: this.overlay.id, value: !this.isRemoved }));
 	}
 }

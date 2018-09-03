@@ -1,10 +1,15 @@
 @import 'core/less/common';
 /deep/ body {
 
-	ansyn-selected-case-bar div.pop-hover:hover .pop-content, .pop-content.visible {
+	ansyn-popover.default-case div.pop-hover:hover .pop-content, .pop-content.visible {
 		visibility: hidden !important;
 	}
 	ansyn-tools {
 		background: @application-main-color;
+	}
+
+	div.app > div.menu {
+		box-shadow: 0 0 10px black;
+		z-index: @z-index-menu-container;
 	}
 }

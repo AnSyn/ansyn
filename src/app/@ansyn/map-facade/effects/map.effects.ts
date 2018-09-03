@@ -9,7 +9,7 @@ import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map
 import { intersect, polygon } from '@turf/turf';
 import {
 	ActiveMapChangedAction,
-	AnnotationContextMenuTriggerAction,
+	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
@@ -17,7 +17,6 @@ import {
 	MapsListChangedAction,
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
-	SetMapsDataActionStore,
 	SynchronizeMapsAction
 } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -26,7 +25,7 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	RemoveAlertMsg,
-	SetLayoutSuccessAction
+	SetLayoutSuccessAction, SetMapsDataActionStore
 } from '@ansyn/core/actions/core.actions';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
@@ -48,9 +47,9 @@ export class MapEffects {
 	 * @ofType AnnotationContextMenuTriggerAction
 	 */
 	@Effect({ dispatch: false })
-	annotationContextMenuTrigger$ = this.actions$.pipe(
-		ofType<AnnotationContextMenuTriggerAction>(MapActionTypes.TRIGGER.ANNOTATION_CONTEXT_MENU),
-		share());
+	annotationContextMenuTrigger$ = this.actions$
+		.ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT)
+		.share();
 
 	/**
 	 * @type Effect
@@ -260,11 +259,11 @@ export class MapEffects {
 	 * @action ActiveMapChangedAction
 	 */
 	@Effect()
-	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$.pipe(
-		ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA),
-		map(({ payload }) => payload),
-		filter(({ activeMapId }) => Boolean(activeMapId)),
-		map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId)));
+	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$
+		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
+		.map(({ payload }) => payload)
+		.filter(({ activeMapId }) => Boolean(activeMapId))
+		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
 
 	/**
 	 * @type Effect
@@ -274,11 +273,11 @@ export class MapEffects {
 	 * @action MapsListChangedAction
 	 */
 	@Effect()
-	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$.pipe(
-		ofType<SetMapsDataActionStore>(MapActionTypes.STORE.SET_MAPS_DATA),
-		map(({ payload }) => payload),
-		filter(({ mapsList }) => Boolean(mapsList)),
-		map(({ mapsList }) => new MapsListChangedAction(mapsList)));
+	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$
+		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
+		.map(({ payload }) => payload)
+		.filter(({ mapsList }) => Boolean(mapsList))
+		.map(({ mapsList }) => new MapsListChangedAction(mapsList));
 
 	/**
 	 * @type Effect

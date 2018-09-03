@@ -8,6 +8,7 @@ import {
 	OpenModalAction,
 	LoadCaseAction
 } from '../../actions/cases.actions';
+import { getTimeFormat } from '@ansyn/core/utils/time';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
@@ -111,6 +112,10 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		if (this.selectedCaseId !== caseId) {
 			this.store$.dispatch(new LoadCaseAction(caseId));
 		}
+	}
+
+	formatTime(timeToFormat: Date): string {
+		return getTimeFormat(timeToFormat);
 	}
 
 }

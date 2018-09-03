@@ -7,17 +7,23 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
+	SetMarkUp,
 	SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
-import { Store } from '@ngrx/store';
-import { IOverlaysState, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
+import { Store, select } from '@ngrx/store';
+import { IOverlaysState, MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import { IOverlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
+import {
+	coreStateSelector,
+	ICoreState,
+	selectFavoriteOverlays,
+	selectPresetOverlays
+} from '@ansyn/core/reducers/core.reducer';
 import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
-import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/internal/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class OverlaysEffects {
@@ -54,9 +60,9 @@ export class OverlaysEffects {
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.overLoad.replace('$overLoad', overlays.data.length.toString())));
 					}
 					return actions;
-				})),
-				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
-		}));
+				})
+				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
+		});
 
 	/**
 	 * @type Effect
@@ -76,6 +82,44 @@ export class OverlaysEffects {
 				})));
 		}));
 
+	/**
+	 * @type Effect
+	 * @name setFavoriteOverlaysUpdateCase$
+	 * @ofType SetFavoriteOverlaysAction
+	 * @action OverlaysMarkupAction
+	 */
+	@Effect()
+	setFavoriteOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
+		select(selectFavoriteOverlays),
+		map((favoriteOverlays: IOverlay[]) => favoriteOverlays.map(overlay => overlay.id)),
+		map((overlayIds) => new SetMarkUp({
+				classToSet: MarkUpClass.favorites,
+				dataToSet: {
+					overlaysIds: overlayIds
+				}
+			}
+		))
+	);
+
+	/**
+	 * @type Effect
+	 * @name setPresetOverlaysUpdateCase$
+	 * @ofType SetPresetOverlaysAction
+	 * @action OverlaysMarkupAction
+	 */
+	@Effect()
+	setPresetOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
+		select(selectPresetOverlays),
+		map((presetOverlays: IOverlay[]) => presetOverlays.map(overlay => overlay.id)),
+		map((overlayIds) => new SetMarkUp({
+				classToSet: MarkUpClass.presets,
+				dataToSet: {
+					overlaysIds: overlayIds
+				}
+			}
+		))
+	);
+
 	@Effect()
 	dropsCount$ = this.store$.select(selectDrops).pipe(
 		filter(Boolean),
@@ -83,7 +127,7 @@ export class OverlaysEffects {
 
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IOverlaysState>,
+				protected store$: Store<any>,
 				protected overlaysService: OverlaysService) {
 	}
 

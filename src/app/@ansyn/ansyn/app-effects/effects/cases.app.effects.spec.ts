@@ -4,8 +4,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { ContextModule } from '@ansyn/context/context.module';
-import { SetMapsDataActionStore } from '@ansyn/map-facade/actions/map.actions';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import {
@@ -28,9 +26,8 @@ import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { ContextConfig } from '@ansyn/context/models/context.config';
 import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { CasesEffects } from '@ansyn/menu-items/cases/effects/cases.effects';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

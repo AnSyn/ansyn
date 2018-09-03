@@ -2,12 +2,12 @@ import { Observable, of } from 'rxjs';
 import * as ol from 'openlayers';
 import Map from 'ol/map';
 import View from 'ol/view';
-import ScaleLine from 'ol/control/scaleline';
 import Layer from 'ol/layer/layer';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import * as olShared from '../shared/openlayers-shared';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
@@ -17,14 +17,14 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 
-	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, [mainLayer]: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
-			controls: [new ScaleLine()]
+			controls: []
 		});
-		this.setMainLayer(layers[0], position);
-		return of(true);
+		this.setMainLayer(mainLayer, position);
+		return Observable.of(true);
 	}
 
 	addLayerIfNotExist(layer: any) {
@@ -52,15 +52,11 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	setMainLayer(layer: Layer, position?: ICaseMapPosition) {
-		if (this.mainLayer) {
-			this.mapObject.removeLayer(this.mainLayer);
-			this.mapObject.render();
-		}
-
-		this.mainLayer = layer;
+		this.removeMainLayer();
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
-		this.addLayer(this.mainLayer);
+		this.mainLayer = layer;
+		this.mapObject.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {
 			this.fitToMainLayerExtent(layerExtent);
@@ -93,10 +89,20 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	addLayer(layer: Layer): void {
-		this.mapObject.addLayer(layer);
+		throw new Error('Can\'t find implementation')
+	}
+
+	removeMainLayer() {
+		if (this.mainLayer) {
+			this.removeLayer(this.mainLayer);
+			this.mainLayer = null;
+		}
 	}
 
 	removeLayer(layer: any): void {
+		olShared.removeWorkers(layer);
+		this.mapObject.removeLayer(layer);
+		this.mapObject.renderSync();
 	}
 
 	setPosition(position: ICaseMapPosition): Observable<boolean> {
@@ -129,6 +135,9 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	dispose() {
-
+		if (this.mapObject) {
+			this.removeMainLayer();
+			this.mapObject.setTarget(null);
+		}
 	}
 }

@@ -5,7 +5,7 @@ import {
 	ElementRef,
 	Inject,
 	Input,
-	isDevMode, OnDestroy,
+	OnDestroy,
 	OnInit,
 	Renderer2,
 	ViewChild,
@@ -105,11 +105,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 			tap((_menuItems) => this.entities = _menuItems)
 		);
 
-	menuItemsAsArray$: Observable<IMenuItem[]> = this.store
-		.pipe(
-			select(selectAllMenuItems),
-			map((menuItems: IMenuItem[]) => menuItems.filter(this.isMenuItemShown))
-		);
+	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(select(selectAllMenuItems));
 
 	@AutoSubscription
 	selectedMenuItem$: Observable<string> = this.store
@@ -151,10 +147,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 	get selectedMenuItem(): IMenuItem {
 		return this.entities[this.selectedMenuItemName];
-	}
-
-	isMenuItemShown(menuItem: IMenuItem) {
-		return isDevMode() || menuItem.production;
 	}
 
 	forceRedraw() {

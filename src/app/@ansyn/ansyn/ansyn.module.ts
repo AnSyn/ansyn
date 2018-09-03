@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ansynMenuItems } from './ansyn.menu-items';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
@@ -25,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@ansyn/core/core.module';
 import { HelpModule } from '@ansyn/menu-items/help/help.module';
+import { configuration } from '../../../configuration/configuration';
 
 @NgModule({
 	imports: [
@@ -43,7 +43,7 @@ import { HelpModule } from '@ansyn/menu-items/help/help.module';
 		AnsynPluginsModule,
 		CoreModule,
 		ContextModule,
-		MenuModule.provideMenuItems(ansynMenuItems),
+		MenuModule.provideMenuItems(configuration.ansynMenuItems),
 		AlertsModule.provideAlerts(ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule,

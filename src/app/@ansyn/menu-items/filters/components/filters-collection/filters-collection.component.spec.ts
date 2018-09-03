@@ -10,6 +10,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreConfig } from '@ansyn/core/models/core.config';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -40,7 +41,7 @@ describe('FiltersCollectionComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })
 			],
-			providers: [{ provide: filtersConfig, useValue: { filters: null } },  { provide: LoggerConfig, useValue: {} }]
+			providers: [{ provide: filtersConfig, useValue: { filters: null } },  { provide: LoggerConfig, useValue: {} }, { provide: CoreConfig, useValue: {}}]
 		})
 			.compileComponents();
 	}));

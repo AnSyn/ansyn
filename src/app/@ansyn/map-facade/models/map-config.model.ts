@@ -5,6 +5,7 @@ export interface IMapSearchConfig {
 }
 
 export interface IMapFacadeConfig {
+	displayDebounceTime: number;
 	overlayCoverage: number;
 	sensorTypeShortcuts: Object;
 	contextMenu: {

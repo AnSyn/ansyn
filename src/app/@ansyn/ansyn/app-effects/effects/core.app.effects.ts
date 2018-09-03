@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
@@ -58,8 +58,8 @@ export class CoreAppEffects {
 			CasesActionTypes.UPDATE_CASE,
 			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
 			CasesActionTypes.SELECT_CASE
-		)
-		.do((action) => {
+		),
+		tap((action) => {
 			this.loggerService.info(JSON.stringify(action));
 		}));
 

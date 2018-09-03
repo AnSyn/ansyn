@@ -22,6 +22,7 @@ import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
+import { catchError, mergeMap, tap } from 'rxjs/operators';
 
 export interface INorthData {
 	northOffsetDeg: number;

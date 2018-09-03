@@ -43,7 +43,7 @@ import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/to
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { differenceWith, isEqual } from 'lodash';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
+import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 
 
 @Injectable()

@@ -23,7 +23,7 @@ import {
 	selectPresetOverlays
 } from '@ansyn/core/reducers/core.reducer';
 import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
-import { map } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class OverlaysEffects {
@@ -60,9 +60,10 @@ export class OverlaysEffects {
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.overLoad.replace('$overLoad', overlays.data.length.toString())));
 					}
 					return actions;
-				})
-				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
-		});
+				}),
+				catchError(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]))
+			)
+		}));
 
 	/**
 	 * @type Effect

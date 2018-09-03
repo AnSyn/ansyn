@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
 import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
@@ -103,7 +103,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				if (position) {
 					this.positionChanged.emit(position);
 				}
-			})
+			});
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);

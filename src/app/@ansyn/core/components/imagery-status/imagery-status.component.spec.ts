@@ -44,7 +44,7 @@ describe('ImageryStatusComponent', () => {
 	});
 
 	it('check click on toggleMapSynchronization', () => {
-		spyOnProperty(component, 'isGeoRegistred', 'get').and.returnValue(true);
+		spyOnProperty(component, 'noGeoRegistration', 'get').and.returnValue(false);
 		fixture.detectChanges();
 		spyOn(component.toggleMapSynchronization, 'emit');
 		fixture.nativeElement.querySelector('.link-maps').click();

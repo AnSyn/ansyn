@@ -171,11 +171,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	get isGeoRegistred() {
+	get noGeoRegistration() {
 		if (!this.overlay) {
-			return true;
+			return false;
 		}
-		return this.overlay.isGeoRegistered;
+		return !this.overlay.isGeoRegistered;
 	}
 
 	constructor(protected store$: Store<any>,

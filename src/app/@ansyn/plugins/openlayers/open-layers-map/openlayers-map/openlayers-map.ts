@@ -199,6 +199,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 		olShare.removeWorkers(layer);
 		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
+		this._mapObject.removeLayer(layer);
 		this._mapObject.renderSync();
 	}
 

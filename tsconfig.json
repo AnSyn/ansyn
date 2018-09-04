@@ -8,6 +8,9 @@
       ],
       "@ansyn/event-drops": [
         "node_modules/@ansyn/event-drops"
+      ],
+      "@builder/*": [
+        "src/app/builder/*"
       ]
     },
     "outDir": "./dist/out-tsc",

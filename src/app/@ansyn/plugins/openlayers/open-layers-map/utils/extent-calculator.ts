@@ -1,5 +1,5 @@
-import { CaseMapExtent, CaseMapExtentPolygon } from '../models/case-map-position.model';
-import { toRadians } from './math';
+import { CaseMapExtent, CaseMapExtentPolygon } from '@ansyn/core/models/case-map-position.model';
+import { toRadians } from '@ansyn/core/utils/math';
 import { polygon, center } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
 

@@ -68,7 +68,7 @@ export class QueryParamsHelper {
 				case 'geopoint': {
 					const { geopoint } = qParams;
 					if (geopoint) {
-						const coordinates = geopoint.split(',').map(Number).reverse();
+						const coordinates = geopoint.split(',').map(Number).reverse(); // todo: check if reverse is needed?
 						const region = turf.geometry('Point', coordinates);
 						updatedCaseModel.state.region = region;
 						// Put the requested position in the case. This is needed in order to set correct map position, when no overlays are found
@@ -85,10 +85,7 @@ export class QueryParamsHelper {
 						switch (geoJsonGeomtry.type) {
 							case 'Point': {
 								const geoPoint: Point = <any>geoJsonGeomtry;
-								geoPoint.coordinates = geoPoint.coordinates.reverse();
-
 								updatedCaseModel.state.region = geoPoint;
-
 								updatedCaseModel.state.contextEntities = [{
 									id: UUID.UUID(),
 									date: qParams.time ? new Date(qParams.time) : new Date(),
@@ -102,7 +99,7 @@ export class QueryParamsHelper {
 							}
 							break;
 							case 'Polygon': {
-								const region = <Polygon> geoJsonGeomtry;
+								const region = <Polygon>geoJsonGeomtry;
 								const feature: Feature<any> = turf.polygon(region.coordinates);
 								const centroidOfGeometry = centroid(feature);
 								const extentPolygon = bboxPolygon(bbox(feature)).geometry;

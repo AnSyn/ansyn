@@ -1,9 +1,11 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
 	<main>
-		<img [src]="imageSrc"
-			 (error)="imageSrc = errorSrc"
-			 (load)="finishedLoadingImage()"
-			 [class.loading]="loading">
+		<img
+			*ngif="imageSrc"
+			[src]="imageSrc"
+			(error)="imageSrc = errorSrc"
+			(load)="finishedLoadingImage()"
+			[class.loading]="loading">
 		<p class="error-text" *ngIf="imageSrc === errorSrc">Preview is not available</p>
 		<ansyn-loader [show]="loading"></ansyn-loader>
 	</main>

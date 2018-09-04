@@ -33,7 +33,6 @@ import {
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetRemovedOverlaysIdAction,
-	SetToastMessageAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/core/actions/core.actions';
@@ -53,6 +52,8 @@ import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
+import { of } from 'rxjs/internal/observable/of';
+import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -251,15 +252,12 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
+		this.store$.dispatch(new SetHoveredOverlayAction({...overlay, thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA}));
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
 		return (<any>sourceProvider).getThumbnailUrl(overlay, position)
 			.map(thumbnailUrl => ({ ...overlay, thumbnailUrl }))
-			.catch(err => {
-				this.store$.dispatch(new SetToastMessageAction({
-					toastText: 'Failed to load overlay preview',
-					showWarningIcon: true
-				}));
-				return null;
+			.catch(() => {
+				return of(overlay);
 			});
 	});
 	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));

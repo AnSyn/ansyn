@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, of, pipe } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -11,11 +11,7 @@ import {
 	SetMarkUp
 } from '@ansyn/overlays/actions/overlays.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import {
-	ImageryCreatedAction,
-	MapActionTypes,
-	SetIsLoadingAcion
-} from '@ansyn/map-facade/actions/map.actions';
+import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
@@ -30,7 +26,8 @@ import {
 	AddAlertMsg,
 	BackToWorldView,
 	CoreActionTypes,
-	RemoveAlertMsg, SetMapsDataActionStore,
+	RemoveAlertMsg,
+	SetMapsDataActionStore,
 	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '@ansyn/core/actions/core.actions';
@@ -46,10 +43,9 @@ import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-prov
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
 import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
-import { debounceTime } from 'rxjs/internal/operators';
 
 @Injectable()
 export class MapAppEffects {
@@ -88,15 +84,6 @@ export class MapAppEffects {
 		.pipe(
 			filter((data) => !this.displayShouldSwitch(data)),
 			mergeMap(this.onDisplayOverlay.bind(this))
-		);
-
-	@Effect()
-	onDisplayOverlayShowLoader$ = this.onDisplayOverlay$
-		.pipe(
-			map(([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) => action),
-			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
-				mapId: payload.mapId, show: true, text: 'Loading Overlay'
-			}))
 		);
 
 	@Effect()
@@ -178,15 +165,16 @@ export class MapAppEffects {
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.pipe(
 			filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay)),
-			map((action: DisplayOverlayAction) => {
-				return new RequestOverlayByIDFromBackendAction({
-					overlayId: action.payload.overlay.id,
-					sourceType: action.payload.overlay.sourceType,
-					mapId: action.payload.mapId
-				});
+			mergeMap((action: DisplayOverlayAction) => {
+				return [
+					new RequestOverlayByIDFromBackendAction({
+						overlayId: action.payload.overlay.id,
+						sourceType: action.payload.overlay.sourceType,
+						mapId: action.payload.mapId
+					}),
+					this.getLoadingAction(action.payload.mapId, true, 'Loading Overlay')];
 			})
 		);
-
 
 	/**
 	 * @type Effect
@@ -316,7 +304,7 @@ export class MapAppEffects {
 
 		// remove prev layers
 		const mapIdsToDelete = [];
-		this.displayedItems.forEach(( value: Date, key: string) => {
+		this.displayedItems.forEach((value: Date, key: string) => {
 			const isTimePassed = (currentTime.getTime() - (this.displayedItems.get(action.payload.mapId) || currentTime).getTime()) > this.config.displayDebounceTime;
 			if (isTimePassed) {
 				mapIdsToDelete.push(key);
@@ -349,6 +337,21 @@ export class MapAppEffects {
 			}));
 		}
 
+		this.setIsLoadingSpinner(mapId, sourceLoader, caseMapState, mapData, overlay);
+
+		const sourceProviderMetaData = { ...caseMapState, data: { ...mapData, overlay } };
+
+		/* -1- */
+		const isActiveMapAlive = mergeMap((layer) => {
+			const checkCommunicator = this.imageryCommunicatorService.provide(communicator.id);
+			if (!checkCommunicator || !checkCommunicator.ActiveMap) {
+				sourceLoader.removeExtraData(layer);
+				return EMPTY;
+			}
+			return of(layer);
+		});
+
+		/* -2- */
 		const changeActiveMap = mergeMap((layer) => {
 			let observable = Observable.of(true);
 			const geoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
@@ -361,21 +364,42 @@ export class MapAppEffects {
 			return observable.map(() => layer);
 		});
 
-		const extent = payload.extent || (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
-		const resetView = mergeMap((layer) => communicator.resetView(layer, mapData.position, extent));
-		const displaySuccess = map(() => new DisplayOverlaySuccessAction(payload));
+		/* -3- */
+		const resetView = pipe(
+			mergeMap((layer) => {
+				const extent = (intersection < this.config.overlayCoverage) && extentFromGeojson(overlay.footprint);
+				return communicator.resetView(layer, mapData.position, extent);
+			}),
+			map(() => new DisplayOverlaySuccessAction(payload))
+		);
 
-		return Observable.fromPromise(sourceLoader.createAsync({ ...caseMapState, data: { ...mapData, overlay } }))
-			.pipe(changeActiveMap, resetView, displaySuccess)
-			.catch((exception) => {
-				console.error(exception);
-				return Observable.from([
+		const onError = catchError((exception) => {
+			console.error(exception);
+			return Observable.from([
 				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
 				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
-				]);
-			}
-		)
+			]);
+		});
+
+		return Observable.fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
+			.pipe(
+				isActiveMapAlive,
+				changeActiveMap,
+				resetView,
+				onError);
 	};
+
+	setIsLoadingSpinner(mapId, sourceLoader, caseMapState, mapData, overlay) {
+		if (sourceLoader.existsInCache({ ...caseMapState, data: { ...mapData, overlay } })) {
+			this.store$.dispatch(this.getLoadingAction(mapId, false));
+		} else {
+			this.store$.dispatch(this.getLoadingAction(mapId, true, 'Loading Overlay'));
+		}
+	}
+
+	getLoadingAction(mapId: string, show: boolean, text: string = '') {
+		return new SetIsLoadingAcion({ mapId: mapId, show: show, text: text });
+	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const isFull = OverlaysService.isFullOverlay(payload.overlay);

@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
-import Point from 'ol/geom/point';
-import Polygon from 'ol/geom/polygon';
+import olPoint from 'ol/geom/point';
+import olPolygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { ICaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
@@ -25,7 +25,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 })
 export class ContextEntityVisualizer extends EntitiesVisualizer {
 	referenceDate: Date;
-	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
+	idToCachedCenter: Map<string, olPolygon | olPoint> = new Map<string, olPolygon | olPoint>();
 	geoJsonFormat: GeoJSON;
 
 	@AutoSubscription
@@ -78,7 +78,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	}
 
 	private getText(feature) {
-		if (!this.referenceDate || !(this.getGeometry(feature) instanceof Point)) {
+		if (!this.referenceDate || !(this.getGeometry(feature) instanceof olPoint)) {
 			return '';
 		}
 		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
@@ -99,12 +99,12 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
 			const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
 			const centroid = getPointByGeometry(featureGeoJson.geometry);
-			const point = new Point(<[number, number]> centroid.coordinates);
+			const point = new olPoint(<[number, number]> centroid.coordinates);
 
 			this.idToCachedCenter.set(featureId, point);
 			return point;
 		} else if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Polygon') {
-			const projectedPolygon = entityMap.feature.getGeometry() as Polygon;
+			const projectedPolygon = entityMap.feature.getGeometry() as olPolygon;
 
 			this.idToCachedCenter.set(featureId, projectedPolygon);
 			return projectedPolygon;

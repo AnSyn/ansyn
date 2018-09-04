@@ -143,7 +143,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	get pinText(): string {
-		return this.isPinned ? 'Pin' : 'Unpin';
+		return this.isPinned ? 'Unpin' : 'Pin';
 	}
 
 	get selectedMenuItem(): IMenuItem {

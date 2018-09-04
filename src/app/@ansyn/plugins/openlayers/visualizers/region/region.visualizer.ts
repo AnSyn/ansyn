@@ -2,7 +2,7 @@ import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entiti
 import * as turf from '@turf/turf';
 import { empty, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { Actions } from '@ngrx/effects';
+import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
@@ -16,6 +16,7 @@ import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/stat
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { AutoSubscription } from 'auto-subscriptions';
+import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -50,21 +51,26 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 
 	@AutoSubscription
-	onContextMenu$: Observable<any> = this.actions$
-		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
-		.withLatestFrom(this.isActiveGeoFilter$, this.isActiveMap$)
-		.filter(([action, isActiveGeoFilter, isActiveMap]: [ContextMenuTriggerAction, boolean, boolean]) => isActiveGeoFilter && isActiveMap)
-		.map(([{ payload }]) => payload)
-		.do(this.onContextMenu.bind(this));
+	onContextMenu$: Observable<any> = this.actions$.pipe(
+		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
+		withLatestFrom(this.isActiveGeoFilter$),
+		filter(([action, isActiveGeoFilter]) => isActiveGeoFilter),
+		map(([{ payload }]) => payload),
+		tap((payload) => {
+			this.onContextMenu(payload);
+		})
+	);
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$)
-		.do(this.interactionChanges.bind(this));
+	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$).pipe(
+		tap(this.interactionChanges.bind(this))
+	);
 
 	@AutoSubscription
 	drawChanges$ = Observable
-		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$)
-		.mergeMap(this.drawChanges.bind(this));
+		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$).pipe(
+			mergeMap(this.drawChanges.bind(this))
+		);
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
@@ -86,9 +92,9 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new UpdateGeoFilterStatus());
 
 		this.projectionService
-			.projectCollectionAccurately([feature], this.iMap)
-			.take(1)
-			.do((featureCollection: FeatureCollection<GeometryObject>) => {
+			.projectCollectionAccurately([feature], this.iMap).pipe(
+			take(1),
+			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
 				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
@@ -100,7 +106,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 					}));
 				}
 			})
-			.subscribe();
+		).subscribe();
 	}
 
 	createDrawInteraction() {

@@ -25,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@ansyn/core/core.module';
 import { HelpModule } from '@ansyn/menu-items/help/help.module';
 import { configuration } from '../../../configuration/configuration';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
 	imports: [
@@ -50,6 +51,7 @@ import { configuration } from '../../../configuration/configuration';
 		ImageryModule,
 		StatusBarModule,
 		AnsynRouterModule,
+		RouterModule,
 		HelpModule
 	],
 	declarations: [AnsynComponent],

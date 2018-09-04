@@ -66,14 +66,6 @@ export class FiltersAppEffects {
 	facets$ = this.store$.select(selectFacets);
 	oldFilters$ = this.store$.select(selectOldFilters);
 
-	/**
-	 * @type Effect
-	 * @name updateOverlayFilters$
-	 * @ofType onFiltersChanges$
-	 * @action SyncOverlaysWithFavoritesAfterLoadedAction, SetFilteredOverlaysAction
-	 * @filter overlays are loaded
-	 * @dependencies filters, core, overlays
-	 */
 	@Effect()
 	updateOverlayFilters$ = this.onFiltersChanges$
 		.withLatestFrom(this.overlaysArray$)
@@ -87,13 +79,6 @@ export class FiltersAppEffects {
 			];
 		});
 
-	/**
-	 * @type Effect
-	 * @name initializeFilters$
-	 * @ofType LoadOverlaysSuccessAction
-	 * @dependencies cases, overlays
-	 * @action InitializeFiltersAction
-	 */
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
@@ -130,25 +115,13 @@ export class FiltersAppEffects {
 			return new InitializeFiltersSuccessAction(filters);
 		});
 
-	/**
-	 * @type Effect
-	 * @name resetFilters$
-	 * @ofType LoadOverlaysAction
-	 * @action ResetFiltersAction
-	 */
+
 	@Effect()
 	resetFilters$: Observable<ResetFiltersAction> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new ResetFiltersAction());
 
 
-	/**
-	 * @type Effect
-	 * @name updateFiltersBadge$
-	 * @ofType onFiltersChanges$
-	 * @dependencies filters
-	 * @action SetBadgeAction
-	 */
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$
 		.map(([filters, showOnlyFavorites]: [Filters, boolean, IOverlay[], string[], boolean]) => {
@@ -165,12 +138,6 @@ export class FiltersAppEffects {
 		})
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name setShowFavoritesFlagOnFilters$
-	 * @ofType SetFavoriteOverlaysAction
-	 * @action EnableOnlyFavoritesSelectionAction
-	 */
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$
 		.map((favoriteOverlays: IOverlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)));

@@ -44,7 +44,7 @@ export interface IAnsynBuilderConstructor {
 	options: IAnsynBuilderOptions;
 	callback: any;
 }
-
+// @dynamic
 export class AnsynBuilder {
 	static Providers = { ContextService };
 

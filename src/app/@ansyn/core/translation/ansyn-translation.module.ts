@@ -20,6 +20,7 @@ export function HttpLoaderFactory(http: HttpClient, translationProviders: Transl
 	return new AnsynTranslationLoader(http, translationProviders);
 }
 
+// @dynamic
 @NgModule({
 	imports: [
 		CommonModule,

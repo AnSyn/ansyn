@@ -9,6 +9,7 @@ export interface IUtmZone {
 	utmProj: string;
 }
 
+// @dynamic
 @Injectable()
 export class ProjectionConverterService {
 	static isValidCoordinates(coords: number[], minLength: number) {

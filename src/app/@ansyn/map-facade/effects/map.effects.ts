@@ -43,21 +43,11 @@ import { pipe } from 'rxjs/internal-compatibility';
 @Injectable()
 export class MapEffects {
 
-	/**
-	 * @type Effect
-	 * @name annotationContextMenuTrigger$
-	 * @ofType AnnotationContextMenuTriggerAction
-	 */
 	@Effect({ dispatch: false })
 	annotationContextMenuTrigger$ = this.actions$
 		.ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT)
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name onUpdateSize$
-	 * @ofType UpdateMapSizeAction
-	 */
 	@Effect({ dispatch: false })
 	onUpdateSize$: Observable<void> = this.actions$
 		.ofType(MapActionTypes.UPDATE_MAP_SIZE)
@@ -68,11 +58,6 @@ export class MapEffects {
 			});
 		});
 
-	/**
-	 * @type Effect
-	 * @name onCommunicatorChange$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction
-	 */
 	@Effect({ dispatch: false })
 	onCommunicatorChange$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
@@ -85,24 +70,11 @@ export class MapEffects {
 			}
 		});
 
-	/**
-	 * @type Effect
-	 * @name onContextMenuShow$
-	 * @ofType ContextMenuShowAction
-	 */
 	@Effect({ dispatch: false })
 	onContextMenuShow$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name onMapCreatedDecreasePendingCount$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction
-	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is greater than 0
-	 * @action DecreasePendingMapsCountAction
-	 */
 	@Effect()
 	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_REMOVED)
@@ -110,14 +82,6 @@ export class MapEffects {
 		.filter(([action, mapState]) => mapState.pendingMapsCount > 0)
 		.map(() => new DecreasePendingMapsCountAction());
 
-	/**
-	 * @type Effect
-	 * @name onMapPendingCountReachedZero$
-	 * @ofType DecreasePendingMapsCountAction
-	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is 0
-	 * @action SetLayoutSuccessAction
-	 */
 	@Effect()
 	onMapPendingCountReachedZero$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.DECREASE_PENDING_MAPS_COUNT)
@@ -125,14 +89,6 @@ export class MapEffects {
 		.filter(([action, mapState]) => mapState.pendingMapsCount === 0)
 		.map(() => new SetLayoutSuccessAction());
 
-	/**
-	 * @type Effect
-	 * @name positionChanged$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action SetMapsDataActionStore
-	 */
 	@Effect()
 	positionChanged$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.POSITION_CHANGED)
@@ -170,14 +126,6 @@ export class MapEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
 	@Effect()
 	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.pipe(
@@ -186,14 +134,6 @@ export class MapEffects {
 			this.checkOverlaysOutOfBounds$.bind(this)
 		);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBoundsFromBackToWorlds$
-	 * @ofType BackToWorldSuccess
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
 	@Effect()
 	checkImageOutOfBoundsFromBackToWorlds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.pipe(
@@ -202,14 +142,6 @@ export class MapEffects {
 			this.checkOverlaysOutOfBounds$.bind(this)
 		);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg
-	 */
 	@Effect()
 	updateOutOfBoundList: Observable<RemoveAlertMsg> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_REMOVED)
@@ -218,13 +150,6 @@ export class MapEffects {
 		});
 
 
-	/**
-	 * @type Effect
-	 * @name backToWorldView$
-	 * @ofType BackToWorldAction
-	 * @dependencies map
-	 * @action SetMapsDataActionStore, BackToWorldSuccessAction
-	 */
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
@@ -254,13 +179,6 @@ export class MapEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name onMapsDataActiveMapIdChanged$
-	 * @ofType SetMapsDataActionStore
-	 * @filter There is an activeMapId
-	 * @action ActiveMapChangedAction
-	 */
 	@Effect()
 	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$
 		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
@@ -268,13 +186,6 @@ export class MapEffects {
 		.filter(({ activeMapId }) => Boolean(activeMapId))
 		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
 
-	/**
-	 * @type Effect
-	 * @name onMapsData1MapsListChanged$
-	 * @ofType SetMapsDataActionStore
-	 * @filter There is a mapsList
-	 * @action MapsListChangedAction
-	 */
 	@Effect()
 	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$
 		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
@@ -282,22 +193,11 @@ export class MapEffects {
 		.filter(({ mapsList }) => Boolean(mapsList))
 		.map(({ mapsList }) => new MapsListChangedAction(mapsList));
 
-	/**
-	 * @type Effect
-	 * @name pinLocationModeTriggerAction$
-	 * @ofType PinLocationModeTriggerAction
-	 */
 	@Effect({ dispatch: false })
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$
 		.ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
 		.map(({ payload }) => payload);
 
-	/**
-	 * @type Effect
-	 * @name newInstanceInitPosition$
-	 * @ofType ImageryCreatedAction
-	 * @dispatch: false
-	 */
 	@Effect()
 	newInstanceInitPosition$: Observable<any> = this.actions$
 		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
@@ -324,12 +224,7 @@ export class MapEffects {
 			return actions;
 		});
 
-	/**
-	 * @type Effect
-	 * @name onSynchronizeAppMaps$
-	 * @ofType SynchronizeMapsAction
-	 * @dependencies maps
-	 */
+
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)

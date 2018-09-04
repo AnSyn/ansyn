@@ -27,13 +27,7 @@ import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash'
 
 @Injectable()
 export class LayersEffects {
-	/**
-	 * @type Effect
-	 * @name beginLayerTreeLoad$
-	 * @ofType BeginLayerCollectionLoadAction
-	 * @dependencies layers
-	 * @action LayerCollectionLoadedAction?, ErrorLoadingLayersAction?
-	 */
+
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.pipe(

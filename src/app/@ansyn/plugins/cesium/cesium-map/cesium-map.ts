@@ -5,6 +5,7 @@ import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 export const CesiumMapName = 'cesium';
 
+// @dynamic
 @ImageryMap({
 	mapType: CesiumMapName
 })

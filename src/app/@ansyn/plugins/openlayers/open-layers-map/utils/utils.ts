@@ -2,6 +2,7 @@ import * as ol from 'openlayers';
 import olExtent from 'ol/extent';
 import { Point } from 'geojson';
 
+// @dynamic
 export class Utils {
 	static BoundingBoxToOLExtent(bbox: Point[]): ol.Extent | any {
 		const coordinates = <ol.Coordinate[]> bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);

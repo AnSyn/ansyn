@@ -14,6 +14,7 @@ import { IEnumFiled, EnumFilterMetadata } from '@ansyn/menu-items/filters/models
 
 export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
 
+// @dynamic
 @Injectable()
 export class FiltersService {
 	static buildCaseFilters(filters: Filters): CaseFilters {

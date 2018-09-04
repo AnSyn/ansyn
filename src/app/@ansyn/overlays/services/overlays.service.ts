@@ -13,6 +13,7 @@ import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
+// @dynamic
 @Injectable()
 export class OverlaysService {
 

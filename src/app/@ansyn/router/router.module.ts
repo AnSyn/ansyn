@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { routerFeatureKey, RouterReducer } from './reducers/router.reducer';
 import { StoreModule } from '@ngrx/store';
 
+// @dynamic
 @NgModule({
 	imports: [
 		CommonModule,

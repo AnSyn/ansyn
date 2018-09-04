@@ -29,13 +29,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 
 @Injectable()
 export class CoreAppEffects {
-	/**
-	 * @type Effect
-	 * @name clearPresets$
-	 * @ofType LoadOverlaysAction
-	 * @dependencies core
-	 * @action SetPresetOverlaysAction
-	 */
+
 	@Effect()
 	clearPresets$: Observable<any> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
@@ -71,14 +65,6 @@ export class CoreAppEffects {
 		.withLatestFrom(this.store$.select(coreStateSelector))
 		.map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria));
 
-	/**
-	 * @type Effect
-	 * @name onAdjacentOverlay$
-	 * @ofType GoAdjacentOverlay
-	 * @dependencies cases
-	 * @filter There is an active map overlay
-	 * @action DisplayOverlayFromStoreAction
-	 */
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$
 		.ofType<GoAdjacentOverlay>(CoreActionTypes.GO_ADJACENT_OVERLAY)
@@ -97,14 +83,6 @@ export class CoreAppEffects {
 		.filter(Boolean)
 		.map(id => new DisplayOverlayFromStoreAction({ id }));
 
-	/**
-	 * @type Effect
-	 * @name onNextPresetOverlay$
-	 * @ofType GoAdjacentOverlay
-	 * @dependencies cases
-	 * @filter There is an active map overlay
-	 * @action DisplayOverlayFromStoreAction
-	 */
 	@Effect()
 	onNextPresetOverlay$: Observable<any> = this.actions$
 		.ofType<GoNextPresetOverlay>(CoreActionTypes.GO_NEXT_PRESET_OVERLAY)

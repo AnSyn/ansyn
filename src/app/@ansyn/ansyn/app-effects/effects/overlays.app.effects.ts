@@ -57,14 +57,6 @@ import { get } from 'lodash';
 @Injectable()
 export class OverlaysAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name displayLatestOverlay$
-	 * @ofType SetFilteredOverlaysAction
-	 * @dependencies overlays
-	 * @filter defaultOverlay is latest and displayedOverlays is not empty
-	 * @action DisplayOverlayFromStoreAction
-	 */
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
@@ -81,14 +73,6 @@ export class OverlaysAppEffects {
 	);
 
 
-	/**
-	 * @type Effect
-	 * @name displayTwoNearestOverlay$
-	 * @ofType SetFilteredOverlaysAction
-	 * @dependencies overlays
-	 * @filter defaultOverlay is nearst
-	 * @action DisplayMultipleOverlaysFromStoreAction
-	 */
 	@Effect()
 	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
@@ -117,14 +101,6 @@ export class OverlaysAppEffects {
 		share()
 	);
 
-	/**
-	 * @type Effect
-	 * @name displayMultipleOverlays$
-	 * @ofType DisplayMultipleOverlaysFromStoreAction
-	 * @dependencies map
-	 * @filter there is at least one none empty overlay to display
-	 * @action DisplayOverlayFromStoreAction, SetPendingOverlaysAction, ChangeLayoutAction
-	 */
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE),
@@ -149,14 +125,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name displayPendingOverlaysOnChangeLayoutSuccess$
-	 * @ofType SetLayoutSuccess
-	 * @dependencies map
-	 * @filter there is at least one pending overlay
-	 * @action DisplayOverlayFromStoreAction
-	 */
 	@Effect()
 	displayPendingOverlaysOnChangeLayoutSuccess$: Observable<any> = this.actions$.pipe(
 		ofType(CoreActionTypes.SET_LAYOUT_SUCCESS),
@@ -181,13 +149,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name onDisplayOverlayFromStore$
-	 * @ofType DisplayOverlayFromStoreAction
-	 * @dependencies overlays, map
-	 * @action DisplayOverlayAction
-	 */
 	@Effect()
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
@@ -199,14 +160,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name onSetRemovedOverlaysIdAction$
-	 * @ofType SetRemovedOverlaysIdAction
-	 * @dependencies overlays
-	 * @filter
-	 * @action DisplayOverlayFromStoreAction | BackToWorldView
-	 */
 	@Effect()
 	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
 		ofType<SetRemovedOverlaysIdAction>(CoreActionTypes.SET_REMOVED_OVERLAY_ID),
@@ -231,11 +184,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name setHoveredOverlay$
-	 * @action SetHoveredOverlayAction
-	 */
 
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])

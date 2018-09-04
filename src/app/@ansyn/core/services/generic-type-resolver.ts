@@ -7,6 +7,7 @@ export interface IResolver {
 
 export type Type = Function;
 
+// @dynamic
 export class GenericTypeResolver {
 	static resolveMultiInjection(injector: IResolver, token: Type, filterFunction: InjectionResolverFilter = null, isSingelton: boolean = false): any {
 		const resolvedValue = injector.get(token);

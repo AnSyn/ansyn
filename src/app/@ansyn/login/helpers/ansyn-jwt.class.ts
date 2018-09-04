@@ -2,6 +2,7 @@ import HmacSHA256 from 'crypto-js/hmac-sha256';
 import Base64 from 'crypto-js/enc-base64';
 import Utf8 from 'crypto-js/enc-utf8';
 
+// @dynamic
 export class AnsynJwt {
 	public base64;
 	public utf8;

@@ -45,13 +45,6 @@ import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash'
 @Injectable()
 export class CasesEffects {
 
-	/**
-	 * @type Effect
-	 * @name loadCases$
-	 * @ofType LoadCasesAction
-	 * @dependencies cases
-	 * @action LoadCasesSuccessAction
-	 */
 	@Effect()
 	loadCases$: Observable<AddCasesAction | {}> = this.actions$
 		.ofType(CasesActionTypes.LOAD_CASES)
@@ -62,25 +55,12 @@ export class CasesEffects {
 				.catch(() => EMPTY);
 		}).share();
 
-	/**
-	 * @type Effect
-	 * @name onAddCase$
-	 * @ofType AddCaseAction
-	 * @action SelectCaseAction
-	 */
 	@Effect()
 	onAddCase$: Observable<SelectCaseAction> = this.actions$
 		.ofType<AddCaseAction>(CasesActionTypes.ADD_CASE)
 		.map((action: AddCaseAction) => new SelectCaseAction(action.payload))
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name onDeleteCase$
-	 * @ofType DeleteCaseAction
-	 * @dependencies cases
-	 * @action LoadDefaultCaseAction?, DeleteCaseBackendAction
-	 */
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
@@ -91,14 +71,6 @@ export class CasesEffects {
 		rxPreventCrash()
 	);
 
-	/**
-	 * @type Effect
-	 * @name onDeleteCaseLoadCases$
-	 * @ofType DeleteCaseBackendSuccessAction
-	 * @dependencies cases
-	 * @filter state cases length is not larger than the paginationLimit
-	 * @action LoadCasesAction
-	 */
 	@Effect()
 	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$
 		.ofType(CasesActionTypes.DELETE_CASE)
@@ -107,14 +79,6 @@ export class CasesEffects {
 		.map(() => new LoadCasesAction())
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name onUpdateCase$
-	 * @ofType UpdateCaseAction
-	 * @dependencies cases
-	 * @filter Not the default case
-	 * @action UpdateCaseBackendAction
-	 */
 	@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$
 		.ofType(CasesActionTypes.UPDATE_CASE)
@@ -123,12 +87,6 @@ export class CasesEffects {
 		.map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload.updatedCase))
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name onUpdateCaseBackend$
-	 * @ofType UpdateCaseBackendAction
-	 * @action UpdateCaseBackendSuccessAction
-	 */
 	@Effect()
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
 		.pipe(
@@ -144,33 +102,16 @@ export class CasesEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name openModal$
-	 * @ofType OpenModalAction
-	 */
 	@Effect({ dispatch: false })
 	openModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.OPEN_MODAL)
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name closeModal$
-	 * @ofType CloseModalAction
-	 */
 	@Effect({ dispatch: false })
 	closeModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.CLOSE_MODAL)
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name loadDefaultCase$
-	 * @ofType LoadDefaultCaseAction
-	 * @filter Payload does not have context
-	 * @action SelectCaseAction
-	 */
 	@Effect()
 	loadDefaultCase$: Observable<SelectCaseAction> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE)
@@ -180,12 +121,6 @@ export class CasesEffects {
 			return new SelectCaseAction(defaultCaseQueryParams);
 		}).share();
 
-	/**
-	 * @type Effect
-	 * @name onSaveCaseAs$
-	 * @ofType SaveCaseAsAction
-	 * @action AddCaseAction
-	 */
 	@Effect()
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
@@ -211,13 +146,6 @@ export class CasesEffects {
 			).catch(() => EMPTY)
 		));
 
-	/**
-	 * @type Effect
-	 * @name onCopyShareCaseIdLink$
-	 * @ofType CopyCaseLinkAction
-	 * @filter shareCaseAsQueryParams is false
-	 * @action SetToastMessageAction
-	 */
 	@Effect()
 	onCopyShareCaseIdLink$ = this.actions$
 		.ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK)
@@ -228,11 +156,6 @@ export class CasesEffects {
 			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
 		});
 
-	/**
-	 * @type Effect
-	 * @name loadDefaultCaseIfNoActiveCase$
-	 * @ofType LoadDefaultCaseIfNoActiveCaseAction
-	 */
 	@Effect()
 	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE)

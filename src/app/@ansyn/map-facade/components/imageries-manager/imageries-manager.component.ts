@@ -14,6 +14,7 @@ import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
 import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
 
+// @dynamic
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',

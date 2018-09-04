@@ -14,6 +14,7 @@ export interface IBaseImageryMapConstructor extends IImageryMapMetaData {
 	new(...args): BaseImageryMap;
 }
 
+// @dynamic
 export abstract class BaseImageryMap<T = any> {
 	static groupLayers = new Map<string, any>();
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();

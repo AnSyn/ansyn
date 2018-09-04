@@ -112,14 +112,6 @@ export class MapAppEffects {
 			}))
 		);
 
-	/**
-	 * @type Effect
-	 * @name onSetManualImageProcessing$
-	 * @ofType SetMapManualImageProcessing
-	 * @dependencies map
-	 * @filter There is a full overlay
-	 * @action SetMapsDataAction
-	 */
 	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
@@ -137,14 +129,6 @@ export class MapAppEffects {
 				];
 			}));
 
-	/**
-	 * @type Effect
-	 * @name displayOverlayOnNewMapInstance$
-	 * @ofType MapInstanceChangedAction
-	 * @dependencies map
-	 * @filter There is mapsList, and it has a an overlay with id from payload
-	 * @action DisplayOverlayAction
-	 */
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED)
@@ -166,13 +150,6 @@ export class MapAppEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name onOverlayFromURL$
-	 * @ofType DisplayOverlayAction
-	 * @filter There is no full overlay
-	 * @action RequestOverlayByIDFromBackendAction
-	 */
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
@@ -188,12 +165,6 @@ export class MapAppEffects {
 		);
 
 
-	/**
-	 * @type Effect
-	 * @name overlayLoadingFailed$
-	 * @ofType DisplayOverlayFailedAction
-	 * @action SetToastMessageAction, RemoveOverlayFromLoadingOverlaysAction
-	 */
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
@@ -205,13 +176,6 @@ export class MapAppEffects {
 			}))
 		);
 
-	/**
-	 * @type Effect
-	 * @name setOverlaysNotInCase$
-	 * @ofType SetFilteredOverlaysAction, SetMapsDataActionStore
-	 * @dependencies overlays, map
-	 * @action AddAlertMsg?, RemoveAlertMsg?
-	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, CoreActionTypes.SET_MAPS_DATA)
@@ -226,13 +190,7 @@ export class MapAppEffects {
 				});
 			})
 		);
-	/**
-	 * @type Effect
-	 * @name markupOnMapsDataChanges$
-	 * @ofType ActiveMapChangedAction, MapsListChangedAction
-	 * @dependencies none
-	 * @action SetMarkUp
-	 */
+
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
@@ -274,11 +232,6 @@ export class MapAppEffects {
 			)
 		);
 
-	/**
-	 * @type Effect
-	 * @name toggleLayersGroupLayer$
-	 * @ofType ToggleMapLayersAction
-	 */
 	@Effect({ dispatch: false })
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
 		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
@@ -289,14 +242,6 @@ export class MapAppEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name activeMapGeoRegistrationChanged$
-	 * @ofType DisplayOverlaySuccessAction, ActiveMapChangedAction
-	 * @dependencies map
-	 * @filter mapsList.length > 0
-	 * @action SetMapGeoEnabledModeToolsActionStore
-	 */
 	@Effect()
 	activeMapGeoRegistrationChanged$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.MAPS_LIST_CHANGED, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)

@@ -2,7 +2,7 @@ import { CaseMapExtent, CaseMapExtentPolygon } from '../models/case-map-position
 import { toRadians } from './math';
 import { polygon, center } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
-
+// @dynamic
 export class ExtentCalculator {
 
 	static polygonToExtent(extentPolygon: CaseMapExtentPolygon): CaseMapExtent {

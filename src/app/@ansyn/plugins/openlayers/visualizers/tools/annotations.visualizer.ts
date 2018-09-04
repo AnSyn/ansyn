@@ -65,6 +65,7 @@ import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode
 import { featureCollection } from '@turf/turf';
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
 
+// @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, ProjectionService, toolsConfig],

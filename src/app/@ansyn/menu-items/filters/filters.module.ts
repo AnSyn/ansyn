@@ -20,6 +20,7 @@ import { BooleanFilterContainerComponent } from './components/boolean-filter-con
 import { ShowMorePipe } from './pipes/show-more.pipe';
 import { FilterCounterComponent } from './components/filter-counter/filter-counter.component';
 
+// @dynamic
 @NgModule({
 	imports: [
 		CommonModule,

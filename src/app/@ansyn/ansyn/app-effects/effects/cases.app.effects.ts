@@ -24,13 +24,6 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 @Injectable()
 export class CasesAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name onDisplayOverlay$
-	 * @ofType DisplayOverlayAction
-	 * @action SetMapsDataActionStore
-	 * @dependencies map
-	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
@@ -48,12 +41,6 @@ export class CasesAppEffects {
 			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		}).share();
 
-	/**
-	 * @type Effect
-	 * @name loadCase$
-	 * @ofType SelectDilutedCaseAction
-	 * @action SelectCaseAction?, SetToastMessageAction?, LoadDefaultCaseIfNoActiveCaseAction?
-	 */
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE)

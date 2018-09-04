@@ -48,13 +48,6 @@ export class UpdateCaseAppEffects {
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
-	/**
-	 * @type Effect
-	 * @name caseCollection$
-	 * @ofType [...UpdateCaseActionTypes]
-	 * @action UpdateCaseAction
-	 * @dependencies cases, core, tools, statusBar, map, layers, filters
-	 */
 	@Effect()
 	shouldUpdateCase$ = Observable.combineLatest(this.events)
 		.withLatestFrom(this.store$.select(selectSelectedCase))

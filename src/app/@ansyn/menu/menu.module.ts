@@ -12,6 +12,7 @@ import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
 
 export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 
+// @dynamic
 @NgModule({
 	imports: [
 		CommonModule,

@@ -52,26 +52,12 @@ export class ContextEffects {
 			);
 	});
 
-	/**
-	 * @type Effect
-	 * @name loadExistingDefaultCaseContext$
-	 * @ofType LoadDefaultCaseAction
-	 * @filter Payload does not have context
-	 * @action SelectCaseAction
-	 */
 	@Effect()
 	loadExistingDefaultCaseContext$: Observable<SetContextParamsAction | SelectCaseAction> =
 		this.loadDefaultCaseContext$
 			.filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => Boolean(context))
 			.pipe(this.setContext);
 
-	/**
-	 * @type Effect
-	 * @name loadExistingDefaultCaseContext$
-	 * @ofType LoadDefaultCaseAction
-	 * @filter Payload does not have context
-	 * @action SelectCaseAction
-	 */
 	@Effect()
 	loadNotExistingDefaultCaseContext$: Observable<any> =
 		this.loadDefaultCaseContext$.pipe(
@@ -94,14 +80,6 @@ export class ContextEffects {
 		);
 
 
-	/**
-	 * @type Effect
-	 * @name onCopyShareCaseLink$
-	 * @ofType CopyCaseLinkAction
-	 * @filter shareCaseAsQueryParams is true
-	 * @action SetToastMessageAction
-	 * @dependencies cases
-	 */
 	@Effect()
 	onCopyShareCaseLink$ = this.actions$.pipe(
 		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),

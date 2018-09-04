@@ -51,6 +51,7 @@ const animations: any[] = [
 	)
 ];
 
+// @dynamic
 @Component({
 	selector: 'ansyn-menu',
 	templateUrl: './menu.component.html',

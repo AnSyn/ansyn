@@ -35,12 +35,6 @@ import { map } from 'rxjs/operators';
 export class OverlaysEffects {
 
 
-	/**
-	 * @type Effect
-	 * @name loadOverlays$
-	 * @ofType LoadOverlaysAction
-	 * @action LoadOverlaysSuccessAction
-	 */
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
@@ -70,12 +64,6 @@ export class OverlaysEffects {
 				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
 
-	/**
-	 * @type Effect
-	 * @name onRequestOverlayByID$
-	 * @ofType RequestOverlayByIDFromBackendAction
-	 * @action DisplayOverlayAction
-	 */
 	@Effect()
 	onRequestOverlayByID$: Observable<DisplayOverlayAction> = this.actions$
 		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
@@ -88,12 +76,7 @@ export class OverlaysEffects {
 				}));
 		});
 
-	/**
-	 * @type Effect
-	 * @name setFavoriteOverlaysUpdateCase$
-	 * @ofType SetFavoriteOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
+
 	@Effect()
 	setFavoriteOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
 		select(selectFavoriteOverlays),
@@ -107,12 +90,6 @@ export class OverlaysEffects {
 		))
 	);
 
-	/**
-	 * @type Effect
-	 * @name setPresetOverlaysUpdateCase$
-	 * @ofType SetPresetOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
 	@Effect()
 	setPresetOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
 		select(selectPresetOverlays),

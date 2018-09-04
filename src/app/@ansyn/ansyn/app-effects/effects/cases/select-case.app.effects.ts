@@ -33,12 +33,6 @@ import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 @Injectable()
 export class SelectCaseAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name selectCase$
-	 * @ofType SelectCaseAction
-	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, ToggleDisplayAnnotation
-	 */
 	@Effect()
 	selectCase$: Observable<any> = this.actions$
 		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)

@@ -19,6 +19,7 @@ import { catchError, map, mergeMap, debounceTime } from 'rxjs/operators';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
+// @dynamic
 @Injectable()
 export class CasesService {
 	static defaultTime: ICaseTimeState = {

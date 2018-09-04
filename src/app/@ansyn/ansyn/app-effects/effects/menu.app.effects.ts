@@ -12,12 +12,6 @@ import { selectSubMenu } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 @Injectable()
 export class MenuAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name onContainerChanged$
-	 * @ofType ContainerChangedTriggerAction
-	 * @action UpdateMapSizeAction, RedrawTimelineAction
-	 */
 	@Effect()
 	onContainerChanged$: Observable<UpdateMapSizeAction> = this.actions$
 		.ofType(MenuActionTypes.TRIGGER.CONTAINER_CHANGED)
@@ -26,12 +20,6 @@ export class MenuAppEffects {
 			new RedrawTimelineAction()
 		]);
 
-	/**
-	 * @type Effect
-	 * @name autoCloseMenu$
-	 * @ofType annotationFlag$
-	 * @action SetAutoClose
-	 */
 	@Effect()
 	autoCloseMenu$: Observable<SetAutoClose> = this.store$
 		.select(selectSubMenu)

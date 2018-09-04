@@ -31,6 +31,7 @@ enum StaticGroupsKeys {
 	layers = 'layers'
 }
 
+// @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
 	deps: [ProjectionService]

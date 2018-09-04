@@ -12,6 +12,7 @@ import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.comp
 import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
+// @dynamic
 @Injectable()
 export class MapFacadeService {
 	subscribers: {[key: string]: any[]} = {};
@@ -31,7 +32,9 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: ICaseMapState[], mapId: string): ICaseMapState {
-		return mapsList.find(({ id }: ICaseMapState) => id === mapId);
+		return mapsList.find(function({ id }: ICaseMapState) {
+			return id === mapId
+		});
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {

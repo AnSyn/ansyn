@@ -18,6 +18,7 @@ import { EditLayerComponent } from './components/data-layers-modals/edit-layer/e
 import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 
+// @dynamic
 @NgModule({
 	imports: [
 		CoreModule,

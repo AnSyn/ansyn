@@ -22,13 +22,6 @@ import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 export class StatusBarAppEffects {
 
 
-	/**
-	 * @type Effect
-	 * @name onCopySelectedCaseLink$
-	 * @ofType CopySelectedCaseLinkAction
-	 * @dependencies cases
-	 * @action CopyCaseLinkAction
-	 */
 	@Effect()
 	onCopySelectedCaseLink$ = this.actions$
 		.ofType<CopySelectedCaseLinkAction>(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK)
@@ -40,23 +33,13 @@ export class StatusBarAppEffects {
 		});
 
 
-	/**
-	 * @type Effect
-	 * @name onExpand$
-	 * @ofType ExpandAction
-	 */
 	@Effect({ dispatch: false })
 	onExpand$: Observable<void> = this.actions$
 		.ofType(StatusBarActionsTypes.EXPAND)
 		.map(() => {
 			console.log('onExpand$');
 		});
-	/**
-	 * @type Effect
-	 * @name onClickOutsideMap$
-	 * @ofType ClickOutsideMap
-	 * @action UpdateStatusFlagsAction
-	 */
+
 	@Effect()
 	onClickOutsideMap$ = this.actions$
 		.ofType<ClickOutsideMap>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP)

@@ -12,6 +12,7 @@ import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 
+// @dynamic
 @NgModule({
 	imports: [
 		CommonModule,

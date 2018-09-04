@@ -19,6 +19,7 @@ import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { InfiniteScrollModule } from 'ng-infinitescroll';
 import { CasesAutoSaveComponent } from '@ansyn/menu-items/cases/components/cases-auto-save/cases-auto-save.component';
 
+// @dynamic
 @NgModule({
 	imports: [
 		StoreModule.forFeature(casesFeatureKey, CasesReducer),

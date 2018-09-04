@@ -4,7 +4,7 @@ import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
 import { inside } from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { fromEvent, Observable, pipe } from 'rxjs';
+import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
@@ -16,7 +16,6 @@ import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { tap, filter, withLatestFrom, map } from 'rxjs/operators';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
-import { cold, hot } from 'jasmine-marbles';
 import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryPlugin({
@@ -24,7 +23,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 	deps: [Store, Actions, ProjectionService]
 })
 export class ContextMenuPlugin extends BaseImageryPlugin {
-	isActiveOperators = pipe(
+	isActiveOperators: UnaryFunction<any, any> = pipe(
 		withLatestFrom(this.store$.select(selectActiveMapId).pipe(map((activeMapId: string) => activeMapId === this.mapId))),
 		filter(([prevData, isActive]: [any, boolean]) => isActive),
 		map(([prevData]: [any, boolean]) => prevData)
@@ -36,7 +35,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY),
 			map(({ payload }) => payload),
 			this.isActiveOperators,
-			map(id => new DisplayOverlayFromStoreAction({ id })),
+			map((id: string) => new DisplayOverlayFromStoreAction({ id })),
 			tap((action) => this.store$.dispatch(action))
 		);
 

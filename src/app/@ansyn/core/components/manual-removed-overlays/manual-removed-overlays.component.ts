@@ -7,7 +7,7 @@ import { tap, withLatestFrom, filter, map } from 'rxjs/internal/operators';
 import { IOverlay } from '../../models/overlay.model';
 import { selectOverlaysArray, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
 import { ICase } from '../../models/case.model';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-manual-removed-overlays',
@@ -23,14 +23,14 @@ export class ManualRemovedOverlaysComponent implements OnInit, OnDestroy {
 	removedOverlaysCount = 0;
 
 	@AutoSubscription
-	removedOverlaysVisibility$ = this.store.select(selectRemovedOverlaysVisibility).pipe(
+	removedOverlaysVisibility$: Observable<any> = this.store.select(selectRemovedOverlaysVisibility).pipe(
 		tap((visibility) => {
 			this.removedOverlaysVisibility = visibility;
 		})
 	);
 
 	@AutoSubscription
-	removedOverlaysCount$ = combineLatest(this.store.select(selectRemovedOverlays), this.store.select(selectOverlaysMap)).pipe(
+	removedOverlaysCount$: Observable<any> = combineLatest(this.store.select(selectRemovedOverlays), this.store.select(selectOverlaysMap)).pipe(
 		tap(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
 			this.removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
 		})

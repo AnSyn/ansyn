@@ -2,7 +2,7 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import olFeature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
@@ -110,7 +110,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			});
 	}
 
-	onPointerMove({ coordinate }: any) {
+	onPointerMove({ coordinate }: any): Subscription {
 		const point = <GeoPoint> turf.geometry('Point', coordinate);
 		return this.projectionService.projectApproximately(point, this.iMap)
 			.take(1)

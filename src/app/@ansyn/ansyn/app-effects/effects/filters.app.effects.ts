@@ -57,14 +57,14 @@ import 'rxjs/add/observable/combineLatest';
 export class FiltersAppEffects {
 
 	filters$: Observable<Filters> = this.store$.select(selectFilters);
-	showOnlyFavorite$ = this.store$.select(selectShowOnlyFavorites);
-	favoriteOverlays$ = this.store$.select(selectFavoriteOverlays);
-	overlaysArray$ = this.store$.select(selectOverlaysArray);
-	removedOverlays$ = this.store$.select(selectRemovedOverlays);
-	removedOverlaysVisibility$ = this.store$.select(selectRemovedOverlaysVisibility);
+	showOnlyFavorite$: Observable<any> = this.store$.select(selectShowOnlyFavorites);
+	favoriteOverlays$: Observable<any> = this.store$.select(selectFavoriteOverlays);
+	overlaysArray$: Observable<any> = this.store$.select(selectOverlaysArray);
+	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
+	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
 	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[], string[], boolean]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
-	facets$ = this.store$.select(selectFacets);
-	oldFilters$ = this.store$.select(selectOldFilters);
+	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
+	oldFilters$: Observable<any> = this.store$.select(selectOldFilters);
 
 	@Effect()
 	updateOverlayFilters$ = this.onFiltersChanges$

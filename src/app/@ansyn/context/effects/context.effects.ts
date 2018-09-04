@@ -35,7 +35,7 @@ export class ContextEffects {
 		})
 	);
 
-	setContext = mergeMap(([action, context, contextParams]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
+	setContext: any = mergeMap(([action, context, contextParams]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
 		const paramsPayload: IContextParams = {};
 		if (context.defaultOverlay) {
 			paramsPayload.defaultOverlay = context.defaultOverlay;

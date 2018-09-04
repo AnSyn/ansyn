@@ -9,6 +9,7 @@ import {
 } from '@ansyn/core/models/visualizers/annotations.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -25,7 +26,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	@Input() mapId;
 
 	@AutoSubscription
-	positionChanged$ = this.mapEffect.positionChanged$.pipe(
+	positionChanged$: Observable<any> = this.mapEffect.positionChanged$.pipe(
 		tap(() => this.clickMenuProps = null)
 	);
 

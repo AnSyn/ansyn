@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { Observable } from 'rxjs';
+import { Observable, UnaryFunction } from 'rxjs';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
@@ -101,7 +101,7 @@ export class MapEffects {
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		});
 
-	checkOverlaysOutOfBounds$ = pipe(
+	checkOverlaysOutOfBounds$: UnaryFunction<any, any> = pipe(
 		filter(Boolean),
 		map((map: ICaseMapState) => {
 			const key = AlertMsgTypes.OverlaysOutOfBounds;

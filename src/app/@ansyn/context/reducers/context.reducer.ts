@@ -4,6 +4,7 @@ import { ContextActionTypes, ContextActions } from '../actions/context.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IContext, DisplayedOverlay } from '@ansyn/core/models/context.model';
 import { IContextEntity } from '@ansyn/core/models/case.model';
+import { EntityAdapter } from '../../../../../node_modules/@ngrx/entity/src/models';
 
 export const contextFeatureKey = 'context';
 
@@ -17,7 +18,7 @@ export interface IContextState extends EntityState<IContext> {
 	params: IContextParams;
 }
 
-export const contextAdapter = createEntityAdapter<IContext>();
+export const contextAdapter: EntityAdapter<IContext> = createEntityAdapter<IContext>();
 export const contextInitialState: IContextState = contextAdapter.getInitialState({
 	params: {
 		defaultOverlay: null,

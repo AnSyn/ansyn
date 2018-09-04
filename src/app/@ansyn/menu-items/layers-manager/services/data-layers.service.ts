@@ -3,7 +3,7 @@ import { Inject, Injectable, InjectionToken, OnDestroy, OnInit } from '@angular/
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { StorageService } from '@ansyn/core/services/storage/storage.service';
+import { IStoredEntity, StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { ILayer, layerPluginType, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';
@@ -35,7 +35,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 		);
 
 
-	generateAnnotationLayer(name = 'Default', data = featureCollection([])): ILayer {
+	generateAnnotationLayer(name = 'Default', data: any = featureCollection([])): ILayer {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
@@ -68,24 +68,24 @@ export class DataLayersService implements OnInit, OnDestroy {
 			);
 	}
 
-	addLayer(layer) {
+	addLayer(layer: ILayer): Observable<any>  {
 		return this.storageService.create('layers', { preview: layer })
 			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to create layer')));
 	}
 
-	updateLayer(layer) {
+	updateLayer(layer: ILayer): Observable<any> {
 		return this.storageService
 			.update('layers', { preview: layer, data: null })
 			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Can\'t find layer to update')));
 	}
 
-	removeLayer(layerId) {
+	removeLayer(layerId: string): Observable<any> {
 		return this.storageService
 			.delete('layers', layerId)
 			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to remove layer')));
 	}
 
-	removeCaseLayers(caseId) {
+	removeCaseLayers(caseId: string): Observable<any> {
 		return this.storageService.deleteByCase('layers', { caseId });
 	}
 }

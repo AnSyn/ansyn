@@ -5,7 +5,7 @@ import 'rxjs/add/operator/filter';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Observable, UnaryFunction } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -173,7 +173,7 @@ export class CasesEffects {
 			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase))
 		);
 
-	saveLayers = pipe(
+	saveLayers: UnaryFunction<any, any> = pipe(
 		mergeMap((action: ManualSaveAction) => this.dataLayersService
 			.removeCaseLayers(action.payload.id).pipe(
 				withLatestFrom(this.store.select(selectLayers)),

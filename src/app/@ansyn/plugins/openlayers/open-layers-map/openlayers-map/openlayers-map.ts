@@ -27,7 +27,7 @@ import * as olShare from '../shared/openlayers-shared';
 
 export const OpenlayersMapName = 'openLayersMap';
 
-enum StaticGroupsKeys {
+export enum StaticGroupsKeys {
 	layers = 'layers'
 }
 

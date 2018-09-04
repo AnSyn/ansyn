@@ -27,8 +27,8 @@ import { tap } from 'rxjs/internal/operators';
 @Injectable()
 export class UpdateCaseAppEffects {
 	isAutoSaveTriggered: boolean;
-	clearIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = false));
-	setIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = true));
+	clearIsAutoSave: any = pipe(tap(() => this.isAutoSaveTriggered = false));
+	setIsAutoSave: any = pipe(tap(() => this.isAutoSaveTriggered = true));
 
 	events: any[] = [
 		this.store$.select(selectSelectedLayersIds),

@@ -42,7 +42,7 @@ export class CoreAppEffects {
 		.map(() => new SetPresetOverlaysAction([]));
 
 	@Effect({ dispatch: false })
-	actionsLogger$ = this.actions$
+	actionsLogger$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.ADD_CASE,
 			CasesActionTypes.DELETE_CASE,
 			CasesActionTypes.LOAD_CASE,

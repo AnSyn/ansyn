@@ -103,7 +103,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	private element: any;
 	private oldActiveId: string;
 
-	redraw$ = this.actions$
+	redraw$: Observable<any> = this.actions$
 		.pipe(
 			ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE),
 			withLatestFrom(this.store$.select(selectDrops)),
@@ -144,7 +144,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	private subscribers: Subscription[];
 
-	onResize$ = fromEvent(window, 'resize')
+	onResize$: Observable<any> = fromEvent(window, 'resize')
 		.pipe(
 			withLatestFrom(this.store$.select(selectDrops)),
 			tap(([event, drops]) => this.initEventDropsSequence(drops))

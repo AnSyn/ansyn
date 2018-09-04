@@ -18,7 +18,7 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
 	@Input() eventListener = 'click';
 
 	@AutoSubscription
-	$event = () => {
+	$event: () => any = () => {
 		return fromEvent(window, this.eventListener).pipe(
 		tap(($event: any) => {
 			setTimeout(() => {

@@ -1,0 +1,8 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ng-ansyn",
+  "lib": {
+    "entryFile": "src/public_api.ts",
+    "styleIncludePaths": ["../../../src/app/@ansyn"]
+  }
+}

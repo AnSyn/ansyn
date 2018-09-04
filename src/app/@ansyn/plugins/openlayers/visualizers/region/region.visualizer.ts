@@ -52,8 +52,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	@AutoSubscription
 	onContextMenu$: Observable<any> = this.actions$
 		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
-		.withLatestFrom(this.isActiveGeoFilter$)
-		.filter(([action, isActiveGeoFilter]: [ContextMenuTriggerAction, boolean]) => isActiveGeoFilter)
+		.withLatestFrom(this.isActiveGeoFilter$, this.isActiveMap$)
+		.filter(([action, isActiveGeoFilter, isActiveMap]: [ContextMenuTriggerAction, boolean, boolean]) => isActiveGeoFilter && isActiveMap)
 		.map(([{ payload }]) => payload)
 		.do(this.onContextMenu.bind(this));
 

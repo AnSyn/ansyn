@@ -121,3 +121,23 @@
 	}
 }
 
+// Prevent collision of description and buttons in small resolution
+@media screen and (max-width: 1180px) {
+	:host {
+		width: 25%;
+		justify-content: space-between;
+		.buttons {
+			position: initial;
+		}
+		.notification {
+			position: initial;
+			max-width: initial;
+			overflow: hidden;
+		}
+		.description {
+			padding: 0;
+			max-width: initial;
+			overflow: hidden;
+		}
+	}
+}

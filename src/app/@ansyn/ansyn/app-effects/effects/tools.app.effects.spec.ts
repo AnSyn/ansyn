@@ -1,6 +1,6 @@
 import { ToolsAppEffects } from './tools.app.effects';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';

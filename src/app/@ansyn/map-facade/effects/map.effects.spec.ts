@@ -1,5 +1,5 @@
 import { MapEffects } from './map.effects';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Store, StoreModule } from '@ngrx/store';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';

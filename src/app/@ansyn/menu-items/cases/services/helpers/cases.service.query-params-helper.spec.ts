@@ -7,7 +7,7 @@ import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';

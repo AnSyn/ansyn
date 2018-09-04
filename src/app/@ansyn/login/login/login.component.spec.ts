@@ -79,7 +79,7 @@ describe('LoginComponent', () => {
 			spyOn(component, 'showTryAgainMsg');
 			component.login$.subscribe(() => {
 				expect(component.showTryAgainMsg).toHaveBeenCalled();
-				expect(throwError).toHaveBeenCalledWith('Unauthorized');
+				expect(rxjs.throwError).toHaveBeenCalledWith('Unauthorized');
 			});
 		});
 

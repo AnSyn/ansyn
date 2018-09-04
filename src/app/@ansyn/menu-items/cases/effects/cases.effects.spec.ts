@@ -13,7 +13,7 @@ import {
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { ICase } from '../models/case.model';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';

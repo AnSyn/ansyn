@@ -4,7 +4,7 @@ import { TreeViewComponent } from './tree-view.component';
 import { TreeviewModule } from 'ngx-treeview';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {

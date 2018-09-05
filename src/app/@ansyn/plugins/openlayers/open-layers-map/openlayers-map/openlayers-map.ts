@@ -25,6 +25,7 @@ import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
+import { configuration } from '../../../../../../configuration/configuration';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -343,7 +344,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				return null;
 			}
 
-			if (this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
+			if (configuration.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
 				extentPolygon = layerExtentPolygon;
 			}
 

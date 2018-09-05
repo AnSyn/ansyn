@@ -7,6 +7,7 @@ import { constConfiguration } from './configuration.const';
 
 export const configuration = {
 	...constConfiguration,
+	needToUseLayerExtent: false,
 	production: true,
 	ansynMenuItems: [
 		{

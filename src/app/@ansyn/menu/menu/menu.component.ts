@@ -36,6 +36,7 @@ import {
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import * as packageJson from 'root/package.json';
 
 const animations: any[] = [
 	trigger(
@@ -87,7 +88,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	@ViewChild('container') container: ElementRef;
-	@Input() version;
+	@Input() version = (<any> packageJson).version;
 
 	@AutoSubscription
 	isPinned$ = this.store
@@ -143,7 +144,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	get pinText(): string {
-		return this.isPinned ? 'Pin' : 'Unpin';
+		return this.isPinned ? 'Unpin' : 'Pin';
 	}
 
 	get selectedMenuItem(): IMenuItem {

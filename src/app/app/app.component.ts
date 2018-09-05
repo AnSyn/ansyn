@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Inject, Renderer2 } from '@angular/core';
-import * as packageJson from '../../../package.json';
+import * as packageJson from 'root/package.json';
 import { DOCUMENT } from '@angular/common';
 
 @Component({

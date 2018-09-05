@@ -19,8 +19,7 @@ import { ContextEffects } from '@ansyn/context/effects/context.effects';
 })
 export class ContextModule {
 
-	constructor(protected store: Store<IContextState>,
-				protected contextService: ContextService) {
+	constructor(protected store: Store<IContextState>, protected contextService: ContextService) {
 		contextService.loadContexts().subscribe((contexts: IContext[]) => {
 			this.store.dispatch(new AddAllContextsAction(contexts));
 		});

@@ -76,7 +76,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.VIEW.SET_IS_LOADING: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
 			const { mapId, show, text } = action.payload;
-			if (show) {
+			const exist = state.mapsList.some(({ id }) => id === mapId);
+			if (show && exist) {
 				isLoadingMaps.set(mapId, text);
 			} else {
 				isLoadingMaps.delete(mapId);

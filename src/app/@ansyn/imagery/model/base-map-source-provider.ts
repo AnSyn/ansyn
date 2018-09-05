@@ -41,7 +41,15 @@ export abstract class BaseMapSourceProvider {
 		return Promise.resolve(layer);
 	}
 
+	existsInCache(metaData: ICaseMapState): boolean {
+		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
+		return cacheLayers.length > 0;
+	}
+
 	getThumbnailUrl(overlay, position): Observable<string> {
 		return of(overlay.thumbnailUrl);
+	}
+
+	removeExtraData(layer: any) {
 	}
 }

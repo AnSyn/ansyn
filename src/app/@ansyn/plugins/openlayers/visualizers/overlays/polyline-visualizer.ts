@@ -37,6 +37,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { AutoSubscription } from 'auto-subscriptions';
+import * as turf from '@turf/turf';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -103,6 +104,11 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				'stroke': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
 			}
 		});
+	}
+
+	geometryToEntity(id, footprint) {
+		const fp = turf.simplify(turf.multiPolygon(footprint.coordinates), { tolerance: 0.01, highQuality: true });
+		return super.geometryToEntity(id, fp.geometry);
 	}
 
 	protected initLayers() {
@@ -253,7 +259,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	protected createHoverLayer() {
 		if (this.hoverLayer) {
-			this.iMap.mapObject.removeLayer(this.hoverLayer);
+			this.iMap.removeLayer(this.hoverLayer);
 		}
 
 		this.hoverLayer = new VectorLayer({
@@ -261,7 +267,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			style: (feature: Feature) => this.featureStyle(feature, VisualizerStates.HOVER)
 		});
 
-		this.iMap.mapObject.addLayer(this.hoverLayer);
+		this.iMap.addLayer(this.hoverLayer);
 	}
 
 

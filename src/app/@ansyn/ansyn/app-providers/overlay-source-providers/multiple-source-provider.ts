@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
@@ -129,7 +129,11 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public getById(id: string, sourceType: string): Observable<IOverlay> {
-		return this.overlaysSources.find(s => s.sourceType === sourceType).getById(id, sourceType);
+		const overlaysSource = this.overlaysSources.find(s => s.sourceType === sourceType);
+		if (overlaysSource) {
+			return overlaysSource.getById(id, sourceType);
+		}
+		return throwError(`Cannot find overlay for source = ${sourceType} id = ${id}`);
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

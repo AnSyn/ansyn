@@ -172,7 +172,8 @@ export class MapAppEffects {
 						sourceType: action.payload.overlay.sourceType,
 						mapId: action.payload.mapId
 					}),
-					this.getLoadingAction(action.payload.mapId, true, 'Loading Overlay')];
+					new SetIsLoadingAcion({ mapId: action.payload.mapId, show: true, text: 'Loading Overlay' })
+				];
 			})
 		);
 
@@ -337,9 +338,9 @@ export class MapAppEffects {
 			}));
 		}
 
-		this.setIsLoadingSpinner(mapId, sourceLoader, caseMapState, mapData, overlay);
-
 		const sourceProviderMetaData = { ...caseMapState, data: { ...mapData, overlay } };
+		this.setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData);
+
 
 		/* -1- */
 		const isActiveMapAlive = mergeMap((layer) => {
@@ -389,16 +390,12 @@ export class MapAppEffects {
 				onError);
 	};
 
-	setIsLoadingSpinner(mapId, sourceLoader, caseMapState, mapData, overlay) {
-		if (sourceLoader.existsInCache({ ...caseMapState, data: { ...mapData, overlay } })) {
-			this.store$.dispatch(this.getLoadingAction(mapId, false));
+	setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData) {
+		if (sourceLoader.existsInCache(sourceProviderMetaData)) {
+			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: false }));
 		} else {
-			this.store$.dispatch(this.getLoadingAction(mapId, true, 'Loading Overlay'));
+			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: true, text: 'Loading Overlay' }));
 		}
-	}
-
-	getLoadingAction(mapId: string, show: boolean, text: string = '') {
-		return new SetIsLoadingAcion({ mapId: mapId, show: show, text: text });
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {

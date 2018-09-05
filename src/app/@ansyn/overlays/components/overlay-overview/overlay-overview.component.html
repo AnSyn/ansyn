@@ -1,7 +1,7 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
 	<main>
 		<img
-			*ngif="imageSrc"
+			*ngIf="imageSrc"
 			[src]="imageSrc"
 			(error)="imageSrc = errorSrc"
 			(load)="finishedLoadingImage()"

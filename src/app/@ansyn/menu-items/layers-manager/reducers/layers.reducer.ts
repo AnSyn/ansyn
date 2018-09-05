@@ -8,7 +8,7 @@ import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions
 import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
-import { Dictionary } from '../../../../../../node_modules/@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>();
 

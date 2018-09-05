@@ -43,13 +43,14 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { pipe } from 'rxjs/internal-compatibility';
+import { Position } from 'geojson';
 
 @Injectable()
 export class MapEffects {
 
 	region$ = this.store$.select(selectRegion);
 
-	isPinPointSearch$: Observable<any> = this.region$.pipe(
+	isPinPointSearch$ = this.region$.pipe(
 		filter(Boolean),
 		map((region) => region.type === CaseGeoFilter.PinPoint),
 		distinctUntilChanged()
@@ -61,14 +62,15 @@ export class MapEffects {
 	 * @name onPinPointSearch$
 	 * @ofType ContextMenuTriggerAction
 	 */
-	@Effect({ dispatch: false })
-	onPinPointSearch: Observable<any> = this.actions$.pipe(
+	@Effect()
+	onPinPointSearch$: Observable<SetOverlaysCriteriaAction> = this.actions$.pipe(
 		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
 		withLatestFrom(this.isPinPointSearch$),
-		filter(([{ payload }, isPinPointSearch]: [any, boolean]) => isPinPointSearch),
-		tap(([{ payload }, isPinPointSearch]: [any, boolean]) => {
+		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
+		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
+		map((payload: Position) => {
 			const region = turf.geometry('Point', payload);
-			this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+			return new SetOverlaysCriteriaAction({ region });
 		})
 	);
 

@@ -56,9 +56,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		withLatestFrom(this.isActiveGeoFilter$),
 		filter(([action, isActiveGeoFilter]) => isActiveGeoFilter),
 		map(([{ payload }]) => payload),
-		tap((payload) => {
-			this.onContextMenu(payload);
-		})
+		tap(this.onContextMenu.bind(this))
 	);
 
 	@AutoSubscription

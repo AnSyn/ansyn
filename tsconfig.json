@@ -11,7 +11,8 @@
       ],
       "@builder/*": [
         "src/app/builder/*"
-      ]
+      ],
+      "root/*": ["./*"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

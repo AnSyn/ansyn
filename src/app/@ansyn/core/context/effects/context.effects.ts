@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IContextParams, selectContextsArray, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
+import { IContextParams, selectContextsArray, selectContextsParams } from 'src/app/@ansyn/core/context/reducers/context.reducer';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import {
 	CasesActionTypes,
@@ -9,7 +9,7 @@ import {
 	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { SetContextParamsAction } from 'src/app/@ansyn/core/context/actions/context.actions';
 import { IContext } from '@ansyn/core/models/context.model';
 import { ICase } from '@ansyn/core/models/case.model';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
@@ -18,7 +18,7 @@ import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.re
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { ContextService } from '@ansyn/context/services/context.service';
+import { ContextService } from 'src/app/@ansyn/core/context/services/context.service';
 import { Store } from '@ngrx/store';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 

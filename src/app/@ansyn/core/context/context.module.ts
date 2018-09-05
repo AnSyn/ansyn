@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { contextFeatureKey, ContextReducer, IContextState } from '@ansyn/context/reducers/context.reducer';
-import { ContextService } from '@ansyn/context/services/context.service';
-import { AddAllContextsAction } from '@ansyn/context/actions/context.actions';
+import { contextFeatureKey, ContextReducer, IContextState } from 'reducers/context.reducer';
+import { ContextService } from 'services/context.service';
+import { AddAllContextsAction } from 'actions/context.actions';
 import { HttpClientModule } from '@angular/common/http';
 import { IContext } from '@ansyn/core/models/context.model';
 import { EffectsModule } from '@ngrx/effects';
-import { ContextEffects } from '@ansyn/context/effects/context.effects';
+import { ContextEffects } from 'effects/context.effects';
 
 
 @NgModule({

@@ -20,7 +20,7 @@ import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/ma
 import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
+import { selectContextEntities } from '@ansyn/core/context/reducers/context.reducer';
 import { pipe } from 'rxjs/Rx';
 import { tap } from 'rxjs/internal/operators';
 

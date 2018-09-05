@@ -12,7 +12,7 @@ import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { PlanetOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet-source-provider';
-import { ContextConfig } from '@ansyn/context/models/context.config';
+import { ContextConfig } from '@ansyn/core/context/models/context.config';
 import { LoginConfig } from '../../../app/login/services/login-config.service';
 import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
 import { configuration } from '../../../../configuration/configuration';

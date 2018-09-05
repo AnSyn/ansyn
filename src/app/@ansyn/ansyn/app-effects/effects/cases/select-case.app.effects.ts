@@ -26,7 +26,7 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { SetContextParamsAction } from '@ansyn/core/context/actions/context.actions';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 

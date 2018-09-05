@@ -11,7 +11,7 @@ import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
+import { selectContextEntities } from '@ansyn/core/context/reducers/context.reducer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';

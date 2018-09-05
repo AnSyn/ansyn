@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import * as turf from '@turf/turf';
-import { empty, Observable } from 'rxjs';
+import { combineLatest, empty, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
@@ -65,10 +65,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = Observable
-		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$).pipe(
-			mergeMap(this.drawChanges.bind(this))
-		);
+	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$).pipe(
+		mergeMap(this.drawChanges.bind(this)));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
 		super();

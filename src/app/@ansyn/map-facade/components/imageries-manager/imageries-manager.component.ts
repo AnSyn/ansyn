@@ -1,11 +1,11 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
+import { ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { IMapsLayout } from '@ansyn/core/models/i-maps-layout';
@@ -13,6 +13,7 @@ import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.mode
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
 import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -65,11 +66,11 @@ export class ImageriesManagerComponent implements OnInit {
 	}
 
 	initClickOutside() {
-		Observable
-			.fromEvent(this.document, 'click')
-			.filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element))
-			.do((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
-			.subscribe()
+		fromEvent(this.document, 'click').pipe(
+			filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element)),
+			filter((event: any) => !event.path.some((element) => element.id === 'editGeoFilter' || element.id === 'contextGeoFilter')),
+			tap((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
+		).subscribe();
 	}
 
 	initSubscribers() {

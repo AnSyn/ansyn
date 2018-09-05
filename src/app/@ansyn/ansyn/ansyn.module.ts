@@ -17,7 +17,7 @@ import { SettingsModule } from '@ansyn/menu-items/settings/settings.module';
 import { MenuModule } from '@ansyn/menu/menu.module';
 import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { AnsynRouterModule } from '@ansyn/router/router.module';
+import { AnsynRouterModule } from './router/router.module';
 import { ContextModule } from '@ansyn/context/context.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';

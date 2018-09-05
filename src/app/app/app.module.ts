@@ -8,7 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { configuration } from '../../configuration/configuration';
-import { LoginModule } from '@ansyn/login/login.module';
+import { LoginModule } from './login/login.module';
 
 @NgModule({
 	imports: [

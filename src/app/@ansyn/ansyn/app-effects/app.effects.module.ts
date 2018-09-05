@@ -14,7 +14,6 @@ import { StatusBarAppEffects } from './effects/status-bar.app.effects';
 import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
-import { IRouterState } from './router/reducers/router.reducer';
 import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core/reducers/core.reducer';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
@@ -32,7 +31,7 @@ export interface IAppState {
 	map: IMapState;
 	tools: IToolsState;
 	filters: IFiltersState;
-	router: IRouterState
+	router: any
 }
 
 @NgModule({

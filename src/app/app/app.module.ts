@@ -9,6 +9,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { configuration } from '../../configuration/configuration';
 import { LoginModule } from './login/login.module';
+import { AnsynRouterModule } from './router/router.module';
 
 @NgModule({
 	imports: [
@@ -18,6 +19,7 @@ import { LoginModule } from './login/login.module';
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),
 		AnsynModule,
 		LoginModule,
+		AnsynRouterModule,
 		AppRoutingModule
 	],
 	providers: [

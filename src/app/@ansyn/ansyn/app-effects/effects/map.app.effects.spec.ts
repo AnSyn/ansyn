@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import {
 	ActiveMapChangedAction,
-	ImageryCreatedAction
+	ImageryCreatedAction, SetIsLoadingAcion
 } from '@ansyn/map-facade/actions/map.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
@@ -320,12 +320,13 @@ describe('MapAppEffects', () => {
 			};
 			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
 
-			const expectedResults = cold('--b--', {
+			const expectedResults = cold('--(bc)--', {
 				b: new RequestOverlayByIDFromBackendAction({
 					overlayId: testOverlay.id,
 					sourceType: 'IDAHO',
 					mapId: 'imagery1'
-				})
+				}),
+				c: new SetIsLoadingAcion({ mapId: 'imagery1', show: true, text: 'Loading Overlay' })
 			});
 
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
@@ -360,12 +361,13 @@ describe('MapAppEffects', () => {
 			};
 			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
 
-			const expectedResults = cold('--b--', {
+			const expectedResults = cold('--(bc)--', {
 				b: new RequestOverlayByIDFromBackendAction({
 					overlayId: testOverlay.id,
 					sourceType: 'PLANET',
 					mapId: 'imagery1'
-				})
+				}),
+				c: new SetIsLoadingAcion({ mapId: 'imagery1', show: true, text: 'Loading Overlay' })
 			});
 
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);

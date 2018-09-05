@@ -5,9 +5,9 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import {
-	DisplayOverlayAction,
+	DisplayOverlayAction, DisplayOverlayFailedAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
@@ -16,20 +16,16 @@ import {
 	SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
-import { Store, select } from '@ngrx/store';
-import { IOverlaysState, MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
+import { select, Store } from '@ngrx/store';
+import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import { IOverlay } from '../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
 import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import {
-	coreStateSelector,
-	ICoreState,
-	selectFavoriteOverlays,
-	selectPresetOverlays
-} from '@ansyn/core/reducers/core.reducer';
-import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
+import { coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '@ansyn/core/reducers/core.reducer';
+import { BackToWorldView, UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
 import { map } from 'rxjs/operators';
+import { LoggerService } from '@ansyn/core/services/logger.service';
 
 @Injectable()
 export class OverlaysEffects {
@@ -61,19 +57,27 @@ export class OverlaysEffects {
 					}
 					return actions;
 				})
-				.catch(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
+				.catch(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
 		});
 
 	@Effect()
-	onRequestOverlayByID$: Observable<DisplayOverlayAction> = this.actions$
+	onRequestOverlayByID$: Observable<any> = this.actions$
 		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.flatMap((action: RequestOverlayByIDFromBackendAction) => {
-			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType) // this.overlaysService.fetchData("",action.payload)
+			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType)
 				.map((overlay: IOverlay) => new DisplayOverlayAction({
 					overlay,
 					mapId: action.payload.mapId,
 					forceFirstDisplay: true
-				}));
+				}))
+				.catch((exception) => {
+					this.loggerService.error(exception);
+					console.error(exception);
+					return from([
+						new DisplayOverlayFailedAction({id: action.payload.overlayId, mapId: action.payload.mapId}),
+						new BackToWorldView({mapId: action.payload.mapId})
+					])
+				});
 		});
 
 
@@ -111,7 +115,8 @@ export class OverlaysEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>,
-				protected overlaysService: OverlaysService) {
+				protected overlaysService: OverlaysService,
+				protected loggerService: LoggerService) {
 	}
 
 

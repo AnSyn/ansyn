@@ -1,4 +1,4 @@
-import { AnsynBuilder } from './api/ansyn-builder';
+import { AnsynBuilder } from '@builder/api/ansyn-builder';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppAnsynModule } from '../app/app.module';
 

@@ -52,6 +52,12 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@Input() mapId: string = null;
 	@Input() mapsAmount = 1;
+
+	@HostBinding('class.one-map')
+	get oneMap() {
+		return this.mapsAmount === 1;
+	}
+
 	@Input() layerFlag = false;
 
 	@Input() set overlay(overlay: IOverlay) {

@@ -14,6 +14,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
+import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -45,7 +46,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 			})
 		);
 
-	geometryToEntity(id, footprint) {
+	geometryToEntity(id, footprint): IVisualizerEntity {
 		const fp = turf.simplify(turf.multiPolygon(footprint.coordinates), { tolerance: 0.01, highQuality: true });
 		return super.geometryToEntity(id, fp.geometry);
 	}

@@ -10,10 +10,7 @@ import { getPointByGeometry } from '@ansyn/core/utils/geo';
 import { Position } from 'geojson';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
-import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 
 @ImageryVisualizer({
@@ -50,8 +47,5 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(coordinates: Position): void {
-		const region = turf.geometry('Point', coordinates);
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: SearchModeEnum.none, indicator: true }));
-		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

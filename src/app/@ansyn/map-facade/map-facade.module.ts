@@ -3,7 +3,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { MapEffects } from './effects/map.effects';
 import { MapFacadeService } from './services/map-facade.service';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { ImageryModule } from '@ansyn/imagery';
 import { CommonModule } from '@angular/common';
 import { ImageryContainerComponent } from './components/imagery-container/imagery-container.component';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
@@ -15,7 +15,7 @@ import { ImageryRotationComponent } from './components/imagery-rotation/imagery-
 import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
 import { ImageryTileProgressComponent } from './components/imagery-tile-progress/imagery-tile-progress.component';
 import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-type-notice/overlay-source-type-notice.component';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule } from '@ansyn/core';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
 
@@ -23,7 +23,7 @@ import { GeocoderService } from './services/geocoder.service';
 	imports: [
 		StoreModule.forFeature(mapFeatureKey, MapReducer),
 		EffectsModule.forFeature([MapEffects]),
-		// ImageryModule,
+		ImageryModule,
 		CommonModule,
 		CoreModule,
 		FormsModule

@@ -14,13 +14,13 @@ import { IContext } from '../../models/context.model';
 import { ICase } from '../../models/case.model';
 import { copyFromContent } from '../../utils/clipboard';
 import { IStartAndEndDate } from '../../overlays/models/base-overlay-source-provider.model';
-import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { ContextService } from '../services/context.service';
 import { Store } from '@ngrx/store';
 import { OverlaysService } from '../../overlays/services/overlays.service';
+import { toastMessages } from '../../models/toast-messages';
 
 @Injectable()
 export class ContextEffects {
@@ -96,7 +96,7 @@ export class ContextEffects {
 		map((sCase: ICase) => {
 			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
 			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
+			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
 		})
 	);
 

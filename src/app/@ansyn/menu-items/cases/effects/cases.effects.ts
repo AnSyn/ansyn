@@ -27,7 +27,6 @@ import 'rxjs/add/observable/of';
 import { ICasesConfig } from '../models/cases-config';
 import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/core/models/case.model';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 import { catchError, debounceTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/internal/operators';
@@ -41,6 +40,7 @@ import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.r
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { pipe } from 'rxjs/Rx';
 import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
+import { toastMessages } from '@ansyn/core/models/toast-messages';
 
 @Injectable()
 export class CasesEffects {
@@ -153,7 +153,7 @@ export class CasesEffects {
 		.map((action) => {
 			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
 			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
+			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
 		});
 
 	@Effect()

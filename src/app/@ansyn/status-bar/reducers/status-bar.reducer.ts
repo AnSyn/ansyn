@@ -4,11 +4,6 @@ import { IComboBoxesProperties } from '../models/combo-boxes.model';
 import { StatusBarActions } from '../actions/status-bar.actions';
 import { SearchMode, SearchModeEnum } from '../models/search-mode.enum';
 
-export const statusBarToastMessages = {
-	showLinkCopyToast: 'Link copied to clipboard',
-	showOverlayErrorToast: 'Failed to load overlay'
-};
-
 export interface IGeoFilterStatus {
 	searchMode: SearchMode;
 	indicator: boolean;

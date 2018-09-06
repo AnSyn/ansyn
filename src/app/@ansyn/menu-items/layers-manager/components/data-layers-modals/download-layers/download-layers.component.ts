@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { saveAs } from 'file-saver';
-import * as tokml from 'tokml';
+import tokml from 'tokml';
 import { cloneDeep } from 'lodash';
 import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { Store } from '@ngrx/store';

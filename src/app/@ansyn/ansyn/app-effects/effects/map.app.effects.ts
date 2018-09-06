@@ -10,7 +10,6 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
 } from '@ansyn/core/overlays/actions/overlays.actions';
-import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
@@ -46,6 +45,7 @@ import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communic
 import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
 import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
+import { toastMessages } from '@ansyn/core/models/toast-messages';
 
 @Injectable()
 export class MapAppEffects {
@@ -160,7 +160,7 @@ export class MapAppEffects {
 		.pipe(
 			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
 			map((action) => new SetToastMessageAction({
-				toastText: statusBarToastMessages.showOverlayErrorToast,
+				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
 			}))
 		);

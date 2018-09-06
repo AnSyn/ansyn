@@ -9,13 +9,12 @@ import { ICase } from '../models/case.model';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
-import * as moment from 'moment';
 import { StorageService, IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEntity } from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
 import { catchError, map, mergeMap, debounceTime } from 'rxjs/operators';
-
+import moment from 'moment';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 

@@ -2,9 +2,6 @@
   "extends": "../../../tsconfig.app.json",
   "compilerOptions": {
     "paths": {
-      "configuration/*": [
-        "src/configuration/*"
-      ]
     }
   }
 }

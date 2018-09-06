@@ -7,9 +7,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { configuration } from 'configuration/configuration';
 import { LoginModule } from './login/login.module';
 import { AnsynRouterModule } from './router/router.module';
+import { configuration } from '../../configuration/configuration';
 
 @NgModule({
 	imports: [

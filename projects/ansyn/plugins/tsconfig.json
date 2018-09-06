@@ -31,9 +31,6 @@
       ],
       "@ansyn/imagery/*": [
         "dist/ansyn/imagery/*"
-      ],
-      "configuration/*": [
-        "src/configuration/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

@@ -7,10 +7,10 @@ import VectorLayer from 'ol/layer/vector';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import olPoint from 'ol/geom/point';
 import olPolygon from 'ol/geom/polygon';
 import { getPointByGeometry } from '@ansyn/core/utils/geo';
@@ -6,11 +5,9 @@ import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
 import { ICaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { select, Store } from '@ngrx/store';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { selectContextEntities } from '@ansyn/core/context/reducers/context.reducer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
@@ -18,6 +15,8 @@ import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service'
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
+import { EntitiesVisualizer } from '../entities-visualizer';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -49,7 +48,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		);
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>) {
+				protected store$: Store<any>) {
 		super();
 
 		this.updateStyle({

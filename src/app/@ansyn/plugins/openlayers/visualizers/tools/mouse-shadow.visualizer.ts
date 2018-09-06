@@ -6,16 +6,15 @@ import { Observable, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -67,7 +66,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		]));
 
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected projectionService: ProjectionService) {
+	constructor(protected actions$: Actions, protected store$: Store<any>, protected projectionService: ProjectionService) {
 		super();
 
 		this._iconSrc = new Style({

@@ -1,5 +1,5 @@
 import Layer from 'ol/layer/layer';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import { ProjectableRaster } from '../models/projectable-raster';
 
 export function isRasterLayer(layer): boolean {
 	return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster

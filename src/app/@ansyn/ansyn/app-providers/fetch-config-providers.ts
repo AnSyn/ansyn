@@ -15,7 +15,7 @@ import { PlanetOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-s
 import { ContextConfig } from '@ansyn/core/context/models/context.config';
 import { LoginConfig } from '../../../app/login/services/login-config.service';
 import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
-import { configuration } from '../../../../configuration/configuration';
+import { configuration } from 'configuration/configuration';
 import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
 
 export const getProviders = (conf): any[] => {
@@ -84,7 +84,10 @@ export const getProviders = (conf): any[] => {
 		},
 		{
 			provide: CoreConfig,
-			useValue: conf.coreConfig
+			useValue: {
+				...configuration.coreConfig,
+				...conf.coreConfig
+			}
 		},
 		{
 			provide: MAP_SOURCE_PROVIDERS_CONFIG,

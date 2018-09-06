@@ -6,7 +6,6 @@ import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { AutoSubscription } from 'auto-subscriptions';
 import {
@@ -14,6 +13,7 @@ import {
 	OverlaysActionTypes
 } from '@ansyn/core/overlays/actions/overlays.actions';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

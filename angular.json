@@ -458,7 +458,7 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ansyn/imagery/ng-package.prod.json"
+              "project": "projects/ansyn/imagery/ng-package.json"
             }
           }
         }
@@ -479,7 +479,7 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ansyn/menu/ng-package.prod.json"
+              "project": "projects/ansyn/menu/ng-package.json"
             }
           }
         }
@@ -500,7 +500,7 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ansyn/menu/ng-package.prod.json"
+              "project": "projects/ansyn/menu/ng-package.json"
             }
           }
         }
@@ -521,7 +521,28 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ansyn/menu/ng-package.prod.json"
+              "project": "projects/ansyn/menu/ng-package.json"
+            }
+          }
+        }
+      }
+    },
+
+    "@ansyn/plugins":  {
+      "root": "projects/ansyn/plugins",
+      "sourceRoot": "src/app/@ansyn/plugins",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/plugins/tsconfig.json",
+            "project": "projects/ansyn/plugins/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/plugins/ng-package.json"
             }
           }
         }

@@ -10,5 +10,6 @@ export interface ICoreConfig {
 	translation: {
 		default: any,
 		[key: string]: any
-	}
+	};
+	needToUseLayerExtent: boolean;
 }

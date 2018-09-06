@@ -20,8 +20,8 @@ import {
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import ol_color from 'ol/color';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 export interface IFeatureIdentifier {
 	feature: Feature,

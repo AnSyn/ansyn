@@ -41,7 +41,6 @@ import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
@@ -62,6 +61,7 @@ import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar
 import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { featureCollection } from '@turf/turf';
 import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 // @dynamic
 @ImageryVisualizer({

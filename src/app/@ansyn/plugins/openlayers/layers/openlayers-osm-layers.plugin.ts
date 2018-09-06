@@ -1,4 +1,3 @@
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Store } from '@ngrx/store';
 import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import OSM from 'ol/source/osm';
@@ -13,6 +12,7 @@ import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 
 @ImageryPlugin({

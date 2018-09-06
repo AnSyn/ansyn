@@ -21,6 +21,9 @@
       "@builder/*": [
         "src/app/builder/*"
       ],
+      "configuration/*": [
+        "src/configuration/*"
+      ],
       "root/*": ["./*"]
     },
     "outDir": "./dist/out-tsc",

@@ -8,7 +8,9 @@ import { HelpComponent } from '@ansyn/menu-items/help/components/help.component'
 
 export const constConfiguration = {
 	production: false,
-	needToUseLayerExtent: false,
+	coreConfig: {
+		needToUseLayerExtent: false
+	},
 	configPath: 'assets/config/app.config.json',
 	overlays: {
 		overlayOverviewFailed: 'assets/icons/preview-failed-to-find-overlay-preview.svg'

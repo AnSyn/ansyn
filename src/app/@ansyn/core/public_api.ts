@@ -1,3 +1,4 @@
+export { toDegrees, toRadians } from './utils/math';
 export { toastMessages } from './models/toast-messages';
 export {
 	contextAdapter,
@@ -39,3 +40,4 @@ export { ContextActionTypes, ContextActions } from './context/actions/context.ac
 export { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 export { DisplayedOverlay } from './models/context.model';
 export { EntityAdapter } from '@ngrx/entity/src/models';
+

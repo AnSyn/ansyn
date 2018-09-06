@@ -25,7 +25,9 @@ import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
-import { configuration } from '../../../../../../configuration/configuration';
+import { Inject } from '@angular/core';
+import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -36,7 +38,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [ProjectionService]
+	deps: [ProjectionService, CoreConfig]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
@@ -50,7 +52,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 
 
-	constructor(public projectionService: ProjectionService) {
+	constructor(public projectionService: ProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
 
@@ -345,7 +347,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				return null;
 			}
 
-			if (configuration.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
+			if (this.coreConfig.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
 				extentPolygon = layerExtentPolygon;
 			}
 

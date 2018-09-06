@@ -6,8 +6,6 @@ import { inside } from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
 import { overlaysStateSelector } from '@ansyn/core/overlays/reducers/overlays.reducer';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
@@ -17,6 +15,7 @@ import { DisplayOverlayFromStoreAction } from '@ansyn/core/overlays/actions/over
 import { tap, filter, withLatestFrom, map } from 'rxjs/operators';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -49,7 +48,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		return <HTMLElement> this.iMap.mapObject.getViewport();
 	}
 
-	constructor(protected store$: Store<IAppState>, protected actions$: Actions, protected projectionService: ProjectionService) {
+	constructor(protected store$: Store<any>, protected actions$: Actions, protected projectionService: ProjectionService) {
 		super();
 	}
 

@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import * as turf from '@turf/turf';
 import { combineLatest, empty, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -17,6 +16,7 @@ import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.acti
 import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { AutoSubscription } from 'auto-subscriptions';
 import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { EntitiesVisualizer } from '../entities-visualizer';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';

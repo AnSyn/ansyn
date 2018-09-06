@@ -11,7 +11,6 @@ import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { LoggerService } from '@ansyn/core/services/logger.service';
@@ -24,6 +23,7 @@ import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 export interface INorthData {
 	northOffsetDeg: number;

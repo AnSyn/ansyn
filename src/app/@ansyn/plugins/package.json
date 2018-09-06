@@ -1,9 +1,0 @@
-{
-	"name": "@ansyn/plugins",
-	"version": "0.2.81",
-	"peerDependencies": {
-		"@ansyn/core": "0.2.81"
-	},
-	"typings": "index.d.ts",
-	"license": "MIT"
-}

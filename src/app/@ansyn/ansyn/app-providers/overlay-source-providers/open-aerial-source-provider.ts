@@ -2,7 +2,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
 	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
+} from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';

@@ -7,7 +7,7 @@ import {
 	ActiveMapChangedAction,
 	ImageryCreatedAction, SetIsLoadingAcion
 } from '@ansyn/map-facade/actions/map.actions';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
@@ -15,7 +15,7 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/core/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
 import { ICase } from '@ansyn/menu-items/cases/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
@@ -33,7 +33,7 @@ import {
 	overlaysFeatureKey,
 	overlaysInitialState,
 	overlaysStateSelector
-} from '@ansyn/core/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -55,7 +55,7 @@ import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token
 import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { LoggerService } from '@ansyn/core/services/logger.service';

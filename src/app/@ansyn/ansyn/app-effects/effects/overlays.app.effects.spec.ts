@@ -8,8 +8,8 @@ import {
 	DisplayOverlaySuccessAction,
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
-} from '@ansyn/core/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
+} from '@ansyn/overlays/actions/overlays.actions';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	MarkUpClass,
 	OverlayReducer,
@@ -18,7 +18,7 @@ import {
 	overlaysStateSelector,
 	selectDropMarkup,
 	selectOverlaysMap
-} from '@ansyn/core/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs';
 import {
 	IToolsState,
@@ -51,8 +51,8 @@ import {
 	contextFeatureSelector,
 	contextInitialState,
 	selectContextsParams
-} from '@ansyn/core/context/reducers/context.reducer';
-import { SetContextParamsAction } from '@ansyn/core/context/actions/context.actions';
+} from '@ansyn/context/reducers/context.reducer';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
 

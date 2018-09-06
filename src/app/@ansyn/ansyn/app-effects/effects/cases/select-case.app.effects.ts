@@ -21,14 +21,15 @@ import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/acti
 import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetContextParamsAction } from '@ansyn/core/context/actions/context.actions';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { ICoreConfig } from '@ansyn/core/models/core.config.model';
+import { IAppState } from '../../app.effects.module';
+import { isFullOverlay } from '@ansyn/core/utils/overlays';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -95,6 +96,6 @@ export class SelectCaseAppEffects {
 	}
 
 	parseOverlay(overlay: IOverlay): IOverlay {
-		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
+		return isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
 }

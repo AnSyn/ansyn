@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { IdahoSourceProvider } from './idaho-source-provider';
+import { IdahoOverlaysSourceConfig, IdahoSourceProvider, IIdahoOverlaySourceConfig } from './idaho-source-provider';
 import { HttpClient } from '@angular/common/http';
-import { IdahoOverlaysSourceConfig, IIdahoOverlaySourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/idaho-source-provider';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';

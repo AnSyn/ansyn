@@ -10,10 +10,10 @@ import {
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetSpecialObjectsActionStore
-} from '@ansyn/core/overlays/actions/overlays.actions';
+} from '@ansyn/overlays/actions/overlays.actions';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import {
 	IMarkUpData,
 	IOverlaysState,
@@ -22,7 +22,7 @@ import {
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
 	selectOverlaysMap
-} from '@ansyn/core/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core/models/overlay.model';
 import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
@@ -36,7 +36,7 @@ import {
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/core/actions/core.actions';
-import { ExtendMap } from '@ansyn/core/overlays/reducers/extendedMap.class';
+import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
@@ -45,15 +45,15 @@ import {
 	BaseMapSourceProvider,
 	IBaseMapSourceProviderConstructor
 } from '@ansyn/imagery/model/base-map-source-provider';
-import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/core/context/reducers/context.reducer';
-import { SetContextParamsAction } from '@ansyn/core/context/actions/context.actions';
+import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
 import { of } from 'rxjs/internal/observable/of';
-import { overlayOverviewComponentConstants } from '@ansyn/core/overlays/components/overlay-overview/overlay-overview.component.const';
+import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
 
 @Injectable()
 export class OverlaysAppEffects {

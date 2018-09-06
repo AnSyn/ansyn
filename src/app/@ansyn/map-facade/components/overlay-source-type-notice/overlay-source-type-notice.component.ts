@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { IOverlaysConfig } from '@ansyn/core/overlays/models/overlays.config';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
+import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',
@@ -27,10 +27,7 @@ export class OverlaySourceTypeNoticeComponent {
 		return this._title;
 	}
 
-	private _config: IOverlaysConfig;
-
-	constructor(overlaysService: OverlaysService) {
-		this._config = overlaysService.config;
+	constructor(@Inject(mapFacadeConfig) public _config: IMapFacadeConfig) {
 	}
 
 }

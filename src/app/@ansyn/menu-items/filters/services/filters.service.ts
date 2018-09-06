@@ -8,9 +8,9 @@ import { CaseFilters } from '@ansyn/core/models/case.model';
 import { IFilterModel } from '@ansyn/core/models/IFilterModel';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { cloneDeep } from 'lodash';
 import { IEnumFiled, EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { buildFilteredOverlays } from '@ansyn/core';
 
 export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
 
@@ -68,7 +68,7 @@ export class FiltersService {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);
-		const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites, removedOverlaysIds, removedOverlaysVisibility );
+		const filteredOverlays: string[] = buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites, removedOverlaysIds, removedOverlaysVisibility );
 		metadata.resetFilteredCount();
 		filteredOverlays
 			.map((id) => overlays.get(id))

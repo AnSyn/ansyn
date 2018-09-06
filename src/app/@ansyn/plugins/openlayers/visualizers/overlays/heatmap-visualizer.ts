@@ -1,10 +1,10 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { combineLatest, empty, Observable } from 'rxjs';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectFilteredOveralys, selectOverlaysMap } from '@ansyn/core/overlays/reducers/overlays.reducer';
+import { selectFilteredOveralys, selectOverlaysMap } from '@ansyn/overlays/reducers/overlays.reducer';
 import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';

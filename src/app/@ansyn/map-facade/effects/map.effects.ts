@@ -35,13 +35,13 @@ import {
 	SetOverlaysCriteriaAction
 } from '@ansyn/core/actions/core.actions';
 import { AlertMsgTypes, selectRegion } from '@ansyn/core/reducers/core.reducer';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { pipe } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
+import { isFullOverlay } from '@ansyn/core/utils/overlays';
 
 @Injectable()
 export class MapEffects {
@@ -136,7 +136,7 @@ export class MapEffects {
 		filter(Boolean),
 		map((map: ICaseMapState) => {
 			const key = AlertMsgTypes.OverlaysOutOfBounds;
-			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
+			const isWorldView = !isFullOverlay(map.data.overlay);
 			let isInBound;
 			if (!isWorldView) {
 				const { extentPolygon } = map.data.position;

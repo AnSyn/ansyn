@@ -5,7 +5,7 @@ import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions } from '@ngrx/effects';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/core/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';

@@ -13,6 +13,7 @@
     "build:builder": "ng build builder",
     "build:gulp": "cd build && gulp build",
     "build:prod": "ng build ansyn --prod",
+    "build:libs": "ng build @ansyn/core && ng build @ansyn/menu && ng build @ansyn/overlays && ng build @ansyn/status-bar && ng build @ansyn/imagery && ng build @ansyn/map-facade && ng build @ansyn/context && ng build @ansyn/menu-items && ng build @ansyn/plugins",
     "docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3",
     "fix-all": "node scripts/fix-package-json -a",
     "fix-package-json": "node scripts/fix-package-json",

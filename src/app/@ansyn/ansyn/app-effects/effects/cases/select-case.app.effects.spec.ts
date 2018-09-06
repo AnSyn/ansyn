@@ -2,7 +2,6 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
-import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/select-case.app.effects';
 
 import { cold, hot } from 'jasmine-marbles';
 import {
@@ -37,8 +36,9 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { SetContextParamsAction } from '@ansyn/core/context/actions/context.actions';
+import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { CoreConfig } from '@ansyn/core/models/core.config';
+import { SelectCaseAppEffects } from './select-case.app.effects';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;

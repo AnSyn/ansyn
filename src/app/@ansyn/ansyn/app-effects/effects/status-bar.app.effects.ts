@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';

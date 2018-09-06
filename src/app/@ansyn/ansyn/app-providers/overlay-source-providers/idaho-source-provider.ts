@@ -6,7 +6,7 @@ import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn
 import {
 	BaseOverlaySourceProvider, IFetchParams,
 	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
+} from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { toRadians } from '@ansyn/core/utils/math';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { limitArray } from '@ansyn/core/utils/i-limited-array';

@@ -10,7 +10,7 @@ import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/r
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { DisplayOverlayAction } from '@ansyn/core/overlays/actions/overlays.actions';
+import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 
 function mockOverlay(id: string): IOverlay {
 	const overlay = <IOverlay> {};

@@ -1,0 +1,61 @@
+{
+  "extends": "../../../tsconfig.app.json",
+  "compilerOptions": {
+    "paths": {
+      "@ansyn/core": [
+        "src/app/@ansyn/core/public_api"
+      ],
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery/public_api"
+      ],
+      "@ansyn/menu-items": [
+        "src/app/@ansyn/menu-items/public_api"
+      ],
+      "@ansyn/map-facade": [
+        "src/app/@ansyn/map-facade/public_api"
+      ],
+      "@ansyn/plugins": [
+        "src/app/@ansyn/plugins/public_api"
+      ],
+      "@ansyn/overlays": [
+        "src/app/@ansyn/overlays/public_api"
+      ],
+      "@ansyn/context": [
+        "src/app/@ansyn/context/public_api"
+      ],
+      "@ansyn/menu": [
+        "src/app/@ansyn/menu/public_api"
+      ],
+      "@ansyn/status-bar": [
+        "src/app/@ansyn/status-bar/public_api"
+      ],
+      "@ansyn/core/*": [
+        "src/app/@ansyn/core/*"
+      ],
+      "@ansyn/imagery/*": [
+        "src/app/@ansyn/imagery/*"
+      ],
+      "@ansyn/menu-items/*": [
+        "src/app/@ansyn/menu-items/*"
+      ],
+      "@ansyn/map-facade/*": [
+        "src/app/@ansyn/map-facade/*"
+      ],
+      "@ansyn/plugins/*": [
+        "src/app/@ansyn/plugins/*"
+      ],
+      "@ansyn/menu/*": [
+        "src/app/@ansyn/menu/*"
+      ],
+      "@ansyn/overlays/*": [
+        "src/app/@ansyn/overlays/*"
+      ],
+      "@ansyn/status-bar/*": [
+        "src/app/@ansyn/status-bar/*"
+      ],
+      "@ansyn/context/*": [
+        "src/app/@ansyn/context/*"
+      ]
+    }
+  }
+}

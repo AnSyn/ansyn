@@ -3,11 +3,11 @@ import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/mod
 import XYZ from 'ol/source/xyz';
 import proj from 'ol/proj';
 import ImageLayer from 'ol/layer/image';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
+import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 

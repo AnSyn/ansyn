@@ -9,13 +9,13 @@ import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { OverlaysConfig, OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
-import { OverlayReducer, overlaysFeatureKey } from '@ansyn/core/overlays/reducers/overlays.reducer';
+import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
 import { HttpClientModule, HttpBackend  } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {

@@ -14,8 +14,11 @@
       "@ansyn/menu-items/*": [
         "src/app/@ansyn/menu-items/*"
       ],
-      "@ansyn/event-drops": [
-        "node_modules/@ansyn/event-drops"
+      "@ansyn/context": [
+        "dist/ansyn/context"
+      ],
+      "@ansyn/context/*": [
+        "dist/ansyn/context/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

@@ -9,7 +9,7 @@ import {
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
-} from '@ansyn/core/overlays/actions/overlays.actions';
+} from '@ansyn/overlays/actions/overlays.actions';
 import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade/actions/map.actions';
 import {
 	SetManualImageProcessing,
@@ -18,7 +18,7 @@ import {
 	UpdateOverlaysManualProcessArgs
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/core/overlays/reducers/overlays.reducer';
+import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import {
@@ -33,11 +33,10 @@ import {
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils/calc-extent';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
@@ -46,6 +45,8 @@ import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, s
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
 import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
 import { toastMessages } from '@ansyn/core/models/toast-messages';
+import { IAppState } from '../app.effects.module';
+import { isFullOverlay } from '@ansyn/core/utils/overlays';
 
 @Injectable()
 export class MapAppEffects {
@@ -141,7 +142,7 @@ export class MapAppEffects {
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.pipe(
-			filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay)),
+			filter((action: DisplayOverlayAction) => !isFullOverlay(action.payload.overlay)),
 			mergeMap((action: DisplayOverlayAction) => {
 				return [
 					new RequestOverlayByIDFromBackendAction({
@@ -344,10 +345,10 @@ export class MapAppEffects {
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
-		const isFull = OverlaysService.isFullOverlay(payload.overlay);
+		const isFull = isFullOverlay(payload.overlay);
 		const { overlay } = payload;
 		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
-		const isNotDisplayed = !(OverlaysService.isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
+		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
 		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
 	}
 

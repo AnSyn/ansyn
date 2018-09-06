@@ -13,9 +13,6 @@
       ],
       "@ansyn/imagery/*": [
         "dist/ansyn/imagery/*"
-      ],
-      "@ansyn/event-drops": [
-        "node_modules/@ansyn/event-drops"
       ]
     },
     "outDir": "../../../out-tsc/lib",

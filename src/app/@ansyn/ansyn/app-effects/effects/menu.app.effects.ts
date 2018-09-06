@@ -6,7 +6,7 @@ import { IAppState } from '../app.effects.module';
 import { Store } from '@ngrx/store';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
 import { MenuActionTypes, SetAutoClose } from '@ansyn/menu/actions/menu.actions';
-import { RedrawTimelineAction } from '@ansyn/core/overlays/actions/overlays.actions';
+import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
 import { selectSubMenu } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 
 @Injectable()

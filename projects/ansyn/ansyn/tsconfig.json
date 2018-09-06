@@ -2,11 +2,41 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@ansyn/*": [
-        "src/app/@ansyn/*"
+      "@ansyn/core": [
+        "dist/ansyn/core"
       ],
-      "@ansyn/event-drops": [
-        "node_modules/@ansyn/event-drops"
+      "@ansyn/core/*": [
+        "dist/ansyn/core/*"
+      ],
+      "@ansyn/menu-items": [
+        "dist/ansyn/menu-items"
+      ],
+      "@ansyn/menu-items/*": [
+        "dist/ansyn/menu-items/*"
+      ],
+      "@ansyn/map-facade": [
+        "dist/ansyn/map-facade"
+      ],
+      "@ansyn/map-facade/*": [
+        "dist/ansyn/map-facade/*"
+      ],
+      "@ansyn/status-bar": [
+        "dist/ansyn/status-bar"
+      ],
+      "@ansyn/status-bar/*": [
+        "dist/ansyn/status-bar/*"
+      ],
+      "@ansyn/imagery": [
+        "dist/ansyn/imagery"
+      ],
+      "@ansyn/imagery/*": [
+        "dist/ansyn/imagery/*"
+      ],
+      "@ansyn/plugins": [
+        "dist/ansyn/plugins"
+      ],
+      "@ansyn/plugins/*": [
+        "dist/ansyn/plugins/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

@@ -7,6 +7,12 @@
       ],
       "@ansyn/core/*": [
         "src/app/@ansyn/core/*"
+      ],
+      "@ansyn/context": [
+        "src/app/@ansyn/context/public_api"
+      ],
+      "@ansyn/context/*": [
+        "src/app/@ansyn/context/*"
       ]
     }
   }

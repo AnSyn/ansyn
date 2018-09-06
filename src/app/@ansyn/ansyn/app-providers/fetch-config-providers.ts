@@ -1,4 +1,4 @@
-import { OverlaysConfig } from '@ansyn/core/overlays/services/overlays.service';
+import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
@@ -11,12 +11,12 @@ import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 import { CoreConfig } from '@ansyn/core/models/core.config';
-import { PlanetOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet-source-provider';
-import { ContextConfig } from '@ansyn/core/context/models/context.config';
+import { ContextConfig } from '@ansyn/context/models/context.config';
 import { LoginConfig } from '../../../app/login/services/login-config.service';
-import { OpenAerialOverlaysSourceConfig } from '@ansyn/ansyn/app-providers/overlay-source-providers/open-aerial-source-provider';
-import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
 import { configuration } from '../../../../configuration/configuration';
+import { OpenAerialOverlaysSourceConfig } from './overlay-source-providers/open-aerial-source-provider';
+import { PlanetOverlaysSourceConfig } from './overlay-source-providers/planet/planet-source-provider';
+import { MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers/map-source-providers-config';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -48,7 +48,10 @@ export const getProviders = (conf): any[] => {
 			useValue: conf.toolsConfig
 		}, {
 			provide: OverlaysConfig,
-			useValue: conf.overlaysConfig
+			useValue: {
+				...configuration.overlaysConfig,
+				...conf.overlaysConfig
+			}
 		},
 		{
 			provide: ContextConfig,

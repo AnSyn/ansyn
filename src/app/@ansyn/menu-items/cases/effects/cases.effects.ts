@@ -197,6 +197,26 @@ export class CasesEffects {
 		catchError(() => EMPTY)
 	);
 
+	@Effect()
+	onCopyShareCaseLink$ = this.actions$.pipe(
+		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
+		filter(action => Boolean(action.payload.shareCaseAsQueryParams)),
+		withLatestFrom(this.store.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
+			let sCase = state.entities[action.payload.caseId];
+			if (!sCase) {
+				if (state.selectedCase.id === action.payload.caseId) {
+					sCase = state.selectedCase;
+				}
+			}
+			return sCase;
+		}),
+		map((sCase: ICase) => {
+			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
+			copyFromContent(shareLink);
+			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+		})
+	);
+
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,
 				protected store: Store<ICasesState>,

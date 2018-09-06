@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlaySourceTypeNoticeComponent } from './overlay-source-type-notice.component';
-import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 describe('OverlaySourceTypeNoticeComponent', () => {
 	let component: OverlaySourceTypeNoticeComponent;
@@ -17,14 +17,12 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 			declarations: [OverlaySourceTypeNoticeComponent],
 			providers: [
 				{
-					provide: OverlaysService, useValue: {
-						config: {
-							sourceTypeNotices: {
-								'SRC_TYPE_1': {
-									Default: 'DDD',
-									'SENSOR_TYPE_1': 'blublublu',
-									'SENSOR_TYPE_2': 'My year is $year'
-								}
+					provide: mapFacadeConfig, useValue: {
+						sourceTypeNotices: {
+							'SRC_TYPE_1': {
+								Default: 'DDD',
+								'SENSOR_TYPE_1': 'blublublu',
+								'SENSOR_TYPE_2': 'My year is $year'
 							}
 						}
 					}

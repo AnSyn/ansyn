@@ -7,11 +7,11 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { overlaysStateSelector } from '@ansyn/core/overlays/reducers/overlays.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
-import { DisplayOverlayFromStoreAction } from '@ansyn/core/overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
 import { tap, filter, withLatestFrom, map } from 'rxjs/operators';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { AutoSubscription } from 'auto-subscriptions';

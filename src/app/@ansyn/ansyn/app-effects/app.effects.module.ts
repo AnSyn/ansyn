@@ -11,7 +11,7 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { MenuAppEffects } from './effects/menu.app.effects';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
-import { IOverlaysState } from '@ansyn/core/overlays/reducers/overlays.reducer';
+import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
@@ -20,6 +20,7 @@ import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { ContextAppEffects } from './effects/context.app.effects';
 
 export interface IAppState {
 	core: ICoreState;
@@ -47,7 +48,8 @@ export interface IAppState {
 			ToolsAppEffects,
 			CoreAppEffects,
 			UpdateCaseAppEffects,
-			SelectCaseAppEffects
+			SelectCaseAppEffects,
+			ContextAppEffects
 		])
 	]
 })

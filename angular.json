@@ -547,6 +547,48 @@
           }
         }
       }
+    },
+
+    "@ansyn/overlays":  {
+      "root": "projects/ansyn/overlays",
+      "sourceRoot": "src/app/@ansyn/overlays",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/overlays/tsconfig.json",
+            "project": "projects/ansyn/overlays/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/overlays/ng-package.json"
+            }
+          }
+        }
+      }
+    },
+
+    "@ansyn/context":  {
+      "root": "projects/ansyn/context",
+      "sourceRoot": "src/app/@ansyn/context",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/context/tsconfig.json",
+            "project": "projects/ansyn/context/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/context/ng-package.json"
+            }
+          }
+        }
+      }
     }
 
   },

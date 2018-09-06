@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit, ViewChild } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
@@ -9,9 +9,8 @@ import { ICase } from '../../models/case.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
 import { ICasePreview } from '../../models/case.model';
-import { selectContextsArray } from '@ansyn/core/context/reducers/context.reducer';
+import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
 import { IContext } from '@ansyn/core/models/context.model';
-import { catchError } from 'rxjs/internal/operators';
 import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
 
 const animationsDuring = '0.2s';

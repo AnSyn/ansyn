@@ -2,18 +2,20 @@
   "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
-    "@ansyn/core": [
-      "src/app/@ansyn/core/public_api"
-    ],
-    "@ansyn/core/*": [
-      "src/app/@ansyn/core/*"
-    ],
-    "@ansyn/imagery": [
-      "src/app/@ansyn/imagery/public_api.ts"
-    ],
-    "@ansyn/imagery/*": [
-      "src/app/@ansyn/imagery/*"
-    ],
+    "paths": {
+      "@ansyn/core": [
+        "src/app/@ansyn/core/public_api"
+      ],
+      "@ansyn/core/*": [
+        "src/app/@ansyn/core/*"
+      ],
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery/public_api.ts"
+      ],
+      "@ansyn/imagery/*": [
+        "src/app/@ansyn/imagery/*"
+      ]
+    },
     "target": "es5",
     "sourceMap": true
   },

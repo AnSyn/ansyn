@@ -12,7 +12,7 @@ export const constConfiguration = {
 		needToUseLayerExtent: false
 	},
 	configPath: 'assets/config/app.config.json',
-	overlays: {
+	overlaysConfig: {
 		overlayOverviewFailed: 'assets/icons/preview-failed-to-find-overlay-preview.svg'
 	},
 	ansynMenuItems: [

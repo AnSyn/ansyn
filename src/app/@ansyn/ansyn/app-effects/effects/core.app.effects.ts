@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import {
@@ -9,7 +9,8 @@ import {
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
 	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction
+	SetPresetOverlaysAction,
+	SetRemovedOverlayIdsCount
 } from '@ansyn/core/actions/core.actions';
 import {
 	DisplayOverlayAction,
@@ -17,15 +18,16 @@ import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes
-} from '@ansyn/core/overlays/actions/overlays.actions';
-import { coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { overlaysStateSelector } from '@ansyn/core/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays/actions/overlays.actions';
+import { coreStateSelector, selectRemovedOverlays } from '@ansyn/core/reducers/core.reducer';
+import { overlaysStateSelector, selectOverlaysMap } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IAppState } from '../app.effects.module';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CoreAppEffects {
@@ -101,6 +103,14 @@ export class CoreAppEffects {
 		})
 		.filter(Boolean)
 		.map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId }));
+
+	@Effect()
+	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
+		map(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
+			const removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
+			return new SetRemovedOverlayIdsCount(removedOverlaysCount);
+		})
+	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

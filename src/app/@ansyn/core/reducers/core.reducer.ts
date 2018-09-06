@@ -29,6 +29,7 @@ export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: IOverlay[];
 	removedOverlaysIds: string[];
+	removedOverlaysIdsCount: number;
 	removedOverlaysVisibility: boolean;
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
@@ -43,6 +44,7 @@ export const coreInitialState: ICoreState = {
 	toastMessage: null,
 	favoriteOverlays: [],
 	removedOverlaysIds: [],
+	removedOverlaysIdsCount: 0,
 	removedOverlaysVisibility: true,
 	presetOverlays: [],
 	alertMsg: new Map([
@@ -133,6 +135,9 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_AUTO_SAVE:
 			return { ...state, autoSave: action.payload };
 
+		case CoreActionTypes.SET_REMOVED_OVERLAY_IDS_COUNT:
+			return { ...state, removedOverlaysIdsCount: action.payload };
+
 		default:
 			return state;
 	}
@@ -148,4 +153,4 @@ export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersS
 export const selectRegion: MemoizedSelector<any, any>  = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectEnableCopyOriginalOverlayDataFlag: MemoizedSelector<any, any>  = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
 export const selectAutoSave: MemoizedSelector<any, boolean>  = createSelector(coreStateSelector, (core) => core.autoSave);
-
+export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number>  = createSelector(coreStateSelector, (core) => core.removedOverlaysIdsCount);

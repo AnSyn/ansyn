@@ -8,8 +8,10 @@ import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducer
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/operators';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { configuration } from '../../../../../configuration/configuration';
+import { ImageryCommunicatorService } from '../../../imagery/communicator-service/communicator.service';
+import { selectActiveMapId } from '../../../map-facade/reducers/map.reducer';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -29,15 +31,23 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public loading = false;
 	public errorSrc = configuration.overlays.overlayOverviewFailed;
 
+	public kulolo = 1.56;
 	protected topElement = this.el.nativeElement.parentElement;
 
 	public get const() {
-		return overlayOverviewComponentConstants
+		return overlayOverviewComponentConstants;
 	}
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
+
+	@AutoSubscription
+	activeMapId$: Observable<string> = this.store$.pipe(
+		select(selectActiveMapId),
+		tap((activeMapId) => console.log(activeMapId)),
+		distinctUntilChanged()
+	);
 
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
@@ -54,7 +64,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	constructor(
 		public store$: Store<IOverlaysState>,
 		protected el: ElementRef,
-		protected translate: TranslateService
+		protected translate: TranslateService,
+		protected imageryCommunicatorService: ImageryCommunicatorService
 	) {
 	}
 

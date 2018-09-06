@@ -4,7 +4,7 @@ import 'rxjs/add/observable/forkJoin';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
-import { Actions } from '@ngrx/effects';
+import { Actions, ofType } from '@ngrx/effects';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
@@ -24,6 +24,7 @@ import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
+import { filter, switchMap, withLatestFrom, tap, map, mergeMap, retry, catchError } from 'rxjs/operators';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -43,16 +44,16 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	protected thresholdDegrees = 0.1;
 
 	@AutoSubscription
-	pointNorth$ = this.actions$
-		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
-		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
+	pointNorth$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id),
+		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
 			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
-		})
-		.filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+		}),
+		filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
-		})
-		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+		}),
+		switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return this.pointNorth()
 				.do(virtualNorth => {
 					this.communicator.setVirtualNorth(virtualNorth);
@@ -67,21 +68,23 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 						}
 					}
 				});
-		});
+		})
+	);
 
 	@AutoSubscription
-	backToWorldSuccessSetNorth$ = this.actions$
-		.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
-		.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)
-		.withLatestFrom(this.store$.select(statusBarStateSelector))
-		.do(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+	backToWorldSuccessSetNorth$ = this.actions$.pipe(
+		ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS),
+		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
+		withLatestFrom(this.store$.select(statusBarStateSelector)),
+		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
 			this.communicator.setVirtualNorth(0);
 			switch (comboBoxesProperties.orientation) {
 				case 'Align North':
 				case 'Imagery Perspective':
 					this.communicator.setRotation(0);
 			}
-		});
+		})
+	);
 
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
@@ -91,8 +94,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	getCorrectedNorth(): Observable<INorthData> {
-		return this.getProjectedCenters()
-			.map((projectedCenters: Point[]): INorthData => {
+		return this.getProjectedCenters().pipe(
+			map((projectedCenters: Point[]): INorthData => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
@@ -100,17 +103,18 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				const view = (<BaseImageryMap>this.iMap).mapObject.getView();
 				const actualNorth = northOffsetRad + view.getRotation();
 				return { northOffsetRad, northOffsetDeg, actualNorth };
-			})
-			.mergeMap((northData: INorthData) => {
+			}),
+			mergeMap((northData: INorthData) => {
 				this.iMap.mapObject.getView().setRotation(northData.actualNorth);
 				this.iMap.mapObject.renderSync();
 				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
 					return Observable.throw({ result: northData.actualNorth });
 				}
 				return Observable.of(northData.actualNorth);
-			})
-			.retry(this.maxNumberOfRetries)
-			.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
+			}),
+			retry(this.maxNumberOfRetries),
+			catchError((e) => e.result ? Observable.of(e.result) : Observable.throw(e))
+		);
 	}
 
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
@@ -140,18 +144,19 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	pointNorth(): Observable<any> {
 		this.communicator.updateSize();
 		const currentRotation = this.iMap.mapObject.getView().getRotation();
-		return Observable.of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false })))
-			.mergeMap(() => this.getCorrectedNorth())
-			.do(() => {
+		return Observable.of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false }))).pipe(
+			mergeMap(() => this.getCorrectedNorth()),
+			tap(() => {
 				this.iMap.mapObject.getView().setRotation(currentRotation);
 				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
-			})
-			.catch(reason => {
+			}),
+			catchError(reason => {
 				const error = `setCorrectedNorth failed: ${reason}`;
 				this.loggerService.warn(error);
 				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
 				return Observable.throw(error);
-			});
+			})
+		);
 	}
 
 }

@@ -7,7 +7,7 @@ import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/pro
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/core/overlays/actions/overlays.actions';
 import { SetLayoutAction } from '@ansyn/core/actions/core.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';

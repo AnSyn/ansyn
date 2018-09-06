@@ -21,7 +21,7 @@ import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/acti
 import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';

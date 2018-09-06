@@ -13,8 +13,8 @@ import { Inject } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { select, Store } from '@ngrx/store';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/core/overlays/actions/overlays.actions';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import {
 	IMarkUpData,
@@ -23,8 +23,8 @@ import {
 	overlaysStateSelector,
 	selectFilteredOveralys,
 	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+} from '@ansyn/core/overlays/reducers/overlays.reducer';
+import { ExtendMap } from '@ansyn/core/overlays/reducers/extendedMap.class';
 import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';

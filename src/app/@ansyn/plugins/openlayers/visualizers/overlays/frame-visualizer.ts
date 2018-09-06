@@ -12,7 +12,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 import {
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/core/overlays/actions/overlays.actions';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({

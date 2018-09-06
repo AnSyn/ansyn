@@ -27,7 +27,7 @@ import {
 	MapActionTypes,
 	PinLocationModeTriggerAction
 } from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/core/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';

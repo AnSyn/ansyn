@@ -380,6 +380,50 @@
         }
       }
     },
+
+
+    "@ansyn/map-facade": {
+      "root": "projects/ansyn/map-facade",
+      "sourceRoot": "projects/ansyn/map-facade/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/map-facade/tsconfig.json",
+            "project": "projects/ansyn/map-facade/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/map-facade/ng-package.json"
+            }
+          }
+        }
+      }
+    },
+
+    "@ansyn/ansyn": {
+      "root": "projects/ansyn/ansyn",
+      "sourceRoot": "projects/ansyn/ansyn/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/ansyn/tsconfig.json",
+            "project": "projects/ansyn/ansyn/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/ansyn/ng-package.json"
+            }
+          }
+        }
+      }
+    },
+
     "@ansyn/core": {
       "root": "projects/ansyn/core",
       "sourceRoot": "src/app/@ansyn/core",
@@ -415,46 +459,6 @@
           "configurations": {
             "production": {
               "project": "projects/ansyn/imagery/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/ansyn/imagery/src/test.ts",
-            "tsConfig": "projects/ansyn/imagery/tsconfig.spec.json",
-            "karmaConfig": "projects/ansyn/imagery/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ansyn/imagery/tsconfig.lib.json",
-              "projects/ansyn/imagery/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "@ansyn/ansyn": {
-      "root": "projects/ansyn/ansyn",
-      "sourceRoot": "projects/ansyn/ansyn/src",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/ansyn/ansyn/tsconfig.json",
-            "project": "projects/ansyn/ansyn/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "projects/ansyn/ansyn/ng-package.json"
             }
           }
         }

@@ -4,14 +4,14 @@ import {
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceConfig
 } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
-import { IOverlay } from '@ansyn/overlays/models/overlay.model';
+import { IOverlay } from '@ansyn/core/overlays/models/overlay.model';
 import { Observable } from 'rxjs/Rx';
 import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Injectable } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
 
 const overlays: IOverlaysFetchData = {
 	data: [

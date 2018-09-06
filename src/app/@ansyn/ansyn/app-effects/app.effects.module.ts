@@ -11,7 +11,7 @@ import { IMapState } from '@ansyn/map-facade/reducers/map.reducer';
 import { MenuAppEffects } from './effects/menu.app.effects';
 import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
-import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState } from '@ansyn/core/overlays/reducers/overlays.reducer';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';

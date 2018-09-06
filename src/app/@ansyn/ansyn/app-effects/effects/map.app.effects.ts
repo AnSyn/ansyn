@@ -9,7 +9,7 @@ import {
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/core/overlays/actions/overlays.actions';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade/actions/map.actions';
 import {
@@ -19,7 +19,7 @@ import {
 	UpdateOverlaysManualProcessArgs
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/core/overlays/reducers/overlays.reducer';
 import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
 import {
@@ -34,7 +34,7 @@ import {
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils/calc-extent';

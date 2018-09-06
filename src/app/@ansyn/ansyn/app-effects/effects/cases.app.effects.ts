@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/core/overlays/actions/overlays.actions';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -19,7 +19,7 @@ import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 
 @Injectable()
 export class CasesAppEffects {

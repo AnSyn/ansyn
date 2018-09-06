@@ -17,9 +17,9 @@ import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/core/overlays/actions/overlays.actions';
 import { coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+import { overlaysStateSelector } from '@ansyn/core/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { IOverlaysConfig } from '@ansyn/overlays/models/overlays.config';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { IOverlaysConfig } from '@ansyn/core/overlays/models/overlays.config';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',

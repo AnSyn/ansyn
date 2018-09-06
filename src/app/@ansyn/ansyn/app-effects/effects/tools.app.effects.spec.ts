@@ -22,7 +22,7 @@ import {
 	SetAutoImageProcessingSuccess, SetMeasureDistanceToolState, SetPinLocationModeAction, ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { ICase } from '@ansyn/core/models/case.model';
-import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction } from '@ansyn/core/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
 	ActiveMapChangedAction

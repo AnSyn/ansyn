@@ -13,14 +13,14 @@ import { SetContextParamsAction } from 'src/app/@ansyn/core/context/actions/cont
 import { IContext } from '@ansyn/core/models/context.model';
 import { ICase } from '@ansyn/core/models/case.model';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { IStartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { IStartAndEndDate } from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
 import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { ContextService } from 'src/app/@ansyn/core/context/services/context.service';
 import { Store } from '@ngrx/store';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 
 @Injectable()
 export class ContextEffects {

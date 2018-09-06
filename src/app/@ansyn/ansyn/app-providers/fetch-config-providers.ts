@@ -1,4 +1,4 @@
-import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysConfig } from '@ansyn/core/overlays/services/overlays.service';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';

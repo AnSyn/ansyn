@@ -3,7 +3,7 @@ import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/overlays/models/base-overlay-source-provider.model';
+} from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { sortByDateDesc } from '@ansyn/core/utils/sorting';

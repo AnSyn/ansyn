@@ -5,7 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import { UpdateMapSizeAction } from '@ansyn/map-facade/actions/map.actions';
-import { RedrawTimelineAction } from '@ansyn/overlays/actions/overlays.actions';
+import { RedrawTimelineAction } from '@ansyn/core/overlays/actions/overlays.actions';
 import { ContainerChangedTriggerAction, SetAutoClose } from '@ansyn/menu/actions/menu.actions';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';

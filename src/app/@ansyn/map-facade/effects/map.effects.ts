@@ -7,7 +7,6 @@ import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { CaseGeoFilter, ICaseMapState } from '@ansyn/core/models/case.model';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import * as turf from '@turf/turf';
 import { intersect, polygon } from '@turf/turf';
 
@@ -36,7 +35,7 @@ import {
 	SetOverlaysCriteriaAction
 } from '@ansyn/core/actions/core.actions';
 import { AlertMsgTypes, selectRegion } from '@ansyn/core/reducers/core.reducer';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
@@ -198,7 +197,7 @@ export class MapEffects {
 			}),
 			filter(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => {
-				const disabledMap = communicator.ActiveMap instanceof OpenLayersDisabledMap;
+				const disabledMap = communicator.mapType === 'disabledOpenLayersMap';
 				const updatedMapsList = [...mapsList];
 				updatedMapsList.forEach(
 					(map) => {

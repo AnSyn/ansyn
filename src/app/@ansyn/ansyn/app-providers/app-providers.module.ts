@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseOverlaySourceProvider } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider } from '@ansyn/core/overlays/models/base-overlay-source-provider.model';
 import {
 	IMultipleOverlaysSources,
 	MultipleOverlaysSource,

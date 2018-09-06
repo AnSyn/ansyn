@@ -18,13 +18,13 @@ import {
 	OverlaysActionTypes,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/core/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
 	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
+} from '@ansyn/core/overlays/reducers/overlays.reducer';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes,
@@ -45,7 +45,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 import { IFilterModel } from '@ansyn/core/models/IFilterModel';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
 import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resolver';
 import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';

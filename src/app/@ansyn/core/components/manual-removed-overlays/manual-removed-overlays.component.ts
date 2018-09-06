@@ -5,7 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap, withLatestFrom, filter, map } from 'rxjs/internal/operators';
 import { IOverlay } from '../../models/overlay.model';
-import { selectOverlaysArray, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
+import { selectOverlaysArray, selectOverlaysMap } from '../../overlays/reducers/overlays.reducer';
 import { ICase } from '../../models/case.model';
 import { combineLatest, Observable } from 'rxjs';
 

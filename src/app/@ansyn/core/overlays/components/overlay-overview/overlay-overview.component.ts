@@ -9,7 +9,7 @@ import { overlayOverviewComponentConstants } from './overlay-overview.component.
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { configuration } from '../../../../../configuration/configuration';
+import { configuration } from '../../../../../../configuration/configuration';
 
 @Component({
 	selector: 'ansyn-overlay-overview',

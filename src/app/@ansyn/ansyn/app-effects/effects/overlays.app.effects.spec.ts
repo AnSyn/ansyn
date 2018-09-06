@@ -8,8 +8,8 @@ import {
 	DisplayOverlaySuccessAction,
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
-} from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+} from '@ansyn/core/overlays/actions/overlays.actions';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import {
 	MarkUpClass,
 	OverlayReducer,
@@ -18,7 +18,7 @@ import {
 	overlaysStateSelector,
 	selectDropMarkup,
 	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
+} from '@ansyn/core/overlays/reducers/overlays.reducer';
 import { Observable } from 'rxjs';
 import {
 	IToolsState,

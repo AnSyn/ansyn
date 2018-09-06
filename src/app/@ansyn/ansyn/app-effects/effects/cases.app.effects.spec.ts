@@ -2,7 +2,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/core/overlays/actions/overlays.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
@@ -16,7 +16,7 @@ import { ICase, CaseGeoFilter } from '@ansyn/core/models/case.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs';
-import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey } from '@ansyn/core/overlays/reducers/overlays.reducer';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { contextFeatureKey, ContextReducer } from '@ansyn/core/context/reducers/context.reducer';
 import { ContextService } from '@ansyn/core/context/services/context.service';
@@ -27,7 +27,7 @@ import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service'
 import { ContextConfig } from '@ansyn/core/context/models/context.config';
 import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

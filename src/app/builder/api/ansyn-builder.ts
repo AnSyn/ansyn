@@ -21,7 +21,7 @@ import { FiltersModule } from '@ansyn/menu-items/filters/filters.module';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { AppEffectsModule } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { CoreModule } from '@ansyn/core/core.module';
-import { OverlaysModule } from '@ansyn/overlays/overlays.module';
+import { OverlaysModule } from '@ansyn/core/overlays/overlays.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
 import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';

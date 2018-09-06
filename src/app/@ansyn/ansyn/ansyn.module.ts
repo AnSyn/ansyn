@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
-import { OverlaysModule } from '@ansyn/overlays/overlays.module';
+import { OverlaysModule } from '@ansyn/core/overlays/overlays.module';
 import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';

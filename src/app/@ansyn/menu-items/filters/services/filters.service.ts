@@ -8,7 +8,7 @@ import { CaseFilters } from '@ansyn/core/models/case.model';
 import { IFilterModel } from '@ansyn/core/models/IFilterModel';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
 import { cloneDeep } from 'lodash';
 import { IEnumFiled, EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 

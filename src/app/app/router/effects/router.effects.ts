@@ -7,9 +7,9 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '../actions/router.actions';
 import { Router } from '@angular/router';
-import { ISetStatePayload, SetStateAction } from 'src/app/app/router/actions/router.actions';
+import { ISetStatePayload, SetStateAction } from '../actions/router.actions';
 import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IRouterState, routerStateSelector } from 'src/app/app/router/reducers/router.reducer';
+import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import {
 	CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction, SelectCaseAction

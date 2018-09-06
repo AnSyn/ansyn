@@ -11,7 +11,7 @@ import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer
 import { IMapsLayout } from '@ansyn/core/models/i-maps-layout';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
+import { ActiveImageryMouseEnter } from '../../actions/map.actions';
 import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
 import { filter, tap } from 'rxjs/operators';
 

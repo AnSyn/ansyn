@@ -433,7 +433,7 @@
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/ansyn/core/tsconfig.lib.json",
+            "tsConfig": "projects/ansyn/core/tsconfig.json",
             "project": "projects/ansyn/core/ng-package.json"
           },
           "configurations": {
@@ -444,6 +444,7 @@
         }
       }
     },
+
     "@ansyn/imagery": {
       "root": "projects/ansyn/imagery",
       "sourceRoot": "src/app/@ansyn/imagery",
@@ -453,7 +454,7 @@
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/ansyn/imagery/tsconfig.lib.json",
+            "tsConfig": "projects/ansyn/imagery/tsconfig.json",
             "project": "projects/ansyn/imagery/ng-package.json"
           },
           "configurations": {

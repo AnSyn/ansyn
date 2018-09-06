@@ -12,12 +12,14 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "types": [],
-    "lib": [
-      "es2017",
-      "es2017.object",
-      "es2016.array.include",
-      "dom"
-    ]
+    "paths": {
+      "@ansyn/core": [
+        "./dist/ansyn/core"
+      ],
+      "@ansyn/core/*": [
+        "./dist/ansyn/core/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

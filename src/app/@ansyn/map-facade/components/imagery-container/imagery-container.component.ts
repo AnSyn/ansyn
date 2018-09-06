@@ -3,10 +3,10 @@ import { Store } from '@ngrx/store';
 import { ActiveImageryMouseEnter, ActiveImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
 
 @Component({

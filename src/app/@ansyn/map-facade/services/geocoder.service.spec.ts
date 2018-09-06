@@ -7,8 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { asyncData } from '@ansyn/core/test/async-observable-helpers';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { mapFacadeConfig } from '../models/map-facade.config';
+import { IMapFacadeConfig } from '../models/map-config.model';
 
 describe('GeocoderService', () => {
 	let me;

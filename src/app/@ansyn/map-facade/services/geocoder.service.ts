@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { IMapFacadeConfig, IMapSearchConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
+import { mapFacadeConfig } from '../models/map-facade.config';
 
 @Injectable()
 export class GeocoderService {

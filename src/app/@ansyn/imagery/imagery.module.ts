@@ -12,7 +12,7 @@ import { createConfig } from './providers/config';
 import { createPluginsCollection } from './providers/plugins-collection';
 import { IBaseImageryPluginConstructor } from './model/base-imagery-plugin';
 import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule } from '@ansyn/core';
 
 export interface ImageryMetaData {
 	maps: IBaseImageryMapConstructor[],

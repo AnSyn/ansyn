@@ -8,11 +8,11 @@
       "@ansyn/core/*": [
         "dist/ansyn/core/*"
       ],
+      "@ansyn/imagery": [
+        "dist/ansyn/imagery"
+      ],
       "@ansyn/imagery/*": [
         "dist/ansyn/imagery/*"
-      ],
-      "@ansyn/map-facade/*": [
-        "src/app/@ansyn/map-facade/*"
       ],
       "@ansyn/event-drops": [
         "node_modules/@ansyn/event-drops"

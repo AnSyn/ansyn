@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { GeocoderService } from '@ansyn/map-facade/services/geocoder.service';
+import { GeocoderService } from '../../services/geocoder.service';
 import { Point } from 'geojson';
 import { Subscription } from 'rxjs/Subscription';
 

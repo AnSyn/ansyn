@@ -5,9 +5,9 @@ import { CoreModule } from '@ansyn/core/core.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 

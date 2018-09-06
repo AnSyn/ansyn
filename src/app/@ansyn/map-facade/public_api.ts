@@ -4,5 +4,5 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/fromPromise';
 
-export { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
-export { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+export { MapFacadeModule } from './map-facade.module';
+export { MapFacadeService } from './services/map-facade.service';

@@ -29,10 +29,10 @@
     "testCompile": "cd build && gulp testCompile"
   },
   "dependencies": {
-    "@angular/common": "^6.0.3",
-    "@angular/core": "^6.0.3",
-    "@angular/compiler": "^6.0.3",
     "@angular/animations": "^6.0.3",
+    "@angular/common": "^6.0.3",
+    "@angular/compiler": "^6.0.3",
+    "@angular/core": "^6.0.3",
     "@angular/forms": "^6.0.3",
     "@angular/http": "^6.0.3",
     "@angular/platform-browser": "^6.0.3",

@@ -23,7 +23,7 @@ import {
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
 	SynchronizeMapsAction
-} from '@ansyn/map-facade/actions/map.actions';
+} from '../actions/map.actions';
 import {
 	AddAlertMsg,
 	BackToWorldSuccess,

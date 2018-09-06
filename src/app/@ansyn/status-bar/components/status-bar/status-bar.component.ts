@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { selectLayout } from '@ansyn/core/reducers/core.reducer';
 import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { CopySelectedCaseLinkAction } from '@ansyn/status-bar/actions/status-bar.actions';
+import { CopySelectedCaseLinkAction } from '../../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-status-bar',

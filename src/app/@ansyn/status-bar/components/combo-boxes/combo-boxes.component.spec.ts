@@ -8,7 +8,7 @@ import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-tim
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { ClickOutsideDirective } from '@ansyn/core/directives/click-outside.directive';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { MockComponent } from '@ansyn/core/test/mock-component';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
 

@@ -1,8 +1,8 @@
 import { StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IComboBoxesProperties } from '../models/combo-boxes.model';
-import { StatusBarActions } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { StatusBarActions } from '../actions/status-bar.actions';
+import { SearchMode, SearchModeEnum } from '../models/search-mode.enum';
 
 export const statusBarToastMessages = {
 	showLinkCopyToast: 'Link copied to clipboard',

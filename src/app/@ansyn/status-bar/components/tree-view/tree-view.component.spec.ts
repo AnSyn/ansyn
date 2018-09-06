@@ -2,16 +2,15 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 
 import { TreeViewComponent } from './tree-view.component';
 import { TreeviewModule } from 'ngx-treeview';
-import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
 	IStatusBarState,
 	StatusBarInitialState,
 	statusBarStateSelector
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+} from '../../reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
 import { IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
 import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
@@ -41,12 +40,7 @@ describe('TreeViewComponent', () => {
 					useValue: { toolTips: {}, dataInputFiltersConfig: {} }
 				},
 				provideMockActions(() => actions),
-				{
-					provide: CasesService,
-					useValue: {
-						defaultCase: { id: 'defualtId' }
-					}
-				}]
+				]
 		})
 			.compileComponents();
 	}));

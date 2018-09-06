@@ -5,10 +5,10 @@ import {
 	GoNextPresetOverlay
 } from '@ansyn/core/actions/core.actions';
 import { Store } from '@ngrx/store';
-import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { ExpandAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
-import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+import { IStatusBarState } from '../../reducers/status-bar.reducer';
+import { ExpandAction } from '../../actions/status-bar.actions';
+import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
+import { StatusBarConfig } from '../../models/statusBar.config';
 
 @Component({
 	selector: 'ansyn-navigation-bar',

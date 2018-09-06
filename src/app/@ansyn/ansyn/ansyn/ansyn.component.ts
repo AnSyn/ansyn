@@ -8,6 +8,7 @@ import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
 import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { IAppState } from '../app-effects/app.effects.module';
+import * as packageJson from 'root/package.json';
 
 @Component({
 	selector: 'ansyn-app',
@@ -26,6 +27,7 @@ export class AnsynComponent {
 		.filter(Boolean)
 		.map(MapFacadeService.activeMap)
 		.filter(Boolean);
+	version = (<any> packageJson).version;
 
 	constructor(protected store$: Store<IAppState>) {
 	}

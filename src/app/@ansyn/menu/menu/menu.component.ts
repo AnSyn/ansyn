@@ -32,11 +32,10 @@ import {
 	selectEntitiesMenuItems,
 	selectIsPinned,
 	selectSelectedMenuItem
-} from '@ansyn/menu/reducers/menu.reducer';
+} from '../reducers/menu.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import * as packageJson from 'root/package.json';
 
 const animations: any[] = [
 	trigger(
@@ -89,7 +88,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	@ViewChild('container') container: ElementRef;
-	@Input() version = (<any> packageJson).version;
+	@Input() version;
 
 	@AutoSubscription
 	isPinned$ = this.store

@@ -381,6 +381,26 @@
       }
     },
 
+    "@ansyn/ansyn": {
+      "root": "projects/ansyn/ansyn",
+      "sourceRoot": "projects/ansyn/ansyn/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/ansyn/tsconfig.json",
+            "project": "projects/ansyn/ansyn/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/ansyn/ng-package.json"
+            }
+          }
+        }
+      }
+    },
 
     "@ansyn/map-facade": {
       "root": "projects/ansyn/map-facade",
@@ -397,27 +417,6 @@
           "configurations": {
             "production": {
               "project": "projects/ansyn/map-facade/ng-package.json"
-            }
-          }
-        }
-      }
-    },
-
-    "@ansyn/ansyn": {
-      "root": "projects/ansyn/ansyn",
-      "sourceRoot": "projects/ansyn/ansyn/src",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/ansyn/ansyn/tsconfig.json",
-            "project": "projects/ansyn/ansyn/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "projects/ansyn/ansyn/ng-package.json"
             }
           }
         }
@@ -464,7 +463,29 @@
           }
         }
       }
+    },
+
+    "@ansyn/menu":  {
+      "root": "projects/ansyn/menu",
+      "sourceRoot": "src/app/@ansyn/menu",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ansyn/menu/tsconfig.json",
+            "project": "projects/ansyn/menu/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ansyn/menu/ng-package.prod.json"
+            }
+          }
+        }
+      }
     }
+
   },
   "defaultProject": "ansyn",
   "schematics": {

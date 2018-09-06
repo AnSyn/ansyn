@@ -1,8 +1,8 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { getTimeFormat } from '@ansyn/core/utils/time';
+import { IOverlay } from '../../../models/overlay.model';
+import { getTimeFormat } from '../../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';

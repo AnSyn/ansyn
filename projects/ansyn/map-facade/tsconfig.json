@@ -2,11 +2,14 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@ansyn/imagery/*": [
-        "dist/ansyn/imagery/*"
+      "@ansyn/core": [
+        "dist/ansyn/core"
       ],
       "@ansyn/core/*": [
         "dist/ansyn/core/*"
+      ],
+      "@ansyn/imagery/*": [
+        "dist/ansyn/imagery/*"
       ],
       "@ansyn/map-facade/*": [
         "src/app/@ansyn/map-facade/*"

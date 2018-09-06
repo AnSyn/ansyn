@@ -36,7 +36,6 @@ import {
 } from '@ansyn/core/actions/core.actions';
 import { AlertMsgTypes, selectRegion } from '@ansyn/core/reducers/core.reducer';
 import { OverlaysService } from '@ansyn/core/overlays/services/overlays.service';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
@@ -207,7 +206,7 @@ export class MapEffects {
 						}
 					});
 				this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-				return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+				return Observable.fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
 					.map(() => new BackToWorldSuccess(payload));
 			})
 		);

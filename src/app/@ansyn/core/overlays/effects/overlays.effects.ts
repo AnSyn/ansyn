@@ -18,14 +18,14 @@ import {
 import { OverlaysService } from '../services/overlays.service';
 import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
-import { IOverlay } from '../models/overlay.model';
+import { IOverlay } from '../../models/overlay.model';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
-import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '@ansyn/core/reducers/core.reducer';
-import { BackToWorldView, UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
+import { IOverlaysFetchData } from '../../models/overlay.model';
+import { coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '../../reducers/core.reducer';
+import { BackToWorldView, UpdateOverlaysCountAction } from '../../actions/core.actions';
 import { map } from 'rxjs/operators';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '../../services/logger.service';
 
 @Injectable()
 export class OverlaysEffects {

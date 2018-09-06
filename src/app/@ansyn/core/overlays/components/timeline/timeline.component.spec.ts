@@ -6,8 +6,8 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reduce
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
-import { createStore, IStoreFixture } from '@ansyn/core/test/mock-store';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { createStore, IStoreFixture } from '../../../test/mock-store';
+import { LoggerService } from '../../../services/logger.service';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
 import { BaseOverlaySourceProvider } from '../../models/base-overlay-source-provider.model';
 

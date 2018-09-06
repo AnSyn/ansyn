@@ -1,11 +1,11 @@
-import { IOverlay } from '../models/overlay.model';
+import { IOverlay } from '../../models/overlay.model';
 import { OverlaysService } from '../services/overlays.service';
-import { IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { IOverlaySpecialObject } from '../../models/overlay.model';
 import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
-import { CoreActionTypes, SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
+import { CoreActionTypes, SetOverlaysCriteriaAction } from '../../actions/core.actions';
 
 export interface ITimelineRange {
 	start: Date;

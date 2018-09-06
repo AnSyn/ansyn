@@ -1,3 +1,4 @@
+export * from '@ansyn/imagery/imagery.module';
 export { ImageryPlugin } from './decorators/imagery-plugin';
 export { ImageryMap } from './decorators/imagery-map';
 export { ImageryMapSource } from './decorators/map-source-provider';
@@ -8,4 +9,3 @@ export { CacheService } from './cache-service/cache.service';
 export { ImageryCommunicatorService } from './communicator-service/communicator.service';
 export { CommunicatorEntity } from './communicator-service/communicator.entity';
 export { ProjectionService } from './projection-service/projection.service';
-export { ImageryModule } from './imagery.module';

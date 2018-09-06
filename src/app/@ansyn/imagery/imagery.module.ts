@@ -12,6 +12,7 @@ import { createConfig } from './providers/config';
 import { createPluginsCollection } from './providers/plugins-collection';
 import { IBaseImageryPluginConstructor } from './model/base-imagery-plugin';
 import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
+import { CoreModule } from '@ansyn/core/core.module';
 
 export interface ImageryMetaData {
 	maps: IBaseImageryMapConstructor[],
@@ -21,7 +22,7 @@ export interface ImageryMetaData {
 
 // @dynamic
 @NgModule({
-	imports: [CommonModule],
+	imports: [CommonModule, CoreModule],
 	declarations: [ImageryComponent, MapComponent],
 	entryComponents: [MapComponent],
 	providers: [

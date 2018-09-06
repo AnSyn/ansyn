@@ -1,15 +1,15 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IOverlay } from '../models/overlay.model';
+import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
-import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysCriteria, IOverlaysFetchData } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { union } from 'lodash';
-import { IFilterModel } from '@ansyn/core/models/IFilterModel';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { IFilterModel } from '../../models/IFilterModel';
+import { sortByDateDesc } from '../../utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 

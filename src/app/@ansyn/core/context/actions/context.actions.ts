@@ -1,5 +1,5 @@
-import { IContext } from '@ansyn/core/models/context.model';
-import { IContextParams } from 'src/app/@ansyn/core/context/reducers/context.reducer';
+import { IContext } from '../../models/context.model';
+import { IContextParams } from '../reducers/context.reducer';
 
 export enum ContextActionTypes {
 	ADD_ALL_CONTEXT = '[Context] Add All Contexts',

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ManualRemovedOverlaysComponent } from './manual-removed-overlays.component';
 import { StoreModule } from '@ngrx/store';
-import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
+import { SliderCheckboxComponent } from '../slider-checkbox/slider-checkbox.component';
 
 describe('ManualRemovedOverlaysComponent', () => {
 	let component: ManualRemovedOverlaysComponent;

@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
-import { type } from '@ansyn/core/utils/type';
-import { IOverlay } from '../models/overlay.model';
+import { type } from '../../utils/type';
+import { IOverlay } from '../../models/overlay.model';
 import { MarkUpClass, IMarkUpData, IOverlayDropMarkUp, ITimelineRange } from '../reducers/overlays.reducer';
-import { IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay } from '../../models/overlay.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),

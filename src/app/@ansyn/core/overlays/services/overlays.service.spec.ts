@@ -5,10 +5,14 @@ import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs';
 import { Observer } from 'rxjs/Observer';
-import { IOverlay } from '../models/overlay.model';
-import { IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import {
+	IOverlay,
+	IOverlaysCriteria,
+	IOverlaysFetchData,
+	IOverlaySpecialObject
+} from '../../models/overlay.model';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '../../services/logger.service';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {

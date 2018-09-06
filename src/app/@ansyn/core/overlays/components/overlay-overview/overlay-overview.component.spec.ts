@@ -5,10 +5,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '../../../models/overlay.model';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
-import { MockComponent } from '@ansyn/core/test/mock-component';
+import { MockComponent } from '../../../test/mock-component';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;

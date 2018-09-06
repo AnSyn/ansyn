@@ -4,7 +4,7 @@ import {
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceConfig
 } from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
-import { IOverlay } from '@ansyn/core/overlays/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { Observable } from 'rxjs/Rx';
 import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { cold } from 'jasmine-marbles';

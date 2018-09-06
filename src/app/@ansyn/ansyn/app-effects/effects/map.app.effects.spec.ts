@@ -17,7 +17,7 @@ import {
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/core/overlays/actions/overlays.actions';
 import { ICase } from '@ansyn/menu-items/cases/models/case.model';
-import { IOverlay } from '@ansyn/core/overlays/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	IMapState,

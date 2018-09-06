@@ -13,8 +13,10 @@
     "importHelpers": true,
     "types": [],
     "lib": [
-      "dom",
-      "es2015"
+      "es2017",
+      "es2017.object",
+      "es2016.array.include",
+      "dom"
     ]
   },
   "angularCompilerOptions": {

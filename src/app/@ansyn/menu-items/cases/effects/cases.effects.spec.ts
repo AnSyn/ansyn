@@ -26,7 +26,7 @@ import { CoreConfig } from '@ansyn/core/models/core.config';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { OverlaysConfig } from '@ansyn/core/overlays/services/overlays.service';
-import { IOverlay } from '@ansyn/core/overlays/models/overlay.model';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
 import { LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';

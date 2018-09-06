@@ -1,2 +1,8 @@
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/pluck';
+import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/observable/fromPromise';
+
 export { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
 export { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';

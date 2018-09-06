@@ -1,3 +1,5 @@
+export { CoreModule } from './core.module';
+export * from './components/welcome-notification/welcome-notification.component';
 export * from './models/overlay.model';
 export * from './models/visualizers/annotations.model';
 export * from './actions/core.actions';

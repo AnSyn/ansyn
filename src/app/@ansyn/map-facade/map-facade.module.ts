@@ -23,7 +23,7 @@ import { GeocoderService } from './services/geocoder.service';
 	imports: [
 		StoreModule.forFeature(mapFeatureKey, MapReducer),
 		EffectsModule.forFeature([MapEffects]),
-		ImageryModule,
+		// ImageryModule,
 		CommonModule,
 		CoreModule,
 		FormsModule

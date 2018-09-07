@@ -1,3 +1,4 @@
+export { AlertsModule } from './alerts/alerts.module';
 export { buildFilteredOverlays } from './utils/overlays';
 export { isFullOverlay } from './utils/overlays';
 export { IFilterModel } from './models/IFilterModel';

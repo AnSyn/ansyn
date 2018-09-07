@@ -17,7 +17,7 @@ import { SaveCaseComponent } from './components/save-case/save-case.component';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { InfiniteScrollModule } from 'ng-infinitescroll';
-import { CasesAutoSaveComponent } from '@ansyn/menu-items/cases/components/cases-auto-save/cases-auto-save.component';
+import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 
 // @dynamic
 @NgModule({

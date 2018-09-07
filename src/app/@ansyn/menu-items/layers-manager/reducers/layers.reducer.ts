@@ -3,12 +3,9 @@ import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { uniq } from 'lodash';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { EntitySelectors } from '@ngrx/entity/src/models';
-import { ToolsActionsTypes } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IToolsState, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
-import { Dictionary } from '@ngrx/entity/src/models';
 
 export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>();
 
@@ -95,7 +92,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.SHOW_ALL_LAYERS: {
 			const selectedLayersIds = state.selectedLayersIds;
 			const layersToShow = (<string[]>state.ids).filter((id) => state.entities[id].type === action.payload);
-			return { ...state, selectedLayersIds: uniq([...selectedLayersIds, ...layersToShow]) }
+			return { ...state, selectedLayersIds: uniq([...selectedLayersIds, ...layersToShow]) };
 		}
 
 		default:

@@ -16,7 +16,6 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
-import { ICase } from '@ansyn/menu-items/cases/models/case.model';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
@@ -62,7 +61,7 @@ import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
 import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';

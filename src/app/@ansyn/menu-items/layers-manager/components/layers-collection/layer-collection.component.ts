@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { ILayerState } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { Store } from '@ngrx/store';
 import { SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
+import { ILayer, LayerType } from '../../models/layers.model';
+import { ILayerState } from '../../reducers/layers.reducer';
 
 export interface ILayerCollection {
 	type: LayerType;

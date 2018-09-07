@@ -2,7 +2,6 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { EffectsModule } from '@ngrx/effects';
-import { ContextMenuPlugin } from '@ansyn/plugins/openlayers/context-menu/context-menu.plugin';
 import { ContextMenuDisplayAction } from '@ansyn/map-facade/actions/map.actions';
 import { cold, hot } from 'jasmine-marbles';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
@@ -10,6 +9,7 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reduce
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/index';
 import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
+import { ContextMenuPlugin } from './context-menu.plugin';
 
 describe('ContextMenuPlugin', () => {
 	let contextMenuPlugin: ContextMenuPlugin;

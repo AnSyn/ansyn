@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { saveAs } from 'file-saver';
 import tokml from 'tokml';
 import { cloneDeep } from 'lodash';
-import { ILayer } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
 import { CloseLayersModal } from '../../../actions/layers.actions';
 import { UUID } from 'angular2-uuid';
+import { ILayer } from '../../../models/layers.model';
 
 @Component({
 	selector: 'ansyn-download-layers',

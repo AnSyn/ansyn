@@ -2,7 +2,7 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/ansyn/ansyn",
   "lib": {
-    "entryFile": "../../../src/public_api.ts",
+    "entryFile": "../../../src/app/@ansyn/ansyn/public_api.ts",
     "styleIncludePaths": ["../../../src/app/@ansyn"]
   }
 }

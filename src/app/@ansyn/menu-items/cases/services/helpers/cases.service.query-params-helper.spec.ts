@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
-import { ICase } from '../../models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { CasesService } from '../cases.service';
 import * as rison from 'rison';
 import * as wellknown from 'wellknown';

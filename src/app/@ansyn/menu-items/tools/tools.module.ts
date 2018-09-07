@@ -8,9 +8,9 @@ import { AnnotationsControlComponent } from './components/annotations-control/an
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
-import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { ProjectionConverterService } from './services/projection-converter.service';
+import { IToolsConfig, toolsConfig } from './models/tools-config';
 
 // @dynamic
 @NgModule({

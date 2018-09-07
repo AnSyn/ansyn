@@ -5,13 +5,13 @@ import { SaveCaseComponent } from './save-case.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CasesModule } from '../../cases.module';
 import { Store, StoreModule } from '@ngrx/store';
-import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { CoreConfig } from '@ansyn/core/models/core.config';
-import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
+import { casesConfig } from '../../services/cases.service';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;

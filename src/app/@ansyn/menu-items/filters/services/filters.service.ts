@@ -2,15 +2,15 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { IFilter } from '../models/IFilter';
 import 'rxjs/add/observable/of';
-import { Filters, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { CaseFilters } from '@ansyn/core/models/case.model';
 import { IFilterModel } from '@ansyn/core/models/IFilterModel';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import { cloneDeep } from 'lodash';
-import { IEnumFiled, EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { buildFilteredOverlays } from '@ansyn/core';
+import { Filters, IFiltersState } from '../reducer/filters.reducer';
+import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
+import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
+import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
 
 export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
 

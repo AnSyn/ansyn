@@ -14,6 +14,12 @@
       "@ansyn/menu-items/*": [
         "dist/ansyn/menu-items/*"
       ],
+      "@ansyn/menu": [
+        "dist/ansyn/menu"
+      ],
+      "@ansyn/menu/*": [
+        "dist/ansyn/menu/*"
+      ],
       "@ansyn/map-facade": [
         "dist/ansyn/map-facade"
       ],
@@ -37,6 +43,18 @@
       ],
       "@ansyn/plugins/*": [
         "dist/ansyn/plugins/*"
+      ],
+      "@ansyn/overlays": [
+        "dist/ansyn/overlays"
+      ],
+      "@ansyn/overlays/*": [
+        "dist/ansyn/overlays/*"
+      ],
+      "@ansyn/context": [
+        "dist/ansyn/context"
+      ],
+      "@ansyn/context/*": [
+        "dist/ansyn/context/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

@@ -1,13 +1,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { casesConfig, CasesService } from './cases.service';
-import { ICase } from '../models/case.model';
 import { UrlSerializer } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import 'rxjs/add/observable/of';
 import { UUID } from 'angular2-uuid';
 import { StorageService } from '@ansyn/core/services/storage/storage.service';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { ICase} from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 

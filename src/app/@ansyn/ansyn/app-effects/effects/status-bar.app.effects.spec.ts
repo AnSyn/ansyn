@@ -4,7 +4,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { ExpandAction, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { ICase } from '@ansyn/menu-items/cases/models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs';

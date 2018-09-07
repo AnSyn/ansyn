@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.app.json",
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
       "@ansyn/core": [
@@ -13,6 +13,12 @@
       ],
       "@ansyn/context/*": [
         "src/app/@ansyn/context/*"
+      ],
+      "@ansyn/menu": [
+        "src/app/@ansyn/menu/public_api"
+      ],
+      "@ansyn/menu/*": [
+        "src/app/@ansyn/menu/*"
       ]
     }
   }

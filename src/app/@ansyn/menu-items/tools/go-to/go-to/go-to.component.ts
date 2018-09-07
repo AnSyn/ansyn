@@ -10,12 +10,12 @@ import {
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/pluck';
 import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
 import { SetSubMenu } from '../../actions/tools.actions';
 import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
 import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { IToolsConfig, toolsConfig } from '../../models/tools-config';
+import { ProjectionConverterService } from '../../services/projection-converter.service';
 
 @Component({
 	selector: 'ansyn-go-to',

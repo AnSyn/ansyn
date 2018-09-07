@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ICase } from '../models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { Params } from '@angular/router';
 import { ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/core/models/case.model';
 import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';

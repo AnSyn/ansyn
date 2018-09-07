@@ -7,9 +7,6 @@ import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overla
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { union } from 'lodash';
-import { IFilterModel } from '@ansyn/core/models/IFilterModel';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 

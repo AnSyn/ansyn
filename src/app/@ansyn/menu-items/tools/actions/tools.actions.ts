@@ -1,10 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from '@ansyn/core/utils/type';
 import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core/models/case.model';
-import { SubMenuEnum } from '../reducers/tools.reducer';
+import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { toolsFlags } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { FeatureCollection } from 'geojson';
 import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
 
 export const ToolsActionsTypes = {

@@ -1,4 +1,4 @@
-import { ICase } from '../../models/case.model';
+import { ICase } from '@ansyn/core/models/case.model';
 import { Params } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';

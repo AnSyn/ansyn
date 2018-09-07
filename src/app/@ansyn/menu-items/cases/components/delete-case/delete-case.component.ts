@@ -5,7 +5,7 @@ import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions'
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
 import { EMPTY, Observable, of } from 'rxjs';
-import { ICasePreview } from '../../models/case.model';
+import { ICasePreview } from '@ansyn/core/models/case.model';
 import { catchError } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
 

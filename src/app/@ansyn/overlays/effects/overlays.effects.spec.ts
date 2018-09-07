@@ -6,7 +6,6 @@ import {
 	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction,
 	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
 import {
@@ -16,8 +15,9 @@ import {
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { LoggerService } from '@ansyn/core/services/logger.service';
-import { coreInitialState, coreStateSelector } from '@ansyn/core.reducer';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
+import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { IOverlay } from '@ansyn/core/models/overlay.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

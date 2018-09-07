@@ -1,8 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { Actions, EffectsModule } from '@ngrx/effects';
+import { MouseShadowVisualizer } from './mouse-shadow.visualizer';
 
 describe('mouseShadowVisualizer', () => {
 	let mouseShadowVisualizer: MouseShadowVisualizer;

@@ -5,8 +5,8 @@ import {
 	SelectCaseAction,
 	UpdateCaseAction
 } from '../actions/cases.actions';
-import { ICase } from '../models/case.model';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
+import { ICase } from '@ansyn/core/models/case.model';
 
 
 describe('CasesReducer', () => {

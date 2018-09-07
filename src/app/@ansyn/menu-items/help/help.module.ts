@@ -4,8 +4,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '@ansyn/core';
 import { EffectsModule } from '@ngrx/effects';
-import { HelpEffects } from '@ansyn/menu-items/help/effects/help.effects';
-import { HelpLocalStorageService } from '@ansyn/menu-items/help/services/help.local-storage.service';
+import { HelpLocalStorageService } from './services/help.local-storage.service';
+import { HelpEffects } from './effects/help.effects';
 
 @NgModule({
 	imports: [CoreModule,

@@ -1,3 +1,11 @@
+export { IBaseImageryMapConstructor } from './model/base-imagery-map';
+export {
+	createImageryMapsCollection,
+	IMAGERY_MAPS,
+	IMAGERY_MAPS_COLLECTIONS,
+	ImageryMapsFactory, ImageryMapsProvider
+} from './providers/imagery-map-collection';
+
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';
 export { ImageryVisualizer } from './decorators/imagery-visualizer';
 export { BaseImageryPlugin, IImageryPluginMetaData } from './model/base-imagery-plugin';

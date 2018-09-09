@@ -10,6 +10,6 @@ export {
 	selectContextsArray, selectContextsParams
 } from './reducers/context.reducer';
 
-export { ContextActionTypes, ContextActions } from '../context/actions/context.actions';
+export { ContextActionTypes, ContextActions } from './actions/context.actions';
 
 export { ContextModule } from './context.module';

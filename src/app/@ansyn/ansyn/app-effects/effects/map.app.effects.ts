@@ -19,8 +19,7 @@ import {
 } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+import { mapFacadeConfig, IMapFacadeConfig } from '@ansyn/map-facade';
 import {
 	AddAlertMsg,
 	BackToWorldView,
@@ -33,7 +32,6 @@ import {
 import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { ICaseMapState } from '@ansyn/core/models/case.model';
 import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
 import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils/calc-extent';
@@ -42,8 +40,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
-import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
+import { IMAGERY_MAPS, IBaseImageryMapConstructor } from '@ansyn/imagery';
 import { toastMessages } from '@ansyn/core/models/toast-messages';
 import { IAppState } from '../app.effects.module';
 import { isFullOverlay } from '@ansyn/core/utils/overlays';

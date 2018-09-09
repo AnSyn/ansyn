@@ -1,3 +1,4 @@
+export { IToolsConfig, toolsConfig, IImageProcParam } from './tools/models/tools-config';
 export { CasesModule } from './cases/cases.module';
 export { AlgorithmsModule } from './algorithms/algorithms.module';
 export { FiltersModule } from './filters/filters.module';

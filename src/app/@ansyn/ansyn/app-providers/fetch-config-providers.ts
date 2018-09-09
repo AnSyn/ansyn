@@ -17,6 +17,8 @@ import { configuration } from '../../../../configuration/configuration';
 import { OpenAerialOverlaysSourceConfig } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetOverlaysSourceConfig } from './overlay-source-providers/planet/planet-source-provider';
 import { MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers/map-source-providers-config';
+import { ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
+import { MENU_ITEMS } from '@ansyn/menu/menu.module';
 
 export const getProviders = (conf): any[] => {
 	return [
@@ -95,6 +97,15 @@ export const getProviders = (conf): any[] => {
 		{
 			provide: MAP_SOURCE_PROVIDERS_CONFIG,
 			useValue: conf.mapSourceProvidersConfig
+		},
+		{
+			provide: MENU_ITEMS,
+			useValue: configuration.ansynMenuItems
+		},
+		{
+			provide: ANALYZE_FOR_ENTRY_COMPONENTS,
+			useValue: configuration.ansynMenuItems,
+			multi: true
 		}
 	];
 };

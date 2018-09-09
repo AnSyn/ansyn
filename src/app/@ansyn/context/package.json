@@ -1,14 +1,9 @@
 {
-	"name": "@ansyn/context",
-	"version": "0.2.81",
-	"main": "index.ts",
-	"peerDependencies": {
-		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3",
-		"@ngrx/store": "^6.0.1",
-		"@ansyn/core": "0.2.81",
-		"rxjs": "^6.2.1"
-	},
-	"license": "MIT",
-	"typings": "index.d.ts"
+  "name": "@ansyn/context",
+  "version": "0.2.81.4",
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
+    "@ansyn/core": "0.2.81.4"
+  }
 }

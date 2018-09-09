@@ -21,15 +21,13 @@ import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/acti
 import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { ICoreConfig } from '@ansyn/core/models/core.config.model';
 import { IAppState } from '../../app.effects.module';
 import { isFullOverlay } from '@ansyn/core/utils/overlays';
+import { CoreConfig, ICoreConfig } from '@ansyn/core';
 
 @Injectable()
 export class SelectCaseAppEffects {

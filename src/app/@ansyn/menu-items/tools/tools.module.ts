@@ -1,7 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolsComponent } from './tools/tools.component';
-import { CoreModule } from '@ansyn/core';
 import { GoToModule } from './go-to/go-to.module';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
@@ -11,6 +10,7 @@ import { ImageProcessingControlComponent } from './components/image-processing-c
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ProjectionConverterService } from './services/projection-converter.service';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
+import { CoreModule } from '@ansyn/core';
 
 // @dynamic
 @NgModule({

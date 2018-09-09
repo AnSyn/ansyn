@@ -1,28 +1,28 @@
-<!--<div class="app animations" [ngClass]="(isPinnedClass$ | async)">-->
-	<!--<div class="menu">-->
+<div class="app animations" [ngClass]="(isPinnedClass$ | async)">
+	<div class="menu">
 		<ansyn-menu [version]="version"></ansyn-menu>
-		<!--<ansyn-tools class="ansynToolsAlone" ></ansyn-tools>-->
-	<!--</div>-->
+		<ansyn-tools class="ansynToolsAlone" ></ansyn-tools>
+	</div>
 
-	<!--<div class="layer">-->
-		<!--<div class="maps-container">-->
-			<!--<ansyn-imageries-manager></ansyn-imageries-manager>-->
-		<!--</div>-->
+	<div class="layer">
+		<div class="maps-container">
+			<ansyn-imageries-manager></ansyn-imageries-manager>
+		</div>
 
-		<!--<div class="status-timeline-container">-->
-			<!--<div class="status">-->
-				<!--<ansyn-status-bar-->
-					<!--[selectedCaseName]="(selectedCaseName$ | async)"-->
-					<!--[activeMap]="(activeMap$ | async)">-->
-				<!--</ansyn-status-bar>-->
-			<!--</div>-->
+		<div class="status-timeline-container">
+			<div class="status">
+				<ansyn-status-bar
+					[selectedCaseName]="(selectedCaseName$ | async)"
+					[activeMap]="(activeMap$ | async)">
+				</ansyn-status-bar>
+			</div>
 
-			<!--<div class="app-timeline-container">-->
-				<!--<ansyn-overlays-container></ansyn-overlays-container>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-<!--</div>-->
+			<div class="app-timeline-container">
+				<ansyn-overlays-container></ansyn-overlays-container>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 <!--&lt;!&ndash; App overlays &ndash;&gt;-->

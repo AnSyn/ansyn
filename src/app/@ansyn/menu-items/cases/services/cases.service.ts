@@ -14,7 +14,7 @@ import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEn
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
 import { catchError, map, mergeMap, debounceTime } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 

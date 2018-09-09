@@ -1,6 +1,14 @@
 {
-  "extends": "../../../tsconfig.json",
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
+    "paths": {
+      "@ansyn/core": [
+        "dist/ansyn/core"
+      ],
+      "@ansyn/core/*": [
+        "dist/ansyn/core/*"
+      ]
+    },
     "outDir": "../../../out-tsc/lib",
     "target": "es2015",
     "module": "es2015",
@@ -12,11 +20,12 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "types": [],
-    "paths": {
-      "@ansyn/menu/*": [
-        "src/app/@ansyn/menu/*"
-      ]
-    }
+    "lib": [
+      "es2017",
+      "es2017.object",
+      "es2016.array.include",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

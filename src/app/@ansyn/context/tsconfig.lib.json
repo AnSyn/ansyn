@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.json",
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
       "@ansyn/core": [
@@ -7,18 +7,6 @@
       ],
       "@ansyn/core/*": [
         "dist/ansyn/core/*"
-      ],
-      "@ansyn/menu/*": [
-        "dist/ansyn/menu/*"
-      ],
-      "@ansyn/menu-items/*": [
-        "src/app/@ansyn/menu-items/*"
-      ],
-      "@ansyn/context": [
-        "dist/ansyn/context"
-      ],
-      "@ansyn/context/*": [
-        "dist/ansyn/context/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

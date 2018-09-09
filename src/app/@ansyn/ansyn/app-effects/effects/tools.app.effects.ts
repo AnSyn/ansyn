@@ -40,7 +40,7 @@ import {
 	SetMapsDataActionStore
 } from '@ansyn/core/actions/core.actions';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { differenceWith, isEqual } from 'lodash';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { filter, map, withLatestFrom } from 'rxjs/internal/operators';

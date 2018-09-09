@@ -8,5 +8,5 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 
-
+export { OpenLayersProjectionService } from './openlayers/open-layers-map/projection/open-layers-projection.service';
 export { AnsynPluginsModule } from './ansyn-plugins.module';

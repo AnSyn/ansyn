@@ -1,18 +1,8 @@
 {
-	"name": "@ansyn/menu",
-	"version": "0.2.81",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "MIT",
-	"peerDependencies": {
-		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3",
-		"@ansyn/core": "0.2.81"
-	},
-	"typings": "index.d.ts"
+  "name": "@ansyn/menu",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+  }
 }

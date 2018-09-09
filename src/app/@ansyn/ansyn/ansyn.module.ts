@@ -24,7 +24,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule, AlertsModule  } from '@ansyn/core';
 import { RouterModule } from '@angular/router';
-import { configuration } from '../../../configuration/configuration';
 import { ansynAlerts } from './ansyn-alerts';
 
 @NgModule({
@@ -44,7 +43,7 @@ import { ansynAlerts } from './ansyn-alerts';
 		AnsynPluginsModule,
 		CoreModule,
 		ContextModule,
-		MenuModule.provideMenuItems(configuration.ansynMenuItems),
+		MenuModule,
 		AlertsModule.provideAlerts(ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule,

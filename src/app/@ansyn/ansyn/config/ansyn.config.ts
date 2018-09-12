@@ -48,16 +48,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			iconClass: 'icon-main-tools'
 		},
 		{
-			name: 'Algorithms',
-			component: AlgorithmsComponent,
-			iconClass: 'icon-main-algorithms'
-		},
-		{
-			name: 'Settings',
-			component: SettingsComponent,
-			iconClass: 'icon-main-settings'
-		},
-		{
 			name: 'Help',
 			component: HelpComponent,
 			iconClass: 'icon-help-settings'

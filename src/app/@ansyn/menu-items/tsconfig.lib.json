@@ -11,9 +11,6 @@
       "@ansyn/menu/*": [
         "dist/ansyn/menu/*"
       ],
-      "@ansyn/menu-items/*": [
-        "src/app/@ansyn/menu-items/*"
-      ],
       "@ansyn/context": [
         "dist/ansyn/context"
       ],

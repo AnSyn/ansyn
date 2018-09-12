@@ -5,7 +5,7 @@
 			(error)="img.src = errorSrc"
 			(load)="finishedLoadingImage()"
 			[class.loading]="loading">
-		<p class="error-text" *ngIf="img.src === errorSrc">Preview is not available</p>
+		<p class="error-text" *ngIf="img.src.includes(errorSrc)">Preview is not available</p>
 		<ansyn-loader [show]="loading"></ansyn-loader>
 	</main>
 	<footer>

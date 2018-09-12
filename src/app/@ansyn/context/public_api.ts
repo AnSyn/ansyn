@@ -1,6 +1,8 @@
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
+export { ContextService } from './services/context.service';
+
 export {
 	contextAdapter,
 	contextFeatureKey, contextFeatureSelector, contextInitialState,
@@ -10,6 +12,6 @@ export {
 	selectContextsArray, selectContextsParams
 } from './reducers/context.reducer';
 
-export { ContextActionTypes, ContextActions } from './actions/context.actions';
+export { ContextActionTypes, ContextActions, SetContextParamsAction } from './actions/context.actions';
 
 export { ContextModule } from './context.module';

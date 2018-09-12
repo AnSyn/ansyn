@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IContextParams, selectContextsArray, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
+import { IContextParams, selectContextsArray, selectContextsParams, SetContextParamsAction, ContextService } from '@ansyn/context';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseAction,
 	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
 import { IContext } from '@ansyn/core/models/context.model';
 import { ICase } from '@ansyn/core/models/case.model';
 import { IStartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { ContextService } from '@ansyn/context/services/context.service';
 import { Store } from '@ngrx/store';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 

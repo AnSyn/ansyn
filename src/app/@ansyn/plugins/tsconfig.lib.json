@@ -22,6 +22,9 @@
       ],
       "@ansyn/overlays": [
         "dist/ansyn/overlays"
+      ],
+      "@ansyn/menu": [
+        "dist/ansyn/menu"
       ]
     },
     "outDir": "../../../out-tsc/lib",

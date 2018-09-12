@@ -7,6 +7,9 @@
       ],
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
+      ],
+      "@ansyn/menu": [
+        "dist/ansyn/menu"
       ]
     },
     "outDir": "../../../out-tsc/lib",

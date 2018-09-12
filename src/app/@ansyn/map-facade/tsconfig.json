@@ -8,6 +8,9 @@
       ],
       "@ansyn/imagery": [
         "src/app/@ansyn/imagery/public_api.ts"
+      ],
+      "@ansyn/menu": [
+        "src/app/@ansyn/menu/public_api.ts"
       ]
     },
     "target": "es5",

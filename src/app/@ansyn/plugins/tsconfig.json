@@ -32,6 +32,12 @@
       "@ansyn/status-bar/*": [
         "src/app/@ansyn/status-bar/*"
       ],
+      "@ansyn/context": [
+        "src/app/@ansyn/context/public_api.ts"
+      ],
+      "@ansyn/context/*": [
+        "src/app/@ansyn/context/*"
+      ],
       "configuration/*": [
         "src/configuration/*"
       ]

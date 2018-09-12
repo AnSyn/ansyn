@@ -9,7 +9,7 @@ import { ICase } from '@ansyn/core/models/case.model';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
 import { ICasePreview } from '@ansyn/core/models/case.model';
-import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
+import { selectContextsArray } from '@ansyn/context';
 import { IContext } from '@ansyn/core/models/context.model';
 import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
 

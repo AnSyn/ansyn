@@ -24,7 +24,7 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
 import { isFullOverlay } from '@ansyn/core/utils/overlays';
 import { CoreConfig, ICoreConfig } from '@ansyn/core';

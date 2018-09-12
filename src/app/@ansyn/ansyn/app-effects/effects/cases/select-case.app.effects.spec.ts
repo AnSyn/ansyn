@@ -36,7 +36,7 @@ import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions'
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { SetContextParamsAction } from '@ansyn/context';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 

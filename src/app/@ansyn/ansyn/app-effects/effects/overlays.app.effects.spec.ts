@@ -51,8 +51,8 @@ import {
 	contextFeatureSelector,
 	contextInitialState,
 	selectContextsParams
-} from '@ansyn/context/reducers/context.reducer';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+} from '@ansyn/context';
+import { SetContextParamsAction } from '@ansyn/context';
 import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
 

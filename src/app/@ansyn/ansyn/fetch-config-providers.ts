@@ -11,7 +11,7 @@ import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 import { CoreConfig } from '@ansyn/core/models/core.config';
-import { ContextConfig } from '@ansyn/context/models/context.config';
+import { ContextConfig } from '@ansyn/context';
 import { OpenAerialOverlaysSourceConfig } from './app-providers/overlay-source-providers/open-aerial-source-provider';
 import { PlanetOverlaysSourceConfig } from './app-providers/overlay-source-providers/planet/planet-source-provider';
 import { MAP_SOURCE_PROVIDERS_CONFIG } from './app-providers/map-source-providers/map-source-providers-config';

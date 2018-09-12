@@ -45,8 +45,8 @@ import {
 	BaseMapSourceProvider,
 	IBaseMapSourceProviderConstructor
 } from '@ansyn/imagery/model/base-map-source-provider';
-import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
+import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context';
+import { SetContextParamsAction } from '@ansyn/context';
 import { IContextEntity } from '@ansyn/core/models/case.model';
 import { DisplayedOverlay } from '@ansyn/core/models/context.model';
 import olExtent from 'ol/extent';

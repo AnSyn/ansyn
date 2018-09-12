@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
@@ -21,9 +21,10 @@ import { configuration } from '../../../../../configuration/configuration';
 	destroy: 'ngOnDestroy'
 })
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
+	@ViewChild('img') img: ElementRef;
+
 	public sensorName: string;
 	public formattedTime: string;
-	public imageSrc: string;
 	public overlayId: string;
 
 	public loading = false;
@@ -77,9 +78,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.isHoveringOverDrop = true;
 
 				this.sensorName = overlay.sensorName;
-				this.imageSrc = isFetchingOverlayData ? undefined : overlay.thumbnailUrl;
+				this.img.nativeElement.src = isFetchingOverlayData ? undefined : overlay.thumbnailUrl;
 				this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-				if (isNewOverlay || isFetchingOverlayData) {
+				if ((isNewOverlay || isFetchingOverlayData) && !this.img.nativeElement.complete) {
 					this.startedLoadingImage();
 				}
 			}

@@ -2,8 +2,8 @@ import { createEntityAdapter } from '@ngrx/entity';
 import { EntityState } from '@ngrx/entity/src/models';
 import { ContextActionTypes, ContextActions } from '../actions/context.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IContext, DisplayedOverlay } from '@ansyn/core/models/context.model';
-import { IContextEntity } from '@ansyn/core/models/case.model';
+import { IContext, DisplayedOverlay } from '@ansyn/core';
+import { IContextEntity } from '@ansyn/core';
 import { EntityAdapter } from '@ngrx/entity/src/models';
 
 export const contextFeatureKey = 'context';

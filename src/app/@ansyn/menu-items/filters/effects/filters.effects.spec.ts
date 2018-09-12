@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core';
 import { FiltersEffects } from './filters.effects';
 import { filtersFeatureKey, FiltersReducer } from '../reducer/filters.reducer';
 

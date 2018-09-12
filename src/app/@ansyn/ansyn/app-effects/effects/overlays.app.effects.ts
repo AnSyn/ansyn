@@ -23,10 +23,10 @@ import {
 	selectDropMarkup,
 	selectOverlaysMap
 } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IOverlay, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core';
 import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { LayoutKey, layoutOptions } from '@ansyn/core';
 import {
 	BackToWorldView,
 	CoreActionTypes,
@@ -35,10 +35,10 @@ import {
 	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
-} from '@ansyn/core/actions/core.actions';
+} from '@ansyn/core';
 import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import {
@@ -47,8 +47,8 @@ import {
 } from '@ansyn/imagery/model/base-map-source-provider';
 import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context';
 import { SetContextParamsAction } from '@ansyn/context';
-import { IContextEntity } from '@ansyn/core/models/case.model';
-import { DisplayedOverlay } from '@ansyn/core/models/context.model';
+import { IContextEntity } from '@ansyn/core';
+import { DisplayedOverlay } from '@ansyn/core';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';

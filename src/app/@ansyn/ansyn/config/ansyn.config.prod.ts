@@ -3,7 +3,7 @@ import { FiltersCollectionComponent } from '@ansyn/menu-items/filters/components
 import { LayersManagerComponent } from '@ansyn/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 import { ToolsComponent } from '@ansyn/menu-items/tools/tools/tools.component';
 import { HelpComponent } from '@ansyn/menu-items/help/components/help.component';
-import { IAlert } from '@ansyn/core/alerts/alerts.model';
+import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {

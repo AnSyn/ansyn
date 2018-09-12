@@ -5,7 +5,7 @@ import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visu
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { AutoSubscription } from 'auto-subscriptions';
 import {

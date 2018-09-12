@@ -1,6 +1,6 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { AnsynComponent } from './ansyn.component';
-import { MockComponent } from '@ansyn/core/test/mock-component';
+import { MockComponent } from '@ansyn/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Subject } from 'rxjs/Subject';

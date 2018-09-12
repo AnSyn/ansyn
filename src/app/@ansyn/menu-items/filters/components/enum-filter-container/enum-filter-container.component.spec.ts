@@ -4,7 +4,7 @@ import { SortPipe } from '../../pipes/sort.pipe';
 import { MapIteratorPipe } from '../../pipes/map-iterator.pipe';
 import { EnumFilterContainerComponent } from './enum-filter-container.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { AnsynCheckboxComponent } from '@ansyn/core/components/ansyn-checkbox/ansyn-checkbox.component';
+import { AnsynCheckboxComponent } from '@ansyn/core';
 import { ShowMorePipe } from '../../pipes/show-more.pipe';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
 import { filtersConfig } from '../../services/filters.service';

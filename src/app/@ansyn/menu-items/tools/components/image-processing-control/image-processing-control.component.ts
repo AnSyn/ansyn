@@ -5,7 +5,7 @@ import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
-import { ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { ImageManualProcessArgs } from '@ansyn/core';
 import { IImageProcParam } from '../../models/tools-config';
 
 

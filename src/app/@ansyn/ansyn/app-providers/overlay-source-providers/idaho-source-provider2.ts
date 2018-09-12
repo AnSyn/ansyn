@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { IdahoOverlaysSourceConfig, IdahoSourceProvider, IIdahoOverlaySourceConfig } from './idaho-source-provider';
 import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { ErrorHandlerService } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
+import { LoggerService } from '@ansyn/core';
 
 export const IdahoOverlaySourceType2 = 'IDAHO2';
 

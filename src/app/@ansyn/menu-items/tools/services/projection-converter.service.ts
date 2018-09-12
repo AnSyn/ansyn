@@ -1,7 +1,7 @@
 import { inRange, isEqual } from 'lodash';
 import proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
-import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core';
 import { IToolsConfig, toolsConfig } from '../models/tools-config';
 
 export interface IUtmZone {

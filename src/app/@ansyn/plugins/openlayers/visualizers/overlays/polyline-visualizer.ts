@@ -15,7 +15,7 @@ import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visu
 import { select, Store } from '@ngrx/store';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 import {
 	IMarkUpData,
 	IOverlaysState,
@@ -28,11 +28,11 @@ import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
 import { MultiLineString } from 'geojson';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { IVisualizerEntity } from '@ansyn/core';
+import { VisualizerStates } from '@ansyn/core';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { AutoSubscription } from 'auto-subscriptions';

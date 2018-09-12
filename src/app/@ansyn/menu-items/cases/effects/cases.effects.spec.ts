@@ -14,18 +14,18 @@ import {
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs/Rx';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { AddCasesAction } from '../actions/cases.actions';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { StorageService } from '@ansyn/core/services/storage/storage.service';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { CoreConfig } from '@ansyn/core';
+import { StorageService } from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
+import { LoggerService } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
 

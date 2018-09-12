@@ -30,7 +30,7 @@ import {
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
+import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
@@ -38,7 +38,7 @@ import {
 	ClearActiveInteractionsAction,
 	CoreActionTypes,
 	SetMapsDataActionStore
-} from '@ansyn/core/actions/core.actions';
+} from '@ansyn/core';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { differenceWith, isEqual } from 'lodash';

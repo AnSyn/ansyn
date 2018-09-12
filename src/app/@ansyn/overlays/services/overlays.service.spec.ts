@@ -10,9 +10,9 @@ import {
 	IOverlaysCriteria,
 	IOverlaysFetchData,
 	IOverlaySpecialObject
-} from '@ansyn/core/models/overlay.model';
+} from '@ansyn/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { buildFilteredOverlays } from '@ansyn/core';
 

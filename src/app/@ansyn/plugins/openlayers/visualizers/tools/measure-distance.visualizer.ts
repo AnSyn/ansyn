@@ -19,12 +19,12 @@ import { Observable } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
 import { Store } from '@ngrx/store';
-import { getPointByGeometry } from '@ansyn/core/utils/geo';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { getPointByGeometry } from '@ansyn/core';
+import { IVisualizerEntity } from '@ansyn/core';
+import { VisualizerStates } from '@ansyn/core';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
-import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { MarkerSize } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 

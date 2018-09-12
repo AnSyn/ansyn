@@ -5,13 +5,13 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable, of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
-import { ICasePreview } from '@ansyn/core/models/case.model';
+import { ICasePreview } from '@ansyn/core';
 import { selectContextsArray } from '@ansyn/context';
-import { IContext } from '@ansyn/core/models/context.model';
-import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
+import { IContext } from '@ansyn/core';
+import { AnsynInputComponent } from '@ansyn/core';
 
 const animationsDuring = '0.2s';
 

@@ -7,12 +7,12 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { IMapsLayout } from '@ansyn/core/models/i-maps-layout';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { coreStateSelector, ICoreState } from '@ansyn/core';
+import { IMapsLayout } from '@ansyn/core';
+import { LayoutKey, layoutOptions } from '@ansyn/core';
+import { ICaseMapState } from '@ansyn/core';
 import { ActiveImageryMouseEnter } from '../../actions/map.actions';
-import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
+import { SetMapsDataActionStore } from '@ansyn/core';
 import { filter, tap } from 'rxjs/operators';
 
 // @dynamic

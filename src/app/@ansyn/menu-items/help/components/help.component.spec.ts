@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HelpComponent } from './help.component';
 import { By } from '@angular/platform-browser';
-import { AnsynCheckboxComponent } from '@ansyn/core/components/ansyn-checkbox/ansyn-checkbox.component';
-import { MockComponent } from '@ansyn/core/test/mock-component';
+import { AnsynCheckboxComponent } from '@ansyn/core';
+import { MockComponent } from '@ansyn/core';
 import { HelpLocalStorageService } from '../services/help.local-storage.service';
 
 describe('HelpComponent', () => {

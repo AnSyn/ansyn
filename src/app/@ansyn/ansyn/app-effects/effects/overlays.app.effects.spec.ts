@@ -38,13 +38,13 @@ import {
 import { cold, hot } from 'jasmine-marbles';
 import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
 
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreInitialState, coreStateSelector } from '@ansyn/core';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
+import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import {
@@ -53,7 +53,7 @@ import {
 	selectContextsParams
 } from '@ansyn/context';
 import { SetContextParamsAction } from '@ansyn/context';
-import { DisplayedOverlay } from '@ansyn/core/models/context.model';
+import { DisplayedOverlay } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
 
 describe('OverlaysAppEffects', () => {

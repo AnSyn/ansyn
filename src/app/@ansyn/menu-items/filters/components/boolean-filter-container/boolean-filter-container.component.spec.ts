@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BooleanFilterContainerComponent } from './boolean-filter-container.component';
 import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
-import { AnsynCheckboxComponent } from '@ansyn/core/components/ansyn-checkbox/ansyn-checkbox.component';
+import { AnsynCheckboxComponent } from '@ansyn/core';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
 
 describe('BooleanFilterContainerComponent', () => {

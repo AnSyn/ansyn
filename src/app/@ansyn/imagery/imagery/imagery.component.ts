@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 import { IBaseImageryMapConstructor } from '../model/base-imagery-map';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 

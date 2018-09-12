@@ -10,7 +10,7 @@ import { mapFacadeConfig  } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 

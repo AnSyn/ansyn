@@ -3,7 +3,7 @@ import ImageLayer from 'ol/layer/image';
 import Raster from 'ol/source/raster';
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { Store } from '@ngrx/store';

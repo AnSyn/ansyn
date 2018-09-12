@@ -3,7 +3,7 @@ import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
-import { MockComponent } from '@ansyn/core/test/mock-component';
+import { MockComponent } from '@ansyn/core';
 
 
 describe('ToolsComponent', () => {

@@ -3,7 +3,7 @@ import * as ol from 'openlayers';
 import Map from 'ol/map';
 import View from 'ol/view';
 import Layer from 'ol/layer/layer';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';

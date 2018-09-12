@@ -2,12 +2,12 @@ import { BaseImageryMap } from '../../model/base-imagery-map';
 import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '../../model/base-map-source-provider';
 import { ComponentFactoryResolver, ComponentRef, EventEmitter, Injector, ViewContainerRef } from '@angular/core';
 import { IBaseImageryMapConstructor } from '../../model/base-imagery-map';
-import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
 import { ImageryCommunicatorService } from '../../communicator-service/communicator.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { BaseImageryPlugin } from '../../model/base-imagery-plugin';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 import { BaseImageryPluginProvider } from '../providers/imagery.providers';
 import { MapComponent } from '../../map/map.component';
 

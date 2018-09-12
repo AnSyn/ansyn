@@ -11,7 +11,7 @@ import * as turf from '@turf/turf';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { IVisualizerEntity } from '@ansyn/core';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';

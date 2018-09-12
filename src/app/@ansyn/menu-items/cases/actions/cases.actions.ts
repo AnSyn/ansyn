@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { Params } from '@angular/router';
-import { ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/core/models/case.model';
-import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
+import { ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/core';
+import { IStoredEntity } from '@ansyn/core';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',

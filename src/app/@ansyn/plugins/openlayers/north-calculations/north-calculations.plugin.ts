@@ -1,4 +1,4 @@
-import { toDegrees } from '@ansyn/core/utils/math';
+import { toDegrees } from '@ansyn/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 import * as turf from '@turf/turf';
@@ -13,13 +13,13 @@ import { ProjectionService } from '@ansyn/imagery/projection-service/projection.
 import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseOrientation } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
+import { CaseOrientation } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
+import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core';
 import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import { areCoordinatesNumeric } from '@ansyn/core';
 import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
 import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';

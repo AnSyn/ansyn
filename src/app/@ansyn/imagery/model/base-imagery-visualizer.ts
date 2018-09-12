@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from './base-imagery-plugin';
 import { IImageryPluginMetaData } from './base-imagery-plugin';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { IVisualizerEntity } from '@ansyn/core';
 
 export type VisualizerInteractionTypes = 'click' | 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
 

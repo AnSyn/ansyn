@@ -12,21 +12,21 @@ import {
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction, SetMapsDataActionStore
-} from '@ansyn/core/actions/core.actions';
+} from '@ansyn/core';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICase, ICaseMapState } from '@ansyn/core';
 import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
-import { isFullOverlay } from '@ansyn/core/utils/overlays';
+import { isFullOverlay } from '@ansyn/core';
 import { CoreConfig, ICoreConfig } from '@ansyn/core';
 
 @Injectable()

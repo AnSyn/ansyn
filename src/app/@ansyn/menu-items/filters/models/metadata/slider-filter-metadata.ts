@@ -1,5 +1,5 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType } from '@ansyn/core/models/case.model';
+import { FilterType } from '@ansyn/core';
 
 export class SliderFilterMetadata implements FilterMetadata {
 	count = 0;

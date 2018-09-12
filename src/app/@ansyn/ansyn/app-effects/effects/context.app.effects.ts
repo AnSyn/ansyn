@@ -6,9 +6,9 @@ import {
 	LoadDefaultCaseAction,
 	SelectCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { IContext } from '@ansyn/core/models/context.model';
-import { ICase } from '@ansyn/core/models/case.model';
+import { SetToastMessageAction } from '@ansyn/core';
+import { IContext } from '@ansyn/core';
+import { ICase } from '@ansyn/core';
 import { IStartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';

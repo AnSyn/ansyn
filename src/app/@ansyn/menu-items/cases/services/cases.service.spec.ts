@@ -5,10 +5,10 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import 'rxjs/add/observable/of';
 import { UUID } from 'angular2-uuid';
-import { StorageService } from '@ansyn/core/services/storage/storage.service';
-import { ICase} from '@ansyn/core/models/case.model';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { CoreConfig } from '@ansyn/core/models/core.config';
+import { StorageService } from '@ansyn/core';
+import { ICase} from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core';
 
 export const MockCasesConfig = {
 	provide: casesConfig,

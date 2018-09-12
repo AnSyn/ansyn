@@ -15,7 +15,7 @@ import { IOverlaysState } from '@ansyn/overlays/reducers/overlays.reducer';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
-import { ICoreState } from '@ansyn/core/reducers/core.reducer';
+import { ICoreState } from '@ansyn/core';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 import { IToolsState } from '@ansyn/menu-items/tools/reducers/tools.reducer';

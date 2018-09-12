@@ -5,9 +5,9 @@ import {
 	MapInstanceChangedAction,
 	PositionChangedAction,
 } from '../actions/map.actions';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model'
+import { ICaseMapState } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
+import { ICaseMapPosition } from '@ansyn/core'
 import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
 import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';

@@ -1,5 +1,5 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
@@ -9,8 +9,8 @@ import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { GoToAction } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { LayoutKey } from '@ansyn/core/models/layout-options.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { LayoutKey } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
 import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';

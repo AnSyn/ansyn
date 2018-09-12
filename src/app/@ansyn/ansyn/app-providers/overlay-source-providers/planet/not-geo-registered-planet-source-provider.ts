@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { PlanetSourceProvider } from './planet-source-provider';
 import { PlanetOverlay } from './planet.model';
 

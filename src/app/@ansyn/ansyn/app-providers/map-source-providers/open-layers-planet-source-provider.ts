@@ -1,10 +1,10 @@
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
 import proj from 'ol/proj';
-import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
+import { extentFromGeojson } from '@ansyn/core';
 import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
 import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
 import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';

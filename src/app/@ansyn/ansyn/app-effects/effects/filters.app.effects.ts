@@ -39,16 +39,16 @@ import {
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
-} from '@ansyn/core/reducers/core.reducer';
-import { FilterType, ICaseFacetsState, ICaseFilter } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+} from '@ansyn/core';
+import { FilterType, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
 import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
-import { IFilterModel } from '@ansyn/core/models/IFilterModel';
+import { IFilterModel } from '@ansyn/core';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
-import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resolver';
-import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
+import { InjectionResolverFilter } from '@ansyn/core';
+import { GenericTypeResolverService } from '@ansyn/core';
 import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
 import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
 import 'rxjs/add/observable/combineLatest';

@@ -1,11 +1,11 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { layoutOptions } from '@ansyn/core/models/layout-options.model';
+import { CoreActionTypes } from '@ansyn/core';
+import { layoutOptions } from '@ansyn/core';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
-import { IPendingOverlay } from '@ansyn/core/models/overlay.model';
+import { IPendingOverlay } from '@ansyn/core';
 
 export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: ICaseMapState[], activeMapId?: string } {
 	const mapsList: ICaseMapState[] = [];

@@ -1,16 +1,16 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { CasesService } from '../cases.service';
 import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { StorageService } from '@ansyn/core/services/storage/storage.service';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { StorageService } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/core';
 
 describe('CasesService', () => {
 	let casesService: CasesService;

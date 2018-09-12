@@ -1,9 +1,9 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
-import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';

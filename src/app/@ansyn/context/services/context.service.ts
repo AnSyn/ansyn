@@ -3,10 +3,10 @@ import { ContextConfig } from '../models/context.config';
 import { IContextConfig } from '../models/context.config.model';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/internal/operators';
-import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
-import { IContext } from '@ansyn/core/models/context.model';
-import { StorageService } from '@ansyn/core/services/storage/storage.service';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { rxPreventCrash } from '@ansyn/core';
+import { IContext } from '@ansyn/core';
+import { StorageService } from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/core';
 
 @Injectable()
 export class ContextService {

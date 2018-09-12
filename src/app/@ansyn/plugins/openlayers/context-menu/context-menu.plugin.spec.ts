@@ -8,7 +8,7 @@ import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/index';
-import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
+import { SetMapsDataActionStore } from '@ansyn/core';
 import { ContextMenuPlugin } from './context-menu.plugin';
 
 describe('ContextMenuPlugin', () => {

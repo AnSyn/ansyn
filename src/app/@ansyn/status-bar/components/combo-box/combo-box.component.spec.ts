@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComboBoxComponent } from './combo-box.component';
-import { MockComponent } from '@ansyn/core/test/mock-component';
+import { MockComponent } from '@ansyn/core';
 
 describe('ComboBoxComponent', () => {
 	let component: ComboBoxComponent;

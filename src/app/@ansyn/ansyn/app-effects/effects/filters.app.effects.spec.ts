@@ -11,7 +11,7 @@ import {
 	InitializeFiltersSuccessAction,
 	ResetFiltersAction
 } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { FilterType } from '@ansyn/core/models/case.model';
+import { FilterType } from '@ansyn/core';
 import { OverlayReducer, overlaysFeatureKey, overlaysStatusMessages } from '@ansyn/overlays/reducers/overlays.reducer';
 import {
 	LoadOverlaysAction,
@@ -25,12 +25,12 @@ import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/en
 import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
 import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
 import 'rxjs/add/observable/of';
-import { SetFavoriteOverlaysAction } from '@ansyn/core/actions/core.actions';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { SetFavoriteOverlaysAction } from '@ansyn/core';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
 import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
+import { GenericTypeResolverService } from '@ansyn/core';
 import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
 
 describe('Filters app effects', () => {

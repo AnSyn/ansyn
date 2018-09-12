@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core';
 
 export interface IToolsConfig {
 	Annotations: {

@@ -5,13 +5,13 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/of';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
-import { StorageService, IStoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEntity } from '@ansyn/core/models/case.model';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { StorageService, IStoredEntity } from '@ansyn/core';
+import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEntity } from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { catchError, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */

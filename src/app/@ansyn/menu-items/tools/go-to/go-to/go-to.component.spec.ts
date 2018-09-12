@@ -6,9 +6,9 @@ import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { CoreModule } from '@ansyn/core';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
+import { LoggerConfig } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
-import { CoreConfig } from '@ansyn/core/models/core.config';
+import { CoreConfig } from '@ansyn/core';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 import { toolsConfig } from '../../models/tools-config';
 

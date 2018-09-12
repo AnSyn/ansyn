@@ -1,4 +1,4 @@
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import TileSource from 'ol/source/tile';
 import { Observable } from 'rxjs';

@@ -1,6 +1,6 @@
 import { IFilter } from '../IFilter';
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseBooleanFilterMetadata } from '@ansyn/core/models/case.model';
+import { FilterType, ICaseBooleanFilterMetadata } from '@ansyn/core';
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';

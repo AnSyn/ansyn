@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
 import { AddLayer, CloseLayersModal, UpdateLayer } from '../../../actions/layers.actions';
 import { DataLayersService } from '../../../services/data-layers.service';
-import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
+import { AnsynInputComponent } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-edit-layer',

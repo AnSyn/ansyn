@@ -21,7 +21,7 @@ import {
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess, SetMeasureDistanceToolState, SetPinLocationModeAction, ShowOverlaysFootprintAction
 } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import {
@@ -45,7 +45,7 @@ import {
 	BackToWorldView,
 	ClearActiveInteractionsAction,
 	SetMapsDataActionStore
-} from '@ansyn/core/actions/core.actions';
+} from '@ansyn/core';
 import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';

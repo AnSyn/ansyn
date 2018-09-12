@@ -1,6 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { PlaceholderComponent } from '@ansyn/core/components/placeholder/placeholder.component';
+import { PlaceholderComponent } from '@ansyn/core';
 import { UnAuthGuard } from './login/guards/unauth.guard';
 import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
 import { AuthGuard } from './login/guards/auth.guard';

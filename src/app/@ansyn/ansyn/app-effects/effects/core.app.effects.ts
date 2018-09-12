@@ -11,7 +11,7 @@ import {
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlayIdsCount
-} from '@ansyn/core/actions/core.actions';
+} from '@ansyn/core';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
@@ -19,13 +19,13 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes
 } from '@ansyn/overlays/actions/overlays.actions';
-import { coreStateSelector, selectRemovedOverlays } from '@ansyn/core/reducers/core.reducer';
+import { coreStateSelector, selectRemovedOverlays } from '@ansyn/core';
 import { overlaysStateSelector, selectOverlaysMap } from '@ansyn/overlays/reducers/overlays.reducer';
 import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { IAppState } from '../app.effects.module';
 import { map } from 'rxjs/operators';
 

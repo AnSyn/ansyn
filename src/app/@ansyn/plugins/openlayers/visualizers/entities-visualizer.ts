@@ -10,8 +10,8 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import ol_Layer from 'ol/layer/layer';
 
-import { IVisualizerStyle, MarkerSizeDic } from '@ansyn/core/models/visualizers/visualizer-style';
-import { IVisualizerStateStyle, VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { IVisualizerStyle, MarkerSizeDic } from '@ansyn/core';
+import { IVisualizerStateStyle, VisualizerStates } from '@ansyn/core';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
 import {
@@ -19,7 +19,7 @@ import {
 	IBaseImageryVisualizerClass,
 	VisualizerInteractionTypes
 } from '@ansyn/imagery/model/base-imagery-visualizer';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { IVisualizerEntity } from '@ansyn/core';
 import ol_color from 'ol/color';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 

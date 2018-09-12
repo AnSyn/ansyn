@@ -20,22 +20,22 @@ import {
 	SetLayoutAction,
 	SetOverlaysCriteriaAction,
 	UpdateOverlaysCountAction
-} from '@ansyn/core/actions/core.actions';
+} from '@ansyn/core';
 import {
 	ICaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
 	ICaseTimeState
-} from '@ansyn/core/models/case.model';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { IOverlay, IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
+} from '@ansyn/core';
+import { LayoutKey, layoutOptions } from '@ansyn/core';
+import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
 import {
 	selectDataInputFilter,
 	selectLayout,
 	selectOverlaysCriteria,
 	selectRegion
-} from '@ansyn/core/reducers/core.reducer';
+} from '@ansyn/core';
 import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';
 import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';

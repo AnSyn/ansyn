@@ -12,7 +12,7 @@ import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.mod
 import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
 import { CommonModule } from '@angular/common';
 import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
-import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
+import { AlertsModule } from '@ansyn/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FiltersModule } from '@ansyn/menu-items/filters/filters.module';
 import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
 import { AppEffectsModule } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule } from '@ansyn/core';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';

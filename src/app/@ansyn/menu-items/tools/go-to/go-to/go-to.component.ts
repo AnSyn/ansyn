@@ -9,11 +9,11 @@ import {
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/pluck';
-import { copyFromContent } from '@ansyn/core/utils/clipboard';
+import { copyFromContent } from '@ansyn/core';
 import { SetSubMenu } from '../../actions/tools.actions';
 import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
-import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
-import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
+import { ICoordinatesSystem } from '@ansyn/core';
+import { ClearActiveInteractionsAction } from '@ansyn/core';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 

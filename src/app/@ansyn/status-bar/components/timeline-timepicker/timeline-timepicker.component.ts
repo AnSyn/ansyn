@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ICaseTimeState } from '@ansyn/core/models/case.model';
+import { ICaseTimeState } from '@ansyn/core';
 declare function require(name: string);
 const flatpickr = require('flatpickr');
 // import flatpikr doesn't work

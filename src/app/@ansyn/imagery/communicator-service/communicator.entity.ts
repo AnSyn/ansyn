@@ -3,7 +3,7 @@ import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
 import { Observable, of, merge } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';

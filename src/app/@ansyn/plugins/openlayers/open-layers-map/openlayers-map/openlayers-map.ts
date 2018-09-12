@@ -17,8 +17,8 @@ import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '../openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
-import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core';
+import { areCoordinatesNumeric } from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
@@ -26,8 +26,8 @@ import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { ICoreConfig } from '@ansyn/core/models/core.config.model';
+import { CoreConfig } from '@ansyn/core';
+import { ICoreConfig } from '@ansyn/core';
 
 export const OpenlayersMapName = 'openLayersMap';
 

@@ -12,12 +12,12 @@ import {
 	SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { IDilutedCase } from '@ansyn/core/models/case.model';
+import { IDilutedCase } from '@ansyn/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { IAppState } from '../app.effects.module';
 

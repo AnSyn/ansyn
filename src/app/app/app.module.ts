@@ -5,7 +5,7 @@ import { AnsynModule } from '@ansyn/ansyn/ansyn.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoginModule } from './login/login.module';
 import { AnsynRouterModule } from './router/router.module';

@@ -9,8 +9,8 @@ import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core/models/core.config';
+import { LoggerConfig } from '@ansyn/core';
+import { CoreConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { casesConfig } from '../../services/cases.service';
 

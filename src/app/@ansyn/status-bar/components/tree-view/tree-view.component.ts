@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
-import { selectDataInputFilter } from '@ansyn/core/reducers/core.reducer';
+import { selectDataInputFilter } from '@ansyn/core';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
-import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core';
 import { isEqual } from 'lodash';
-import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDataInputFilterValue } from '@ansyn/core';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 

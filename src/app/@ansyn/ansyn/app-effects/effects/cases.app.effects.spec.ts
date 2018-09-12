@@ -3,7 +3,7 @@ import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import {
@@ -12,7 +12,7 @@ import {
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ICase, CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { ICase, CaseGeoFilter } from '@ansyn/core';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs';
@@ -21,12 +21,12 @@ import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/
 import { contextFeatureKey, ContextReducer } from '@ansyn/context';
 import { ContextService } from '@ansyn/context';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { StorageService } from '@ansyn/core/services/storage/storage.service';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { CoreConfig } from '@ansyn/core';
+import { StorageService } from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/core';
 import { ContextConfig } from '@ansyn/context';
 import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
 import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 
 describe('CasesAppEffects', () => {

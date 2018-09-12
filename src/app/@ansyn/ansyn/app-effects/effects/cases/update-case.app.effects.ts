@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
@@ -13,7 +13,7 @@ import {
 	selectLayout,
 	selectOverlaysCriteria,
 	selectPresetOverlays, selectRemovedOverlays, selectRemovedOverlaysVisibility
-} from '@ansyn/core/reducers/core.reducer';
+} from '@ansyn/core';
 import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';

@@ -8,11 +8,11 @@ import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { IVisualizerEntity } from '@ansyn/core';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({

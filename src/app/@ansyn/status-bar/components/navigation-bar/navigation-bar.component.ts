@@ -3,7 +3,7 @@ import {
 	EnableCopyOriginalOverlayDataAction,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay
-} from '@ansyn/core/actions/core.actions';
+} from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { ExpandAction } from '../../actions/status-bar.actions';

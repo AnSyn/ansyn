@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 
 export interface IImageryMapMetaData {

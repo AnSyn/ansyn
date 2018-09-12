@@ -8,7 +8,7 @@ import {
 	OpenModalAction,
 	LoadCaseAction
 } from '../../actions/cases.actions';
-import { getTimeFormat } from '@ansyn/core/utils/time';
+import { getTimeFormat } from '@ansyn/core';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
@@ -17,7 +17,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ICaseModal } from '../../reducers/cases.reducer';
-import { ICasePreview } from '@ansyn/core/models/case.model';
+import { ICasePreview } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
 

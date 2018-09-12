@@ -6,7 +6,7 @@ import { AnnotationRemoveFeature, AnnotationSelectAction, AnnotationUpdateFeatur
 import {
 	AnnotationInteraction,
 	IAnnotationsSelectionEventData
-} from '@ansyn/core/models/visualizers/annotations.model';
+} from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';

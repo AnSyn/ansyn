@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import {
 	AnnotationInteraction,
 	IAnnotationsSelectionEventData
-} from '@ansyn/core/models/visualizers/annotations.model';
+} from '@ansyn/core';
 
 
 describe('AnnotationContextMenuComponent', () => {

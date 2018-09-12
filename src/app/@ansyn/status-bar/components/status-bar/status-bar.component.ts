@@ -2,9 +2,9 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Observable } from 'rxjs';
-import { selectLayout } from '@ansyn/core/reducers/core.reducer';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { selectLayout } from '@ansyn/core';
+import { LayoutKey, layoutOptions } from '@ansyn/core';
+import { ICaseMapState } from '@ansyn/core';
 import { CopySelectedCaseLinkAction } from '../../actions/status-bar.actions';
 
 @Component({

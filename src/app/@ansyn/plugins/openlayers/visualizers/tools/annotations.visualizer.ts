@@ -21,7 +21,7 @@ import {
 	AnnotationMode,
 	IAnnotationBoundingRect,
 	IAnnotationsSelectionEventData
-} from '@ansyn/core/models/visualizers/annotations.model';
+} from '@ansyn/core';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationSelectAction } from '@ansyn/map-facade/actions/map.actions';
@@ -41,17 +41,17 @@ import 'rxjs/add/operator/take';
 import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
 import 'rxjs/add/observable/combineLatest';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
+import { IVisualizerEntity } from '@ansyn/core';
 import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
 import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
 import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { Inject } from '@angular/core';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { ICaseMapState } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
 import OLGeoJSON from 'ol/format/geojson';
-import { IVisualizerStyle, MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { IVisualizerStyle, MarkerSize } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
 import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
@@ -60,7 +60,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
 import { featureCollection } from '@turf/turf';
-import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { VisualizerStates } from '@ansyn/core';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 // @dynamic

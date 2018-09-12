@@ -7,11 +7,11 @@ import {
 	IOverlayFilter,
 	IStartAndEndDate
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 import { area, difference, intersect } from '@turf/turf';
-import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
+import { IDataInputFilterValue } from '@ansyn/core';
 
 export interface IFiltersList {
 	name: string,

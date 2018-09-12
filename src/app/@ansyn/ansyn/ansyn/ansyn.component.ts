@@ -2,7 +2,7 @@ import { Store } from '@ngrx/store';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICase, ICaseMapState } from '@ansyn/core';
 import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
 import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
 import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';

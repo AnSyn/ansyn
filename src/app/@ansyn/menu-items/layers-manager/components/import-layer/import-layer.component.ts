@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/core';
 import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer } from '../../actions/layers.actions';
 import * as toGeoJSON from 'togeojson';

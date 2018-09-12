@@ -4,7 +4,7 @@ import { contextFeatureKey, ContextReducer, IContextState } from './reducers/con
 import { ContextService } from './services/context.service';
 import { AddAllContextsAction } from './actions/context.actions';
 import { HttpClientModule } from '@angular/common/http';
-import { IContext } from '@ansyn/core/models/context.model';
+import { IContext } from '@ansyn/core';
 
 
 @NgModule({

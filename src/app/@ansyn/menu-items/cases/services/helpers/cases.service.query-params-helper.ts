@@ -1,4 +1,4 @@
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { Params } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
@@ -11,12 +11,12 @@ import {
 	ICaseState,
 	ImageManualProcessArgs,
 	IOverlaysManualProcessArgs
-} from '@ansyn/core/models/case.model';
-import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+} from '@ansyn/core';
+import { extentFromGeojson } from '@ansyn/core';
+import { CaseMapExtent } from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
-import { IContext } from '@ansyn/core/models/context.model';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
+import { IContext } from '@ansyn/core';
+import { getPolygonByPointAndRadius } from '@ansyn/core';
 import { point } from '@turf/turf';
 import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';

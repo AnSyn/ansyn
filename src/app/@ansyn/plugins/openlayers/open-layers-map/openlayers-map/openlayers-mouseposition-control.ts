@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import * as turf from '@turf/turf';
 import { Subscription } from 'rxjs/Subscription';
 import Projection from 'ol/proj/projection';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import { areCoordinatesNumeric } from '@ansyn/core';
 
 export class OpenLayersMousePositionControl extends MousePosition {
 	private approximateProjectionSubscription: Subscription;

@@ -4,7 +4,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { ExpandAction, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { ICase } from '@ansyn/core/models/case.model';
+import { ICase } from '@ansyn/core';
 import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
 import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { Observable } from 'rxjs';
@@ -14,9 +14,9 @@ import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/ove
 import { HttpClientModule, HttpBackend  } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

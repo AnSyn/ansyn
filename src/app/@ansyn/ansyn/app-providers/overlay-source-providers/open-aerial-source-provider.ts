@@ -3,19 +3,19 @@ import {
 	BaseOverlaySourceProvider, IFetchParams,
 	IStartAndEndDate, UNKNOWN_NAME
 } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { ErrorHandlerService } from '@ansyn/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
 	bboxFromGeoJson, geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius
-} from '@ansyn/core/utils/geo';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { limitArray } from '@ansyn/core/utils/i-limited-array';
-import { toRadians } from '@ansyn/core/utils/math';
+} from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
+import { sortByDateDesc } from '@ansyn/core';
+import { limitArray } from '@ansyn/core';
+import { toRadians } from '@ansyn/core';
 import * as wellknown from "wellknown";
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 import { empty } from 'rxjs';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;

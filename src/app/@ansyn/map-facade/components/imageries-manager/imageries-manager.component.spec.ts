@@ -5,12 +5,12 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
-import { ImageryStatusComponent } from '@ansyn/core/components/imagery-status/imagery-status.component';
-import { AlertComponentDirective } from '@ansyn/core/alerts/alert-component.directive';
-import { MockComponent } from '@ansyn/core/test/mock-component';
+import { ImageryStatusComponent } from '@ansyn/core';
+import { AlertComponentDirective } from '@ansyn/core';
+import { MockComponent } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
-import { SetLayoutAction, SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
+import { coreFeatureKey, CoreReducer } from '@ansyn/core';
+import { SetLayoutAction, SetMapsDataActionStore } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 const mockAnsynContextMenu = MockComponent({

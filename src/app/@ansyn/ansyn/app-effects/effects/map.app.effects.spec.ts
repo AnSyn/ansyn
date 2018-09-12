@@ -16,7 +16,7 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar/reducers/status-bar.reducer';
 import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay } from '@ansyn/core';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 import {
 	IMapState,
@@ -51,17 +51,17 @@ import {
 	layersStateSelector
 } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
-import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlaysFetchData } from '@ansyn/core';
 import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
 import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
 import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { LoggerService } from '@ansyn/core';
 import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
-import * as extentFromGeojson from '@ansyn/core/utils/calc-extent';
+import * as extentFromGeojson from '@ansyn/core';
 import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
-import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICase, ICaseMapState } from '@ansyn/core';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];
 	sourceType = 'sourceType1';

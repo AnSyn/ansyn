@@ -6,7 +6,7 @@ import { FilterMetadata } from '../../models/metadata/filter-metadata.interface'
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { FilterType } from '@ansyn/core/models/case.model';
+import { FilterType } from '@ansyn/core';
 import { clone } from 'lodash';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { filtersConfig } from '../../services/filters.service';

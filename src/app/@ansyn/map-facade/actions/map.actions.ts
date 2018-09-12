@@ -2,10 +2,10 @@ import { Action } from '@ngrx/store';
 import { Point, Position } from 'geojson';
 import { IImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
 import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay, IPendingOverlay } from '@ansyn/core/models/overlay.model';
-import { IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/core/models/visualizers/annotations.model';
+import { ICaseMapPosition } from '@ansyn/core';
+import { ICaseMapState } from '@ansyn/core';
+import { IOverlay, IPendingOverlay } from '@ansyn/core';
+import { IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/core';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',

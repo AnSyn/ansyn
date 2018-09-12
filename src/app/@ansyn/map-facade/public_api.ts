@@ -4,14 +4,16 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/fromPromise';
+export { initialMapState } from './reducers/map.reducer';
 
+export { mapFeatureKey } from './reducers/map.reducer';
+export { MapReducer } from './reducers/map.reducer';
 export {
 	ClickOutsideMap,
 	ContextMenuDisplayAction,
 	ContextMenuShowAction,
 	ContextMenuTriggerAction
 } from './actions/map.actions';
-
 export {
 	AnnotationRemoveFeature,
 	AnnotationSelectAction, AnnotationUpdateFeature, ImageryCreatedAction,
@@ -31,3 +33,4 @@ export { MapActionTypes } from './actions/map.actions';
 export { IMapFacadeConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
 export { MapFacadeModule } from './map-facade.module';
+export { ActiveMapChangedAction } from './actions/map.actions';

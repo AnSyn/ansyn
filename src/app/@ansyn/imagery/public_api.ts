@@ -28,3 +28,4 @@ export { ImageryCommunicatorService } from './communicator-service/communicator.
 export { CommunicatorEntity } from './communicator-service/communicator.entity';
 export { ProjectionService } from './projection-service/projection.service';
 export { ImageryModule } from './imagery.module';
+export { IMAGERY_CONFIG } from './model/configuration.token';

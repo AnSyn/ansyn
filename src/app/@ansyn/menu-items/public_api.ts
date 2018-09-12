@@ -1,3 +1,5 @@
+export { ActiveMapChangedAction } from '../map-facade/actions/map.actions';
+
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
 export { LoadCaseAction } from './cases/actions/cases.actions';
 export { SettingsComponent } from './settings/settings/settings.component';
@@ -88,3 +90,14 @@ export { HelpModule } from './help/help.module';
 export { LayersManagerModule } from './layers-manager/layers-manager.module';
 export { SettingsModule } from './settings/settings.module';
 export { ToolsModule } from './tools/tools.module';
+export { ICasesConfig } from './cases/models/cases-config';
+export { filtersFeatureKey, FiltersReducer } from './filters/reducer/filters.reducer';
+export {
+	initialLayersState, layersFeatureKey,
+	LayersReducer,
+	layersStateSelector
+} from './layers-manager/reducers/layers.reducer';
+export { casesFeatureKey, CasesReducer, initialCasesState } from './cases/reducers/cases.reducer';
+export { PullActiveCenter } from './tools/actions/tools.actions';
+export { toolsFeatureKey, toolsInitialState, ToolsReducer } from './tools/reducers/tools.reducer';
+export { AddCaseAction } from './cases/actions/cases.actions';

@@ -1,3 +1,16 @@
+import { initialMapState, mapFeatureKey, MapReducer } from '../map-facade/reducers/map.reducer';
+export { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
+export { MockComponent } from './test/mock-component';
+export { ClickOutsideDirective } from './directives/click-outside.directive';
+export { createStore, IStoreFixture } from './test/mock-store';
+export { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
+export { asyncData } from './test/async-observable-helpers';
+export { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
+export  { ICaseLayersState } from './models/case.model';
+export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+
+export { AlertComponentDirective } from './alerts/alert-component.directive';
+export { coreFeatureKey, coreInitialState, CoreReducer } from './reducers/core.reducer';
 export { CaseFilters, ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './models/case.model';
 
 export { type } from './utils/type';

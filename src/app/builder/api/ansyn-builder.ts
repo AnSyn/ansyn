@@ -4,7 +4,7 @@ import { InjectionToken, NgModule, NgModuleRef, Provider } from '@angular/core';
 import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
+import { getProviders } from '@ansyn/ansyn/fetch-config-providers';
 import { ContextService } from '@ansyn/context/services/context.service';
 import { Observable } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';

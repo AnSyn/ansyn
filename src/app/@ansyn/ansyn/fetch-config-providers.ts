@@ -4,23 +4,25 @@ import { layersConfig } from '@ansyn/menu-items/layers-manager/services/data-lay
 import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
 import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { IdahoOverlaysSourceConfig } from './overlay-source-providers/idaho-source-provider';
+import { IdahoOverlaysSourceConfig } from './app-providers/overlay-source-providers/idaho-source-provider';
 import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
-import { MultipleOverlaysSourceConfig } from './overlay-source-providers/multiple-source-provider';
+import { MultipleOverlaysSourceConfig } from './app-providers/overlay-source-providers/multiple-source-provider';
 import { LoggerConfig } from '@ansyn/core/models/logger.config';
 import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { ContextConfig } from '@ansyn/context/models/context.config';
-import { LoginConfig } from '../../../app/login/services/login-config.service';
-import { configuration } from '../../../../configuration/configuration';
-import { OpenAerialOverlaysSourceConfig } from './overlay-source-providers/open-aerial-source-provider';
-import { PlanetOverlaysSourceConfig } from './overlay-source-providers/planet/planet-source-provider';
-import { MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers/map-source-providers-config';
+import { LoginConfig } from '../../app/login/services/login-config.service';
+import { OpenAerialOverlaysSourceConfig } from './app-providers/overlay-source-providers/open-aerial-source-provider';
+import { PlanetOverlaysSourceConfig } from './app-providers/overlay-source-providers/planet/planet-source-provider';
+import { MAP_SOURCE_PROVIDERS_CONFIG } from './app-providers/map-source-providers/map-source-providers-config';
 import { ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
 import { MENU_ITEMS } from '@ansyn/menu/menu.module';
+import { merge } from 'lodash';
 
-export const getProviders = (conf): any[] => {
+export const getProviders = (configurationJSON, configurationTS: any = {}): any[] => {
+	const conf = merge (configurationTS, configurationJSON);
+
 	return [
 		{
 			provide: IdahoOverlaysSourceConfig,
@@ -39,7 +41,8 @@ export const getProviders = (conf): any[] => {
 			useValue: conf.casesConfig
 		},
 		{
-			provide: filtersConfig, useValue: conf.filtersConfig
+			provide: filtersConfig,
+			useValue: conf.filtersConfig
 		},
 		{
 			provide: layersConfig,
@@ -50,10 +53,7 @@ export const getProviders = (conf): any[] => {
 			useValue: conf.toolsConfig
 		}, {
 			provide: OverlaysConfig,
-			useValue: {
-				...configuration.overlaysConfig,
-				...conf.overlaysConfig
-			}
+			useValue: conf.overlaysConfig
 		},
 		{
 			provide: ContextConfig,
@@ -89,10 +89,7 @@ export const getProviders = (conf): any[] => {
 		},
 		{
 			provide: CoreConfig,
-			useValue: {
-				...configuration.coreConfig,
-				...conf.coreConfig
-			}
+			useValue: conf.coreConfig
 		},
 		{
 			provide: MAP_SOURCE_PROVIDERS_CONFIG,
@@ -100,16 +97,16 @@ export const getProviders = (conf): any[] => {
 		},
 		{
 			provide: MENU_ITEMS,
-			useValue: configuration.ansynMenuItems
+			useValue: conf.menuConfig.ansynMenuItems
 		},
 		{
 			provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-			useValue: configuration.ansynMenuItems,
+			useValue: conf.menuConfig.ansynMenuItems,
 			multi: true
 		}
 	];
 };
 
-export const fetchConfigProviders = () => fetch(configuration.configPath)
+export const fetchConfigProviders = (configurationTS) => fetch(configurationTS.configPath)
 	.then(response => response.json())
-	.then(getProviders);
+	.then((configurationJSON) => getProviders(configurationJSON, configurationTS));

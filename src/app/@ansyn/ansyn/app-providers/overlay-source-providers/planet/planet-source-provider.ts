@@ -15,10 +15,12 @@ import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { LoggerService } from '@ansyn/core/services/logger.service';
 import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import moment from 'moment';
 import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
+/* Do not change this ( rollup issue ) */
+import * as momentNs from 'moment';
+const moment = momentNs;
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';

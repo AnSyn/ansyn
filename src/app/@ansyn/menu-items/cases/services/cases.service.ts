@@ -13,8 +13,10 @@ import { StorageService, IStoredEntity } from '@ansyn/core/services/storage/stor
 import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEntity } from '@ansyn/core/models/case.model';
 import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
-import { catchError, map, mergeMap, debounceTime } from 'rxjs/operators';
-import moment from 'moment';
+import { catchError, map } from 'rxjs/operators';
+/* Do not change this ( rollup issue ) */
+import * as momentNs from 'moment';
+const moment = momentNs;
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 

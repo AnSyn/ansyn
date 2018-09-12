@@ -4,5 +4,8 @@
   "lib": {
     "entryFile": "./public_api.ts",
     "styleIncludePaths": ["../"]
+  },
+  "externals": {
+    "moment": "moment"
   }
 }

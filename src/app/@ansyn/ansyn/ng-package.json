@@ -11,6 +11,7 @@
     "@ansyn/overlays",
     "@ansyn/plugins",
     "@ansyn/status-bar",
+    "@ansyn/context",
     "@ngrx/core",
     "@ngrx/effects",
     "@ngrx/entity",

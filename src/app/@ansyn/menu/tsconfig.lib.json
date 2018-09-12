@@ -13,8 +13,8 @@
     "importHelpers": true,
     "types": [],
     "paths": {
-      "@ansyn/menu/*": [
-        "src/app/@ansyn/menu/*"
+      "@ansyn/menu": [
+        "src/app/@ansyn/menu"
       ]
     }
   },

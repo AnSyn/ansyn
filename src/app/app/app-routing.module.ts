@@ -2,7 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PlaceholderComponent } from '@ansyn/core';
 import { UnAuthGuard } from './login/guards/unauth.guard';
-import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
+import { AnsynComponent } from '@ansyn/ansyn';
 import { AuthGuard } from './login/guards/auth.guard';
 import { LoginComponent } from './login/login/login.component';
 

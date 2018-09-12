@@ -5,41 +5,20 @@
       "@ansyn/core": [
         "src/app/@ansyn/core/public_api"
       ],
-      "@ansyn/core/*": [
-        "src/app/@ansyn/core/*"
-      ],
       "@ansyn/imagery": [
         "src/app/@ansyn/imagery/public_api.ts"
-      ],
-      "@ansyn/imagery/*": [
-        "src/app/@ansyn/imagery/*"
       ],
       "@ansyn/map-facade": [
         "src/app/@ansyn/map-facade/public_api.ts"
       ],
-      "@ansyn/map-facade/*": [
-        "src/app/@ansyn/map-facade/*"
-      ],
       "@ansyn/menu-items": [
         "src/app/@ansyn/menu-items/public_api.ts"
-      ],
-      "@ansyn/menu-items/*": [
-        "src/app/@ansyn/menu-items/*"
       ],
       "@ansyn/status-bar": [
         "src/app/@ansyn/status-bar/public_api.ts"
       ],
-      "@ansyn/status-bar/*": [
-        "src/app/@ansyn/status-bar/*"
-      ],
       "@ansyn/context": [
         "src/app/@ansyn/context/public_api.ts"
-      ],
-      "@ansyn/context/*": [
-        "src/app/@ansyn/context/*"
-      ],
-      "configuration/*": [
-        "src/configuration/*"
       ]
     }
   }

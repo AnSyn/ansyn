@@ -1,5 +1,5 @@
-import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
-import { selectDropMarkup, selectLoading } from '@ansyn/overlays/reducers/overlays.reducer';
+import { AnsynComponent } from '@ansyn/ansyn';
+import { selectDropMarkup, selectLoading } from '@ansyn/overlays';
 import { Store } from '@ngrx/store';
 import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';

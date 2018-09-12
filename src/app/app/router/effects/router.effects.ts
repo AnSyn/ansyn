@@ -8,14 +8,14 @@ import { Observable } from 'rxjs';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '../actions/router.actions';
 import { Router } from '@angular/router';
 import { ISetStatePayload, SetStateAction } from '../actions/router.actions';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items';
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import {
 	CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction, SelectCaseAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items';
 import { Store } from '@ngrx/store';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { CasesService } from '@ansyn/menu-items';
 
 @Injectable()
 export class RouterEffects {

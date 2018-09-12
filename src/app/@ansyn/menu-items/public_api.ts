@@ -1,3 +1,5 @@
+export { ProjectionConverterService } from './tools/services/projection-converter.service';
+export { LoadCaseAction } from './cases/actions/cases.actions';
 export { SettingsComponent } from './settings/settings/settings.component';
 export { GoToAction } from './tools/actions/tools.actions';
 export { ILayerState } from './layers-manager/reducers/layers.reducer';

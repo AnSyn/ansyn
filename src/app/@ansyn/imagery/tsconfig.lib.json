@@ -15,9 +15,6 @@
     "paths": {
       "@ansyn/core": [
         "./dist/ansyn/core"
-      ],
-      "@ansyn/core/*": [
-        "./dist/ansyn/core/*"
       ]
     }
   },

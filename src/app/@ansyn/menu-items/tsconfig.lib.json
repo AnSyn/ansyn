@@ -5,17 +5,11 @@
       "@ansyn/core": [
         "dist/ansyn/core"
       ],
-      "@ansyn/core/*": [
-        "dist/ansyn/core/*"
-      ],
-      "@ansyn/menu/*": [
-        "dist/ansyn/menu/*"
+      "@ansyn/menu": [
+        "dist/ansyn/menu"
       ],
       "@ansyn/context": [
         "dist/ansyn/context"
-      ],
-      "@ansyn/context/*": [
-        "dist/ansyn/context/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

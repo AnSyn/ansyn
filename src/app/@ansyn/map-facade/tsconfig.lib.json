@@ -5,14 +5,8 @@
       "@ansyn/core": [
         "dist/ansyn/core"
       ],
-      "@ansyn/core/*": [
-        "dist/ansyn/core/*"
-      ],
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
-      ],
-      "@ansyn/imagery/*": [
-        "dist/ansyn/imagery/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

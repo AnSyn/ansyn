@@ -5,8 +5,6 @@ import { ToolsComponent } from '@ansyn/menu-items/tools/tools/tools.component';
 import { HelpComponent } from '@ansyn/menu-items/help/components/help.component';
 import { IAlert } from '@ansyn/core/alerts/alerts.model';
 import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
-import { AlgorithmsComponent } from '@ansyn/menu-items/algorithms/algorithms/algorithms.component';
-import { SettingsComponent } from '@ansyn/menu-items/settings/settings/settings.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -48,19 +46,10 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			iconClass: 'icon-main-tools'
 		},
 		{
-			name: 'Algorithms',
-			component: AlgorithmsComponent,
-			iconClass: 'icon-main-algorithms'
-		},
-		{
-			name: 'Settings',
-			component: SettingsComponent,
-			iconClass: 'icon-main-settings'
-		},
-		{
 			name: 'Help',
 			component: HelpComponent,
 			iconClass: 'icon-help-settings'
 		}
 	]
+
 };

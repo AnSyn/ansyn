@@ -46,7 +46,7 @@
                 },
                 {
                   "replace": "src/app/@ansyn/ansyn/config/ansyn.config.ts",
-                  "with": "src/app/@ansyn/ansyn/config/ansyn.config-dev.ts"
+                  "with": "src/app/@ansyn/ansyn/config/ansyn.config.dev.ts"
                 }
               ]
             },
@@ -64,6 +64,10 @@
                 {
                   "replace": "src/configuration/configuration.ts",
                   "with": "src/configuration/configuration.prod.ts"
+                },
+                {
+                  "replace": "src/app/@ansyn/ansyn/config/ansyn.config.ts",
+                  "with": "src/app/@ansyn/ansyn/config/ansyn.config.prod.ts"
                 }
               ]
             }

@@ -35,6 +35,7 @@ export interface IOverlay extends IDilutedOverlay {
 	csmState?: string;
 	isGeoRegistered: boolean;
 	tag?: any; // original metadata
+	projection?: string;
 }
 
 export interface IOverlaysCriteria {

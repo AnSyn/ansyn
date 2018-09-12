@@ -43,6 +43,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
+	// constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
+
+
 	@AutoSubscription
 	pointNorth$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
@@ -158,5 +161,10 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			})
 		);
 	}
+
+	/// פונקציה שמחזירה 2 נקודות ב-GeoJson
+	// overlay אני שולח לתוך ה
+	// map source provider
+	/// מקבל את הנקודות ומחשב את הצפון
 
 }

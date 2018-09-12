@@ -1,12 +1,12 @@
 {
 	"name": "@ansyn/imagery",
-	"version": "0.2.81.5",
+	"version": "0.2.81.6",
 	"keywords": [],
 	"author": "ansyn",
 	"license": "MIT",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3",
-		"@ansyn/core": "0.2.81.5"
+		"@ansyn/core": "0.2.81.6"
 	}
 }

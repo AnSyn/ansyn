@@ -39,7 +39,7 @@
       "@builder/*": [
         "src/app/builder/*"
       ],
-      "root/*": ["./*"]
+      "root/package.json": ["./package.json"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

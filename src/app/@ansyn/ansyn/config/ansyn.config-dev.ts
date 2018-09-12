@@ -2,20 +2,30 @@ import { CasesComponent } from '@ansyn/menu-items/cases/components/cases/cases.c
 import { FiltersCollectionComponent } from '@ansyn/menu-items/filters/components/filters-collection/filters-collection.component';
 import { LayersManagerComponent } from '@ansyn/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 import { ToolsComponent } from '@ansyn/menu-items/tools/tools/tools.component';
+import { HelpComponent } from '@ansyn/menu-items/help/components/help.component';
+import { IAlert } from '@ansyn/core/alerts/alerts.model';
+import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
 import { AlgorithmsComponent } from '@ansyn/menu-items/algorithms/algorithms/algorithms.component';
 import { SettingsComponent } from '@ansyn/menu-items/settings/settings/settings.component';
-import { HelpComponent } from '@ansyn/menu-items/help/components/help.component';
 
-export const constConfiguration = {
-	production: false,
-	coreConfig: {
-		needToUseLayerExtent: false
-	},
-	configPath: 'assets/config/app.config.json',
-	overlaysConfig: {
-		overlayOverviewFailed: 'assets/icons/preview-failed-to-find-overlay-preview.svg'
-	},
-	menuConfig: {
+export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
+		ansynAlerts: [
+			{
+				key: 'noGeoRegistration',
+				background: '#a70b0b',
+				text: 'This Image Has No Geo-Registration'
+			},
+			{
+				key: 'overlayIsNotPartOfQuery',
+				background: '#27B2CF',
+				text: 'This Overlay Is Not a Part of the Query'
+			},
+			{
+				key: 'overlaysOutOfBounds',
+				background: '#80c5d4',
+				text: 'Image is out of bounds'
+			}
+		],
 		ansynMenuItems: [
 			{
 				name: 'Cases',
@@ -37,7 +47,6 @@ export const constConfiguration = {
 				component: ToolsComponent,
 				iconClass: 'icon-main-tools'
 			},
-
 			{
 				name: 'Algorithms',
 				component: AlgorithmsComponent,
@@ -54,5 +63,4 @@ export const constConfiguration = {
 				iconClass: 'icon-help-settings'
 			}
 		]
-	}
-};
+	};

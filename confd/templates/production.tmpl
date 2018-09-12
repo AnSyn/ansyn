@@ -116,7 +116,8 @@
     "schema": "layers"
   },
   "overlaysConfig": {
-    "limit": 249
+    "limit": 249,
+    "overlayOverviewFailed": "assets/icons/preview-failed-to-find-overlay-preview.svg"
   },
   "mapFacadeConfig": {
     "overlayCoverage": 0.1,
@@ -348,12 +349,8 @@
     	"default": {
 		 	"Sentinel-2A": "Sentinel 2A"
 	   	}
-    }
-  },
-  "loginConfig": {
-    "baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
-    "active":  "{{ getv "/ansyn/login/active" "" }}",
-    "authorizedPath": "/"
+    },
+    "needToUseLayerExtent": false
   },
   "menuConfig": {
     "path": "assets/logo.svg",

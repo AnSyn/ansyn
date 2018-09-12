@@ -1,8 +1,20 @@
 {
-  "name": "@ansyn/ansyn",
-  "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
-  }
+	"name": "@ansyn/ansyn",
+	"version": "0.2.81.4",
+	"peerDependencies": {
+		"@angular/common": "^6.0.3",
+		"@angular/core": "^6.0.3"
+	},
+	"dependencies": {
+		"@ansyn/assets": "0.2.81.4",
+		"@ansyn/core": "0.2.81.4",
+		"@ansyn/imagery": "0.2.81.4",
+		"@ansyn/map-facade": "0.2.81.4",
+		"@ansyn/menu": "0.2.81.4",
+		"@ansyn/menu-items": "0.2.81.4",
+		"@ansyn/overlays": "0.2.81.4",
+		"@ansyn/plugins": "0.2.81.4",
+		"@ansyn/status-bar": "0.2.81.4"
+	},
+	"license": "MIT"
 }

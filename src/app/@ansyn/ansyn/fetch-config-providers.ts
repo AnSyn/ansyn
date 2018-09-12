@@ -12,17 +12,11 @@ import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
 import { MenuConfig } from '@ansyn/menu/models/menuConfig';
 import { CoreConfig } from '@ansyn/core/models/core.config';
 import { ContextConfig } from '@ansyn/context/models/context.config';
-import { LoginConfig } from '../../app/login/services/login-config.service';
 import { OpenAerialOverlaysSourceConfig } from './app-providers/overlay-source-providers/open-aerial-source-provider';
 import { PlanetOverlaysSourceConfig } from './app-providers/overlay-source-providers/planet/planet-source-provider';
 import { MAP_SOURCE_PROVIDERS_CONFIG } from './app-providers/map-source-providers/map-source-providers-config';
-import { ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
-import { MENU_ITEMS } from '@ansyn/menu/menu.module';
-import { merge } from 'lodash';
 
-export const getProviders = (configurationJSON, configurationTS: any = {}): any[] => {
-	const conf = merge (configurationTS, configurationJSON);
-
+export const getProviders = (conf): any[] => {
 	return [
 		{
 			provide: IdahoOverlaysSourceConfig,
@@ -60,10 +54,6 @@ export const getProviders = (configurationJSON, configurationTS: any = {}): any[
 			useValue: conf.contextConfig
 		},
 		{
-			provide: LoginConfig,
-			useValue: conf.loginConfig
-		},
-		{
 			provide: mapFacadeConfig,
 			useValue: conf.mapFacadeConfig
 		},
@@ -94,19 +84,10 @@ export const getProviders = (configurationJSON, configurationTS: any = {}): any[
 		{
 			provide: MAP_SOURCE_PROVIDERS_CONFIG,
 			useValue: conf.mapSourceProvidersConfig
-		},
-		{
-			provide: MENU_ITEMS,
-			useValue: conf.menuConfig.ansynMenuItems
-		},
-		{
-			provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-			useValue: conf.menuConfig.ansynMenuItems,
-			multi: true
 		}
 	];
 };
 
-export const fetchConfigProviders = (configurationTS) => fetch(configurationTS.configPath)
+export const fetchConfigProviders = (configPath) => fetch(configPath)
 	.then(response => response.json())
-	.then((configurationJSON) => getProviders(configurationJSON, configurationTS));
+	.then(getProviders);

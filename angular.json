@@ -43,6 +43,10 @@
                 {
                   "replace": "src/configuration/configuration.ts",
                   "with": "src/configuration/configuration.dev.ts"
+                },
+                {
+                  "replace": "src/app/@ansyn/ansyn/config/ansyn.config.ts",
+                  "with": "src/app/@ansyn/ansyn/config/ansyn.config-dev.ts"
                 }
               ]
             },
@@ -380,7 +384,6 @@
         }
       }
     },
-
     "@ansyn/ansyn": {
       "root": "src/app/@ansyn/ansyn",
       "sourceRoot": "src/app/@ansyn/ansyn/src",
@@ -401,7 +404,6 @@
         }
       }
     },
-
     "@ansyn/map-facade": {
       "root": "src/app/@ansyn/map-facade",
       "sourceRoot": "projects/ansyn/map-facade/src",
@@ -422,7 +424,6 @@
         }
       }
     },
-
     "@ansyn/core": {
       "root": "projectssrc/app/@ansyn/ansyn/core",
       "sourceRoot": "src/app/@ansyn/core",
@@ -443,7 +444,6 @@
         }
       }
     },
-
     "@ansyn/imagery": {
       "root": "src/app/@ansyn/imagery",
       "sourceRoot": "src/app/@ansyn/imagery",
@@ -464,8 +464,7 @@
         }
       }
     },
-
-    "@ansyn/menu":  {
+    "@ansyn/menu": {
       "root": "src/app/@ansyn/menu",
       "sourceRoot": "src/app/@ansyn/menu",
       "projectType": "library",
@@ -485,8 +484,7 @@
         }
       }
     },
-
-    "@ansyn/status-bar":  {
+    "@ansyn/status-bar": {
       "root": "src/app/@ansyn/status-bar",
       "sourceRoot": "src/app/@ansyn/status-bar",
       "projectType": "library",
@@ -506,8 +504,7 @@
         }
       }
     },
-
-    "@ansyn/menu-items":  {
+    "@ansyn/menu-items": {
       "root": "src/app/@ansyn/menu-items",
       "sourceRoot": "src/app/@ansyn/menu-items",
       "projectType": "library",
@@ -527,8 +524,7 @@
         }
       }
     },
-
-    "@ansyn/plugins":  {
+    "@ansyn/plugins": {
       "root": "src/app/@ansyn/plugins",
       "sourceRoot": "src/app/@ansyn/plugins",
       "projectType": "library",
@@ -548,8 +544,7 @@
         }
       }
     },
-
-    "@ansyn/overlays":  {
+    "@ansyn/overlays": {
       "root": "src/app/@ansyn/overlays",
       "sourceRoot": "src/app/@ansyn/overlays",
       "projectType": "library",
@@ -569,8 +564,7 @@
         }
       }
     },
-
-    "@ansyn/context":  {
+    "@ansyn/context": {
       "root": "src/app/@ansyn/context",
       "sourceRoot": "src/app/@ansyn/context",
       "projectType": "library",
@@ -590,7 +584,6 @@
         }
       }
     }
-
   },
   "defaultProject": "ansyn",
   "schematics": {

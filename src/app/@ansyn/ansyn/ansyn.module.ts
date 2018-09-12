@@ -22,9 +22,9 @@ import { ContextModule } from '@ansyn/context';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule, AlertsModule  } from '@ansyn/core';
+import { AlertsModule, CoreModule } from '@ansyn/core';
 import { RouterModule } from '@angular/router';
-import { ansynAlerts } from './ansyn-alerts';
+import { ansynConfig } from './config/ansyn.config';
 
 @NgModule({
 	imports: [
@@ -43,8 +43,8 @@ import { ansynAlerts } from './ansyn-alerts';
 		AnsynPluginsModule,
 		CoreModule,
 		ContextModule,
-		MenuModule,
-		AlertsModule.provideAlerts(ansynAlerts),
+		MenuModule.provideMenuItems(ansynConfig.ansynMenuItems),
+		AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule,
 		ImageryModule,

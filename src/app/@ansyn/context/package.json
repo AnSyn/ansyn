@@ -1,9 +1,10 @@
 {
-  "name": "@ansyn/context",
-  "version": "0.2.81.4",
-  "peerDependencies": {
-    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
-    "@ansyn/core": "0.2.81.4"
-  }
+	"name": "@ansyn/context",
+	"version": "0.2.81.4",
+	"peerDependencies": {
+		"@angular/common": "^6.0.3",
+		"@angular/core": "^6.0.3",
+		"@ansyn/core": "0.2.81.4"
+	},
+	"license": "MIT"
 }

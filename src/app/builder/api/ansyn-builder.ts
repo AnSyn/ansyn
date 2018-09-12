@@ -23,12 +23,12 @@ import { AppEffectsModule } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { CoreModule } from '@ansyn/core/core.module';
 import { OverlaysModule } from '@ansyn/overlays/overlays.module';
 import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
 import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
 import { IWindowLayout } from '../reducers/builder.reducer';
 import { AnsynApi } from './ansyn-api.service';
 import { buildAnsynCustomComponent } from '../dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 import { AnsynBuilderModule } from './ansyn-builder.module';
+import { ansynConfig } from '@ansyn/ansyn/config/ansyn.config';
 
 export interface IAnsynBuilderOptions {
 	providers?: any[];
@@ -109,7 +109,7 @@ export class AnsynBuilder {
 				BrowserAnimationsModule,
 				AnsynPluginsModule,
 				CoreModule,
-				AlertsModule.provideAlerts(ansynAlerts),
+				AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 				AppEffectsModule,
 				MapFacadeModule,
 				ImageryModule,

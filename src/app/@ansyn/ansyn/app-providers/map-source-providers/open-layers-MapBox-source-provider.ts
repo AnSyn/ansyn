@@ -1,9 +1,9 @@
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins';
+import { OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
+import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';

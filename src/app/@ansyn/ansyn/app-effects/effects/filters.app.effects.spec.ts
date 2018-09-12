@@ -4,34 +4,34 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { filtersFeatureKey, FiltersReducer } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { filtersFeatureKey, FiltersReducer } from '@ansyn/menu-items';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
 	ResetFiltersAction
-} from '@ansyn/menu-items/filters/actions/filters.actions';
+} from '@ansyn/menu-items';
 import { FilterType } from '@ansyn/core';
-import { OverlayReducer, overlaysFeatureKey, overlaysStatusMessages } from '@ansyn/overlays/reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey, overlaysStatusMessages } from '@ansyn/overlays';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
-} from '@ansyn/overlays/actions/overlays.actions';
-import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
-import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
-import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
+} from '@ansyn/overlays';
+import { IFilter } from '@ansyn/menu-items';
+import { FilterMetadata } from '@ansyn/menu-items';
+import { EnumFilterMetadata } from '@ansyn/menu-items';
+import { SetBadgeAction } from '@ansyn/menu';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu';
 import 'rxjs/add/observable/of';
 import { SetFavoriteOverlaysAction } from '@ansyn/core';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core';
 import { IOverlay } from '@ansyn/core';
-import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { SliderFilterMetadata } from '@ansyn/menu-items';
+import { OverlaysService } from '@ansyn/overlays';
 import { GenericTypeResolverService } from '@ansyn/core';
-import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
+import { FiltersService } from '@ansyn/menu-items';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

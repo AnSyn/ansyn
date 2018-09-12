@@ -9,7 +9,7 @@ import { IOverlay } from '@ansyn/core';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
 import { MockComponent } from '@ansyn/core';
-import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysConfig } from '@ansyn/overlays';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;

@@ -1,5 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
@@ -11,10 +11,10 @@ import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { Inject } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
+import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays';
+import { OverlaysService } from '@ansyn/overlays';
 import { ICaseMapState } from '@ansyn/core';
 import {
 	IMarkUpData,
@@ -23,14 +23,14 @@ import {
 	overlaysStateSelector,
 	selectFilteredOveralys,
 	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+} from '@ansyn/overlays';
+import { ExtendMap } from '@ansyn/overlays';
 import { MultiLineString } from 'geojson';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapFacadeService } from '@ansyn/map-facade';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade';
 import { IVisualizerEntity } from '@ansyn/core';
 import { VisualizerStates } from '@ansyn/core';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { IOverlay } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';

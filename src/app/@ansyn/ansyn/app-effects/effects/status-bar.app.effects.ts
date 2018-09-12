@@ -5,17 +5,17 @@ import {
 	CopySelectedCaseLinkAction,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
-} from '@ansyn/status-bar/actions/status-bar.actions';
+} from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { OverlaysService } from '@ansyn/overlays';
+import { casesStateSelector, ICasesState } from '@ansyn/menu-items';
+import { CopyCaseLinkAction } from '@ansyn/menu-items';
+import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade';
+import { selectGeoFilterSearchMode } from '@ansyn/status-bar';
+import { SearchModeEnum } from '@ansyn/status-bar';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 
 

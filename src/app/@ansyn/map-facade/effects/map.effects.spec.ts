@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { cold, hot } from 'jasmine-marbles';

@@ -18,13 +18,13 @@ import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/overlays';
 import { coreStateSelector, selectRemovedOverlays } from '@ansyn/core';
-import { overlaysStateSelector, selectOverlaysMap } from '@ansyn/overlays/reducers/overlays.reducer';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { overlaysStateSelector, selectOverlaysMap } from '@ansyn/overlays';
+import { CasesActionTypes } from '@ansyn/menu-items';
 import { LoggerService } from '@ansyn/core';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade';
+import { MapFacadeService } from '@ansyn/map-facade';
 import { IOverlay } from '@ansyn/core';
 import { IAppState } from '../app.effects.module';
 import { map } from 'rxjs/operators';

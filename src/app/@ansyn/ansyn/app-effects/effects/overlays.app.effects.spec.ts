@@ -8,8 +8,8 @@ import {
 	DisplayOverlaySuccessAction,
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
-} from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+} from '@ansyn/overlays';
+import { OverlaysService } from '@ansyn/overlays';
 import {
 	MarkUpClass,
 	OverlayReducer,
@@ -18,7 +18,7 @@ import {
 	overlaysStateSelector,
 	selectDropMarkup,
 	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays';
 import { Observable } from 'rxjs';
 import {
 	IToolsState,
@@ -26,7 +26,7 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+} from '@ansyn/menu-items';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
@@ -34,19 +34,19 @@ import {
 	CasesReducer,
 	casesStateSelector,
 	initialCasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
+} from '@ansyn/menu-items';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarStateSelector } from '@ansyn/status-bar';
 
 import { coreInitialState, coreStateSelector } from '@ansyn/core';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { CasesService } from '@ansyn/menu-items';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { ICase } from '@ansyn/core';
-import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
+import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade';
+import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade';
 import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
+import { CacheService } from '@ansyn/imagery';
 import {
 	contextFeatureSelector,
 	contextInitialState,
@@ -54,7 +54,7 @@ import {
 } from '@ansyn/context';
 import { SetContextParamsAction } from '@ansyn/context';
 import { DisplayedOverlay } from '@ansyn/core';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
+import { ImageryMapSource } from '@ansyn/imagery';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

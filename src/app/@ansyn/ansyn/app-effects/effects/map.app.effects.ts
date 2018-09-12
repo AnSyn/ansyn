@@ -9,16 +9,16 @@ import {
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
-} from '@ansyn/overlays/actions/overlays.actions';
-import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade/actions/map.actions';
+} from '@ansyn/overlays';
+import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
-} from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
+} from '@ansyn/menu-items';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade';
+import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays';
 import { mapFacadeConfig, IMapFacadeConfig } from '@ansyn/map-facade';
 import {
 	AddAlertMsg,
@@ -29,16 +29,16 @@ import {
 	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '@ansyn/core';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { DisabledOpenLayersMapName } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { endTimingLog, startTimingLog } from '@ansyn/core';
 import { AlertMsgTypes } from '@ansyn/core';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenlayersMapName } from '@ansyn/plugins';
 import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { MapFacadeService } from '@ansyn/map-facade';
+import { CommunicatorEntity } from '@ansyn/imagery';
 import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IMAGERY_MAPS, IBaseImageryMapConstructor } from '@ansyn/imagery';
 import { toastMessages } from '@ansyn/core';

@@ -12,7 +12,7 @@ import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
 import { LoggerService } from '@ansyn/core';
 import { Injectable } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 
 const overlays: IOverlaysFetchData = {
 	data: [

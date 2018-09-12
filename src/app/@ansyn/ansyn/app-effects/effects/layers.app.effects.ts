@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/withLatestFrom';
-import { CasesActionTypes, SaveCaseAsSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SaveCaseAsSuccessAction } from '@ansyn/menu-items';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { mergeMap } from 'rxjs/internal/operators';
 import { Store } from '@ngrx/store';
@@ -8,15 +8,15 @@ import {
 	BeginLayerCollectionLoadAction,
 	UpdateLayer,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+} from '@ansyn/menu-items';
+import { selectLayers } from '@ansyn/menu-items';
+import { ILayer, LayerType } from '@ansyn/menu-items';
 import { Feature } from 'geojson';
 import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	MapActionTypes
-} from '@ansyn/map-facade/actions/map.actions';
+} from '@ansyn/map-facade';
 import { Observable } from 'rxjs/index';
 
 

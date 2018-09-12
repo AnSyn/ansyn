@@ -1,11 +1,11 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { UUID } from 'angular2-uuid';
 import { Observable } from 'rxjs';
 import { Feature, Polygon } from 'geojson';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { PolygonSearchVisualizer } from './polygon-search.visualizer';
 
 describe('PolygonSearchVisualizer', () => {

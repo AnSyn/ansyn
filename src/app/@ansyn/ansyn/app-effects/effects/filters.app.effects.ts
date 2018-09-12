@@ -11,30 +11,30 @@ import {
 	selectFilters,
 	selectOldFilters,
 	selectShowOnlyFavorites
-} from '@ansyn/menu-items/filters/reducer/filters.reducer';
+} from '@ansyn/menu-items';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/overlays';
 import {
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
 	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
 	ResetFiltersAction
-} from '@ansyn/menu-items/filters/actions/filters.actions';
+} from '@ansyn/menu-items';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
-import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
+import { SetBadgeAction } from '@ansyn/menu';
 import {
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
@@ -42,15 +42,15 @@ import {
 } from '@ansyn/core';
 import { FilterType, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
 import { IOverlay } from '@ansyn/core';
-import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
-import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
+import { FilterMetadata } from '@ansyn/menu-items';
+import { FiltersService } from '@ansyn/menu-items';
 import { IFilterModel } from '@ansyn/core';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
+import { OverlaysService } from '@ansyn/overlays';
+import { IFilter } from '@ansyn/menu-items';
 import { InjectionResolverFilter } from '@ansyn/core';
 import { GenericTypeResolverService } from '@ansyn/core';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { EnumFilterMetadata } from '@ansyn/menu-items';
+import { BooleanFilterMetadata } from '@ansyn/menu-items';
 import 'rxjs/add/observable/combineLatest';
 import { buildFilteredOverlays } from '@ansyn/core';
 

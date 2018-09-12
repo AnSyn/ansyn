@@ -6,61 +6,61 @@ import { cloneDeep } from 'lodash';
 import {
 	ActiveMapChangedAction,
 	ImageryCreatedAction, SetIsLoadingAcion
-} from '@ansyn/map-facade/actions/map.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+} from '@ansyn/map-facade';
+import { OverlaysService } from '@ansyn/overlays';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
 	StatusBarInitialState,
 	StatusBarReducer,
 	statusBarStateSelector
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/status-bar';
+import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays';
 import { IOverlay } from '@ansyn/core';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { CommunicatorEntity } from '@ansyn/imagery';
 import {
 	IMapState,
 	initialMapState,
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector
-} from '@ansyn/map-facade/reducers/map.reducer';
-import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items/tools/actions/tools.actions';
+} from '@ansyn/map-facade';
+import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items';
 import {
 	IOverlaysState,
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysInitialState,
 	overlaysStateSelector
-} from '@ansyn/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
 	casesFeatureKey, CasesReducer, casesStateSelector,
 	ICasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+} from '@ansyn/menu-items';
+import { mapFacadeConfig } from '@ansyn/map-facade';
 import {
 	IToolsState, toolsFlags, toolsInitialState,
 	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+} from '@ansyn/menu-items';
 import {
 	ILayerState,
 	initialLayersState,
 	layersStateSelector
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
+} from '@ansyn/menu-items';
+import { VisualizersConfig } from '@ansyn/imagery';
 import { IOverlaysFetchData } from '@ansyn/core';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { CacheService } from '@ansyn/imagery';
+import { BaseMapSourceProvider } from '@ansyn/imagery';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { CasesService } from '@ansyn/menu-items';
 import { LoggerService } from '@ansyn/core';
-import { IMAGERY_CONFIG } from '@ansyn/imagery/model/configuration.token';
+import { IMAGERY_CONFIG } from '@ansyn/imagery';
 import * as extentFromGeojson from '@ansyn/core';
-import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
+import { IMAGERY_MAPS } from '@ansyn/imagery';
 import { ICase, ICaseMapState } from '@ansyn/core';
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported =  ['mapType1'];

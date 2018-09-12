@@ -5,16 +5,16 @@ import {
 	CasesActionTypes,
 	LoadDefaultCaseAction,
 	SelectCaseAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items';
 import { SetToastMessageAction } from '@ansyn/core';
 import { IContext } from '@ansyn/core';
 import { ICase } from '@ansyn/core';
-import { IStartAndEndDate } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { IStartAndEndDate } from '@ansyn/overlays';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { CasesService } from '@ansyn/menu-items';
 import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays';
 
 @Injectable()
 export class ContextAppEffects {

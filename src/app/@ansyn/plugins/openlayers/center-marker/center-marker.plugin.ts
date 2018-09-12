@@ -6,9 +6,9 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import { ICaseMapPosition } from '@ansyn/core';
 import { Observable } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
+import { BaseImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryMap } from '@ansyn/imagery';
+import { ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 

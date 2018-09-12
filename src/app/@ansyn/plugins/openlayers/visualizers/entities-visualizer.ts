@@ -18,7 +18,7 @@ import {
 	BaseImageryVisualizer,
 	IBaseImageryVisualizerClass,
 	VisualizerInteractionTypes
-} from '@ansyn/imagery/model/base-imagery-visualizer';
+} from '@ansyn/imagery';
 import { IVisualizerEntity } from '@ansyn/core';
 import ol_color from 'ol/color';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';

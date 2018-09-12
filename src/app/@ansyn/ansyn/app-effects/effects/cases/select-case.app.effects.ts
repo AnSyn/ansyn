@@ -16,14 +16,14 @@ import {
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items';
+import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items';
 import { ICase, ICaseMapState } from '@ansyn/core';
-import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { IOverlay } from '@ansyn/core';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items';
+import { UpdateFacetsAction } from '@ansyn/menu-items';
+import { CasesService } from '@ansyn/menu-items';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
 import { isFullOverlay } from '@ansyn/core';

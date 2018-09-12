@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ProjectionService } from '@ansyn/imagery';
 import { Actions, EffectsModule } from '@ngrx/effects';
 import { MouseShadowVisualizer } from './mouse-shadow.visualizer';
 

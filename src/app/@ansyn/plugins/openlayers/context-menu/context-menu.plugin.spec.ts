@@ -1,11 +1,11 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
-import { ContextMenuDisplayAction } from '@ansyn/map-facade/actions/map.actions';
+import { ContextMenuDisplayAction } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { DisplayOverlayFromStoreAction } from '@ansyn/overlays';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/index';
 import { SetMapsDataActionStore } from '@ansyn/core';

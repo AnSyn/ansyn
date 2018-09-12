@@ -18,31 +18,31 @@ import {
 	StopMouseShadow,
 	ToolsActionsTypes,
 	UpdateToolsFlags
-} from '@ansyn/menu-items/tools/actions/tools.actions';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+} from '@ansyn/menu-items';
+import { CasesActionTypes } from '@ansyn/menu-items';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/operator/withLatestFrom';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { CommunicatorEntity } from '@ansyn/imagery';
 import {
 	MapActionTypes,
 	PinLocationModeTriggerAction
-} from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+} from '@ansyn/map-facade';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
+import { MapFacadeService } from '@ansyn/map-facade';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
 import { Point } from 'geojson';
-import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
-import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
+import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import {
 	ClearActiveInteractionsAction,
 	CoreActionTypes,
 	SetMapsDataActionStore
 } from '@ansyn/core';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { differenceWith, isEqual } from 'lodash';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterSearchMode } from '@ansyn/status-bar';
 import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
 import { IAppState } from '../app.effects.module';
 

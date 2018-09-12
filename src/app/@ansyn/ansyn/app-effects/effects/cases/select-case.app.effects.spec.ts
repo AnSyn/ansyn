@@ -7,7 +7,7 @@ import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+} from '@ansyn/menu-items';
 import {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
@@ -32,10 +32,10 @@ import {
 	IContextEntity,
 	IOverlaysManualProcessArgs
 } from '@ansyn/core';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
+import { SelectCaseAction } from '@ansyn/menu-items';
+import { SetComboBoxesProperties } from '@ansyn/status-bar';
+import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items';
+import { UpdateFacetsAction } from '@ansyn/menu-items';
 import { SetContextParamsAction } from '@ansyn/context';
 import { CoreConfig } from '@ansyn/core';
 import { SelectCaseAppEffects } from './select-case.app.effects';

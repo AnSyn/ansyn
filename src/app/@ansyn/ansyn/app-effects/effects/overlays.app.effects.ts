@@ -10,10 +10,10 @@ import {
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetSpecialObjectsActionStore
-} from '@ansyn/overlays/actions/overlays.actions';
+} from '@ansyn/overlays';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays';
 import {
 	IMarkUpData,
 	IOverlaysState,
@@ -22,10 +22,10 @@ import {
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
 	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
+} from '@ansyn/overlays';
 import { IOverlay, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
+import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { LayoutKey, layoutOptions } from '@ansyn/core';
 import {
 	BackToWorldView,
@@ -36,15 +36,15 @@ import {
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/core';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ExtendMap } from '@ansyn/overlays';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { ICaseMapPosition } from '@ansyn/core';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+import { CommunicatorEntity } from '@ansyn/imagery';
 import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import {
 	BaseMapSourceProvider,
 	IBaseMapSourceProviderConstructor
-} from '@ansyn/imagery/model/base-map-source-provider';
+} from '@ansyn/imagery';
 import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IContextEntity } from '@ansyn/core';
@@ -53,7 +53,7 @@ import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
 import { of } from 'rxjs/internal/observable/of';
-import { overlayOverviewComponentConstants } from '@ansyn/overlays/components/overlay-overview/overlay-overview.component.const';
+import { overlayOverviewComponentConstants } from '@ansyn/overlays';
 
 @Injectable()
 export class OverlaysAppEffects {

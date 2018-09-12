@@ -2,32 +2,32 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { IOverlay } from '@ansyn/core';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import {
 	AddCaseAction,
 	LoadCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction, SelectDilutedCaseAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
+} from '@ansyn/menu-items';
 import { ICase, CaseGeoFilter } from '@ansyn/core';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable } from 'rxjs';
-import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays';
+import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items';
 import { contextFeatureKey, ContextReducer } from '@ansyn/context';
 import { ContextService } from '@ansyn/context';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { CoreConfig } from '@ansyn/core';
 import { StorageService } from '@ansyn/core';
 import { ErrorHandlerService } from '@ansyn/core';
 import { ContextConfig } from '@ansyn/context';
-import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { casesConfig, CasesService } from '@ansyn/menu-items';
 import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { OverlaysService } from '@ansyn/overlays';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

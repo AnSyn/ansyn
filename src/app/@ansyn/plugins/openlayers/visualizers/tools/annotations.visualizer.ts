@@ -13,7 +13,7 @@ import olText from 'ol/style/text';
 import olStroke from 'ol/style/stroke';
 
 import condition from 'ol/events/condition';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { VisualizerInteractions } from '@ansyn/imagery';
 import { cloneDeep, uniq } from 'lodash';
 import * as ol from 'openlayers';
 import {
@@ -24,41 +24,41 @@ import {
 } from '@ansyn/core';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
-import { AnnotationSelectAction } from '@ansyn/map-facade/actions/map.actions';
+import { AnnotationSelectAction } from '@ansyn/map-facade';
 import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
 	SubMenuEnum
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+} from '@ansyn/menu-items';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	selectActiveAnnotationLayer,
 	selectLayersEntities,
 	selectSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+} from '@ansyn/menu-items';
 import 'rxjs/add/operator/take';
-import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
+import { SetAnnotationMode } from '@ansyn/menu-items';
+import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import 'rxjs/add/observable/combineLatest';
 import { IVisualizerEntity } from '@ansyn/core';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+import { ProjectionService } from '@ansyn/imagery';
+import { ImageryVisualizer } from '@ansyn/imagery';
+import { IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { Inject } from '@angular/core';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { MapFacadeService } from '@ansyn/map-facade';
 import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { ICaseMapState } from '@ansyn/core';
 import { IOverlay } from '@ansyn/core';
 import OLGeoJSON from 'ol/format/geojson';
 import { IVisualizerStyle, MarkerSize } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { ILayer, LayerType } from '@ansyn/menu-items';
+import { UpdateLayer } from '@ansyn/menu-items';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { selectGeoFilterSearchMode } from '@ansyn/status-bar';
+import { SearchMode, SearchModeEnum } from '@ansyn/status-bar';
 import { featureCollection } from '@turf/turf';
 import { VisualizerStates } from '@ansyn/core';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';

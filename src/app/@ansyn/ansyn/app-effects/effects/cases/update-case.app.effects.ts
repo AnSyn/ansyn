@@ -5,8 +5,8 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import { ICase } from '@ansyn/core';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { UpdateCaseAction } from '@ansyn/menu-items';
+import { selectFacets } from '@ansyn/menu-items';
 import {
 	selectAutoSave,
 	selectFavoriteOverlays,
@@ -14,11 +14,11 @@ import {
 	selectOverlaysCriteria,
 	selectPresetOverlays, selectRemovedOverlays, selectRemovedOverlaysVisibility
 } from '@ansyn/core';
-import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { selectSelectedLayersIds } from '@ansyn/menu-items';
+import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
+import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items';
+import { selectComboBoxesProperties } from '@ansyn/status-bar';
+import { selectSelectedCase } from '@ansyn/menu-items';
 import { selectContextEntities } from '@ansyn/context';
 import { pipe } from 'rxjs/Rx';
 import { tap } from 'rxjs/internal/operators';

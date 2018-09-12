@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { ICase, ICaseMapState } from '@ansyn/core';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
+import { MapFacadeService } from '@ansyn/map-facade';
+import { mapStateSelector } from '@ansyn/map-facade';
+import { selectIsPinned } from '@ansyn/menu';
+import { selectSelectedCase } from '@ansyn/menu-items';
 import { Input } from '@angular/core';
 
 @Component({

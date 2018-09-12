@@ -6,19 +6,19 @@ import {
 	SubMenuEnum,
 	toolsFlags,
 	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+} from '@ansyn/menu-items';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Feature from 'ol/feature';
 import { Point } from 'geojson';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade';
 import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
-import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items';
+import { ProjectionService } from '@ansyn/imagery';
+import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 

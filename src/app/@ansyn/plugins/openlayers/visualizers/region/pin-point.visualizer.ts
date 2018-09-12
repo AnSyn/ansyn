@@ -7,9 +7,9 @@ import { Actions } from '@ngrx/effects';
 import * as turf from '@turf/turf';
 import { getPointByGeometry } from '@ansyn/core';
 import { Position } from 'geojson';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ProjectionService } from '@ansyn/imagery';
 import { CaseGeoFilter, CaseRegionState } from '@ansyn/core';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 import { RegionVisualizer } from './region.visualizer';
 

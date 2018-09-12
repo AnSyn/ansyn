@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Point, Position } from 'geojson';
-import { IImageryChanged } from '@ansyn/imagery/communicator-service/communicator.service';
-import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { IImageryChanged } from '@ansyn/imagery';
+import { IMapInstanceChanged } from '@ansyn/imagery';
 import { ICaseMapPosition } from '@ansyn/core';
 import { ICaseMapState } from '@ansyn/core';
 import { IOverlay, IPendingOverlay } from '@ansyn/core';

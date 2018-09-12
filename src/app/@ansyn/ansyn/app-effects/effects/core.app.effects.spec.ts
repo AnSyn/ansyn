@@ -6,11 +6,11 @@ import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector } from '@ansyn/core';
 import { cold, hot } from 'jasmine-marbles';
 import { GoNextPresetOverlay } from '@ansyn/core';
-import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { casesStateSelector, initialCasesState } from '@ansyn/menu-items';
+import { initialMapState, mapStateSelector } from '@ansyn/map-facade';
 import { IOverlay } from '@ansyn/core';
 import { LoggerService } from '@ansyn/core';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlayAction } from '@ansyn/overlays';
 
 function mockOverlay(id: string): IOverlay {
 	const overlay = <IOverlay> {};

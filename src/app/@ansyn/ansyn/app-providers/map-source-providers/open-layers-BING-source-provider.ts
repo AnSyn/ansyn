@@ -1,9 +1,9 @@
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '@ansyn/plugins';
+import { OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
+import { ImageryMapSource } from '@ansyn/imagery';
 import proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 

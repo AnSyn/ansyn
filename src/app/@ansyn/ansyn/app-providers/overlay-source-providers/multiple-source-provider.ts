@@ -6,7 +6,7 @@ import {
 	IFetchParams,
 	IOverlayFilter,
 	IStartAndEndDate
-} from '@ansyn/overlays/models/base-overlay-source-provider.model';
+} from '@ansyn/overlays';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { LoggerService } from '@ansyn/core';

@@ -8,7 +8,7 @@ import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer
 import { ImageryStatusComponent } from '@ansyn/core';
 import { AlertComponentDirective } from '@ansyn/core';
 import { MockComponent } from '@ansyn/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core';
 import { SetLayoutAction, SetMapsDataActionStore } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';

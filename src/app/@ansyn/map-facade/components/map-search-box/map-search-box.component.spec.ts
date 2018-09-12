@@ -2,7 +2,7 @@ import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core
 
 import { MapSearchBoxComponent } from './map-search-box.component';
 import { FormsModule } from '@angular/forms';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { asyncData } from '@ansyn/core';
 

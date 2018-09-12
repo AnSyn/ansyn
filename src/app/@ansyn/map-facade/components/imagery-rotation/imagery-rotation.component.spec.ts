@@ -4,7 +4,7 @@ import { ImageryRotationComponent } from './imagery-rotation.component';
 import { CoreModule } from '@ansyn/core';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '@ansyn/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreConfig } from '@ansyn/core';
 

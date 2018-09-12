@@ -2,7 +2,7 @@ import { GeoJsonObject, Point } from 'geojson';
 import { Observable } from 'rxjs';
 import { ICaseMapPosition } from '@ansyn/core';
 import { ImageryMap } from '@ansyn/imagery';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import { BaseImageryMap } from '@ansyn/imagery';
 export const CesiumMapName = 'cesium';
 
 // @dynamic

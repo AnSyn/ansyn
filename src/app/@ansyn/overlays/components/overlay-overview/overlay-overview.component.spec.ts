@@ -7,7 +7,8 @@ import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { IOverlay, MockComponent } from '@ansyn/core';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
-import { OverlaysConfig, SetHoveredOverlayAction } from '../..';
+import { OverlaysConfig } from '../../services/overlays.service';
+import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;

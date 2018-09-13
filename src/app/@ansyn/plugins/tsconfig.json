@@ -3,22 +3,22 @@
   "compilerOptions": {
     "paths": {
       "@ansyn/core": [
-        "src/app/@ansyn/core/public_api"
+        "src/app/@ansyn/core"
       ],
       "@ansyn/imagery": [
-        "src/app/@ansyn/imagery/public_api.ts"
+        "src/app/@ansyn/imagery"
       ],
       "@ansyn/map-facade": [
-        "src/app/@ansyn/map-facade/public_api.ts"
+        "src/app/@ansyn/map-facade"
       ],
       "@ansyn/menu-items": [
-        "src/app/@ansyn/menu-items/public_api.ts"
+        "src/app/@ansyn/menu-items"
       ],
       "@ansyn/status-bar": [
-        "src/app/@ansyn/status-bar/public_api.ts"
+        "src/app/@ansyn/status-bar"
       ],
       "@ansyn/context": [
-        "src/app/@ansyn/context/public_api.ts"
+        "src/app/@ansyn/context"
       ]
     }
   }

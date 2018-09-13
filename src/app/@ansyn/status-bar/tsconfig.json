@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": {
       "@ansyn/core": [
-        "src/app/@ansyn/core/public_api"
+        "src/app/@ansyn/core"
       ]
     }
   }

@@ -1,3 +1,4 @@
+export { DataLayersService } from './layers-manager/services/data-layers.service';
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
 export { LoadCaseAction } from './cases/actions/cases.actions';
 export { SettingsComponent } from './settings/settings/settings.component';

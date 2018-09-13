@@ -4,13 +4,13 @@
     "module": "commonjs",
     "paths": {
       "@ansyn/core": [
-        "src/app/@ansyn/core/public_api"
+        "src/app/@ansyn/core"
       ],
       "@ansyn/imagery": [
-        "src/app/@ansyn/imagery/public_api.ts"
+        "src/app/@ansyn/imagery"
       ],
       "@ansyn/menu": [
-        "src/app/@ansyn/menu/public_api.ts"
+        "src/app/@ansyn/menu"
       ]
     },
     "target": "es5",

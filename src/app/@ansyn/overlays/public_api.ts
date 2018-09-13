@@ -1,6 +1,7 @@
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/mergeMap';
 
+export { selectLoading } from './reducers/overlays.reducer';
 export { LoadOverlaysSuccessAction } from './actions/overlays.actions';
 export { IMarkUpData } from './reducers/overlays.reducer';
 export { IDateRange, IFetchParams, IOverlayFilter } from './models/base-overlay-source-provider.model';

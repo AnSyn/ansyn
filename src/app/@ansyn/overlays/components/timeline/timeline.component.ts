@@ -138,7 +138,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDrops),
 			distinctUntilChanged(isEqual),
-			tap(drops => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
+			tap((drops: any) => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
 			tap(drops => {
 				if (drops.length >= 1) {
 					this.configuration.range = this.overlaysService.getTimeRangeFromDrops(drops);

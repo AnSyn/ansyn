@@ -19,6 +19,10 @@ import { Observer } from 'rxjs/Observer';
 import * as turf from '@turf/turf';
 import { ProjectionService } from '../../../imagery/projection-service/projection.service';
 import { toDegrees } from '@ansyn/core/utils/math';
+import { combineLatest, of } from 'rxjs/index';
+import { CommunicatorEntity } from '../../../imagery/communicator-service/communicator.entity';
+import Map from 'ol/map';
+import { catchError } from 'rxjs/internal/operators';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -46,33 +50,24 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		return overlayOverviewComponentConstants;
 	}
 
-	mapObject;
-
 	@HostBinding('class.show') isHoveringOverDrop = false;
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
 
 	@AutoSubscription
-	activeMapId$ = this.store$.pipe(
-		select(selectActiveMapId),
-		map((activeMapId) => this.imageryCommunicatorService.provide(activeMapId)),
-		filter(Boolean),
-		tap((communicator) => {
-			this.mapObject = communicator.ActiveMap.mapObject;
-		})
-	);
-
-	@AutoSubscription
-	hoveredOverlay$: Observable<any> = this.store$.pipe(
-		select(selectHoveredOverlay),
-		filter((overlay: IOverlay) => Boolean(this.mapObject)),
-		mergeMap((overlay: IOverlay) => this.getCorrectedNorth().pipe(
-			map((north) => {
-				console.log(toDegrees(north));
-				return [overlay, north];
-			})
-		)),
-		tap(this.onHoveredOverlay.bind(this))
+	hoveredOverlay$: Observable<any> = combineLatest(this.store$.pipe(select(selectHoveredOverlay)), this.store$.pipe(select(selectActiveMapId))).pipe(
+		map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]),
+		filter(([overlay, comm]: [IOverlay, CommunicatorEntity]) => Boolean(comm)),
+		map(([overlay, comm]: [IOverlay, CommunicatorEntity]) => [overlay, comm.ActiveMap.mapObject]),
+		mergeMap(([overlay, mapObject]: [IOverlay, Map]) => {
+			return this.getCorrectedNorth(mapObject).pipe(
+				map((north) => {
+					return [overlay, north];
+				})
+			);
+		}),
+		tap(this.onHoveredOverlay.bind(this)),
+		catchError(() => of(true))
 	);
 
 	// Mark the original overlay as un-hovered when mouse leaves
@@ -112,7 +107,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.img.nativeElement.src = isFetchingOverlayData ? undefined : overlay.thumbnailUrl;
 				this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
 				this.rotation = north;
-				console.log(toDegrees(this.rotation));
 				if ((isNewOverlay || isFetchingOverlayData) && !this.img.nativeElement.complete) {
 					this.startedLoadingImage();
 				}
@@ -123,25 +117,25 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 
-	getCorrectedNorth(): Observable<number> {
-		return this.getProjectedCenters().pipe(
+	getCorrectedNorth(mapObject: Map): Observable<number> {
+		return this.getProjectedCenters(mapObject).pipe(
 			map((projectedCenters: Point[]): number => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-				return northOffsetRad * -1 ;
+				return northOffsetRad * -1;
 			})
 		);
 	}
 
-	getProjectedCenters(): Observable<Point[]> {
+	getProjectedCenters(mapObject: Map): Observable<Point[]> {
 		return Observable.create((observer: Observer<any>) => {
-			const size = this.mapObject.getSize();
-			const olCenterView = this.mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
+			const size = mapObject.getSize();
+			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 			if (!areCoordinatesNumeric(olCenterView)) {
 				observer.error('no coordinate for pixel');
 			}
-			const olCenterViewWithOffset = this.mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
+			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
 			if (!areCoordinatesNumeric(olCenterViewWithOffset)) {
 				observer.error('no coordinate for pixel');
 			}

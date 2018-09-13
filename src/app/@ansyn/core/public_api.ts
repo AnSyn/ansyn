@@ -1,4 +1,3 @@
-import { initialMapState, mapFeatureKey, MapReducer } from '../map-facade/reducers/map.reducer';
 export { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
 export { MockComponent } from './test/mock-component';
 export { ClickOutsideDirective } from './directives/click-outside.directive';

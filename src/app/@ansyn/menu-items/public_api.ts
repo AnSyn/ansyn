@@ -1,5 +1,3 @@
-export { ActiveMapChangedAction } from '../map-facade/actions/map.actions';
-
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
 export { LoadCaseAction } from './cases/actions/cases.actions';
 export { SettingsComponent } from './settings/settings/settings.component';

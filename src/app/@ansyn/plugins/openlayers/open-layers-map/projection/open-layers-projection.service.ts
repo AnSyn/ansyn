@@ -6,7 +6,6 @@ import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';
 import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { ProjectionLike } from 'root/node_modules/@types/openlayers';
 
 @Injectable()
 export class OpenLayersProjectionService extends ProjectionService {

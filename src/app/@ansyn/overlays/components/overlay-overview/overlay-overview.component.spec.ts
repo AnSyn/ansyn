@@ -9,6 +9,10 @@ import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
 import { MockComponent } from '@ansyn/core/test/mock-component';
+import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { of } from 'rxjs';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade/reducers/map.reducer';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
@@ -20,9 +24,10 @@ describe('OverlayOverviewComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
+			providers: [ImageryCommunicatorService, ProjectionService],
 			imports: [
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer, [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])
 			],
 			declarations: [OverlayOverviewComponent, mockLoader]
@@ -67,6 +72,7 @@ describe('OverlayOverviewComponent', () => {
 			expect(classExists('show')).toBeFalsy();
 		});
 		it('should show or hide me according to store', () => {
+			spyOn(component, 'getCorrectedNorth').and.callFake(() => of(0));
 			store.dispatch(new SetHoveredOverlayAction(overlays[0]));
 			fixture.detectChanges();
 			expect(classExists('show')).toBeTruthy();

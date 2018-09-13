@@ -57,13 +57,12 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = combineLatest(this.store$.pipe(select(selectHoveredOverlay)), this.store$.pipe(select(selectActiveMapId))).pipe(
 		map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]),
-		filter(([overlay, comm]: [IOverlay, CommunicatorEntity]) => Boolean(comm)),
-		map(([overlay, comm]: [IOverlay, CommunicatorEntity]) => [overlay, comm.ActiveMap.mapObject]),
-		mergeMap(([overlay, mapObject]: [IOverlay, Map]) => {
-			return this.getCorrectedNorth(mapObject).pipe(
+		mergeMap(([overlay, comm]: [IOverlay, CommunicatorEntity]) => {
+			return this.getCorrectedNorth(comm).pipe(
+				catchError(() => of(0)),
 				map((north) => {
 					return [overlay, north];
-				})
+				}),
 			);
 		}),
 		tap(this.onHoveredOverlay.bind(this)),
@@ -117,7 +116,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 
-	getCorrectedNorth(mapObject: Map): Observable<number> {
+	getCorrectedNorth(communicator: CommunicatorEntity): Observable<number> {
+		if (!communicator) {
+			return of(0);
+		}
+		const { mapObject } = communicator.ActiveMap;
 		return this.getProjectedCenters(mapObject).pipe(
 			map((projectedCenters: Point[]): number => {
 				const projectedCenterView = projectedCenters[0].coordinates;

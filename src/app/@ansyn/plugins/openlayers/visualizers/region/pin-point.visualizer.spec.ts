@@ -1,8 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
-import { PinPointVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/pin-point.visualizer';
+import { PinPointVisualizer } from './pin-point.visualizer';
 
 describe('PinPointVisualizer', () => {
 	let pinPointVisualizer: PinPointVisualizer;

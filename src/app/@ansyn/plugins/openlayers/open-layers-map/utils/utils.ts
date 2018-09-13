@@ -1,8 +1,9 @@
 import olPolygon from 'ol/geom/polygon';
 import olExtent from 'ol/extent';
 import { Point } from 'geojson';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent } from '@ansyn/core';
 
+// @dynamic
 export class Utils {
 	static BoundingBoxToOLExtent(bbox: Point[]): ol.Extent | any {
 		const coordinates = <ol.Coordinate[]> bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);

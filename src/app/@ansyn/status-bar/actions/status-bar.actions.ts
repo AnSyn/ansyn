@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { IComboBoxesProperties } from '../models/combo-boxes.model';
-import { IGeoFilterStatus } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
+import { SearchModeEnum } from '../models/search-mode.enum';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
@@ -35,8 +35,13 @@ export class SetComboBoxesProperties implements Action {
 
 export class UpdateGeoFilterStatus implements Action {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
+
 	constructor(public payload: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
 	}
 }
 
-export type StatusBarActions = CopySelectedCaseLinkAction | UpdateGeoFilterStatus | ExpandAction | SetComboBoxesProperties;
+export type StatusBarActions =
+	CopySelectedCaseLinkAction
+	| UpdateGeoFilterStatus
+	| ExpandAction
+	| SetComboBoxesProperties;

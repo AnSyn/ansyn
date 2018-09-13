@@ -3,16 +3,40 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@ansyn/*": [
-        "src/app/@ansyn/*"
+      "@ansyn/ansyn": [
+        "src/app/@ansyn/ansyn"
       ],
-      "@ansyn/event-drops": [
-        "node_modules/@ansyn/event-drops"
+      "@ansyn/core": [
+        "src/app/@ansyn/core"
+      ],
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery"
+      ],
+      "@ansyn/menu-items": [
+        "src/app/@ansyn/menu-items"
+      ],
+      "@ansyn/map-facade": [
+        "src/app/@ansyn/map-facade"
+      ],
+      "@ansyn/plugins": [
+        "src/app/@ansyn/plugins"
+      ],
+      "@ansyn/overlays": [
+        "src/app/@ansyn/overlays"
+      ],
+      "@ansyn/context": [
+        "src/app/@ansyn/context"
+      ],
+      "@ansyn/menu": [
+        "src/app/@ansyn/menu"
+      ],
+      "@ansyn/status-bar": [
+        "src/app/@ansyn/status-bar"
       ],
       "@builder/*": [
         "src/app/builder/*"
       ],
-      "root/*": ["./*"]
+      "root/package.json": ["./package.json"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

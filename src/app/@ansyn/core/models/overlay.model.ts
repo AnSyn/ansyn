@@ -1,4 +1,4 @@
-import { ICaseDataInputFiltersState, CaseRegionState, ICaseTimeState } from './case.model';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from './case.model';
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],

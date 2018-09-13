@@ -17,7 +17,7 @@ function limitData(data, limit, limitedSoFar): ILimitedArray {
 		limited += (data.length - limit);	// update how many items removed in total
 		data = data.slice(0, limit);		// slice the part of the array beyond limit value
 	}
-	return { data, limited }
+	return { data, limited };
 }
 
 // input: array, number and (*sorting function)
@@ -43,7 +43,7 @@ export function limitArray(arr: Array<any>, limit: number, options?: ILimitedArr
 // sliced off the merged array)
 // when (*sorting function) provided, sorting will be perform before slice
 export function mergeLimitedArrays(arr: Array<ILimitedArray>, limit: number, options?: ILimitedArrayOptions): ILimitedArray {
-	let	data = [];
+	let data = [];
 	let limited = 0;	// how many items removed
 	arr.forEach(limitedArr => {
 		data = data.concat(limitedArr.data);

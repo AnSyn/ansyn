@@ -4,82 +4,72 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import {
+	BooleanFilterMetadata,
+	EnableOnlyFavoritesSelectionAction,
+	EnumFilterMetadata,
+	FilterMetadata,
 	Filters,
+	FiltersActionTypes,
+	FiltersService,
 	filtersStateSelector,
+	IFilter,
 	IFiltersState,
+	InitializeFiltersAction,
+	InitializeFiltersSuccessAction,
+	ResetFiltersAction,
 	selectFacets,
 	selectFilters,
 	selectOldFilters,
 	selectShowOnlyFavorites
-} from '@ansyn/menu-items/filters/reducer/filters.reducer';
+} from '@ansyn/menu-items';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
-	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
-} from '@ansyn/overlays/actions/overlays.actions';
-import {
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
-	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
-import {
-	EnableOnlyFavoritesSelectionAction,
-	FiltersActionTypes,
-	InitializeFiltersAction,
-	InitializeFiltersSuccessAction,
-	ResetFiltersAction
-} from '@ansyn/menu-items/filters/actions/filters.actions';
+	selectOverlaysMap,
+	SetFilteredOverlaysAction,
+	SetOverlaysStatusMessage
+} from '@ansyn/overlays';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
-import { SetBadgeAction } from '@ansyn/menu/actions/menu.actions';
+import { SetBadgeAction } from '@ansyn/menu';
 import {
+	buildFilteredOverlays,
+	FilterType,
+	GenericTypeResolverService,
+	ICaseFacetsState,
+	ICaseFilter,
+	IFilterModel,
+	InjectionResolverFilter,
+	IOverlay,
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
-} from '@ansyn/core/reducers/core.reducer';
-import { FilterType, ICaseFacetsState, ICaseFilter } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
-import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
-import { IFilterModel } from '@ansyn/core/models/IFilterModel';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
-import { InjectionResolverFilter } from '@ansyn/core/services/generic-type-resolver';
-import { GenericTypeResolverService } from '@ansyn/core/services/generic-type-resolver.service';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
-import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
+} from '@ansyn/core';
 import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class FiltersAppEffects {
 
 	filters$: Observable<Filters> = this.store$.select(selectFilters);
-	showOnlyFavorite$ = this.store$.select(selectShowOnlyFavorites);
-	favoriteOverlays$ = this.store$.select(selectFavoriteOverlays);
-	overlaysArray$ = this.store$.select(selectOverlaysArray);
-	removedOverlays$ = this.store$.select(selectRemovedOverlays);
-	removedOverlaysVisibility$ = this.store$.select(selectRemovedOverlaysVisibility);
+	showOnlyFavorite$: Observable<any> = this.store$.select(selectShowOnlyFavorites);
+	favoriteOverlays$: Observable<any> = this.store$.select(selectFavoriteOverlays);
+	overlaysArray$: Observable<any> = this.store$.select(selectOverlaysArray);
+	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
+	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
 	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[], string[], boolean]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
-	facets$ = this.store$.select(selectFacets);
-	oldFilters$ = this.store$.select(selectOldFilters);
+	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
+	oldFilters$: Observable<any> = this.store$.select(selectOldFilters);
 
-	/**
-	 * @type Effect
-	 * @name updateOverlayFilters$
-	 * @ofType onFiltersChanges$
-	 * @action SyncOverlaysWithFavoritesAfterLoadedAction, SetFilteredOverlaysAction
-	 * @filter overlays are loaded
-	 * @dependencies filters, core, overlays
-	 */
 	@Effect()
 	updateOverlayFilters$ = this.onFiltersChanges$
 		.withLatestFrom(this.overlaysArray$)
 		.mergeMap(([[filters, showOnlyFavorite, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, boolean, IOverlay[], string[], boolean], IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
-			const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite, removedOverlaysIds, removedOverlaysVisibility);
+			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite, removedOverlaysIds, removedOverlaysVisibility);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
@@ -87,13 +77,6 @@ export class FiltersAppEffects {
 			];
 		});
 
-	/**
-	 * @type Effect
-	 * @name initializeFilters$
-	 * @ofType LoadOverlaysSuccessAction
-	 * @dependencies cases, overlays
-	 * @action InitializeFiltersAction
-	 */
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$
 		.ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS)
@@ -130,25 +113,13 @@ export class FiltersAppEffects {
 			return new InitializeFiltersSuccessAction(filters);
 		});
 
-	/**
-	 * @type Effect
-	 * @name resetFilters$
-	 * @ofType LoadOverlaysAction
-	 * @action ResetFiltersAction
-	 */
+
 	@Effect()
 	resetFilters$: Observable<ResetFiltersAction> = this.actions$
 		.ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS)
 		.map(() => new ResetFiltersAction());
 
 
-	/**
-	 * @type Effect
-	 * @name updateFiltersBadge$
-	 * @ofType onFiltersChanges$
-	 * @dependencies filters
-	 * @action SetBadgeAction
-	 */
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$
 		.map(([filters, showOnlyFavorites]: [Filters, boolean, IOverlay[], string[], boolean]) => {
@@ -165,12 +136,6 @@ export class FiltersAppEffects {
 		})
 		.share();
 
-	/**
-	 * @type Effect
-	 * @name setShowFavoritesFlagOnFilters$
-	 * @ofType SetFavoriteOverlaysAction
-	 * @action EnableOnlyFavoritesSelectionAction
-	 */
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$
 		.map((favoriteOverlays: IOverlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)));

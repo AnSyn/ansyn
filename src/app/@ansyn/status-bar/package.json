@@ -1,17 +1,9 @@
 {
 	"name": "@ansyn/status-bar",
-	"version": "0.2.81",
-	"description": "status-bar",
-	"main": "index.ts",
-	"scripts": {
-		"test": "npm test"
-	},
-	"author": "",
-	"license": "MIT",
+	"version": "0.2.81.7",
 	"peerDependencies": {
-		"@angular/core": "^6.0.3",
 		"@angular/common": "^6.0.3",
-		"@ansyn/core": "0.2.81"
+		"@angular/core": "^6.0.3"
 	},
-	"typings": "index.d.ts"
+	"license": "MIT"
 }

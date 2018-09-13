@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
-import {
-	MapInstanceChangedAction,
-	PositionChangedAction,
-} from '../actions/map.actions';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model'
-import { IMapInstanceChanged } from '@ansyn/imagery/imagery/manager/imagery.component.manager';
+import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
+import { ICaseMapPosition, ICaseMapState, IOverlay } from '@ansyn/core';
+import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
 
+// @dynamic
 @Injectable()
 export class MapFacadeService {
-	subscribers: {[key: string]: any[]} = {};
+	subscribers: { [key: string]: any[] } = {};
 
 	mapsList$ = this.store.select(mapStateSelector).pluck<IMapState, ICaseMapState[]>('mapsList');
 	mapsList: ICaseMapState[] = [];
@@ -31,7 +26,9 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: ICaseMapState[], mapId: string): ICaseMapState {
-		return mapsList.find(({ id }: ICaseMapState) => id === mapId);
+		return mapsList.find(function ({ id }: ICaseMapState) {
+			return id === mapId;
+		});
 	}
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
@@ -43,7 +40,7 @@ export class MapFacadeService {
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
 			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
-			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
+			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this))
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}

@@ -6,10 +6,8 @@ import { DataLayersService, layersConfig } from '../../services/data-layers.serv
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { CoreConfig } from '@ansyn/core/models/core.config';
+import { CoreConfig, LoggerConfig, LoggerService } from '@ansyn/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;

@@ -1,8 +1,8 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
 import { Action } from '@ngrx/store';
-import { ICaseFacetsState } from '@ansyn/core/models/case.model';
-import { Filters } from '@ansyn/menu-items/filters/reducer/filters.reducer';
+import { ICaseFacetsState } from '@ansyn/core';
+import { Filters } from '../reducer/filters.reducer';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',
@@ -50,8 +50,10 @@ export class EnableOnlyFavoritesSelectionAction implements Action {
 	constructor(public payload?: any) {
 	}
 }
+
 export class UpdateFacetsAction implements Action {
 	readonly type = FiltersActionTypes.UPDATE_FACETS;
+
 	constructor(public payload: ICaseFacetsState) {
 
 	}

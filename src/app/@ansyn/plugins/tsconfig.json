@@ -1,0 +1,25 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@ansyn/core": [
+        "src/app/@ansyn/core"
+      ],
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery"
+      ],
+      "@ansyn/map-facade": [
+        "src/app/@ansyn/map-facade"
+      ],
+      "@ansyn/menu-items": [
+        "src/app/@ansyn/menu-items"
+      ],
+      "@ansyn/status-bar": [
+        "src/app/@ansyn/status-bar"
+      ],
+      "@ansyn/context": [
+        "src/app/@ansyn/context"
+      ]
+    }
+  }
+}

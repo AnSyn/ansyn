@@ -3,52 +3,41 @@ import { ToolsAppEffects } from './tools.app.effects';
 import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
-import {
-	IToolsState,
-	toolsFeatureKey,
-	toolsInitialState,
-	ToolsReducer,
-	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import {
-	DisableImageProcessing,
-	GoToAction,
-	PullActiveCenter,
-	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction, SetAnnotationMode,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess, SetMeasureDistanceToolState, SetPinLocationModeAction, ShowOverlaysFootprintAction
-} from '@ansyn/menu-items/tools/actions/tools.actions';
-import { ICase } from '@ansyn/core/models/case.model';
-import { DisplayOverlaySuccessAction } from '@ansyn/overlays/actions/overlays.actions';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import {
-	ActiveMapChangedAction
-} from '@ansyn/map-facade/actions/map.actions';
 import {
 	casesFeatureKey,
 	CasesReducer,
 	casesStateSelector,
-	ICasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { cold, hot } from 'jasmine-marbles';
-import { provideMockActions } from '@ngrx/effects/testing';
-import {
+	DisableImageProcessing,
+	GoToAction,
+	ICasesState,
 	ILayerState,
 	initialLayersState,
-	layersStateSelector
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import {
-	BackToWorldView,
-	ClearActiveInteractionsAction,
-	SetMapsDataActionStore
-} from '@ansyn/core/actions/core.actions';
-import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+	IToolsState,
+	layersStateSelector,
+	PullActiveCenter,
+	SelectCaseAction,
+	SetActiveCenter,
+	SetActiveOverlaysFootprintModeAction,
+	SetAnnotationMode,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess,
+	SetMeasureDistanceToolState,
+	SetPinLocationModeAction,
+	ShowOverlaysFootprintAction,
+	toolsConfig,
+	toolsFeatureKey,
+	toolsInitialState,
+	ToolsReducer,
+	toolsStateSelector
+} from '@ansyn/menu-items';
+import { BackToWorldView, ClearActiveInteractionsAction, ICase, SetMapsDataActionStore } from '@ansyn/core';
+import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
+import { ActiveMapChangedAction, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { cold, hot } from 'jasmine-marbles';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -302,8 +291,7 @@ describe('ToolsAppEffects', () => {
 
 	describe('backToWorldView', () => {
 		it('backToWorldView should raise DisableImageProcessing', () => {
-			const activeCommunicator = {
-			};
+			const activeCommunicator = {};
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 			actions = hot('--a--', { a: new BackToWorldView({ mapId: 'mapId' }) });
 			const expectedResults = cold('--b--', { b: new DisableImageProcessing() });

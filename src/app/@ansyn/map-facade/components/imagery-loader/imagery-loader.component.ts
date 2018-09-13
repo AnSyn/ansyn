@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { mapStateSelector, IMapState } from '../../reducers/map.reducer';
+import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -20,7 +20,7 @@ export class ImageryLoaderComponent implements OnInit, OnDestroy {
 	}
 
 	get loaderText(): string {
-		return this.isLoadingMaps.get(this.mapId)
+		return this.isLoadingMaps.get(this.mapId);
 	}
 
 	isLoadingMaps$: Observable<Map<string, string>> = this.store$.select(mapStateSelector)

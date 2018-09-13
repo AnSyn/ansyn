@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/core';
 import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer } from '../../actions/layers.actions';
 import * as toGeoJSON from 'togeojson';
-import { fromEvent } from 'rxjs/index';
+import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 
 @Component({
@@ -23,7 +23,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	file: File;
 
 	@AutoSubscription
-	onFileLoad$ = fromEvent(this.reader, 'load').pipe(
+	onFileLoad$: Observable<any> = fromEvent(this.reader, 'load').pipe(
 		tap(() => {
 			const layerName = this.file.name.slice(0, this.file.name.lastIndexOf('.'));
 			const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);

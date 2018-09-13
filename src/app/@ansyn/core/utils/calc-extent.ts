@@ -1,5 +1,5 @@
 import { Feature, MultiPolygon, Polygon as geoPolygon } from 'geojson';
-import { area, intersect, bbox, polygon, unkinkPolygon } from '@turf/turf';
+import { area, bbox, intersect, polygon, unkinkPolygon } from '@turf/turf';
 import { CaseMapExtent } from '../models/case-map-position.model';
 
 export function extentFromGeojson(footprint: MultiPolygon | geoPolygon): CaseMapExtent {

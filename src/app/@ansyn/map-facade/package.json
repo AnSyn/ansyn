@@ -1,21 +1,9 @@
 {
 	"name": "@ansyn/map-facade",
-	"version": "0.2.81",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "MIT",
+	"version": "0.2.81.7",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3",
-		"@ansyn/core": "0.2.81",
-		"@ngrx/effects": "^6.0.1",
-		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^6.0.1"
+		"@angular/core": "^6.0.3"
 	},
-	"typings": "index.d.ts"
+	"license": "MIT"
 }

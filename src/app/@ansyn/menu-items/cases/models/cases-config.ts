@@ -1,4 +1,4 @@
-import { ICase } from './case.model';
+import { ICase } from '@ansyn/core';
 
 export interface ICasesConfig {
 	schema: string,

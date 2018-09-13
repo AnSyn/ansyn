@@ -3,20 +3,22 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
-	DisplayOverlayAction, LoadOverlaysAction, LoadOverlaysSuccessAction,
+	DisplayOverlayAction,
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
 	RequestOverlayByIDFromBackendAction
 } from '../actions/overlays.actions';
-import { IOverlay } from '../models/overlay.model';
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
 import {
-	OverlayReducer, overlaysFeatureKey, overlaysInitialState,
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysInitialState,
 	overlaysStateSelector
 } from '../reducers/overlays.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreInitialState, coreStateSelector, IOverlay, LoggerService } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {

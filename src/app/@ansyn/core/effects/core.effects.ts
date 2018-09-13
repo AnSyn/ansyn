@@ -15,7 +15,7 @@ export class CoreEffects {
 		.ofType(CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG)
 		.pipe(
 			tap((action: SetWasWelcomeNotificationShownFlagAction) => {
-				const payloadObj = {wasWelcomeNotificationShown: action.payload};
+				const payloadObj = { wasWelcomeNotificationShown: action.payload };
 				updateSession(payloadObj);
 			})
 		);

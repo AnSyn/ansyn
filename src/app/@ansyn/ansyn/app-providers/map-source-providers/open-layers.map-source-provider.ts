@@ -1,13 +1,8 @@
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
-import {
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
+import { ProjectableRaster } from '@ansyn/plugins';
 import Layer from 'ol/layer/layer';
+import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers-config';
 
 export abstract class OpenLayersMapSourceProvider extends BaseMapSourceProvider {
 	constructor(protected cacheService: CacheService,

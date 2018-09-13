@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { IImageryConfig } from '../model/iimagery-config';
 import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 
 @Injectable()
 export class CacheService {

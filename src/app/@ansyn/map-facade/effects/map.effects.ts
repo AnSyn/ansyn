@@ -1,13 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { Observable } from 'rxjs';
+import { Observable, UnaryFunction } from 'rxjs';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
-import { CaseGeoFilter, ICaseMapState } from '@ansyn/core/models/case.model';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import {
+	AddAlertMsg,
+	AlertMsgTypes,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseGeoFilter,
+	CoreActionTypes,
+	ICaseMapPosition,
+	ICaseMapState,
+	isFullOverlay,
+	RemoveAlertMsg,
+	selectRegion,
+	SetLayoutSuccessAction,
+	SetMapsDataActionStore,
+	SetOverlaysCriteriaAction
+} from '@ansyn/core';
 import * as turf from '@turf/turf';
 import { intersect, polygon } from '@turf/turf';
 
@@ -24,23 +38,8 @@ import {
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
 	SynchronizeMapsAction
-} from '@ansyn/map-facade/actions/map.actions';
-import {
-	AddAlertMsg,
-	BackToWorldSuccess,
-	BackToWorldView,
-	CoreActionTypes,
-	RemoveAlertMsg,
-	SetLayoutSuccessAction,
-	SetMapsDataActionStore,
-	SetOverlaysCriteriaAction
-} from '@ansyn/core/actions/core.actions';
-import { AlertMsgTypes, selectRegion } from '@ansyn/core/reducers/core.reducer';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+} from '../actions/map.actions';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { pipe } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
@@ -56,12 +55,6 @@ export class MapEffects {
 		distinctUntilChanged()
 	);
 
-
-	/**
-	 * @type Effect
-	 * @name onPinPointSearch$
-	 * @ofType ContextMenuTriggerAction
-	 */
 	@Effect()
 	onPinPointSearch$: Observable<SetOverlaysCriteriaAction> = this.actions$.pipe(
 		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
@@ -75,22 +68,12 @@ export class MapEffects {
 	);
 
 
-	/**
-	 * @type Effect
-	 * @name annotationContextMenuTrigger$
-	 * @ofType AnnotationContextMenuTriggerAction
-	 */
 	@Effect({ dispatch: false })
 	annotationContextMenuTrigger$ = this.actions$.pipe(
 		ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT),
 		share()
 	);
 
-	/**
-	 * @type Effect
-	 * @name onUpdateSize$
-	 * @ofType UpdateMapSizeAction
-	 */
 	@Effect({ dispatch: false })
 	onUpdateSize$: Observable<void> = this.actions$.pipe(
 		ofType(MapActionTypes.UPDATE_MAP_SIZE),
@@ -102,11 +85,6 @@ export class MapEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name onCommunicatorChange$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction
-	 */
 	@Effect({ dispatch: false })
 	onCommunicatorChange$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED),
@@ -120,25 +98,12 @@ export class MapEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name onContextMenuShow$
-	 * @ofType ContextMenuShowAction
-	 */
 	@Effect({ dispatch: false })
 	onContextMenuShow$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.CONTEXT_MENU.SHOW),
 		share()
 	);
 
-	/**
-	 * @type Effect
-	 * @name onMapCreatedDecreasePendingCount$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction
-	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is greater than 0
-	 * @action DecreasePendingMapsCountAction
-	 */
 	@Effect()
 	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.IMAGERY_REMOVED),
@@ -147,14 +112,6 @@ export class MapEffects {
 		map(() => new DecreasePendingMapsCountAction())
 	);
 
-	/**
-	 * @type Effect
-	 * @name onMapPendingCountReachedZero$
-	 * @ofType DecreasePendingMapsCountAction
-	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is 0
-	 * @action SetLayoutSuccessAction
-	 */
 	@Effect()
 	onMapPendingCountReachedZero$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.DECREASE_PENDING_MAPS_COUNT),
@@ -163,14 +120,6 @@ export class MapEffects {
 		map(() => new SetLayoutSuccessAction())
 	);
 
-	/**
-	 * @type Effect
-	 * @name positionChanged$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action SetMapsDataActionStore
-	 */
 	@Effect()
 	positionChanged$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED),
@@ -184,11 +133,11 @@ export class MapEffects {
 		})
 	);
 
-	checkOverlaysOutOfBounds$ = pipe(
+	checkOverlaysOutOfBounds$: UnaryFunction<any, any> = pipe(
 		filter(Boolean),
 		map((map: ICaseMapState) => {
 			const key = AlertMsgTypes.OverlaysOutOfBounds;
-			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
+			const isWorldView = !isFullOverlay(map.data.overlay);
 			let isInBound;
 			if (!isWorldView) {
 				const { extentPolygon } = map.data.position;
@@ -209,14 +158,6 @@ export class MapEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
 	@Effect()
 	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.pipe(
@@ -225,14 +166,6 @@ export class MapEffects {
 			this.checkOverlaysOutOfBounds$.bind(this)
 		);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBoundsFromBackToWorlds$
-	 * @ofType BackToWorldSuccess
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
 	@Effect()
 	checkImageOutOfBoundsFromBackToWorlds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.pipe(
@@ -241,14 +174,6 @@ export class MapEffects {
 			this.checkOverlaysOutOfBounds$.bind(this)
 		);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg
-	 */
 	@Effect()
 	updateOutOfBoundList: Observable<RemoveAlertMsg> = this.actions$.pipe(
 		ofType(MapActionTypes.IMAGERY_REMOVED),
@@ -258,13 +183,6 @@ export class MapEffects {
 	);
 
 
-	/**
-	 * @type Effect
-	 * @name backToWorldView$
-	 * @ofType BackToWorldAction
-	 * @dependencies map
-	 * @action SetMapsDataActionStore, BackToWorldSuccessAction
-	 */
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
@@ -279,7 +197,7 @@ export class MapEffects {
 			}),
 			filter(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => {
-				const disabledMap = communicator.ActiveMap instanceof OpenLayersDisabledMap;
+				const disabledMap = communicator.mapType === 'disabledOpenLayersMap';
 				const updatedMapsList = [...mapsList];
 				updatedMapsList.forEach(
 					(map) => {
@@ -289,18 +207,11 @@ export class MapEffects {
 						}
 					});
 				this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-				return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+				return Observable.fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
 					.map(() => new BackToWorldSuccess(payload));
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name onMapsDataActiveMapIdChanged$
-	 * @ofType SetMapsDataActionStore
-	 * @filter There is an activeMapId
-	 * @action ActiveMapChangedAction
-	 */
 	@Effect()
 	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$.pipe(
 		ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA),
@@ -309,13 +220,6 @@ export class MapEffects {
 		map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId))
 	);
 
-	/**
-	 * @type Effect
-	 * @name onMapsData1MapsListChanged$
-	 * @ofType SetMapsDataActionStore
-	 * @filter There is a mapsList
-	 * @action MapsListChangedAction
-	 */
 	@Effect()
 	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$.pipe(
 		ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA),
@@ -324,23 +228,12 @@ export class MapEffects {
 		map(({ mapsList }) => new MapsListChangedAction(mapsList))
 	);
 
-	/**
-	 * @type Effect
-	 * @name pinLocationModeTriggerAction$
-	 * @ofType PinLocationModeTriggerAction
-	 */
 	@Effect({ dispatch: false })
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(
 		ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE),
 		map(({ payload }) => payload)
 	);
 
-	/**
-	 * @type Effect
-	 * @name newInstanceInitPosition$
-	 * @ofType ImageryCreatedAction
-	 * @dispatch: false
-	 */
 	@Effect()
 	newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
 		ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED),
@@ -368,12 +261,7 @@ export class MapEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name onSynchronizeAppMaps$
-	 * @ofType SynchronizeMapsAction
-	 * @dependencies maps
-	 */
+
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SYNCHRONIZE_MAPS),

@@ -2,7 +2,7 @@ import { ICasesConfig } from './models/cases-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule } from '@ansyn/core';
 import { CasesTableComponent } from './components/cases-table/cases-table.component';
 import { EditCaseComponent } from './components/edit-case/edit-case.component';
 import { FormsModule } from '@angular/forms';
@@ -17,8 +17,9 @@ import { SaveCaseComponent } from './components/save-case/save-case.component';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { InfiniteScrollModule } from 'ng-infinitescroll';
-import { CasesAutoSaveComponent } from '@ansyn/menu-items/cases/components/cases-auto-save/cases-auto-save.component';
+import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 
+// @dynamic
 @NgModule({
 	imports: [
 		StoreModule.forFeature(casesFeatureKey, CasesReducer),

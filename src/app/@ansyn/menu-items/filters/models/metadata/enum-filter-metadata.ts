@@ -1,6 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { IFilter } from '../IFilter';
-import { FilterType } from '@ansyn/core/models/case.model';
+import { FilterType } from '@ansyn/core';
 
 export interface IEnumFiled {
 	count: number;

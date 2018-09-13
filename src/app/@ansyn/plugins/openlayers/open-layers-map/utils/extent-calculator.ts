@@ -1,8 +1,8 @@
-import { CaseMapExtent, CaseMapExtentPolygon } from '@ansyn/core/models/case-map-position.model';
-import { toRadians } from '@ansyn/core/utils/math';
-import { polygon, center } from '@turf/turf';
+import { CaseMapExtent, CaseMapExtentPolygon, toRadians } from '@ansyn/core';
+import { center, polygon } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
 
+// @dynamic
 export class ExtentCalculator {
 
 	static polygonToExtent(extentPolygon: CaseMapExtentPolygon): CaseMapExtent {

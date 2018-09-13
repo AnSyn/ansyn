@@ -3,6 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppAnsynModule } from '../../app/app.module';
 import { configuration } from '../../../configuration/configuration';
 
+
 if (Boolean(0)) {
 	platformBrowserDynamic().bootstrapModule(AppAnsynModule);
 }

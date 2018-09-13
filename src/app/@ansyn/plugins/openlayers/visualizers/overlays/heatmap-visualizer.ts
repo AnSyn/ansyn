@@ -1,19 +1,16 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { combineLatest, empty, Observable } from 'rxjs';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectFilteredOveralys, selectOverlaysMap } from '@ansyn/overlays/reducers/overlays.reducer';
+import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { OverlaysService, selectFilteredOveralys, selectOverlaysMap } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { ImageryVisualizer } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IVisualizerEntity } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -45,12 +42,12 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 			})
 		);
 
-	geometryToEntity(id, footprint) {
+	geometryToEntity(id, footprint): IVisualizerEntity {
 		const fp = turf.simplify(turf.multiPolygon(footprint.coordinates), { tolerance: 0.01, highQuality: true });
 		return super.geometryToEntity(id, fp.geometry);
 	}
 
-	constructor(public store$: Store<IAppState>, public actions$: Actions) {
+	constructor(public store$: Store<any>, public actions$: Actions) {
 		super(null, {
 			opacity: 0.5,
 			initial: {

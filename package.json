@@ -1,6 +1,6 @@
 {
-  "name": "@ansyn/ansyn",
-  "version": "0.2.81.4",
+  "name": "ansyn-src",
+  "version": "0.2.81.7",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -13,6 +13,8 @@
     "build:builder": "ng build builder",
     "build:gulp": "cd build && gulp build",
     "build:prod": "ng build ansyn --prod",
+    "build:libs": "bash scripts/build-libs.sh",
+    "publish:libs": "bash scripts/publish-libs.sh",
     "docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3",
     "fix-all": "node scripts/fix-package-json -a",
     "fix-package-json": "node scripts/fix-package-json",
@@ -80,10 +82,14 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.6.8",
-    "@angular-devkit/build-ng-packagr": "~0.6.8",
-    "@angular/cli": "~6.0.8",
     "@angular/compiler-cli": "^6.0.3",
+    "@angular-devkit/build-ng-packagr": "~0.6.8",
+    "@angular-devkit/build-angular": "~0.6.8",
+    "ng-packagr": "^3.0.0-rc.2",
+    "tsickle": ">=0.25.5",
+    "tslib": "^1.7.1",
+    "typescript": "~2.7.2",
+    "@angular/cli": "~6.0.8",
     "@angular/language-service": "^6.0.3",
     "@types/d3": "^4.13.0",
     "@types/file-saver": "^1.3.0",
@@ -119,19 +125,14 @@
     "karma-coverage-istanbul-reporter": "~2.0.0",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "ng-packagr": "^3.0.0-rc.2",
     "pre-commit": "1.2.2",
     "protractor": "~5.3.0",
     "protractor-screenshoter-plugin": "^0.5.0",
     "replace": "0.3.0",
     "ts-node": "~5.0.1",
-    "tsickle": ">=0.25.5",
-    "tslib": "^1.7.1",
-    "tslint": "~5.9.1",
-    "typescript": "~2.7.2"
+    "tslint": "~5.9.1"
   },
   "precommit": [
-    "fix-all",
-    "lint"
+    "fix-all"
   ]
 }

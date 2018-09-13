@@ -1,7 +1,7 @@
 import { TranslateLoader } from '@ngx-translate/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export class AnsynTranslationLoader implements TranslateLoader {
 
@@ -16,8 +16,8 @@ export class AnsynTranslationLoader implements TranslateLoader {
 		return forkJoin(this.translationProviders.map((translationProvider: TranslateLoader) => translationProvider.getTranslation(lang)))
 			.pipe(map((results) => {
 				return results.reduce((prev, currentObject) => {
-					return {...prev, ...currentObject};
-				}, {})
+					return { ...prev, ...currentObject };
+				}, {});
 			}));
 	}
 

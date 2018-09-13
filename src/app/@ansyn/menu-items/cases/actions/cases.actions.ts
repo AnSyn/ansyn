@@ -1,8 +1,6 @@
 import { Action } from '@ngrx/store';
-import { ICase } from '../models/case.model';
+import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState, IStoredEntity } from '@ansyn/core';
 import { Params } from '@angular/router';
-import { ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/core/models/case.model';
-import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -159,6 +157,7 @@ export class CopyCaseLinkAction implements Action {
 
 export class ManualSaveAction implements Action {
 	readonly type = CasesActionTypes.MANUAL_SAVE;
+
 	constructor(public payload: ICase) {
 	}
 }

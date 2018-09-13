@@ -1,28 +1,25 @@
-import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { getTimeFormat } from '@ansyn/core/utils/time';
+import { forkJoin, Observable } from 'rxjs';
+import { areCoordinatesNumeric, getTimeFormat, IOverlay } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
-import { configuration } from '../../../../../configuration/configuration';
-import { ImageryCommunicatorService } from '../../../imagery/communicator-service/communicator.service';
-import { selectActiveMapId } from '../../../map-facade/reducers/map.reducer';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { OverlaysConfig } from '../../services/overlays.service';
+import { IOverlaysConfig } from '../../models/overlays.config';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Observer } from 'rxjs/Observer';
 import * as turf from '@turf/turf';
-import { ProjectionService } from '../../../imagery/projection-service/projection.service';
-import { toDegrees } from '@ansyn/core/utils/math';
 import { combineLatest, of } from 'rxjs/index';
-import { CommunicatorEntity } from '../../../imagery/communicator-service/communicator.entity';
 import Map from 'ol/map';
-import { catchError } from 'rxjs/internal/operators';
+
+/* delete */
+import { selectActiveMapId } from '../../../map-facade';
+import { ImageryCommunicatorService, CommunicatorEntity, ProjectionService  } from '../../../imagery';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -41,7 +38,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public overlayId: string;
 
 	public loading = false;
-	public errorSrc = configuration.overlays.overlayOverviewFailed;
+	public errorSrc = this.overlaysConfig.overlayOverviewFailed;
 
 	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
@@ -62,7 +59,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				catchError(() => of(0)),
 				map((north) => {
 					return [overlay, north];
-				}),
+				})
 			);
 		}),
 		tap(this.onHoveredOverlay.bind(this)),
@@ -80,8 +77,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		protected el: ElementRef,
 		protected translate: TranslateService,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
-		protected projectionService: ProjectionService
-	) {
+		@Inject(OverlaysConfig) protected overlaysConfig: IOverlaysConfig,
+		protected projectionService: ProjectionService) {
 	}
 
 	ngOnInit() {
@@ -148,7 +145,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
-		return Observable.forkJoin(coordinates.map((coordinate) => {
+		return forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
 			return this.projectionService.projectApproximatelyFromProjection(point, 'EPSG:3857');
 		}));

@@ -1,6 +1,6 @@
 import { IMenuState, initialMenuState, MenuReducer } from './menu.reducer';
-import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
-import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
+import { IMenuItem } from '../models/menu-item.model';
+import { AddMenuItemAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
 
 describe('MenuReducer', () => {
 

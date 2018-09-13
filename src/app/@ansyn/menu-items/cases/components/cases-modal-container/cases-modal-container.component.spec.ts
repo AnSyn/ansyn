@@ -6,13 +6,12 @@ import { CasesModule } from '../../cases.module';
 import { OpenModalAction } from '../../actions/cases.actions';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
-import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
+import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
+import { casesConfig } from '../../services/cases.service';
 
 describe('ModalContainerComponent', () => {
 	let component: CasesModalContainerComponent;
@@ -31,8 +30,8 @@ describe('ModalContainerComponent', () => {
 				DataLayersService,
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {}},
-				{ provide: layersConfig, useValue: {}}
+				{ provide: CoreConfig, useValue: {} },
+				{ provide: layersConfig, useValue: {} }
 			]
 		})
 			.compileComponents();

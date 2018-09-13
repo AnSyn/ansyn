@@ -1,13 +1,10 @@
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
 import proj from 'ol/proj';
-import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
+import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/plugins';
+import { ImageryMapSource } from '@ansyn/imagery';
+import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 

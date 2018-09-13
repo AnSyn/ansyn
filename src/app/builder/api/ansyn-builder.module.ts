@@ -4,6 +4,7 @@ import { StoreModule } from '@ngrx/store';
 import { builderFeatureKey, BuilderReducer } from '../reducers/builder.reducer';
 import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';
 
+// @dynamic
 @NgModule({
 	imports: [
 		CommonModule,

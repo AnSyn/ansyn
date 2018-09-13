@@ -4,33 +4,28 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import {
+	DisplayOverlayAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	OverlaysService
+} from '@ansyn/overlays';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
 	SelectDilutedCaseAction
-} from '@ansyn/menu-items/cases/actions/cases.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { IDilutedCase } from '@ansyn/core/models/case.model';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+} from '@ansyn/menu-items';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade';
+import { IDilutedCase, IOverlay, SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { IAppState } from '../app.effects.module';
 
 @Injectable()
 export class CasesAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name onDisplayOverlay$
-	 * @ofType DisplayOverlayAction
-	 * @action SetMapsDataActionStore
-	 * @dependencies map
-	 */
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
@@ -48,12 +43,6 @@ export class CasesAppEffects {
 			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		}).share();
 
-	/**
-	 * @type Effect
-	 * @name loadCase$
-	 * @ofType SelectDilutedCaseAction
-	 * @action SelectCaseAction?, SetToastMessageAction?, LoadDefaultCaseIfNoActiveCaseAction?
-	 */
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE)

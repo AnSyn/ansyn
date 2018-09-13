@@ -5,6 +5,7 @@ import { coreStateSelector, ICoreState, IToastMessage } from '../../reducers/cor
 import { SetToastMessageAction } from '../../actions/core.actions';
 import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/internal/operators';
+
 const animations: any[] = [
 	trigger('toastAnimation', [
 		transition(':enter', [style({

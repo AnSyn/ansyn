@@ -1,18 +1,15 @@
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Store } from '@ngrx/store';
-import { ILayer, layerPluginType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, layerPluginType, selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items';
 import OSM from 'ol/source/osm';
 import TileLayer from 'ol/layer/tile';
-import { selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
 import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
+import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
+import { ICaseMapState } from '@ansyn/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 
 @ImageryPlugin({
@@ -71,7 +68,7 @@ export class OpenlayersOsmLayersPlugin extends BaseImageryPlugin {
 	}
 
 	addGroupLayer(layer: ILayer) {
-		const group =  OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
+		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray = group.getLayers().getArray();
 		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
 			const osmLayer = this.createOSMLayer(layer);

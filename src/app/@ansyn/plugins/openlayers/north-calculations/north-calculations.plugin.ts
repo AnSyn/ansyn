@@ -1,29 +1,32 @@
-import { toDegrees } from '@ansyn/core/utils/math';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/forkJoin';
+import {
+	areCoordinatesNumeric,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseOrientation,
+	CoreActionTypes,
+	IOverlay,
+	LoggerService,
+	toDegrees
+} from '@ansyn/core';
+import { Observable, forkJoin, Observer } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
-import { Observer } from 'rxjs/Observer';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseOrientation } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
+import {
+	BaseImageryMap,
+	BaseImageryPlugin,
+	CommunicatorEntity,
+	ImageryPlugin,
+	ProjectionService
+} from '@ansyn/imagery';
+import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
+import { SetIsVisibleAcion } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 import { filter, switchMap, withLatestFrom, tap, map, mergeMap, retry, catchError } from 'rxjs/operators';
 
 export interface INorthData {
@@ -42,9 +45,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
-
-	// constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
-
 
 	@AutoSubscription
 	pointNorth$ = this.actions$.pipe(
@@ -121,7 +121,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
-		return Observable.forkJoin(coordinates.map((coordinate) => {
+		return forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
 			return this.projectionService.projectAccurately(point, this.iMap);
 		}));
@@ -161,10 +161,5 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			})
 		);
 	}
-
-	/// פונקציה שמחזירה 2 נקודות ב-GeoJson
-	// overlay אני שולח לתוך ה
-	// map source provider
-	/// מקבל את הנקודות ומחשב את הצפון
 
 }

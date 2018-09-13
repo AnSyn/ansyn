@@ -1,11 +1,8 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { CoreActionTypes, ICaseMapState, IPendingOverlay, layoutOptions } from '@ansyn/core';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { layoutOptions } from '@ansyn/core/models/layout-options.model';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
-import { IPendingOverlay } from '@ansyn/core/models/overlay.model';
 
 export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: ICaseMapState[], activeMapId?: string } {
 	const mapsList: ICaseMapState[] = [];
@@ -110,10 +107,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.REMOVE_PENDING_OVERLAY:
 			const pendingOverlays = state.pendingOverlays.filter((pending) => pending.overlay.id !== action.payload);
-			return { ...state, pendingOverlays};
+			return { ...state, pendingOverlays };
 
 		case CoreActionTypes.TOGGLE_MAP_LAYERS: {
-			const mapsList = [ ...state.mapsList ];
+			const mapsList = [...state.mapsList];
 			const toggledMap = mapsList.find(map => map.id === action.payload.mapId);
 			if (toggledMap) {
 				toggledMap.flags.displayLayers = !toggledMap.flags.displayLayers;
@@ -124,7 +121,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case CoreActionTypes.SET_LAYOUT:
 			const layout = layoutOptions.get(action.payload);
-			if ( layout.mapsCount !== state.mapsList.length && state.mapsList.length) {
+			if (layout.mapsCount !== state.mapsList.length && state.mapsList.length) {
 				const pendingMapsCount = Math.abs(layout.mapsCount - state.mapsList.length);
 				const mapsDataChanges = setMapsDataChanges(state.mapsList, state.activeMapId, layout);
 				return { ...state, pendingMapsCount, ...mapsDataChanges };

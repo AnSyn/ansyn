@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnsynCheckboxComponent } from './ansyn-checkbox.component';
-import { By } from '@angular/platform-browser';
 
 
 describe('AnsynCheckboxComponent', () => {

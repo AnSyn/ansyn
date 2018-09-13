@@ -1,17 +1,14 @@
 import { Observable } from 'rxjs';
 import ImageLayer from 'ol/layer/image';
-import { OpenLayersImageProcessing } from '@ansyn/plugins/openlayers/image-processing/image-processing';
 import Raster from 'ol/source/raster';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
+import { ICaseMapState } from '@ansyn/core';
+import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersDisabledMap } from '../open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersImageProcessing } from './image-processing';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

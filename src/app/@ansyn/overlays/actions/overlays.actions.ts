@@ -26,7 +26,8 @@ export const OverlaysActionTypes = {
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
 	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
 	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE'),
-	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY')
+	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY'),
+	CHANGE_OVERLAY_PREVIEW_ROTATION: type('[Overlay] CHANGE_OVERLAY_PREVIEW_ROTATION'),
 };
 
 export class SelectOverlayAction implements Action {
@@ -178,6 +179,14 @@ export class SetHoveredOverlayAction implements Action {
 	}
 }
 
+export class ChangeOverlayPreviewRotationAction implements Action {
+	type = OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION;
+
+	constructor(public payload: number) {
+
+	}
+}
+
 
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
@@ -197,3 +206,4 @@ export type OverlaysActions
 	| AddMarkUp
 	| RemoveMarkUp
 	| SetHoveredOverlayAction
+	| ChangeOverlayPreviewRotationAction

@@ -7,12 +7,7 @@ import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { IOverlay, MockComponent } from '@ansyn/core';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
-import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
-import { OverlaysConfig } from '@ansyn/overlays';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { ProjectionService } from '@ansyn/imagery';
-import { of } from 'rxjs';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { OverlaysConfig, SetHoveredOverlayAction } from '../..';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
@@ -24,10 +19,9 @@ describe('OverlayOverviewComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [ImageryCommunicatorService, ProjectionService],
 			imports: [
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer, [mapFeatureKey]: MapReducer }),
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
 				EffectsModule.forRoot([])
 			],
 			providers: [
@@ -78,7 +72,6 @@ describe('OverlayOverviewComponent', () => {
 			expect(classExists('show')).toBeFalsy();
 		});
 		it('should show or hide me according to store', () => {
-			spyOn(component, 'getCorrectedNorth').and.callFake(() => of(0));
 			store.dispatch(new SetHoveredOverlayAction(overlays[0]));
 			fixture.detectChanges();
 			expect(classExists('show')).toBeTruthy();

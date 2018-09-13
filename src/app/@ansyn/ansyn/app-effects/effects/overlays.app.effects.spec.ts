@@ -43,7 +43,13 @@ import {
 	SetLayoutAction,
 	SetLayoutSuccessAction
 } from '@ansyn/core';
-import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import {
+	BaseMapSourceProvider,
+	CacheService,
+	ImageryCommunicatorService,
+	ImageryMapSource,
+	ProjectionService
+} from '@ansyn/imagery';
 import {
 	initialMapState,
 	mapFeatureKey,
@@ -177,6 +183,7 @@ describe('OverlaysAppEffects', () => {
 				})
 			],
 			providers: [
+				ProjectionService,
 				OverlaysAppEffects,
 				provideMockActions(() => actions),
 				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },

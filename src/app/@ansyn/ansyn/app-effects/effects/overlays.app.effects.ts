@@ -21,9 +21,10 @@ import {
 	SetHoveredOverlayAction,
 	SetSpecialObjectsActionStore
 } from '@ansyn/overlays';
-import { Action, Store } from '@ngrx/store';
+import { Action, select, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import {
+	areCoordinatesNumeric,
 	BackToWorldView,
 	CoreActionTypes,
 	DisplayedOverlay,
@@ -52,17 +53,41 @@ import {
 	BaseMapSourceProvider,
 	CommunicatorEntity,
 	IBaseMapSourceProviderConstructor,
-	ImageryCommunicatorService
+	ImageryCommunicatorService,
+	ProjectionService
 } from '@ansyn/imagery';
 import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
+import * as turf from '@turf/turf';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
 import { of } from 'rxjs/internal/observable/of';
+import { selectHoveredOverlay } from '../../../overlays/reducers/overlays.reducer';
+import * as GeoJSON from 'geojson';
+import { Point } from 'geojson';
+import OLMap from 'ol/map';
+import { forkJoin } from 'rxjs/index';
+import { Observer } from 'rxjs/Observer';
+import { ChangeOverlayPreviewRotationAction } from '../../../overlays/actions/overlays.actions';
 
 @Injectable()
 export class OverlaysAppEffects {
+
+	@Effect()
+	hoveredOverlayPreview$: Observable<any> = this.store$.pipe(select(selectHoveredOverlay)).pipe(
+		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
+		map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]),
+		mergeMap(([overlay, comm]: [IOverlay, CommunicatorEntity]) => {
+			return this.getCorrectedNorth(comm).pipe(
+				catchError(() => of(0)),
+				map((north) => {
+					return north;
+				})
+			);
+		}),
+		map((north: number) => new ChangeOverlayPreviewRotationAction(north))
+	);
 
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
@@ -254,11 +279,50 @@ export class OverlaysAppEffects {
 		return this.baseSourceProviders.find(({ constructor }) => sType === (<IBaseMapSourceProviderConstructor>constructor).sourceType);
 	}
 
+	getCorrectedNorth(communicator: CommunicatorEntity): Observable<number> {
+		if (!communicator) {
+			return of(0);
+		}
+		const { mapObject } = communicator.ActiveMap;
+		return this.getProjectedCenters(mapObject).pipe(
+			map((projectedCenters: Point[]): number => {
+				const projectedCenterView = projectedCenters[0].coordinates;
+				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
+				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
+				return northOffsetRad * -1;
+			})
+		);
+	}
+
+	getProjectedCenters(mapObject: OLMap): Observable<Point[]> {
+		return Observable.create((observer: Observer<any>) => {
+			const size = mapObject.getSize();
+			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
+			if (!areCoordinatesNumeric(olCenterView)) {
+				observer.error('no coordinate for pixel');
+			}
+			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
+			if (!areCoordinatesNumeric(olCenterViewWithOffset)) {
+				observer.error('no coordinate for pixel');
+			}
+			observer.next([olCenterView, olCenterViewWithOffset]);
+		})
+			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
+	}
+
+	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
+		return forkJoin(coordinates.map((coordinate) => {
+			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
+			return this.projectionService.projectApproximatelyFromProjection(point, 'EPSG:3857');
+		}));
+	}
+
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
 				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
-				public imageryCommunicatorService: ImageryCommunicatorService) {
+				public imageryCommunicatorService: ImageryCommunicatorService,
+				public projectionService: ProjectionService) {
 	}
 
 }

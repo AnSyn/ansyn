@@ -1,25 +1,21 @@
 import { Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { forkJoin, Observable } from 'rxjs';
-import { areCoordinatesNumeric, getTimeFormat, IOverlay } from '@ansyn/core';
+import { Observable } from 'rxjs';
+import { getTimeFormat, IOverlay } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
+import {
+	ChangeOverlayPreviewRotationAction,
+	DisplayOverlayFromStoreAction,
+	OverlaysActionTypes,
+	SetMarkUp
+} from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { IOverlaysConfig } from '../../models/overlays.config';
-import * as GeoJSON from 'geojson';
-import { Point } from 'geojson';
-import { Observer } from 'rxjs/Observer';
-import * as turf from '@turf/turf';
-import { combineLatest, of } from 'rxjs/index';
-import Map from 'ol/map';
-
-/* delete */
-import { selectActiveMapId } from '../../../map-facade';
-import { ImageryCommunicatorService, CommunicatorEntity, ProjectionService  } from '../../../imagery';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -52,19 +48,17 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.top.px') top = 0;
 
 	@AutoSubscription
-	hoveredOverlay$: Observable<any> = combineLatest(this.store$.pipe(select(selectHoveredOverlay)), this.store$.pipe(select(selectActiveMapId))).pipe(
-		map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]),
-		mergeMap(([overlay, comm]: [IOverlay, CommunicatorEntity]) => {
-			return this.getCorrectedNorth(comm).pipe(
-				catchError(() => of(0)),
-				map((north) => {
-					return [overlay, north];
-				})
-			);
-		}),
-		tap(this.onHoveredOverlay.bind(this)),
-		catchError(() => of(true))
+	rotationChanged$: Observable<any> = this.actions$.pipe(
+		ofType<ChangeOverlayPreviewRotationAction>(OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION),
+		tap(({ payload }) => this.rotation = payload)
 	);
+
+	@AutoSubscription
+	hoveredOverlay$: Observable<any> = this.store$.pipe(
+		select(selectHoveredOverlay),
+		tap(this.onHoveredOverlay.bind(this))
+	);
+
 
 	// Mark the original overlay as un-hovered when mouse leaves
 	@HostListener('mouseleave')
@@ -74,11 +68,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public store$: Store<IOverlaysState>,
+		public actions$: Actions,
 		protected el: ElementRef,
 		protected translate: TranslateService,
-		protected imageryCommunicatorService: ImageryCommunicatorService,
-		@Inject(OverlaysConfig) protected overlaysConfig: IOverlaysConfig,
-		protected projectionService: ProjectionService) {
+		@Inject(OverlaysConfig) protected overlaysConfig: IOverlaysConfig) {
 	}
 
 	ngOnInit() {
@@ -87,7 +80,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay([overlay, north]: [IOverlay, number]) {
+	onHoveredOverlay(overlay: IOverlay) {
 		if (overlay) {
 			const isNewOverlay = this.overlayId !== overlay.id;
 			const isFetchingOverlayData = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
@@ -102,7 +95,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.sensorName = overlay.sensorName;
 				this.img.nativeElement.src = isFetchingOverlayData ? undefined : overlay.thumbnailUrl;
 				this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-				this.rotation = north;
 				if ((isNewOverlay || isFetchingOverlayData) && !this.img.nativeElement.complete) {
 					this.startedLoadingImage();
 				}
@@ -110,45 +102,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		} else {
 			this.isHoveringOverDrop = false;
 		}
-	}
-
-
-	getCorrectedNorth(communicator: CommunicatorEntity): Observable<number> {
-		if (!communicator) {
-			return of(0);
-		}
-		const { mapObject } = communicator.ActiveMap;
-		return this.getProjectedCenters(mapObject).pipe(
-			map((projectedCenters: Point[]): number => {
-				const projectedCenterView = projectedCenters[0].coordinates;
-				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
-				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-				return northOffsetRad * -1;
-			})
-		);
-	}
-
-	getProjectedCenters(mapObject: Map): Observable<Point[]> {
-		return Observable.create((observer: Observer<any>) => {
-			const size = mapObject.getSize();
-			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
-			if (!areCoordinatesNumeric(olCenterView)) {
-				observer.error('no coordinate for pixel');
-			}
-			const olCenterViewWithOffset = mapObject.getCoordinateFromPixel([size[0] / 2, (size[1] / 2) - 1]);
-			if (!areCoordinatesNumeric(olCenterViewWithOffset)) {
-				observer.error('no coordinate for pixel');
-			}
-			observer.next([olCenterView, olCenterViewWithOffset]);
-		})
-			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
-	}
-
-	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
-		return forkJoin(coordinates.map((coordinate) => {
-			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
-			return this.projectionService.projectApproximatelyFromProjection(point, 'EPSG:3857');
-		}));
 	}
 
 	onDblClick() {

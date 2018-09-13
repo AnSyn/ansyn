@@ -1,9 +1,9 @@
 {
-  "extends": "../../../tsconfig.app.json",
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@ansyn/core/*": [
-        "src/app/@ansyn/core/*"
+      "@ansyn/core": [
+        "src/app/@ansyn/core"
       ]
     }
   }

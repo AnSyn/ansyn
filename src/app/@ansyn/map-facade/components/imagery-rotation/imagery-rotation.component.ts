@@ -1,8 +1,7 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ICaseMapState } from '@ansyn/core';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -46,7 +45,7 @@ export class ImageryRotationComponent {
 	}
 
 	get communicator(): CommunicatorEntity {
-		return this.imageryCommunicatorService.provide(this.mapState.id)
+		return this.imageryCommunicatorService.provide(this.mapState.id);
 	}
 
 	get virtualNorth() {

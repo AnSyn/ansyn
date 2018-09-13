@@ -12,30 +12,35 @@ import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '../utils/extent-calculator';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
+import { BaseImageryMap, ImageryMap, ProjectionService } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '../openlayers-map/openlayers-mouseposition-control';
 import 'rxjs/add/operator/take';
-import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
+import {
+	areCoordinatesNumeric,
+	CaseMapExtent,
+	CaseMapExtentPolygon,
+	CoreConfig,
+	ICaseMapPosition,
+	ICoreConfig
+} from '@ansyn/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
-import { configuration } from '../../../../../../configuration/configuration';
+import { Inject } from '@angular/core';
 
 export const OpenlayersMapName = 'openLayersMap';
 
-enum StaticGroupsKeys {
+export enum StaticGroupsKeys {
 	layers = 'layers'
 }
 
+// @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [ProjectionService]
+	deps: [ProjectionService, CoreConfig]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
@@ -49,7 +54,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 
 
-	constructor(public projectionService: ProjectionService) {
+	constructor(public projectionService: ProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
 
@@ -97,7 +102,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
 		const renderer = 'canvas';
-		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true, loadTilesWhileAnimating: true });
+		this._mapObject = new OLMap({
+			target,
+			renderer,
+			controls,
+			loadTilesWhileInteracting: true,
+			loadTilesWhileAnimating: true
+		});
 		this.initListeners();
 		return this.resetView(layers[0], position);
 	}
@@ -108,7 +119,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				if (position) {
 					this.positionChanged.emit(position);
 				}
-			})
+			});
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
@@ -252,9 +263,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.projectionService.projectAccurately(point, this);
 	}
 
-	calculateRotateExtent(map: OLMap): Observable<{ extentPolygon: CaseMapExtentPolygon, layerExtentPolygon: CaseMapExtentPolygon}> {
+	calculateRotateExtent(map: OLMap): Observable<{ extentPolygon: CaseMapExtentPolygon, layerExtentPolygon: CaseMapExtentPolygon }> {
 		if (!this.isValidPosition) {
-			return Observable.of({ extentPolygon: null, layerExtentPolygon: null});
+			return Observable.of({ extentPolygon: null, layerExtentPolygon: null });
 		}
 		const [width, height] = map.getSize();
 		const topLeft = map.getCoordinateFromPixel([0, 0]);
@@ -264,7 +275,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
 		const someIsNaN = !coordinates[0].every(areCoordinatesNumeric);
 		if (someIsNaN) {
-			return Observable.of({ extentPolygon: null, layerExtentPolygon: null});
+			return Observable.of({ extentPolygon: null, layerExtentPolygon: null });
 		}
 
 		const mainLayer = this.getMainLayer();
@@ -275,14 +286,18 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates)), new olFeature(layerExtentPolygon)], this)
 				.map((collection: FeatureCollection<GeometryObject>) => {
 					mainLayer.set('mainExtent', collection.features[1].geometry as Polygon);
-					return { extentPolygon: collection.features[0].geometry as Polygon,
-						layerExtentPolygon: collection.features[1].geometry as Polygon};
+					return {
+						extentPolygon: collection.features[0].geometry as Polygon,
+						layerExtentPolygon: collection.features[1].geometry as Polygon
+					};
 				});
 		}
 		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], this)
 			.map((collection: FeatureCollection<GeometryObject>) => {
-				return { extentPolygon: collection.features[0].geometry as Polygon,
-					layerExtentPolygon: cachedMainExtent};
+				return {
+					extentPolygon: collection.features[0].geometry as Polygon,
+					layerExtentPolygon: cachedMainExtent
+				};
 			});
 	}
 
@@ -333,7 +348,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
-		return this.calculateRotateExtent(this.mapObject).map(({extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon}) => {
+		return this.calculateRotateExtent(this.mapObject).map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {
 				return null;
 			}
@@ -344,7 +359,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				return null;
 			}
 
-			if (configuration.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
+			if (this.coreConfig.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
 				extentPolygon = layerExtentPolygon;
 			}
 
@@ -360,7 +375,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		// check if 3 out of 4 coordinates inside main layer extent
 		let cornersInside = 0;
 		for (let i = 0; i < extentPolygon.coordinates[0].length - 1; i++) { // -1 in order to ignore duplicated coordinate
-			const isInside = turf.booleanPointInPolygon(turf.point(extentPolygon.coordinates[0][i]), turf.polygon(layerExtentPolygon.coordinates), {ignoreBoundary: false});
+			const isInside = turf.booleanPointInPolygon(turf.point(extentPolygon.coordinates[0][i]), turf.polygon(layerExtentPolygon.coordinates), { ignoreBoundary: false });
 			if (isInside) {
 				cornersInside++;
 			}

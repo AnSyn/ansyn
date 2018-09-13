@@ -6,5 +6,5 @@ export function createConfig(config: IImageryConfig): ValueProvider {
 	return {
 		provide: IMAGERY_CONFIG,
 		useValue: config
-	}
+	};
 }

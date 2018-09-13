@@ -1,6 +1,6 @@
 import { StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { CaseGeoFilter } from '@ansyn/core/models/case.model';
+import { UpdateGeoFilterStatus } from '../actions/status-bar.actions';
+import { CaseGeoFilter } from '@ansyn/core';
 
 describe('Status Bar Reducer', () => {
 	let _reducerState;

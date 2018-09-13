@@ -2,8 +2,8 @@ import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { HelpEffects } from '@ansyn/menu-items/help/effects/help.effects';
-import { menuFeatureKey, MenuReducer } from '@ansyn/menu/reducers/menu.reducer';
+import { HelpEffects } from '../effects/help.effects';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu';
 
 describe('HelpEffects', () => {
 	let helpEffects: HelpEffects;

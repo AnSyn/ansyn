@@ -2,20 +2,17 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import olFeature from 'ol/feature';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
-import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
+import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/map-facade';
 import { Actions } from '@ngrx/effects';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade/actions/map.actions';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
+import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
+import { IVisualizerEntity } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -67,7 +64,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		]));
 
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected projectionService: ProjectionService) {
+	constructor(protected actions$: Actions, protected store$: Store<any>, protected projectionService: ProjectionService) {
 		super();
 
 		this._iconSrc = new Style({
@@ -110,7 +107,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			});
 	}
 
-	onPointerMove({ coordinate }: any) {
+	onPointerMove({ coordinate }: any): Subscription {
 		const point = <GeoPoint> turf.geometry('Point', coordinate);
 		return this.projectionService.projectApproximately(point, this.iMap)
 			.take(1)

@@ -1,11 +1,9 @@
 {
 	"name": "@ansyn/menu-items",
-	"version": "0.2.81",
-	"license": "MIT",
+	"version": "0.2.81.7",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3",
-		"@ansyn/core": "0.2.81"
+		"@angular/core": "^6.0.3"
 	},
-	"typings": "index.d.ts"
+	"license": "MIT"
 }

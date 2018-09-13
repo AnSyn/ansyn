@@ -62,3 +62,5 @@ yarn.lock
 confd/dev
 confd/confd.exe
 confd/confd
+
+src/ng-ansyn.metadata.json

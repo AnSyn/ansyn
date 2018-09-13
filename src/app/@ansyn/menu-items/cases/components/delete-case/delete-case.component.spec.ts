@@ -8,10 +8,9 @@ import { Observable } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
+import { casesConfig, CasesService } from '../../services/cases.service';
+import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -47,7 +46,7 @@ describe('DeleteCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));

@@ -1,11 +1,8 @@
 import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
-import { ICase } from '../models/case.model';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { CasesService } from '../services/cases.service';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { Operator } from 'rxjs/Operator';
-import { ICasePreview } from '@ansyn/core/models/case.model';
+import { ICase, ICasePreview } from '@ansyn/core';
 
 export interface ICaseModal {
 	show: boolean,
@@ -19,7 +16,7 @@ export interface ICasesState extends EntityState<ICasePreview> {
 
 export const casesFeatureKey = 'cases';
 
-export const casesAdapter = createEntityAdapter<ICasePreview>({ sortComparer: (ob1: ICasePreview, ob2: ICasePreview): number => +ob2.creationTime - +ob1.creationTime });
+export const casesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({ sortComparer: (ob1: ICasePreview, ob2: ICasePreview): number => +ob2.creationTime - +ob1.creationTime });
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
 	selectedCase: null,

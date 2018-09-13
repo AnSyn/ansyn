@@ -23,7 +23,6 @@
 		</div>
 
 
-
 	</div>
 
 	<ansyn-layer *ngFor="let layer of collection.data"
@@ -31,9 +30,9 @@
 				 [layer]="layer"
 				 [showOnly]="collection.data.length < 2">
 
-			<ansyn-layer-menu [disabledRemove]="collection.data?.length < 2"
-							  (openModal)="openModal($event, layer)">
-			</ansyn-layer-menu>
+		<ansyn-layer-menu [disabledRemove]="collection.data?.length < 2"
+						  (openModal)="openModal($event, layer)">
+		</ansyn-layer-menu>
 
 	</ansyn-layer>
 

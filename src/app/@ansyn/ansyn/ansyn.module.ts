@@ -1,30 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
-import { OverlaysModule } from '@ansyn/overlays/overlays.module';
-import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
+import { StatusBarModule } from '@ansyn/status-bar';
+import { OverlaysModule } from '@ansyn/overlays';
+import { AnsynPluginsModule } from '@ansyn/plugins';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
-import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
-import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
-import { CasesModule } from '@ansyn/menu-items/cases/cases.module';
-import { FiltersModule } from '@ansyn/menu-items/filters/filters.module';
-import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
-import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
-import { AlgorithmsModule } from '@ansyn/menu-items/algorithms/algorithms.module';
-import { SettingsModule } from '@ansyn/menu-items/settings/settings.module';
-import { MenuModule } from '@ansyn/menu/menu.module';
-import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { AnsynRouterModule } from '@ansyn/router/router.module';
-import { ContextModule } from '@ansyn/context/context.module';
+import {
+	AlgorithmsModule,
+	CasesModule,
+	FiltersModule,
+	HelpModule,
+	LayersManagerModule,
+	SettingsModule,
+	ToolsModule
+} from '@ansyn/menu-items';
+import { MenuModule } from '@ansyn/menu';
+import { MapFacadeModule } from '@ansyn/map-facade';
+import { ImageryModule } from '@ansyn/imagery';
+import { ContextModule } from '@ansyn/context';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule } from '@ansyn/core/core.module';
-import { HelpModule } from '@ansyn/menu-items/help/help.module';
-import { configuration } from '../../../configuration/configuration';
+import { AlertsModule, CoreModule } from '@ansyn/core';
+import { RouterModule } from '@angular/router';
+import { ansynConfig } from './config/ansyn.config';
 
 @NgModule({
 	imports: [
@@ -43,13 +43,13 @@ import { configuration } from '../../../configuration/configuration';
 		AnsynPluginsModule,
 		CoreModule,
 		ContextModule,
-		MenuModule.provideMenuItems(configuration.ansynMenuItems),
-		AlertsModule.provideAlerts(ansynAlerts),
+		MenuModule.provideMenuItems(ansynConfig.ansynMenuItems),
+		AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule,
 		ImageryModule,
 		StatusBarModule,
-		AnsynRouterModule,
+		RouterModule,
 		HelpModule
 	],
 	declarations: [AnsynComponent],

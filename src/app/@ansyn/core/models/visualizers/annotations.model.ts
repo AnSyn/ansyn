@@ -20,7 +20,7 @@ export interface IUpdateFeatureEvent {
 	properties: { [k: string]: any }
 }
 
-export type AnnotationMode = 'Point' | 'LineString' | 'Polygon'| 'Circle' | 'Rectangle' | 'Arrow' | undefined;
+export type AnnotationMode = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Arrow' | undefined;
 
 export enum AnnotationInteraction {
 	click = 'click',

@@ -1,9 +1,9 @@
-import { IFilter } from '@ansyn/menu-items/filters/models/IFilter';
-import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { FiltersActions, FiltersActionTypes } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { ICaseFacetsState, ICaseFilter } from '@ansyn/core/models/case.model';
-import { FiltersService } from '@ansyn/menu-items/filters/services/filters.service';
+import { ICaseFacetsState, ICaseFilter } from '@ansyn/core';
+import { IFilter } from '../models/IFilter';
+import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
+import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
+import { FiltersService } from '../services/filters.service';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 

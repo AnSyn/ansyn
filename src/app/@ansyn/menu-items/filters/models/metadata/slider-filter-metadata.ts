@@ -1,5 +1,5 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType } from '@ansyn/core/models/case.model';
+import { FilterType } from '@ansyn/core';
 
 export class SliderFilterMetadata implements FilterMetadata {
 	count = 0;
@@ -24,7 +24,7 @@ export class SliderFilterMetadata implements FilterMetadata {
 	}
 
 	updateMetadata(range: { start: number, end: number }): void {
-		if (!range || (range.start && range.end && range.start > range.end) ) {
+		if (!range || (range.start && range.end && range.start > range.end)) {
 			return;
 		}
 

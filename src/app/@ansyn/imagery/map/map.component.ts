@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { filter, map, take } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { BaseImageryMap } from '../model/base-imagery-map';
 })
 export class MapComponent implements OnInit, OnDestroy {
 	@ViewChild('mapElement') protected mapElement: ElementRef;
+
 	constructor(protected map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 

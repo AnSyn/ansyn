@@ -4,13 +4,11 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IToolsState, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreConfig, CoreModule, LoggerConfig } from '@ansyn/core';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { ProjectionConverterService } from '@ansyn/menu-items/tools/services/projection-converter.service';
-import { toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
 import { HttpClientModule } from '@angular/common/http';
-import { CoreConfig } from '@ansyn/core/models/core.config';
+import { ProjectionConverterService } from '../../services/projection-converter.service';
+import { toolsConfig } from '../../models/tools-config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -24,18 +22,18 @@ describe('GoToComponent', () => {
 			providers: [
 				ProjectionConverterService,
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {}},
+				{ provide: CoreConfig, useValue: {} },
 				{
 					provide: toolsConfig, useValue: {
-					GoTo: {
-						from: '',
-						to: ''
-					},
-					Proj4: {
-						ed50: '+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs',
-						ed50Customized: ''
+						GoTo: {
+							from: '',
+							to: ''
+						},
+						Proj4: {
+							ed50: '+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs',
+							ed50Customized: ''
+						}
 					}
-				}
 				}
 			]
 		})

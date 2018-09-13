@@ -1,11 +1,12 @@
 export interface IStroke {
 	stroke?: string | any;
 	'stroke-width'?: number | any;
-	"stroke-opacity"?: number | any;
+	'stroke-opacity'?: number | any;
 }
+
 export interface IFill {
 	fill?: string | any;
-	"fill-opacity"?: number | any;
+	'fill-opacity'?: number | any;
 }
 
 export interface ILabel extends IStroke {
@@ -20,9 +21,9 @@ export interface ILabel extends IStroke {
 export interface IVisualizerStyle extends IStroke, IFill {
 	zIndex?: number;
 	fill?: string;
-	"fill-opacity"?: number;
-	"marker-color"?: string;
-	"marker-size"?: MarkerSize;
+	'fill-opacity'?: number;
+	'marker-color'?: string;
+	'marker-size'?: MarkerSize;
 	shadow?: IStroke;
 	icon?: {
 		scale: number;
@@ -32,11 +33,13 @@ export interface IVisualizerStyle extends IStroke, IFill {
 	geometry?: any;
 	label?: ILabel;
 }
+
 export enum MarkerSize {
 	small = 'small',
 	medium = 'medium',
 	large = 'large'
 }
+
 export enum MarkerSizeDic {
 	small = 4,
 	medium = 6,

@@ -1,11 +1,11 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppAnsynModule } from './app/app/app.module';
-import { fetchConfigProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
-import { configuration } from './configuration/configuration';
+import { fetchConfigProviders } from '@ansyn/ansyn';
 import { enableProdMode } from '@angular/core';
+import { configuration } from './configuration/configuration';
 
 if (configuration.production) {
 	enableProdMode();
 }
 
-fetchConfigProviders().then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));
+fetchConfigProviders(configuration.configPath).then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));

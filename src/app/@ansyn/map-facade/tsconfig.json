@@ -1,0 +1,22 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "paths": {
+      "@ansyn/core": [
+        "src/app/@ansyn/core"
+      ],
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery"
+      ],
+      "@ansyn/menu": [
+        "src/app/@ansyn/menu"
+      ]
+    },
+    "target": "es5",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

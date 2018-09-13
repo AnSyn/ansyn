@@ -3,7 +3,8 @@ import {
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
-	Inject, Injector,
+	Inject,
+	Injector,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -12,7 +13,7 @@ import {
 } from '@angular/core';
 import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 import { IBaseImageryMapConstructor } from '../model/base-imagery-map';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 
@@ -44,7 +45,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this.mapComponentElem,
 			this._mapComponentRef,
 			this.baseSourceProviders,
-			this.mapComponentSettings,
+			this.mapComponentSettings
 		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.worldView.mapType, this.mapComponentSettings.data.position).then(() => {

@@ -39,7 +39,8 @@
 				[disabled]="imageManualProcessingDisabled">
 			<i class="icon-tools-image-processing"></i>
 		</button>
-		<ansyn-image-processing-control [expand]="isExpand(subMenuEnum.manualImageProcessing) && !onAutoImageProcessing "></ansyn-image-processing-control>
+		<ansyn-image-processing-control
+			[expand]="isExpand(subMenuEnum.manualImageProcessing) && !onAutoImageProcessing "></ansyn-image-processing-control>
 	</div>
 	<div class="display-overlay-visualizer">
 		<button tooltip-class="right"
@@ -66,7 +67,8 @@
 				[disabled]="!(isActiveAnnotationLayer$ | async) || isGeoOptionsDisabled">
 			<span class="icon-annotation"></span>
 		</button>
-		<ansyn-annotations-control [expand]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"></ansyn-annotations-control>
+		<ansyn-annotations-control
+			[expand]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"></ansyn-annotations-control>
 	</div>
 
 	<div class="distance-measure-tool">

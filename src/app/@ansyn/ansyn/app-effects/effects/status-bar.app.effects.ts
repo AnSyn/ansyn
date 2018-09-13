@@ -3,19 +3,18 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import {
 	CopySelectedCaseLinkAction,
+	SearchModeEnum,
+	selectGeoFilterSearchMode,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
-} from '@ansyn/status-bar/actions/status-bar.actions';
+} from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { CopyCaseLinkAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { OverlaysService } from '@ansyn/overlays';
+import { casesStateSelector, CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items';
+import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 
 
@@ -23,13 +22,6 @@ import { filter, map, withLatestFrom } from 'rxjs/operators';
 export class StatusBarAppEffects {
 
 
-	/**
-	 * @type Effect
-	 * @name onCopySelectedCaseLink$
-	 * @ofType CopySelectedCaseLinkAction
-	 * @dependencies cases
-	 * @action CopyCaseLinkAction
-	 */
 	@Effect()
 	onCopySelectedCaseLink$ = this.actions$.pipe(
 		ofType<CopySelectedCaseLinkAction>(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK),
@@ -42,11 +34,6 @@ export class StatusBarAppEffects {
 	);
 
 
-	/**
-	 * @type Effect
-	 * @name onExpand$
-	 * @ofType ExpandAction
-	 */
 	@Effect({ dispatch: false })
 	onExpand$: Observable<void> = this.actions$.pipe(
 		ofType(StatusBarActionsTypes.EXPAND),
@@ -54,12 +41,7 @@ export class StatusBarAppEffects {
 			console.log('onExpand$');
 		})
 	);
-	/**
-	 * @type Effect
-	 * @name onClickOutsideMap$
-	 * @ofType ClickOutsideMap
-	 * @action UpdateStatusFlagsAction
-	 */
+
 	@Effect()
 	onClickOutsideMap$ = this.actions$.pipe(
 		ofType<ClickOutsideMap | ContextMenuShowAction>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP, MapActionTypes.CONTEXT_MENU.SHOW),

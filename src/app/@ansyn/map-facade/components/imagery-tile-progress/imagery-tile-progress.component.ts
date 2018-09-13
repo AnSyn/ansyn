@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { Actions } from '@ngrx/effects';
@@ -16,7 +16,7 @@ export class ImageryTileProgressComponent implements OnInit, OnDestroy {
 	private _subscriptions: Subscription[] = [];
 	progress$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.VIEW.SET_PROGRESS_BAR)
-		.filter((action: SetProgressBarAction) => action.payload.mapId === this.mapId )
+		.filter((action: SetProgressBarAction) => action.payload.mapId === this.mapId)
 		.map((action: SetProgressBarAction) => action.payload.progress)
 		.do((progress) => this.progress = progress);
 

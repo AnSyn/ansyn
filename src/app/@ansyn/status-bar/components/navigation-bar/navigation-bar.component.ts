@@ -1,14 +1,10 @@
 import { Component, HostListener, Inject } from '@angular/core';
-import {
-	EnableCopyOriginalOverlayDataAction,
-	GoAdjacentOverlay,
-	GoNextPresetOverlay
-} from '@ansyn/core/actions/core.actions';
+import { EnableCopyOriginalOverlayDataAction, GoAdjacentOverlay, GoNextPresetOverlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { ExpandAction } from '@ansyn/status-bar/actions/status-bar.actions';
-import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
-import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+import { IStatusBarState } from '../../reducers/status-bar.reducer';
+import { ExpandAction } from '../../actions/status-bar.actions';
+import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
+import { StatusBarConfig } from '../../models/statusBar.config';
 
 @Component({
 	selector: 'ansyn-navigation-bar',
@@ -24,8 +20,8 @@ export class NavigationBarComponent {
 		return this.statusBarConfig.toolTips || {};
 	}
 
-	private _nextPresetOverlayKeys = 'qQ/'.split("").map(char => char.charCodeAt(0));
-	private _overlayHack = 'Eeק'.split("").map(char => char.charCodeAt(0));
+	private _nextPresetOverlayKeys = 'qQ/'.split('').map(char => char.charCodeAt(0));
+	private _overlayHack = 'Eeק'.split('').map(char => char.charCodeAt(0));
 
 	@HostListener('window:keyup', ['$event'])
 	onkeyup($event: KeyboardEvent) {
@@ -39,12 +35,12 @@ export class NavigationBarComponent {
 		} else if ($event.which === 37) { // ArrowLeft
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1 ) {
+		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
 			this.clickGoNextPresetOverlay();
 			this.goNextQuickLoop = false;
 		}
 
-		if (this._overlayHack.indexOf($event.which) !== -1 ) {
+		if (this._overlayHack.indexOf($event.which) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
 		}
 	}
@@ -59,11 +55,11 @@ export class NavigationBarComponent {
 			this.goNextActive = true;
 		} else if ($event.which === 37) { // ArrowLeft
 			this.goPrevActive = true;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1 ) {
+		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
 			this.goNextQuickLoop = true;
 		}
 
-		if (this._overlayHack.indexOf($event.which) !== -1 ) {
+		if (this._overlayHack.indexOf($event.which) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 		}
 	}

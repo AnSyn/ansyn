@@ -1,13 +1,11 @@
 import { Store } from '@ngrx/store';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectIsPinned } from '@ansyn/menu/reducers/menu.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { IAppState } from '../app-effects/app.effects.module';
+import { ICase, ICaseMapState } from '@ansyn/core';
+import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { selectIsPinned } from '@ansyn/menu';
+import { selectSelectedCase } from '@ansyn/menu-items';
 
 @Component({
 	selector: 'ansyn-app',
@@ -27,6 +25,8 @@ export class AnsynComponent {
 		.map(MapFacadeService.activeMap)
 		.filter(Boolean);
 
-	constructor(protected store$: Store<IAppState>) {
+	@Input() version;
+
+	constructor(protected store$: Store<any>) {
 	}
 }

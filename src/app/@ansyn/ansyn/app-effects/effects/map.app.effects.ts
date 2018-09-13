@@ -6,46 +6,67 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction,
+	IOverlaysState,
+	MarkUpClass,
 	OverlaysActionTypes,
+	overlaysStateSelector,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
-} from '@ansyn/overlays/actions/overlays.actions';
-import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade/actions/map.actions';
+} from '@ansyn/overlays';
+import {
+	ImageryCreatedAction,
+	IMapFacadeConfig,
+	IMapState,
+	MapActionTypes,
+	mapFacadeConfig,
+	MapFacadeService,
+	mapStateSelector,
+	SetIsLoadingAcion
+} from '@ansyn/map-facade';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
-} from '@ansyn/menu-items/tools/actions/tools.actions';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
+} from '@ansyn/menu-items';
 import {
 	AddAlertMsg,
+	AlertMsgTypes,
 	BackToWorldView,
 	CoreActionTypes,
+	endTimingLog,
+	extentFromGeojson,
+	getFootprintIntersectionRatioInExtent,
+	ICaseMapState,
+	isFullOverlay,
 	RemoveAlertMsg,
 	SetMapsDataActionStore,
 	SetToastMessageAction,
+	startTimingLog,
+	toastMessages,
 	ToggleMapLayersAction
-} from '@ansyn/core/actions/core.actions';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { endTimingLog, startTimingLog } from '@ansyn/core/utils/logs/timer-logs';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core/utils/calc-extent';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { IMAGERY_MAPS } from '@ansyn/imagery/providers/imagery-map-collection';
-import { IBaseImageryMapConstructor } from '@ansyn/imagery/model/base-imagery-map';
+} from '@ansyn/core';
+import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
+import {
+	BaseMapSourceProvider,
+	CommunicatorEntity,
+	IBaseImageryMapConstructor,
+	IMAGERY_MAPS,
+	ImageryCommunicatorService
+} from '@ansyn/imagery';
+import {
+	catchError,
+	debounceTime,
+	filter,
+	map,
+	mergeMap,
+	pairwise,
+	startWith,
+	switchMap,
+	tap,
+	withLatestFrom
+} from 'rxjs/operators';
+import { IAppState } from '../app.effects.module';
 
 @Injectable()
 export class MapAppEffects {
@@ -99,14 +120,6 @@ export class MapAppEffects {
 			}))
 		);
 
-	/**
-	 * @type Effect
-	 * @name onSetManualImageProcessing$
-	 * @ofType SetMapManualImageProcessing
-	 * @dependencies map
-	 * @filter There is a full overlay
-	 * @action SetMapsDataAction
-	 */
 	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
@@ -124,14 +137,6 @@ export class MapAppEffects {
 				];
 			}));
 
-	/**
-	 * @type Effect
-	 * @name displayOverlayOnNewMapInstance$
-	 * @ofType MapInstanceChangedAction
-	 * @dependencies map
-	 * @filter There is mapsList, and it has a an overlay with id from payload
-	 * @action DisplayOverlayAction
-	 */
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED)
@@ -153,18 +158,11 @@ export class MapAppEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name onOverlayFromURL$
-	 * @ofType DisplayOverlayAction
-	 * @filter There is no full overlay
-	 * @action RequestOverlayByIDFromBackendAction
-	 */
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.pipe(
-			filter((action: DisplayOverlayAction) => !OverlaysService.isFullOverlay(action.payload.overlay)),
+			filter((action: DisplayOverlayAction) => !isFullOverlay(action.payload.overlay)),
 			mergeMap((action: DisplayOverlayAction) => {
 				return [
 					new RequestOverlayByIDFromBackendAction({
@@ -177,30 +175,17 @@ export class MapAppEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name overlayLoadingFailed$
-	 * @ofType DisplayOverlayFailedAction
-	 * @action SetToastMessageAction, RemoveOverlayFromLoadingOverlaysAction
-	 */
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
 		.pipe(
 			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
 			map((action) => new SetToastMessageAction({
-				toastText: statusBarToastMessages.showOverlayErrorToast,
+				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
 			}))
 		);
 
-	/**
-	 * @type Effect
-	 * @name setOverlaysNotInCase$
-	 * @ofType SetFilteredOverlaysAction, SetMapsDataActionStore
-	 * @dependencies overlays, map
-	 * @action AddAlertMsg?, RemoveAlertMsg?
-	 */
 	@Effect()
 	setOverlaysNotInCase$: Observable<any> = this.actions$
 		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, CoreActionTypes.SET_MAPS_DATA)
@@ -215,13 +200,7 @@ export class MapAppEffects {
 				});
 			})
 		);
-	/**
-	 * @type Effect
-	 * @name markupOnMapsDataChanges$
-	 * @ofType ActiveMapChangedAction, MapsListChangedAction
-	 * @dependencies none
-	 * @action SetMarkUp
-	 */
+
 	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
@@ -263,11 +242,6 @@ export class MapAppEffects {
 			)
 		);
 
-	/**
-	 * @type Effect
-	 * @name toggleLayersGroupLayer$
-	 * @ofType ToggleMapLayersAction
-	 */
 	@Effect({ dispatch: false })
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
 		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
@@ -278,14 +252,6 @@ export class MapAppEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name activeMapGeoRegistrationChanged$
-	 * @ofType DisplayOverlaySuccessAction, ActiveMapChangedAction
-	 * @dependencies map
-	 * @filter mapsList.length > 0
-	 * @action SetMapGeoEnabledModeToolsActionStore
-	 */
 	@Effect()
 	activeMapGeoRegistrationChanged$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.TRIGGER.MAPS_LIST_CHANGED, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
@@ -399,10 +365,10 @@ export class MapAppEffects {
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
-		const isFull = OverlaysService.isFullOverlay(payload.overlay);
+		const isFull = isFullOverlay(payload.overlay);
 		const { overlay } = payload;
 		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
-		const isNotDisplayed = !(OverlaysService.isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
+		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
 		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
 	}
 

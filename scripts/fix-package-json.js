@@ -26,6 +26,21 @@ function fix(fileName) {
 			}
 		});
 	}
+	if (packageJson.dependencies) {
+		Object.keys(packageJson.dependencies).forEach(name => {
+			if (name in mainPackage.dependencies) {
+				packageJson.dependencies[name] = mainPackage.devDependencies[name];
+			}
+
+			if (name in mainPackage.dependencies) {
+				packageJson.dependencies[name] = mainPackage.dependencies[name];
+			}
+
+			if (name.substr(0, 7) === '@ansyn/') {
+				packageJson.dependencies[name] = packageJson.version;
+			}
+		});
+	}
 
 	let newContent = JSON.stringify(packageJson, null, '\t');
 	newContent = newContent.split('\n').join('\r\n') + '\r\n';
@@ -39,6 +54,6 @@ function fix(fileName) {
 }
 
 packages.forEach((pkg) => {
-	const fileName = 'projects/ansyn/' + pkg + '/package.json';
+	const fileName = 'src/app/@ansyn/' + pkg + '/package.json';
 	fix(fileName);
 });

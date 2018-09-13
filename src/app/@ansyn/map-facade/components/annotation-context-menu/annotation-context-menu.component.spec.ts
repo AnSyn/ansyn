@@ -8,10 +8,7 @@ import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs/Subject';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import {
-	AnnotationInteraction,
-	IAnnotationsSelectionEventData
-} from '@ansyn/core/models/visualizers/annotations.model';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
 
 
 describe('AnnotationContextMenuComponent', () => {
@@ -98,7 +95,7 @@ describe('AnnotationContextMenuComponent', () => {
 				height: 100,
 				left: 100,
 				width: 100
-			},
+			}
 		};
 		fixture.detectChanges();
 		spyOn(component, 'removeFeature');

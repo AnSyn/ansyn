@@ -18,7 +18,14 @@ import {
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
 import { fromEvent, Observable } from 'rxjs';
-import { IMenuState } from '../reducers/menu.reducer';
+import {
+	IMenuState,
+	selectAllMenuItems,
+	selectAutoClose,
+	selectEntitiesMenuItems,
+	selectIsPinned,
+	selectSelectedMenuItem
+} from '../reducers/menu.reducer';
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -26,17 +33,9 @@ import { DOCUMENT } from '@angular/common';
 import { IMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
-import {
-	selectAllMenuItems,
-	selectAutoClose,
-	selectEntitiesMenuItems,
-	selectIsPinned,
-	selectSelectedMenuItem
-} from '@ansyn/menu/reducers/menu.reducer';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import * as packageJson from 'root/package.json';
+import { filter, tap, withLatestFrom } from 'rxjs/operators';
 
 const animations: any[] = [
 	trigger(
@@ -52,6 +51,7 @@ const animations: any[] = [
 	)
 ];
 
+// @dynamic
 @Component({
 	selector: 'ansyn-menu',
 	templateUrl: './menu.component.html',
@@ -88,7 +88,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	@ViewChild('container') container: ElementRef;
-	@Input() version = (<any> packageJson).version;
+	@Input() version;
 
 	@AutoSubscription
 	isPinned$ = this.store

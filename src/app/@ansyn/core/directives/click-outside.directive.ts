@@ -1,8 +1,6 @@
-import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { OnInit } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 
 @Directive({
@@ -18,19 +16,20 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
 	@Input() eventListener = 'click';
 
 	@AutoSubscription
-	$event = () => {
+	$event: () => any = () => {
 		return fromEvent(window, this.eventListener).pipe(
-		tap(($event: any) => {
-			setTimeout(() => {
-				const self = $event.path.includes(this.elementRef.nativeElement);
-				const trigger = $event.path.includes(this.trigger);
-				if (!self && !trigger) {
-					this.ansynClickOutside.emit($event);
-				}
-			}, 0);
+			tap(($event: any) => {
+				setTimeout(() => {
+					const self = $event.path.includes(this.elementRef.nativeElement);
+					const trigger = $event.path.includes(this.trigger);
+					if (!self && !trigger) {
+						this.ansynClickOutside.emit($event);
+					}
+				}, 0);
 
-		})
-	)};
+			})
+		);
+	};
 
 	ngOnDestroy(): void {
 	}

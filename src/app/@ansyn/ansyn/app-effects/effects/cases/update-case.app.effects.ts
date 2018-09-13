@@ -4,31 +4,35 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { ICase } from '@ansyn/core/models/case.model';
-import { UpdateCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { selectFacets } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import {
+	ICase,
 	selectAutoSave,
 	selectFavoriteOverlays,
 	selectLayout,
 	selectOverlaysCriteria,
-	selectPresetOverlays, selectRemovedOverlays, selectRemovedOverlaysVisibility
-} from '@ansyn/core/reducers/core.reducer';
-import { selectSelectedLayersIds } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { selectComboBoxesProperties } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { selectSelectedCase } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
+	selectPresetOverlays,
+	selectRemovedOverlays,
+	selectRemovedOverlaysVisibility
+} from '@ansyn/core';
+import {
+	selectFacets,
+	selectOverlaysManualProcessArgs,
+	selectSelectedCase,
+	selectSelectedLayersIds,
+	UpdateCaseAction
+} from '@ansyn/menu-items';
+import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
+import { selectComboBoxesProperties } from '@ansyn/status-bar';
+import { selectContextEntities } from '@ansyn/context';
 import { pipe } from 'rxjs/Rx';
 import { tap } from 'rxjs/internal/operators';
+import { IAppState } from '../../app.effects.module';
 
 @Injectable()
 export class UpdateCaseAppEffects {
 	isAutoSaveTriggered: boolean;
-	clearIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = false));
-	setIsAutoSave = pipe(tap(() => this.isAutoSaveTriggered = true));
+	clearIsAutoSave: any = pipe(tap(() => this.isAutoSaveTriggered = false));
+	setIsAutoSave: any = pipe(tap(() => this.isAutoSaveTriggered = true));
 
 	events: any[] = [
 		this.store$.select(selectSelectedLayersIds),
@@ -48,13 +52,6 @@ export class UpdateCaseAppEffects {
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
-	/**
-	 * @type Effect
-	 * @name caseCollection$
-	 * @ofType [...UpdateCaseActionTypes]
-	 * @action UpdateCaseAction
-	 * @dependencies cases, core, tools, statusBar, map, layers, filters
-	 */
 	@Effect()
 	shouldUpdateCase$ = Observable.combineLatest(this.events)
 		.withLatestFrom(this.store$.select(selectSelectedCase))

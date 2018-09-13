@@ -19,6 +19,7 @@ export interface ImageryMetaData {
 	mapSourceProviders: IBaseMapSourceProviderConstructor[]
 }
 
+// @dynamic
 @NgModule({
 	imports: [CommonModule],
 	declarations: [ImageryComponent, MapComponent],

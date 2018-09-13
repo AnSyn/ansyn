@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AlertComponentDirective } from './alert-component.directive';
 import { ALERTS_COLLECTION, AlertsProvider, IAlert } from '../alerts/alerts.model';
 
+// @dynamic
 @NgModule({
 	imports: [CommonModule],
 	declarations: [AlertComponentDirective],
@@ -17,6 +18,6 @@ export class AlertsModule {
 			providers: [
 				{ provide: ALERTS_COLLECTION, multi: true, useValue: alerts }
 			]
-		}
+		};
 	}
 }

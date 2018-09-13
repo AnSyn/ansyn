@@ -1,4 +1,4 @@
-import { IHelpLocalStorageState } from '@ansyn/menu-items/help/models/help.local-storage-state.model';
+import { IHelpLocalStorageState } from '../models/help.local-storage-state.model';
 
 export class HelpLocalStorageService {
 	getHelpLocalStorageData(): IHelpLocalStorageState {

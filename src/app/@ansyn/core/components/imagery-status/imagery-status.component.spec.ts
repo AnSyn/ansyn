@@ -20,7 +20,12 @@ describe('ImageryStatusComponent', () => {
 			providers: [
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: ALERTS, useValue: [] },
-				{ provide: TranslateService, useValue: { get: () => EMPTY, setDefaultLang(arg) {} }}]
+				{
+					provide: TranslateService, useValue: {
+						get: () => EMPTY, setDefaultLang(arg) {
+						}
+					}
+				}]
 		}).compileComponents();
 	}));
 

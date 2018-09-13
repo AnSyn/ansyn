@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../../dist/ansyn/imagery",
+  "lib": {
+    "entryFile": "./public_api.ts",
+    "styleIncludePaths": [
+      "../"
+    ]
+  }
+}

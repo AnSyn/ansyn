@@ -1,15 +1,15 @@
-import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { getTimeFormat } from '@ansyn/core/utils/time';
+import { getTimeFormat, IOverlay } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { configuration } from '../../../../../configuration/configuration';
+import { OverlaysConfig } from '../../services/overlays.service';
+import { IOverlaysConfig } from '../../models/overlays.config';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -28,12 +28,12 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public overlayId: string;
 
 	public loading = false;
-	public errorSrc = configuration.overlays.overlayOverviewFailed;
+	public errorSrc = this.overlaysConfig.overlayOverviewFailed;
 
 	protected topElement = this.el.nativeElement.parentElement;
 
 	public get const() {
-		return overlayOverviewComponentConstants
+		return overlayOverviewComponentConstants;
 	}
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
@@ -55,7 +55,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	constructor(
 		public store$: Store<IOverlaysState>,
 		protected el: ElementRef,
-		protected translate: TranslateService
+		protected translate: TranslateService,
+		@Inject(OverlaysConfig) protected overlaysConfig: IOverlaysConfig
 	) {
 	}
 

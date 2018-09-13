@@ -1,10 +1,9 @@
 import OSM from 'ol/source/osm';
 import TileLayer from 'ol/layer/tile';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
+import { ICaseMapState } from '@ansyn/core';
+import { ImageryMapSource } from '@ansyn/imagery';
+import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 

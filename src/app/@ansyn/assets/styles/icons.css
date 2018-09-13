@@ -1,0 +1,320 @@
+.icon-remove-from-case:before {
+	content: "\e978";
+}
+
+.icon-no-of-screens:before {
+	content: "\e929";
+}
+
+.icon-sync:before {
+	content: "\e928";
+}
+
+.icon-status-bar-alert:before {
+	content: "\e927";
+}
+
+.icon-tools-polygons:before {
+	content: "\e912";
+}
+
+.icon-tools-image-processing:before {
+	content: "\e913";
+}
+
+.icon-favorites:before {
+	content: "\e924";
+}
+
+.icon-remove-overlay:before {
+	content: "\e92b";
+}
+
+.icon-restore-overlay:before {
+	content: "\e92a";
+}
+
+.icon-presets:before {
+	content: "\e91b";
+}
+
+.icon-status-bar-prev:before {
+	content: "\e925";
+}
+
+.icon-status-bar-next:before {
+	content: "\e926";
+}
+
+.icon-main-cases:before {
+	content: "\61";
+}
+
+.icon-main-data-layers:before {
+	content: "\62";
+}
+
+.icon-main-filters:before {
+	content: "\63";
+}
+
+.icon-main-tools:before {
+	content: "\64";
+}
+
+.icon-screen-1:before {
+	content: "\e900";
+}
+
+.icon-screen-2:before {
+	content: "\e901";
+}
+
+.icon-screen-3:before {
+	content: "\e902";
+}
+
+.icon-screen-4:before {
+	content: "\e903";
+}
+
+.icon-screen-5:before {
+	content: "\e904";
+}
+
+.icon-screen-6:before {
+	content: "\e905";
+}
+
+.icon-context-menu-next:before {
+	content: "\e906";
+}
+
+.icon-context-menu-prev:before {
+	content: "\e907";
+}
+
+.icon-context-menu-angle:before {
+	content: "\e908";
+}
+
+.icon-map-Point:before {
+	content: "\e909";
+}
+
+.icon-context-menu-first:before {
+	content: "\e90a";
+}
+
+.icon-context-menu-last:before {
+	content: "\e90b";
+}
+
+.icon-status-bar-case:before {
+	content: "\e90c";
+}
+
+.icon-status-bar-orientation:before {
+	content: "\e90d";
+}
+
+.icon-status-bar-geo:before {
+	content: "\e911";
+}
+
+.icon-status-bar-share-link:before {
+	content: "\e915";
+}
+
+.icon-shadow-mouse:before {
+	content: "\e916";
+}
+
+.icon-status-bar-expand:before {
+	content: "\e91d";
+}
+
+.icon-status-bar-time:before {
+	content: "\e91f";
+}
+
+.icon-status-bar-input-data:before {
+	content: "\e918";
+}
+
+.icon-tools-height:before {
+	content: "\e920";
+}
+
+.icon-main-algorithms:before {
+	content: "\e921";
+}
+
+.icon-tools-ruler:before {
+	content: "\e922";
+}
+
+.icon-main-settings:before {
+	content: "\e923";
+}
+
+.icon-help-settings:before {
+	content: "\e917";
+}
+
+.icon-tools-go-to:before {
+	content: "\e92c";
+}
+
+.icon-tools-pin:before {
+	content: "\e92d";
+}
+
+.icon-automatic-image-processing:before {
+	content: "\e92e";
+}
+
+.icon-status-bar-imagery-count:before {
+	content: "\e92f";
+}
+
+.icon-tools-heatmap:before {
+	content: "\e931";
+}
+
+.icon-tools-toggle:before {
+	content: "\e939";
+}
+
+.icon-entity-map-marker:before {
+	content: "\e93b";
+}
+
+.icon-entity-time-line:before {
+	content: "\e940";
+}
+
+.icon-tools-export:before {
+	content: "\e942";
+}
+
+.icon-delete:before {
+	content: "\e943";
+}
+
+.icon-edit:before {
+	content: "\e944";
+}
+
+.icon-annotation:before {
+	content: "\e910";
+}
+
+.icon-share:before {
+	content: "\e945";
+}
+
+.icon-close:before {
+	content: "\e947";
+}
+
+.icon-annotation-point:before {
+	content: "\e948";
+}
+
+.icon-annotation-line:before {
+	content: "\e949";
+}
+
+.icon-annotation-polygon:before {
+	content: "\e94a";
+}
+
+.icon-annotation-circle:before {
+	content: "\e94b";
+}
+
+.icon-annotation-square:before {
+	content: "\e94c";
+}
+
+.icon-annotation-arrow:before {
+	content: "\e94d";
+}
+
+.icon-annotation-weight:before {
+	content: "\e94e";
+}
+
+.icon-annotation-color:before {
+	content: "\e94f";
+}
+
+.icon-annotation-label:before {
+	content: "\e930";
+}
+
+.icon-annotation-duplicate:before {
+	content: "\e951";
+}
+
+.icon-layers-hide:before {
+	content: "\e954";
+}
+
+.icon-status-bar-show-pin-point:before {
+	content: "\e956";
+}
+
+.icon-temporary-link:before {
+	content: "\e957";
+}
+
+.icon-permanent-link:before {
+	content: "\e958";
+}
+
+.icon-context-menu-best:before {
+	content: "\e95b";
+}
+
+.icon-reset-timeline:before {
+	content: "\e97a";
+}
+
+.icon-frame-mode:before {
+	content: "\e97b";
+}
+
+.icon-save-manual:before {
+	content: "\e914";
+}
+
+.icon-download-layer:before {
+	content: "\e90e";
+}
+
+.icon-map-Polygon:before {
+	content: "\e90f";
+	font-size: 4rem;
+}
+
+.icon-layer-export:before {
+	content: "\e919";
+}
+
+.icon-layer-add:before {
+	content: "\e91a";
+}
+
+.icon-layer-import:before {
+	content: "\e90e";
+}
+
+.icon-annotation-no-fill-inactive:before {
+	content: "\e91c";
+}
+
+.icon-annotation-no-fill:before {
+	content: "\e91e";
+}

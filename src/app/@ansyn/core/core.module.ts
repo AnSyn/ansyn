@@ -14,7 +14,7 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';

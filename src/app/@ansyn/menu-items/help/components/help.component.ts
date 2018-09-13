@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { helpComponentConstants } from '@ansyn/menu-items/help/components/help.component.const';
-import { HelpLocalStorageService } from '@ansyn/menu-items/help/services/help.local-storage.service';
+import { helpComponentConstants } from '../components/help.component.const';
+import { HelpLocalStorageService } from '../services/help.local-storage.service';
 
 @Component({
 	selector: 'ansyn-help',

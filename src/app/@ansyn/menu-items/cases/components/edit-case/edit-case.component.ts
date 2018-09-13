@@ -1,18 +1,14 @@
-import { Component, ElementRef, HostBinding, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit, ViewChild } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { ICase } from '../../models/case.model';
+import { AnsynInputComponent, ICase, ICasePreview, IContext } from '@ansyn/core';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
-import { ICasePreview } from '../../models/case.model';
-import { selectContextsArray } from '@ansyn/context/reducers/context.reducer';
-import { IContext } from '@ansyn/core/models/context.model';
-import { catchError } from 'rxjs/internal/operators';
-import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
+import { selectContextsArray } from '@ansyn/context';
 
 const animationsDuring = '0.2s';
 
@@ -68,7 +64,7 @@ export class EditCaseComponent implements OnInit {
 
 	addDefaultContext(context: IContext[]): IContext[] {
 		return [
-			{ id: 'default', name: 'Default ICase', creationTime: new Date()},
+			{ id: 'default', name: 'Default ICase', creationTime: new Date() },
 			...context
 		];
 	}

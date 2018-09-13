@@ -2,8 +2,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
 import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { Point } from 'geojson';
+import { ICaseMapPosition } from '@ansyn/core';
 
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;

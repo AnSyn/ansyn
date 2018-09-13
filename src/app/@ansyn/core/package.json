@@ -1,0 +1,18 @@
+{
+	"name": "@ansyn/core",
+	"version": "0.2.81.7",
+	"description": "",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "ansyn",
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": "^6.0.3",
+		"@angular/core": "^6.0.3",
+		"@types/geojson": "^7946.0.3",
+		"@turf/turf": "5.1.6",
+		"proj4": "2.4.3"
+	}
+}

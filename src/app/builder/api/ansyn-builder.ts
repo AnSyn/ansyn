@@ -29,6 +29,7 @@ import { AnsynApi } from './ansyn-api.service';
 import { buildAnsynCustomComponent } from '../dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 import { AnsynBuilderModule } from './ansyn-builder.module';
 import { ansynConfig } from '@ansyn/ansyn';
+import { ContextAppEffects } from '@ansyn/ansyn';
 
 export interface IAnsynBuilderOptions {
 	providers?: any[];
@@ -124,7 +125,8 @@ export class AnsynBuilder {
 				...configProviders,
 				customProviders,
 				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
-				{ provide: DataLayersService, useClass: BuilderDataLayersService }
+				{ provide: DataLayersService, useClass: BuilderDataLayersService },
+				{ provide: ContextAppEffects, useClass: class Empty {} }
 			],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],

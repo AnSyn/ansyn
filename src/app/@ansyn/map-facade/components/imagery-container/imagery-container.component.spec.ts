@@ -1,15 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryContainerComponent } from './imagery-container.component';
-import { MockComponent } from '@ansyn/core';
-import { CoreModule } from '@ansyn/core';
+import { CoreConfig, CoreModule, LoggerConfig, MockComponent } from '@ansyn/core';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { HttpClientModule } from '@angular/common/http';
-import { CoreConfig } from '@ansyn/core';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;

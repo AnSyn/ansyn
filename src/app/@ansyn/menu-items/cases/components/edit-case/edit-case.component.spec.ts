@@ -9,8 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { casesConfig, CasesService } from '../../services/cases.service';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 
 describe('EditCaseComponent', () => {
@@ -46,7 +45,7 @@ describe('EditCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));
@@ -76,7 +75,10 @@ describe('EditCaseComponent', () => {
 			component.editMode = true;
 			spyOn(component, 'close');
 			component.onSubmitCase(0);
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({updatedCase: component.caseModel, forceUpdate: true}));
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({
+				updatedCase: component.caseModel,
+				forceUpdate: true
+			}));
 			expect(component.close).toHaveBeenCalled();
 		});
 

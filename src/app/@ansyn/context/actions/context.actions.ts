@@ -8,12 +8,14 @@ export enum ContextActionTypes {
 
 export class AddAllContextsAction {
 	readonly type = ContextActionTypes.ADD_ALL_CONTEXT;
+
 	constructor(public payload: IContext[]) {
 	}
 }
 
 export class SetContextParamsAction {
 	readonly type = ContextActionTypes.SET_CONTEXT_PARAMS;
+
 	constructor(public payload: Partial<IContextParams>) {
 	}
 }

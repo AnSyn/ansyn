@@ -1,9 +1,13 @@
 import { Observable } from 'rxjs';
-import { BaseImageryPlugin } from './base-imagery-plugin';
-import { IImageryPluginMetaData } from './base-imagery-plugin';
+import { BaseImageryPlugin, IImageryPluginMetaData } from './base-imagery-plugin';
 import { IVisualizerEntity } from '@ansyn/core';
 
-export type VisualizerInteractionTypes = 'click' | 'pointerMove' | 'doubleClick' | 'contextMenu' | 'drawInteractionHandler';
+export type VisualizerInteractionTypes =
+	'click'
+	| 'pointerMove'
+	| 'doubleClick'
+	| 'contextMenu'
+	| 'drawInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
 	click: 'click',

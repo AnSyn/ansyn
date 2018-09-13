@@ -1,17 +1,13 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
+import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { IOverlay } from '@ansyn/core';
-import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import {
-	DisplayOverlaySuccessAction,
-	OverlaysActionTypes
-} from '@ansyn/overlays';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 

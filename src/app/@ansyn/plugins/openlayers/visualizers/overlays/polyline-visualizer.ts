@@ -1,5 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { VisualizerInteractions } from '@ansyn/imagery';
+import { ImageryVisualizer, IVisualizersConfig, VisualizerInteractions, VisualizersConfig } from '@ansyn/imagery';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
@@ -11,28 +11,23 @@ import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { Inject } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays';
-import { OverlaysService } from '@ansyn/overlays';
-import { ICaseMapState } from '@ansyn/core';
 import {
+	DisplayOverlayFromStoreAction,
+	ExtendMap,
 	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
+	OverlaysService,
 	overlaysStateSelector,
 	selectFilteredOveralys,
-	selectOverlaysMap
+	selectOverlaysMap,
+	SetMarkUp
 } from '@ansyn/overlays';
-import { ExtendMap } from '@ansyn/overlays';
+import { ICaseMapState, IOverlay, IVisualizerEntity, VisualizerStates } from '@ansyn/core';
 import { MultiLineString } from 'geojson';
-import { MapFacadeService } from '@ansyn/map-facade';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { IVisualizerEntity } from '@ansyn/core';
-import { VisualizerStates } from '@ansyn/core';
-import { ImageryVisualizer } from '@ansyn/imagery';
+import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { IOverlay } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { AutoSubscription } from 'auto-subscriptions';

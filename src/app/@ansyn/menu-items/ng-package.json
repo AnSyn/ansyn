@@ -3,7 +3,9 @@
   "dest": "../../../../dist/ansyn/menu-items",
   "lib": {
     "entryFile": "./public_api.ts",
-    "styleIncludePaths": ["../"]
+    "styleIncludePaths": [
+      "../"
+    ]
   },
   "externals": {
     "moment": "moment"

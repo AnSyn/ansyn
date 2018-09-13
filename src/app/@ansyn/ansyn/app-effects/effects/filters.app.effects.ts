@@ -4,9 +4,19 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import {
+	BooleanFilterMetadata,
+	EnableOnlyFavoritesSelectionAction,
+	EnumFilterMetadata,
+	FilterMetadata,
 	Filters,
+	FiltersActionTypes,
+	FiltersService,
 	filtersStateSelector,
+	IFilter,
 	IFiltersState,
+	InitializeFiltersAction,
+	InitializeFiltersSuccessAction,
+	ResetFiltersAction,
 	selectFacets,
 	selectFilters,
 	selectOldFilters,
@@ -16,43 +26,30 @@ import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
-	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
-} from '@ansyn/overlays';
-import {
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
-	selectOverlaysMap
+	selectOverlaysMap,
+	SetFilteredOverlaysAction,
+	SetOverlaysStatusMessage
 } from '@ansyn/overlays';
-import {
-	EnableOnlyFavoritesSelectionAction,
-	FiltersActionTypes,
-	InitializeFiltersAction,
-	InitializeFiltersSuccessAction,
-	ResetFiltersAction
-} from '@ansyn/menu-items';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/observable/of';
 import { SetBadgeAction } from '@ansyn/menu';
 import {
+	buildFilteredOverlays,
+	FilterType,
+	GenericTypeResolverService,
+	ICaseFacetsState,
+	ICaseFilter,
+	IFilterModel,
+	InjectionResolverFilter,
+	IOverlay,
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
-import { FilterType, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
-import { IOverlay } from '@ansyn/core';
-import { FilterMetadata } from '@ansyn/menu-items';
-import { FiltersService } from '@ansyn/menu-items';
-import { IFilterModel } from '@ansyn/core';
-import { OverlaysService } from '@ansyn/overlays';
-import { IFilter } from '@ansyn/menu-items';
-import { InjectionResolverFilter } from '@ansyn/core';
-import { GenericTypeResolverService } from '@ansyn/core';
-import { EnumFilterMetadata } from '@ansyn/menu-items';
-import { BooleanFilterMetadata } from '@ansyn/menu-items';
 import 'rxjs/add/observable/combineLatest';
-import { buildFilteredOverlays } from '@ansyn/core';
 
 @Injectable()
 export class FiltersAppEffects {

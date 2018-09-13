@@ -6,8 +6,12 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import {
 	CoreActionTypes,
+	coreStateSelector,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
+	IOverlay,
+	LoggerService,
+	selectRemovedOverlays,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlayIdsCount
@@ -17,15 +21,12 @@ import {
 	DisplayOverlayFromStoreAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes
+	OverlaysActionTypes,
+	overlaysStateSelector,
+	selectOverlaysMap
 } from '@ansyn/overlays';
-import { coreStateSelector, selectRemovedOverlays } from '@ansyn/core';
-import { overlaysStateSelector, selectOverlaysMap } from '@ansyn/overlays';
 import { CasesActionTypes } from '@ansyn/menu-items';
-import { LoggerService } from '@ansyn/core';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { MapFacadeService } from '@ansyn/map-facade';
-import { IOverlay } from '@ansyn/core';
+import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 import { map } from 'rxjs/operators';
 

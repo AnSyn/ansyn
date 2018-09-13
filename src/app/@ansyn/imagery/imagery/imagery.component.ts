@@ -3,7 +3,8 @@ import {
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
-	Inject, Injector,
+	Inject,
+	Injector,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -44,7 +45,7 @@ export class ImageryComponent implements OnInit, OnDestroy {
 			this.mapComponentElem,
 			this._mapComponentRef,
 			this.baseSourceProviders,
-			this.mapComponentSettings,
+			this.mapComponentSettings
 		);
 
 		this._manager.setActiveMap(this.mapComponentSettings.worldView.mapType, this.mapComponentSettings.data.position).then(() => {

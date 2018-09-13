@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ProjectionService } from '@ansyn/imagery';
+import { BaseImageryMap, CommunicatorEntity, ProjectionService } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';
-import { BaseImageryMap } from '@ansyn/imagery';
-import { CommunicatorEntity } from '@ansyn/imagery';
 
 @Injectable()
 export class OpenLayersProjectionService extends ProjectionService {

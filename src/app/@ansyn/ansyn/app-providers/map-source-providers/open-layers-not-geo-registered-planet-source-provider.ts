@@ -1,6 +1,5 @@
 import { OpenLayerPlanetSourceProvider } from './open-layers-planet-source-provider';
-import { OpenLayersDisabledMap } from '@ansyn/plugins';
-import { OpenLayersMap } from '@ansyn/plugins';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ImageryMapSource } from '@ansyn/imagery';
 
 export const OpenLayerNotGeoRegisteredPlanetSourceProviderSourceType = 'NOT-GEO-REGISTERED-PLANET';

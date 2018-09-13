@@ -5,29 +5,33 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import {
-	SetRemovedOverlaysVisibilityAction,
+	CoreConfig,
+	ICase,
+	ICaseMapState,
+	ICoreConfig,
+	IOverlay,
+	isFullOverlay,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
+	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction, SetMapsDataActionStore
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction
 } from '@ansyn/core';
 import {
 	BeginLayerCollectionLoadAction,
+	CasesActionTypes,
+	CasesService,
+	SelectCaseAction,
+	UpdateFacetsAction,
+	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items';
-import { ICase, ICaseMapState } from '@ansyn/core';
 import { SetComboBoxesProperties } from '@ansyn/status-bar';
-import { IOverlay } from '@ansyn/core';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items';
-import { UpdateFacetsAction } from '@ansyn/menu-items';
-import { CasesService } from '@ansyn/menu-items';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
-import { isFullOverlay } from '@ansyn/core';
-import { CoreConfig, ICoreConfig } from '@ansyn/core';
 
 @Injectable()
 export class SelectCaseAppEffects {

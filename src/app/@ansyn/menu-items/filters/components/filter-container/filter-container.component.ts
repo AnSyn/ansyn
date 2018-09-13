@@ -89,7 +89,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	}
 
 	onMetadataChange(metadata: any): void {
-		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata ) } ));
+		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata) }));
 	}
 
 	showAll(): void {

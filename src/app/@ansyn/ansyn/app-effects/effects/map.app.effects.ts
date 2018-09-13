@@ -6,44 +6,67 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction,
+	IOverlaysState,
+	MarkUpClass,
 	OverlaysActionTypes,
+	overlaysStateSelector,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
 } from '@ansyn/overlays';
-import { ImageryCreatedAction, MapActionTypes, SetIsLoadingAcion } from '@ansyn/map-facade';
+import {
+	ImageryCreatedAction,
+	IMapFacadeConfig,
+	IMapState,
+	MapActionTypes,
+	mapFacadeConfig,
+	MapFacadeService,
+	mapStateSelector,
+	SetIsLoadingAcion
+} from '@ansyn/map-facade';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
 } from '@ansyn/menu-items';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { IOverlaysState, MarkUpClass, overlaysStateSelector } from '@ansyn/overlays';
-import { mapFacadeConfig, IMapFacadeConfig } from '@ansyn/map-facade';
 import {
 	AddAlertMsg,
+	AlertMsgTypes,
 	BackToWorldView,
 	CoreActionTypes,
+	endTimingLog,
+	extentFromGeojson,
+	getFootprintIntersectionRatioInExtent,
+	ICaseMapState,
+	isFullOverlay,
 	RemoveAlertMsg,
 	SetMapsDataActionStore,
 	SetToastMessageAction,
+	startTimingLog,
+	toastMessages,
 	ToggleMapLayersAction
 } from '@ansyn/core';
-import { DisabledOpenLayersMapName } from '@ansyn/plugins';
-import { ICaseMapState } from '@ansyn/core';
-import { endTimingLog, startTimingLog } from '@ansyn/core';
-import { AlertMsgTypes } from '@ansyn/core';
-import { OpenlayersMapName } from '@ansyn/plugins';
-import { extentFromGeojson, getFootprintIntersectionRatioInExtent } from '@ansyn/core';
-import { BaseMapSourceProvider } from '@ansyn/imagery';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { MapFacadeService } from '@ansyn/map-facade';
-import { CommunicatorEntity } from '@ansyn/imagery';
-import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { IMAGERY_MAPS, IBaseImageryMapConstructor } from '@ansyn/imagery';
-import { toastMessages } from '@ansyn/core';
+import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
+import {
+	BaseMapSourceProvider,
+	CommunicatorEntity,
+	IBaseImageryMapConstructor,
+	IMAGERY_MAPS,
+	ImageryCommunicatorService
+} from '@ansyn/imagery';
+import {
+	catchError,
+	debounceTime,
+	filter,
+	map,
+	mergeMap,
+	pairwise,
+	startWith,
+	switchMap,
+	tap,
+	withLatestFrom
+} from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
-import { isFullOverlay } from '@ansyn/core';
 
 @Injectable()
 export class MapAppEffects {

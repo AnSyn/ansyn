@@ -6,12 +6,14 @@ import { DataLayersService, layersConfig } from '../../../services/data-layers.s
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../../reducers/layers.reducer';
-import { StorageService } from '@ansyn/core';
-import { ErrorHandlerService } from '@ansyn/core';
-import { LoggerService } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
-import { LoggerConfig } from '@ansyn/core';
-import { AnsynInputComponent } from '@ansyn/core';
+import {
+	AnsynInputComponent,
+	CoreConfig,
+	ErrorHandlerService,
+	LoggerConfig,
+	LoggerService,
+	StorageService
+} from '@ansyn/core';
 
 describe('EditLayerComponent', () => {
 	let component: EditLayerComponent;

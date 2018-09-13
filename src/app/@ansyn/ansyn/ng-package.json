@@ -46,10 +46,11 @@
     "togeojson",
     "tokml",
     "wellknown"
-
   ],
   "lib": {
     "entryFile": "./public_api.ts",
-    "styleIncludePaths": ["../"]
+    "styleIncludePaths": [
+      "../"
+    ]
   }
 }

@@ -5,9 +5,27 @@ import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import {
 	ActiveMapChangedAction,
-	ImageryCreatedAction, SetIsLoadingAcion
+	ImageryCreatedAction,
+	IMapState,
+	initialMapState,
+	mapFacadeConfig,
+	mapFeatureKey,
+	MapReducer,
+	mapStateSelector,
+	SetIsLoadingAcion
 } from '@ansyn/map-facade';
-import { OverlaysService } from '@ansyn/overlays';
+import {
+	BaseOverlaySourceProvider,
+	DisplayOverlayAction,
+	IFetchParams,
+	IOverlaysState,
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysInitialState,
+	OverlaysService,
+	overlaysStateSelector,
+	RequestOverlayByIDFromBackendAction
+} from '@ansyn/overlays';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
@@ -15,55 +33,37 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '@ansyn/status-bar';
-import { DisplayOverlayAction, RequestOverlayByIDFromBackendAction } from '@ansyn/overlays';
-import { IOverlay } from '@ansyn/core';
-import { CommunicatorEntity } from '@ansyn/imagery';
+import * as extentFromGeojson from '@ansyn/core';
+import { ICase, ICaseMapState, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import {
-	IMapState,
-	initialMapState,
-	mapFeatureKey,
-	MapReducer,
-	mapStateSelector
-} from '@ansyn/map-facade';
-import { SetMapGeoEnabledModeToolsActionStore } from '@ansyn/menu-items';
+	BaseMapSourceProvider,
+	CacheService,
+	CommunicatorEntity,
+	IMAGERY_CONFIG,
+	IMAGERY_MAPS,
+	ImageryCommunicatorService,
+	VisualizersConfig
+} from '@ansyn/imagery';
 import {
-	IOverlaysState,
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
-	overlaysStateSelector
-} from '@ansyn/overlays';
+	casesFeatureKey,
+	CasesReducer,
+	CasesService,
+	casesStateSelector,
+	ICasesState,
+	ILayerState,
+	initialLayersState,
+	IToolsState,
+	layersStateSelector,
+	SetMapGeoEnabledModeToolsActionStore,
+	toolsInitialState,
+	toolsStateSelector
+} from '@ansyn/menu-items';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import {
-	casesFeatureKey, CasesReducer, casesStateSelector,
-	ICasesState
-} from '@ansyn/menu-items';
-import { mapFacadeConfig } from '@ansyn/map-facade';
-import {
-	IToolsState, toolsFlags, toolsInitialState,
-	toolsStateSelector
-} from '@ansyn/menu-items';
-import {
-	ILayerState,
-	initialLayersState,
-	layersStateSelector
-} from '@ansyn/menu-items';
-import { VisualizersConfig } from '@ansyn/imagery';
-import { IOverlaysFetchData } from '@ansyn/core';
-import { CacheService } from '@ansyn/imagery';
-import { BaseMapSourceProvider } from '@ansyn/imagery';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { CasesService } from '@ansyn/menu-items';
-import { LoggerService } from '@ansyn/core';
-import { IMAGERY_CONFIG } from '@ansyn/imagery';
-import * as extentFromGeojson from '@ansyn/core';
-import { IMAGERY_MAPS } from '@ansyn/imagery';
-import { ICase, ICaseMapState } from '@ansyn/core';
+
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	public supported =  ['mapType1'];
+	public supported = ['mapType1'];
 	sourceType = 'sourceType1';
 
 	create(metaData: any): any {
@@ -123,7 +123,7 @@ describe('MapAppEffects', () => {
 	};
 	let fakeOverlay: IOverlay;
 
-	const imagery1PositionBoundingBox = {test: 1};
+	const imagery1PositionBoundingBox = { test: 1 };
 
 	const cases: ICase[] = [{
 		id: '1',
@@ -133,7 +133,7 @@ describe('MapAppEffects', () => {
 		lastModified: new Date(),
 		autoSave: false,
 		state: {
-			time: {type: '', from: new Date(), to: new Date()},
+			time: { type: '', from: new Date(), to: new Date() },
 			region: {
 				type: 'Polygon',
 				coordinates: [
@@ -149,10 +149,10 @@ describe('MapAppEffects', () => {
 				data: [
 					{
 						id: 'imagery1',
-						data: {position: {zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox}}
+						data: { position: { zoom: 1, center: 2, boundingBox: imagery1PositionBoundingBox } }
 					},
-					{id: 'imagery2', data: {position: {zoom: 3, center: 4}, overlayDisplayMode: 'Heatmap'}},
-					{id: 'imagery3', data: {position: {zoom: 5, center: 6}}}
+					{ id: 'imagery2', data: { position: { zoom: 3, center: 4 }, overlayDisplayMode: 'Heatmap' } },
+					{ id: 'imagery3', data: { position: { zoom: 5, center: 6 } } }
 				],
 				activeMapId: 'imagery1'
 			}
@@ -173,12 +173,16 @@ describe('MapAppEffects', () => {
 			],
 			providers: [
 				{ provide: LoggerService, useValue: { error: (some) => null } },
-				{ provide: CacheService, useClass: CacheService, deps: [VisualizersConfig, ImageryCommunicatorService] },
+				{
+					provide: CacheService,
+					useClass: CacheService,
+					deps: [VisualizersConfig, ImageryCommunicatorService]
+				},
 				ImageryCommunicatorService,
-				{provide: VisualizersConfig, useValue: {}},
+				{ provide: VisualizersConfig, useValue: {} },
 				MapAppEffects,
 				OverlaysService,
-				{provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true},
+				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{
 					provide: mapFacadeConfig,
 					useValue: {}
@@ -202,7 +206,7 @@ describe('MapAppEffects', () => {
 						'maxCachedLayers': 100
 					}
 				},
-				{provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock},
+				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
@@ -224,7 +228,7 @@ describe('MapAppEffects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const selectedCase = cases[0];
-		icaseState = {cases, selectedCase} as any;
+		icaseState = { cases, selectedCase } as any;
 
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
@@ -232,7 +236,7 @@ describe('MapAppEffects', () => {
 		layerState = cloneDeep(initialLayersState);
 
 		toolsState = cloneDeep(toolsInitialState);
-		fakeOverlay = <any>{id: 'overlayId', date: new Date(), isGeoRegistered: true};
+		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: true };
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
 		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
@@ -266,7 +270,7 @@ describe('MapAppEffects', () => {
 
 		beforeEach(() => {
 			fakeCommunicator = <any> {
-				ActiveMap: {MapType: 'ol'},
+				ActiveMap: { MapType: 'ol' },
 				resetView: () => {
 				}
 			};
@@ -301,7 +305,7 @@ describe('MapAppEffects', () => {
 				azimuth: 0,
 				isGeoRegistered: true
 			};
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 			const expectedResults = cold('-');
 			expect(mapAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 		});
@@ -317,7 +321,7 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true,
 				sourceType: 'IDAHO'
 			};
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 
 			const expectedResults = cold('--(bc)--', {
 				b: new RequestOverlayByIDFromBackendAction({
@@ -342,7 +346,7 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 			const expectedResults = cold('-');
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
 		});
@@ -358,7 +362,7 @@ describe('MapAppEffects', () => {
 				isGeoRegistered: true,
 				sourceType: 'PLANET'
 			};
-			actions = hot('--a--', {a: new DisplayOverlayAction({overlay: testOverlay, mapId: 'imagery1'})});
+			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 
 			const expectedResults = cold('--(bc)--', {
 				b: new RequestOverlayByIDFromBackendAction({
@@ -387,7 +391,7 @@ describe('MapAppEffects', () => {
 
 			const communicators: Array<string> = ['imagery1'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({id: 'imagery1'})
+				a: new ImageryCreatedAction({ id: 'imagery1' })
 			});
 			const expectedResults = cold('--b--', {
 				b: new DisplayOverlayAction({
@@ -403,7 +407,7 @@ describe('MapAppEffects', () => {
 			icaseState.selectedCase.state.maps.data[1].data.overlay = null;
 			const communicators: Array<string> = ['imagery2'];
 			actions = hot('--a--', {
-				a: new ImageryCreatedAction({id: 'imagery2'})
+				a: new ImageryCreatedAction({ id: 'imagery2' })
 			});
 			const expectedResults = cold('-');
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
@@ -412,15 +416,15 @@ describe('MapAppEffects', () => {
 
 	describe('activeMapGeoRegistrationChanged$', () => {
 		it('After active map is changed should dispatch "SetMapGeoEnabledModeToolsActionStore" geoOpertions state', () => {
-			const testOverlay: IOverlay = {id: 'testOverlayId1', isGeoRegistered: false} as IOverlay;
+			const testOverlay: IOverlay = { id: 'testOverlayId1', isGeoRegistered: false } as IOverlay;
 			mapState.mapsList = <any> [
-				{id: 'imagery1', data: {overlay: testOverlay}},
-				{id: 'imagery2', data: {overlay: testOverlay}}
+				{ id: 'imagery1', data: { overlay: testOverlay } },
+				{ id: 'imagery2', data: { overlay: testOverlay } }
 			];
 			mapState.activeMapId = 'imagery1';
-			actions = hot('--a--', {a: new ActiveMapChangedAction('')});
+			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
 			const b = new SetMapGeoEnabledModeToolsActionStore(testOverlay.isGeoRegistered);
-			const expectedResults = cold('--b--', {b});
+			const expectedResults = cold('--b--', { b });
 			expect(mapAppEffects.activeMapGeoRegistrationChanged$).toBeObservable(expectedResults);
 		});
 	});

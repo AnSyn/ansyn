@@ -3,6 +3,8 @@
   "dest": "../../../../dist/ansyn/core",
   "lib": {
     "entryFile": "./public_api.ts",
-    "styleIncludePaths": ["../"]
+    "styleIncludePaths": [
+      "../"
+    ]
   }
 }

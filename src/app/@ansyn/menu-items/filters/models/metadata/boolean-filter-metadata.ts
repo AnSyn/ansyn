@@ -10,6 +10,7 @@ export interface IBooleanProperty {
 	count: number;
 	disabled?: boolean;
 }
+
 export interface IBooleanProperties {
 	true: IBooleanProperty;
 	false: IBooleanProperty;

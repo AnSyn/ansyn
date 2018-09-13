@@ -1,11 +1,14 @@
 import { Action } from '@ngrx/store';
 import { Point, Position } from 'geojson';
-import { IImageryChanged } from '@ansyn/imagery';
-import { IMapInstanceChanged } from '@ansyn/imagery';
-import { ICaseMapPosition } from '@ansyn/core';
-import { ICaseMapState } from '@ansyn/core';
-import { IOverlay, IPendingOverlay } from '@ansyn/core';
-import { IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/core';
+import { IImageryChanged, IMapInstanceChanged } from '@ansyn/imagery';
+import {
+	IAnnotationsSelectionEventData,
+	ICaseMapPosition,
+	ICaseMapState,
+	IOverlay,
+	IPendingOverlay,
+	IUpdateFeatureEvent
+} from '@ansyn/core';
 
 export const MapActionTypes = {
 	POSITION_CHANGED: 'POSITION_CHANGED',

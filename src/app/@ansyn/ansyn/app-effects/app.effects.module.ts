@@ -1,7 +1,6 @@
 import { FiltersAppEffects } from './effects/filters.app.effects';
-import { ILayerState } from '@ansyn/menu-items';
+import { ICasesState, IFiltersState, ILayerState, IToolsState } from '@ansyn/menu-items';
 import { LayersAppEffects } from './effects/layers.app.effects';
-import { ICasesState } from '@ansyn/menu-items';
 import { IMenuState } from '@ansyn/menu';
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
@@ -18,8 +17,6 @@ import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
-import { IToolsState } from '@ansyn/menu-items';
-import { IFiltersState } from '@ansyn/menu-items';
 import { ContextAppEffects } from './effects/context.app.effects';
 
 export interface IAppState {

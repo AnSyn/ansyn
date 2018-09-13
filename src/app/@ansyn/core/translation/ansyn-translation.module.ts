@@ -1,4 +1,4 @@
-import { Injectable, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
+import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MissingTranslationLogging } from '../utils/missing-translation-logging';

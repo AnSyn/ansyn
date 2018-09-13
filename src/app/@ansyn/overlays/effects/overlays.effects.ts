@@ -5,9 +5,10 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { Observable, from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import {
-	DisplayOverlayAction, DisplayOverlayFailedAction,
+	DisplayOverlayAction,
+	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
@@ -18,14 +19,20 @@ import {
 import { OverlaysService } from '../services/overlays.service';
 import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
-import { IOverlay } from '@ansyn/core';
+import {
+	BackToWorldView,
+	coreStateSelector,
+	ICoreState,
+	IOverlay,
+	IOverlaysFetchData,
+	LoggerService,
+	selectFavoriteOverlays,
+	selectPresetOverlays,
+	UpdateOverlaysCountAction
+} from '@ansyn/core';
 import { unionBy } from 'lodash';
 import 'rxjs/add/operator/share';
-import { IOverlaysFetchData } from '@ansyn/core';
-import { coreStateSelector, ICoreState, selectFavoriteOverlays, selectPresetOverlays } from '@ansyn/core';
-import { BackToWorldView, UpdateOverlaysCountAction } from '@ansyn/core';
 import { map } from 'rxjs/operators';
-import { LoggerService } from '@ansyn/core';
 
 @Injectable()
 export class OverlaysEffects {
@@ -74,9 +81,9 @@ export class OverlaysEffects {
 					this.loggerService.error(exception);
 					console.error(exception);
 					return from([
-						new DisplayOverlayFailedAction({id: action.payload.overlayId, mapId: action.payload.mapId}),
-						new BackToWorldView({mapId: action.payload.mapId})
-					])
+						new DisplayOverlayFailedAction({ id: action.payload.overlayId, mapId: action.payload.mapId }),
+						new BackToWorldView({ mapId: action.payload.mapId })
+					]);
 				});
 		});
 

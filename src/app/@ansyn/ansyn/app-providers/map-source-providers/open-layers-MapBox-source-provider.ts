@@ -1,7 +1,6 @@
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
-import { OpenLayersDisabledMap } from '@ansyn/plugins';
-import { OpenLayersMap } from '@ansyn/plugins';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';

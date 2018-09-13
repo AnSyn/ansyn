@@ -2,18 +2,19 @@ import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/core';
 import {
-	BaseOverlaySourceProvider, IFetchParams,
-	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/overlays';
-import { toRadians } from '@ansyn/core';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core';
-import { limitArray } from '@ansyn/core';
-import { sortByDateDesc } from '@ansyn/core';
+	ErrorHandlerService,
+	geojsonMultiPolygonToPolygon,
+	getPolygonByPointAndRadius,
+	IOverlay,
+	IOverlaysFetchData,
+	limitArray,
+	LoggerService,
+	sortByDateDesc,
+	toRadians
+} from '@ansyn/core';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
-import { ErrorHandlerService } from '@ansyn/core';
-import { LoggerService } from '@ansyn/core';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';

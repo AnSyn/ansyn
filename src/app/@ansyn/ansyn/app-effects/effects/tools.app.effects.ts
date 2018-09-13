@@ -3,9 +3,13 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
+	CasesActionTypes,
 	DisableImageProcessing,
 	EnableImageProcessing,
 	GoToAction,
+	IImageProcParam,
+	IToolsConfig,
+	IToolsState,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
@@ -17,32 +21,35 @@ import {
 	ShowOverlaysFootprintAction,
 	StopMouseShadow,
 	ToolsActionsTypes,
+	toolsConfig,
+	toolsFlags,
+	toolsStateSelector,
 	UpdateToolsFlags
 } from '@ansyn/menu-items';
-import { CasesActionTypes } from '@ansyn/menu-items';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import 'rxjs/add/operator/withLatestFrom';
-import { CommunicatorEntity } from '@ansyn/imagery';
 import {
+	IMapState,
 	MapActionTypes,
-	PinLocationModeTriggerAction
+	MapFacadeService,
+	mapStateSelector,
+	PinLocationModeTriggerAction,
+	selectActiveMapId,
+	selectMapsList
 } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
-import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { MapFacadeService } from '@ansyn/map-facade';
-import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
-import { Point } from 'geojson';
-import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import {
+	CaseGeoFilter,
 	ClearActiveInteractionsAction,
 	CoreActionTypes,
+	ICaseMapState,
+	ImageManualProcessArgs,
 	SetMapsDataActionStore
 } from '@ansyn/core';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
+import { Point } from 'geojson';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
+import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { differenceWith, isEqual } from 'lodash';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar';
 import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
 import { IAppState } from '../app.effects.module';
 

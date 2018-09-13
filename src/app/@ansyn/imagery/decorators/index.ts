@@ -1,5 +1,3 @@
-import { IImageryMapMetaData, IBaseImageryMapConstructor } from '../model/base-imagery-map';
-
 /**
  * @description Add depths to constructor
  */
@@ -8,5 +6,5 @@ export function ImageryDecorator<M, C>(metaData: M) {
 		Object.keys(metaData).forEach((key) => {
 			constructor[key] = metaData[key];
 		});
-	}
+	};
 }

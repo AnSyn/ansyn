@@ -10,16 +10,16 @@ import Icon from 'ol/style/icon';
 import VectorLayer from 'ol/layer/vector';
 import ol_Layer from 'ol/layer/layer';
 
-import { IVisualizerStyle, MarkerSizeDic } from '@ansyn/core';
-import { IVisualizerStateStyle, VisualizerStates } from '@ansyn/core';
+import {
+	IVisualizerEntity,
+	IVisualizerStateStyle,
+	IVisualizerStyle,
+	MarkerSizeDic,
+	VisualizerStates
+} from '@ansyn/core';
 import { FeatureCollection } from 'geojson';
 import { Observable } from 'rxjs';
-import {
-	BaseImageryVisualizer,
-	IBaseImageryVisualizerClass,
-	VisualizerInteractionTypes
-} from '@ansyn/imagery';
-import { IVisualizerEntity } from '@ansyn/core';
+import { BaseImageryVisualizer, IBaseImageryVisualizerClass, VisualizerInteractionTypes } from '@ansyn/imagery';
 import ol_color from 'ol/color';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 

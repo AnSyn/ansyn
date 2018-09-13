@@ -10,7 +10,7 @@ import { mapFacadeConfig } from '../../models/map-facade.config';
 })
 export class OverlaySourceTypeNoticeComponent {
 
-	@Input()  set overlay(newOverlay: IOverlay) {
+	@Input() set overlay(newOverlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration
 		this._title = newOverlay
@@ -18,7 +18,7 @@ export class OverlaySourceTypeNoticeComponent {
 			&& (sourceTypeConfig[newOverlay.sensorType] || sourceTypeConfig.Default);
 		// Insert the photo year into the title, if requested
 		if (this._title && newOverlay.date) {
-			this._title = this._title.replace('$year', newOverlay.date.getFullYear().toString())
+			this._title = this._title.replace('$year', newOverlay.date.getFullYear().toString());
 		}
 	}
 

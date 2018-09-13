@@ -3,10 +3,7 @@ import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import { AnnotationRemoveFeature, AnnotationSelectAction, AnnotationUpdateFeature } from '../../actions/map.actions';
-import {
-	AnnotationInteraction,
-	IAnnotationsSelectionEventData
-} from '@ansyn/core';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';

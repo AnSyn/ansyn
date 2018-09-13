@@ -4,7 +4,12 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
-import { DisplayOverlayAction, DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
+import {
+	DisplayOverlayAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	OverlaysService
+} from '@ansyn/overlays';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -12,13 +17,10 @@ import {
 	SelectDilutedCaseAction
 } from '@ansyn/menu-items';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
+import { IDilutedCase, IOverlay, SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { IDilutedCase } from '@ansyn/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
-import { IOverlay } from '@ansyn/core';
-import { OverlaysService } from '@ansyn/overlays';
 import { IAppState } from '../app.effects.module';
 
 @Injectable()

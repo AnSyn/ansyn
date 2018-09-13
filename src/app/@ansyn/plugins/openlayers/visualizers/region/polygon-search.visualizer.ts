@@ -5,12 +5,9 @@ import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
-import { CaseGeoFilter, CaseRegionState } from '@ansyn/core';
-import { ProjectionService } from '@ansyn/imagery';
-import { getPolygonByPointAndRadius } from '@ansyn/core';
+import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize } from '@ansyn/core';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
-import { ImageryVisualizer } from '@ansyn/imagery';
-import { MarkerSize } from '@ansyn/core';
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
@@ -38,7 +35,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
 		const id = UUID.UUID();
-		const featureJson = region.type === "Point" ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
+		const featureJson = region.type === 'Point' ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
 		const entities = [{ id, featureJson }];
 		return this.setEntities(entities);
 	}

@@ -5,14 +5,17 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
+import { ActiveImageryMouseEnter, ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
-import { coreStateSelector, ICoreState } from '@ansyn/core';
-import { IMapsLayout } from '@ansyn/core';
-import { LayoutKey, layoutOptions } from '@ansyn/core';
-import { ICaseMapState } from '@ansyn/core';
-import { ActiveImageryMouseEnter } from '../../actions/map.actions';
-import { SetMapsDataActionStore } from '@ansyn/core';
+import {
+	coreStateSelector,
+	ICaseMapState,
+	ICoreState,
+	IMapsLayout,
+	LayoutKey,
+	layoutOptions,
+	SetMapsDataActionStore
+} from '@ansyn/core';
 import { filter, tap } from 'rxjs/operators';
 
 // @dynamic

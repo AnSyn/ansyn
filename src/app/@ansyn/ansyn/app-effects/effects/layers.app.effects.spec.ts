@@ -1,5 +1,10 @@
 import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	ICasesState,
 	ILayerState,
+	initialCasesState,
 	initialLayersState,
 	layersFeatureKey,
 	LayersReducer,
@@ -11,13 +16,6 @@ import { LayersAppEffects } from './layers.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	casesStateSelector,
-	ICasesState,
-	initialCasesState
-} from '@ansyn/menu-items';
 import { cloneDeep } from 'lodash';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IAppState } from '../app.effects.module';
@@ -53,8 +51,7 @@ describe('LayersAppEffects', () => {
 		]);
 		casesState.selectedCase = <any> {
 			state: {
-				layers: {
-				}
+				layers: {}
 			}
 		};
 		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));

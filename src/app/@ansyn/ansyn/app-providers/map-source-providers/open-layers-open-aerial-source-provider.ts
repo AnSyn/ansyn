@@ -1,11 +1,8 @@
-import { extentFromGeojson } from '@ansyn/core';
-import { ProjectableRaster } from '@ansyn/plugins';
+import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
+import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/plugins';
 import XYZ from 'ol/source/xyz';
 import proj from 'ol/proj';
 import ImageLayer from 'ol/layer/image';
-import { OpenLayersDisabledMap } from '@ansyn/plugins';
-import { OpenLayersMap } from '@ansyn/plugins';
-import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 

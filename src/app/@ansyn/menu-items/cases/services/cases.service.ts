@@ -1,21 +1,29 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { EMPTY, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/of';
-import { ICase } from '@ansyn/core';
+import {
+	ErrorHandlerService,
+	ICase,
+	ICasePreview,
+	ICaseState,
+	ICaseTimeState,
+	IContextEntity,
+	IDilutedCaseState,
+	IStoredEntity,
+	StorageService
+} from '@ansyn/core';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
-import { StorageService, IStoredEntity } from '@ansyn/core';
-import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEntity } from '@ansyn/core';
-import { ErrorHandlerService } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { catchError, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
+
 const moment = momentNs;
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
@@ -51,7 +59,7 @@ export class CasesService {
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
-			)
+			);
 	}
 
 	parseCasePreview(casePreview: ICasePreview): ICasePreview {
@@ -148,7 +156,7 @@ export class CasesService {
 			.pipe(
 				map(_ => selectedCase),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
-			)
+			);
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {

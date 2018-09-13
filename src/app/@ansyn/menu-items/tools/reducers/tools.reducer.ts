@@ -1,11 +1,12 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { AnnotationMode } from '@ansyn/core';
-import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core';
-import { FeatureCollection } from 'geojson';
-import * as turf from '@turf/turf';
-import { IVisualizerStateStyle } from '@ansyn/core';
-import { IVisualizerStyle } from '@ansyn/core';
+import {
+	AnnotationMode,
+	ImageManualProcessArgs,
+	IOverlaysManualProcessArgs,
+	IVisualizerStyle,
+	OverlayDisplayMode
+} from '@ansyn/core';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -60,7 +61,10 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			if (action.payload.override) {
 				return { ...state, overlaysManualProcessArgs: action.payload.data };
 			}
-			return { ...state, overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data } };
+			return {
+				...state,
+				overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data }
+			};
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			return { ...state, annotationMode: <AnnotationMode> action.payload };

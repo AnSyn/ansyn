@@ -20,13 +20,13 @@ describe('NavigationBarComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
-				},
+				}
 			]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any> ) => {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		fixture = TestBed.createComponent(NavigationBarComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

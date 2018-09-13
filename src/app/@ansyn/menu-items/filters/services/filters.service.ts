@@ -2,11 +2,8 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { IFilter } from '../models/IFilter';
 import 'rxjs/add/observable/of';
-import { CaseFilters } from '@ansyn/core';
-import { IFilterModel } from '@ansyn/core';
-import { IOverlay } from '@ansyn/core';
+import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
-import { buildFilteredOverlays } from '@ansyn/core';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
@@ -68,7 +65,7 @@ export class FiltersService {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);
-		const filteredOverlays: string[] = buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites, removedOverlaysIds, removedOverlaysVisibility );
+		const filteredOverlays: string[] = buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites, removedOverlaysIds, removedOverlaysVisibility);
 		metadata.resetFilteredCount();
 		filteredOverlays
 			.map((id) => overlays.get(id))

@@ -6,15 +6,15 @@ import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs';
 import { Observer } from 'rxjs/Observer';
 import {
+	buildFilteredOverlays,
 	IOverlay,
 	IOverlaysCriteria,
 	IOverlaysFetchData,
-	IOverlaySpecialObject
+	IOverlaySpecialObject,
+	LoggerService
 } from '@ansyn/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoggerService } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
-import { buildFilteredOverlays } from '@ansyn/core';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -207,7 +207,7 @@ describe('OverlaysService', () => {
 			o2 = { id: '2', date: new Date(1) },
 			o3 = { id: '3', date: new Date(2) },
 			o6 = { id: '6', date: new Date(3) },
-			parsedFilters = [ { key: 'fakeFilter', filterFunc: () => true } ],
+			parsedFilters = [{ key: 'fakeFilter', filterFunc: () => true }],
 			overlays = <any> [o1, o2, o3],
 			favorites = <any> [o1, o6],
 			removedLayers = <any> [],

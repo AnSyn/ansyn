@@ -1,5 +1,6 @@
 <div class="edit-layer">
-	<form #f="ngForm" class="edit-layer-form" (ngSubmit)="layer ? editLayer(layerName.value) : addLayer(layerName.value)">
+	<form #f="ngForm" class="edit-layer-form"
+		  (ngSubmit)="layer ? editLayer(layerName.value) : addLayer(layerName.value)">
 		<ansyn-input
 			#layerName
 			[ngModel]="layer?.name"

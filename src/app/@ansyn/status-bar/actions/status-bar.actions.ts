@@ -35,8 +35,13 @@ export class SetComboBoxesProperties implements Action {
 
 export class UpdateGeoFilterStatus implements Action {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
+
 	constructor(public payload: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
 	}
 }
 
-export type StatusBarActions = CopySelectedCaseLinkAction | UpdateGeoFilterStatus | ExpandAction | SetComboBoxesProperties;
+export type StatusBarActions =
+	CopySelectedCaseLinkAction
+	| UpdateGeoFilterStatus
+	| ExpandAction
+	| SetComboBoxesProperties;

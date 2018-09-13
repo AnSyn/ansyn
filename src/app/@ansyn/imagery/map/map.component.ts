@@ -12,6 +12,7 @@ import { BaseImageryMap } from '../model/base-imagery-map';
 })
 export class MapComponent implements OnInit, OnDestroy {
 	@ViewChild('mapElement') protected mapElement: ElementRef;
+
 	constructor(protected map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 

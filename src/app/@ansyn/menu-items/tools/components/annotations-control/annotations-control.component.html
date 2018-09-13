@@ -6,7 +6,8 @@
 			<option
 				[selected]="(activeAnnotationLayer$ | async) === layer?.id"
 				[value]="layer?.id"
-				*ngFor="let layer of annotationLayerIds$ | async">{{ layer.name }}</option>
+				*ngFor="let layer of annotationLayerIds$ | async">{{ layer.name }}
+			</option>
 		</select>
 		<span class="arrow">▼</span>
 	</div>

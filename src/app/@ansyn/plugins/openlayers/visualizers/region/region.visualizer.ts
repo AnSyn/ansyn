@@ -3,17 +3,22 @@ import { combineLatest, empty, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { selectActiveMapId } from '@ansyn/map-facade';
-import { VisualizerInteractions } from '@ansyn/imagery';
+import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
+import { ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/draw';
-import { ProjectionService } from '@ansyn/imagery';
-import { selectRegion } from '@ansyn/core';
-import { CaseGeoFilter, CaseRegionState } from '@ansyn/core';
-import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade';
-import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core';
-import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
-import { SearchModeEnum } from '@ansyn/status-bar';
+import {
+	CaseGeoFilter,
+	CaseRegionState,
+	selectRegion,
+	SetOverlaysCriteriaAction,
+	SetToastMessageAction
+} from '@ansyn/core';
+import {
+	SearchModeEnum,
+	selectGeoFilterIndicator,
+	selectGeoFilterSearchMode,
+	UpdateGeoFilterStatus
+} from '@ansyn/status-bar';
 import { AutoSubscription } from 'auto-subscriptions';
 import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';

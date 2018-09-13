@@ -3,13 +3,10 @@ import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
-import { coreInitialState, coreStateSelector } from '@ansyn/core';
+import { coreInitialState, coreStateSelector, GoNextPresetOverlay, IOverlay, LoggerService } from '@ansyn/core';
 import { cold, hot } from 'jasmine-marbles';
-import { GoNextPresetOverlay } from '@ansyn/core';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade';
-import { IOverlay } from '@ansyn/core';
-import { LoggerService } from '@ansyn/core';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 
 function mockOverlay(id: string): IOverlay {

@@ -6,54 +6,60 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
+	ExtendMap,
+	IMarkUpData,
+	IOverlaysState,
+	MarkUpClass,
+	overlayOverviewComponentConstants,
 	OverlaysActionTypes,
+	OverlaysService,
+	overlaysStateSelector,
+	selectdisplayOverlayHistory,
+	selectDropMarkup,
+	selectOverlaysMap,
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetSpecialObjectsActionStore
 } from '@ansyn/overlays';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { OverlaysService } from '@ansyn/overlays';
-import {
-	IMarkUpData,
-	IOverlaysState,
-	MarkUpClass,
-	overlaysStateSelector,
-	selectdisplayOverlayHistory,
-	selectDropMarkup,
-	selectOverlaysMap
-} from '@ansyn/overlays';
-import { IOverlay, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade';
-import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { LayoutKey, layoutOptions } from '@ansyn/core';
 import {
 	BackToWorldView,
 	CoreActionTypes,
+	DisplayedOverlay,
+	ICaseMapPosition,
+	IContextEntity,
+	IOverlay,
+	IOverlaySpecialObject,
+	IPendingOverlay,
+	LayoutKey,
+	layoutOptions,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/core';
-import { ExtendMap } from '@ansyn/overlays';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { ICaseMapPosition } from '@ansyn/core';
-import { CommunicatorEntity } from '@ansyn/imagery';
-import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import {
+	IMapState,
+	mapStateSelector,
+	RemovePendingOverlayAction,
+	selectActiveMapId,
+	selectMapsList,
+	SetPendingOverlaysAction
+} from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
-	IBaseMapSourceProviderConstructor
+	CommunicatorEntity,
+	IBaseMapSourceProviderConstructor,
+	ImageryCommunicatorService
 } from '@ansyn/imagery';
-import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context';
-import { SetContextParamsAction } from '@ansyn/context';
-import { IContextEntity } from '@ansyn/core';
-import { DisplayedOverlay } from '@ansyn/core';
+import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
 import { of } from 'rxjs/internal/observable/of';
-import { overlayOverviewComponentConstants } from '@ansyn/overlays';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -200,7 +206,10 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
-		this.store$.dispatch(new SetHoveredOverlayAction({...overlay, thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA}));
+		this.store$.dispatch(new SetHoveredOverlayAction({
+			...overlay,
+			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
+		}));
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
 		return (<any>sourceProvider).getThumbnailUrl(overlay, position)
 			.map(thumbnailUrl => ({ ...overlay, thumbnailUrl }))

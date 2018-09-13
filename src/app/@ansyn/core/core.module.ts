@@ -25,7 +25,6 @@ import { ManualRemovedOverlaysComponent } from './components/manual-removed-over
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
-import { CoreConfig } from './models/core.config';
 
 @NgModule({
 	imports: [

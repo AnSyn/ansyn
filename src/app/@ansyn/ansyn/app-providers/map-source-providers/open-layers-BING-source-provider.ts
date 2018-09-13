@@ -1,7 +1,6 @@
 import TileLayer from 'ol/layer/tile';
 import BingMaps from 'ol/source/bingmaps';
-import { OpenLayersDisabledMap } from '@ansyn/plugins';
-import { OpenLayersMap } from '@ansyn/plugins';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery';
 import proj from 'ol/proj';

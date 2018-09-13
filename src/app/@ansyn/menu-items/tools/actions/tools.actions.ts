@@ -1,9 +1,13 @@
 import { Action } from '@ngrx/store';
-import { type } from '@ansyn/core';
-import { ImageManualProcessArgs, OverlayDisplayMode, IOverlaysManualProcessArgs } from '@ansyn/core';
+import {
+	AnnotationMode,
+	ImageManualProcessArgs,
+	IOverlaysManualProcessArgs,
+	IVisualizerStyle,
+	OverlayDisplayMode,
+	type
+} from '@ansyn/core';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
-import { AnnotationMode } from '@ansyn/core';
-import { IVisualizerStyle } from '@ansyn/core';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -167,7 +171,7 @@ export class EnableImageProcessing implements Action {
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: ImageManualProcessArgs ) {
+	constructor(public payload: ImageManualProcessArgs) {
 	};
 }
 

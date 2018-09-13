@@ -4,21 +4,25 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
-import { ICase } from '@ansyn/core';
-import { UpdateCaseAction } from '@ansyn/menu-items';
-import { selectFacets } from '@ansyn/menu-items';
 import {
+	ICase,
 	selectAutoSave,
 	selectFavoriteOverlays,
 	selectLayout,
 	selectOverlaysCriteria,
-	selectPresetOverlays, selectRemovedOverlays, selectRemovedOverlaysVisibility
+	selectPresetOverlays,
+	selectRemovedOverlays,
+	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
-import { selectSelectedLayersIds } from '@ansyn/menu-items';
+import {
+	selectFacets,
+	selectOverlaysManualProcessArgs,
+	selectSelectedCase,
+	selectSelectedLayersIds,
+	UpdateCaseAction
+} from '@ansyn/menu-items';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { selectOverlaysManualProcessArgs } from '@ansyn/menu-items';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
-import { selectSelectedCase } from '@ansyn/menu-items';
 import { selectContextEntities } from '@ansyn/context';
 import { pipe } from 'rxjs/Rx';
 import { tap } from 'rxjs/internal/operators';

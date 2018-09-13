@@ -5,7 +5,7 @@ export { createStore, IStoreFixture } from './test/mock-store';
 export { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 export { asyncData } from './test/async-observable-helpers';
 export { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
-export  { ICaseLayersState } from './models/case.model';
+export { ICaseLayersState } from './models/case.model';
 export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 
 export { AlertComponentDirective } from './alerts/alert-component.directive';

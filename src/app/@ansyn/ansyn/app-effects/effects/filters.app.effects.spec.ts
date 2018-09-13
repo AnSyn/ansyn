@@ -4,34 +4,30 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { filtersFeatureKey, FiltersReducer } from '@ansyn/menu-items';
 import {
 	EnableOnlyFavoritesSelectionAction,
+	EnumFilterMetadata,
+	FilterMetadata,
+	filtersFeatureKey,
+	FiltersReducer,
+	FiltersService,
+	IFilter,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction
+	ResetFiltersAction,
+	SliderFilterMetadata
 } from '@ansyn/menu-items';
-import { FilterType } from '@ansyn/core';
-import { OverlayReducer, overlaysFeatureKey, overlaysStatusMessages } from '@ansyn/overlays';
 import {
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
-	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
-} from '@ansyn/overlays';
-import { IFilter } from '@ansyn/menu-items';
-import { FilterMetadata } from '@ansyn/menu-items';
-import { EnumFilterMetadata } from '@ansyn/menu-items';
-import { SetBadgeAction } from '@ansyn/menu';
-import { menuFeatureKey, MenuReducer } from '@ansyn/menu';
+	coreFeatureKey,
+	CoreReducer,
+	FilterType,
+	GenericTypeResolverService,
+	IOverlay,
+	SetFavoriteOverlaysAction
+} from '@ansyn/core';
+import { LoadOverlaysAction, LoadOverlaysSuccessAction, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays';
+import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 import 'rxjs/add/observable/of';
-import { SetFavoriteOverlaysAction } from '@ansyn/core';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core';
-import { IOverlay } from '@ansyn/core';
-import { SliderFilterMetadata } from '@ansyn/menu-items';
-import { OverlaysService } from '@ansyn/overlays';
-import { GenericTypeResolverService } from '@ansyn/core';
-import { FiltersService } from '@ansyn/menu-items';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -48,7 +44,7 @@ describe('Filters app effects', () => {
 	const filterKey4: IFilter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
-	const favoriteOver =  <IOverlay> {};
+	const favoriteOver = <IOverlay> {};
 	favoriteOver.id = '2';
 
 	beforeEach(async(() => {
@@ -98,11 +94,27 @@ describe('Filters app effects', () => {
 	});
 
 	it('updateFiltersBadge$ should calculate filters number', () => {
-		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', { count: 10, filteredCount: 0,  isChecked: true }); // (isChecked) => no changes
-		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', { count: 10, filteredCount: 0, isChecked: false }); // (!isChecked) => 1
+		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', {
+			count: 10,
+			filteredCount: 0,
+			isChecked: true
+		}); // (isChecked) => no changes
+		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', {
+			count: 10,
+			filteredCount: 0,
+			isChecked: false
+		}); // (!isChecked) => 1
 
-		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', { count: 10, filteredCount: 0, isChecked: true }); // (isChecked) => no changes
-		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', { count: 10, filteredCount: 0, isChecked: false }); // (!isChecked) => 2
+		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', {
+			count: 10,
+			filteredCount: 0,
+			isChecked: true
+		}); // (isChecked) => no changes
+		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', {
+			count: 10,
+			filteredCount: 0,
+			isChecked: false
+		}); // (!isChecked) => 2
 
 		(<SliderFilterMetadata>filterMetadata3).min = -2;
 		(<SliderFilterMetadata>filterMetadata3).max = 2; // (start = -Infinity && end = Infinity ) => no changes
@@ -115,7 +127,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('setShowFavoritesFlagOnFilters$', () => {
-		const overlays = [ <IOverlay> {}, <IOverlay> {}];
+		const overlays = [<IOverlay> {}, <IOverlay> {}];
 		store.dispatch(new SetFavoriteOverlaysAction(overlays));
 		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);

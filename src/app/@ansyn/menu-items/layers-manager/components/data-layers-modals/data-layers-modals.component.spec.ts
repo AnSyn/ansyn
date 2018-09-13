@@ -7,8 +7,7 @@ import { DownloadLayersComponent } from './download-layers/download-layers.compo
 import { EditLayerComponent } from './edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './delete-layer/delete-layer.component';
 import { FormsModule } from '@angular/forms';
-import { AnsynModalComponent } from '@ansyn/core';
-import { AnsynInputComponent } from '@ansyn/core';
+import { AnsynInputComponent, AnsynModalComponent } from '@ansyn/core';
 
 describe('DataLayersModalsComponent', () => {
 	let component: DataLayersModalsComponent;

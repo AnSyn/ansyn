@@ -4,4 +4,4 @@ export interface IImageryConfig {
 
 export const initialImageryConfig: IImageryConfig = {
 	maxCachedLayers: 100
-}
+};

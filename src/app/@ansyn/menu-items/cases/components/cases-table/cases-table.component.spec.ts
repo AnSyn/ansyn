@@ -9,8 +9,7 @@ import { LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { casesConfig } from '../../services/cases.service';
 
@@ -25,7 +24,7 @@ describe('CasesTableComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({[casesFeatureKey]: CasesReducer}),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [
@@ -33,7 +32,7 @@ describe('CasesTableComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 			]
 		})
 			.compileComponents();

@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HelpComponent } from './help.component';
 import { By } from '@angular/platform-browser';
-import { AnsynCheckboxComponent } from '@ansyn/core';
-import { MockComponent } from '@ansyn/core';
+import { AnsynCheckboxComponent, MockComponent } from '@ansyn/core';
 import { HelpLocalStorageService } from '../services/help.local-storage.service';
 
 describe('HelpComponent', () => {
@@ -22,7 +21,8 @@ describe('HelpComponent', () => {
 			providers: [
 				{
 					provide: HelpLocalStorageService, useValue: {
-						setHelpLocalStorageData: () => {},
+						setHelpLocalStorageData: () => {
+						},
 						getHelpLocalStorageData: () => ({})
 					}
 				}
@@ -45,7 +45,7 @@ describe('HelpComponent', () => {
 		it('should invoke a call to the store', () => {
 			let checkboxElement = fixture.debugElement.query(By.directive(AnsynCheckboxComponent));
 			spyOn(component.helpLocalStorageService, 'setHelpLocalStorageData');
-			checkboxElement.triggerEventHandler('checkedChange', true );
+			checkboxElement.triggerEventHandler('checkedChange', true);
 			expect(component.helpLocalStorageService.setHelpLocalStorageData).toHaveBeenCalledWith({ dontShowHelpOnStartup: true });
 		});
 	});

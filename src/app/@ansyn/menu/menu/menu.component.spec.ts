@@ -17,7 +17,7 @@ describe('MenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer })],
 			declarations: [MenuComponent],
-			providers: [ {provide: MenuConfig, useValue: {}} ]
+			providers: [{ provide: MenuConfig, useValue: {} }]
 		}).compileComponents();
 	}));
 

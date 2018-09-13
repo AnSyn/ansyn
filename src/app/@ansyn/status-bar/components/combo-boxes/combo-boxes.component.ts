@@ -9,32 +9,25 @@ import {
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import {
-	IComboBoxesProperties,
-	GEO_FILTERS,
-	ORIENTATIONS,
-	TIME_FILTERS
-} from '../../models/combo-boxes.model';
-import {
-	CoreActionTypes,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction,
-	UpdateOverlaysCountAction
-} from '@ansyn/core';
-import {
-	ICaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	ICaseTimeState
-} from '@ansyn/core';
-import { LayoutKey, layoutOptions } from '@ansyn/core';
-import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
-import {
+	CoreActionTypes,
+	ICaseDataInputFiltersState,
+	ICaseTimeState,
+	IOverlay,
+	IOverlaysCriteria,
+	LayoutKey,
+	layoutOptions,
 	selectDataInputFilter,
 	selectLayout,
 	selectOverlaysCriteria,
-	selectRegion
+	selectRegion,
+	SetLayoutAction,
+	SetOverlaysCriteriaAction,
+	UpdateOverlaysCountAction
 } from '@ansyn/core';
 import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';

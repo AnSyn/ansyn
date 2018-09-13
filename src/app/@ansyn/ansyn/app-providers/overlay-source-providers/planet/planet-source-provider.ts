@@ -1,25 +1,25 @@
 import { Observable } from 'rxjs';
-import {
-	BaseOverlaySourceProvider,
-	IFetchParams,
-	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { sortByDateDesc } from '@ansyn/core';
-import { geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from '@ansyn/core';
-import { limitArray } from '@ansyn/core';
-import { toRadians } from '@ansyn/core';
+import {
+	ErrorHandlerService,
+	geojsonMultiPolygonToPolygon,
+	geojsonPolygonToMultiPolygon,
+	IDataInputFilterValue,
+	IOverlay,
+	limitArray,
+	LoggerService,
+	sortByDateDesc,
+	toRadians
+} from '@ansyn/core';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { LoggerService } from '@ansyn/core';
-import { IOverlay } from '@ansyn/core';
-import { ErrorHandlerService } from '@ansyn/core';
-import { IDataInputFilterValue } from '@ansyn/core';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
+
 const moment = momentNs;
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
@@ -182,7 +182,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	private _getBboxFilter(region: {type}): {type; field_name; config} {
+	private _getBboxFilter(region: { type }): { type; field_name; config } {
 		let fetchRegion = region;
 		if (fetchRegion.type === 'MultiPolygon') {
 			fetchRegion = geojsonMultiPolygonToPolygon(fetchRegion as GeoJSON.MultiPolygon);
@@ -263,7 +263,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			});
 
 		return forkJoin(startDate$, endDate$)
-			.map(([start, end]: [Date, Date]) => ({startDate: start.toISOString(), endDate: end.toString()}));
+			.map(([start, end]: [Date, Date]) => ({ startDate: start.toISOString(), endDate: end.toString() }));
 	}
 
 	private extractArrayData(overlays: PlanetOverlay[]): IOverlay[] {

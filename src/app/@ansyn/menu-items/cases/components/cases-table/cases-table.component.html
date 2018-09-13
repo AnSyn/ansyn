@@ -21,7 +21,7 @@
 		</div>
 	</div>
 
-	<div class="cases-table-body" (infiniteScroll)="loadCases()"  *ngIf="entities$ | async as entities" #tbodyElement>
+	<div class="cases-table-body" (infiniteScroll)="loadCases()" *ngIf="entities$ | async as entities" #tbodyElement>
 
 		<div class="cases-table-body-row"
 			 *ngFor="let id of ids"
@@ -42,9 +42,9 @@
 					{{entities[id].name}}
 				</div>
 
-				<ansyn-cases-auto-save  class="cases-table-auto-save-col"
-										*ngIf="selectedCaseId === id; else notSelected"
-										[caseId]="id">
+				<ansyn-cases-auto-save class="cases-table-auto-save-col"
+									   *ngIf="selectedCaseId === id; else notSelected"
+									   [caseId]="id">
 				</ansyn-cases-auto-save>
 
 				<ng-template #notSelected>

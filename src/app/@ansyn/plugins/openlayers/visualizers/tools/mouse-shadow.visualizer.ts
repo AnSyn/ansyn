@@ -4,15 +4,13 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import { Observable, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
-import { selectActiveMapId } from '@ansyn/map-facade';
+import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/map-facade';
 import { Actions } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
-import { ProjectionService } from '@ansyn/imagery';
-import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 import { IVisualizerEntity } from '@ansyn/core';
-import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 

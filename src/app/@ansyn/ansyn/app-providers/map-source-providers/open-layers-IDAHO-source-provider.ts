@@ -1,17 +1,11 @@
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
 import proj from 'ol/proj';
-import { extentFromGeojson } from '@ansyn/core';
-import { ProjectableRaster } from '@ansyn/plugins';
-import { OpenLayersDisabledMap } from '@ansyn/plugins';
-import { OpenLayersMap } from '@ansyn/plugins';
-import { ICaseMapState } from '@ansyn/core';
-import { ImageryMapSource } from '@ansyn/imagery';
-import { IOverlay } from '@ansyn/core';
+import { extentFromGeojson, ICaseMapState, IOverlay } from '@ansyn/core';
+import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/plugins';
+import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
-import { CacheService } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers-config';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 

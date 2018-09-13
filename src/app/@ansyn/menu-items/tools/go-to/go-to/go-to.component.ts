@@ -1,19 +1,16 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
-import { IToolsState, toolsStateSelector, toolsFlags } from '../../reducers/tools.reducer';
+import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import {
 	GoToAction,
 	GoToInputChangeAction,
 	PullActiveCenter,
-	SetPinLocationModeAction
+	SetPinLocationModeAction,
+	SetSubMenu
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/pluck';
-import { copyFromContent } from '@ansyn/core';
-import { SetSubMenu } from '../../actions/tools.actions';
-import { selectSubMenu, SubMenuEnum } from '../../reducers/tools.reducer';
-import { ICoordinatesSystem } from '@ansyn/core';
-import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { ClearActiveInteractionsAction, copyFromContent, ICoordinatesSystem } from '@ansyn/core';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 

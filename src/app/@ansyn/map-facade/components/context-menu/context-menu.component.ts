@@ -11,14 +11,12 @@ import {
 import { uniq as _uniq } from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { IOverlay } from '@ansyn/core';
+import { CaseGeoFilter, ICaseMapState, IOverlay, selectRegion } from '@ansyn/core';
 import { MapFacadeService } from '../../services/map-facade.service';
-import { CaseGeoFilter, ICaseMapState } from '@ansyn/core';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
 import { Actions } from '@ngrx/effects';
-import { selectRegion } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 
 

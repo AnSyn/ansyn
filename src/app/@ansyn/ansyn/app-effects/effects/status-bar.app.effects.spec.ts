@@ -1,22 +1,22 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ExpandAction, UpdateGeoFilterStatus } from '@ansyn/status-bar';
-import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar';
-import { CasesService } from '@ansyn/menu-items';
-import { ICase } from '@ansyn/core';
-import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items';
-import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items';
+import { ExpandAction, statusBarFeatureKey, StatusBarReducer, UpdateGeoFilterStatus } from '@ansyn/status-bar';
+import { AddCaseAction, casesFeatureKey, CasesReducer, CasesService, SelectCaseAction } from '@ansyn/menu-items';
+import { ICase, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { OverlaysConfig, OverlaysService } from '@ansyn/overlays';
-import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays';
-import { HttpClientModule, HttpBackend  } from '@angular/common/http';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams,
+	OverlayReducer,
+	OverlaysConfig,
+	overlaysFeatureKey,
+	OverlaysService
+} from '@ansyn/overlays';
+import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
-import { LoggerService } from '@ansyn/core';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';

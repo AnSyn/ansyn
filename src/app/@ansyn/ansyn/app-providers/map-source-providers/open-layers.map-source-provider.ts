@@ -1,6 +1,4 @@
-import { BaseMapSourceProvider } from '@ansyn/imagery';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { CacheService } from '@ansyn/imagery';
+import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { ProjectableRaster } from '@ansyn/plugins';
 import Layer from 'ol/layer/layer';

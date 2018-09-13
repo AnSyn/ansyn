@@ -6,17 +6,11 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import {
-	IStatusBarState,
-	StatusBarInitialState,
-	statusBarStateSelector
-} from '../../reducers/status-bar.reducer';
+import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
-import { IOverlaysCriteria } from '@ansyn/core';
-import { coreInitialState, coreStateSelector } from '@ansyn/core';
+import { coreInitialState, coreStateSelector, IOverlaysCriteria, SliderCheckboxComponent } from '@ansyn/core';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
-import { SliderCheckboxComponent } from '@ansyn/core';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -39,8 +33,8 @@ describe('TreeViewComponent', () => {
 					provide: StatusBarConfig,
 					useValue: { toolTips: {}, dataInputFiltersConfig: {} }
 				},
-				provideMockActions(() => actions),
-				]
+				provideMockActions(() => actions)
+			]
 		})
 			.compileComponents();
 	}));

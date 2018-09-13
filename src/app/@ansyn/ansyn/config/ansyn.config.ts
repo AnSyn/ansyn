@@ -1,12 +1,12 @@
-import { CasesComponent } from '@ansyn/menu-items';
-import { FiltersCollectionComponent } from '@ansyn/menu-items';
-import { LayersManagerComponent } from '@ansyn/menu-items';
-import { ToolsComponent } from '@ansyn/menu-items';
-import { HelpComponent } from '@ansyn/menu-items';
+import {
+	CasesComponent,
+	FiltersCollectionComponent,
+	HelpComponent,
+	LayersManagerComponent,
+	ToolsComponent
+} from '@ansyn/menu-items';
 import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
-import { AlgorithmsComponent } from '@ansyn/menu-items';
-import { SettingsComponent } from '@ansyn/menu-items';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [

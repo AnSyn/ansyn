@@ -1,16 +1,12 @@
 import { OverlaysConfig } from '@ansyn/overlays';
-import { toolsConfig } from '@ansyn/menu-items';
-import { layersConfig } from '@ansyn/menu-items';
-import { filtersConfig } from '@ansyn/menu-items';
-import { casesConfig } from '@ansyn/menu-items';
+import { casesConfig, filtersConfig, layersConfig, toolsConfig } from '@ansyn/menu-items';
 import { mapFacadeConfig } from '@ansyn/map-facade';
 import { IdahoOverlaysSourceConfig } from './app-providers/overlay-source-providers/idaho-source-provider';
 import { VisualizersConfig } from '@ansyn/imagery';
 import { MultipleOverlaysSourceConfig } from './app-providers/overlay-source-providers/multiple-source-provider';
-import { LoggerConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { StatusBarConfig } from '@ansyn/status-bar';
 import { MenuConfig } from '@ansyn/menu';
-import { CoreConfig } from '@ansyn/core';
 import { ContextConfig } from '@ansyn/context';
 import { OpenAerialOverlaysSourceConfig } from './app-providers/overlay-source-providers/open-aerial-source-provider';
 import { PlanetOverlaysSourceConfig } from './app-providers/overlay-source-providers/planet/planet-source-provider';

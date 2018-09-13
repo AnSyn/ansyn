@@ -50,8 +50,10 @@ export class EnableOnlyFavoritesSelectionAction implements Action {
 	constructor(public payload?: any) {
 	}
 }
+
 export class UpdateFacetsAction implements Action {
 	readonly type = FiltersActionTypes.UPDATE_FACETS;
+
 	constructor(public payload: ICaseFacetsState) {
 
 	}

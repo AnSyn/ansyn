@@ -3,6 +3,8 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import {
 	IToolsState,
 	selectSubMenu,
+	SetActiveCenter,
+	SetPinLocationModeAction,
 	SubMenuEnum,
 	toolsFlags,
 	toolsStateSelector
@@ -16,9 +18,7 @@ import { Point } from 'geojson';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade';
 import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
-import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items';
-import { ProjectionService } from '@ansyn/imagery';
-import { ImageryVisualizer } from '@ansyn/imagery';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 

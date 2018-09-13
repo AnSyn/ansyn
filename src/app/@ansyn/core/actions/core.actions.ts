@@ -232,8 +232,10 @@ export class SetMapsDataActionStore implements Action {
 	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
 	}
 }
+
 export class SetRemovedOverlayIdsCount implements Action {
 	readonly type = CoreActionTypes.SET_REMOVED_OVERLAY_IDS_COUNT;
+
 	constructor(public payload: number) {
 	}
 }

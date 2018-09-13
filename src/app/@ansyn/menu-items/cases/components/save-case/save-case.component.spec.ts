@@ -8,8 +8,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { casesConfig } from '../../services/cases.service';
 
@@ -25,7 +24,7 @@ describe('SaveCaseComponent', () => {
 		],
 		modalCaseId: 'fakeId1',
 		modal: true,
-		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
+		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } }
 	} as any;
 
 	beforeEach(async(() => {
@@ -42,8 +41,8 @@ describe('SaveCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
-				]
+				{ provide: layersConfig, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

@@ -2,9 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Observable } from 'rxjs';
-import { selectLayout } from '@ansyn/core';
-import { LayoutKey, layoutOptions } from '@ansyn/core';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState, LayoutKey, layoutOptions, selectLayout } from '@ansyn/core';
 import { CopySelectedCaseLinkAction } from '../../actions/status-bar.actions';
 
 @Component({
@@ -14,7 +12,7 @@ import { CopySelectedCaseLinkAction } from '../../actions/status-bar.actions';
 })
 
 export class StatusBarComponent implements OnInit, OnDestroy {
-	icon = "block-icon icon-status-bar-case";
+	icon = 'block-icon icon-status-bar-case';
 	@Input() selectedCaseName: string;
 	@Input() activeMap: ICaseMapState;
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout)

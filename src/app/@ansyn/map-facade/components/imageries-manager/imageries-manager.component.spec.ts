@@ -5,12 +5,16 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
-import { ImageryStatusComponent } from '@ansyn/core';
-import { AlertComponentDirective } from '@ansyn/core';
-import { MockComponent } from '@ansyn/core';
+import {
+	AlertComponentDirective,
+	coreFeatureKey,
+	CoreReducer,
+	ImageryStatusComponent,
+	MockComponent,
+	SetLayoutAction,
+	SetMapsDataActionStore
+} from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core';
-import { SetLayoutAction, SetMapsDataActionStore } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 const mockAnsynContextMenu = MockComponent({
@@ -52,7 +56,7 @@ describe('ImageriesManagerComponent', () => {
 			],
 			imports: [
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({[mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer})
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer })
 			],
 			declarations: [
 				ImageriesManagerComponent,
@@ -79,12 +83,12 @@ describe('ImageriesManagerComponent', () => {
 		fixture = TestBed.createComponent(ImageriesManagerComponent);
 		component = fixture.componentInstance;
 		const mapsList = <any> [
-			{id: 'imagery1', data: {overlay: {}}},
-			{id: 'imagery2', data: {overlay: {}}}
+			{ id: 'imagery1', data: { overlay: {} } },
+			{ id: 'imagery2', data: { overlay: {} } }
 		];
 		const activeMapId = 'imagery1';
 		store.dispatch(new SetLayoutAction('layout2'));
-		store.dispatch(new SetMapsDataActionStore({mapsList, activeMapId}));
+		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
 		fixture.detectChanges();
 	});
 

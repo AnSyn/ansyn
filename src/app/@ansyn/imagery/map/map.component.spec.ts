@@ -1,9 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MapComponent } from './map.component';
-import { Observable, of } from 'rxjs/index';
+import { of } from 'rxjs/index';
 import { cold } from 'jasmine-marbles';
 import { BaseImageryMap } from '../model/base-imagery-map';
-import { inject } from '@angular/core/testing';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 
 describe('MapComponent', () => {

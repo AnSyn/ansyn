@@ -1,16 +1,19 @@
-import { AddMenuItemAction, SelectMenuItemAction } from '@ansyn/menu';
-import { CasesReducer } from '@ansyn/menu-items';
+import {
+	AddMenuItemAction,
+	ContainerChangedTriggerAction,
+	menuFeatureKey,
+	MenuReducer,
+	SelectMenuItemAction
+} from '@ansyn/menu';
+import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { menuFeatureKey, MenuReducer } from '@ansyn/menu';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { RedrawTimelineAction } from '@ansyn/overlays';
-import { ContainerChangedTriggerAction, SetAutoClose } from '@ansyn/menu';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { casesFeatureKey } from '@ansyn/menu-items';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { saveAs } from 'file-saver';
 import tokml from 'tokml';
 import { cloneDeep } from 'lodash';
@@ -47,7 +47,7 @@ export class DownloadLayersComponent {
 	visualizerToSimpleStyle(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial };
+			feature.properties = { id: feature.properties.id ...feature.properties.style.initial };
 		});
 	}
 

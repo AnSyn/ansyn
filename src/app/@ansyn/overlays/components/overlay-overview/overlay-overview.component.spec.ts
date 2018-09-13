@@ -5,10 +5,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { IOverlay } from '@ansyn/core';
+import { IOverlay, MockComponent } from '@ansyn/core';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
-import { MockComponent } from '@ansyn/core';
 import { OverlaysConfig } from '@ansyn/overlays';
 
 describe('OverlayOverviewComponent', () => {
@@ -66,7 +65,7 @@ describe('OverlayOverviewComponent', () => {
 		let neededElement: Element;
 
 		beforeAll(() => {
-			neededElement = document.createElement("CIRCLE");
+			neededElement = document.createElement('CIRCLE');
 			neededElement.id = `dropId-${overlayId}`;
 			document.body.appendChild(neededElement);
 		});

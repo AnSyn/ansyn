@@ -35,7 +35,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		.do(this.closeManualProcessingMenu.bind(this));
 
 	isActiveAnnotationLayer$ = this.store.select(selectActiveAnnotationLayer).pipe(
-		map(Boolean),
+		map(Boolean)
 	);
 
 	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);

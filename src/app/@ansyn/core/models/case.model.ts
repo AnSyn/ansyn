@@ -1,10 +1,9 @@
 import { ICaseMapPosition } from './case-map-position.model';
-import { IOverlay } from './overlay.model';
-import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
+import { IDilutedOverlay, IOverlay } from './overlay.model';
+import { Feature, Point, Polygon } from 'geojson';
 import { IEntity } from '../services/storage/storage.service';
 import { IVisualizerEntity } from './visualizers/visualizers-entity';
 import { LayoutKey } from './layout-options.model';
-import { IDilutedOverlay } from './overlay.model';
 
 export interface ICasePreview extends IEntity {
 	creationTime: Date;

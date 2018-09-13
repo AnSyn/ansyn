@@ -4,12 +4,10 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { filtersConfig } from '../../services/filters.service';
-import { MockComponent } from '@ansyn/core';
+import { CoreConfig, LoggerConfig, MockComponent } from '@ansyn/core';
 import { Subject } from 'rxjs/Subject';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
-import { CoreConfig } from '@ansyn/core';
 import { UpdateFacetsAction } from '../../actions/filters.actions';
 
 describe('FiltersCollectionComponent', () => {
@@ -41,7 +39,10 @@ describe('FiltersCollectionComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })
 			],
-			providers: [{ provide: filtersConfig, useValue: { filters: null } },  { provide: LoggerConfig, useValue: {} }, { provide: CoreConfig, useValue: {}}]
+			providers: [{ provide: filtersConfig, useValue: { filters: null } }, {
+				provide: LoggerConfig,
+				useValue: {}
+			}, { provide: CoreConfig, useValue: {} }]
 		})
 			.compileComponents();
 	}));

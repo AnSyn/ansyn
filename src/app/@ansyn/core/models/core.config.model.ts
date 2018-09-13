@@ -1,4 +1,4 @@
-import { IStorageConfig } from "../services/storage/config";
+import { IStorageConfig } from '../services/storage/config';
 
 export interface ICoreConfig {
 	storageService: IStorageConfig;

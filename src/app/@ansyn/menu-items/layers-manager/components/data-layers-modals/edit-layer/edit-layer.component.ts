@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ILayer } from '../../../models/layers.model';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';

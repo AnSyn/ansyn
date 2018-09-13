@@ -1,11 +1,10 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { ICase, ICasePreview } from '@ansyn/core';
+import { ICasePreview, SetAutoSave } from '@ansyn/core';
 import { Observable } from 'rxjs/index';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { map, tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { SetAutoSave } from '@ansyn/core';
 import { selectCaseEntities } from '../../reducers/cases.reducer';
 
 @Component({
@@ -42,6 +41,7 @@ export class CasesAutoSaveComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 	}
+
 	constructor(protected store$: Store<any>) {
 	}
 

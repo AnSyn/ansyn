@@ -18,6 +18,6 @@ export class AlertsModule {
 			providers: [
 				{ provide: ALERTS_COLLECTION, multi: true, useValue: alerts }
 			]
-		}
+		};
 	}
 }

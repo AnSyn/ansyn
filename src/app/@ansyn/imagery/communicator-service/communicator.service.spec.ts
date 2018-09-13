@@ -3,7 +3,6 @@ import { ImageryCommunicatorService } from './communicator.service';
 import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
 import { ICaseMapPosition } from '@ansyn/core';
-import { Point } from 'geojson';
 
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;

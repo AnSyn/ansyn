@@ -10,8 +10,7 @@ import { casesConfig } from '../../services/cases.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 
 describe('CasesToolsComponent', () => {
@@ -25,15 +24,15 @@ describe('CasesToolsComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({[casesFeatureKey]: CasesReducer}),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [
 				DataLayersService,
-				{ provide: casesConfig, useValue: {schema: null} },
+				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 
 			]
 		})

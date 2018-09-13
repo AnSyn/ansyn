@@ -5,10 +5,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
-import { StorageService } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
-import { LoggerService } from '@ansyn/core';
-import { ErrorHandlerService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
 
 describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;

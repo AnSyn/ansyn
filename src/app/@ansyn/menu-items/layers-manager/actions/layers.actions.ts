@@ -115,7 +115,7 @@ export class CloseLayersModal extends SetLayersModal {
 	}
 }
 
-export class ShowAllLayers implements Action{
+export class ShowAllLayers implements Action {
 	type = LayersActionTypes.SHOW_ALL_LAYERS;
 
 	constructor(public payload: LayerType) {

@@ -39,7 +39,10 @@ describe('PolygonSearchVisualizer', () => {
 		const fakePoint = [0, 0];
 		spyOn(store, 'dispatch');
 		polygonSearchVisualizer.onContextMenu(fakePoint);
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateGeoFilterStatus({ searchMode: polygonSearchVisualizer.geoFilter, indicator: true }));
+		expect(store.dispatch).toHaveBeenCalledWith(new UpdateGeoFilterStatus({
+			searchMode: polygonSearchVisualizer.geoFilter,
+			indicator: true
+		}));
 	});
 
 	it('drawRegionOnMap calls setEntities with Feature', () => {

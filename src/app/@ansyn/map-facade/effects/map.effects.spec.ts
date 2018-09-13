@@ -11,11 +11,10 @@ import { cold, hot } from 'jasmine-marbles';
 import {
 	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
-	ImageryRemovedAction
+	ImageryRemovedAction,
+	SynchronizeMapsAction
 } from '../actions/map.actions';
-import { SynchronizeMapsAction } from '../actions/map.actions';
-import { SetLayoutSuccessAction } from '@ansyn/core';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -105,7 +104,7 @@ describe('MapEffects', () => {
 					return Observable.of({});
 				}
 			};
-			const fakeMap: ICaseMapState = <any> {id: 'imagery2'};
+			const fakeMap: ICaseMapState = <any> { id: 'imagery2' };
 			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'setPosition').and.callFake(() => Observable.of(true));

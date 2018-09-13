@@ -3,6 +3,8 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import {
 	CopySelectedCaseLinkAction,
+	SearchModeEnum,
+	selectGeoFilterSearchMode,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '@ansyn/status-bar';
@@ -11,11 +13,8 @@ import { IAppState } from '../app.effects.module';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/pluck';
 import { OverlaysService } from '@ansyn/overlays';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items';
-import { CopyCaseLinkAction } from '@ansyn/menu-items';
+import { casesStateSelector, CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items';
 import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar';
-import { SearchModeEnum } from '@ansyn/status-bar';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 
 

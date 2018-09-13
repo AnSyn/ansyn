@@ -8,8 +8,7 @@ import { Observable } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { casesConfig, CasesService } from '../../services/cases.service';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 
@@ -47,7 +46,7 @@ describe('DeleteCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));

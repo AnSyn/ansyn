@@ -1,7 +1,6 @@
-import { StatusBarActionsTypes } from '../actions/status-bar.actions';
+import { StatusBarActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IComboBoxesProperties } from '../models/combo-boxes.model';
-import { StatusBarActions } from '../actions/status-bar.actions';
 import { SearchMode, SearchModeEnum } from '../models/search-mode.enum';
 
 export interface IGeoFilterStatus {
@@ -25,7 +24,7 @@ export const StatusBarInitialState: IStatusBarState = {
 export const statusBarFeatureKey = 'statusBar';
 export const statusBarStateSelector: MemoizedSelector<any, IStatusBarState> = createFeatureSelector<IStatusBarState>(statusBarFeatureKey);
 
-export function StatusBarReducer(state = StatusBarInitialState, action: StatusBarActions | any ): IStatusBarState {
+export function StatusBarReducer(state = StatusBarInitialState, action: StatusBarActions | any): IStatusBarState {
 	switch (action.type) {
 		case StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES:
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
@@ -38,6 +37,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 
 	}
 }
+
 export const selectComboBoxesProperties = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.comboBoxesProperties : StatusBarInitialState.comboBoxesProperties);
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
 export const selectGeoFilterIndicator = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.indicator);

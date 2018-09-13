@@ -5,11 +5,9 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import * as turf from '@turf/turf';
-import { getPointByGeometry } from '@ansyn/core';
+import { CaseGeoFilter, CaseRegionState, getPointByGeometry } from '@ansyn/core';
 import { Position } from 'geojson';
-import { ProjectionService } from '@ansyn/imagery';
-import { CaseGeoFilter, CaseRegionState } from '@ansyn/core';
-import { ImageryVisualizer } from '@ansyn/imagery';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 import { RegionVisualizer } from './region.visualizer';
 

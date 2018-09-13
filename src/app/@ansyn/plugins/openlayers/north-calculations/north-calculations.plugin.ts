@@ -1,4 +1,13 @@
-import { toDegrees } from '@ansyn/core';
+import {
+	areCoordinatesNumeric,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseOrientation,
+	CoreActionTypes,
+	IOverlay,
+	LoggerService,
+	toDegrees
+} from '@ansyn/core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 import * as turf from '@turf/turf';
@@ -9,20 +18,16 @@ import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlay
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
-import { ProjectionService } from '@ansyn/imagery';
-import { BaseImageryPlugin } from '@ansyn/imagery';
-import { CommunicatorEntity } from '@ansyn/imagery';
-import { BaseImageryMap } from '@ansyn/imagery';
-import { LoggerService } from '@ansyn/core';
-import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
-import { CaseOrientation } from '@ansyn/core';
-import { IOverlay } from '@ansyn/core';
-import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core';
+import {
+	BaseImageryMap,
+	BaseImageryPlugin,
+	CommunicatorEntity,
+	ImageryPlugin,
+	ProjectionService
+} from '@ansyn/imagery';
+import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 import { SetIsVisibleAcion } from '@ansyn/map-facade';
-import { areCoordinatesNumeric } from '@ansyn/core';
-import { ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { comboBoxesOptions } from '@ansyn/status-bar';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 export interface INorthData {

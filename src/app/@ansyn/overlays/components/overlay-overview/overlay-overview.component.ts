@@ -1,8 +1,7 @@
-import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IOverlay } from '@ansyn/core';
-import { getTimeFormat } from '@ansyn/core';
+import { getTimeFormat, IOverlay } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
@@ -11,7 +10,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { IOverlaysConfig } from '../../models/overlays.config';
-import { Inject } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-overlay-overview',

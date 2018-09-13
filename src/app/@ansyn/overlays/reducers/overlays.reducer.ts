@@ -1,11 +1,9 @@
-import { IOverlay } from '@ansyn/core';
+import { CoreActionTypes, IOverlay, IOverlaySpecialObject, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { OverlaysService } from '../services/overlays.service';
-import { IOverlaySpecialObject } from '@ansyn/core';
 import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
-import { CoreActionTypes, SetOverlaysCriteriaAction } from '@ansyn/core';
 
 export interface ITimelineRange {
 	start: Date;
@@ -117,7 +115,11 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS: {
-			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, overlays: new Map(), filteredOverlays: [] });
+			const drops = OverlaysService.parseOverlayDataForDisplay({
+				...state,
+				overlays: new Map(),
+				filteredOverlays: []
+			});
 			return {
 				...state,
 				loading: true,

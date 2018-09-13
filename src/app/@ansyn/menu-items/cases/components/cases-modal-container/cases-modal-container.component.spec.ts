@@ -9,8 +9,7 @@ import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core';
-import { CoreConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { casesConfig } from '../../services/cases.service';
 
@@ -31,8 +30,8 @@ describe('ModalContainerComponent', () => {
 				DataLayersService,
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {}},
-				{ provide: layersConfig, useValue: {}}
+				{ provide: CoreConfig, useValue: {} },
+				{ provide: layersConfig, useValue: {} }
 			]
 		})
 			.compileComponents();

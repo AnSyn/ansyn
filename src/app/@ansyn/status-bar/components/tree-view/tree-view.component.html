@@ -6,7 +6,8 @@
 			</ngx-treeview>
 		</div>
 		<div class="data-input-filters-buttons">
-			<ansyn-slider-checkbox [checked]="dataInputFiltersActive" (checkedChange)="activateDataInputFilters($event)"></ansyn-slider-checkbox>
+			<ansyn-slider-checkbox [checked]="dataInputFiltersActive"
+								   (checkedChange)="activateDataInputFilters($event)"></ansyn-slider-checkbox>
 			<div>
 				<a (click)="onTreeViewClose()">Cancel</a>
 				<a class="ok-button" (click)="dataInputFiltersOk()">Ok</a>

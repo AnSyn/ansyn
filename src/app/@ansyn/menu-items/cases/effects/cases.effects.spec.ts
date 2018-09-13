@@ -5,6 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
+	AddCasesAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
@@ -14,18 +15,12 @@ import {
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { Observable } from 'rxjs/Rx';
-import { ICase } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, ICase, IOverlay, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { AddCasesAction } from '../actions/cases.actions';
-import { CoreConfig } from '@ansyn/core';
-import { StorageService } from '@ansyn/core';
-import { ErrorHandlerService } from '@ansyn/core';
-import { IOverlay } from '@ansyn/core';
-import { LoggerService } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
 
@@ -95,7 +90,7 @@ describe('CasesEffects', () => {
 		let selectLayersState =
 			[
 				{ type: LayerType.annotation }
-			]
+			];
 
 
 		spyOn(store, 'select').and.callFake(() => Observable.of(selectLayersState));
@@ -178,7 +173,7 @@ describe('CasesEffects', () => {
 					activeLayersIds: [
 						'111',
 						'222'
-					],
+					]
 				}
 			}
 		} as ICase;

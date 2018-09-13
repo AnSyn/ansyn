@@ -1,13 +1,9 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { FilterMetadata } from '@ansyn/menu-items';
-import { BooleanFilterMetadata } from '@ansyn/menu-items';
-import { ProjectionService } from '@ansyn/imagery';
+import { BooleanFilterMetadata, EnumFilterMetadata, FilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items';
+import { ImageryModule, ProjectionService } from '@ansyn/imagery';
 import { BaseOverlaySourceProvider } from '@ansyn/overlays';
-import { EnumFilterMetadata } from '@ansyn/menu-items';
-import { SliderFilterMetadata } from '@ansyn/menu-items';
 import { OpenLayersProjectionService } from '@ansyn/plugins';
-import { ImageryModule } from '@ansyn/imagery';
 import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
 import { OpenLayerMapBoxSourceProvider } from './map-source-providers/open-layers-MapBox-source-provider';
 import { OpenLayerNotGeoRegisteredPlanetSourceProvider } from './map-source-providers/open-layers-not-geo-registered-planet-source-provider';

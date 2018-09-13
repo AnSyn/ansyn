@@ -59,6 +59,6 @@ export class LayerCollectionComponent {
 	}
 
 	openModal(type: SelectedModalEnum, layer?: ILayer): void {
-		this.store.dispatch(new SetLayersModal ({ type, layer }));
+		this.store.dispatch(new SetLayersModal({ type, layer }));
 	}
 }

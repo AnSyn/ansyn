@@ -1,10 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { ContextService } from './context.service';
 import { HttpClientModule } from '@angular/common/http';
-import { CoreConfig } from '@ansyn/core';
-import { StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, StorageService } from '@ansyn/core';
 import { ContextConfig } from '../models/context.config';
-import { ErrorHandlerService } from '@ansyn/core';
 
 describe('ContextService', () => {
 	let contextService: ContextService;
@@ -25,7 +23,8 @@ describe('ContextService', () => {
 				{
 					provide: ErrorHandlerService,
 					useValue: {
-						httpErrorHandle: () => {}
+						httpErrorHandle: () => {
+						}
 					}
 				}
 			]

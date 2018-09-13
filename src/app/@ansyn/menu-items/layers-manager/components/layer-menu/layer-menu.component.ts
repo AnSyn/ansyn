@@ -9,6 +9,7 @@ import { SelectedModalEnum } from '../../reducers/layers-modal';
 export class LayerMenuComponent {
 	@Input() disabledRemove: boolean;
 	@Output() openModal = new EventEmitter<SelectedModalEnum>();
+
 	get SelectedModalEnum() {
 		return SelectedModalEnum;
 	}

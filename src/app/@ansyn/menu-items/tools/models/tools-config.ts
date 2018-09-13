@@ -3,7 +3,7 @@ import { ICoordinatesSystem } from '@ansyn/core';
 
 export interface IToolsConfig {
 	Annotations: {
-		displayId: "0" | "1";
+		displayId: '0' | '1';
 	},
 	GoTo: {
 		from: ICoordinatesSystem;

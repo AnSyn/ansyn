@@ -1,9 +1,7 @@
 import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { CasesService } from '../services/cases.service';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { Operator } from 'rxjs/Operator';
 import { ICase, ICasePreview } from '@ansyn/core';
 
 export interface ICaseModal {

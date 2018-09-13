@@ -1,19 +1,21 @@
 import olPoint from 'ol/geom/point';
 import olPolygon from 'ol/geom/polygon';
-import { getPointByGeometry } from '@ansyn/core';
-import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core';
-import { ICaseMapState, IContextEntity } from '@ansyn/core';
+import {
+	getPointByGeometry,
+	getTimeDiff,
+	getTimeDiffFormat,
+	ICaseMapState,
+	IContextEntity,
+	IVisualizerEntity
+} from '@ansyn/core';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { selectContextEntities } from '@ansyn/context';
-import { IVisualizerEntity } from '@ansyn/core';
-import { ImageryVisualizer } from '@ansyn/imagery';
-import { MapFacadeService } from '@ansyn/map-facade';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { distinctUntilChanged, filter, map, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';

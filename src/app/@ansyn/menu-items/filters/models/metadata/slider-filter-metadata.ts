@@ -24,7 +24,7 @@ export class SliderFilterMetadata implements FilterMetadata {
 	}
 
 	updateMetadata(range: { start: number, end: number }): void {
-		if (!range || (range.start && range.end && range.start > range.end) ) {
+		if (!range || (range.start && range.end && range.start > range.end)) {
 			return;
 		}
 

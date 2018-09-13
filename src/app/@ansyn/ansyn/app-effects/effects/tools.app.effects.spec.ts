@@ -6,48 +6,37 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
 import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	DisableImageProcessing,
+	GoToAction,
+	ICasesState,
+	ILayerState,
+	initialLayersState,
 	IToolsState,
+	layersStateSelector,
+	PullActiveCenter,
+	SelectCaseAction,
+	SetActiveCenter,
+	SetActiveOverlaysFootprintModeAction,
+	SetAnnotationMode,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess,
+	SetMeasureDistanceToolState,
+	SetPinLocationModeAction,
+	ShowOverlaysFootprintAction,
+	toolsConfig,
 	toolsFeatureKey,
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
 } from '@ansyn/menu-items';
-import {
-	DisableImageProcessing,
-	GoToAction,
-	PullActiveCenter,
-	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction, SetAnnotationMode,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess, SetMeasureDistanceToolState, SetPinLocationModeAction, ShowOverlaysFootprintAction
-} from '@ansyn/menu-items';
-import { ICase } from '@ansyn/core';
+import { BackToWorldView, ClearActiveInteractionsAction, ICase, SetMapsDataActionStore } from '@ansyn/core';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { MapFacadeService } from '@ansyn/map-facade';
-import {
-	ActiveMapChangedAction
-} from '@ansyn/map-facade';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	casesStateSelector,
-	ICasesState
-} from '@ansyn/menu-items';
-import { mapStateSelector } from '@ansyn/map-facade';
+import { ActiveMapChangedAction, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import {
-	ILayerState,
-	initialLayersState,
-	layersStateSelector
-} from '@ansyn/menu-items';
-import {
-	BackToWorldView,
-	ClearActiveInteractionsAction,
-	SetMapsDataActionStore
-} from '@ansyn/core';
-import { toolsConfig } from '@ansyn/menu-items';
-import { SelectCaseAction } from '@ansyn/menu-items';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
 
 describe('ToolsAppEffects', () => {
@@ -302,8 +291,7 @@ describe('ToolsAppEffects', () => {
 
 	describe('backToWorldView', () => {
 		it('backToWorldView should raise DisableImageProcessing', () => {
-			const activeCommunicator = {
-			};
+			const activeCommunicator = {};
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 			actions = hot('--a--', { a: new BackToWorldView({ mapId: 'mapId' }) });
 			const expectedResults = cold('--b--', { b: new DisableImageProcessing() });

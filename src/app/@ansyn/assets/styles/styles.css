@@ -1,8 +1,8 @@
 @import "~ol/ol.css";
 @import "~flatpickr/dist/flatpickr.css";
 @import "~@ansyn/event-drops/style.css";
-@import "bootstrap/carousel";
-@import 'icons';
+@import "bootstrap/carousel.css";
+@import 'icons.css';
 @import "~primeng/resources/primeng.min.css";
 @import "~primeng/resources/themes/omega/theme.css";
 @import "~font-awesome/css/font-awesome.min.css";

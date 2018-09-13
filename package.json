@@ -1,6 +1,6 @@
 {
-  "name": "@ansyn/ansyn",
-  "version": "0.2.81.6",
+  "name": "ansyn-src",
+  "version": "0.2.81.7",
   "private": true,
   "license": "MIT",
   "repository": {

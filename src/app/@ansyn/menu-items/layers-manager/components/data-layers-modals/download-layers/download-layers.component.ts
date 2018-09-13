@@ -47,7 +47,7 @@ export class DownloadLayersComponent {
 	visualizerToSimpleStyle(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { id: feature.properties.id ...feature.properties.style.initial };
+			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial };
 		});
 	}
 

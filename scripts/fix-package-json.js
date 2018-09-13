@@ -21,7 +21,7 @@ function fix(fileName) {
 				packageJson.peerDependencies[name] = mainPackage.dependencies[name];
 			}
 
-			if (name.substr(0, 7) === '@ansyn/') {
+			if (name.substr(0, 7) === '@ansyn/' && packages.includes(name.substr(7))) {
 				packageJson.peerDependencies[name] = packageJson.version;
 			}
 		});
@@ -36,7 +36,7 @@ function fix(fileName) {
 				packageJson.dependencies[name] = mainPackage.dependencies[name];
 			}
 
-			if (name.substr(0, 7) === '@ansyn/') {
+			if (name.substr(0, 7) === '@ansyn/' && packages.includes(name.substr(7))) {
 				packageJson.dependencies[name] = packageJson.version;
 			}
 		});

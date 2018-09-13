@@ -3,13 +3,13 @@
   "compilerOptions": {
     "paths": {
       "@ansyn/core": [
-        "src/app/@ansyn/core"
+        "src/app/@ansyn/core/public_api"
       ],
       "@ansyn/context": [
-        "src/app/@ansyn/context"
+        "src/app/@ansyn/context/public_api"
       ],
       "@ansyn/menu": [
-        "src/app/@ansyn/menu"
+        "src/app/@ansyn/menu/public_api"
       ]
     }
   }

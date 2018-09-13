@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/overlays",
-	"version": "0.2.81.7",
+	"version": "0.2.81.8",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3"

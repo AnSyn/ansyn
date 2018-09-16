@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { StatusBarModule } from '@ansyn/status-bar';
@@ -25,10 +25,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertsModule, CoreModule } from '@ansyn/core';
 import { RouterModule } from '@angular/router';
 import { ansynConfig } from './config/ansyn.config';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { COMPONENT_MODE } from './app-providers/component-mode';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		StoreModule.forRoot({}),
+		EffectsModule.forRoot([]),
+		RouterModule.forRoot([]),
 		AppProvidersModule,
 		CasesModule,
 		FiltersModule,
@@ -52,11 +58,28 @@ import { ansynConfig } from './config/ansyn.config';
 		RouterModule,
 		HelpModule
 	],
+	providers: [
+		{
+			provide: COMPONENT_MODE,
+			useValue: false
+		}
+
+	],
 	declarations: [AnsynComponent],
 	exports: [AnsynComponent]
 })
 
 export class AnsynModule {
-
+	static component(): ModuleWithProviders {
+		return {
+			ngModule: AnsynModule,
+			providers: [
+				{
+					provide: COMPONENT_MODE,
+					useValue: true
+				}
+			]
+		}
+	}
 
 }

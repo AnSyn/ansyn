@@ -1,3 +1,6 @@
+export { IAlertComponent } from './alerts/alerts.model';
+export { ILoggerConfig } from './models/logger-config.model';
+export { AnsynTranslationModule } from './translation/ansyn-translation.module';
 export { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
 export { MockComponent } from './test/mock-component';
 export { ClickOutsideDirective } from './directives/click-outside.directive';

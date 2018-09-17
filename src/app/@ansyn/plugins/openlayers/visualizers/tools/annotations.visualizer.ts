@@ -56,8 +56,9 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '@ansyn/status-bar';
-import { featureCollection } from '@turf/turf';
+import { featureCollection, area, length, lineString } from '@turf/turf';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
+import geometry from 'ol/geom/geometry';
 
 // @dynamic
 @ImageryVisualizer({
@@ -404,7 +405,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.pipe(
 				take(1),
 				withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
-				tap(([featureCollection, activeAnnotationLayer, overlay]: [FeatureCollection<GeometryObject>, ILayer, IOverlay]) => {
+				tap(([featureCollection, activeAnnotationLayer, overlay]: [any, ILayer, IOverlay]) => {
 					const [geoJsonFeature] = featureCollection.features;
 					const data = <FeatureCollection<any>> { ...activeAnnotationLayer.data };
 					data.features.push(geoJsonFeature);
@@ -415,6 +416,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
+					console.log(`area: ${area(<any>geoJsonFeature.geometry)}`);
+					const line = lineString(<number[][]>geoJsonFeature.geometry.coordinates[0]);
+					const collllll = length(line, {units: 'meters'});
+					console.log(`scope: ${collllll}`);
 					this.store$.dispatch(new UpdateLayer({ ...activeAnnotationLayer, data }));
 				})
 			).subscribe();

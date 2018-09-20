@@ -299,7 +299,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
 		overlay.tag = element;
-		overlay.projection = '3857';
+		overlay.projection = 'EPSG:3857';
 		return overlay;
 	}
 }

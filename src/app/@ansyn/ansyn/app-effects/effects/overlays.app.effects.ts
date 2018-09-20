@@ -56,7 +56,7 @@ import {
 	ImageryCommunicatorService,
 	ProjectionService
 } from '@ansyn/imagery';
-import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
 import * as turf from '@turf/turf';
@@ -70,18 +70,23 @@ import OLMap from 'ol/map';
 import { forkJoin } from 'rxjs/index';
 import { Observer } from 'rxjs/Observer';
 import { ChangeOverlayPreviewRotationAction } from '../../../overlays/actions/overlays.actions';
+import { NorthCalculationsPlugin } from '../../../plugins/openlayers/north-calculations/north-calculations.plugin';
 
 @Injectable()
 export class OverlaysAppEffects {
 
 	@Effect()
-	hoveredOverlayPreview$: Observable<any> = this.store$.pipe(select(selectHoveredOverlay)).pipe(
+	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
 		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
+		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(overlay)),
 		map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]),
+		filter(([overlay, comm]: [IOverlay, CommunicatorEntity]) => comm !== null),
 		mergeMap(([overlay, comm]: [IOverlay, CommunicatorEntity]) => {
-			return this.getCorrectedNorth(comm).pipe(
+			const northCalcPlugin: NorthCalculationsPlugin = comm.getPlugin(NorthCalculationsPlugin);
+			northCalcPlugin.sayYoooPlagin();
+			return northCalcPlugin.getCorrectedNorth(comm).pipe(
 				catchError(() => of(0)),
-				map((north) => {
+				map((north: number) => {
 					return north;
 				})
 			);
@@ -231,7 +236,7 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
-		this.store$.dispatch(new SetHoveredOverlayAction({
+		this.store$.dispatch(new SetHoveredOverlayAction(<any> {
 			...overlay,
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));

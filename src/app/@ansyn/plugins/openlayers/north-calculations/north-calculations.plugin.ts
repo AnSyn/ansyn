@@ -8,7 +8,7 @@ import {
 	LoggerService,
 	toDegrees
 } from '@ansyn/core';
-import { Observable, forkJoin, Observer } from 'rxjs';
+import { forkJoin, Observable, Observer } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
@@ -27,7 +27,8 @@ import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ans
 import { SetIsVisibleAcion } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
-import { filter, switchMap, withLatestFrom, tap, map, mergeMap, retry, catchError } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, retry, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import OLMap from 'ol/map';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -96,41 +97,43 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	getCorrectedNorth(): Observable<INorthData> {
-		return this.getProjectedCenters().pipe(
-			map((projectedCenters: Point[]): INorthData => {
+	getCorrectedNorth(communicator?: CommunicatorEntity): Observable<any> {
+		let mapObject = null;
+		if (communicator) {
+			mapObject  = communicator.ActiveMap.mapObject;
+		}
+		return this.getProjectedCenters(mapObject).pipe(
+			map((projectedCenters: Point[]) => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-				const northOffsetDeg = toDegrees(northOffsetRad);
-				const view = (<BaseImageryMap>this.iMap).mapObject.getView();
-				const actualNorth = northOffsetRad + view.getRotation();
-				return { northOffsetRad, northOffsetDeg, actualNorth };
-			}),
-			mergeMap((northData: INorthData) => {
-				this.iMap.mapObject.getView().setRotation(northData.actualNorth);
-				this.iMap.mapObject.renderSync();
-				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-					return Observable.throw({ result: northData.actualNorth });
+				if (communicator) {
+					return northOffsetRad * -1;
 				}
-				return Observable.of(northData.actualNorth);
+				else {
+					const northOffsetDeg = toDegrees(northOffsetRad);
+					const view = (<BaseImageryMap>this.iMap).mapObject.getView();
+					const actualNorth = northOffsetRad + view.getRotation();
+					return { northOffsetRad, northOffsetDeg, actualNorth };
+				}
 			}),
-			retry(this.maxNumberOfRetries),
-			catchError((e) => e.result ? Observable.of(e.result) : Observable.throw(e))
 		);
 	}
 
-	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
+	projectPoints(coordinates: ol.Coordinate[], previewRotation: boolean): Observable<Point[]> {
 		return forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
+			if (previewRotation) {
+				return this.projectionService.projectApproximatelyFromProjection(point, 'EPSG:3857');
+
+			}
 			return this.projectionService.projectAccurately(point, this.iMap);
 		}));
 	}
 
-	getProjectedCenters(): Observable<Point[]> {
+	getProjectedCenters(mapObject?: OLMap): Observable<Point[]> {
 		return Observable.create((observer: Observer<any>) => {
-			const mapObject = this.iMap.mapObject;
-			const size = mapObject.getSize();
+			const size = Boolean(mapObject) ? mapObject.getSize() : this.iMap.mapObject;
 			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 			if (!areCoordinatesNumeric(olCenterView)) {
 				observer.error('no coordinate for pixel');
@@ -141,7 +144,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
+			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, Boolean(mapObject)));
 	}
 
 	pointNorth(): Observable<any> {
@@ -161,5 +164,4 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			})
 		);
 	}
-
 }

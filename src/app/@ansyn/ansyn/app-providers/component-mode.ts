@@ -1,3 +1,4 @@
 import { InjectionToken } from '@angular/core';
+import { InjectionsContainer } from '@ansyn/core';
 
-export const COMPONENT_MODE = new InjectionToken<boolean>('COMPONENT_MODE');
+export const COMPONENT_MODE: InjectionToken<boolean> = InjectionsContainer.get<boolean>('COMPONENT_MODE');

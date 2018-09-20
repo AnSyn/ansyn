@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/do';
 
+export { IComboBoxesProperties } from './models/combo-boxes.model';
 export {
 	statusBarFeatureKey,
 	StatusBarInitialState,
@@ -28,3 +29,4 @@ export {
 export { SearchModeEnum } from './models/search-mode.enum';
 export { StatusBarConfig } from './models/statusBar.config';
 export { StatusBarModule } from './status-bar.module';
+export { orientations, ORIENTATIONS } from './models/combo-boxes.model';

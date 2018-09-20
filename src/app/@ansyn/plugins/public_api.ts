@@ -7,6 +7,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
+export { NorthCalculationsPlugin } from './openlayers/north-calculations/north-calculations.plugin';
 
 export {
 	DisabledOpenLayersMapName,

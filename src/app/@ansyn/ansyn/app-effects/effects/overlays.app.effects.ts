@@ -63,14 +63,14 @@ import * as turf from '@turf/turf';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
 import { of } from 'rxjs/internal/observable/of';
-import { selectHoveredOverlay } from '../../../overlays/reducers/overlays.reducer';
+import { selectHoveredOverlay } from '@ansyn/overlays';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import OLMap from 'ol/map';
 import { forkJoin } from 'rxjs/index';
 import { Observer } from 'rxjs/Observer';
-import { ChangeOverlayPreviewRotationAction } from '../../../overlays/actions/overlays.actions';
-import { NorthCalculationsPlugin } from '../../../plugins/openlayers/north-calculations/north-calculations.plugin';
+import { ChangeOverlayPreviewRotationAction } from '@ansyn/overlays';
+import { NorthCalculationsPlugin } from '@ansyn/plugins';
 
 @Injectable()
 export class OverlaysAppEffects {

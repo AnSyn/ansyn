@@ -124,6 +124,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
 		overlay.tag = openAerialElement;
+		overlay.projection = 'EPSG:3857';
 
 		return overlay;
 	}

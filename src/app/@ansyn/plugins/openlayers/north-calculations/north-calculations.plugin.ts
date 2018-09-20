@@ -58,8 +58,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
 		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
 		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(overlay) && Boolean(this.communicator) && activeMapId === this.mapId),
-		mergeMap(([overlay]: [IOverlay, string]) => {
-			return this.getPreviewNorth(overlay)
+		mergeMap(([{ projection }]: [IOverlay, string]) => {
+			return this.getPreviewNorth(projection)
 				.pipe(
 					catchError(() => of(0))
 				);
@@ -115,8 +115,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	getPreviewNorth(overlay: IOverlay) {
-		return this.getProjectedCenters(overlay).pipe(
+	getPreviewNorth(projection: string) {
+		return this.getProjectedCenters(projection).pipe(
 			map((projectedCenters: Point[]): number => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
@@ -149,17 +149,17 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
 	}
 
-	projectPoints(coordinates: ol.Coordinate[], overlay?: IOverlay): Observable<Point[] | any> {
+	projectPoints(coordinates: ol.Coordinate[], projection?: string): Observable<Point[] | any> {
 		return Observable.forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
-			if (overlay) {
-				return this.projectionService.projectApproximatelyFromProjection(point, overlay.projection);
+			if (projection) {
+				return this.projectionService.projectApproximatelyFromProjection(point, projection);
 			}
 			return this.projectionService.projectAccurately(point, this.iMap);
 		}));
 	}
 
-	getProjectedCenters(overlay?: IOverlay): Observable<Point[]> {
+	getProjectedCenters(projection?: string): Observable<Point[]> {
 		return Observable.create((observer: Observer<any>) => {
 			const mapObject = this.iMap.mapObject;
 			const size = mapObject.getSize();
@@ -173,7 +173,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, overlay));
+			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, projection));
 	}
 
 	pointNorth(): Observable<any> {

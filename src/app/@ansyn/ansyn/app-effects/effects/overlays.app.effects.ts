@@ -56,37 +56,31 @@ import {
 	ImageryCommunicatorService,
 	ProjectionService
 } from '@ansyn/imagery';
-import { catchError, distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
 import * as turf from '@turf/turf';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
 import { of } from 'rxjs/internal/observable/of';
-import { selectHoveredOverlay } from '@ansyn/overlays';
+import { selectHoveredOverlay, ChangeOverlayPreviewRotationAction } from '@ansyn/overlays';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import OLMap from 'ol/map';
 import { forkJoin } from 'rxjs/index';
 import { Observer } from 'rxjs/Observer';
-import { ChangeOverlayPreviewRotationAction } from '@ansyn/overlays';
-import { NorthCalculationsPlugin } from '@ansyn/plugins';
 
 @Injectable()
 export class OverlaysAppEffects {
 
 	@Effect()
-	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
+	hoveredOverlayPreview$: Observable<any> = this.store$.pipe(select(selectHoveredOverlay)).pipe(
 		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
-		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(overlay)),
 		map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]),
-		filter(([overlay, comm]: [IOverlay, CommunicatorEntity]) => comm !== null),
 		mergeMap(([overlay, comm]: [IOverlay, CommunicatorEntity]) => {
-			const northCalcPlugin: NorthCalculationsPlugin = comm.getPlugin(NorthCalculationsPlugin);
-			northCalcPlugin.sayYoooPlagin();
-			return northCalcPlugin.getCorrectedNorth(comm).pipe(
+			return this.getCorrectedNorth(comm).pipe(
 				catchError(() => of(0)),
-				map((north: number) => {
+				map((north) => {
 					return north;
 				})
 			);
@@ -236,7 +230,7 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
-		this.store$.dispatch(new SetHoveredOverlayAction(<any> {
+		this.store$.dispatch(new SetHoveredOverlayAction({
 			...overlay,
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));

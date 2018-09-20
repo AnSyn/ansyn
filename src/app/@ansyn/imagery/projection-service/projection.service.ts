@@ -12,7 +12,7 @@ export abstract class ProjectionService {
 
 	abstract projectApproximately(point: Point, map: BaseImageryMap): Observable<Point>;
 
-	abstract projectApproximatelyFromProjection(point: Point, projection: ol.ProjectionLike): Observable<Point>;
+	abstract projectApproximatelyFromProjection(point: Point, projection: string): Observable<Point>;
 
 	// image collection
 	abstract projectCollectionAccurately<T = any>(features: T[], map: BaseImageryMap): Observable<FeatureCollection<GeometryObject>>;

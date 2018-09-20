@@ -57,7 +57,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
 		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
-		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(overlay) && Boolean(this.communicator) && activeMapId === this.mapId),
+		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(this.communicator) && activeMapId === this.mapId),
 		mergeMap(([{ projection }]: [IOverlay, string]) => {
 			return this.getPreviewNorth(projection)
 				.pipe(

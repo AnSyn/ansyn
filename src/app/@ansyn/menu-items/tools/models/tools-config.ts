@@ -23,7 +23,7 @@ export interface IImageProcParam {
 	max: number
 }
 
-export const toolsConfig: InjectionToken<IToolsConfig> = new InjectionToken('toolsConfig');
+export const toolsConfig = 'toolsConfig';
 
 
 

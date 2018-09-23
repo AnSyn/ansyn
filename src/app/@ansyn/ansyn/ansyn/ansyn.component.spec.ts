@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
 import { mapStateSelector } from '@ansyn/map-facade';
+import { COMPONENT_MODE } from '../public_api';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -58,6 +59,12 @@ describe('AnsynComponent', () => {
 				mockEmptyComponent,
 				mockOverlayOverviewComponent,
 				ansynTools
+			],
+			providers: [
+				{
+					provide: COMPONENT_MODE,
+					useValue: false
+				}
 			],
 			imports: [
 				RouterTestingModule,

@@ -1,3 +1,4 @@
+export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
 export { LoadCaseAction } from './cases/actions/cases.actions';
@@ -100,3 +101,6 @@ export { casesFeatureKey, CasesReducer, initialCasesState } from './cases/reduce
 export { PullActiveCenter } from './tools/actions/tools.actions';
 export { toolsFeatureKey, toolsInitialState, ToolsReducer } from './tools/reducers/tools.reducer';
 export { AddCaseAction } from './cases/actions/cases.actions';
+export { QueryParamsHelper } from './cases/services/helpers/cases.service.query-params-helper';
+export { UpdateFilterAction } from './filters/actions/filters.actions';
+export { IEnumFiled } from './filters/models/metadata/enum-filter-metadata';

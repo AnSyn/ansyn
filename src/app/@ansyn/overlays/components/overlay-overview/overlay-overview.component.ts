@@ -1,15 +1,21 @@
-import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { getTimeFormat } from '@ansyn/core/utils/time';
+import { getTimeFormat, IOverlay } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
+import {
+	ChangeOverlayPreviewRotationAction,
+	DisplayOverlayFromStoreAction,
+	OverlaysActionTypes,
+	SetMarkUp
+} from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { configuration } from '../../../../../configuration/configuration';
+import { OverlaysConfig } from '../../services/overlays.service';
+import { IOverlaysConfig } from '../../models/overlays.config';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -21,18 +27,20 @@ import { configuration } from '../../../../../configuration/configuration';
 	destroy: 'ngOnDestroy'
 })
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
+	@ViewChild('img') img: ElementRef;
+
 	public sensorName: string;
 	public formattedTime: string;
-	public imageSrc: string;
 	public overlayId: string;
 
 	public loading = false;
-	public errorSrc = configuration.overlays.overlayOverviewFailed;
+	public errorSrc = this.overlaysConfig.overlayOverviewFailed;
 
+	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
 
 	public get const() {
-		return overlayOverviewComponentConstants
+		return overlayOverviewComponentConstants;
 	}
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
@@ -40,10 +48,17 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.top.px') top = 0;
 
 	@AutoSubscription
+	rotationChanged$: Observable<any> = this.actions$.pipe(
+		ofType<ChangeOverlayPreviewRotationAction>(OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION),
+		tap(({ payload }) => this.rotation = payload)
+	);
+
+	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
 		tap(this.onHoveredOverlay.bind(this))
 	);
+
 
 	// Mark the original overlay as un-hovered when mouse leaves
 	@HostListener('mouseleave')
@@ -53,9 +68,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public store$: Store<IOverlaysState>,
+		public actions$: Actions,
 		protected el: ElementRef,
-		protected translate: TranslateService
-	) {
+		protected translate: TranslateService,
+		@Inject(OverlaysConfig) protected overlaysConfig: IOverlaysConfig) {
 	}
 
 	ngOnInit() {
@@ -67,6 +83,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	onHoveredOverlay(overlay: IOverlay) {
 		if (overlay) {
 			const isNewOverlay = this.overlayId !== overlay.id;
+			const isFetchingOverlayData = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
 			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);
 			if (hoveredElement) {
@@ -76,9 +93,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.isHoveringOverDrop = true;
 
 				this.sensorName = overlay.sensorName;
-				this.imageSrc = overlay.thumbnailUrl;
+				this.img.nativeElement.src = isFetchingOverlayData ? undefined : overlay.thumbnailUrl;
 				this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-				if (isNewOverlay) {
+				if ((isNewOverlay || isFetchingOverlayData) && !this.img.nativeElement.complete) {
 					this.startedLoadingImage();
 				}
 			}

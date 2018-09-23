@@ -6,65 +6,64 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
-	OverlaysActionTypes,
-	SetFilteredOverlaysAction,
-	SetHoveredOverlayAction,
-	SetSpecialObjectsActionStore
-} from '@ansyn/overlays/actions/overlays.actions';
-import { Action, Store } from '@ngrx/store';
-import { IAppState } from '../app.effects.module';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import {
+	ExtendMap,
 	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
+	overlayOverviewComponentConstants,
+	OverlaysActionTypes,
+	OverlaysService,
 	overlaysStateSelector,
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
-	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
-import { IOverlay, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/core/models/overlay.model';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
+	selectOverlaysMap,
+	SetFilteredOverlaysAction,
+	SetHoveredOverlayAction,
+	SetSpecialObjectsActionStore
+} from '@ansyn/overlays';
+import { Action, Store } from '@ngrx/store';
+import { IAppState } from '../app.effects.module';
 import {
 	BackToWorldView,
 	CoreActionTypes,
+	DisplayedOverlay,
+	ICaseMapPosition,
+	IContextEntity,
+	IOverlay,
+	IOverlaySpecialObject,
+	IPendingOverlay,
+	LayoutKey,
+	layoutOptions,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetRemovedOverlaysIdAction,
-	SetToastMessageAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
-} from '@ansyn/core/actions/core.actions';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+} from '@ansyn/core';
+import {
+	IMapState,
+	mapStateSelector,
+	RemovePendingOverlayAction,
+	selectActiveMapId,
+	selectMapsList,
+	SetPendingOverlaysAction
+} from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
-	IBaseMapSourceProviderConstructor
-} from '@ansyn/imagery/model/base-map-source-provider';
-import { IContextParams, selectContextEntities, selectContextsParams } from '@ansyn/context/reducers/context.reducer';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
-import { IContextEntity } from '@ansyn/core/models/case.model';
-import { DisplayedOverlay } from '@ansyn/core/models/context.model';
+	CommunicatorEntity,
+	IBaseMapSourceProviderConstructor,
+	ImageryCommunicatorService
+} from '@ansyn/imagery';
+import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
+import { of } from 'rxjs/internal/observable/of';
 
 @Injectable()
 export class OverlaysAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name displayLatestOverlay$
-	 * @ofType SetFilteredOverlaysAction
-	 * @dependencies overlays
-	 * @filter defaultOverlay is latest and displayedOverlays is not empty
-	 * @action DisplayOverlayFromStoreAction
-	 */
 	@Effect()
 	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
@@ -81,14 +80,6 @@ export class OverlaysAppEffects {
 	);
 
 
-	/**
-	 * @type Effect
-	 * @name displayTwoNearestOverlay$
-	 * @ofType SetFilteredOverlaysAction
-	 * @dependencies overlays
-	 * @filter defaultOverlay is nearst
-	 * @action DisplayMultipleOverlaysFromStoreAction
-	 */
 	@Effect()
 	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
@@ -117,14 +108,6 @@ export class OverlaysAppEffects {
 		share()
 	);
 
-	/**
-	 * @type Effect
-	 * @name displayMultipleOverlays$
-	 * @ofType DisplayMultipleOverlaysFromStoreAction
-	 * @dependencies map
-	 * @filter there is at least one none empty overlay to display
-	 * @action DisplayOverlayFromStoreAction, SetPendingOverlaysAction, ChangeLayoutAction
-	 */
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE),
@@ -149,14 +132,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name displayPendingOverlaysOnChangeLayoutSuccess$
-	 * @ofType SetLayoutSuccess
-	 * @dependencies map
-	 * @filter there is at least one pending overlay
-	 * @action DisplayOverlayFromStoreAction
-	 */
 	@Effect()
 	displayPendingOverlaysOnChangeLayoutSuccess$: Observable<any> = this.actions$.pipe(
 		ofType(CoreActionTypes.SET_LAYOUT_SUCCESS),
@@ -181,13 +156,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name onDisplayOverlayFromStore$
-	 * @ofType DisplayOverlayFromStoreAction
-	 * @dependencies overlays, map
-	 * @action DisplayOverlayAction
-	 */
 	@Effect()
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
@@ -199,14 +167,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name onSetRemovedOverlaysIdAction$
-	 * @ofType SetRemovedOverlaysIdAction
-	 * @dependencies overlays
-	 * @filter
-	 * @action DisplayOverlayFromStoreAction | BackToWorldView
-	 */
 	@Effect()
 	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
 		ofType<SetRemovedOverlaysIdAction>(CoreActionTypes.SET_REMOVED_OVERLAY_ID),
@@ -231,11 +191,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name setHoveredOverlay$
-	 * @action SetHoveredOverlayAction
-	 */
 
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
@@ -251,17 +206,16 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
+		this.store$.dispatch(new SetHoveredOverlayAction(<IOverlay>{
+			...overlay,
+			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
+		}));
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
-		return (<any>sourceProvider).getThumbnailUrl(overlay, position).pipe(
-			map(thumbnailUrl => ({ ...overlay, thumbnailUrl })),
-			catchError(err => {
-				this.store$.dispatch(new SetToastMessageAction({
-					toastText: 'Failed to load overlay preview',
-					showWarningIcon: true
-				}));
-				return null;
-			})
-		)
+		return (<any>sourceProvider).getThumbnailUrl(overlay, position)
+			.map(thumbnailUrl => ({ ...overlay, thumbnailUrl }))
+			.catch(() => {
+				return of(overlay);
+			});
 	});
 	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
 

@@ -1,4 +1,4 @@
-import { IStorageConfig } from "../services/storage/config";
+import { IStorageConfig } from '../services/storage/config';
 
 export interface ICoreConfig {
 	storageService: IStorageConfig;
@@ -10,5 +10,6 @@ export interface ICoreConfig {
 	translation: {
 		default: any,
 		[key: string]: any
-	}
+	};
+	needToUseLayerExtent: boolean;
 }

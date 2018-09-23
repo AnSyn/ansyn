@@ -7,7 +7,7 @@ import {
 } from '../actions/menu.actions';
 import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
+import { IMenuItem } from '../models/menu-item.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
 

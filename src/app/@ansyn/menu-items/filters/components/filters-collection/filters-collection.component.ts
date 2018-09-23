@@ -7,6 +7,7 @@ import { UpdateFacetsAction } from '../../actions/filters.actions';
 import { distinctUntilChanged, map } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 
 
 	@AutoSubscription
-	filters$ = this.store.select(filtersStateSelector).pipe(
+	filters$: Observable<any> = this.store.select(filtersStateSelector).pipe(
 		distinctUntilChanged(),
 		map((state: IFiltersState) => {
 			return {

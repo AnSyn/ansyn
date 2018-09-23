@@ -6,13 +6,12 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
 import { LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
-import { casesConfig } from '@ansyn/menu-items/cases/services/cases.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
+import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
+import { casesConfig } from '../../services/cases.service';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -25,7 +24,7 @@ describe('CasesTableComponent', () => {
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({[casesFeatureKey]: CasesReducer}),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [
@@ -33,7 +32,7 @@ describe('CasesTableComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 			]
 		})
 			.compileComponents();

@@ -1,18 +1,9 @@
-import { forkJoin, from, Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import {
-	BaseOverlaySourceProvider,
-	IDateRange,
-	IFetchParams,
-	IOverlayFilter,
-	IStartAndEndDate
-} from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { BaseOverlaySourceProvider, IDateRange, IFetchParams, IOverlayFilter, IStartAndEndDate } from '@ansyn/overlays';
+import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
-import { LoggerService } from '@ansyn/core/services/logger.service';
 import { area, difference, intersect } from '@turf/turf';
-import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
-import { map } from 'rxjs/internal/operators';
 
 export interface IFiltersList {
 	name: string,
@@ -130,7 +121,11 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public getById(id: string, sourceType: string): Observable<IOverlay> {
-		return this.overlaysSources.find(s => s.sourceType === sourceType).getById(id, sourceType);
+		const overlaysSource = this.overlaysSources.find(s => s.sourceType === sourceType);
+		if (overlaysSource) {
+			return overlaysSource.getById(id, sourceType);
+		}
+		return throwError(`Cannot find overlay for source = ${sourceType} id = ${id}`);
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

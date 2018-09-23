@@ -6,8 +6,7 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reduce
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
-import { createStore, IStoreFixture } from '@ansyn/core/test/mock-store';
-import { LoggerService } from '@ansyn/core/services/logger.service';
+import { createStore, IStoreFixture, LoggerService } from '@ansyn/core';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
 import { BaseOverlaySourceProvider } from '../../models/base-overlay-source-provider.model';
 
@@ -128,7 +127,7 @@ describe('TimelineComponent', () => {
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }
-	},
+				}
 			],
 			declarations: [TimelineComponent],
 			imports: [

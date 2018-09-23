@@ -1,17 +1,21 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Observable, UnaryFunction } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
 	CasesActionTypes,
 	CopyCaseLinkAction,
+	DeleteCaseAction,
+	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
+	ManualSaveAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
+	SelectDilutedCaseAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
 	UpdateCaseBackendSuccessAction
@@ -19,36 +23,29 @@ import {
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/cases.reducer';
 import { ICasesConfig } from '../models/cases-config';
-import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/core/models/case.model';
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { statusBarToastMessages } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { copyFromContent } from '@ansyn/core/utils/clipboard';
-import { IStoredEntity } from '@ansyn/core/services/storage/storage.service';
 import {
-	catchError, debounceTime, filter, map, mergeMap, share, switchMap,
-	withLatestFrom
-} from 'rxjs/internal/operators';
+	copyFromContent,
+	ErrorHandlerService,
+	ICase,
+	ICasePreview,
+	IDilutedCaseState,
+	IStoredEntity,
+	rxPreventCrash,
+	SetToastMessageAction,
+	toastMessages
+} from '@ansyn/core';
+import { catchError, debounceTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import { DeleteCaseAction, LoadCaseAction, ManualSaveAction, SelectDilutedCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { forkJoin } from 'rxjs/index';
 import { UUID } from 'angular2-uuid';
-import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
+import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import { pipe } from 'rxjs/Rx';
-import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
 
 @Injectable()
 export class CasesEffects {
 
-	/**
-	 * @type Effect
-	 * @name loadCases$
-	 * @ofType LoadCasesAction
-	 * @dependencies cases
-	 * @action LoadCasesSuccessAction
-	 */
 	@Effect()
 	loadCases$: Observable<AddCasesAction | {}> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_CASES),
@@ -61,25 +58,12 @@ export class CasesEffects {
 		}),
 		share());
 
-	/**
-	 * @type Effect
-	 * @name onAddCase$
-	 * @ofType AddCaseAction
-	 * @action SelectCaseAction
-	 */
 	@Effect()
 	onAddCase$: Observable<SelectCaseAction> = this.actions$.pipe(
 		ofType<AddCaseAction>(CasesActionTypes.ADD_CASE),
 		map((action: AddCaseAction) => new SelectCaseAction(action.payload)),
 		share());
 
-	/**
-	 * @type Effect
-	 * @name onDeleteCase$
-	 * @ofType DeleteCaseAction
-	 * @dependencies cases
-	 * @action LoadDefaultCaseAction?, DeleteCaseBackendAction
-	 */
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
@@ -90,14 +74,6 @@ export class CasesEffects {
 		rxPreventCrash()
 	);
 
-	/**
-	 * @type Effect
-	 * @name onDeleteCaseLoadCases$
-	 * @ofType DeleteCaseBackendSuccessAction
-	 * @dependencies cases
-	 * @filter state cases length is not larger than the paginationLimit
-	 * @action LoadCasesAction
-	 */
 	@Effect()
 	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.DELETE_CASE),
@@ -106,14 +82,6 @@ export class CasesEffects {
 		map(() => new LoadCasesAction()),
 		share());
 
-	/**
-	 * @type Effect
-	 * @name onUpdateCase$
-	 * @ofType UpdateCaseAction
-	 * @dependencies cases
-	 * @filter Not the default case
-	 * @action UpdateCaseBackendAction
-	 */
 	@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.UPDATE_CASE),
@@ -122,12 +90,6 @@ export class CasesEffects {
 		map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload.updatedCase)),
 		share());
 
-	/**
-	 * @type Effect
-	 * @name onUpdateCaseBackend$
-	 * @ofType UpdateCaseBackendAction
-	 * @action UpdateCaseBackendSuccessAction
-	 */
 	@Effect()
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
 		.pipe(
@@ -143,31 +105,14 @@ export class CasesEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name openModal$
-	 * @ofType OpenModalAction
-	 */
 	@Effect({ dispatch: false })
 	openModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.OPEN_MODAL);
 
-	/**
-	 * @type Effect
-	 * @name closeModal$
-	 * @ofType CloseModalAction
-	 */
 	@Effect({ dispatch: false })
 	closeModal$: Observable<any> = this.actions$
 		.ofType(CasesActionTypes.CLOSE_MODAL);
 
-	/**
-	 * @type Effect
-	 * @name loadDefaultCase$
-	 * @ofType LoadDefaultCaseAction
-	 * @filter Payload does not have context
-	 * @action SelectCaseAction
-	 */
 	@Effect()
 	loadDefaultCase$: Observable<SelectCaseAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
@@ -178,12 +123,6 @@ export class CasesEffects {
 		}),
 		share());
 
-	/**
-	 * @type Effect
-	 * @name onSaveCaseAs$
-	 * @ofType SaveCaseAsAction
-	 * @action AddCaseAction
-	 */
 	@Effect()
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
@@ -209,13 +148,6 @@ export class CasesEffects {
 			).catch(() => EMPTY)
 		));
 
-	/**
-	 * @type Effect
-	 * @name onCopyShareCaseIdLink$
-	 * @ofType CopyCaseLinkAction
-	 * @filter shareCaseAsQueryParams is false
-	 * @action SetToastMessageAction
-	 */
 	@Effect()
 	onCopyShareCaseIdLink$ = this.actions$.pipe(
 		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
@@ -223,14 +155,9 @@ export class CasesEffects {
 		map((action) => {
 			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
 			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: statusBarToastMessages.showLinkCopyToast });
-		}));
+			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+		});
 
-	/**
-	 * @type Effect
-	 * @name loadDefaultCaseIfNoActiveCase$
-	 * @ofType LoadDefaultCaseIfNoActiveCaseAction
-	 */
 	@Effect()
 	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE),
@@ -248,7 +175,7 @@ export class CasesEffects {
 			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase))
 		);
 
-	saveLayers = pipe(
+	saveLayers: UnaryFunction<any, any> = pipe(
 		mergeMap((action: ManualSaveAction) => this.dataLayersService
 			.removeCaseLayers(action.payload.id).pipe(
 				withLatestFrom(this.store.select(selectLayers)),
@@ -270,6 +197,26 @@ export class CasesEffects {
 		]),
 		catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to update case')),
 		catchError(() => EMPTY)
+	);
+
+	@Effect()
+	onCopyShareCaseLink$ = this.actions$.pipe(
+		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
+		filter(action => Boolean(action.payload.shareCaseAsQueryParams)),
+		withLatestFrom(this.store.select(casesStateSelector), (action: CopyCaseLinkAction, state: ICasesState) => {
+			let sCase = state.entities[action.payload.caseId];
+			if (!sCase) {
+				if (state.selectedCase.id === action.payload.caseId) {
+					sCase = state.selectedCase;
+				}
+			}
+			return sCase;
+		}),
+		map((sCase: ICase) => {
+			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
+			copyFromContent(shareLink);
+			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+		})
 	);
 
 	constructor(protected actions$: Actions,

@@ -5,10 +5,15 @@ import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { EMPTY, Observable } from 'rxjs';
 import { Observer } from 'rxjs/Observer';
-import { IOverlay } from '../models/overlay.model';
-import { IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import {
+	buildFilteredOverlays,
+	IOverlay,
+	IOverlaysCriteria,
+	IOverlaysFetchData,
+	IOverlaySpecialObject,
+	LoggerService
+} from '@ansyn/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoggerService } from '@ansyn/core/services/logger.service';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
@@ -202,18 +207,18 @@ describe('OverlaysService', () => {
 			o2 = { id: '2', date: new Date(1) },
 			o3 = { id: '3', date: new Date(2) },
 			o6 = { id: '6', date: new Date(3) },
-			parsedFilters = [ { key: 'fakeFilter', filterFunc: () => true } ],
+			parsedFilters = [{ key: 'fakeFilter', filterFunc: () => true }],
 			overlays = <any> [o1, o2, o3],
 			favorites = <any> [o1, o6],
 			removedLayers = <any> [],
 			showOnlyFavorite = false;
 
-		let ids = OverlaysService.buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite, removedLayers, true);
+		let ids = buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite, removedLayers, true);
 		expect(ids).toEqual(['1', '2', '3', '6']);
 
 		/* only favorite ids */
 		showOnlyFavorite = true;
-		ids = OverlaysService.buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite, removedLayers, true);
+		ids = buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite, removedLayers, true);
 		expect(ids).toEqual(['1', '6']);
 
 	});

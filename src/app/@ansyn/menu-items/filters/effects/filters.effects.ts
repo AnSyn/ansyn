@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
 import { Store } from '@ngrx/store';
+import { IFiltersState } from '../reducer/filters.reducer';
 
 @Injectable()
 export class FiltersEffects {

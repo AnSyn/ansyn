@@ -1,5 +1,5 @@
 import { Feature, FeatureCollection, GeometryObject, MultiPolygon, Point, Polygon } from 'geojson';
-import { geometry, bbox, bboxPolygon, centerOfMass, circle, feature, lineString, point } from '@turf/turf';
+import { bbox, bboxPolygon, centerOfMass, circle, feature, geometry, lineString, point } from '@turf/turf';
 
 export function getPolygonByPoint(lonLat: number[]): Feature<Polygon> {
 	return bboxPolygon(bbox(point(lonLat)));

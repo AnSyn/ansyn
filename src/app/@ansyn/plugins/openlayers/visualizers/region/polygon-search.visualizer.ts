@@ -1,17 +1,14 @@
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { UUID } from 'angular2-uuid';
-import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
 import { Position } from 'geojson';
-import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
-import { MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
+import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize } from '@ansyn/core';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
+import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
+import { RegionVisualizer } from './region.visualizer';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -37,7 +34,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
 		const id = UUID.UUID();
-		const featureJson = region.type === "Point" ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
+		const featureJson = region.type === 'Point' ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
 		const entities = [{ id, featureJson }];
 		return this.setEntities(entities);
 	}

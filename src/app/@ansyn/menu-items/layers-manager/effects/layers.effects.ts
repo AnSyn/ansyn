@@ -15,19 +15,12 @@ import { mergeMap } from 'rxjs/operators';
 import { catchError, filter, map, withLatestFrom } from 'rxjs/internal/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
-import { selectAutoSave } from '@ansyn/core/reducers/core.reducer';
-import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
+import { rxPreventCrash, selectAutoSave } from '@ansyn/core';
 
 
 @Injectable()
 export class LayersEffects {
-	/**
-	 * @type Effect
-	 * @name beginLayerTreeLoad$
-	 * @ofType BeginLayerCollectionLoadAction
-	 * @dependencies layers
-	 * @action LayerCollectionLoadedAction?, ErrorLoadingLayersAction?
-	 */
+
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.pipe(
@@ -51,7 +44,7 @@ export class LayersEffects {
 	);
 
 	@Effect({ dispatch: false })
-	addLayer$ = this.actions$.pipe(
+	addLayer$: Observable<any> = this.actions$.pipe(
 		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
@@ -60,7 +53,7 @@ export class LayersEffects {
 	);
 
 	@Effect({ dispatch: false })
-	updateLayer$ = this.actions$.pipe(
+	updateLayer$: Observable<any> = this.actions$.pipe(
 		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
@@ -76,7 +69,7 @@ export class LayersEffects {
 		ofType<UpdateLayer>(LayersActionTypes.REMOVE_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.removeLayer(action.payload)
+		mergeMap(([action]: [any, boolean]) => this.dataLayersService.removeLayer(action.payload)
 			.pipe(
 				catchError(() => EMPTY)
 			)

@@ -1,25 +1,23 @@
 import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	ICasesState,
 	ILayerState,
+	initialCasesState,
 	initialLayersState,
 	layersFeatureKey,
 	LayersReducer,
 	layersStateSelector
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+} from '@ansyn/menu-items';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	casesStateSelector,
-	ICasesState,
-	initialCasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cloneDeep } from 'lodash';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IAppState } from '../app.effects.module';
 
 describe('LayersAppEffects', () => {
@@ -52,8 +50,7 @@ describe('LayersAppEffects', () => {
 		]);
 		casesState.selectedCase = <any> {
 			state: {
-				layers: {
-				}
+				layers: {}
 			}
 		};
 		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));

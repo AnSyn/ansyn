@@ -4,31 +4,32 @@ import { InjectionToken, NgModule, NgModuleRef, Provider } from '@angular/core';
 import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { getProviders } from '@ansyn/ansyn/app-providers/fetch-config-providers';
-import { ContextService } from '@ansyn/context/services/context.service';
+import { getProviders } from '@ansyn/ansyn';
+import { ContextService } from '@ansyn/context';
 import { Observable } from 'rxjs';
-import { DataLayersService } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { AppProvidersModule } from '@ansyn/ansyn/app-providers/app-providers.module';
-import { AnsynPluginsModule } from '@ansyn/plugins/ansyn-plugins.module';
+import { DataLayersService } from '@ansyn/menu-items';
+import { AppProvidersModule } from '@ansyn/ansyn';
+import { AnsynPluginsModule } from '@ansyn/plugins';
 import { CommonModule } from '@angular/common';
-import { ToolsModule } from '@ansyn/menu-items/tools/tools.module';
-import { AlertsModule } from '@ansyn/core/alerts/alerts.module';
+import { ToolsModule } from '@ansyn/menu-items';
+import { AlertsModule } from '@ansyn/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MapFacadeModule } from '@ansyn/map-facade/map-facade.module';
+import { MapFacadeModule } from '@ansyn/map-facade';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { FiltersModule } from '@ansyn/menu-items/filters/filters.module';
-import { StatusBarModule } from '@ansyn/status-bar/status-bar.module';
-import { AppEffectsModule } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { CoreModule } from '@ansyn/core/core.module';
-import { OverlaysModule } from '@ansyn/overlays/overlays.module';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { ansynAlerts } from '@ansyn/ansyn/ansyn-alerts';
-import { LayersManagerModule } from '@ansyn/menu-items/layers-manager/layers-manager.module';
+import { FiltersModule } from '@ansyn/menu-items';
+import { StatusBarModule } from '@ansyn/status-bar';
+import { AppEffectsModule } from '@ansyn/ansyn';
+import { CoreModule } from '@ansyn/core';
+import { OverlaysModule } from '@ansyn/overlays';
+import { ImageryModule } from '@ansyn/imagery';
+import { LayersManagerModule } from '@ansyn/menu-items';
 import { IWindowLayout } from '../reducers/builder.reducer';
 import { AnsynApi } from './ansyn-api.service';
 import { buildAnsynCustomComponent } from '../dynamic-ansyn/bootstrap/ansyn.bootstrap.component';
 import { AnsynBuilderModule } from './ansyn-builder.module';
+import { ansynConfig } from '@ansyn/ansyn';
+import { ContextAppEffects } from '@ansyn/ansyn';
 
 export interface IAnsynBuilderOptions {
 	providers?: any[];
@@ -44,7 +45,7 @@ export interface IAnsynBuilderConstructor {
 	options: IAnsynBuilderOptions;
 	callback: any;
 }
-
+// @dynamic
 export class AnsynBuilder {
 	static Providers = { ContextService };
 
@@ -109,7 +110,7 @@ export class AnsynBuilder {
 				BrowserAnimationsModule,
 				AnsynPluginsModule,
 				CoreModule,
-				AlertsModule.provideAlerts(ansynAlerts),
+				AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 				AppEffectsModule,
 				MapFacadeModule,
 				ImageryModule,
@@ -124,7 +125,8 @@ export class AnsynBuilder {
 				...configProviders,
 				customProviders,
 				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
-				{ provide: DataLayersService, useClass: BuilderDataLayersService }
+				{ provide: DataLayersService, useClass: BuilderDataLayersService },
+				{ provide: ContextAppEffects, useClass: class Empty {} }
 			],
 			declarations: [AnsynCustomComponenet],
 			bootstrap: [AnsynCustomComponenet],

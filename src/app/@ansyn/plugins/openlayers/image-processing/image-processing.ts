@@ -1,4 +1,3 @@
-
 import { ProjectableRaster } from '../open-layers-map/models/projectable-raster';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)

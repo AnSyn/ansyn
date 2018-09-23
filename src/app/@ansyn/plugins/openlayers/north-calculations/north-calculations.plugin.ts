@@ -1,28 +1,41 @@
-import { toDegrees } from '@ansyn/core/utils/math';
-import { forkJoin, Observable, of, throwError } from 'rxjs';
+import {
+	areCoordinatesNumeric,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseOrientation,
+	CoreActionTypes,
+	IOverlay,
+	LoggerService,
+	toDegrees
+} from '@ansyn/core';
+import { Observable } from 'rxjs';
+import 'rxjs/add/observable/forkJoin';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions } from '@ngrx/effects';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { Store } from '@ngrx/store';
-import { Observer } from 'rxjs';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseOrientation } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
+import {
+	ChangeOverlayPreviewRotationAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	selectHoveredOverlay
+} from '@ansyn/overlays';
+import { select, Store } from '@ngrx/store';
+import 'rxjs/add/operator/retry';
+import { Observer } from 'rxjs/Observer';
+import {
+	BaseImageryMap,
+	BaseImageryPlugin,
+	CommunicatorEntity,
+	ImageryPlugin,
+	ProjectionService
+} from '@ansyn/imagery';
+import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
+import { selectActiveMapId, SetIsVisibleAcion } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
-import { catchError, mergeMap, tap } from 'rxjs/operators';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
+import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { of } from 'rxjs/internal/observable/of';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -40,6 +53,19 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
+
+	@AutoSubscription
+	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
+		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
+		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(overlay) && Boolean(this.communicator) && activeMapId === this.mapId),
+		mergeMap(([{ projection }]: [IOverlay, string]) => {
+			return this.getPreviewNorth(projection)
+				.pipe(
+					catchError(() => of(0))
+				);
+		}),
+		tap((north: number) => this.store$.dispatch(new ChangeOverlayPreviewRotationAction(north)))
+	);
 
 	@AutoSubscription
 	pointNorth$ = this.actions$
@@ -89,6 +115,17 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		super();
 	}
 
+	getPreviewNorth(projection: string) {
+		return this.getProjectedCenters(projection).pipe(
+			map((projectedCenters: Point[]): number => {
+				const projectedCenterView = projectedCenters[0].coordinates;
+				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
+				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
+				return northOffsetRad * -1;
+			})
+		);
+	}
+
 	getCorrectedNorth(): Observable<INorthData> {
 		return this.getProjectedCenters()
 			.map((projectedCenters: Point[]): INorthData => {
@@ -112,14 +149,17 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			.catch((e) => e.result ? of(e.result) : throwError(e));
 	}
 
-	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
-		return forkJoin(coordinates.map((coordinate) => {
+	projectPoints(coordinates: ol.Coordinate[], projection?: string): Observable<Point[] | any> {
+		return Observable.forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
+			if (projection) {
+				return this.projectionService.projectApproximatelyFromProjection(point, projection);
+			}
 			return this.projectionService.projectAccurately(point, this.iMap);
 		}));
 	}
 
-	getProjectedCenters(): Observable<Point[]> {
+	getProjectedCenters(projection?: string): Observable<Point[]> {
 		return Observable.create((observer: Observer<any>) => {
 			const mapObject = this.iMap.mapObject;
 			const size = mapObject.getSize();
@@ -133,7 +173,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
+			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, projection));
 	}
 
 	pointNorth(): Observable<any> {

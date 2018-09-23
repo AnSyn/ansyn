@@ -11,9 +11,7 @@
 
 	div.context-menu-wrapper {
 		position: absolute;
-		display: flex;
 		pointer-events: none;
-		justify-content: center;
 		z-index: @z-index-annotation-cotext-menu;
 
 		div.context-menu {
@@ -78,9 +76,7 @@
 		}
 
 		form.annotation-label-edit {
-
-			width: 100%;
-			max-width: 250px;
+			width: 250px;
 			height: 32px;
 			position: absolute;
 			pointer-events: all;
@@ -90,6 +86,8 @@
 			color: black;
 			display: flex;
 			align-items: center;
+			left: 50%;
+			transform: translateX(-50%);
 			top: calc(~'100% + 20px');
 			display: flex;
 			flex-direction: row;

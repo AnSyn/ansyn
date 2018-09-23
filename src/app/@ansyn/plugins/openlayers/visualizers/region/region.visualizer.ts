@@ -1,21 +1,27 @@
-import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
 import * as turf from '@turf/turf';
-import { combineLatest, EMPTY, Observable } from 'rxjs';
+import { combineLatest, empty, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { Actions } from '@ngrx/effects';
+import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
+import { ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/draw';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { selectRegion } from '@ansyn/core/reducers/core.reducer';
-import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
-import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { SetOverlaysCriteriaAction, SetToastMessageAction } from '@ansyn/core/actions/core.actions';
-import { selectGeoFilterIndicator, selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import {
+	CaseGeoFilter,
+	CaseRegionState,
+	selectRegion,
+	SetOverlaysCriteriaAction,
+	SetToastMessageAction
+} from '@ansyn/core';
+import {
+	SearchModeEnum,
+	selectGeoFilterIndicator,
+	selectGeoFilterSearchMode,
+	UpdateGeoFilterStatus
+} from '@ansyn/status-bar';
 import { AutoSubscription } from 'auto-subscriptions';
+import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { EntitiesVisualizer } from '../entities-visualizer';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -50,21 +56,22 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 
 	@AutoSubscription
-	onContextMenu$: Observable<any> = this.actions$
-		.ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU)
-		.withLatestFrom(this.isActiveGeoFilter$)
-		.filter(([action, isActiveGeoFilter]: [ContextMenuTriggerAction, boolean]) => isActiveGeoFilter)
-		.map(([{ payload }]) => payload)
-		.do(this.onContextMenu.bind(this));
+	onContextMenu$: Observable<any> = this.actions$.pipe(
+		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
+		withLatestFrom(this.isActiveGeoFilter$),
+		filter(([action, isActiveGeoFilter]) => isActiveGeoFilter),
+		map(([{ payload }]) => payload),
+		tap(this.onContextMenu.bind(this))
+	);
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = combineLatest(this.onSearchMode$, this.isActiveMap$)
-		.do(this.interactionChanges.bind(this));
+	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$).pipe(
+		tap(this.interactionChanges.bind(this))
+	);
 
 	@AutoSubscription
-	drawChanges$ = Observable
-		.combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$)
-		.mergeMap(this.drawChanges.bind(this));
+	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$).pipe(
+		mergeMap(this.drawChanges.bind(this)));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
@@ -86,9 +93,9 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new UpdateGeoFilterStatus());
 
 		this.projectionService
-			.projectCollectionAccurately([feature], this.iMap)
-			.take(1)
-			.do((featureCollection: FeatureCollection<GeometryObject>) => {
+			.projectCollectionAccurately([feature], this.iMap).pipe(
+			take(1),
+			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
 				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
@@ -100,7 +107,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 					}));
 				}
 			})
-			.subscribe();
+		).subscribe();
 	}
 
 	createDrawInteraction() {

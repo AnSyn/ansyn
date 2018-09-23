@@ -1,23 +1,15 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import {
-	AnnotationSetProperties,
-	SetAnnotationMode
-} from '../../actions/tools.actions';
+import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import {
-	IToolsState, selectAnnotationMode, selectAnnotationProperties,
-	toolsStateSelector
-} from '../../reducers/tools.reducer';
-import { AnnotationMode } from '@ansyn/core/models/visualizers/annotations.model';
-import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
-import { selectActiveAnnotationLayer, selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { distinctUntilChanged, map, tap } from 'rxjs/operators';
-import { SetActiveAnnotationLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
+import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
+import { AnnotationMode, ClearActiveInteractionsAction, IVisualizerStyle } from '@ansyn/core';
+import { map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { IVisualizerStyle } from '@ansyn/core/models/visualizers/visualizer-style';
+import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
+import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
 
 export interface IModeList {
 	mode: AnnotationMode;
@@ -45,6 +37,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;
+
 	get SelectionBoxTypes() {
 		return SelectionBoxTypes;
 	}
@@ -121,7 +114,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	setAnnotationMode(mode?: AnnotationMode) {
 		const dispatchValue = this.mode === mode ? undefined : mode;
 		if (dispatchValue) {
-			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode]}));
+			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 		}
 		this.store.dispatch(new SetAnnotationMode(dispatchValue));
 	}

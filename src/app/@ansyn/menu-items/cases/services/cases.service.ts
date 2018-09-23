@@ -1,20 +1,34 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { EMPTY, Observable, of } from 'rxjs';
-import { ICase } from '../models/case.model';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/observable/of';
+import {
+	ErrorHandlerService,
+	ICase,
+	ICasePreview,
+	ICaseState,
+	ICaseTimeState,
+	IContextEntity,
+	IDilutedCaseState,
+	IStoredEntity,
+	StorageService
+} from '@ansyn/core';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
-import * as moment from 'moment';
-import { StorageService, IStoredEntity } from '@ansyn/core/services/storage/storage.service';
-import { ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState, IContextEntity } from '@ansyn/core/models/case.model';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
 import { cloneDeep } from 'lodash';
-import { catchError, map, mergeMap, debounceTime } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+/* Do not change this ( rollup issue ) */
+import * as momentNs from 'moment';
 
+const moment = momentNs;
 
 export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
 
+// @dynamic
 @Injectable()
 export class CasesService {
 	static defaultTime: ICaseTimeState = {
@@ -45,7 +59,7 @@ export class CasesService {
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
-			)
+			);
 	}
 
 	parseCasePreview(casePreview: ICasePreview): ICasePreview {
@@ -142,7 +156,7 @@ export class CasesService {
 			.pipe<any>(
 				map(_ => selectedCase),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
-			)
+			);
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {

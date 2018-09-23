@@ -1,26 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NorthCalculationsPlugin } from '@ansyn/plugins/openlayers/north-calculations/north-calculations.plugin';
-import { ImageProcessingPlugin } from '@ansyn/plugins/openlayers/image-processing/image-processing.plugin';
-import { MonitorPlugin } from '@ansyn/plugins/openlayers/monitor/monitor.plugin';
-import { CenterMarkerPlugin } from '@ansyn/plugins/openlayers/center-marker/center-marker.plugin';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
-import { ContextMenuPlugin } from '@ansyn/plugins/openlayers/context-menu/context-menu.plugin';
-import { AnnotationsVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/annotations.visualizer';
-import { PolygonSearchVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/polygon-search.visualizer';
-import { GoToVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/goto.visualizer';
-import { ContextEntityVisualizer } from '@ansyn/plugins/openlayers/visualizers/contexts/context-entity.visualizer';
-import { MouseShadowVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/mouse-shadow.visualizer';
-import { FootprintPolylineVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/polyline-visualizer';
-import { PinPointVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/pin-point.visualizer';
-import { MeasureDistanceVisualizer } from '@ansyn/plugins/openlayers/visualizers/tools/measure-distance.visualizer';
-import { FrameVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/frame-visualizer';
-import { FootprintHeatmapVisualizer } from '@ansyn/plugins/openlayers/visualizers/overlays/heatmap-visualizer';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { CesiumMap } from '@ansyn/plugins/cesium/cesium-map/cesium-map';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenlayersGeoJsonLayersVisualizer } from '@ansyn/plugins/openlayers/layers/openlayers-geoJson-layers.visualizer';
-import { OpenlayersOsmLayersPlugin } from '@ansyn/plugins/openlayers/layers/openlayers-osm-layers.plugin';
+import { ImageryModule } from '@ansyn/imagery';
+import { NorthCalculationsPlugin } from './openlayers/north-calculations/north-calculations.plugin';
+import { OpenlayersOsmLayersPlugin } from './openlayers/layers/openlayers-osm-layers.plugin';
+import { CenterMarkerPlugin } from './openlayers/center-marker/center-marker.plugin';
+import { ImageProcessingPlugin } from './openlayers/image-processing/image-processing.plugin';
+import { ContextMenuPlugin } from './openlayers/context-menu/context-menu.plugin';
+import { MonitorPlugin } from './openlayers/monitor/monitor.plugin';
+import { FrameVisualizer } from './openlayers/visualizers/overlays/frame-visualizer';
+import { MeasureDistanceVisualizer } from './openlayers/visualizers/tools/measure-distance.visualizer';
+import { AnnotationsVisualizer } from './openlayers/visualizers/tools/annotations.visualizer';
+import { ContextEntityVisualizer } from './openlayers/visualizers/contexts/context-entity.visualizer';
+import { FootprintPolylineVisualizer } from './openlayers/visualizers/overlays/polyline-visualizer';
+import { FootprintHeatmapVisualizer } from './openlayers/visualizers/overlays/heatmap-visualizer';
+import { GoToVisualizer } from './openlayers/visualizers/tools/goto.visualizer';
+import { PinPointVisualizer } from './openlayers/visualizers/region/pin-point.visualizer';
+import { OpenLayersMap } from './openlayers/open-layers-map/openlayers-map/openlayers-map';
+import { CesiumMap } from './cesium/cesium-map/cesium-map';
+import { OpenLayersDisabledMap } from './openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersGeoJsonLayersVisualizer } from './openlayers/layers/openlayers-geoJson-layers.visualizer';
+import { PolygonSearchVisualizer } from './openlayers/visualizers/region/polygon-search.visualizer';
+import { MouseShadowVisualizer } from './openlayers/visualizers/tools/mouse-shadow.visualizer';
 
 @NgModule({
 	imports: [

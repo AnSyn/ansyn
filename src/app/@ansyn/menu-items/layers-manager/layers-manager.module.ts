@@ -8,7 +8,7 @@ import { LayersManagerComponent } from './components/layers-manager/layers-manag
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
 import { LayerCollectionComponent } from './components/layers-collection/layer-collection.component';
-import { CoreModule } from '@ansyn/core/core.module';
+import { CoreModule } from '@ansyn/core';
 import { DownloadLayersComponent } from './components/data-layers-modals/download-layers/download-layers.component';
 import { LayerComponent } from './components/layer/layer.component';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { EditLayerComponent } from './components/data-layers-modals/edit-layer/e
 import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 
+// @dynamic
 @NgModule({
 	imports: [
 		CoreModule,

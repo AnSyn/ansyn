@@ -1,5 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryVisualizer, IVisualizersConfig, VisualizerInteractions, VisualizersConfig } from '@ansyn/imagery';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
 import olMultiLineString from 'ol/geom/multilinestring';
@@ -11,32 +11,28 @@ import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { Inject } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery/model/visualizers-config.token';
 import { select, Store } from '@ngrx/store';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
 import {
+	DisplayOverlayFromStoreAction,
+	ExtendMap,
 	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
+	OverlaysService,
 	overlaysStateSelector,
 	selectFilteredOveralys,
-	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
-import { ExtendMap } from '@ansyn/overlays/reducers/extendedMap.class';
+	selectOverlaysMap,
+	SetMarkUp
+} from '@ansyn/overlays';
+import { ICaseMapState, IOverlay, IVisualizerEntity, VisualizerStates } from '@ansyn/core';
 import { MultiLineString } from 'geojson';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { AutoSubscription } from 'auto-subscriptions';
+import * as turf from '@turf/turf';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -103,6 +99,11 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				'stroke': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
 			}
 		});
+	}
+
+	geometryToEntity(id, footprint) {
+		const fp = turf.simplify(turf.multiPolygon(footprint.coordinates), { tolerance: 0.01, highQuality: true });
+		return super.geometryToEntity(id, fp.geometry);
 	}
 
 	protected initLayers() {
@@ -253,7 +254,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 
 	protected createHoverLayer() {
 		if (this.hoverLayer) {
-			this.iMap.mapObject.removeLayer(this.hoverLayer);
+			this.iMap.removeLayer(this.hoverLayer);
 		}
 
 		this.hoverLayer = new VectorLayer({
@@ -261,7 +262,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 			style: (feature: Feature) => this.featureStyle(feature, VisualizerStates.HOVER)
 		});
 
-		this.iMap.mapObject.addLayer(this.hoverLayer);
+		this.iMap.addLayer(this.hoverLayer);
 	}
 
 

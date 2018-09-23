@@ -9,9 +9,9 @@
 	</div>
 </div>
 
-<div  class="img-container"
-	  [attr.tooltip-value]="geoRegiteredProperties.tooltip"
-	  tooltip-class="bottom left">
+<div class="img-container"
+	 [attr.tooltip-value]="geoRegiteredProperties.tooltip"
+	 tooltip-class="bottom left">
 	<img [src]="geoRegiteredProperties.compass"
 		 (click)="toggleNorth()"
 		 (mousedown)="stopPropagation($event)"

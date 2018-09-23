@@ -9,9 +9,9 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
-import { selectActiveAnnotationLayer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
+import { ClearActiveInteractionsAction } from '@ansyn/core';
 import { map } from 'rxjs/internal/operators';
+import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -35,7 +35,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		.do(this.closeManualProcessingMenu.bind(this));
 
 	isActiveAnnotationLayer$ = this.store.select(selectActiveAnnotationLayer).pipe(
-		map(Boolean),
+		map(Boolean)
 	);
 
 	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);

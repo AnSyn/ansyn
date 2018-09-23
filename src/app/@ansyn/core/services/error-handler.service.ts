@@ -15,7 +15,7 @@ export class ErrorHandlerService {
 		let errMsg = error.message ? error.message : error.toString();
 		this.loggerService.error(errMsg);
 		this.store.dispatch(new SetToastMessageAction({
-			toastText: toastMessage || "Connection Problem",
+			toastText: toastMessage || 'Connection Problem',
 			showWarningIcon: true
 		}));
 		return throwError(errMsg);

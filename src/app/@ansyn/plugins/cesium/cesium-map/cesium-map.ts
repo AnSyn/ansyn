@@ -1,10 +1,11 @@
 import { GeoJsonObject, Point } from 'geojson';
-import { Observable, of, throwError } from 'rxjs';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import { Observable } from 'rxjs';
+import { ICaseMapPosition } from '@ansyn/core';
+import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
+
 export const CesiumMapName = 'cesium';
 
+// @dynamic
 @ImageryMap({
 	mapType: CesiumMapName
 })
@@ -83,6 +84,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	addLayerIfNotExist() {
 
 	}
+
 	getRotation(): number {
 		return NaN;
 	}

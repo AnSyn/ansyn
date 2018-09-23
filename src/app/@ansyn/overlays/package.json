@@ -1,16 +1,9 @@
 {
 	"name": "@ansyn/overlays",
-	"version": "0.2.81",
-	"description": "overlays component to show data with graphic touch",
-	"main": "index.ts",
-	"scripts": {
-		"test": "npm test"
-	},
-	"author": "",
-	"license": "MIT",
+	"version": "0.2.81.8",
 	"peerDependencies": {
-		"@ansyn/core": "0.2.81",
-		"ansyn-event-drops": "0.4.12"
+		"@angular/common": "^6.0.3",
+		"@angular/core": "^6.0.3"
 	},
-	"typings": "index.d.ts"
+	"license": "MIT"
 }

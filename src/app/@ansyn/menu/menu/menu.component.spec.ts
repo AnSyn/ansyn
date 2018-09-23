@@ -4,8 +4,8 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reducer';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerChangedTriggerAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
-import { MenuConfig } from '@ansyn/menu/models/menuConfig';
-import { IMenuItem } from '@ansyn/menu/models/menu-item.model';
+import { MenuConfig } from '../models/menuConfig';
+import { IMenuItem } from '../models/menu-item.model';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -17,7 +17,7 @@ describe('MenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer })],
 			declarations: [MenuComponent],
-			providers: [ {provide: MenuConfig, useValue: {}} ]
+			providers: [{ provide: MenuConfig, useValue: {} }]
 		}).compileComponents();
 	}));
 

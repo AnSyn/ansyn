@@ -1,47 +1,40 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
+import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
 import {
 	IGeoFilterStatus,
 	IStatusBarState,
 	selectComboBoxesProperties,
 	selectGeoFilterStatus
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+} from '../../reducers/status-bar.reducer';
+import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import {
-	IComboBoxesProperties,
-	GEO_FILTERS,
-	ORIENTATIONS,
-	TIME_FILTERS
-} from '@ansyn/status-bar/models/combo-boxes.model';
-import {
-	CoreActionTypes,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction,
-	UpdateOverlaysCountAction
-} from '@ansyn/core/actions/core.actions';
-import {
-	ICaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	ICaseTimeState
-} from '@ansyn/core/models/case.model';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { IOverlay, IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import {
+	CoreActionTypes,
+	ICaseDataInputFiltersState,
+	ICaseTimeState,
+	IOverlay,
+	IOverlaysCriteria,
+	LayoutKey,
+	layoutOptions,
 	selectDataInputFilter,
 	selectLayout,
 	selectOverlaysCriteria,
-	selectRegion
-} from '@ansyn/core/reducers/core.reducer';
-import { CaseDataFilterTitle } from '@ansyn/status-bar/models/data-input-filters.model';
+	selectRegion,
+	SetLayoutAction,
+	SetOverlaysCriteriaAction,
+	UpdateOverlaysCountAction
+} from '@ansyn/core';
+import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';
-import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [

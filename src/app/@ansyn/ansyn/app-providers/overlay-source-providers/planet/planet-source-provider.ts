@@ -1,24 +1,26 @@
-import { Observable, throwError } from 'rxjs';
-import {
-	BaseOverlaySourceProvider,
-	IFetchParams,
-	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { Observable } from 'rxjs';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from '@ansyn/core/utils/geo';
-import { limitArray } from '@ansyn/core/utils/i-limited-array';
-import { toRadians } from '@ansyn/core/utils/math';
+import {
+	ErrorHandlerService,
+	geojsonMultiPolygonToPolygon,
+	geojsonPolygonToMultiPolygon,
+	IDataInputFilterValue,
+	IOverlay,
+	limitArray,
+	LoggerService,
+	sortByDateDesc,
+	toRadians
+} from '@ansyn/core';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import * as moment from 'moment';
-import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
-import { forkJoin } from 'rxjs';
-import { catchError, map } from 'rxjs/internal/operators';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { map } from 'rxjs/internal/operators';
+/* Do not change this ( rollup issue ) */
+import * as momentNs from 'moment';
+
+const moment = momentNs;
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
@@ -180,7 +182,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			}));
 	}
 
-	private _getBboxFilter(region: {type}): {type; field_name; config} {
+	private _getBboxFilter(region: { type }): { type; field_name; config } {
 		let fetchRegion = region;
 		if (fetchRegion.type === 'MultiPolygon') {
 			fetchRegion = geojsonMultiPolygonToPolygon(fetchRegion as GeoJSON.MultiPolygon);
@@ -260,8 +262,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				return this.errorHandlerService.httpErrorHandle(error);
 			}));
 
-		return forkJoin(startDate$, endDate$).pipe(
-			map(([start, end]: [Date, Date]) => ({startDate: start.toISOString(), endDate: end.toString()})));
+		return forkJoin(startDate$, endDate$)
+			.map(([start, end]: [Date, Date]) => ({ startDate: start.toISOString(), endDate: end.toString() }));
 	}
 
 	private extractArrayData(overlays: PlanetOverlay[]): IOverlay[] {
@@ -297,7 +299,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
 		overlay.tag = element;
-
+		overlay.projection = 'EPSG:3857';
 		return overlay;
 	}
 }

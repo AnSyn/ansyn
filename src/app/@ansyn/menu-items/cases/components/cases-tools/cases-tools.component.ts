@@ -3,13 +3,12 @@ import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { SaveCaseComponent } from '../save-case/save-case.component';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
-import { OpenModalAction } from '../../actions/cases.actions';
-import { ManualSaveAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Observable } from 'rxjs';
+import { ManualSaveAction, OpenModalAction } from '../../actions/cases.actions';
+import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/internal/operators';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get } from 'lodash';
+import { CasesService } from '../../services/cases.service';
 
 @Component({
 	selector: 'ansyn-cases-tools',

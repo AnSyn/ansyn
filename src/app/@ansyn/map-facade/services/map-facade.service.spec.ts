@@ -2,8 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { MapFacadeService } from './map-facade.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMapState, mapFeatureKey, MapReducer } from '../reducers/map.reducer';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
+import { ImageryCommunicatorService, ImageryModule } from '@ansyn/imagery';
 
 describe('MapFacadeService', () => {
 	let service: MapFacadeService;

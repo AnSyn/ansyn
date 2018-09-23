@@ -57,7 +57,7 @@ document.write(`<div class="skeleton-wrapper">
 window.onerror = function (e) {
 	const text = document.querySelector('.skeleton-text');
 	// In case there was a fatal error, show it on the loading screen
-	if(text) {
+	if (text) {
 		text.innerText = 'Error'
 	}
 };

@@ -1,4 +1,4 @@
-import { CaseGeoFilter, CaseOrientation, CaseTimeFilter } from '@ansyn/core/models/case.model';
+import { CaseGeoFilter, CaseOrientation, CaseTimeFilter } from '@ansyn/core';
 import { InjectionToken } from '@angular/core';
 
 export const timeFilters: CaseTimeFilter[] = ['Start - End'];

@@ -3,9 +3,13 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import {
+	CasesActionTypes,
 	DisableImageProcessing,
 	EnableImageProcessing,
 	GoToAction,
+	IImageProcParam,
+	IToolsConfig,
+	IToolsState,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
@@ -17,33 +21,37 @@ import {
 	ShowOverlaysFootprintAction,
 	StopMouseShadow,
 	ToolsActionsTypes,
+	toolsConfig,
+	toolsFlags,
+	toolsStateSelector,
 	UpdateToolsFlags
-} from '@ansyn/menu-items/tools/actions/tools.actions';
-import { CasesActionTypes } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
+} from '@ansyn/menu-items';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import 'rxjs/add/operator/withLatestFrom';
 import {
+	IMapState,
 	MapActionTypes,
-	PinLocationModeTriggerAction
-} from '@ansyn/map-facade/actions/map.actions';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '@ansyn/core/models/case.model';
-import { Point } from 'geojson';
-import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu/actions/menu.actions';
-import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+	MapFacadeService,
+	mapStateSelector,
+	PinLocationModeTriggerAction,
+	selectActiveMapId,
+	selectMapsList
+} from '@ansyn/map-facade';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import {
+	CaseGeoFilter,
 	ClearActiveInteractionsAction,
 	CoreActionTypes,
+	ICaseMapState,
+	ImageManualProcessArgs,
 	SetMapsDataActionStore
-} from '@ansyn/core/actions/core.actions';
-import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
+} from '@ansyn/core';
+import { Point } from 'geojson';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
+import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { differenceWith, isEqual } from 'lodash';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
+import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
+import { IAppState } from '../app.effects.module';
 
 
 @Injectable()
@@ -67,14 +75,6 @@ export class ToolsAppEffects {
 		}, {});
 	}
 
-	/**
-	 * @type Effect
-	 * @name drawInterrupted$
-	 * @ofType Action
-	 * @dependencies map
-	 * @filter check if polygon draw interrupted
-	 * @action UpdateStatusFlagsAction?
-	 */
 	@Effect()
 	drawInterrupted$: Observable<any> = this.actions$.pipe(
 		ofType<Action>(
@@ -87,13 +87,6 @@ export class ToolsAppEffects {
 		map(() => new UpdateGeoFilterStatus())
 	);
 
-	/**
-	 * @type Effect
-	 * @name onActiveMapChangesSetOverlaysFootprintMode$
-	 * @ofType ActiveMapChangedAction
-	 * @dependencies map
-	 * @action SetActiveOverlaysFootprintModeAction
-	 */
 	@Effect()
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED),
@@ -108,12 +101,6 @@ export class ToolsAppEffects {
 	);
 
 
-	/**
-	 * @type Effect
-	 * @name onShowOverlayFootprint$
-	 * @ofType ShowOverlaysFootprintAction
-	 * @action SetActiveOverlaysFootprintModeAction
-	 */
 	@Effect()
 	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
 		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
@@ -150,12 +137,6 @@ export class ToolsAppEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name backToWorldView$
-	 * @ofType BackToWorldAction
-	 * @action DisableImageProcessing
-	 */
 	@Effect()
 	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
@@ -165,24 +146,11 @@ export class ToolsAppEffects {
 			map(() => new DisableImageProcessing())
 		);
 
-	/**
-	 * @type Effect
-	 * @name onSelectCase$
-	 * @ofType SelectCaseAction
-	 * @action DisableImageProcessing
-	 */
 	@Effect()
 	onSelectCase$: Observable<DisableImageProcessing> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE),
 		map(() => new DisableImageProcessing()));
 
-	/**
-	 * @type Effect
-	 * @name toggleAutoImageProcessing$
-	 * @ofType SetAutoImageProcessing
-	 * @dependencies map
-	 * @action SetMapAutoImageProcessing, SetMapsDataActionStore, SetAutoImageProcessingSuccess
-	 */
 	@Effect()
 	toggleAutoImageProcessing$: Observable<any> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING),
@@ -197,14 +165,6 @@ export class ToolsAppEffects {
 		})
 	)
 
-	/**
-	 * @type Effect
-	 * @name getActiveCenter$
-	 * @ofType PullActiveCenter
-	 * @dependencies map
-	 * @filter There is a map communicator
-	 * @action SetActiveCenter
-	 */
 	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER),
@@ -213,14 +173,6 @@ export class ToolsAppEffects {
 		mergeMap((communicator: CommunicatorEntity) => communicator.getCenter()),
 		map((activeMapCenter: Point) => new SetActiveCenter(activeMapCenter.coordinates)));
 
-	/**
-	 * @type Effect
-	 * @name onGoTo$
-	 * @ofType GoToAction
-	 * @dependencies map
-	 * @filter There is a map communicator
-	 * @action SetActiveCenter
-	 */
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType<GoToAction>(ToolsActionsTypes.GO_TO),
@@ -241,23 +193,11 @@ export class ToolsAppEffects {
 		}),
 		map(({ action, communicator }) => new SetActiveCenter(action.payload)));
 
-	/**
-	 * @type Effect
-	 * @name updatePinLocationState$
-	 * @ofType SetPinLocationModeAction
-	 * @action PinLocationModeTriggerAction
-	 */
 	@Effect()
 	updatePinLocationState$: Observable<PinLocationModeTriggerAction> = this.actions$.pipe(
 		ofType<SetPinLocationModeAction>(ToolsActionsTypes.SET_PIN_LOCATION_MODE),
 		map(({ payload }) => new PinLocationModeTriggerAction(payload)));
 
-	/**
-	 * @type Effect
-	 * @name onLayoutsChangeSetMouseShadowEnable$
-	 * @ofType SetLayoutAction
-	 * @action DisableMouseShadow?, StopMouseShadow?, EnableMouseShadow?
-	 */
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = combineLatest(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId)).pipe(
 		mergeMap(([mapsList, activeMapId]) => {
@@ -273,13 +213,6 @@ export class ToolsAppEffects {
 			return [new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }])];
 		}));
 
-	/**
-	 * @type Effect
-	 * @name updateCaseFromTools$
-	 * @ofType ShowOverlaysFootprintAction
-	 * @dependencies map
-	 * @action SetMapsDataActionStore, DrawOverlaysOnMapTriggerAction
-	 */
 	@Effect()
 	updateCaseFromTools$: Observable<any> = this.actions$
 		.pipe(
@@ -294,12 +227,6 @@ export class ToolsAppEffects {
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name clearActiveInteractions$
-	 * @ofType ClearActiveInteractionsAction
-	 * @action SetMeasureDistanceToolState?, SetAnnotationMode?, UpdateStatusFlagsAction?, SetPinLocationModeAction?
-	 */
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
 		ofType<ClearActiveInteractionsAction>(CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS),

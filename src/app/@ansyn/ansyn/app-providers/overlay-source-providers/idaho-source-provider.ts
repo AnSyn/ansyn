@@ -2,20 +2,19 @@ import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
 import {
-	BaseOverlaySourceProvider, IFetchParams,
-	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { toRadians } from '@ansyn/core/utils/math';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { limitArray } from '@ansyn/core/utils/i-limited-array';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+	ErrorHandlerService,
+	geojsonMultiPolygonToPolygon,
+	getPolygonByPointAndRadius,
+	IOverlay,
+	IOverlaysFetchData,
+	limitArray,
+	LoggerService,
+	sortByDateDesc,
+	toRadians
+} from '@ansyn/core';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { catchError } from 'rxjs/internal/operators';
-import { map } from 'rxjs/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';

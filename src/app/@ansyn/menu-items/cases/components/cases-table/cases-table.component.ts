@@ -2,21 +2,20 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
-import {
-	CopyCaseLinkAction,
-	LoadCasesAction,
-	OpenModalAction,
-	LoadCaseAction
-} from '../../actions/cases.actions';
-import { getTimeFormat } from '@ansyn/core/utils/time';
+import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
+import { getTimeFormat, ICasePreview } from '@ansyn/core';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
-import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
+import {
+	casesStateSelector,
+	ICaseModal,
+	ICasesState,
+	selectCaseEntities,
+	selectCasesIds
+} from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { selectCasesIds, selectCaseEntities } from '../../reducers/cases.reducer';
+import 'rxjs/add/operator/distinctUntilChanged';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { ICaseModal } from '../../reducers/cases.reducer';
-import { ICasePreview } from '@ansyn/core/models/case.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
 

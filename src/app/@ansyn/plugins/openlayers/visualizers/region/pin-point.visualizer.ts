@@ -4,17 +4,12 @@ import Style from 'ol/style/style';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { RegionVisualizer } from '@ansyn/plugins/openlayers/visualizers/region/region.visualizer';
 import * as turf from '@turf/turf';
-import { getPointByGeometry } from '@ansyn/core/utils/geo';
+import { CaseGeoFilter, CaseRegionState, getPointByGeometry } from '@ansyn/core';
 import { Position } from 'geojson';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { CaseGeoFilter, CaseRegionState } from '@ansyn/core/models/case.model';
-import { SetOverlaysCriteriaAction } from '@ansyn/core/actions/core.actions';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
+import { RegionVisualizer } from './region.visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -50,8 +45,5 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(coordinates: Position): void {
-		const region = turf.geometry('Point', coordinates);
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: SearchModeEnum.none, indicator: true }));
-		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

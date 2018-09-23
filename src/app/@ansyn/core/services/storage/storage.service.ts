@@ -21,7 +21,8 @@ export interface IStoredEntity<P extends IEntity, D> {
 @Injectable()
 export class StorageService {
 	constructor(protected _http: HttpClient,
-				@Inject(CoreConfig) public config: ICoreConfig) {}
+				@Inject(CoreConfig) public config: ICoreConfig) {
+	}
 
 	private _buildSchemaUrl(schema: string) {
 		return `${this.config.storageService.baseUrl}/${schema}`;

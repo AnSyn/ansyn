@@ -13,7 +13,7 @@ export const ALERTS_COLLECTION = new InjectionToken<IAlert[][]>('AlertsCollectio
 
 export function alertsFactory(alertsCollections: IAlert[][] = []): IAlert[] {
 	const unique = new Map();
-	const alerts = alertsCollections.reduce((prev, next) =>  [...prev, ...next], []);
+	const alerts = alertsCollections.reduce((prev, next) => [...prev, ...next], []);
 	alerts.forEach((alert: IAlert) => unique.set(alert.key, alert));
 	return Array.from(unique.values());
 }

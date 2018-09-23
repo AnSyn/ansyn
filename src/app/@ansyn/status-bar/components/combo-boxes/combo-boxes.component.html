@@ -2,15 +2,15 @@
 
 	<!-- data input filter-->
 	<div class="combo-box-container block hidden-medium-resolution">
-			<ansyn-combo-box-trigger
-				#trigger
-				class="combo-box-width"
-				(click)="toggleDataInputFilterIcon()"
-				icon="icon-status-bar-input-data"
-				[isActive]="dataInputFilterExpand"
-				[comboBoxToolTipDescription]="toolTips.dataInputFilter"
-				[render]="dataInputFiltersTitle">
-			</ansyn-combo-box-trigger>
+		<ansyn-combo-box-trigger
+			#trigger
+			class="combo-box-width"
+			(click)="toggleDataInputFilterIcon()"
+			icon="icon-status-bar-input-data"
+			[isActive]="dataInputFilterExpand"
+			[comboBoxToolTipDescription]="toolTips.dataInputFilter"
+			[render]="dataInputFiltersTitle">
+		</ansyn-combo-box-trigger>
 
 		<ansyn-tree-view [@fade]
 						 *ngIf="dataInputFilterExpand"
@@ -18,7 +18,7 @@
 						 [trigger]="trigger.elementRef.nativeElement"
 
 						 (closeTreeView)="toggleDataInputFilterIcon()"
-						 class="ansyn-tree-view" ></ansyn-tree-view>
+						 class="ansyn-tree-view"></ansyn-tree-view>
 	</div>
 
 	<!-- Orientation -->

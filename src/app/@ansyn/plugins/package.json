@@ -1,9 +1,9 @@
 {
 	"name": "@ansyn/plugins",
-	"version": "0.2.81",
+	"version": "0.2.81.8",
 	"peerDependencies": {
-		"@ansyn/core": "0.2.81"
+		"@angular/common": "^6.0.3",
+		"@angular/core": "^6.0.3"
 	},
-	"typings": "index.d.ts",
 	"license": "MIT"
 }

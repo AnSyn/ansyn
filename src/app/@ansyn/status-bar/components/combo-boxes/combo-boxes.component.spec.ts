@@ -7,23 +7,31 @@ import { EffectsModule } from '@ngrx/effects';
 import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-timepicker.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { ClickOutsideDirective } from '@ansyn/core/directives/click-outside.directive';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { MockComponent } from '@ansyn/core/test/mock-component';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core/reducers/core.reducer';
+import { ClickOutsideDirective, coreFeatureKey, CoreReducer, MockComponent } from '@ansyn/core';
+import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
 	let fixture: ComponentFixture<ComboBoxesComponent>;
-	const mockComboBoxComponent = MockComponent({ selector: 'ansyn-combo-box', inputs: ['options', 'selected', 'renderFunction', 'comboBoxToolTipDescription'], outputs: ['comboBoxToolTipDescription', 'selectedChange'] });
+	const mockComboBoxComponent = MockComponent({
+		selector: 'ansyn-combo-box',
+		inputs: ['options', 'selected', 'renderFunction', 'comboBoxToolTipDescription'],
+		outputs: ['comboBoxToolTipDescription', 'selectedChange']
+	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
-	const ansynComboTrigger = MockComponent({ selector: 'ansyn-combo-box-trigger', inputs: ['isActive', 'comboBoxToolTipDescription', 'render'] });
+	const ansynComboTrigger = MockComponent({
+		selector: 'ansyn-combo-box-trigger',
+		inputs: ['isActive', 'comboBoxToolTipDescription', 'render']
+	});
 	let store: Store<IStatusBarState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ComboBoxesComponent, mockComboBoxComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
-			imports: [StoreModule.forRoot({ [coreFeatureKey]: CoreReducer, [statusBarFeatureKey]: StatusBarReducer }), EffectsModule.forRoot([])],
+			imports: [StoreModule.forRoot({
+				[coreFeatureKey]: CoreReducer,
+				[statusBarFeatureKey]: StatusBarReducer
+			}), EffectsModule.forRoot([])],
 			providers: [
 				{
 					provide: ORIENTATIONS,
@@ -40,7 +48,7 @@ describe('ComboBoxesComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
-				},
+				}
 			]
 		})
 			.compileComponents();

@@ -1,27 +1,32 @@
-import {
-	ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit,
-	ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { selection } from 'd3';
 import * as d3 from 'd3/build/d3';
 import eventDrops from '@ansyn/event-drops';
 import { OverlaysService } from '../../services/overlays.service';
 import {
-	IOverlaysState, MarkUpClass, IMarkUpData, MarkUpTypes, OverlayDrop, overlaysStateSelector, selectDropMarkup,
+	IMarkUpData,
+	IOverlaysState,
+	ITimelineRange,
+	MarkUpClass,
+	MarkUpTypes,
+	OverlayDrop,
+	selectDropMarkup,
 	selectDrops,
-	selectTimelineRange,
-	ITimelineRange
+	selectTimelineRange
 } from '../../reducers/overlays.reducer';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import {
-	DisplayOverlayFromStoreAction, OverlaysActionTypes, RedrawTimelineAction,
-	SetMarkUp, SetTimelineStateAction
+	DisplayOverlayFromStoreAction,
+	OverlaysActionTypes,
+	RedrawTimelineAction,
+	SetMarkUp,
+	SetTimelineStateAction
 } from '../../actions/overlays.actions';
 import { Subscription } from 'rxjs';
 import { schemeCategory10 } from 'd3-scale';
-import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
@@ -103,7 +108,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	private element: any;
 	private oldActiveId: string;
 
-	redraw$ = this.actions$
+	redraw$: Observable<any> = this.actions$
 		.pipe(
 			ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE),
 			withLatestFrom(this.store$.select(selectDrops)),
@@ -133,7 +138,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDrops),
 			distinctUntilChanged(isEqual),
-			tap(drops => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
+			tap((drops: any) => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
 			tap(drops => {
 				if (drops.length >= 1) {
 					this.configuration.range = this.overlaysService.getTimeRangeFromDrops(drops);
@@ -144,7 +149,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	private subscribers: Subscription[];
 
-	onResize$ = fromEvent(window, 'resize')
+	onResize$: Observable<any> = fromEvent(window, 'resize')
 		.pipe(
 			withLatestFrom(this.store$.select(selectDrops)),
 			tap(([event, drops]) => this.initEventDropsSequence(drops))

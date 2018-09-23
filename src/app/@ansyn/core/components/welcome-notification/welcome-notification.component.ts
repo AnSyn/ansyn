@@ -1,12 +1,4 @@
-import {
-	AfterViewInit,
-	Component,
-	ElementRef,
-	HostBinding,
-	HostListener,
-	Inject,
-	OnDestroy
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
@@ -31,7 +23,7 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 		.pipe(
 			take(1),
 			pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
-		)
+		);
 
 	// Make the DOM element focusable
 	@HostBinding('attr.tabindex')

@@ -6,55 +6,58 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
-	SetFilteredOverlaysAction,
-	SetHoveredOverlayAction
-} from '@ansyn/overlays/actions/overlays.actions';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import {
 	MarkUpClass,
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysInitialState,
+	OverlaysService,
 	overlaysStateSelector,
 	selectDropMarkup,
-	selectOverlaysMap
-} from '@ansyn/overlays/reducers/overlays.reducer';
-import { Observable, of } from 'rxjs';
+	selectOverlaysMap,
+	SetFilteredOverlaysAction,
+	SetHoveredOverlayAction
+} from '@ansyn/overlays';
+import { Observable } from 'rxjs';
 import {
+	casesFeatureKey,
+	CasesReducer,
+	CasesService,
+	casesStateSelector,
+	initialCasesState,
 	IToolsState,
 	toolsFeatureKey,
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
+} from '@ansyn/menu-items';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	casesStateSelector,
-	initialCasesState
-} from '@ansyn/menu-items/cases/reducers/cases.reducer';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { statusBarStateSelector } from '@ansyn/status-bar';
 
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { ICase } from '@ansyn/core/models/case.model';
-import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { RemovePendingOverlayAction, SetPendingOverlaysAction } from '@ansyn/map-facade/actions/map.actions';
-import { SetLayoutAction, SetLayoutSuccessAction } from '@ansyn/core/actions/core.actions';
-import { BaseMapSourceProvider } from '@ansyn/imagery/model/base-map-source-provider';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
+import {
+	coreInitialState,
+	coreStateSelector,
+	DisplayedOverlay,
+	ICase,
+	SetLayoutAction,
+	SetLayoutSuccessAction
+} from '@ansyn/core';
+import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import {
+	initialMapState,
+	mapFeatureKey,
+	MapReducer,
+	mapStateSelector,
+	RemovePendingOverlayAction,
+	SetPendingOverlaysAction
+} from '@ansyn/map-facade';
 import {
 	contextFeatureSelector,
 	contextInitialState,
-	selectContextsParams
-} from '@ansyn/context/reducers/context.reducer';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
-import { DisplayedOverlay } from '@ansyn/core/models/context.model';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
+	selectContextsParams,
+	SetContextParamsAction
+} from '@ansyn/context';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -109,12 +112,22 @@ describe('OverlaysAppEffects', () => {
 		}
 	} as any;
 
-	const firstOverlay = <any>{ id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z'), 'sourceType': 'FIRST', 'thumbnailUrl': 'http://first' };
-	const secondOverlay = <any> { id: 'last', 'photoTime': new Date(), 'sourceType': 'LAST', 'thumbnailUrl': 'http://last' };
+	const firstOverlay = <any>{
+		id: 'first',
+		'photoTime': new Date('2014-06-27T08:43:03.624Z'),
+		'sourceType': 'FIRST',
+		'thumbnailUrl': 'http://first'
+	};
+	const secondOverlay = <any> {
+		id: 'last',
+		'photoTime': new Date(),
+		'sourceType': 'LAST',
+		'thumbnailUrl': 'http://last'
+	};
 
 	const exampleOverlays: any = [
 		['first', firstOverlay],
-		['last', secondOverlay ]
+		['last', secondOverlay]
 	];
 
 	const toolsState: IToolsState = { ...toolsInitialState };
@@ -261,7 +274,10 @@ describe('OverlaysAppEffects', () => {
 
 		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--(bc)--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([{ overlay: firstOverlay, extent: undefined }, { overlay: secondOverlay, extent: undefined }]),
+			b: new DisplayMultipleOverlaysFromStoreAction([{
+				overlay: firstOverlay,
+				extent: undefined
+			}, { overlay: secondOverlay, extent: undefined }]),
 			c: new SetContextParamsAction({ defaultOverlay: null })
 		});
 		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
@@ -306,14 +322,16 @@ describe('OverlaysAppEffects', () => {
 		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction([{ overlay: firstOverlay }, { overlay: secondOverlay }]) });
 		const expectedResults = cold('--(bc)--', {
 			b: new DisplayOverlayAction({ overlay: firstOverlay, 'mapId': '1', extent: undefined }),
-			c: new DisplayOverlayAction({ overlay: secondOverlay, 'mapId': '2' , extent: undefined }),
+			c: new DisplayOverlayAction({ overlay: secondOverlay, 'mapId': '2', extent: undefined })
 		});
 		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
 	});
 
 	it(`displayMultipleOverlays$ effect with overlays count larger than map count
 	should call SetPendingOverlaysAction and ChangeLayoutAction`, () => {
-		const ov1 = <any> { overlay: { id: 'one' }, extent: undefined }, ov2 = <any> { overlay: { id: 'two' }, extent: undefined }, ov3 = <any> { overlay: { id: 'three' }, extent: undefined  };
+		const ov1 = <any> { overlay: { id: 'one' }, extent: undefined },
+			ov2 = <any> { overlay: { id: 'two' }, extent: undefined },
+			ov3 = <any> { overlay: { id: 'three' }, extent: undefined };
 		const payload = [ov1, ov2, ov3];
 		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(payload) });
 		const expectedResults = cold('--(bc)--', {
@@ -326,7 +344,7 @@ describe('OverlaysAppEffects', () => {
 	it(`displayPendingOverlaysOnChangeLayoutSuccess$ effect with overlays
 	should call DisplayOverlayFromStoreAction`, () => {
 		const ov1 = <any> { id: 'first' }, ov2 = <any> { id: 'first' };
-		mapState['pendingOverlays'] = [{ overlay: ov1 } , { overlay: ov2 }];
+		mapState['pendingOverlays'] = [{ overlay: ov1 }, { overlay: ov2 }];
 		actions = hot('--a--', { a: new SetLayoutSuccessAction() });
 		const expectedResults = cold('--(bc)--', {
 			b: new DisplayOverlayAction({ overlay: <any> ov1, 'mapId': '1', extent: undefined }),
@@ -338,7 +356,7 @@ describe('OverlaysAppEffects', () => {
 	it(`removePendingOverlayOnDisplay$ effect with overlay
 	should call RemovePendingOverlayAction with that overlay`, () => {
 		const ov1 = <any> { id: 'first' }, ov2 = <any> { id: 'first' };
-		mapState['pendingOverlays'] = [{ overlay: ov1 } , { overlay: ov2 }];
+		mapState['pendingOverlays'] = [{ overlay: ov1 }, { overlay: ov2 }];
 		actions = hot('--a--', {
 			a: new DisplayOverlaySuccessAction({
 				overlay: <any> ov1,

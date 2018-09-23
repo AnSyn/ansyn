@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect } from '@ngrx/effects';
 import { from, Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
+	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
@@ -11,30 +12,27 @@ import {
 	SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
-import { Store, select } from '@ngrx/store';
-import { IOverlaysState, MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
-import { IOverlay } from '../models/overlay.model';
-import { unionBy } from 'lodash';
-import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { select, Store } from '@ngrx/store';
+import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import {
+	BackToWorldView,
 	coreStateSelector,
 	ICoreState,
+	IOverlay,
+	IOverlaysFetchData,
+	LoggerService,
 	selectFavoriteOverlays,
-	selectPresetOverlays
-} from '@ansyn/core/reducers/core.reducer';
-import { UpdateOverlaysCountAction } from '@ansyn/core/actions/core.actions';
-import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+	selectPresetOverlays,
+	UpdateOverlaysCountAction
+} from '@ansyn/core';
+import { unionBy } from 'lodash';
+import 'rxjs/add/operator/share';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class OverlaysEffects {
 
 
-	/**
-	 * @type Effect
-	 * @name loadOverlays$
-	 * @ofType LoadOverlaysAction
-	 * @action LoadOverlaysSuccessAction
-	 */
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe<any>(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
@@ -60,35 +58,31 @@ export class OverlaysEffects {
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.overLoad.replace('$overLoad', overlays.data.length.toString())));
 					}
 					return actions;
-				}),
-				catchError(() => Observable.from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]))
-			)
-		}));
+				})
+				.catch(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
+		});
 
-	/**
-	 * @type Effect
-	 * @name onRequestOverlayByID$
-	 * @ofType RequestOverlayByIDFromBackendAction
-	 * @action DisplayOverlayAction
-	 */
 	@Effect()
-	onRequestOverlayByID$: Observable<DisplayOverlayAction> = this.actions$.pipe(
-		ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND),
-		mergeMap((action: RequestOverlayByIDFromBackendAction): any => {
-			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType).pipe<any>(
-				map((overlay: IOverlay): any => new DisplayOverlayAction({
+	onRequestOverlayByID$: Observable<any> = this.actions$
+		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
+		.mergeMap((action: RequestOverlayByIDFromBackendAction) => {
+			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType)
+				.map((overlay: IOverlay) => new DisplayOverlayAction({
 					overlay,
 					mapId: action.payload.mapId,
 					forceFirstDisplay: true
-				})));
-		}));
+				}))
+				.catch((exception) => {
+					this.loggerService.error(exception);
+					console.error(exception);
+					return from([
+						new DisplayOverlayFailedAction({ id: action.payload.overlayId, mapId: action.payload.mapId }),
+						new BackToWorldView({ mapId: action.payload.mapId })
+					]);
+				});
+		});
 
-	/**
-	 * @type Effect
-	 * @name setFavoriteOverlaysUpdateCase$
-	 * @ofType SetFavoriteOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
+
 	@Effect()
 	setFavoriteOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
 		select(selectFavoriteOverlays),
@@ -102,12 +96,6 @@ export class OverlaysEffects {
 		))
 	);
 
-	/**
-	 * @type Effect
-	 * @name setPresetOverlaysUpdateCase$
-	 * @ofType SetPresetOverlaysAction
-	 * @action OverlaysMarkupAction
-	 */
 	@Effect()
 	setPresetOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
 		select(selectPresetOverlays),
@@ -129,7 +117,8 @@ export class OverlaysEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>,
-				protected overlaysService: OverlaysService) {
+				protected overlaysService: OverlaysService,
+				protected loggerService: LoggerService) {
 	}
 
 

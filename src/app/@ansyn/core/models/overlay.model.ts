@@ -1,4 +1,4 @@
-import { ICaseDataInputFiltersState, CaseRegionState, ICaseTimeState } from './case.model';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from './case.model';
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],
@@ -35,6 +35,7 @@ export interface IOverlay extends IDilutedOverlay {
 	csmState?: string;
 	isGeoRegistered: boolean;
 	tag?: any; // original metadata
+	projection?: string;
 }
 
 export interface IOverlaysCriteria {

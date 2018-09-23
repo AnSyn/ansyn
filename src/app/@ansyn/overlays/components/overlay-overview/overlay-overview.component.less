@@ -2,6 +2,7 @@
 @import "core/less/z-index-globals";
 
 @animation-duration: 0.3s;
+@image-height: 150px;
 
 :host {
 	position: fixed;
@@ -11,6 +12,7 @@
 	user-select: none;
 	visibility: hidden;
 	opacity: 0;
+	overflow: hidden;
 	transform: translateY(calc(~"1px - 100%"));
 	transition: opacity @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
 
@@ -24,6 +26,8 @@
 		align-items: center;
 		position: relative;
 		main {
+			min-height: @image-height;
+
 			p.error-text {
 				top: 50px;
 				position: absolute;
@@ -54,7 +58,7 @@
 }
 
 img {
-	height: 150px;
+	height: @image-height;
 
 	&.loading {
 		visibility: hidden;

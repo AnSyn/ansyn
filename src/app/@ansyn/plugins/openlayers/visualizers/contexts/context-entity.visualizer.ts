@@ -1,23 +1,24 @@
-import { EntitiesVisualizer } from '@ansyn/plugins/openlayers/visualizers/entities-visualizer';
-import Point from 'ol/geom/point';
-import Polygon from 'ol/geom/polygon';
-import { getPointByGeometry } from '@ansyn/core/utils/geo';
-import { getTimeDiff, getTimeDiffFormat } from '@ansyn/core/utils/time';
-import { ICaseMapState, IContextEntity } from '@ansyn/core/models/case.model';
+import olPoint from 'ol/geom/point';
+import olPolygon from 'ol/geom/polygon';
+import {
+	getPointByGeometry,
+	getTimeDiff,
+	getTimeDiffFormat,
+	ICaseMapState,
+	IContextEntity,
+	IVisualizerEntity
+} from '@ansyn/core';
 import GeoJSON from 'ol/format/geojson';
 import { Observable } from 'rxjs';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
 import { Actions } from '@ngrx/effects';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { selectContextEntities } from '@ansyn/context/reducers/context.reducer';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { selectContextEntities } from '@ansyn/context';
+import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { distinctUntilChanged, filter, map, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
+import { EntitiesVisualizer } from '../entities-visualizer';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -25,7 +26,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 })
 export class ContextEntityVisualizer extends EntitiesVisualizer {
 	referenceDate: Date;
-	idToCachedCenter: Map<string, Polygon | Point> = new Map<string, Polygon | Point>();
+	idToCachedCenter: Map<string, olPolygon | olPoint> = new Map<string, olPolygon | olPoint>();
 	geoJsonFormat: GeoJSON;
 
 	@AutoSubscription
@@ -49,7 +50,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		);
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>) {
+				protected store$: Store<any>) {
 		super();
 
 		this.updateStyle({
@@ -78,7 +79,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	}
 
 	private getText(feature) {
-		if (!this.referenceDate || !(this.getGeometry(feature) instanceof Point)) {
+		if (!this.referenceDate || !(this.getGeometry(feature) instanceof olPoint)) {
 			return '';
 		}
 		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
@@ -99,12 +100,12 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
 			const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
 			const centroid = getPointByGeometry(featureGeoJson.geometry);
-			const point = new Point(<[number, number]> centroid.coordinates);
+			const point = new olPoint(<[number, number]> centroid.coordinates);
 
 			this.idToCachedCenter.set(featureId, point);
 			return point;
 		} else if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Polygon') {
-			const projectedPolygon = entityMap.feature.getGeometry() as Polygon;
+			const projectedPolygon = entityMap.feature.getGeometry() as olPolygon;
 
 			this.idToCachedCenter.set(featureId, projectedPolygon);
 			return projectedPolygon;

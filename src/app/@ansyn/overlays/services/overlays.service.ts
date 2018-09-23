@@ -1,37 +1,17 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IOverlay } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
 import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
-import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { union } from 'lodash';
-import { IFilterModel } from '@ansyn/core/models/IFilterModel';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
 
+// @dynamic
 @Injectable()
 export class OverlaysService {
-
-	static buildFilteredOverlays(overlays: IOverlay[], parsedFilters: IFilterModel[], favorites: IOverlay[], showOnlyFavorite: boolean, removedOverlaysIds: string[], removedOverlaysVisibility: boolean): string[] {
-		let parsedOverlays: IOverlay[] = favorites;
-		if (!showOnlyFavorite) {
-			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
-			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
-		}
-
-		if (removedOverlaysVisibility) {
-			parsedOverlays = parsedOverlays.filter((overlay) => !removedOverlaysIds.some((overlayId) => overlay.id === overlayId));
-		}
-		parsedOverlays.sort(sortByDateDesc);
-		return union(parsedOverlays.map(({ id }) => id));
-	}
-
-	static isFullOverlay(overlay: IOverlay): boolean {
-		return Boolean(overlay && overlay.date);
-	}
-
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
 	 * @param items

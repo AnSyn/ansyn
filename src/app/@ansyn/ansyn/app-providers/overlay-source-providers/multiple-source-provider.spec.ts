@@ -1,17 +1,16 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import {
 	MultipleOverlaysSource,
-	MultipleOverlaysSourceConfig
-} from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
-import { IOverlay } from '@ansyn/overlays/models/overlay.model';
-import { EMPTY, Observable, of, throwError } from 'rxjs';
-import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+	MultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceProvider
+} from './multiple-source-provider';
+
+import { IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { Observable } from 'rxjs/Rx';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
-import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Injectable } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 
 const overlays: IOverlaysFetchData = {
 	data: [

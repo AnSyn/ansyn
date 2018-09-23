@@ -3,23 +3,24 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import {
 	IToolsState,
 	selectSubMenu,
+	SetActiveCenter,
+	SetPinLocationModeAction,
 	SubMenuEnum,
 	toolsFlags,
 	toolsStateSelector
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { combineLatest, Observable, of } from 'rxjs';
+} from '@ansyn/menu-items';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Feature from 'ol/feature';
 import { Point } from 'geojson';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { IMapState, mapStateSelector } from '@ansyn/map-facade';
+import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
-import { SetActiveCenter, SetPinLocationModeAction } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
+import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

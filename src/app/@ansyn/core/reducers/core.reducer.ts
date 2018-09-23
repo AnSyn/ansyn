@@ -151,6 +151,7 @@ export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(cor
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectTime: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
 export const selectEnableCopyOriginalOverlayDataFlag: MemoizedSelector<any, any> = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
 export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(coreStateSelector, (core) => core.autoSave);
 export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(coreStateSelector, (core) => core.removedOverlaysIdsCount);

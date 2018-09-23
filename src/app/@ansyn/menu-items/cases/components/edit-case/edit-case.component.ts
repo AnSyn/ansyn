@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { AnsynInputComponent, ICase, ICasePreview, IContext } from '@ansyn/core';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { CasesService } from '../../services/cases.service';
 import { selectContextsArray } from '@ansyn/context';
 

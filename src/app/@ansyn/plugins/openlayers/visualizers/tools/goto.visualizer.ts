@@ -9,14 +9,13 @@ import {
 	toolsFlags,
 	toolsStateSelector
 } from '@ansyn/menu-items';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Feature from 'ol/feature';
 import { Point } from 'geojson';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import 'rxjs/add/observable/combineLatest';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';

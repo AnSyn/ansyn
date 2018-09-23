@@ -1,9 +1,10 @@
-import { Observable, throwError } from 'rxjs';
+import { forkJoin, from, Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { BaseOverlaySourceProvider, IDateRange, IFetchParams, IOverlayFilter, IStartAndEndDate } from '@ansyn/overlays';
 import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
+import { map } from 'rxjs/operators';
 
 export interface IFiltersList {
 	name: string,

@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { IAppState } from '../app.effects.module';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { MenuActionTypes, SetAutoClose } from '@ansyn/menu';
 import { RedrawTimelineAction } from '@ansyn/overlays';
 import { selectSubMenu } from '@ansyn/menu-items';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class MenuAppEffects {
@@ -19,14 +20,13 @@ export class MenuAppEffects {
 				new UpdateMapSizeAction(),
 				new RedrawTimelineAction()
 			])
-		)
+		);
 
 
 	@Effect()
 	autoCloseMenu$: Observable<SetAutoClose> = this.store$
 		.pipe(
 			select(selectSubMenu),
-			distinctUntilChanged(),
 			map((subMenu) => new SetAutoClose(typeof subMenu !== 'number'))
 		);
 

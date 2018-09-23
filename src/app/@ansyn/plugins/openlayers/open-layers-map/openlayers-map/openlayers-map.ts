@@ -13,10 +13,9 @@ import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '../utils/extent-calculator';
 import { BaseImageryMap, ImageryMap, ProjectionService } from '@ansyn/imagery';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '../openlayers-map/openlayers-mouseposition-control';
-import 'rxjs/add/operator/take';
 import {
 	areCoordinatesNumeric,
 	CaseMapExtent,
@@ -25,8 +24,6 @@ import {
 	ICaseMapPosition,
 	ICoreConfig
 } from '@ansyn/core';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/of';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';

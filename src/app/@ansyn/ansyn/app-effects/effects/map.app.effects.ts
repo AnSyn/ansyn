@@ -67,6 +67,7 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
+import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 
 @Injectable()
 export class MapAppEffects {

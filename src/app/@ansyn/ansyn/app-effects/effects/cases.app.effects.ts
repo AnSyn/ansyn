@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
+import { forkJoin, Observable, of } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
@@ -22,6 +20,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
+import { catchError, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class CasesAppEffects {

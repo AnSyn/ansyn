@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
-import { Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import {
 	ICase,
 	selectAutoSave,
@@ -25,7 +23,7 @@ import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
 import { selectContextEntities } from '@ansyn/context';
 import { pipe } from 'rxjs/Rx';
-import { tap } from 'rxjs/internal/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { IAppState } from '../../app.effects.module';
 
 @Injectable()

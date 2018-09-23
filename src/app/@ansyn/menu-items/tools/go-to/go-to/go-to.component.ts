@@ -9,10 +9,10 @@ import {
 	SetSubMenu
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/pluck';
 import { ClearActiveInteractionsAction, copyFromContent, ICoordinatesSystem } from '@ansyn/core';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -40,7 +40,7 @@ export class GoToComponent implements OnInit {
 	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
 		map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation)),
 		distinctUntilChanged()
-	)
+	);
 
 	pinLocationMode: boolean;
 

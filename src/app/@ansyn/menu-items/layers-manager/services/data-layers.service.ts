@@ -1,8 +1,6 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
 import { Inject, Injectable, InjectionToken, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 import { ErrorHandlerService, ICase, rxPreventCrash, StorageService } from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
 import { featureCollection } from '@turf/turf';

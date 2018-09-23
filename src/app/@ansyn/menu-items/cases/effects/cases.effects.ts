@@ -34,7 +34,16 @@ import {
 	SetToastMessageAction,
 	toastMessages
 } from '@ansyn/core';
-import { catchError, debounceTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/internal/operators';
+import {
+	catchError,
+	debounceTime,
+	filter,
+	map,
+	mergeMap,
+	share,
+	switchMap,
+	withLatestFrom
+} from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { forkJoin } from 'rxjs/index';
@@ -144,8 +153,9 @@ export class CasesEffects {
 					)
 						.pipe(map((_) => addedCase))
 				),
-				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase))
-			).catch(() => EMPTY)
+				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase)),
+				catchError(() => EMPTY)
+			)
 		));
 
 	@Effect()
@@ -156,7 +166,8 @@ export class CasesEffects {
 			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
 			copyFromContent(shareLink);
 			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
-		});
+		})
+	);
 
 	@Effect()
 	loadDefaultCaseIfNoActiveCase$: Observable<any> = this.actions$.pipe(

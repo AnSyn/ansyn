@@ -4,6 +4,7 @@ import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Observable } from 'rxjs';
 import { ICaseMapState, LayoutKey, layoutOptions, selectLayout } from '@ansyn/core';
 import { CopySelectedCaseLinkAction } from '../../actions/status-bar.actions';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-status-bar',

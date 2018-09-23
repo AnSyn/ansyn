@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
@@ -16,7 +16,7 @@ import {
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { map } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/internal/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 

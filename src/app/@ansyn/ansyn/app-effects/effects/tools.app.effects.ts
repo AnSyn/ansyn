@@ -27,7 +27,6 @@ import {
 	UpdateToolsFlags
 } from '@ansyn/menu-items';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import 'rxjs/add/operator/withLatestFrom';
 import {
 	IMapState,
 	MapActionTypes,
@@ -50,7 +49,7 @@ import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { differenceWith, isEqual } from 'lodash';
-import { filter, map, withLatestFrom } from 'rxjs/internal/operators';
+import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 import { IAppState } from '../app.effects.module';
 
 

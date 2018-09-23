@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class GeocoderService {

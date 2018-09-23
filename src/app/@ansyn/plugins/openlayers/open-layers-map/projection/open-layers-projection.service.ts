@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseImageryMap, CommunicatorEntity, ProjectionService } from '@ansyn/imagery';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';

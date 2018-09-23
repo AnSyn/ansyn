@@ -1,4 +1,3 @@
-import 'rxjs/add/operator/filter';
 export { ContextAppEffects } from './app-effects/effects/context.app.effects';
 export { getProviders } from './fetch-config-providers';
 export { AppProvidersModule } from './app-providers/app-providers.module';

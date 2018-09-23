@@ -6,6 +6,7 @@ import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-imagery-container',

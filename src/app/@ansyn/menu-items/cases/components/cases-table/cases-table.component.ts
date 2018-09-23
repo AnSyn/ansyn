@@ -14,7 +14,6 @@ import {
 	selectCasesIds
 } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';

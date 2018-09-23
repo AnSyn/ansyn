@@ -27,7 +27,6 @@ import {
 } from '@ansyn/core';
 import { LoadOverlaysAction, LoadOverlaysSuccessAction, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
-import 'rxjs/add/observable/of';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

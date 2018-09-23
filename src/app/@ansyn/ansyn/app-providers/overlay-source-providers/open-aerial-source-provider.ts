@@ -15,6 +15,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
+import { catchError, map } from 'rxjs/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';

@@ -59,7 +59,6 @@ import { IContextParams, selectContextEntities, selectContextsParams, SetContext
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
-import { of } from 'rxjs/internal/observable/of';
 
 @Injectable()
 export class OverlaysAppEffects {

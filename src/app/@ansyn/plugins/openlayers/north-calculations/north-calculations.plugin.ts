@@ -8,8 +8,7 @@ import {
 	LoggerService,
 	toDegrees
 } from '@ansyn/core';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/forkJoin';
+import { Observable, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
@@ -21,7 +20,6 @@ import {
 	selectHoveredOverlay
 } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
-import 'rxjs/add/operator/retry';
 import { Observer } from 'rxjs/Observer';
 import {
 	BaseImageryMap,

@@ -3,8 +3,6 @@ import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { ActiveImageryMouseEnter, ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import {

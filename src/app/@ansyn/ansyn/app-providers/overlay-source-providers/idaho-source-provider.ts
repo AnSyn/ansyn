@@ -15,6 +15,7 @@ import {
 } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
+import { catchError, map } from 'rxjs/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';

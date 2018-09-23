@@ -47,8 +47,6 @@ import {
 	UpdateLayer
 } from '@ansyn/menu-items';
 import { combineLatest, Observable } from 'rxjs';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/observable/combineLatest';
 import { Inject } from '@angular/core';
 import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/geojson';

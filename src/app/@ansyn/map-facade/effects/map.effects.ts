@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { Observable, UnaryFunction } from 'rxjs';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/share';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {

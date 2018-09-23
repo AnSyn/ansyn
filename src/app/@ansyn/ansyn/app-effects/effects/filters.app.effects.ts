@@ -1,4 +1,4 @@
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
@@ -33,8 +33,6 @@ import {
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/observable/of';
 import { SetBadgeAction } from '@ansyn/menu';
 import {
 	buildFilteredOverlays,
@@ -49,7 +47,7 @@ import {
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
-import 'rxjs/add/observable/combineLatest';
+import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class FiltersAppEffects {

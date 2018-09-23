@@ -18,7 +18,7 @@ import {
 	VisualizerStates
 } from '@ansyn/core';
 import { FeatureCollection } from 'geojson';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BaseImageryVisualizer, IBaseImageryVisualizerClass, VisualizerInteractionTypes } from '@ansyn/imagery';
 import ol_color from 'ol/color';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';

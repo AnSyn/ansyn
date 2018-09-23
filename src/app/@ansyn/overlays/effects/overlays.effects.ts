@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { from, Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
@@ -26,8 +26,7 @@ import {
 	UpdateOverlaysCountAction
 } from '@ansyn/core';
 import { unionBy } from 'lodash';
-import 'rxjs/add/operator/share';
-import { map } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class OverlaysEffects {
@@ -58,14 +57,16 @@ export class OverlaysEffects {
 						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.overLoad.replace('$overLoad', overlays.data.length.toString())));
 					}
 					return actions;
-				})
-				.catch(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]));
-		});
+				}),
+				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]))
+			)
+		})
+	);
 
 	@Effect()
-	onRequestOverlayByID$: Observable<any> = this.actions$
-		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
-		.mergeMap((action: RequestOverlayByIDFromBackendAction) => {
+	onRequestOverlayByID$: Observable<any> = this.actions$.pipe(
+		ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND),
+		mergeMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType)
 				.map((overlay: IOverlay) => new DisplayOverlayAction({
 					overlay,
@@ -80,7 +81,8 @@ export class OverlaysEffects {
 						new BackToWorldView({ mapId: action.payload.mapId })
 					]);
 				});
-		});
+		})
+	);
 
 
 	@Effect()

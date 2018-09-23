@@ -1,11 +1,12 @@
 import { Store } from '@ngrx/store';
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { ICase, ICaseMapState } from '@ansyn/core';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
+import { select } from '@ngrx/store';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-app',

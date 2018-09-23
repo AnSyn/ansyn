@@ -67,20 +67,21 @@ export class OverlaysEffects {
 	onRequestOverlayByID$: Observable<any> = this.actions$.pipe(
 		ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND),
 		mergeMap((action: RequestOverlayByIDFromBackendAction) => {
-			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType)
-				.map((overlay: IOverlay) => new DisplayOverlayAction({
+			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType).pipe(
+				map((overlay: IOverlay) => new DisplayOverlayAction({
 					overlay,
 					mapId: action.payload.mapId,
 					forceFirstDisplay: true
-				}))
-				.catch((exception) => {
+				})),
+				catchError((exception) => {
 					this.loggerService.error(exception);
 					console.error(exception);
 					return from([
 						new DisplayOverlayFailedAction({ id: action.payload.overlayId, mapId: action.payload.mapId }),
 						new BackToWorldView({ mapId: action.payload.mapId })
 					]);
-				});
+				})
+			);
 		})
 	);
 

@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
-import { Observable } from 'rxjs';
-import { MenuActionTypes } from '../actions/menu.actions';
+import { Actions } from '@ngrx/effects';
 
 @Injectable()
 export class MenuEffects {
-
-	@Effect({ dispatch: false })
-	onSelectMenuItem$: Observable<any> = this.actions$
-		.ofType(MenuActionTypes.SELECT_MENU_ITEM)
-		.share();
 
 	constructor(protected actions$: Actions) {
 	}

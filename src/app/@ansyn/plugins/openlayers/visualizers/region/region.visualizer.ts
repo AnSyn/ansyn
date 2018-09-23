@@ -20,7 +20,7 @@ import {
 	UpdateGeoFilterStatus
 } from '@ansyn/status-bar';
 import { AutoSubscription } from 'auto-subscriptions';
-import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
@@ -49,9 +49,10 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 			}
 		});
 
-	onSearchMode$ = this.geoFilterSearch$
-		.map((geoFilterSearch) => geoFilterSearch === this.geoFilter)
-		.distinctUntilChanged();
+	onSearchMode$ = this.geoFilterSearch$.pipe(
+		map((geoFilterSearch) => geoFilterSearch === this.geoFilter),
+		distinctUntilChanged()
+	);
 
 	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 

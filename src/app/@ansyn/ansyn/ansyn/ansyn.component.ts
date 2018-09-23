@@ -7,6 +7,8 @@ import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
 import { select } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
+import { Inject } from '@angular/core';
+import { COMPONENT_MODE } from '../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-app',
@@ -34,6 +36,6 @@ export class AnsynComponent {
 
 	@Input() version;
 
-	constructor(protected store$: Store<any>) {
+	constructor(protected store$: Store<any>, @Inject(COMPONENT_MODE) public componentMode: boolean) {
 	}
 }

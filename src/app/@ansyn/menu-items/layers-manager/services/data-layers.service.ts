@@ -10,7 +10,7 @@ import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
 import { catchError, filter, tap } from 'rxjs/internal/operators';
 import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
 
-export const layersConfig: InjectionToken<ILayersManagerConfig> = new InjectionToken('layers-config');
+export const layersConfig = 'layersManagerConfig';
 
 @Injectable()
 @AutoSubscriptions({

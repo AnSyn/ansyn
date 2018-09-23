@@ -120,18 +120,10 @@ button[disabled] {
 	font-family: 'Open Sans', sans-serif;
 	font-size: 14px;
 	cursor: pointer;
-	.flatpickr-month {
-		height: 33px;
-	}
 }
 
-@keyframes spin {
-	0% {
-		transform: rotate(0deg)
-	}
-	100% {
-		transform: rotate(360deg)
-	}
+.flatpickr-calendar .flatpickr-month {
+	height: 33px;
 }
 
 input[type=number]::-webkit-inner-spin-button,

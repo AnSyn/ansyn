@@ -20,7 +20,7 @@ import { catchError, map } from 'rxjs/operators';
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';
 
-export const OpenAerialOverlaysSourceConfig: InjectionToken<IOpenAerialOverlaySourceConfig> = new InjectionToken('open-aerial-overlays-source-config');
+export const OpenAerialOverlaysSourceConfig = 'openAerialOverlaysSourceConfig';
 
 export interface IOpenAerialOverlaySourceConfig {
 	baseUrl: string;

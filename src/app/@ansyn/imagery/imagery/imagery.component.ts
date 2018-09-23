@@ -11,7 +11,7 @@ import {
 	ViewChild,
 	ViewContainerRef
 } from '@angular/core';
-import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
+import { ImageryComponentManager } from './manager/imagery.component.manager';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { ICaseMapState } from '@ansyn/core';
 import { IBaseImageryMapConstructor } from '../model/base-imagery-map';

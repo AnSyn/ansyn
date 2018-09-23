@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
 	ErrorHandlerService,
@@ -20,7 +20,7 @@ import { catchError, map } from 'rxjs/operators';
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';
 
-export const IdahoOverlaysSourceConfig: InjectionToken<IIdahoOverlaySourceConfig> = new InjectionToken('idaho-overlays-source-config');
+export const IdahoOverlaysSourceConfig = 'idahoOverlaysSourceConfig';
 
 interface IIdahoResponse {
 	idahoResult: Array<any>;

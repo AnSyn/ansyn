@@ -22,7 +22,7 @@ export interface IMultipleOverlaysSourceConfig {
 
 export type IMultipleOverlaysSources = BaseOverlaySourceProvider;
 
-export const MultipleOverlaysSourceConfig: InjectionToken<IMultipleOverlaysSourceConfig> = new InjectionToken('multiple-overlays-source-config');
+export const MultipleOverlaysSourceConfig = 'multipleOverlaysSourceConfig';
 export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = new InjectionToken('multiple-overlays-sources');
 
 @Injectable()
@@ -157,7 +157,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
 		const startEnd = Promise.all(this.sourceConfigs
-			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise()))
+			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise().catch(() => null)))
 			.then(dates => dates.filter(Boolean)
 			// filter(Boolean) prevents crash from providers that do not yet implement the current function
 				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
@@ -177,7 +177,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
 		const startEnd = Promise.all(this.sourceConfigs
-			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise()))
+			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise().catch(() => null)))
 			.then(dates => dates.filter(Boolean)
 			// filter(Boolean) prevents crash from providers that do not yet implement the current function
 				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))

@@ -56,9 +56,9 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '@ansyn/status-bar';
-import { featureCollection, area, length, lineString } from '@turf/turf';
+import * as turf from '@turf/turf';
+import { area, featureCollection } from '@turf/turf';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
-import geometry from 'ol/geom/geometry';
 
 // @dynamic
 @ImageryVisualizer({
@@ -405,7 +405,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.pipe(
 				take(1),
 				withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
-				tap(([featureCollection, activeAnnotationLayer, overlay]: [any, ILayer, IOverlay]) => {
+				tap(([featureCollection, activeAnnotationLayer, overlay]: [FeatureCollection<GeometryObject>, ILayer, IOverlay]) => {
 					const [geoJsonFeature] = featureCollection.features;
 					const data = <FeatureCollection<any>> { ...activeAnnotationLayer.data };
 					data.features.push(geoJsonFeature);
@@ -416,11 +416,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
-					console.log(`area: ${area(<any>geoJsonFeature.geometry)}`);
-					const line = lineString(<number[][]>geoJsonFeature.geometry.coordinates[0]);
-					const collllll = length(line, {units: 'meters'});
-					console.log(`scope: ${collllll}`);
-					this.store$.dispatch(new UpdateLayer({ ...activeAnnotationLayer, data }));
+					this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 				})
 			).subscribe();
 
@@ -514,44 +510,85 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates();
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					const calcLength = Sphere.getLength(line, { projection: projection });
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(calcLength)
 						})
 					}));
 				}
 				break;
-			case 'Polygon':
-			case 'Arrow':
+			case 'Arrow': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
-					moreStyles.push(new olStyle({
-						geometry: line,
-						text: new olText({
-							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
-						})
-					}));
+					this.addLineLength(line, moreStyles, projection);
 				}
+			}
 				break;
-			case 'Rectangle':
+			case 'Polygon': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
+				let calcScope = 0;
+				for (let i = 0; i < coordinates.length - 1; i++) {
+					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					this.addLineLength(line, moreStyles, projection);
+					const calcLength = Sphere.getLength(line, { projection: projection });
+					calcScope += calcLength;
+				}
+				const boundingRect = this.getFeatureBoundingRect(feature);
+				moreStyles.push(new olStyle({
+					text: new olText({
+						...this.measuresTextStyle,
+						text: `Scope: ${this.formatLength(calcScope)}`,
+						offsetY: -boundingRect.height / 2 - 44
+					})
+				}));
+				moreStyles.push(new olStyle({
+					text: new olText({
+						...this.measuresTextStyle,
+						text: `Area: ${this.formatArea(area(turf.polygon([coordinates])) / 1000000)}`,
+						offsetY: -boundingRect.height / 2 - 25
+					})
+				}));
+			}
+				break;
+			case 'Rectangle': {
+				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
+				const boundingRect = this.getFeatureBoundingRect(feature);
+				let calcScope = 0;
 				for (let i = 0; i < 2; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					const calcLength = Sphere.getLength(line, { projection: projection });
+					calcScope += calcLength * 2;
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(calcLength)
 						})
 					}));
 				}
+				moreStyles.push(new olStyle({
+					text: new olText({
+						...this.measuresTextStyle,
+						text: `Scope: ${this.formatLength(calcScope)}`,
+						offsetY: -boundingRect.height / 2 - 44
+					})
+				}));
+				moreStyles.push(new olStyle({
+					text: new olText({
+						...this.measuresTextStyle,
+						text: `Area: ${this.formatArea(area(turf.polygon([coordinates])) / 1000000)}`,
+						offsetY: -boundingRect.height / 2 - 25
+					})
+				}));
+			}
 				break;
 			case 'Circle':
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
+				const boundingRect = this.getFeatureBoundingRect(feature);
 				const leftright = coordinates.reduce((prevResult, currCoord) => {
 					if (currCoord[0] > prevResult.right[0]) {
 						return { left: prevResult.left, right: currCoord };
@@ -562,6 +599,24 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					}
 				}, { left: [Infinity, 0], right: [-Infinity, 0] });
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
+				const calcLineLength = Sphere.getLength(line, { projection: projection });
+				const radius = Sphere.getLength(line, { projection: projection }) / 2;
+				const circleArea = Math.pow(radius, 2) * Math.PI;
+				const circleScope = 2 * radius * Math.PI;
+				moreStyles.push(new olStyle({
+					text: new olText({
+						...this.measuresTextStyle,
+						text: `Scope: ${this.formatLength(circleScope)}`,
+						offsetY:  -boundingRect.height / 2 - 44
+					})
+				}));
+				moreStyles.push(new olStyle({
+					text: new olText({
+						...this.measuresTextStyle,
+						text: `Area: ${this.formatArea(circleArea / 1000000)}`,
+						offsetY:  -boundingRect.height / 2 - 25
+					})
+				}));
 				moreStyles.push(new olStyle({
 					geometry: line,
 					stroke: new olStroke({
@@ -570,7 +625,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					}),
 					text: new olText({
 						...this.measuresTextStyle,
-						text: this.formatLength(line, projection)
+						text: this.formatLength(calcLineLength)
 					})
 				}));
 				break;
@@ -578,20 +633,27 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return moreStyles;
 	}
 
-	/**
-	 * Format length output.
-	 * @param line The line.
-	 * @param projection The Projection.
-	 */
-	formatLength(line, projection): string {
-		const length = Sphere.getLength(line, { projection: projection });
+	addLineLength(line: olLineString, moreStyles: olStyle[], projection: ol.proj.Projection) {
+		const calcLength = Sphere.getLength(line, { projection: projection });
+		moreStyles.push(new olStyle({
+			geometry: line,
+			text: new olText({
+				...this.measuresTextStyle,
+				text: this.formatLength(calcLength)
+			})
+		}));
+	}
+
+	formatArea(calcArea: number): string {
+		return Math.round(calcArea * 100) / 100 + ' Km²';
+	};
+
+	formatLength(calcLength): string {
 		let output;
-		if (length >= 1000) {
-			output = (Math.round(length / 1000 * 100) / 100) +
-				' ' + 'km';
+		if (calcLength >= 1000) {
+			output = (Math.round(calcLength / 1000 * 100) / 100) + ' Km';
 		} else {
-			output = (Math.round(length * 100) / 100) +
-				' ' + 'm';
+			output = (Math.round(calcLength * 100) / 100) + ' m';
 		}
 		return output;
 	};

@@ -124,5 +124,4 @@ export { EntityState } from '@ngrx/entity/src/models';
 export { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 export { DisplayedOverlay } from './models/context.model';
 export { EntityAdapter } from '@ngrx/entity/src/models';
-export { InjectionsContainer } from './models/injections-container';
 export { getProviders } from './models/fetch-config-providers';

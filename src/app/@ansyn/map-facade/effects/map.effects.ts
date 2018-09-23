@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { Observable, UnaryFunction } from 'rxjs';
+import { forkJoin, Observable, UnaryFunction } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
@@ -37,7 +37,7 @@ import {
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { pipe } from 'rxjs/internal-compatibility';
+import { fromPromise, pipe } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
 
 @Injectable()
@@ -203,8 +203,8 @@ export class MapEffects {
 						}
 					});
 				this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-				return Observable.fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
-					.map(() => new BackToWorldSuccess(payload));
+				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
+					.pipe(map(() => new BackToWorldSuccess(payload)));
 			})
 		);
 
@@ -238,7 +238,7 @@ export class MapEffects {
 		switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const communicator = this.communicatorsService.provide(payload.id);
-			return communicator.setPosition(activeMap.data.position).map(() => [{ payload }, mapState]);
+			return communicator.setPosition(activeMap.data.position).pipe(map(() => [{ payload }, mapState]));
 		}),
 		mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
@@ -263,8 +263,8 @@ export class MapEffects {
 		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
 		switchMap((action: SynchronizeMapsAction) => {
 			const mapId = action.payload.mapId;
-			return this.communicatorsService.provide(mapId).getPosition()
-				.map((position: ICaseMapPosition) => [position, action]);
+			return this.communicatorsService.provide(mapId).getPosition().pipe(
+				map((position: ICaseMapPosition) => [position, action]));
 		}),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
@@ -282,7 +282,7 @@ export class MapEffects {
 				}
 			});
 
-			return Observable.forkJoin(setPositionObservables).map(() => [action, mapState]);
+			return forkJoin(setPositionObservables).pipe(map(() => [action, mapState]));
 		})
 	);
 

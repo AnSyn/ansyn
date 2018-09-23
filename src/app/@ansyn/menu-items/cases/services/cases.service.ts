@@ -26,7 +26,7 @@ import * as momentNs from 'moment';
 
 const moment = momentNs;
 
-export const casesConfig: InjectionToken<ICasesConfig> = new InjectionToken('cases-config');
+export const casesConfig = 'casesConfig';
 
 // @dynamic
 @Injectable()

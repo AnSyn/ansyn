@@ -21,7 +21,7 @@ export interface IMultipleOverlaysSourceConfig {
 
 export type IMultipleOverlaysSources = BaseOverlaySourceProvider;
 
-export const MultipleOverlaysSourceConfig: InjectionToken<IMultipleOverlaysSourceConfig> = new InjectionToken('multiple-overlays-source-config');
+export const MultipleOverlaysSourceConfig = 'multipleOverlaysSourceConfig';
 export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = new InjectionToken('multiple-overlays-sources');
 
 @Injectable()

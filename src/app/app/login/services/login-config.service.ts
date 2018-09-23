@@ -1,7 +1,7 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { ILoginConfig } from '../models/login.config';
 
-export const LoginConfig: InjectionToken<ILoginConfig> = new InjectionToken('LoginConfig');
+export const LoginConfig = 'loginConfig';
 
 @Injectable()
 export class LoginConfigService {

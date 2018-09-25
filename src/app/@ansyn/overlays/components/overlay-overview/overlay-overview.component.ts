@@ -5,11 +5,17 @@ import { getTimeFormat, IOverlay } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
-import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../actions/overlays.actions';
+import {
+	ChangeOverlayPreviewRotationAction,
+	DisplayOverlayFromStoreAction,
+	OverlaysActionTypes,
+	SetMarkUp
+} from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { IOverlaysConfig } from '../../models/overlays.config';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-overlay-overview',
@@ -30,6 +36,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public loading = false;
 	public errorSrc = this.overlaysConfig.overlayOverviewFailed;
 
+	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
 
 	public get const() {
@@ -41,10 +48,17 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.top.px') top = 0;
 
 	@AutoSubscription
+	rotationChanged$: Observable<any> = this.actions$.pipe(
+		ofType<ChangeOverlayPreviewRotationAction>(OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION),
+		tap(({ payload }) => this.rotation = payload)
+	);
+
+	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
 		tap(this.onHoveredOverlay.bind(this))
 	);
+
 
 	// Mark the original overlay as un-hovered when mouse leaves
 	@HostListener('mouseleave')
@@ -54,10 +68,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public store$: Store<IOverlaysState>,
+		public actions$: Actions,
 		protected el: ElementRef,
 		protected translate: TranslateService,
-		@Inject(OverlaysConfig) protected overlaysConfig: IOverlaysConfig
-	) {
+		@Inject(OverlaysConfig) protected overlaysConfig: IOverlaysConfig) {
 	}
 
 	ngOnInit() {

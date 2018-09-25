@@ -32,6 +32,11 @@ export class OpenLayersProjectionService extends ProjectionService {
 		return Observable.of(point);
 	}
 
+	projectApproximatelyFromProjection(point: Point, projection: string): Observable<Point> {
+		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
+		return Observable.of(point);
+	}
+
 	/* collections */
 
 	projectCollectionAccuratelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, map: BaseImageryMap): Observable<olFeature[]> {

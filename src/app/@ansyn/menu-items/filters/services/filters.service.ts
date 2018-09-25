@@ -9,7 +9,7 @@ import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
 import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
 
-export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
+export const filtersConfig = 'filtersConfig';
 
 // @dynamic
 @Injectable()

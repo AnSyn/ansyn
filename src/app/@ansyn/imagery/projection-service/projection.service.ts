@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
+import proj from 'ol/proj';
 
 export abstract class ProjectionService {
 	/* Image to ground */
@@ -10,6 +11,8 @@ export abstract class ProjectionService {
 	abstract projectAccurately(point: Point, map: BaseImageryMap): Observable<Point>;
 
 	abstract projectApproximately(point: Point, map: BaseImageryMap): Observable<Point>;
+
+	abstract projectApproximatelyFromProjection(point: Point, projection: string): Observable<Point>;
 
 	// image collection
 	abstract projectCollectionAccurately<T = any>(features: T[], map: BaseImageryMap): Observable<FeatureCollection<GeometryObject>>;
@@ -30,4 +33,5 @@ export abstract class ProjectionService {
 
 
 	abstract getProjectionProperties(communicator: CommunicatorEntity, annotationLayer: any, feature: any, overlay: any): Object
+
 }

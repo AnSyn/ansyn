@@ -6,6 +6,8 @@ import { ICase, ICaseMapState } from '@ansyn/core';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
+import { Inject } from '@angular/core';
+import { COMPONENT_MODE } from '../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-app',
@@ -27,6 +29,6 @@ export class AnsynComponent {
 
 	@Input() version;
 
-	constructor(protected store$: Store<any>) {
+	constructor(protected store$: Store<any>, @Inject(COMPONENT_MODE) public componentMode: boolean) {
 	}
 }

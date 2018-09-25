@@ -1,5 +1,5 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
 import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
@@ -7,7 +7,7 @@ import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
+export const OverlaysConfig = 'overlaysConfig';
 
 // @dynamic
 @Injectable()

@@ -25,7 +25,7 @@ const moment = momentNs;
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
 
-export const PlanetOverlaysSourceConfig: InjectionToken<IPlanetOverlaySourceConfig> = new InjectionToken('planet-overlays-source-config');
+export const PlanetOverlaysSourceConfig = 'planetOverlaysSourceConfig';
 
 export interface IPlanetOverlaySourceConfig {
 	baseUrl: string;
@@ -299,7 +299,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sourceType = this.sourceType;
 		overlay.isGeoRegistered = true;
 		overlay.tag = element;
-
+		overlay.projection = 'EPSG:3857';
 		return overlay;
 	}
 }

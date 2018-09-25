@@ -530,18 +530,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				break;
 			case 'Polygon': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
-				let calcScope = 0;
+				let calcCircumference = 0;
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
 					this.addLineLength(line, moreStyles, projection);
 					const calcLength = Sphere.getLength(line, { projection: projection });
-					calcScope += calcLength;
+					calcCircumference += calcLength;
 				}
 				const boundingRect = this.getFeatureBoundingRect(feature);
 				moreStyles.push(new olStyle({
 					text: new olText({
 						...this.measuresTextStyle,
-						text: `Scope: ${this.formatLength(calcScope)}`,
+						text: `Circumference: ${this.formatLength(calcCircumference)}`,
 						offsetY: -boundingRect.height / 2 - 44
 					})
 				}));
@@ -557,11 +557,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			case 'Rectangle': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				const boundingRect = this.getFeatureBoundingRect(feature);
-				let calcScope = 0;
+				let calcCircumference = 0;
 				for (let i = 0; i < 2; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
 					const calcLength = Sphere.getLength(line, { projection: projection });
-					calcScope += calcLength * 2;
+					calcCircumference += calcLength * 2;
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
@@ -573,7 +573,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				moreStyles.push(new olStyle({
 					text: new olText({
 						...this.measuresTextStyle,
-						text: `Scope: ${this.formatLength(calcScope)}`,
+						text: `Circumference: ${this.formatLength(calcCircumference)}`,
 						offsetY: -boundingRect.height / 2 - 44
 					})
 				}));
@@ -602,11 +602,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const calcLineLength = Sphere.getLength(line, { projection: projection });
 				const radius = Sphere.getLength(line, { projection: projection }) / 2;
 				const circleArea = Math.pow(radius, 2) * Math.PI;
-				const circleScope = 2 * radius * Math.PI;
+				const circleCircumference = 2 * radius * Math.PI;
 				moreStyles.push(new olStyle({
 					text: new olText({
 						...this.measuresTextStyle,
-						text: `Scope: ${this.formatLength(circleScope)}`,
+						text: `Circumference: ${this.formatLength(circleCircumference)}`,
 						offsetY:  -boundingRect.height / 2 - 44
 					})
 				}));

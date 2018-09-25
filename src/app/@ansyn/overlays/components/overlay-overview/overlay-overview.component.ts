@@ -33,7 +33,12 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public formattedTime: string;
 	public overlayId: string;
 
-	public loading = false;
+	private _fetchingImageUrl = false;
+	private _loadingImage = false;
+	public get fetchingUrlOrLoadingImage() {
+		return this._fetchingImageUrl || this._loadingImage;
+	}
+
 	public errorSrc = this.overlaysConfig.overlayOverviewFailed;
 
 	public rotation = 0;
@@ -82,8 +87,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onHoveredOverlay(overlay: IOverlay) {
 		if (overlay) {
+			this.checkIfFetchingImageUrl(overlay);
 			const isNewOverlay = this.overlayId !== overlay.id;
-			const isFetchingOverlayData = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
 			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);
 			if (hoveredElement) {
@@ -93,9 +98,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.isHoveringOverDrop = true;
 
 				this.sensorName = overlay.sensorName;
-				this.img.nativeElement.src = isFetchingOverlayData ? undefined : overlay.thumbnailUrl;
+				this.img.nativeElement.src = this._fetchingImageUrl ? '' : overlay.thumbnailUrl;
 				this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-				if ((isNewOverlay || isFetchingOverlayData) && !this.img.nativeElement.complete) {
+				if (isNewOverlay && !this.img.nativeElement.complete) {
 					this.startedLoadingImage();
 				}
 			}
@@ -109,10 +114,18 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	startedLoadingImage() {
-		this.loading = true;
+		this._loadingImage = true;
 	}
 
 	finishedLoadingImage() {
-		this.loading = false;
+		this._loadingImage = false;
+	}
+
+	checkIfFetchingImageUrl(overlay: IOverlay): void {
+		const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
+		if (!fetching && this._fetchingImageUrl) {
+			this.startedLoadingImage();
+		}
+		this._fetchingImageUrl = fetching;
 	}
 }

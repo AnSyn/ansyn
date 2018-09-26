@@ -21,6 +21,11 @@ div.menu-wrapper {
 		z-index: @z-index-menu;
 		width: @menu-width;
 		height: 100%;
+		transition: width 0.5s;
+
+		&.collapsed {
+			width: @menu-collapsed-width;
+		}
 
 		div.menu-btn {
 			position: relative;
@@ -67,6 +72,7 @@ div.menu-wrapper {
 			}
 		}
 	}
+
 	div.container {
 		position: absolute;
 

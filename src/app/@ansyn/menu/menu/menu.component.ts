@@ -73,6 +73,7 @@ const animations: any[] = [
 export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
+	collapse = false;
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
@@ -250,6 +251,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 	toggleIsPinned() {
 		this.store.dispatch(new ToggleIsPinnedAction(!this.isPinned));
+	}
+
+	toggleMenuCollapse() {
+		this.collapse = !this.collapse;
 	}
 
 	ngOnInit() {

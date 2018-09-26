@@ -13,7 +13,7 @@ import {
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME, UNKNOWN_CLOUD_COVERAGE } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME, DEFAULT_CLOUD_COVERAGE } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
@@ -120,7 +120,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sensorName = idahoElement.properties.platformName ? idahoElement.properties.platformName : UNKNOWN_NAME;
 		overlay.channel = idahoElement.properties.numBands;
 		overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
-		overlay.cloudCoverage = idahoElement.properties.cloud_cover ? idahoElement.properties.cloud_cover : UNKNOWN_CLOUD_COVERAGE;
+		overlay.cloudCoverage = idahoElement.properties.cloud_cover ? idahoElement.properties.cloud_cover : DEFAULT_CLOUD_COVERAGE;
 		overlay.name = idahoElement.properties.catalogID;
 
 		overlay.thumbnailUrl = 'https://api.discover.digitalglobe.com/show?id=' + idahoElement.properties.catalogID + '&f=jpeg';

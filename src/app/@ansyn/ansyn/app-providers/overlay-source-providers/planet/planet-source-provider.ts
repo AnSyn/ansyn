@@ -3,7 +3,7 @@ import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IStartAndEndDate,
-	UNKNOWN_CLOUD_COVERAGE,
+	DEFAULT_CLOUD_COVERAGE,
 	UNKNOWN_NAME
 } from '@ansyn/overlays';
 import { Inject, Injectable } from '@angular/core';
@@ -295,7 +295,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sensorType = element.properties.item_type ? element.properties.item_type : UNKNOWN_NAME;
 		overlay.sensorName = element.properties.satellite_id ? element.properties.satellite_id : UNKNOWN_NAME;
 		overlay.bestResolution = element.properties.gsd;
-		overlay.cloudCoverage = element.properties.cloud_cover ? element.properties.cloud_cover : UNKNOWN_CLOUD_COVERAGE;
+		overlay.cloudCoverage = element.properties.cloud_cover ? element.properties.cloud_cover : DEFAULT_CLOUD_COVERAGE;
 		overlay.name = element.id;
 		overlay.imageUrl = this.appendApiKey(
 			`${this.planetOverlaysSourceConfig.tilesUrl}${overlay.sensorType}/${overlay.id}/{z}/{x}/{y}.png`);

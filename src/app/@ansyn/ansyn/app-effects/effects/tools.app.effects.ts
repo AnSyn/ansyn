@@ -186,9 +186,9 @@ export class ToolsAppEffects {
 				coordinates: action.payload
 			};
 
-			return communicator.setCenter(center).map(() => {
+			return communicator.setCenter(center).pipe(map(() => {
 				return { action, communicator };
-			});
+			}));
 		}),
 		map(({ action, communicator }) => new SetActiveCenter(action.payload)));
 

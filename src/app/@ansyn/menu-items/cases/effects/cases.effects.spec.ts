@@ -14,7 +14,7 @@ import {
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { CoreConfig, ErrorHandlerService, ICase, IOverlay, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
@@ -93,7 +93,7 @@ describe('CasesEffects', () => {
 			];
 
 
-		spyOn(store, 'select').and.callFake(() => Observable.of(selectLayersState));
+		spyOn(store, 'select').and.callFake(() => of(selectLayersState));
 	}));
 
 	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
@@ -193,8 +193,8 @@ describe('CasesEffects', () => {
 			}
 		];
 
-		spyOn(dataLayersService, 'addLayer').and.returnValue(Observable.of(serverResponse));
-		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(selectedCase));
+		spyOn(dataLayersService, 'addLayer').and.returnValue(of(serverResponse));
+		spyOn(casesService, 'createCase').and.callFake(() => of(selectedCase));
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);

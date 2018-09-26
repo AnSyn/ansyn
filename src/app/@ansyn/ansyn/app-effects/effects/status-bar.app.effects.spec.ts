@@ -4,7 +4,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { ExpandAction, statusBarFeatureKey, StatusBarReducer, UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { AddCaseAction, casesFeatureKey, CasesReducer, CasesService, SelectCaseAction } from '@ansyn/menu-items';
 import { ICase, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	BaseOverlaySourceProvider,

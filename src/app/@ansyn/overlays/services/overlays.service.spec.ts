@@ -27,7 +27,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

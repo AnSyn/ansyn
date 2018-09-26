@@ -4,30 +4,32 @@ import { Store } from '@ngrx/store';
 import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IWindowLayout, selectWindowLayout } from '../../reducers/builder.reducer';
+import { filter, skip, take, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AnsynCustomComponent extends AnsynComponent implements OnInit {
 	windowLayout$: Observable<IWindowLayout> = this.store$.select(selectWindowLayout);
 
-	isLoading$: Observable<boolean> = this.store$.select(selectLoading)
-		.skip(1)
-		.filter(loading => !loading)
-		.take(1)
-		.do(() => {
+	isLoading$: Observable<boolean> = this.store$.select(selectLoading).pipe(
+		skip(1),
+		filter(loading => !loading),
+		take(1),
+		tap(() => {
 			setTimeout(() => {
 				this.ref.detectChanges();
 			}, 0);
-		});
+		})
+	);
 
 	hoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
-		.do(() => {
+		.pipe(tap(() => {
 			setTimeout(() => {
 				this.ref.detectChanges();
 			}, 0);
-		});
+		}));
 
 	constructor(private store: Store<any>, private ref: ChangeDetectorRef) {
-		super(store);
+		super(store, false);
 	}
 
 	ngOnInit() {

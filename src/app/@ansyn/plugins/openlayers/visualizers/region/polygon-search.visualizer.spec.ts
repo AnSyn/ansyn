@@ -3,7 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { UUID } from 'angular2-uuid';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { Feature, Polygon } from 'geojson';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { PolygonSearchVisualizer } from './polygon-search.visualizer';
@@ -49,7 +49,7 @@ describe('PolygonSearchVisualizer', () => {
 		const id = 'fakeId';
 		const fakeGeojson: Polygon = { type: 'Polygon', coordinates: [[[0, 0], [0, 0], [0, 0], [0, 0]]] };
 		spyOn(UUID, 'UUID').and.callFake(() => id);
-		spyOn(polygonSearchVisualizer, 'setEntities').and.callFake(() => Observable.empty());
+		spyOn(polygonSearchVisualizer, 'setEntities').and.callFake(() => EMPTY);
 		const expectFeatureJson: Feature<Polygon> = { type: 'Feature', geometry: fakeGeojson, properties: {} };
 		polygonSearchVisualizer.drawRegionOnMap(fakeGeojson);
 		expect(polygonSearchVisualizer.setEntities).toHaveBeenCalledWith([{ id, featureJson: expectFeatureJson }]);

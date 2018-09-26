@@ -6,7 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { getProviders } from '@ansyn/ansyn';
 import { ContextService } from '@ansyn/context';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items';
 import { AppProvidersModule } from '@ansyn/ansyn';
 import { AnsynPluginsModule } from '@ansyn/plugins';
@@ -92,7 +92,7 @@ export class AnsynBuilder {
 
 		class BuilderDataLayersService extends DataLayersService {
 			getAllLayersInATree() {
-				return Observable.of([]);
+				return of([]);
 			}
 		}
 
@@ -124,7 +124,7 @@ export class AnsynBuilder {
 				{ provide: UrlSerializer, useClass: DefaultUrlSerializer },
 				...configProviders,
 				customProviders,
-				{ provide: ContextService, useValue: { loadContexts: () => Observable.of([]) } },
+				{ provide: ContextService, useValue: { loadContexts: () => of([]) } },
 				{ provide: DataLayersService, useClass: BuilderDataLayersService },
 				{ provide: ContextAppEffects, useClass: class Empty {} }
 			],

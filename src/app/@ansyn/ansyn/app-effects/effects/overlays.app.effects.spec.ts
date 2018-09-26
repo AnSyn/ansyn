@@ -17,7 +17,7 @@ import {
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
 } from '@ansyn/overlays';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
 	casesFeatureKey,
 	CasesReducer,

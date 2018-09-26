@@ -32,7 +32,7 @@ import {
 } from '@ansyn/menu-items';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { ContextConfig, contextFeatureKey, ContextReducer, ContextService } from '@ansyn/context';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
@@ -209,7 +209,7 @@ describe('CasesAppEffects', () => {
 				state: { ...caseMock2.state, favoriteOverlays: [{ id: 'blabla', sourceType: 'PLANET' }] }
 			};
 			store.dispatch(new AddCaseAction(caseItem));
-			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
+			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });
 			const expectedResults = cold('--(bc)--', {
 				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),

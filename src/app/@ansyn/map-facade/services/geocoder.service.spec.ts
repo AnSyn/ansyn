@@ -4,8 +4,7 @@ import { GeocoderService } from './geocoder.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { asyncData, ErrorHandlerService } from '@ansyn/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { of } from 'rxjs/observable/of';
+import { Observable, of } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 

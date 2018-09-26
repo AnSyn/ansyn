@@ -1,6 +1,12 @@
 import { Observable } from 'rxjs';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams,
+	IStartAndEndDate,
+	UNKNOWN_CLOUD_COVERAGE,
+	UNKNOWN_NAME
+} from '@ansyn/overlays';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	ErrorHandlerService,
@@ -289,6 +295,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sensorType = element.properties.item_type ? element.properties.item_type : UNKNOWN_NAME;
 		overlay.sensorName = element.properties.satellite_id ? element.properties.satellite_id : UNKNOWN_NAME;
 		overlay.bestResolution = element.properties.gsd;
+		overlay.cloudCoverage = element.properties.cloud_cover ? element.properties.cloud_cover : UNKNOWN_CLOUD_COVERAGE;
 		overlay.name = element.id;
 		overlay.imageUrl = this.appendApiKey(
 			`${this.planetOverlaysSourceConfig.tilesUrl}${overlay.sensorType}/${overlay.id}/{z}/{x}/{y}.png`);

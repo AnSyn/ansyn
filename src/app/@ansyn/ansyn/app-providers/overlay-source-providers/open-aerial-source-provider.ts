@@ -1,5 +1,5 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME, UNKNOWN_CLOUD_COVERAGE } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
@@ -115,6 +115,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sensorType = openAerialElement.platform ? openAerialElement.platform : UNKNOWN_NAME;
 		overlay.sensorName = openAerialElement.properties.sensor ? openAerialElement.properties.sensor : UNKNOWN_NAME;
 		overlay.bestResolution = openAerialElement.gsd;
+		overlay.cloudCoverage = openAerialElement.properties.cloud_cover ? openAerialElement.properties.cloud_cover : UNKNOWN_CLOUD_COVERAGE;
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms;
 		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;

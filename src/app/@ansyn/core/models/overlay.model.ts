@@ -23,6 +23,7 @@ export interface IOverlay extends IDilutedOverlay {
 	sensorName?: string;
 	channel?: number;
 	bestResolution?: number;
+	cloudCoverage?: number;
 	isStereo?: boolean;
 	name: string;
 	imageUrl?: string;

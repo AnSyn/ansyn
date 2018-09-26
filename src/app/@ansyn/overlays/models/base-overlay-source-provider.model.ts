@@ -57,6 +57,8 @@ export function timeIntersection(whiteRange: IDateRange, blackRange: IDateRange)
 }
 
 export const UNKNOWN_NAME = 'Unknown';
+export const UNKNOWN_CLOUD_COVERAGE = 1;
+
 
 @Injectable()
 export abstract class BaseOverlaySourceProvider {

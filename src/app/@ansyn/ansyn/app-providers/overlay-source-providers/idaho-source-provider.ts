@@ -76,15 +76,16 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const requestParams = Object.assign({}, fetchParams, { limit: fetchParams.limit + 1 });
-		return <Observable<IOverlaysFetchData>>this.httpClient.post(url, requestParams)
-			.map(this.extractArrayData.bind(this))
-			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
+		return <Observable<IOverlaysFetchData>>this.httpClient.post(url, requestParams).pipe(
+			map(this.extractArrayData.bind(this)),
+			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
-			}))
-			.catch((error: any) => {
+			})),
+			catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		)
 
 	}
 

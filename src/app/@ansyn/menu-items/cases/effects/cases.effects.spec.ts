@@ -14,7 +14,7 @@ import {
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { CoreConfig, ErrorHandlerService, ICase, IOverlay, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';

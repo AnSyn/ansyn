@@ -16,7 +16,7 @@ import {
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
+import { distinctUntilChanged, map, pluck, tap } from 'rxjs/internal/operators';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -43,10 +43,11 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	ids$: Observable<string[] | number[]> = this.store$.select(selectCasesIds);
 	entities$: Observable<Dictionary<ICasePreview>> = this.store$.select(selectCaseEntities);
 
-	modalCaseId$: Observable<string> = this.caseState$
-		.pluck<ICasesState, ICaseModal>('modal')
-		.distinctUntilChanged()
-		.pluck<ICaseModal, string>('id');
+	modalCaseId$: Observable<string> = this.caseState$.pipe(
+		pluck<ICasesState, ICaseModal>('modal'),
+		distinctUntilChanged(),
+		pluck<ICaseModal, string>('id')
+	);
 
 	@AutoSubscription
 	selectedCaseId$: Observable<string> = this.caseState$.pipe(

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { casesStateSelector, ICaseModal, ICasesState } from '../../reducers/cases.reducer';
 import { Store } from '@ngrx/store';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
+import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 
 const animationsDuring = '0.2s';
 
@@ -23,10 +24,11 @@ const animations: any[] = [
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	@ViewChild('modalContent', { read: ViewContainerRef }) modalContent: ViewContainerRef;
-	show$: Observable<boolean> = this.store.select(casesStateSelector)
-		.pluck <ICasesState, ICaseModal>('modal')
-		.map((modal: ICaseModal) => modal.show)
-		.distinctUntilChanged();
+	show$: Observable<boolean> = this.store.select(casesStateSelector).pipe(
+		pluck<ICasesState, ICaseModal>('modal'),
+		map((modal: ICaseModal) => modal.show),
+		distinctUntilChanged()
+	);
 
 	selectedComponentRef;
 

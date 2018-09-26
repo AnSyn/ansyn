@@ -10,6 +10,7 @@ import { clone } from 'lodash';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../../models/filters-config';
+import { filter, map, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -51,22 +52,25 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	@ViewChild('fields') fields: ElementRef;
 
 
-	metadataFromState$: Observable<any> = this.store.select(selectFilters)
-		.map((filters: Filters) => filters.get(this.filter))
-		.do((metadata: FilterMetadata) => this.metadataFromState = metadata);
+	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
+		map((filters: Filters) => filters.get(this.filter)),
+		tap((metadata: FilterMetadata) => this.metadataFromState = metadata)
+	);
 
-	isGotSmallListFromProvider$ = this.metadataFromState$
-		.filter((metadata) => this.filter.type === FilterType.Enum && Boolean(metadata))
-		.do((metadata) => {
+	isGotSmallListFromProvider$ = this.metadataFromState$.pipe(
+		filter((metadata) => this.filter.type === FilterType.Enum && Boolean(metadata)),
+		tap((metadata) => {
 			this.isGotSmallListFromProvider = (<EnumFilterMetadata>metadata).enumsFields.size <= this.config.shortFilterListLength;
-		});
+		})
+	);
 
 
-	showOnlyFavorites$: Observable<any> = this.store.select(selectShowOnlyFavorites)
-		.do((showOnlyFavorites) => {
+	showOnlyFavorites$: Observable<any> = this.store.select(selectShowOnlyFavorites).pipe(
+		tap((showOnlyFavorites) => {
 			this.showOnlyFavorite = showOnlyFavorites;
 			this.isLongFiltersList = false;
-		});
+		})
+	);
 
 	constructor(protected store: Store<IFiltersState>, @Inject(filtersConfig) protected config: IFiltersConfig) {
 	}

@@ -8,6 +8,7 @@ import { cloneDeep } from 'lodash';
 import { AnsynInputComponent, ICase, ICasePreview, IContext } from '@ansyn/core';
 import { CasesService } from '../../services/cases.service';
 import { selectContextsArray } from '@ansyn/context';
+import { map } from 'rxjs/operators';
 
 const animationsDuring = '0.2s';
 
@@ -41,11 +42,11 @@ export class EditCaseComponent implements OnInit {
 	casesState$: Observable<ICasesState> = this.store.select(casesStateSelector);
 
 	activeCase$: Observable<ICase> = this.casesState$
-		.distinctUntilChanged()
-		.map(this.getCloneActiveCase.bind(this));
+		.pipe(map(this.getCloneActiveCase.bind(this)));
 
-	contextsList$: Observable<IContext[]> = this.store.select(selectContextsArray)
-		.map(this.addDefaultContext);
+	contextsList$: Observable<IContext[]> = this.store.select(selectContextsArray).pipe(
+		map(this.addDefaultContext)
+	);
 
 	contextsList: IContext[];
 	caseModel: ICase;

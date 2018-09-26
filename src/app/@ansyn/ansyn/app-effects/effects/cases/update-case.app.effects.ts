@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable, pipe } from 'rxjs';
 import {
 	ICase,
 	selectAutoSave,
@@ -22,8 +22,7 @@ import {
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
 import { selectContextEntities } from '@ansyn/context';
-import { pipe } from 'rxjs/Rx';
-import { filter, map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 
 @Injectable()
@@ -51,9 +50,9 @@ export class UpdateCaseAppEffects {
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
 	@Effect()
-	shouldUpdateCase$ = combineLatest(this.events).pipe(
+	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
 		withLatestFrom(this.store$.select(selectSelectedCase)),
-		filter(([events, selectedCase]) => Boolean(selectedCase)),    /* SelectCaseAction(selectedCase) already triggered */
+		filter(([events, selectedCase]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
 		map(([events, selectedCase]: [any, any]) => {
 			const [
 				activeLayersIds,

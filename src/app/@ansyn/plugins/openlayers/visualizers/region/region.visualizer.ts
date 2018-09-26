@@ -27,27 +27,31 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
 	region$ = this.store$.select(selectRegion);
 
-	geoFilter$: Observable<any> = this.region$.map((region) => region.type)
-		.distinctUntilChanged();
+	geoFilter$: Observable<any> = this.region$.pipe(
+		map((region) => region.type),
+		distinctUntilChanged()
+	);
 
-	isActiveMap$ = this.store$.select(selectActiveMapId)
-		.map((activeMapId: string): boolean => activeMapId === this.mapId)
-		.distinctUntilChanged();
+	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
+		map((activeMapId: string): boolean => activeMapId === this.mapId),
+		distinctUntilChanged()
+	);
 
 	isActiveGeoFilter$ = this.geoFilter$
-		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
+		.pipe(map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter));
 
 	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
 
 	@AutoSubscription
-	toggleOpacity$ = this.geoFilterSearch$
-		.do((geoFilterSearch) => {
+	toggleOpacity$ = this.geoFilterSearch$.pipe(
+		tap((geoFilterSearch) => {
 			if (geoFilterSearch !== SearchModeEnum.none) {
 				this.vector.setOpacity(0);
 			} else {
 				this.vector.setOpacity(1);
 			}
-		});
+		})
+	);
 
 	onSearchMode$ = this.geoFilterSearch$.pipe(
 		map((geoFilterSearch) => geoFilterSearch === this.geoFilter),
@@ -66,7 +70,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$).pipe(
+	interactionChanges$: Observable<any> = combineLatest(this.onSearchMode$, this.isActiveMap$).pipe(
 		tap(this.interactionChanges.bind(this))
 	);
 

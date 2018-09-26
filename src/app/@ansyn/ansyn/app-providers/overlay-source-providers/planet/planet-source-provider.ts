@@ -1,6 +1,6 @@
-import { Observable, throwError } from 'rxjs';
+import { forkJoin, Observable, throwError } from 'rxjs';
 import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	ErrorHandlerService,
@@ -15,8 +15,7 @@ import {
 } from '@ansyn/core';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { catchError, map } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 
@@ -263,7 +262,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			}));
 
 		return forkJoin(startDate$, endDate$)
-			.map(([start, end]: [Date, Date]) => ({ startDate: start.toISOString(), endDate: end.toString() }));
+			.pipe(map(([start, end]: [Date, Date]) => ({ startDate: start.toISOString(), endDate: end.toString() })));
 	}
 
 	private extractArrayData(overlays: PlanetOverlay[]): IOverlay[] {

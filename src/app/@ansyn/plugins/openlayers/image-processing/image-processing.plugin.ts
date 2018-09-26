@@ -9,6 +9,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersDisabledMap } from '../open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersImageProcessing } from './image-processing';
+import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -18,25 +19,28 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
-	currentMap$ = this.store$.select(mapStateSelector)
-		.map((mapState: IMapState) => MapFacadeService.mapById(mapState.mapsList, this.mapId))
-		.filter(Boolean);
+	currentMap$ = this.store$.select(mapStateSelector).pipe(
+		map((mapState: IMapState) => MapFacadeService.mapById(mapState.mapsList, this.mapId)),
+		filter(Boolean)
+	);
 
 	@AutoSubscription
-	onToggleImageProcessing$: Observable<any> = this.currentMap$
-		.map((currentMap: ICaseMapState) => currentMap.data.isAutoImageProcessingActive)
-		.distinctUntilChanged()
-		.filter(this.isImageLayerAndImageProcessing.bind(this))
-		.do(this.setAutoImageProcessing.bind(this));
+	onToggleImageProcessing$: Observable<any> = this.currentMap$.pipe(
+		map((currentMap: ICaseMapState) => currentMap.data.isAutoImageProcessingActive),
+		distinctUntilChanged(),
+		filter(this.isImageLayerAndImageProcessing.bind(this)),
+		tap(this.setAutoImageProcessing.bind(this))
+	);
 
 	@AutoSubscription
-	imageManualProcessArgs$ = this.currentMap$
-		.filter((currentMap: ICaseMapState) => !currentMap.data.isAutoImageProcessingActive)
-		.map((currentMap: ICaseMapState) => currentMap.data.imageManualProcessArgs)
-		.filter(this.isImageLayerAndImageProcessing.bind(this))
-		.do((imageManualProcessArgs) => {
+	imageManualProcessArgs$ = this.currentMap$.pipe(
+		filter((currentMap: ICaseMapState) => !currentMap.data.isAutoImageProcessingActive),
+		map((currentMap: ICaseMapState) => currentMap.data.imageManualProcessArgs),
+		filter(this.isImageLayerAndImageProcessing.bind(this)),
+		tap((imageManualProcessArgs) => {
 			this._imageProcessing.processImage(imageManualProcessArgs);
-		});
+		})
+	);
 
 	constructor(public store$: Store<any>) {
 		super();

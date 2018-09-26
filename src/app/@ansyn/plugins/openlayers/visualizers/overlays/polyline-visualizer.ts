@@ -27,7 +27,7 @@ import {
 import { ICaseMapState, IOverlay, IVisualizerEntity, VisualizerStates } from '@ansyn/core';
 import { MultiLineString } from 'geojson';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -72,11 +72,12 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
 
 	@AutoSubscription
-	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.overlaysState$
-		.pluck <IOverlaysState, ExtendMap<MarkUpClass, IMarkUpData>>('dropsMarkUp')
-		.distinctUntilChanged()
-		.do((markups) => this.markups = markups)
-		.do(this.onMarkupsChange.bind(this));
+	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.overlaysState$.pipe(
+		pluck<IOverlaysState, ExtendMap<MarkUpClass, IMarkUpData>>('dropsMarkUp'),
+		distinctUntilChanged(),
+		tap((markups) => this.markups = markups),
+		tap(this.onMarkupsChange.bind(this))
+	);
 
 	constructor(public store: Store<any>, @Inject(VisualizersConfig) config: IVisualizersConfig) {
 

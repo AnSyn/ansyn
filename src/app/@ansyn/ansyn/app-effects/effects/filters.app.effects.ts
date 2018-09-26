@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
@@ -58,7 +58,7 @@ export class FiltersAppEffects {
 	overlaysArray$: Observable<any> = this.store$.select(selectOverlaysArray);
 	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
 	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
-	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[], string[], boolean]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[], string[], boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
 	oldFilters$: Observable<any> = this.store$.select(selectOldFilters);
 

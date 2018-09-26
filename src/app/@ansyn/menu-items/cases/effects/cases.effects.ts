@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, UnaryFunction } from 'rxjs';
+import { EMPTY, forkJoin, Observable, pipe, UnaryFunction } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -34,23 +34,11 @@ import {
 	SetToastMessageAction,
 	toastMessages
 } from '@ansyn/core';
-import {
-	catchError,
-	debounceTime,
-	filter,
-	map,
-	mergeMap,
-	share,
-	switchMap,
-	withLatestFrom
-} from 'rxjs/internal/operators';
-import { EMPTY } from 'rxjs/internal/observable/empty';
+import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
-import { forkJoin } from 'rxjs/index';
 import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
-import { pipe } from 'rxjs/Rx';
 
 @Injectable()
 export class CasesEffects {

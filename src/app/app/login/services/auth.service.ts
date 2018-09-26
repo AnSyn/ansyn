@@ -3,6 +3,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginConfigService } from './login-config.service';
 import { ILoginConfig } from '../models/login.config';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +40,7 @@ export class AuthService {
 		const whatToDo = rememberMe ? this.setTokenStorage : this.setTokenSession;
 		return this.httpClient
 			.post(url, body, options)
-			.do(whatToDo);
+			.pipe(tap(whatToDo));
 	}
 
 	loginAuth(authToken: string) {

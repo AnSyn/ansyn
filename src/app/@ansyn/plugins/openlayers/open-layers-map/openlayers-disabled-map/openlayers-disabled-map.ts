@@ -23,7 +23,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 			controls: []
 		});
 		this.setMainLayer(mainLayer, position);
-		return Observable.of(true);
+		return of(true);
 	}
 
 	addLayerIfNotExist(layer: any) {

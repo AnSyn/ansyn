@@ -34,7 +34,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectApproximatelyFromProjection(point: Point, projection: string): Observable<Point> {
 		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
-		return Observable.of(point);
+		return of(point);
 	}
 
 	/* collections */

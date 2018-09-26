@@ -3,8 +3,7 @@ import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlaysState } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { EMPTY, Observable } from 'rxjs';
-import { Observer } from 'rxjs/Observer';
+import { EMPTY, Observable, Observer } from 'rxjs';
 import {
 	buildFilteredOverlays,
 	IOverlay,

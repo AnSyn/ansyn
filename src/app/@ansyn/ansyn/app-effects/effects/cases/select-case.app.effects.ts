@@ -30,14 +30,17 @@ import {
 import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
+import { ofType } from '@ngrx/effects';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class SelectCaseAppEffects {
 
 	@Effect()
-	selectCase$: Observable<any> = this.actions$
-		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch));
+	selectCase$: Observable<any> = this.actions$.pipe(
+		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE),
+		mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
+	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

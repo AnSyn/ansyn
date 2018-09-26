@@ -6,7 +6,7 @@ import {
 } from './multiple-source-provider';
 
 import { IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
 import { Injectable } from '@angular/core';

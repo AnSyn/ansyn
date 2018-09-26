@@ -210,11 +210,12 @@ export class OverlaysAppEffects {
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
-		return (<any>sourceProvider).getThumbnailUrl(overlay, position)
-			.map(thumbnailUrl => ({ ...overlay, thumbnailUrl }))
-			.catch(() => {
+		return (<any>sourceProvider).getThumbnailUrl(overlay, position).pipe(
+			map(thumbnailUrl => ({ ...overlay, thumbnailUrl })),
+			catchError(() => {
 				return of(overlay);
-			});
+			})
+		);
 	});
 	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
 

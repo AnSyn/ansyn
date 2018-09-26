@@ -22,6 +22,7 @@ import { Store } from '@ngrx/store';
 import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
+import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -29,24 +30,26 @@ import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-m
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
-	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId)
-		.map((activeMapId) => activeMapId === this.mapId)
-		.distinctUntilChanged();
+	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId).pipe(
+		map((activeMapId) => activeMapId === this.mapId),
+		distinctUntilChanged()
+	);
 
-	isMeasureToolActive$: Observable<boolean> = this.store$.select(toolsStateSelector)
-		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
-		.map((flags) => flags.get(toolsFlags.isMeasureToolActive))
-		.distinctUntilChanged();
+	isMeasureToolActive$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
+		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
+		map((flags) => flags.get(toolsFlags.isMeasureToolActive)),
+		distinctUntilChanged()
+	);
 
 	@AutoSubscription
-	onChanges$ = combineLatest(this.isActiveMap$, this.isMeasureToolActive$)
-		.do(([isActiveMap, isMeasureToolActive]) => {
+	onChanges$ = combineLatest(this.isActiveMap$, this.isMeasureToolActive$).pipe(
+		tap(([isActiveMap, isMeasureToolActive]) => {
 			if (isActiveMap && isMeasureToolActive) {
 				this.createInteraction();
 			} else {
 				this.clearInteractionAndEntities();
 			}
-		});
+		}));
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -119,11 +122,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	onResetView(): Observable<boolean> {
 		return super.onResetView()
-			.do(() => {
+			.pipe(tap(() => {
 				if (this.drawInteractionHandler) {
 					this.createInteraction();
 				}
-			});
+			}));
 	}
 
 	clearInteractionAndEntities() {

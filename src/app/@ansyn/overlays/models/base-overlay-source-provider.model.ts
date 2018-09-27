@@ -1,4 +1,4 @@
-import { forkJoin, Observable, of } from 'rxjs';
+import { concat, Observable, of } from 'rxjs';
 import { intersect } from '@turf/turf';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
@@ -11,6 +11,7 @@ import {
 	mergeLimitedArrays,
 	sortByDateDesc
 } from '@ansyn/core';
+import { combineAll, map } from 'rxjs/operators';
 
 export interface IDateRange {
 	start: Date;
@@ -112,16 +113,18 @@ export abstract class BaseOverlaySourceProvider {
 			return of({ data: [], limited: 0, errors: [] });
 		}
 
-		const multipleFetches: Observable<IOverlaysFetchData> = forkJoin(fetchObservables) // Wait for every fetch to resolve
-			.map((data: Array<IOverlaysFetchData>) => {
+		const multipleFetches: Observable<IOverlaysFetchData> = concat(...fetchObservables).pipe(// Wait for every fetch to resolve
+			map((val) => of(val)),
+			combineAll(),
+			map((data: Array<IOverlaysFetchData>) => {
 				// All failed
 				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
 					return { data: null, limited: -1, errors: data[0].errors };
 				}
 
 				return this.mergeOverlaysFetchData(data, fetchParams.limit);
-			});
-
+			})
+		);
 		return multipleFetches;
 	}
 

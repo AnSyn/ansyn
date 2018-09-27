@@ -54,7 +54,7 @@ describe('OverlayOverviewComponent', () => {
 	describe('Show or hide me', () => {
 		let classExists = (className) => fixture.nativeElement.classList.contains(className);
 		let overlayId = '234';
-		let overlays: Overlay[] = [{
+		let overlays: Overlay[] = [<Overlay>{
 			id: overlayId,
 			name: 'bcd',
 			photoTime: 'ttt',

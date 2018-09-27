@@ -337,7 +337,7 @@ describe('MapAppEffects', () => {
 
 
 		it('should NOT dispatch anything if "overlay date exists"', () => {
-			const testOverlay: Overlay = {
+			const testOverlay = <Overlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
@@ -379,7 +379,7 @@ describe('MapAppEffects', () => {
 
 	describe('displayOverlayOnNewMapInstance$', () => {
 		it('displayOverlayOnNewMapInstance$ should dispatch DisplayOverlayAction when communicator added that contains overlay', () => {
-			const overlay = {
+			const overlay = <Overlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),

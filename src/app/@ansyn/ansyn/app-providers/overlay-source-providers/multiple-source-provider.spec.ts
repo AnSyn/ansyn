@@ -14,7 +14,7 @@ import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 
 const overlays: IOverlaysFetchData = {
 	data: [
-		{
+		<Overlay>{
 			id: '1',
 			name: 'overlay',
 			isGeoRegistered: true,

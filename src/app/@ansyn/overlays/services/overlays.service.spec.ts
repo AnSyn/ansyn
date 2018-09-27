@@ -34,7 +34,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return Observable.create((observer: Observer<IOverlaysFetchData>) => {
 			const overlays: Overlay[] = [
-				{
+				<Overlay>{
 					id: 'abc',
 					sourceType: 'mock1',
 					azimuth: 0,
@@ -43,7 +43,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					name: 'first',
 					isGeoRegistered: true
 				},
-				{
+				<Overlay>{
 					id: 'abc',
 					sourceType: 'mock2',
 					azimuth: 0,

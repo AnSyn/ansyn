@@ -17,7 +17,7 @@ import {
 	SelectDilutedCaseAction
 } from '@ansyn/menu-items';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { IDilutedCase, IOverlay, SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
+import { IDilutedCase, Overlay, SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
@@ -55,20 +55,20 @@ export class CasesAppEffects {
 					.concat(caseValue.state.favoriteOverlays,
 						caseValue.state.presetOverlays || [])
 				, 'id')
-				.map(({ id, sourceType }: IOverlay) => this.overlaysService.getOverlayById(id, sourceType));
+				.map(({ id, sourceType }: Overlay) => this.overlaysService.getOverlayById(id, sourceType));
 
 			if (observablesArray.length > 0) {
 				resultObservable = Observable.forkJoin(observablesArray);
 			}
 
 			return resultObservable
-				.map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay])))
-				.map((mapOverlay: Map<string, IOverlay>) => {
+				.map(overlays => new Map(overlays.map((overlay): [string, Overlay] => [overlay.id, overlay])))
+				.map((mapOverlay: Map<string, Overlay>) => {
 					caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
-						.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
+						.map((favOverlay: Overlay) => mapOverlay.get(favOverlay.id));
 
 					caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
-						.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
+						.map((preOverlay: Overlay) => mapOverlay.get(preOverlay.id));
 
 					caseValue.state.maps.data
 						.filter(mapData => Boolean(Boolean(mapData.data.overlay)))

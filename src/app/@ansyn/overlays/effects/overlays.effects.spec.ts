@@ -18,7 +18,7 @@ import {
 } from '../reducers/overlays.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreInitialState, coreStateSelector, IOverlay, LoggerService } from '@ansyn/core';
+import { coreInitialState, coreStateSelector, Overlay, LoggerService } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
@@ -36,7 +36,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
+	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		return Observable.empty();
 	};
 }
@@ -48,7 +48,7 @@ describe('Overlays Effects ', () => {
 	let overlaysEffects: OverlaysEffects;
 	let overlaysService: OverlaysService | any;
 
-	const overlays = <IOverlay[]>[
+	const overlays = <Overlay[]>[
 		{
 			id: '12',
 			name: 'tmp12',
@@ -64,7 +64,7 @@ describe('Overlays Effects ', () => {
 			footprint: {}
 		}
 	];
-	const favoriteOverlays = <IOverlay[]>[
+	const favoriteOverlays = <Overlay[]>[
 		{
 			id: '13',
 			name: 'tmp13',
@@ -117,7 +117,7 @@ describe('Overlays Effects ', () => {
 
 
 	it('it should load all the overlays', () => {
-		let tmp = <IOverlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
+		let tmp = <Overlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
 		overlaysService.search.and.returnValue(Observable.of({ data: overlays, limited: 0, errors: [] }));
 		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
 		const expectedResults = cold('--(a)--', {
@@ -127,7 +127,7 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('onRequestOverlayByID$ from IDAHO should dispatch DisplayOverlayAction with overlay', () => {
-		const fakeOverlay = <IOverlay> { id: 'test' };
+		const fakeOverlay = <Overlay> { id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
@@ -148,7 +148,7 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('onRequestOverlayByID$ from PLANET should dispatch DisplayOverlayAction with overlay', () => {
-		const fakeOverlay = <IOverlay> { id: 'test' };
+		const fakeOverlay = <Overlay> { id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(Observable.of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({

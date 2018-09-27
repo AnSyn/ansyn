@@ -44,7 +44,7 @@ import {
 	ICaseFilter,
 	IFilterModel,
 	InjectionResolverFilter,
-	IOverlay,
+	Overlay,
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
@@ -60,14 +60,14 @@ export class FiltersAppEffects {
 	overlaysArray$: Observable<any> = this.store$.select(selectOverlaysArray);
 	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
 	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
-	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[], string[], boolean]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onFiltersChanges$: Observable<[Filters, boolean, Overlay[], string[], boolean]> = Observable.combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
 	oldFilters$: Observable<any> = this.store$.select(selectOldFilters);
 
 	@Effect()
 	updateOverlayFilters$ = this.onFiltersChanges$
 		.withLatestFrom(this.overlaysArray$)
-		.mergeMap(([[filters, showOnlyFavorite, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, boolean, IOverlay[], string[], boolean], IOverlay[]]) => {
+		.mergeMap(([[filters, showOnlyFavorite, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, boolean, Overlay[], string[], boolean], Overlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite, removedOverlaysIds, removedOverlaysVisibility);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
@@ -86,7 +86,7 @@ export class FiltersAppEffects {
 	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$
 		.ofType<InitializeFiltersAction>(FiltersActionTypes.INITIALIZE_FILTERS)
 		.withLatestFrom(this.oldFilters$, this.overlaysArray$, this.facets$)
-		.map(([action, oldFilters, overlays, facets]: [Action, Filters, IOverlay[], ICaseFacetsState]) => {
+		.map(([action, oldFilters, overlays, facets]: [Action, Filters, Overlay[], ICaseFacetsState]) => {
 			const filtersConfig: IFilter[] = this.filtersService.getFilters();
 			const filters: Map<IFilter, FilterMetadata> = new Map<IFilter, FilterMetadata>();
 			const oldFiltersArray = oldFilters ? Array.from(oldFilters) : [];
@@ -122,7 +122,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$
-		.map(([filters, showOnlyFavorites]: [Filters, boolean, IOverlay[], string[], boolean]) => {
+		.map(([filters, showOnlyFavorites]: [Filters, boolean, Overlay[], string[], boolean]) => {
 			let badge = '0';
 
 			if (showOnlyFavorites) {
@@ -138,15 +138,15 @@ export class FiltersAppEffects {
 
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$
-		.map((favoriteOverlays: IOverlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)));
+		.map((favoriteOverlays: Overlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)));
 
 	@Effect({ dispatch: false })
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys)
 		.withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays), this.store$.select(selectRemovedOverlays), this.store$.select(selectRemovedOverlaysVisibility))
-		.filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
+		.filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, Overlay>, Overlay[], string[], boolean]) => {
 			return overlays.size > 0;
 		})
-		.do(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
+		.do(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, Overlay>, Overlay[], string[], boolean]) => {
 
 			Array.from(filterState.filters).forEach(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
 				metadata.resetFilteredCount();

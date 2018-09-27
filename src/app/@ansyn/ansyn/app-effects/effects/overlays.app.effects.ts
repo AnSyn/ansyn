@@ -29,7 +29,7 @@ import {
 	DisplayedOverlay,
 	ICaseMapPosition,
 	IContextEntity,
-	IOverlay,
+	Overlay,
 	IOverlaySpecialObject,
 	IPendingOverlay,
 	LayoutKey,
@@ -195,18 +195,18 @@ export class OverlaysAppEffects {
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 	);
-	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
-	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [IOverlay, CommunicatorEntity]) => {
+	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [Overlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
+	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [Overlay, CommunicatorEntity]) => {
 		if (!communicator) {
 			return Observable.of([overlay, null]);
 		}
 		return communicator.getPosition().map((position) => [overlay, position]);
 	});
-	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
+	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [Overlay, ICaseMapPosition]) => {
 		if (!overlay) {
 			return [overlay];
 		}
-		this.store$.dispatch(new SetHoveredOverlayAction(<IOverlay>{
+		this.store$.dispatch(new SetHoveredOverlayAction(<Overlay>{
 			...overlay,
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
@@ -217,7 +217,7 @@ export class OverlaysAppEffects {
 				return of(overlay);
 			});
 	});
-	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
+	private getHoveredOverlayAction = map((overlay: Overlay) => new SetHoveredOverlayAction(overlay));
 
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)

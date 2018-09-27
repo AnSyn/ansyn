@@ -5,7 +5,7 @@ import {
 	MultipleOverlaysSourceProvider
 } from './multiple-source-provider';
 
-import { IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { Overlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Observable } from 'rxjs/Rx';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
@@ -54,7 +54,7 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
+	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		return Observable.empty();
 	}
 }
@@ -75,7 +75,7 @@ class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	}
 
-	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
+	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		return Observable.empty();
 	}
 }

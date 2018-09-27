@@ -6,7 +6,7 @@ import {
 	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	getPolygonByPointAndRadius,
-	IOverlay,
+	Overlay,
 	IOverlaysFetchData,
 	limitArray,
 	LoggerService,
@@ -49,9 +49,9 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	}
 
-	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
+	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
-		return <Observable<IOverlay>>this.httpClient.get(url)
+		return <Observable<Overlay>>this.httpClient.get(url)
 			.map(this.extractData.bind(this))
 			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
@@ -75,7 +75,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		const requestParams = Object.assign({}, fetchParams, { limit: fetchParams.limit + 1 });
 		return <Observable<IOverlaysFetchData>>this.httpClient.post(url, requestParams)
 			.map(this.extractArrayData.bind(this))
-			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -101,18 +101,18 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	private extractArrayData(data: IIdahoResponse): Array<IOverlay> {
+	private extractArrayData(data: IIdahoResponse): Array<Overlay> {
 		return data ? data.idahoResult.map((element) => {
 			return this.parseData(element, data.token);
 		}) : [];
 	}
 
-	private extractData(data: IIdahoResponseForGetById): IOverlay {
+	private extractData(data: IIdahoResponseForGetById): Overlay {
 		return this.parseData(data.idahoResult, data.token);
 	}
 
-	protected parseData(idahoElement: any, token: string): IOverlay {
-		let overlay: IOverlay = <IOverlay> {};
+	protected parseData(idahoElement: any, token: string): Overlay {
+		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;
 		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
@@ -120,9 +120,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		overlay.sensorName = idahoElement.properties.platformName ? idahoElement.properties.platformName : UNKNOWN_NAME;
 		overlay.channel = idahoElement.properties.numBands;
 		overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
-		overlay.cloudCoverage = idahoElement.properties.cloud_cover ? idahoElement.properties.cloud_cover : DEFAULT_CLOUD_COVERAGE;
 		overlay.name = idahoElement.properties.catalogID;
-
 		overlay.thumbnailUrl = 'https://api.discover.digitalglobe.com/show?id=' + idahoElement.properties.catalogID + '&f=jpeg';
 		overlay.date = new Date(idahoElement.properties.acquisitionDate);
 		overlay.photoTime = idahoElement.properties.acquisitionDate;

@@ -9,7 +9,7 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { IOverlay } from '../../models/overlay.model';
+import { Overlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
 	BackToWorldView,
@@ -46,7 +46,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	_overlay: IOverlay;
+	_overlay: Overlay;
 
 	@HostBinding('class.active') @Input() active: boolean;
 
@@ -60,7 +60,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@Input() layerFlag = false;
 
-	@Input() set overlay(overlay: IOverlay) {
+	@Input() set overlay(overlay: Overlay) {
 		this._overlay = overlay;
 		if (!this._overlay) {
 			this.translatedOverlaySensorName = '';
@@ -88,7 +88,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 
 	@AutoSubscription
-	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
+	favoriteOverlays$: Observable<Overlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {
 			this.favoriteOverlays = favoriteOverlays;
 			this.updateFavoriteStatus();
@@ -96,7 +96,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays).pipe(
+	presetOverlays$: Observable<Overlay[]> = this.store$.select(selectPresetOverlays).pipe(
 		tap((presetOverlays) => {
 			this.presetOverlays = presetOverlays;
 			this.updatePresetStatus();
@@ -127,13 +127,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	favoriteOverlays: IOverlay[];
+	favoriteOverlays: Overlay[];
 	isFavorite: boolean;
 	removedOverlaysIds = [];
 
 	favoritesButtonText: string;
 
-	presetOverlays: IOverlay[];
+	presetOverlays: Overlay[];
 	isPreset: boolean;
 	presetsButtonText: string;
 	isRemoved: boolean;

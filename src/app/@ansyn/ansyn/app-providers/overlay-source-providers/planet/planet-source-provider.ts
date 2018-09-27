@@ -13,7 +13,7 @@ import {
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
 	IDataInputFilterValue,
-	IOverlay,
+	Overlay,
 	limitArray,
 	LoggerService,
 	sortByDateDesc,
@@ -130,7 +130,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
 			{ headers: this.httpHeaders, params: { _page_size: limit } })
 			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+			.map((overlays: Overlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -139,7 +139,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	getById(id: string, sourceType: string): Observable<IOverlay> {
+	getById(id: string, sourceType: string): Observable<Overlay> {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
 		const body = this.buildFilters([{ type: 'StringInFilter', field_name: 'id', config: [id] }]);
 		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders })
@@ -170,7 +170,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.pipe(
 				map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
-				map((overlays: IOverlay[]): IStartAndEndDate => {
+				map((overlays: Overlay[]): IStartAndEndDate => {
 					let startDate: string, endDate: string;
 					if (overlays.length === 0) {
 						startDate = moment().subtract(1, 'month').toISOString();  // month ago
@@ -231,7 +231,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const startDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: IOverlay[]) => {
+			.map((overlays: Overlay[]) => {
 				let startDate: Date;
 				if (overlays.length === 0) {
 					startDate = moment(params.date).subtract(1, 'month').toDate();  // a month before
@@ -254,7 +254,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const endDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: IOverlay[]) => {
+			.map((overlays: Overlay[]) => {
 				let endDate: Date;
 				if (overlays.length === 0) {
 					endDate = moment.min([moment(params.date).add(1, 'month'), moment()]).toDate();  // a month after
@@ -272,7 +272,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			.map(([start, end]: [Date, Date]) => ({ startDate: start.toISOString(), endDate: end.toString() }));
 	}
 
-	private extractArrayData(overlays: PlanetOverlay[]): IOverlay[] {
+	private extractArrayData(overlays: PlanetOverlay[]): Overlay[] {
 		if (!overlays) {
 			return [];
 		}
@@ -281,14 +281,14 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			.map((element) => this.parseData(element));
 	}
 
-	private extractData(overlays: Array<any>): IOverlay {
+	private extractData(overlays: Array<any>): Overlay {
 		if (overlays.length > 0) {
 			return this.parseData(overlays[0]);
 		}
 	}
 
-	protected parseData(element: PlanetOverlay): IOverlay {
-		const overlay: IOverlay = <IOverlay> {};
+	protected parseData(element: PlanetOverlay): Overlay {
+		const overlay: Overlay = new Overlay();
 
 		overlay.id = element.id;
 		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);

@@ -3,14 +3,14 @@ import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs/Rx';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
-import { coreInitialState, coreStateSelector, GoNextPresetOverlay, IOverlay, LoggerService } from '@ansyn/core';
+import { coreInitialState, coreStateSelector, GoNextPresetOverlay, Overlay, LoggerService } from '@ansyn/core';
 import { cold, hot } from 'jasmine-marbles';
 import { casesStateSelector, initialCasesState } from '@ansyn/menu-items';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 
-function mockOverlay(id: string): IOverlay {
-	const overlay = <IOverlay> {};
+function mockOverlay(id: string): Overlay {
+	const overlay = <Overlay> {};
 	overlay.id = id;
 	return overlay;
 }
@@ -19,8 +19,8 @@ describe('CoreAppEffects', () => {
 	let coreAppEffects: CoreAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
-	let overlays1to3: Array<IOverlay>;
-	let overlays1to4: Array<IOverlay>;
+	let overlays1to3: Array<Overlay>;
+	let overlays1to4: Array<Overlay>;
 	const coreState = { ...coreInitialState };
 	const casesState = { ...initialCasesState };
 	const mapsState = { ...initialMapState };

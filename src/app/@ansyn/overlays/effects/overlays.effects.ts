@@ -23,7 +23,7 @@ import {
 	BackToWorldView,
 	coreStateSelector,
 	ICoreState,
-	IOverlay,
+	Overlay,
 	IOverlaysFetchData,
 	LoggerService,
 	selectFavoriteOverlays,
@@ -72,7 +72,7 @@ export class OverlaysEffects {
 		.ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND)
 		.mergeMap((action: RequestOverlayByIDFromBackendAction) => {
 			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType)
-				.map((overlay: IOverlay) => new DisplayOverlayAction({
+				.map((overlay: Overlay) => new DisplayOverlayAction({
 					overlay,
 					mapId: action.payload.mapId,
 					forceFirstDisplay: true
@@ -91,7 +91,7 @@ export class OverlaysEffects {
 	@Effect()
 	setFavoriteOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
 		select(selectFavoriteOverlays),
-		map((favoriteOverlays: IOverlay[]) => favoriteOverlays.map(overlay => overlay.id)),
+		map((favoriteOverlays: Overlay[]) => favoriteOverlays.map(overlay => overlay.id)),
 		map((overlayIds) => new SetMarkUp({
 				classToSet: MarkUpClass.favorites,
 				dataToSet: {
@@ -104,7 +104,7 @@ export class OverlaysEffects {
 	@Effect()
 	setPresetOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
 		select(selectPresetOverlays),
-		map((presetOverlays: IOverlay[]) => presetOverlays.map(overlay => overlay.id)),
+		map((presetOverlays: Overlay[]) => presetOverlays.map(overlay => overlay.id)),
 		map((overlayIds) => new SetMarkUp({
 				classToSet: MarkUpClass.presets,
 				dataToSet: {

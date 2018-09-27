@@ -22,7 +22,7 @@ import {
 	CoreReducer,
 	FilterType,
 	GenericTypeResolverService,
-	IOverlay,
+	Overlay,
 	SetFavoriteOverlaysAction
 } from '@ansyn/core';
 import { LoadOverlaysAction, LoadOverlaysSuccessAction, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays';
@@ -44,7 +44,7 @@ describe('Filters app effects', () => {
 	const filterKey4: IFilter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
-	const favoriteOver = <IOverlay> {};
+	const favoriteOver = <Overlay> {};
 	favoriteOver.id = '2';
 
 	beforeEach(async(() => {
@@ -127,7 +127,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('setShowFavoritesFlagOnFilters$', () => {
-		const overlays = [<IOverlay> {}, <IOverlay> {}];
+		const overlays = [<Overlay> {}, <Overlay> {}];
 		store.dispatch(new SetFavoriteOverlaysAction(overlays));
 		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);

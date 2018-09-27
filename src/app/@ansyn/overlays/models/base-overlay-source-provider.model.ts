@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import {
 	IDataInputFilterValue,
 	ILimitedArray,
-	IOverlay,
+	Overlay,
 	IOverlaysFetchData,
 	LoggerService,
 	mergeLimitedArrays,
@@ -151,7 +151,7 @@ export abstract class BaseOverlaySourceProvider {
 
 	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate>;
 
-	abstract getById(id: string, sourceType: string): Observable<IOverlay>;
+	abstract getById(id: string, sourceType: string): Observable<Overlay>;
 
 	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
 }

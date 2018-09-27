@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IOverlay, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
+import { Overlay, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
@@ -85,14 +85,14 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 export class LoadOverlaysSuccessAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
-	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
+	constructor(public payload: Overlay[], public clearExistingOverlays = false) {
 	}
 }
 
 export class LoadOverlaysFailAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_FAIL;
 
-	constructor(public payload: IOverlay[]) {
+	constructor(public payload: Overlay[]) {
 	}
 }
 
@@ -120,7 +120,7 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
+	constructor(public payload: { overlay: Overlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
 	}
 }
 
@@ -174,7 +174,7 @@ export class RedrawTimelineAction implements Action {
 export class SetHoveredOverlayAction implements Action {
 	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
 
-	constructor(public payload?: IOverlay) {
+	constructor(public payload?: Overlay) {
 
 	}
 }

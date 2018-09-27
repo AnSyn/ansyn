@@ -6,7 +6,7 @@ import {
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
-	IOverlay,
+	Overlay,
 	limitArray,
 	LoggerService,
 	sortByDateDesc,
@@ -64,7 +64,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			.map(data => {
 				return this.extractArrayData(data.results);
 			})
-			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -73,7 +73,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	getById(id: string, sourceType: string): Observable<IOverlay> {
+	getById(id: string, sourceType: string): Observable<Overlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		return this.http.get<any>(baseUrl, { params: { _id: id } })
 			.map(data => {
@@ -92,7 +92,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		return empty();
 	}
 
-	private extractArrayData(overlays: Array<any>): Array<IOverlay> {
+	private extractArrayData(overlays: Array<any>): Array<Overlay> {
 		if (!overlays) {
 			return [];
 		}
@@ -101,21 +101,20 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			.map((element) => this.parseData(element));
 	}
 
-	private extractData(overlays: Array<any>): IOverlay {
+	private extractData(overlays: Array<any>): Overlay {
 		if (overlays.length > 0) {
 			return this.parseData(overlays[0]);
 		}
 	}
 
-	protected parseData(openAerialElement: any): IOverlay {
-		let overlay: IOverlay = <IOverlay> {};
+	protected parseData(openAerialElement: any): Overlay {
+		let overlay: Overlay = new Overlay();
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);
 		overlay.sensorType = openAerialElement.platform ? openAerialElement.platform : UNKNOWN_NAME;
 		overlay.sensorName = openAerialElement.properties.sensor ? openAerialElement.properties.sensor : UNKNOWN_NAME;
 		overlay.bestResolution = openAerialElement.gsd;
-		overlay.cloudCoverage = openAerialElement.properties.cloud_cover ? openAerialElement.properties.cloud_cover : DEFAULT_CLOUD_COVERAGE;
 		overlay.name = openAerialElement.title;
 		overlay.imageUrl = openAerialElement.properties.tms;
 		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;

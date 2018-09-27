@@ -17,7 +17,7 @@ import {
 	CoreActionTypes,
 	ICaseDataInputFiltersState,
 	ICaseTimeState,
-	IOverlay,
+	Overlay,
 	IOverlaysCriteria,
 	LayoutKey,
 	layoutOptions,
@@ -81,7 +81,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	comboBoxesProperties: IComboBoxesProperties;
 	dataInputFilterExpand: boolean;
 	timeSelectionEditIcon: boolean;
-	favoriteOverlays: IOverlay[];
+	favoriteOverlays: Overlay[];
 	layout: LayoutKey;
 	time: ICaseTimeState;
 

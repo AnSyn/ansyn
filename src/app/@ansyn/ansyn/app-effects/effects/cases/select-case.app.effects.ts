@@ -9,7 +9,7 @@ import {
 	ICase,
 	ICaseMapState,
 	ICoreConfig,
-	IOverlay,
+	Overlay,
 	isFullOverlay,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
@@ -97,7 +97,7 @@ export class SelectCaseAppEffects {
 		return map;
 	}
 
-	parseOverlay(overlay: IOverlay): IOverlay {
+	parseOverlay(overlay: Overlay): Overlay {
 		return isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
 }

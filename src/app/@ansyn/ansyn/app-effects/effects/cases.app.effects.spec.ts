@@ -13,7 +13,7 @@ import {
 	CoreConfig,
 	ErrorHandlerService,
 	ICase,
-	IOverlay,
+	Overlay,
 	SetMapsDataActionStore,
 	SetToastMessageAction,
 	StorageService
@@ -94,7 +94,7 @@ describe('CasesAppEffects', () => {
 					useValue: {
 						getOverlayById: (id: string) => {
 							if (['uuu', 'eee'].includes(id)) {
-								const overlay = <IOverlay> {};
+								const overlay = <Overlay> {};
 								overlay.id = id;
 
 								return Observable.of(overlay);
@@ -146,7 +146,7 @@ describe('CasesAppEffects', () => {
 	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
 		const mapsList: any[] = [{ id: 'map1', data: {} }, { id: 'map2', data: {} }];
 		const activeMapId = 'map1';
-		const overlay = <IOverlay> { id: 'tmp' };
+		const overlay = <Overlay> { id: 'tmp' };
 		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
 		const action = new DisplayOverlaySuccessAction({ overlay, mapId: 'map1' });
 		actions = hot('--a--', { a: action });

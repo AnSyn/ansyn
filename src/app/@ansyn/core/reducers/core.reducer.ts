@@ -7,7 +7,7 @@ import {
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IOverlay, IOverlaysCriteria } from '../models/overlay.model';
+import { Overlay, IOverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
 import { uniq } from 'lodash';
@@ -27,11 +27,11 @@ export interface IToastMessage {
 
 export interface ICoreState {
 	toastMessage: IToastMessage;
-	favoriteOverlays: IOverlay[];
+	favoriteOverlays: Overlay[];
 	removedOverlaysIds: string[];
 	removedOverlaysIdsCount: number;
 	removedOverlaysVisibility: boolean;
-	presetOverlays: IOverlay[];
+	presetOverlays: Overlay[];
 	alertMsg: AlertMsg;
 	overlaysCriteria: IOverlaysCriteria;
 	layout: LayoutKey;
@@ -143,10 +143,10 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 	}
 }
 
-export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
+export const selectFavoriteOverlays: MemoizedSelector<any, Overlay[]> = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
 export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(coreStateSelector, (core) => core.removedOverlaysIds);
 export const selectRemovedOverlaysVisibility: MemoizedSelector<any, boolean> = createSelector(coreStateSelector, (core) => core.removedOverlaysVisibility);
-export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(coreStateSelector, (core) => core.presetOverlays);
+export const selectPresetOverlays: MemoizedSelector<any, Overlay[]> = createSelector(coreStateSelector, (core) => core.presetOverlays);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(coreStateSelector, (core) => core.layout);
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);

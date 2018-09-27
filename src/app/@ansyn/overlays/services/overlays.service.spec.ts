@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { Observer } from 'rxjs/Observer';
 import {
 	buildFilteredOverlays,
-	IOverlay,
+	Overlay,
 	IOverlaysCriteria,
 	IOverlaysFetchData,
 	IOverlaySpecialObject,
@@ -27,13 +27,13 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
+	public getById(id: string, sourceType: string = null): Observable<Overlay> {
 		return Observable.empty();
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return Observable.create((observer: Observer<IOverlaysFetchData>) => {
-			const overlays: IOverlay[] = [
+			const overlays: Overlay[] = [
 				{
 					id: 'abc',
 					sourceType: 'mock1',
@@ -58,8 +58,8 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		});
 	}
 
-	getOverlayById(id: string): Observable<IOverlay> {
-		return Observable.create((observer: Observer<IOverlay>) => {
+	getOverlayById(id: string): Observable<Overlay> {
+		return Observable.create((observer: Observer<Overlay>) => {
 			const overlay: any = {
 				id: 'abc',
 				sourceType: 'mock1',

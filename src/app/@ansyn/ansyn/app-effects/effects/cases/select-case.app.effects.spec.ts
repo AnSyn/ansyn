@@ -24,7 +24,7 @@ import {
 	ICaseState,
 	ICaseTimeState,
 	IContextEntity,
-	IOverlay,
+	Overlay,
 	IOverlaysManualProcessArgs,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
@@ -79,10 +79,10 @@ describe('SelectCaseAppEffects', () => {
 				time: ICaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
-				favoriteOverlays: IOverlay[] = [],
+				favoriteOverlays: Overlay[] = [],
 				removedOverlaysIds: string[] = [],
 				removedOverlaysVisibility = true,
-				presetOverlays: IOverlay[] = [],
+				presetOverlays: Overlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
 					activeLayersIds: []

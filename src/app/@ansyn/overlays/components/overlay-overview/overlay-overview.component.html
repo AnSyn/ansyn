@@ -4,10 +4,10 @@
 			#img
 			(error)="img.src = errorSrc"
 			(load)="finishedLoadingImage()"
-			[class.loading]="fetchingUrlOrLoadingImage"
+			[class.loading]="loadingImage"
 			[style.transform]="'rotate(' + rotation + 'rad)'">
-		<p class="error-text" *ngIf="img.src.includes(errorSrc) && !fetchingUrlOrLoadingImage">Preview is not available</p>
-		<ansyn-loader [show]="fetchingUrlOrLoadingImage"></ansyn-loader>
+		<p class="error-text" *ngIf="img.src.includes(errorSrc)">Preview is not available</p>
+		<ansyn-loader [show]="loadingImage"></ansyn-loader>
 	</main>
 	<footer>
 		<div dir="rtl">{{sensorName | translate}}</div>

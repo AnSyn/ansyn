@@ -56,7 +56,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '@ansyn/status-bar';
-import { featureCollection } from '@turf/turf';
+import { area, featureCollection, polygon } from '@turf/turf';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 // @dynamic
@@ -415,7 +415,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
-					this.store$.dispatch(new UpdateLayer({ ...activeAnnotationLayer, data }));
+					this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 				})
 			).subscribe();
 
@@ -509,17 +509,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates();
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					const calcLength = Sphere.getLength(line, { projection });
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(calcLength)
 						})
 					}));
 				}
 				break;
-			case 'Polygon':
-			case 'Arrow':
+			case 'Arrow': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
@@ -527,26 +527,53 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(this.calcLineLength(line, projection))
 						})
 					}));
 				}
+			}
 				break;
-			case 'Rectangle':
+			case 'Polygon': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
-				for (let i = 0; i < 2; i++) {
+				let calcCircumference = 0;
+				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(this.calcLineLength(line, projection))
+						})
+					}));
+					const calcLength = Sphere.getLength(line, { projection });
+					calcCircumference += calcLength;
+				}
+				const boundingRect = this.getFeatureBoundingRect(feature);
+				this.areaCircumferenceStyle(calcCircumference, boundingRect, coordinates).forEach((style) => moreStyles.push(style));
+			}
+				break;
+			case 'Rectangle': {
+				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
+				const boundingRect = this.getFeatureBoundingRect(feature);
+				let calcCircumference = 0;
+				for (let i = 0; i < 2; i++) {
+					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					const calcLength = Sphere.getLength(line, { projection });
+					calcCircumference += calcLength * 2;
+					moreStyles.push(new olStyle({
+						geometry: line,
+						text: new olText({
+							...this.measuresTextStyle,
+							text: this.formatLength(calcLength)
 						})
 					}));
 				}
+				this.areaCircumferenceStyle(calcCircumference, boundingRect, coordinates).forEach((style) => moreStyles.push(style));
+			}
 				break;
 			case 'Circle':
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
+				const boundingRect = this.getFeatureBoundingRect(feature);
 				const leftright = coordinates.reduce((prevResult, currCoord) => {
 					if (currCoord[0] > prevResult.right[0]) {
 						return { left: prevResult.left, right: currCoord };
@@ -557,39 +584,75 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					}
 				}, { left: [Infinity, 0], right: [-Infinity, 0] });
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
-				moreStyles.push(new olStyle({
-					geometry: line,
-					stroke: new olStroke({
-						color: '#27b2cfe6',
-						width: 1
+				const radius = Sphere.getLength(line, { projection }) / 2;
+				const circleArea = Math.pow(radius, 2) * Math.PI;
+				const circleCircumference = 2 * radius * Math.PI;
+				moreStyles.push(
+					new olStyle({
+						text: new olText({
+							...this.measuresTextStyle,
+							text: `Circumference: ${this.formatLength(circleCircumference)}`,
+							offsetY: -boundingRect.height / 2 - 44
+						})
 					}),
-					text: new olText({
-						...this.measuresTextStyle,
-						text: this.formatLength(line, projection)
-					})
-				}));
+					new olStyle({
+						text: new olText({
+							...this.measuresTextStyle,
+							text: `Area: ${this.formatArea(circleArea / 1000000)}`,
+							offsetY: -boundingRect.height / 2 - 25
+						})
+					}),
+					new olStyle({
+						geometry: line,
+						stroke: new olStroke({
+							color: '#27b2cfe6',
+							width: 1
+						}),
+						text: new olText({
+							...this.measuresTextStyle,
+							text: this.formatLength(this.calcLineLength(line, projection))
+						})
+					}));
 				break;
 		}
 		return moreStyles;
 	}
 
-	/**
-	 * Format length output.
-	 * @param line The line.
-	 * @param projection The Projection.
-	 */
-	formatLength(line, projection): string {
-		const length = Sphere.getLength(line, { projection: projection });
+	calcLineLength(line: olLineString, projection: ol.proj.Projection): number {
+		return Sphere.getLength(line, { projection });
+	}
+
+	formatArea(calcArea: number): string {
+		return Math.round(calcArea * 100) / 100 + ' Km²';
+	};
+
+	formatLength(calcLength): string {
 		let output;
-		if (length >= 1000) {
-			output = (Math.round(length / 1000 * 100) / 100) +
-				' ' + 'km';
+		if (calcLength >= 1000) {
+			output = (Math.round(calcLength / 1000 * 100) / 100) + ' Km';
 		} else {
-			output = (Math.round(length * 100) / 100) +
-				' ' + 'm';
+			output = (Math.round(calcLength * 100) / 100) + ' m';
 		}
 		return output;
 	};
+
+	areaCircumferenceStyle(calcCircumference: number, boundingRect: IAnnotationBoundingRect, coordinates: [number, number][]): olStyle[] {
+		return [
+			new olStyle({
+				text: new olText({
+					...this.measuresTextStyle,
+					text: `Circumference: ${this.formatLength(calcCircumference)}`,
+					offsetY: -boundingRect.height / 2 - 44
+				})
+			}),
+			new olStyle({
+				text: new olText({
+					...this.measuresTextStyle,
+					text: `Area: ${this.formatArea(area(polygon([coordinates])) / 1000000)}`,
+					offsetY: -boundingRect.height / 2 - 25
+				})
+			})];
+	}
 
 }
 

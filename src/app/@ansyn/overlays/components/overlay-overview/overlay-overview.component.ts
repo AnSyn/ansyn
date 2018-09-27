@@ -87,23 +87,29 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onHoveredOverlay(overlay: IOverlay) {
 		if (overlay) {
-			this.checkIfFetchingImageUrl(overlay);
-			const isNewOverlay = this.overlayId !== overlay.id;
+
+			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
+			// if (!fetching && this._fetchingImageUrl) {
+			// 	this.startedLoadingImage();
+			// }
+			// this._fetchingImageUrl = fetching;
+
 			this.overlayId = overlay.id;
 			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);
-			if (hoveredElement) {
-				const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-				this.left = hoveredElementBounds.left - 50;
-				this.top = hoveredElementBounds.top;
-				this.isHoveringOverDrop = true;
-
-				this.sensorName = overlay.sensorName;
-				this.img.nativeElement.src = this._fetchingImageUrl ? '' : overlay.thumbnailUrl;
-				this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-				if (isNewOverlay && !this.img.nativeElement.complete) {
-					this.startedLoadingImage();
-				}
+			if (!hoveredElement) {
+				return;
 			}
+			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
+			this.left = hoveredElementBounds.left - 50;
+			this.top = hoveredElementBounds.top;
+			this.isHoveringOverDrop = true;
+
+			this.sensorName = overlay.sensorName;
+			this.img.nativeElement.src = fetching /*this._fetchingImageUrl */ ? '' : overlay.thumbnailUrl;
+			this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
+			// if (!this.img.nativeElement.complete) {
+			this.startedLoadingImage();
+			// }
 		} else {
 			this.isHoveringOverDrop = false;
 		}
@@ -121,7 +127,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		this._loadingImage = false;
 	}
 
-	checkIfFetchingImageUrl(overlay: IOverlay): void {
+	checkIfFetchingImageUrl	(overlay: IOverlay): void {
 		const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 		if (!fetching && this._fetchingImageUrl) {
 			this.startedLoadingImage();

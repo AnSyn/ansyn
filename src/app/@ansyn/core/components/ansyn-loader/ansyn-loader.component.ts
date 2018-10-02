@@ -6,11 +6,8 @@ import { Component, HostBinding, Input } from '@angular/core';
 	styleUrls: ['./ansyn-loader.component.less']
 })
 export class AnsynLoaderComponent {
-	@Input() show = false;
-	@Input() loaderText = '';
+	@Input()
+	@HostBinding('class.show') show: boolean;
 
-	@HostBinding('class.show')
-	get showIt() {
-		return this.show;
-	}
+	@Input() loaderText = '';
 }

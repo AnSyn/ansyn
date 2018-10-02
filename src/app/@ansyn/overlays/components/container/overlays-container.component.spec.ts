@@ -86,11 +86,11 @@ describe('OverlayContainerComponent', () => {
 			];
 
 			store.dispatch(new LoadOverlaysAction({}));
-			expect(state.value.overlays.loading).toBeTruthy();
+			expect(state.value.overlays._loading).toBeTruthy();
 
 			store.dispatch(new LoadOverlaysSuccessAction(overlays));
 			expect(state.value.overlays.overlays.size).toEqual(2);
-			expect(state.value.overlays.loading).toBeFalsy();
+			expect(state.value.overlays._loading).toBeFalsy();
 
 		});
 

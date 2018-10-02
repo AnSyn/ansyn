@@ -107,7 +107,8 @@ export abstract class BaseOverlaySourceProvider {
 						errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
 					});
 				}));
-			});
+			});pp/@ansyn/plugins/public_api.ts
+
 
 		if (fetchObservables.length <= 0) {
 			return of({ data: [], limited: 0, errors: [] });

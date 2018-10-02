@@ -27,6 +27,11 @@
 		position: relative;
 		main {
 			min-height: @image-height;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			// Prevent image overflow when the image is rotated, when the map is rotated
+			overflow: hidden;
 
 			p.error-text {
 				top: 50px;

@@ -39,6 +39,7 @@ export interface IPlanetOverlaySourceConfig {
 	itemTypes: string[];
 	apiKey: string;
 	tilesUrl: string;
+	delayMultiple: number;
 }
 
 export interface IPlanetFilter {
@@ -89,7 +90,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
 		return super.buildFetchObservables(fetchParams, filters).map((obs, index) => {
 			return of(null).pipe(
-				delay(index * 400),
+				delay(index * this.planetOverlaysSourceConfig.delayMultiple),
 				mergeMap(() => obs)
 			);
 		});

@@ -33,10 +33,7 @@ export class LayersEffects {
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
 			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers)),
-			catchError((exception) => {
-				this.store$.dispatch(new LayerCollectionLoadedAction([]));
-				return EMPTY;
-			})
+			catchError(() => of(new LayerCollectionLoadedAction([])))
 		);
 
 	@Effect()

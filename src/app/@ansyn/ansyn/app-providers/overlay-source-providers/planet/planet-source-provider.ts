@@ -1,13 +1,19 @@
 import { Observable, of } from 'rxjs';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams,
+	IOverlayFilter,
+	IStartAndEndDate,
+	UNKNOWN_NAME
+} from '@ansyn/overlays';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
 	IDataInputFilterValue,
-	IOverlay, IOverlaysFetchData,
+	IOverlay,
 	limitArray,
 	LoggerService,
 	sortByDateDesc,
@@ -19,10 +25,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
-import { Feature } from 'geojson';
-import { intersect } from '@turf/turf';
 import { delay, mergeMap } from 'rxjs/operators';
-import { IOverlayFilter, timeIntersection } from '../../../../overlays/models/base-overlay-source-provider.model';
 
 const moment = momentNs;
 

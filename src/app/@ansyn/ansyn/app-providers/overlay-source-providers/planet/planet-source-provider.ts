@@ -1,6 +1,12 @@
-import { Observable } from 'rxjs';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams,
+	IOverlayFilter,
+	IStartAndEndDate,
+	UNKNOWN_NAME
+} from '@ansyn/overlays';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	ErrorHandlerService,
@@ -19,6 +25,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
+import { delay, mergeMap } from 'rxjs/operators';
 
 const moment = momentNs;
 
@@ -32,6 +39,7 @@ export interface IPlanetOverlaySourceConfig {
 	itemTypes: string[];
 	apiKey: string;
 	tilesUrl: string;
+	delayMultiple: number;
 }
 
 export interface IPlanetFilter {
@@ -77,6 +85,15 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 	appendApiKey(url: string) {
 		return `${url}?api_key=${this.planetOverlaysSourceConfig.apiKey}`;
+	}
+
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+		return super.buildFetchObservables(fetchParams, filters).map((obs, index) => {
+			return of(null).pipe(
+				delay(index * this.planetOverlaysSourceConfig.delayMultiple),
+				mergeMap(() => obs)
+			);
+		});
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<IOverlaysPlanetFetchData> {

@@ -505,21 +505,22 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const moreStyles: olStyle[] = [];
 		let coordinates: any[] = [];
 		switch (mode) {
-			case 'LineString':
+			case 'LineString': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates();
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
-					const calcLength = Sphere.getLength(line, { projection });
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(calcLength)
+							text: this.formatLength(Sphere.getLength(line, { projection }))
 						})
 					}));
 				}
+			}
 				break;
-			case 'Arrow': {
+			case 'Polygon':
+			case 'Arrow':
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
@@ -527,53 +528,27 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(this.calcLineLength(line, projection))
+							text: this.formatLength(Sphere.getLength(line, { projection }))
 						})
 					}));
 				}
-			}
-				break;
-			case 'Polygon': {
-				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
-				let calcCircumference = 0;
-				for (let i = 0; i < coordinates.length - 1; i++) {
-					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
-					moreStyles.push(new olStyle({
-						geometry: line,
-						text: new olText({
-							...this.measuresTextStyle,
-							text: this.formatLength(this.calcLineLength(line, projection))
-						})
-					}));
-					const calcLength = Sphere.getLength(line, { projection });
-					calcCircumference += calcLength;
-				}
-				const boundingRect = this.getFeatureBoundingRect(feature);
-				this.areaCircumferenceStyle(calcCircumference, boundingRect, coordinates).forEach((style) => moreStyles.push(style));
-			}
 				break;
 			case 'Rectangle': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
-				const boundingRect = this.getFeatureBoundingRect(feature);
-				let calcCircumference = 0;
 				for (let i = 0; i < 2; i++) {
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
-					const calcLength = Sphere.getLength(line, { projection });
-					calcCircumference += calcLength * 2;
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(calcLength)
+							text: this.formatLength(Sphere.getLength(line, { projection }))
 						})
 					}));
 				}
-				this.areaCircumferenceStyle(calcCircumference, boundingRect, coordinates).forEach((style) => moreStyles.push(style));
 			}
 				break;
 			case 'Circle':
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
-				const boundingRect = this.getFeatureBoundingRect(feature);
 				const leftright = coordinates.reduce((prevResult, currCoord) => {
 					if (currCoord[0] > prevResult.right[0]) {
 						return { left: prevResult.left, right: currCoord };
@@ -584,24 +559,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					}
 				}, { left: [Infinity, 0], right: [-Infinity, 0] });
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
-				const radius = Sphere.getLength(line, { projection }) / 2;
-				const circleArea = Math.pow(radius, 2) * Math.PI;
-				const circleCircumference = 2 * radius * Math.PI;
 				moreStyles.push(
-					new olStyle({
-						text: new olText({
-							...this.measuresTextStyle,
-							text: `Circumference: ${this.formatLength(circleCircumference)}`,
-							offsetY: -boundingRect.height / 2 - 44
-						})
-					}),
-					new olStyle({
-						text: new olText({
-							...this.measuresTextStyle,
-							text: `Area: ${this.formatArea(circleArea / 1000000)}`,
-							offsetY: -boundingRect.height / 2 - 25
-						})
-					}),
 					new olStyle({
 						geometry: line,
 						stroke: new olStroke({
@@ -610,16 +568,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						}),
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(this.calcLineLength(line, projection))
+							text: this.formatLength(Sphere.getLength(line, { projection }))
 						})
 					}));
 				break;
 		}
+		moreStyles.push(...this.areaCircumferenceStyles(feature, projection));
 		return moreStyles;
-	}
-
-	calcLineLength(line: olLineString, projection: ol.proj.Projection): number {
-		return Sphere.getLength(line, { projection });
 	}
 
 	formatArea(calcArea: number): string {
@@ -636,22 +591,30 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return output;
 	};
 
-	areaCircumferenceStyle(calcCircumference: number, boundingRect: IAnnotationBoundingRect, coordinates: [number, number][]): olStyle[] {
+	areaCircumferenceStyles(feature: any, projection: any): olStyle[] {
+
+		const calcCircumference = Sphere.getLength(feature.getGeometry(), { projection });
+		const calcArea = Sphere.getArea(feature.getGeometry(), { projection });
+		const { height } = this.getFeatureBoundingRect(feature);
+		if (!calcArea || !calcCircumference) {
+			return [];
+		}
 		return [
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
 					text: `Circumference: ${this.formatLength(calcCircumference)}`,
-					offsetY: -boundingRect.height / 2 - 44
+					offsetY: -height / 2 - 44
 				})
 			}),
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
-					text: `Area: ${this.formatArea(area(polygon([coordinates])) / 1000000)}`,
-					offsetY: -boundingRect.height / 2 - 25
+					text: `Area: ${this.formatArea(calcArea / 1000000)}`,
+					offsetY: -height / 2 - 25
 				})
-			})];
+			})
+		];
 	}
 
 }

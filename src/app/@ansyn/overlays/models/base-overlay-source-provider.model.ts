@@ -11,7 +11,6 @@ import {
 	mergeLimitedArrays,
 	sortByDateDesc
 } from '@ansyn/core';
-import { delay, mergeMap } from 'rxjs/operators';
 
 export interface IDateRange {
 	start: Date;
@@ -63,10 +62,10 @@ export const UNKNOWN_NAME = 'Unknown';
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
-	constructor(protected loggerService: LoggerService) {
+	protected constructor(protected loggerService: LoggerService) {
 	}
 
-	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
 		const regionFeature: Feature<any> = {
 			type: 'Feature',
 			properties: {},
@@ -79,7 +78,7 @@ export abstract class BaseOverlaySourceProvider {
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		const fetchObservables = filters
+		return filters
 			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(regionFeature, f.coverage);
 				return intersection && intersection.geometry;
@@ -107,13 +106,11 @@ export abstract class BaseOverlaySourceProvider {
 						errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
 					});
 				});
-			}).map((obs, index) => {
-				return of(null).pipe(
-					delay(index * 400),
-					mergeMap(() => obs)
-				);
-			});
+			})
+	}
 
+	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
+		const fetchObservables = this.buildFetchObservables(fetchParams, filters);
 		if (fetchObservables.length <= 0) {
 			return of({ data: [], limited: 0, errors: [] });
 		}

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
@@ -7,7 +7,7 @@ import {
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
 	IDataInputFilterValue,
-	IOverlay,
+	IOverlay, IOverlaysFetchData,
 	limitArray,
 	LoggerService,
 	sortByDateDesc,
@@ -19,6 +19,10 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
+import { Feature } from 'geojson';
+import { intersect } from '@turf/turf';
+import { delay, mergeMap } from 'rxjs/operators';
+import { IOverlayFilter, timeIntersection } from '../../../../overlays/models/base-overlay-source-provider.model';
 
 const moment = momentNs;
 
@@ -77,6 +81,15 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 	appendApiKey(url: string) {
 		return `${url}?api_key=${this.planetOverlaysSourceConfig.apiKey}`;
+	}
+
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+		return super.buildFetchObservables(fetchParams, filters).map((obs, index) => {
+			return of(null).pipe(
+				delay(index * 400),
+				mergeMap(() => obs)
+			);
+		});
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<IOverlaysPlanetFetchData> {

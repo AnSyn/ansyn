@@ -19,10 +19,10 @@ export interface IDateRange {
 
 export interface IFetchParams {
 	limit: number;
-	region: GeoJsonObject;
+	region: GeoJsonObject | any;
 	sensors?: string[];
 	dataInputFilters: IDataInputFilterValue[];
-	timeRange: IDateRange;
+	timeRange: IDateRange | any;
 }
 
 export interface IOverlayFilter {

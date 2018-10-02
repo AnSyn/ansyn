@@ -1,9 +1,10 @@
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IOverlayFilter,
 	IStartAndEndDate,
+	timeIntersection,
 	UNKNOWN_NAME
 } from '@ansyn/overlays';
 import { Inject, Injectable } from '@angular/core';
@@ -25,7 +26,10 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
-import { delay, mergeMap } from 'rxjs/operators';
+import { Feature } from 'geojson';
+import { intersect } from '@turf/turf';
+import { isEqual } from 'lodash';
+import { catchError } from 'rxjs/operators';
 
 const moment = momentNs;
 
@@ -78,7 +82,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			item_types: Array.isArray(sensors) ? sensors : this.planetOverlaysSourceConfig.itemTypes,
 			filter: {
 				type: 'AndFilter',
-				config: config
+				config
 			}
 		};
 	}
@@ -88,31 +92,101 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
-		return super.buildFetchObservables(fetchParams, filters).map((obs, index) => {
-			return of(null).pipe(
-				delay(index * this.planetOverlaysSourceConfig.delayMultiple),
-				mergeMap(() => obs)
-			);
-		});
+		const regionFeature: Feature<any> = {
+			type: 'Feature',
+			properties: {},
+			geometry: fetchParams.region
+		};
+		// They are strings!
+		const fetchParamsTimeRange = {
+			start: new Date(fetchParams.timeRange.start),
+			end: new Date(fetchParams.timeRange.end)
+		};
+
+		let region: any = { type: 'OrFilter', config: [] };
+		let timeRange: any = { type: 'OrFilter', config: [] };
+		let sensors: any = [];
+
+		filters
+			.filter(f => { // Make sure they have a common region
+				const intersection = intersect(regionFeature, f.coverage);
+				return intersection && intersection.geometry;
+			})
+			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
+			.forEach(f => {
+				const { geometry } = intersect(f.coverage, regionFeature);
+				const time = timeIntersection(fetchParamsTimeRange, f.timeRange);
+
+				if (!region.config.some((secGeomerty) => isEqual(geometry, secGeomerty))) {
+					region.config.push(geometry);
+				}
+
+				if (!timeRange.config.some((secTime) => isEqual(time, secTime))) {
+					timeRange.config.push(time);
+				}
+
+				if (f.sensor && !sensors.includes(f.sensor)) {
+					sensors.push(f.sensor);
+				}
+			});
+		return [this.fetch(<any>{
+			...fetchParams,
+			region,
+			timeRange,
+			sensors
+		})];
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<IOverlaysPlanetFetchData> {
-		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+		if (fetchParams.region.type !== 'OrFilter') {
+			fetchParams.region = {
+				type: 'OrFilter',
+				config: [fetchParams.region]
+			};
 		}
-		// if limit not provided by config - set default value
-		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
-		let baseUrl = this.planetOverlaysSourceConfig.baseUrl;
+		if (fetchParams.timeRange.type !== 'OrFilter') {
+			fetchParams.timeRange = {
+				type: 'OrFilter',
+				config: [fetchParams.timeRange]
+			};
+		}
+
+		fetchParams.region.config.forEach((geom, index, arr) => {
+			if (geom.type === 'MultiPolygon') {
+				arr[index] = geojsonMultiPolygonToPolygon(geom as GeoJSON.MultiPolygon);
+			}
+		});
+
+		if (!fetchParams.limit) {
+			fetchParams.limit = DEFAULT_OVERLAYS_LIMIT;
+		}
+
 		// add 1 to limit - so we'll know if provider have more then X overlays
-		const limit = `${fetchParams.limit + 1}`;
+		const _page_size = `${fetchParams.limit + 1}`;
 
-		const bboxFilter = { type: 'GeometryFilter', field_name: 'geometry', config: fetchParams.region };
-		const dateFilter = {
-			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: fetchParams.timeRange.start.toISOString(), lte: fetchParams.timeRange.end.toISOString() }
-		};
-
-		const filters: IPlanetFilter[] = [bboxFilter, dateFilter];
+		const filters: IPlanetFilter[] = [
+			/* geometry */
+			{
+				type: 'OrFilter',
+				config: fetchParams.region.config.map((geometry) => ({
+					type: 'GeometryFilter',
+					field_name: 'geometry',
+					config: geometry
+				}))
+			},
+			/* time */
+			{
+				type: 'OrFilter',
+				config: fetchParams.timeRange.config.map(({ start, end }) => ({
+					field_name: 'acquired',
+					type: 'DateRangeFilter',
+					config: {
+						gte: start.toISOString(),
+						lte: end.toISOString()
+					}
+				}))
+			}
+		];
 
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
 			const configFilters = [];
@@ -137,17 +211,19 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 			filters.push(preFilter);
 		}
-
-		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
-			{ headers: this.httpHeaders, params: { _page_size: limit } })
-			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+		const { baseUrl } = this.planetOverlaysSourceConfig;
+		const body = this.buildFilters(filters, fetchParams.sensors);
+		const options = { headers: this.httpHeaders, params: { _page_size } };
+		return this.http.post(baseUrl, body, options).pipe(
+			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
+			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
-			}))
-			.catch((error: HttpResponseBase | any) => {
+			})),
+			catchError((error: HttpResponseBase | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {

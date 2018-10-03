@@ -51,7 +51,7 @@ export interface IPlanetOverlaySourceConfig {
 export interface IPlanetFilter {
 	type: string,
 	field_name?: string,
-	config: object;
+	config: any | Array<IPlanetFilter>;
 }
 
 export interface IPlanetFetchParams extends IFetchParams {
@@ -157,7 +157,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	paramsToFilter(fetchParams: IFetchParams): IPlanetFilter {
-		return {
+
+		const filters: IPlanetFilter =  {
 			type: 'AndFilter',
 			config: [
 				{
@@ -172,14 +173,17 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 						gte: fetchParams.timeRange.start.toISOString(),
 						lte: fetchParams.timeRange.end.toISOString()
 					}
-				},
-				{
-					type: 'StringInFilter',
-					field_name: 'item_type',
-					config: fetchParams.sensors
 				}
 			]
+		};
+		if (fetchParams.sensors.length) {
+			filters.config.push({
+				type: 'StringInFilter',
+				field_name: 'item_type',
+				config: fetchParams.sensors
+			})
 		}
+		return filters;
 	}
 
 	fetch(fetchParams: IPlanetFetchParams): Observable<IOverlaysPlanetFetchData> {

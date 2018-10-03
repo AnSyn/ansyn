@@ -329,7 +329,7 @@ describe('MapAppEffects', () => {
 					sourceType: 'IDAHO',
 					mapId: 'imagery1'
 				}),
-				c: new SetIsLoadingAcion({ mapId: 'imagery1', show: true, text: 'Loading IOverlay' })
+				c: new SetIsLoadingAcion({ mapId: 'imagery1', show: true, text: 'Loading Overlay' })
 			});
 
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);
@@ -370,7 +370,7 @@ describe('MapAppEffects', () => {
 					sourceType: 'PLANET',
 					mapId: 'imagery1'
 				}),
-				c: new SetIsLoadingAcion({ mapId: 'imagery1', show: true, text: 'Loading IOverlay' })
+				c: new SetIsLoadingAcion({ mapId: 'imagery1', show: true, text: 'Loading Overlay' })
 			});
 
 			expect(mapAppEffects.onOverlayFromURL$).toBeObservable(expectedResults);

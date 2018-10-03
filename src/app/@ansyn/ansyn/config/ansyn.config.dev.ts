@@ -20,7 +20,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			key: 'overlayIsNotPartOfQuery',
 			background: '#27B2CF',
-			text: 'This IOverlay Is Not a Part of the Query'
+			text: 'This Overlay Is Not a Part of the Query'
 		},
 		{
 			key: 'overlaysOutOfBounds',

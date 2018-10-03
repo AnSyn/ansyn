@@ -170,10 +170,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (this.enableCopyOriginalOverlayData && this._overlay.tag) {
 			const tagJson = JSON.stringify(this._overlay.tag);
 			copyFromContent(tagJson);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'IOverlay original data copied to clipboard' }));
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
 		} else {
 			copyFromContent(this.overlayDescription);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'IOverlay description copied to clipboard' }));
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
 		}
 	}
 

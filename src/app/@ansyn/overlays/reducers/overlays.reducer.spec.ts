@@ -11,7 +11,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { IOverlaySpecialObject } from '@ansyn/core';
 
-describe('IOverlay Reducer', () => {
+describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
 	beforeEach(() => {
 		o1 = {

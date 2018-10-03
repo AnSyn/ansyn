@@ -53,7 +53,7 @@ export interface IPlanetFilter {
 }
 
 export interface IPlanetFetchParams extends IFetchParams {
-	parsedFilters: IFetchParams[]
+	filters: IPlanetFilter[]
 }
 
 @Injectable()
@@ -124,21 +124,21 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const reduceFilters: any[] = filters
 			.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
 			.reduce((res, item) => {
-			const exist = res.find((f) => isEqual({ coverage: f.coverage, timeRange: f.timeRange }, { coverage: item.coverage, timeRange: item.timeRange }))
-			if (exist) {
-				exist.sensors = uniq([ ...exist.sensors, ...item.sensors]);
+			const equalItem = res.find((f) => isEqual({ coverage: f.coverage, timeRange: f.timeRange }, { coverage: item.coverage, timeRange: item.timeRange }))
+			if (equalItem) {
+				equalItem.sensors = uniq([ ...equalItem.sensors, ...item.sensors]);
 				return res;
 			}
 			return [...res, item];
 		}, []);
 
-		const parsedFilters: Partial<IFetchParams>[] = reduceFilters
+		const planetFilters: IPlanetFilter[] = reduceFilters
 			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(regionFeature, f.coverage);
 				return intersection && intersection.geometry;
 			})
 			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
-			.map((item) => {
+			.map((item): Partial<IFetchParams> => {
 				const { geometry } = intersect(item.coverage, regionFeature);
 				const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
 				const { sensors } = item;
@@ -147,10 +147,11 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 					region: geometry,
 					sensors
 				};
-			}, []);
+		}).map(this.paramsToFilter);
+
 		return [this.fetch(<any>{
 			...fetchParams,
-			parsedFilters
+			filters: planetFilters
 		})];
 	}
 
@@ -185,7 +186,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IPlanetFetchParams): Observable<IOverlaysPlanetFetchData> {
-		const filters: IPlanetFilter[] = fetchParams.parsedFilters.map(this.paramsToFilter);
+		const { filters } = fetchParams;
 
 		if (!fetchParams.limit) {
 			fetchParams.limit = DEFAULT_OVERLAYS_LIMIT;

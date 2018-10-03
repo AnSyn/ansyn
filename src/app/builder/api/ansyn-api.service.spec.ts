@@ -106,7 +106,7 @@ describe('apiService', () => {
 	});
 
 	it('should displayOverLay', () => {
-		const overlay: IOverlay = <IOverlay>{
+		const overlay: IOverlay = {
 			'id': 'LC80410372018051LGN00',
 			'footprint': {
 				'type': 'MultiPolygon',

@@ -1,5 +1,5 @@
 import { forkJoin, Observable, of } from 'rxjs';
-import { intersect } from '@turf/turf';
+import { feature, intersect } from '@turf/turf';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import {
@@ -66,12 +66,7 @@ export abstract class BaseOverlaySourceProvider {
 	}
 
 	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
-		const regionFeature: Feature<any> = {
-			type: 'Feature',
-			properties: {},
-			geometry: fetchParams.region
-		};
-
+		const regionFeature: Feature<any> = feature(<any> fetchParams.region);
 		// They are strings!
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),

@@ -1,5 +1,5 @@
 import { forkJoin, Observable, of } from 'rxjs';
-import { intersect } from '@turf/turf';
+import { feature, intersect } from '@turf/turf';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import {
@@ -64,23 +64,18 @@ export const DEFAULT_CLOUD_COVERAGE = 1;
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
-	constructor(protected loggerService: LoggerService) {
+	protected constructor(protected loggerService: LoggerService) {
 	}
 
-	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
-		const regionFeature: Feature<any> = {
-			type: 'Feature',
-			properties: {},
-			geometry: fetchParams.region
-		};
-
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+		const regionFeature: Feature<any> = feature(<any> fetchParams.region);
 		// They are strings!
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		const fetchObservables = filters
+		return filters
 			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(regionFeature, f.coverage);
 				return intersection && intersection.geometry;
@@ -108,8 +103,11 @@ export abstract class BaseOverlaySourceProvider {
 						errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
 					});
 				});
-			});
+			})
+	}
 
+	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
+		const fetchObservables = this.buildFetchObservables(fetchParams, filters);
 		if (fetchObservables.length <= 0) {
 			return of({ data: [], limited: 0, errors: [] });
 		}

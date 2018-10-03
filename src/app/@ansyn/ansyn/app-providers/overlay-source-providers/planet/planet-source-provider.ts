@@ -53,7 +53,7 @@ export interface IPlanetFilter {
 }
 
 export interface IPlanetFetchParams extends IFetchParams {
-	filters: IPlanetFilter[]
+	planetFilters: IPlanetFilter[]
 }
 
 @Injectable()
@@ -141,14 +141,14 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 					sensors
 				}
 			})
-			.filter((fetchParams: IFetchParams) => Boolean(fetchParams.timeRange && fetchParams.region))
+			.filter(({ timeRange, region }: IFetchParams) => Boolean(timeRange && region))
 			.map(this.paramsToFilter);
 		if (!planetFilters.length) {
 			return [];
 		}
 		return [this.fetch(<any>{
 			...fetchParams,
-			filters: planetFilters
+			planetFilters
 		})];
 	}
 
@@ -183,7 +183,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IPlanetFetchParams): Observable<IOverlaysPlanetFetchData> {
-		const { filters } = fetchParams;
+		const { planetFilters } = fetchParams;
 
 		if (!fetchParams.limit) {
 			fetchParams.limit = DEFAULT_OVERLAYS_LIMIT;
@@ -193,11 +193,11 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const _page_size = `${fetchParams.limit + 1}`;
 
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
-			filters.push(this.buildDataInputFilter(fetchParams.dataInputFilters));
+			planetFilters.push(this.buildDataInputFilter(fetchParams.dataInputFilters));
 		}
 
 		const { baseUrl } = this.planetOverlaysSourceConfig;
-		const body = this.buildFilters({ config: filters, sensors: fetchParams.sensors, type: 'OrFilter' });
+		const body = this.buildFilters({ config: planetFilters, sensors: fetchParams.sensors, type: 'OrFilter' });
 		const options = { headers: this.httpHeaders, params: { _page_size } };
 		return this.http.post(baseUrl, body, options).pipe(
 			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),

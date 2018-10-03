@@ -26,11 +26,13 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/internal/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
-import { Feature } from 'geojson';
 import { intersect } from '@turf/turf';
 import { isEqual } from 'lodash';
 import { catchError } from 'rxjs/operators';
-
+import { feature } from '@turf/turf'
+import { GeometryObject } from 'geojson';
+import { IDateRange } from '../../../../overlays/models/base-overlay-source-provider.model';
+import { uniq } from 'lodash';
 const moment = momentNs;
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
@@ -52,10 +54,14 @@ export interface IPlanetFilter {
 	config: object;
 }
 
+export interface IPlanetFetchParams extends IFetchParams {
+	parsedFilters: IFetchParams[]
+}
+
 @Injectable()
 export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = PlanetOverlaySourceType;
-	private httpHeaders: HttpHeaders;
+	readonly httpHeaders: HttpHeaders;
 
 	protected planetDic = {
 		'sensorType': 'item_type',
@@ -77,13 +83,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	buildFilters(config: IPlanetFilter[], sensors?: string[]) {
+	buildFilters({ config, sensors, type = 'AndFilter'  }: { config: IPlanetFilter[], sensors?: string[], type?: 'AndFilter' | 'OrFilter' }) {
 		return {
 			item_types: Array.isArray(sensors) ? sensors : this.planetOverlaysSourceConfig.itemTypes,
-			filter: {
-				type: 'AndFilter',
-				config
-			}
+			filter: { type, config }
 		};
 	}
 
@@ -91,71 +94,101 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return `${url}?api_key=${this.planetOverlaysSourceConfig.apiKey}`;
 	}
 
-	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
-		const regionFeature: Feature<any> = {
-			type: 'Feature',
-			properties: {},
-			geometry: fetchParams.region
+	buildDataInputFilter(dataInputFilters: IDataInputFilterValue[]): IPlanetFilter {
+		return {
+			type: 'OrFilter',
+			config: dataInputFilters.map((aFilter: IDataInputFilterValue) => {
+				const sensorTypeFilter = {
+					type: 'StringInFilter',
+					field_name: 'item_type',
+					config: [aFilter.sensorType]
+				};
+				if (Boolean(aFilter.sensorName)) {
+					return {
+						type: 'AndFilter', config: [
+							sensorTypeFilter,
+							{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
+						]
+					};
+				}
+				return sensorTypeFilter;
+			})
 		};
-		// They are strings!
+	}
+
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+		const regionFeature = feature(<any>fetchParams.region);
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		let region: any = { type: 'OrFilter', config: [] };
-		let timeRange: any = { type: 'OrFilter', config: [] };
-		let sensors: any = [];
+		const reduceFilters: any[] = filters
+			.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
+			.reduce((res, item) => {
+			const exist = res.find((f) => isEqual({ coverage: f.coverage, timeRange: f.timeRange }, { coverage: item.coverage, timeRange: item.timeRange }))
+			if (exist) {
+				exist.sensors = uniq([ ...exist.sensors, ...item.sensors]);
+				return res;
+			}
+			return [...res, item];
+		}, []);
 
-		filters
+		const parsedFilters: Partial<IFetchParams>[] = reduceFilters
 			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(regionFeature, f.coverage);
 				return intersection && intersection.geometry;
 			})
 			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
-			.forEach(f => {
-				const { geometry } = intersect(f.coverage, regionFeature);
-				const time = timeIntersection(fetchParamsTimeRange, f.timeRange);
-
-				if (!region.config.some((secGeomerty) => isEqual(geometry, secGeomerty))) {
-					region.config.push(geometry);
-				}
-
-				if (!timeRange.config.some((secTime) => isEqual(time, secTime))) {
-					timeRange.config.push(time);
-				}
-
-				if (f.sensor && !sensors.includes(f.sensor)) {
-					sensors.push(f.sensor);
-				}
-			});
+			.map((item) => {
+				const { geometry } = intersect(item.coverage, regionFeature);
+				const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
+				const { sensors } = item;
+				return {
+					timeRange: time,
+					region: geometry,
+					sensors
+				};
+			}, []);
 		return [this.fetch(<any>{
 			...fetchParams,
-			region,
-			timeRange,
-			sensors
+			parsedFilters
 		})];
 	}
 
-	fetch(fetchParams: IFetchParams): Observable<IOverlaysPlanetFetchData> {
-		if (fetchParams.region.type !== 'OrFilter') {
-			fetchParams.region = {
-				type: 'OrFilter',
-				config: [fetchParams.region]
-			};
+	paramsToFilter(fetchParams: IFetchParams): IPlanetFilter {
+		return {
+			type: 'AndFilter',
+			config: [
+				{
+					type: 'GeometryFilter',
+					field_name: 'geometry',
+					config: fetchParams.region
+				},
+				{
+					type: 'DateRangeFilter',
+					field_name: 'acquired',
+					config: {
+						gte: fetchParams.timeRange.start.toISOString(),
+						lte: fetchParams.timeRange.end.toISOString()
+					}
+				},
+				{
+					type: 'StringInFilter',
+					field_name: 'item_type',
+					config: fetchParams.sensors
+				}
+			]
 		}
-		if (fetchParams.timeRange.type !== 'OrFilter') {
-			fetchParams.timeRange = {
-				type: 'OrFilter',
-				config: [fetchParams.timeRange]
-			};
-		}
+	}
 
-		fetchParams.region.config.forEach((geom, index, arr) => {
-			if (geom.type === 'MultiPolygon') {
-				arr[index] = geojsonMultiPolygonToPolygon(geom as GeoJSON.MultiPolygon);
-			}
-		});
+	fetch(fetchParams: IPlanetFetchParams): Observable<IOverlaysPlanetFetchData> {
+		const filters: IPlanetFilter[] = fetchParams.parsedFilters.map(this.paramsToFilter);
+		// fetchParams.regions.forEach((geom, index, arr) => {
+		// 	if (geom.type === 'MultiPolygon') {
+		// 		arr[index] = geojsonMultiPolygonToPolygon(geom as GeoJSON.MultiPolygon);
+		// 	}
+		// });
 
 		if (!fetchParams.limit) {
 			fetchParams.limit = DEFAULT_OVERLAYS_LIMIT;
@@ -164,55 +197,12 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const _page_size = `${fetchParams.limit + 1}`;
 
-		const filters: IPlanetFilter[] = [
-			/* geometry */
-			{
-				type: 'OrFilter',
-				config: fetchParams.region.config.map((geometry) => ({
-					type: 'GeometryFilter',
-					field_name: 'geometry',
-					config: geometry
-				}))
-			},
-			/* time */
-			{
-				type: 'OrFilter',
-				config: fetchParams.timeRange.config.map(({ start, end }) => ({
-					field_name: 'acquired',
-					type: 'DateRangeFilter',
-					config: {
-						gte: start.toISOString(),
-						lte: end.toISOString()
-					}
-				}))
-			}
-		];
-
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
-			const configFilters = [];
-			const preFilter = { type: 'OrFilter', config: configFilters };
-			fetchParams.dataInputFilters.forEach((aFilter: IDataInputFilterValue) => {
-				const sensorTypeFilter = {
-					type: 'StringInFilter',
-					field_name: 'item_type',
-					config: [aFilter.sensorType]
-				};
-				if (Boolean(aFilter.sensorName)) {
-					configFilters.push({
-						type: 'AndFilter', config: [
-							sensorTypeFilter,
-							{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
-						]
-					});
-				} else {
-					configFilters.push(sensorTypeFilter);
-				}
-			});
-
-			filters.push(preFilter);
+			filters.push(this.buildDataInputFilter(fetchParams.dataInputFilters));
 		}
+
 		const { baseUrl } = this.planetOverlaysSourceConfig;
-		const body = this.buildFilters(filters, fetchParams.sensors);
+		const body = this.buildFilters({ config: filters, sensors: fetchParams.sensors, type: 'OrFilter' });
 		const options = { headers: this.httpHeaders, params: { _page_size } };
 		return this.http.post(baseUrl, body, options).pipe(
 			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
@@ -228,7 +218,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
-		const body = this.buildFilters([{ type: 'StringInFilter', field_name: 'id', config: [id] }]);
+		const body = this.buildFilters({ config: [{ type: 'StringInFilter', field_name: 'id', config: [id] }] });
 		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders })
 			.map(data => {
 				if (data.features.length <= 0) {
@@ -253,7 +243,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		const pageLimit: any = params.limit ? params.limit : DEFAULT_OVERLAYS_LIMIT;
 
-		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.pipe(
 				map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
@@ -315,7 +305,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		let pageLimit: any = params.limitBefore ? params.limitBefore : DEFAULT_OVERLAYS_LIMIT / 2;
 
-		const startDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		const startDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: IOverlay[]) => {
@@ -338,7 +328,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		pageLimit = params.limitAfter ? params.limitAfter : DEFAULT_OVERLAYS_LIMIT / 2;
 
-		const endDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		const endDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
 			.map((overlays: IOverlay[]) => {

@@ -121,34 +121,31 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		const reduceFilters: any[] = filters
+		const planetFilters: IPlanetFilter[] = filters
 			.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
 			.reduce((res, item) => {
-			const equalItem = res.find((f) => isEqual({ coverage: f.coverage, timeRange: f.timeRange }, { coverage: item.coverage, timeRange: item.timeRange }))
-			if (equalItem) {
-				equalItem.sensors = uniq([ ...equalItem.sensors, ...item.sensors]);
-				return res;
-			}
-			return [...res, item];
-		}, []);
-
-		const planetFilters: IPlanetFilter[] = reduceFilters
-			.filter(f => { // Make sure they have a common region
-				const intersection = intersect(regionFeature, f.coverage);
-				return intersection && intersection.geometry;
-			})
-			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
+				const equalItem = res.find((f) => isEqual({ coverage: f.coverage, timeRange: f.timeRange }, { coverage: item.coverage, timeRange: item.timeRange }))
+				if (equalItem) {
+					equalItem.sensors = uniq([ ...equalItem.sensors, ...item.sensors]);
+					return res;
+				}
+				return [...res, item];
+			}, [])
 			.map((item): Partial<IFetchParams> => {
-				const { geometry } = intersect(item.coverage, regionFeature);
+				const intersection = intersect(regionFeature, item.coverage);
 				const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
 				const { sensors } = item;
 				return {
 					timeRange: time,
-					region: geometry,
+					region: intersection && intersection.geometry,
 					sensors
-				};
-		}).map(this.paramsToFilter);
-
+				}
+			})
+			.filter((fetchParams: IFetchParams) => Boolean(fetchParams.timeRange && fetchParams.region))
+			.map(this.paramsToFilter);
+		if (!planetFilters.length) {
+			return [];
+		}
 		return [this.fetch(<any>{
 			...fetchParams,
 			filters: planetFilters

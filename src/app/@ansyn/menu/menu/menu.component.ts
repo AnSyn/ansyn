@@ -89,7 +89,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return this._componentElem;
 	}
 
-	// @ViewChild('menu') menuElement: ElementRef;
+	@ViewChild('menu') menuElement: ElementRef;
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
 
@@ -255,35 +255,14 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new ToggleIsPinnedAction(!this.isPinned));
 	}
 
-	toggleMenuCollapse() {
+	startToggleMenuCollapse() {
 		this.collapse = !this.collapse;
-		// const duration = 500;
-		// let from, to;
-		// if (this.collapse) {
-		// 	from = 90;
-		// 	to = 30;
-		// } else {
-		// 	from = 30;
-		// 	to = 90;
-		// }
-		// requestAnimationFrame(timeStamp => {
-		// 	this.startTime = timeStamp || new Date().getTime();
-		// 	this.animateMenuWidth(timeStamp, this.menuElement.nativeElement, from, to, duration);
-		// });
 	}
 
-	// private animateMenuWidth(timeStamp: number, element: any, from: number, to: number, duration: number) {
-	// 	let timestamp = timeStamp || new Date().getTime();
-	// 	let runtime = timestamp - this.startTime;
-	// 	let progress = runtime / duration;
-	// 	progress = Math.min(progress, 1);
-	// 	element.style.width = (from + (to - from) * progress).toFixed(2) + 'px';
-	// 	if (runtime < duration) {
-	// 		requestAnimationFrame(timeStamp => {
-	// 			this.animateMenuWidth(timeStamp, this.menuElement.nativeElement, from, to, duration);
-	// 		});
-	// 	}
-	// }
+	onEndToggleMenuCollapse() {
+		this.forceRedraw()
+			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+	}
 
 	ngOnInit() {
 		new MutationObserver(() => {
@@ -292,6 +271,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 				this.store.dispatch(new ContainerChangedTriggerAction());
 			}
 		}).observe(this.container.nativeElement, { childList: true });
+
+		this.menuElement.nativeElement.addEventListener('transitionend', this.onEndToggleMenuCollapse.bind(this));
 	}
 
 	ngOnDestroy(): void {

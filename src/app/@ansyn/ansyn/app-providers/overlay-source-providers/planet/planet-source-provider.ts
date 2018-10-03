@@ -30,8 +30,6 @@ import { intersect } from '@turf/turf';
 import { isEqual } from 'lodash';
 import { catchError } from 'rxjs/operators';
 import { feature } from '@turf/turf'
-import { GeometryObject } from 'geojson';
-import { IDateRange } from '../../../../overlays/models/base-overlay-source-provider.model';
 import { uniq } from 'lodash';
 const moment = momentNs;
 

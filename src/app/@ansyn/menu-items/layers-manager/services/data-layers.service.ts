@@ -1,7 +1,7 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
-import { Inject, Injectable, InjectionToken, OnDestroy, OnInit } from '@angular/core';
+import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ErrorHandlerService, ICase, rxPreventCrash, StorageService } from '@ansyn/core';
+import { ErrorHandlerService, ICase, StorageService } from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
 import { featureCollection } from '@turf/turf';
 import { select, Store } from '@ngrx/store';
@@ -58,8 +58,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 	public getAllLayersInATree({ caseId }): Observable<{} | ILayer[]> {
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers')),
-				rxPreventCrash()
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers'))
 			);
 	}
 

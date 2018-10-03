@@ -912,100 +912,6 @@
           ]
         }
       ],
-      "blacklist": [
-        {
-          "name": "San Francisco",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "[ null ]",
-          "coverage": [
-            [
-              [
-                [
-                  -122.4281,
-                  37.7068
-                ],
-                [
-                  -122.5048,
-                  37.7068
-                ],
-                [
-                  -122.5158,
-                  37.7835
-                ],
-                [
-                  -122.4062,
-                  37.8108
-                ],
-                [
-                  -122.3569,
-                  37.7287
-                ],
-                [
-                  -122.3898,
-                  37.7068
-                ],
-                [
-                  -122.4281,
-                  37.7068
-                ]
-              ]
-            ]
-          ]
-        }
-      ]
-    },
-    "NOT-GEO-REGISTERED-PLANET": {
-      "whitelist": [
-        {
-          "name": "San Francisco",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" "[ null ]" }}",
-          "coverage": [
-            [
-              [
-                [
-                  -122.4281,
-                  37.7068
-                ],
-                [
-                  -122.5048,
-                  37.7068
-                ],
-                [
-                  -122.5158,
-                  37.7835
-                ],
-                [
-                  -122.4062,
-                  37.8108
-                ],
-                [
-                  -122.3569,
-                  37.7287
-                ],
-                [
-                  -122.3898,
-                  37.7068
-                ],
-                [
-                  -122.4281,
-                  37.7068
-                ]
-              ]
-            ]
-          ]
-        }
-      ],
       "blacklist": []
     },
     "OPEN_AERIAL": {
@@ -1070,6 +976,7 @@
       "Sentinel2L1C"
     ],
     "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
-    "tilesUrl": "https://tiles.planet.com/data/v1/"
+    "tilesUrl": "https://tiles.planet.com/data/v1/",
+    "delayMultiple": 300
   }
 }

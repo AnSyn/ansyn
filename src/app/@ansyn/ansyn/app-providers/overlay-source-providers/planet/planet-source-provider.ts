@@ -188,11 +188,6 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 	fetch(fetchParams: IPlanetFetchParams): Observable<IOverlaysPlanetFetchData> {
 		const filters: IPlanetFilter[] = fetchParams.parsedFilters.map(this.paramsToFilter);
-		// fetchParams.regions.forEach((geom, index, arr) => {
-		// 	if (geom.type === 'MultiPolygon') {
-		// 		arr[index] = geojsonMultiPolygonToPolygon(geom as GeoJSON.MultiPolygon);
-		// 	}
-		// });
 
 		if (!fetchParams.limit) {
 			fetchParams.limit = DEFAULT_OVERLAYS_LIMIT;

@@ -10,9 +10,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
-import { filter, map, pluck } from 'rxjs/internal/operators';
+import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-tools',

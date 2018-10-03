@@ -22,12 +22,11 @@ import {
 } from '@ansyn/core';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { map } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
-import { catchError } from 'rxjs/operators';
 
 const moment = momentNs;
 

@@ -170,7 +170,7 @@ export class MapAppEffects {
 						sourceType: action.payload.overlay.sourceType,
 						mapId: action.payload.mapId
 					}),
-					new SetIsLoadingAcion({ mapId: action.payload.mapId, show: true, text: 'Loading Overlay' })
+					new SetIsLoadingAcion({ mapId: action.payload.mapId, show: true, text: 'Loading IOverlay' })
 				];
 			})
 		);
@@ -360,7 +360,7 @@ export class MapAppEffects {
 		if (sourceLoader.existsInCache(sourceProviderMetaData)) {
 			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: false }));
 		} else {
-			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: true, text: 'Loading Overlay' }));
+			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: true, text: 'Loading IOverlay' }));
 		}
 	}
 

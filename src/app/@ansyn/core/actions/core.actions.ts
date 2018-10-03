@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from '../utils/type';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
-import { Overlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { ICaseMapState } from '../models/case.model';
 
@@ -85,14 +85,14 @@ export class ToggleMapLayersAction implements Action {
 export class ToggleFavoriteAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload: { id: string, value: boolean, overlay?: Overlay }) {
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
 	}
 }
 
 export class TogglePresetOverlayAction implements Action {
 	type: string = CoreActionTypes.TOGGLE_OVERLAY_PRESET;
 
-	constructor(public payload: { id: string, value: boolean, overlay?: Overlay }) {
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
 	}
 }
 
@@ -106,14 +106,14 @@ export class SetToastMessageAction implements Action {
 export class SetFavoriteOverlaysAction implements Action {
 	type = CoreActionTypes.SET_FAVORITE_OVERLAYS;
 
-	constructor(public payload: Overlay[]) {
+	constructor(public payload: IOverlay[]) {
 	}
 }
 
 export class SetPresetOverlaysAction implements Action {
 	type = CoreActionTypes.SET_PRESET_OVERLAYS;
 
-	constructor(public payload: Overlay[]) {
+	constructor(public payload: IOverlay[]) {
 	}
 }
 

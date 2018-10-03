@@ -1,21 +1,21 @@
 import { Action } from '@ngrx/store';
-import { Overlay, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
+import { IOverlay, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
-	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
-	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
-	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
-	REQUEST_OVERLAY_FROM_BACKEND: type('[Overlay] Load Overlay By Id'),
-	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
-	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
-	CLEAR_FILTER: type('[Overlay] Clear Filter'),
-	DISPLAY_OVERLAY_FROM_STORE: type('[Overlay] Display Overlay From Store'),
-	DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE: type('[Overlay] Display Multiple Overlays From Store'),
-	DISPLAY_OVERLAY: type('[Overlay] Display Overlay'),
-	DISPLAY_OVERLAY_SUCCESS: type('[Overlay] Display Overlay Success'),
-	DISPLAY_OVERLAY_FAILED: type('[Overlay] Display Overlay Failed'),
-	REDRAW_TIMELINE: type('[Overlay] Redraw Timeline'),
+	SELECT_OVERLAY: type('[IOverlay] Select IOverlay'),
+	UNSELECT_OVERLAY: type('[IOverlay] Unselect IOverlay'),
+	LOAD_OVERLAYS: type('[IOverlay] Load Overlays'),
+	REQUEST_OVERLAY_FROM_BACKEND: type('[IOverlay] Load IOverlay By Id'),
+	LOAD_OVERLAYS_SUCCESS: type('[IOverlay] Load Overlays Success'),
+	LOAD_OVERLAYS_FAIL: type('[IOverlay] Load Overlays Failed'),
+	CLEAR_FILTER: type('[IOverlay] Clear Filter'),
+	DISPLAY_OVERLAY_FROM_STORE: type('[IOverlay] Display IOverlay From Store'),
+	DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE: type('[IOverlay] Display Multiple Overlays From Store'),
+	DISPLAY_OVERLAY: type('[IOverlay] Display IOverlay'),
+	DISPLAY_OVERLAY_SUCCESS: type('[IOverlay] Display IOverlay Success'),
+	DISPLAY_OVERLAY_FAILED: type('[IOverlay] Display IOverlay Failed'),
+	REDRAW_TIMELINE: type('[IOverlay] Redraw Timeline'),
 	ADD_OVERLAYS_MARKUPS: type('ADD_OVERLAYS_MARKUPS'),
 	REMOVE_OVERLAYS_MARKUPS: type('REMOVE_OVERLAYS_MARKUPS'),
 	SET_OVERLAYS_MARKUPS: type('SET_OVERLAYS_MARKUPS'),
@@ -27,7 +27,7 @@ export const OverlaysActionTypes = {
 	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
 	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE'),
 	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY'),
-	CHANGE_OVERLAY_PREVIEW_ROTATION: type('[Overlay] CHANGE_OVERLAY_PREVIEW_ROTATION'),
+	CHANGE_OVERLAY_PREVIEW_ROTATION: type('[IOverlay] CHANGE_OVERLAY_PREVIEW_ROTATION'),
 };
 
 export class SelectOverlayAction implements Action {
@@ -85,14 +85,14 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 export class LoadOverlaysSuccessAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
-	constructor(public payload: Overlay[], public clearExistingOverlays = false) {
+	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
 	}
 }
 
 export class LoadOverlaysFailAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_FAIL;
 
-	constructor(public payload: Overlay[]) {
+	constructor(public payload: IOverlay[]) {
 	}
 }
 
@@ -120,7 +120,7 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: Overlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
+	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
 	}
 }
 
@@ -174,7 +174,7 @@ export class RedrawTimelineAction implements Action {
 export class SetHoveredOverlayAction implements Action {
 	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
 
-	constructor(public payload?: Overlay) {
+	constructor(public payload?: IOverlay) {
 
 	}
 }

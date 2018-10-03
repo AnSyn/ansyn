@@ -1,5 +1,5 @@
 import { ICaseMapPosition } from './case-map-position.model';
-import { IDilutedOverlay, Overlay } from './overlay.model';
+import { IDilutedOverlay, IOverlay } from './overlay.model';
 import { Feature, Point, Polygon } from 'geojson';
 import { IEntity } from '../services/storage/storage.service';
 import { IVisualizerEntity } from './visualizers/visualizers-entity';
@@ -66,8 +66,8 @@ export interface IDilutedCaseState {
 }
 
 export interface ICaseState extends IDilutedCaseState {
-	favoriteOverlays?: Overlay[];
-	presetOverlays?: Overlay[];
+	favoriteOverlays?: IOverlay[];
+	presetOverlays?: IOverlay[];
 	maps?: ICaseMapsState;
 }
 
@@ -140,7 +140,7 @@ export interface IDilutedCaseMapData {
 }
 
 export interface ICaseMapData extends IDilutedCaseMapData {
-	overlay?: Overlay,
+	overlay?: IOverlay,
 }
 
 export interface IDilutedCaseMapState {

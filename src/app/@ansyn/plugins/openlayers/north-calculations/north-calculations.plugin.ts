@@ -4,7 +4,7 @@ import {
 	BackToWorldView,
 	CaseOrientation,
 	CoreActionTypes,
-	Overlay,
+	IOverlay,
 	LoggerService,
 	toDegrees
 } from '@ansyn/core';
@@ -57,8 +57,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
 		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
-		filter(([overlay, activeMapId]: [Overlay, string]) => Boolean(overlay) && Boolean(this.communicator) && activeMapId === this.mapId),
-		mergeMap(([{ projection }]: [Overlay, string]) => {
+		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(overlay) && Boolean(this.communicator) && activeMapId === this.mapId),
+		mergeMap(([{ projection }]: [IOverlay, string]) => {
 			return this.getPreviewNorth(projection)
 				.pipe(
 					catchError(() => of(0))
@@ -74,10 +74,10 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
 			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
 		})
-		.filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
+		.filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
 		})
-		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, Overlay]) => {
+		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return this.pointNorth()
 				.do(virtualNorth => {
 					this.communicator.setVirtualNorth(virtualNorth);

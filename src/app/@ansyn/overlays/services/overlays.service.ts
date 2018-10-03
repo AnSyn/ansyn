@@ -1,7 +1,7 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Overlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
+import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
 import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import 'rxjs/add/operator/map';
@@ -60,7 +60,7 @@ export class OverlaysService {
 		});
 	}
 
-	getOverlayById(id: string, sourceType: string): Observable<Overlay> {
+	getOverlayById(id: string, sourceType: string): Observable<IOverlay> {
 		return this._overlaySourceProvider.getById(id, sourceType);
 	}
 

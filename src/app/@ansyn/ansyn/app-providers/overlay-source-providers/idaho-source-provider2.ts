@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { IdahoOverlaysSourceConfig, IdahoSourceProvider, IIdahoOverlaySourceConfig } from './idaho-source-provider';
 import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService, Overlay, LoggerService } from '@ansyn/core';
+import { ErrorHandlerService, IOverlay, LoggerService } from '@ansyn/core';
 
 export const IdahoOverlaySourceType2 = 'IDAHO2';
 
@@ -13,7 +13,7 @@ export class IdahoSourceProvider2 extends IdahoSourceProvider {
 		super(errorHandlerService, http, _overlaySourceConfig, loggerService);
 	}
 
-	protected parseData(idahoElement: any, token: string): Overlay {
+	protected parseData(idahoElement: any, token: string): IOverlay {
 		const result = <any> super.parseData(idahoElement, token);
 		result.isGeoRegistered = false;
 		return result;

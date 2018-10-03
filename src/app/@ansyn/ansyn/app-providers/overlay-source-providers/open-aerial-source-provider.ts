@@ -1,14 +1,15 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME, DEFAULT_CLOUD_COVERAGE } from '@ansyn/overlays';
+import { Inject, Injectable } from '@angular/core';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
-	Overlay,
+	IOverlay,
 	limitArray,
 	LoggerService,
+	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
@@ -64,7 +65,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			.map(data => {
 				return this.extractArrayData(data.results);
 			})
-			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -73,7 +74,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	getById(id: string, sourceType: string): Observable<Overlay> {
+	getById(id: string, sourceType: string): Observable<IOverlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
 		return this.http.get<any>(baseUrl, { params: { _id: id } })
 			.map(data => {
@@ -92,7 +93,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		return empty();
 	}
 
-	private extractArrayData(overlays: Array<any>): Array<Overlay> {
+	private extractArrayData(overlays: Array<any>): Array<IOverlay> {
 		if (!overlays) {
 			return [];
 		}
@@ -101,14 +102,14 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			.map((element) => this.parseData(element));
 	}
 
-	private extractData(overlays: Array<any>): Overlay {
+	private extractData(overlays: Array<any>): IOverlay {
 		if (overlays.length > 0) {
 			return this.parseData(overlays[0]);
 		}
 	}
 
-	protected parseData(openAerialElement: any): Overlay {
-		let overlay: Overlay = new Overlay();
+	protected parseData(openAerialElement: any): IOverlay {
+		let overlay: IOverlay = new Overlay();
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
 		overlay.id = openAerialElement._id;
 		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);

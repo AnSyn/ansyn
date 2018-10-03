@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
-import { ICaseMapPosition, ICaseMapState, Overlay } from '@ansyn/core';
+import { ICaseMapPosition, ICaseMapState, IOverlay } from '@ansyn/core';
 import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 
@@ -14,7 +14,7 @@ export class MapFacadeService {
 	mapsList$ = this.store.select(mapStateSelector).pluck<IMapState, ICaseMapState[]>('mapsList');
 	mapsList: ICaseMapState[] = [];
 
-	static isOverlayGeoRegistered(overlay: Overlay): boolean {
+	static isOverlayGeoRegistered(overlay: IOverlay): boolean {
 		if (!overlay) {
 			return true;
 		}

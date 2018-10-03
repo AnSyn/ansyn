@@ -22,7 +22,7 @@ import {
 	IAnnotationBoundingRect,
 	IAnnotationsSelectionEventData,
 	ICaseMapState,
-	Overlay,
+	IOverlay,
 	IVisualizerEntity,
 	IVisualizerStyle,
 	MarkerSize,
@@ -404,7 +404,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.pipe(
 				take(1),
 				withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
-				tap(([featureCollection, activeAnnotationLayer, overlay]: [FeatureCollection<GeometryObject>, ILayer, Overlay]) => {
+				tap(([featureCollection, activeAnnotationLayer, overlay]: [FeatureCollection<GeometryObject>, ILayer, IOverlay]) => {
 					const [geoJsonFeature] = featureCollection.features;
 					const data = <FeatureCollection<any>> { ...activeAnnotationLayer.data };
 					data.features.push(geoJsonFeature);

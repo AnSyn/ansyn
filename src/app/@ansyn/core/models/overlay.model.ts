@@ -1,7 +1,7 @@
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from './case.model';
 
 export interface IOverlaysFetchData {
-	data: Overlay[],
+	data: IOverlay[],
 	// number of overlays removed from total overlays (according to config)
 	limited: number,
 	errors?: Error[]
@@ -13,11 +13,33 @@ export interface IDilutedOverlay {
 }
 
 export interface IPendingOverlay {
-	overlay: Overlay;
+	overlay: IOverlay;
 	extent?: any;
 }
 
-export class Overlay implements IDilutedOverlay {
+export interface IOverlay extends IDilutedOverlay {
+	footprint?: any; // @TODO add type geojson multipoligon,
+	sensorType?: string;
+	sensorName?: string;
+	channel?: number;
+	bestResolution?: number;
+	cloudCoverage: number;
+	isStereo?: boolean;
+	name: string;
+	imageUrl?: string;
+	baseImageUrl?: string;
+	thumbnailUrl?: string;
+	photoTime: string;
+	date: Date;
+	azimuth: number; // radians
+	approximateTransform?: any;
+	csmState?: string;
+	isGeoRegistered: boolean;
+	tag?: any; // original metadata
+	projection?: string;
+}
+
+export class Overlay implements IOverlay {
 	footprint?: any; // @TODO add type geojson multipoligon,
 	sensorType = 'Unknown';
 	sensorName = 'Unknown';

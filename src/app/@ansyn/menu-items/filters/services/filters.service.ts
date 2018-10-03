@@ -2,7 +2,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { IFilter } from '../models/IFilter';
 import 'rxjs/add/observable/of';
-import { buildFilteredOverlays, CaseFilters, IFilterModel, Overlay } from '@ansyn/core';
+import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
@@ -42,7 +42,7 @@ export class FiltersService {
 		}));
 	}
 
-	static calculatePotentialOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, overlays: Map<string, Overlay>, favoriteOverlays: Overlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean, filterState: IFiltersState): void {
+	static calculatePotentialOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean, filterState: IFiltersState): void {
 		const cloneMetadata = cloneDeep(metadata);
 
 		if (metadata instanceof EnumFilterMetadata) {
@@ -61,7 +61,7 @@ export class FiltersService {
 		}
 	}
 
-	static calculateOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, overlays: Map<string, Overlay>, favoriteOverlays: Overlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean, filterState: IFiltersState, cloneMetadata: FilterMetadata): void {
+	static calculateOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean, filterState: IFiltersState, cloneMetadata: FilterMetadata): void {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);

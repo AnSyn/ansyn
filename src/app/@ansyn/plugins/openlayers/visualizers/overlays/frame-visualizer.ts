@@ -5,7 +5,7 @@ import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade';
-import { Overlay } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
@@ -48,7 +48,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	setOverlay(overlay: Overlay) {
+	setOverlay(overlay: IOverlay) {
 		if (overlay) {
 			const { id, footprint } = overlay;
 			const featureJson: GeoJSON.Feature<any> = { type: 'Feature', geometry: footprint, properties: {} };

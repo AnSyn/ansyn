@@ -1,7 +1,7 @@
 import XYZ from 'ol/source/xyz';
 import ImageLayer from 'ol/layer/image';
 import proj from 'ol/proj';
-import { extentFromGeojson, ICaseMapState, Overlay } from '@ansyn/core';
+import { extentFromGeojson, ICaseMapState, IOverlay } from '@ansyn/core';
 import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
@@ -90,7 +90,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		});
 	}
 
-	getColorChannel(overlay: Overlay, imageData: any): string {
+	getColorChannel(overlay: IOverlay, imageData: any): string {
 		let rgbBans: string;
 		if (imageData && imageData.bandAliases) {
 			const rIndex = imageData.bandAliases.indexOf('R');
@@ -108,11 +108,11 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		return this.getBandsSection(overlay, rgbBans);
 	}
 
-	getBandsSection(overlay: Overlay, bands: string): string {
+	getBandsSection(overlay: IOverlay, bands: string): string {
 		return '&bands=' + bands;
 	}
 
-	getPannedSection(overlay: Overlay, associationData: any): string {
+	getPannedSection(overlay: IOverlay, associationData: any): string {
 		if (associationData.associations && associationData.associations.length > 0) {
 			// overlay.imageUrl = overlay.baseImageUrl + '&panId=' + associationData.associations[0].imageId;
 			return '&panId=' + associationData.associations[0].imageId;
@@ -120,7 +120,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		return '';
 	}
 
-	getImageData(overlay: Overlay, token, fileName: string): Promise<any> {
+	getImageData(overlay: IOverlay, token, fileName: string): Promise<any> {
 		const idahoElement = overlay.tag;
 		const fileUrl = `http://idaho.geobigdata.io/v1/metadata/${idahoElement.properties.bucketName}/${overlay.id}/${fileName}.json`;
 

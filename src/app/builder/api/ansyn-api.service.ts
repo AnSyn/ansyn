@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { ProjectionConverterService } from '@ansyn/menu-items';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { Overlay } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { SetLayoutAction } from '@ansyn/core';
 import { SelectCaseAction } from '@ansyn/menu-items';
@@ -74,11 +74,11 @@ export class AnsynApi {
 		this.store.dispatch(new ShadowMouseProducer({ point: { coordinates, type: 'point' }, outsideSource: true }));
 	}
 
-	displayOverLay(overlay: Overlay) {
+	displayOverLay(overlay: IOverlay) {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
 
-	setOverlays(overlays: Overlay[]) {
+	setOverlays(overlays: IOverlay[]) {
 		this.store.dispatch(new LoadOverlaysSuccessAction(overlays, true));
 	}
 

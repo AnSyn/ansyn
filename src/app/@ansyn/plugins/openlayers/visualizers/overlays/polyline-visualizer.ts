@@ -24,7 +24,7 @@ import {
 	selectOverlaysMap,
 	SetMarkUp
 } from '@ansyn/overlays';
-import { ICaseMapState, Overlay, IVisualizerEntity, VisualizerStates } from '@ansyn/core';
+import { ICaseMapState, IOverlay, IVisualizerEntity, VisualizerStates } from '@ansyn/core';
 import { MultiLineString } from 'geojson';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
@@ -57,7 +57,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store.select(selectOverlaysMap)),
-			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, Overlay>]) => {
+			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === 'Polygon') {
 					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));

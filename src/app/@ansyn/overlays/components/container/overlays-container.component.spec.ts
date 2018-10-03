@@ -3,7 +3,7 @@ import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService } from '../../services/overlays.service';
 import { Observable } from 'rxjs/Rx';
 import { DebugElement } from '@angular/core';
-import { createStore, Overlay, IOverlaysFetchData, IStoreFixture, MockComponent } from '@ansyn/core';
+import { createStore, IOverlay, IOverlaysFetchData, IStoreFixture, MockComponent } from '@ansyn/core';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { State, Store, StoreModule } from '@ngrx/store';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
@@ -26,7 +26,7 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return Observable.empty();
 	};
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return Observable.empty();
 	};
 }
@@ -72,7 +72,7 @@ describe('OverlayContainerComponent', () => {
 		component = fixture.componentInstance;
 
 		it('should distinguish between changed data', () => {
-			const overlays = < Overlay[] > [{
+			const overlays = < IOverlay[] > [{
 				id: '12',
 				name: 'tmp12',
 				photoTime: new Date(Date.now()).toISOString(),

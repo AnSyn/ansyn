@@ -10,7 +10,7 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { GoToAction } from '@ansyn/menu-items';
 import { SelectCaseAction } from '@ansyn/menu-items';
 import { LayoutKey } from '@ansyn/core';
-import { Overlay } from '@ansyn/core';
+import { IOverlay } from '@ansyn/core';
 import { DisplayOverlayAction } from '@ansyn/overlays';
 import { casesConfig } from '@ansyn/menu-items';
 import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';
@@ -106,7 +106,7 @@ describe('apiService', () => {
 	});
 
 	it('should displayOverLay', () => {
-		const overlay: Overlay = <Overlay>{
+		const overlay: IOverlay = <IOverlay>{
 			'id': 'LC80410372018051LGN00',
 			'footprint': {
 				'type': 'MultiPolygon',

@@ -1,7 +1,7 @@
 import { Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { BaseOverlaySourceProvider, IDateRange, IFetchParams, IOverlayFilter, IStartAndEndDate } from '@ansyn/overlays';
-import { IDataInputFilterValue, Overlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 
@@ -120,7 +120,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	public getById(id: string, sourceType: string): Observable<Overlay> {
+	public getById(id: string, sourceType: string): Observable<IOverlay> {
 		const overlaysSource = this.overlaysSources.find(s => s.sourceType === sourceType);
 		if (overlaysSource) {
 			return overlaysSource.getById(id, sourceType);

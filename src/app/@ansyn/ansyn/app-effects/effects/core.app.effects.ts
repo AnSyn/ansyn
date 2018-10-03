@@ -9,7 +9,7 @@ import {
 	coreStateSelector,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
-	Overlay,
+	IOverlay,
 	LoggerService,
 	selectRemovedOverlays,
 	SetOverlaysCriteriaAction,
@@ -93,7 +93,7 @@ export class CoreAppEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
 		})
-		.withLatestFrom(this.store$.select(coreStateSelector), ({ overlayId, mapId }, { presetOverlays }): { overlay: Overlay, mapId: string } => {
+		.withLatestFrom(this.store$.select(coreStateSelector), ({ overlayId, mapId }, { presetOverlays }): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;
 			if (length === 0) {
 				return;
@@ -107,7 +107,7 @@ export class CoreAppEffects {
 
 	@Effect()
 	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
-		map(([removedOverlaysIds, overlays]: [string[], Map<string, Overlay>]) => {
+		map(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
 			const removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
 			return new SetRemovedOverlayIdsCount(removedOverlaysCount);
 		})

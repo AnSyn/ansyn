@@ -7,7 +7,7 @@ import { BaseImageryPlugin, ImageryPlugin, ProjectionService } from '@ansyn/imag
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
 import { DisplayOverlayFromStoreAction, overlaysStateSelector } from '@ansyn/overlays';
-import { areCoordinatesNumeric, Overlay } from '@ansyn/core';
+import { areCoordinatesNumeric, IOverlay } from '@ansyn/core';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
@@ -61,7 +61,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			.withLatestFrom(this.store$.select(overlaysStateSelector))
 			.do(([point, overlaysState]) => {
 				const overlays = overlaysState.filteredOverlays
-					.map((id: string): Overlay => overlaysState.overlays.get(id))
+					.map((id: string): IOverlay => overlaysState.overlays.get(id))
 					.filter(({ footprint }) => inside(point, footprint));
 
 				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));

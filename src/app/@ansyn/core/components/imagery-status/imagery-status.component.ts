@@ -9,7 +9,7 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { Overlay } from '../../models/overlay.model';
+import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
 	BackToWorldView,
@@ -46,7 +46,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	_overlay: Overlay;
+	_overlay: IOverlay;
 
 	@HostBinding('class.active') @Input() active: boolean;
 
@@ -60,7 +60,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@Input() layerFlag = false;
 
-	@Input() set overlay(overlay: Overlay) {
+	@Input() set overlay(overlay: IOverlay) {
 		this._overlay = overlay;
 		if (!this._overlay) {
 			this.translatedOverlaySensorName = '';
@@ -88,7 +88,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 
 	@AutoSubscription
-	favoriteOverlays$: Observable<Overlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
+	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {
 			this.favoriteOverlays = favoriteOverlays;
 			this.updateFavoriteStatus();
@@ -96,7 +96,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	presetOverlays$: Observable<Overlay[]> = this.store$.select(selectPresetOverlays).pipe(
+	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays).pipe(
 		tap((presetOverlays) => {
 			this.presetOverlays = presetOverlays;
 			this.updatePresetStatus();
@@ -127,13 +127,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	favoriteOverlays: Overlay[];
+	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
 	removedOverlaysIds = [];
 
 	favoritesButtonText: string;
 
-	presetOverlays: Overlay[];
+	presetOverlays: IOverlay[];
 	isPreset: boolean;
 	presetsButtonText: string;
 	isRemoved: boolean;
@@ -170,10 +170,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (this.enableCopyOriginalOverlayData && this._overlay.tag) {
 			const tagJson = JSON.stringify(this._overlay.tag);
 			copyFromContent(tagJson);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'IOverlay original data copied to clipboard' }));
 		} else {
 			copyFromContent(this.overlayDescription);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'IOverlay description copied to clipboard' }));
 		}
 	}
 

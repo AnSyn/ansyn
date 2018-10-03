@@ -6,7 +6,7 @@ import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { Overlay, IVisualizerEntity } from '@ansyn/core';
+import { IOverlay, IVisualizerEntity } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
@@ -30,7 +30,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store$.pipe(select(selectFilteredOveralys)))
 		.pipe(
 			withLatestFrom(this.store$.select(selectOverlaysMap)),
-			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, Overlay>]) => {
+			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === 'Heatmap') {
 					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));

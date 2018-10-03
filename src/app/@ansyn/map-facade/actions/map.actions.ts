@@ -5,7 +5,7 @@ import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
 	ICaseMapState,
-	Overlay,
+	IOverlay,
 	IPendingOverlay,
 	IUpdateFeatureEvent
 } from '@ansyn/core';
@@ -52,7 +52,7 @@ export const MapActionTypes = {
 
 export interface IContextMenuShowPayload {
 	point: Point;
-	overlays: Overlay[];
+	overlays: IOverlay[];
 	event: MouseEvent;
 }
 

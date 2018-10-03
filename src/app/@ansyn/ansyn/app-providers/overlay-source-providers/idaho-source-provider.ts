@@ -6,14 +6,15 @@ import {
 	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	getPolygonByPointAndRadius,
-	Overlay,
+	IOverlay,
 	IOverlaysFetchData,
 	limitArray,
 	LoggerService,
+	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME, DEFAULT_CLOUD_COVERAGE } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
@@ -49,9 +50,9 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	}
 
-	public getById(id: string, sourceType: string = null): Observable<Overlay> {
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
-		return <Observable<Overlay>>this.httpClient.get(url)
+		return <Observable<IOverlay>>this.httpClient.get(url)
 			.map(this.extractData.bind(this))
 			.catch((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
@@ -75,7 +76,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		const requestParams = Object.assign({}, fetchParams, { limit: fetchParams.limit + 1 });
 		return <Observable<IOverlaysFetchData>>this.httpClient.post(url, requestParams)
 			.map(this.extractArrayData.bind(this))
-			.map((overlays: Overlay[]) => limitArray(overlays, fetchParams.limit, {
+			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			}))
@@ -101,18 +102,18 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			});
 	}
 
-	private extractArrayData(data: IIdahoResponse): Array<Overlay> {
+	private extractArrayData(data: IIdahoResponse): Array<IOverlay> {
 		return data ? data.idahoResult.map((element) => {
 			return this.parseData(element, data.token);
 		}) : [];
 	}
 
-	private extractData(data: IIdahoResponseForGetById): Overlay {
+	private extractData(data: IIdahoResponseForGetById): IOverlay {
 		return this.parseData(data.idahoResult, data.token);
 	}
 
-	protected parseData(idahoElement: any, token: string): Overlay {
-		let overlay: Overlay = new Overlay();
+	protected parseData(idahoElement: any, token: string): IOverlay {
+		let overlay: IOverlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
 		overlay.id = idahoElement.identifier;
 		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;

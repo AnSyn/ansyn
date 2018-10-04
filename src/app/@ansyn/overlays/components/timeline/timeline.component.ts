@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	Inject,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+	ViewEncapsulation
+} from '@angular/core';
 import { selection } from 'd3';
 import * as d3 from 'd3/build/d3';
 import eventDrops from '@ansyn/event-drops';
@@ -29,6 +38,7 @@ import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
+import { DOCUMENT } from '@angular/common';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -46,7 +56,8 @@ export interface IEventDropsEvent {
 	selector: 'ansyn-timeline',
 	templateUrl: './timeline.component.html',
 	styleUrls: ['./timeline.component.less'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	encapsulation: ViewEncapsulation.None
 })
 
 export class TimelineComponent implements OnInit, OnDestroy {
@@ -155,12 +166,20 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		);
 
 	constructor(@Inject(OverlaysService) protected overlaysService: OverlaysService,
+				protected elementRef: ElementRef,
+				@Inject(DOCUMENT) protected document: Document,
 				protected store$: Store<IOverlaysState>,
 				protected actions$: Actions) {
 	}
 
+	addRStyle() {
+		const circlesR: HTMLStyleElement = this.document.createElement('style');
+		circlesR.innerText = ` circle.displayed, circle.active { r: 8; } `;
+		this.elementRef.nativeElement.appendChild(circlesR);
+	}
 
 	ngOnInit() {
+		this.addRStyle();
 		this.subscribers = [this.dropsChange$.subscribe(),
 			this.dropsMarkUp$.subscribe(),
 			this.timeLineRange$.subscribe(),

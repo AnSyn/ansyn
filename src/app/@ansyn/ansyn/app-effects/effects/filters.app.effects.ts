@@ -146,11 +146,17 @@ export class FiltersAppEffects {
 			return overlays.size > 0;
 		}),
 		tap(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
+			const overlaysPlusExtras = new Map(overlays);
+			favoriteOverlays.forEach(overlay => {
+				if (!overlaysPlusExtras.has(overlay.id)) {
+					overlaysPlusExtras.set(overlay.id, overlay);
+				}
+			});
 
 			Array.from(filterState.filters).forEach(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
 				metadata.resetFilteredCount();
 				filteredOverlays.forEach((id: string) => {
-					const overlay = overlays.get(id);
+					const overlay = overlaysPlusExtras.get(id);
 					metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
 				});
 				if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {

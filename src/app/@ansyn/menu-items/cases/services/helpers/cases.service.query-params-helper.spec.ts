@@ -7,7 +7,7 @@ import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
@@ -28,7 +28,7 @@ describe('CasesService', () => {
 				},
 				{
 					provide: ErrorHandlerService,
-					useValue: { httpErrorHandle: () => Observable.throw(null) }
+					useValue: { httpErrorHandle: () => throwError(null) }
 				},
 				MockCasesConfig
 			]

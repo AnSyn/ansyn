@@ -7,12 +7,6 @@ import {
 	LayersActionTypes,
 	UpdateLayer
 } from '../actions/layers.actions';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';

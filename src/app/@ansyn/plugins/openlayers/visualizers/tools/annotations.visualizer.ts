@@ -47,10 +47,8 @@ import {
 	UpdateLayer
 } from '@ansyn/menu-items';
 import { combineLatest, Observable } from 'rxjs';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/observable/combineLatest';
 import { Inject } from '@angular/core';
-import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, take, tap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/geojson';
 import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
@@ -97,13 +95,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		map((map: ICaseMapState) => map.data.overlay)
 	);
 
-	annotationFlag$ = this.store$.select(selectSubMenu)
-		.map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations)
-		.distinctUntilChanged();
+	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
+		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
+		distinctUntilChanged());
 
-	isActiveMap$ = this.store$.select(selectActiveMapId)
-		.map((activeMapId: string): boolean => activeMapId === this.mapId)
-		.distinctUntilChanged();
+	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
+		map((activeMapId: string): boolean => activeMapId === this.mapId),
+		distinctUntilChanged()
+	);
 
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 

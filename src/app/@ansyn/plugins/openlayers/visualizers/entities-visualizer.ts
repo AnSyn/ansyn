@@ -18,10 +18,11 @@ import {
 	VisualizerStates
 } from '@ansyn/core';
 import { FeatureCollection } from 'geojson';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BaseImageryVisualizer, IBaseImageryVisualizerClass, VisualizerInteractionTypes } from '@ansyn/imagery';
 import ol_color from 'ol/color';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
+import { map } from 'rxjs/operators';
 
 export interface IFeatureIdentifier {
 	feature: Feature,
@@ -215,7 +216,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		if (logicalEntities.length <= 0) {
-			return Observable.of(true);
+			return of(true);
 		}
 
 		const featuresCollectionToAdd = <FeatureCollection<any>> {
@@ -228,7 +229,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		});
 
 		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
-			.map((features: Feature[]) => {
+			.pipe(map((features: Feature[]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
 					this.idToEntity.set(_id, <any>{
@@ -238,7 +239,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				});
 				this.source.addFeatures(features);
 				return true;
-			});
+			}));
 	}
 
 	setEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {

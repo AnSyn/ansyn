@@ -10,8 +10,6 @@ import {
 } from '@ansyn/status-bar';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/pluck';
 import { OverlaysService } from '@ansyn/overlays';
 import { casesStateSelector, CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items';
 import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade';

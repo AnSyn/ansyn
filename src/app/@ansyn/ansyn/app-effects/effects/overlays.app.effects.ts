@@ -1,6 +1,6 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
@@ -59,7 +59,6 @@ import { IContextParams, selectContextEntities, selectContextsParams, SetContext
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get } from 'lodash';
-import { of } from 'rxjs/internal/observable/of';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -198,9 +197,9 @@ export class OverlaysAppEffects {
 	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
 	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [IOverlay, CommunicatorEntity]) => {
 		if (!communicator) {
-			return Observable.of([overlay, null]);
+			return of([overlay, null]);
 		}
-		return communicator.getPosition().map((position) => [overlay, position]);
+		return communicator.getPosition().pipe(map((position) => [overlay, position]));
 	});
 	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
 		if (!overlay) {
@@ -211,11 +210,12 @@ export class OverlaysAppEffects {
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
-		return (<any>sourceProvider).getThumbnailUrl(overlay, position)
-			.map(thumbnailUrl => ({ ...overlay, thumbnailUrl }))
-			.catch(() => {
+		return (<any>sourceProvider).getThumbnailUrl(overlay, position).pipe(
+			map(thumbnailUrl => ({ ...overlay, thumbnailUrl })),
+			catchError(() => {
 				return of(overlay);
-			});
+			})
+		);
 	});
 	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
 
@@ -233,7 +233,7 @@ export class OverlaysAppEffects {
 		.pipe(
 			catchError(err => {
 				console.error(err);
-				return Observable.of(err);
+				return of(err);
 			})
 		);
 

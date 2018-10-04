@@ -9,18 +9,18 @@ import {
 	toolsFlags,
 	toolsStateSelector
 } from '@ansyn/menu-items';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { combineLatest, Observable, of } from 'rxjs';
+import { select, Store } from '@ngrx/store';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Feature from 'ol/feature';
 import { Point } from 'geojson';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import 'rxjs/add/observable/combineLatest';
+import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
+import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -28,42 +28,43 @@ import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-m
 })
 export class GoToVisualizer extends EntitiesVisualizer {
 	/* data */
-	mapState$ = this.store$.select(mapStateSelector);
 	toolsState$ = this.store$.select(toolsStateSelector);
 
-	pinLocation$ = this.toolsState$
-		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
-		.map((flags) => flags.get(toolsFlags.pinLocation))
-		.distinctUntilChanged();
+	pinLocation$ = this.toolsState$.pipe(
+		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
+		map((flags) => flags.get(toolsFlags.pinLocation)),
+		distinctUntilChanged()
+	);
 
-	isActiveMap$ = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
-		.distinctUntilChanged()
-		.map((activeMapId) => activeMapId === this.mapId);
+	isActiveMap$ = this.store$.pipe(
+		select(selectActiveMapId),
+		map((activeMapId) => activeMapId === this.mapId)
+	);
 
-	goToExpand$ = this.store$.select(selectSubMenu)
-		.map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.goTo)
-		.distinctUntilChanged();
+	goToExpand$ = this.store$.select(selectSubMenu).pipe(
+		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.goTo),
+		distinctUntilChanged()
+	);
 
-	activeCenter$ = this.toolsState$
-		.pluck<IToolsState, number[]>('activeCenter')
-		.distinctUntilChanged();
+	activeCenter$ = this.toolsState$.pipe(
+		pluck<IToolsState, number[]>('activeCenter'),
+		distinctUntilChanged());
 
 	/* events */
 	@AutoSubscription
-	drawPinPoint$ = Observable
-		.combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$)
-		.mergeMap(this.drawGotoIconOnMap.bind(this));
+	drawPinPoint$ = combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$)
+		.pipe(mergeMap(this.drawGotoIconOnMap.bind(this)));
 
 	@AutoSubscription
-	goToPinAvailable$ = Observable.combineLatest(this.pinLocation$, this.isActiveMap$)
-		.do(([pinLocation, isActiveMap]: [boolean, boolean]) => {
+	goToPinAvailable$ = combineLatest(this.pinLocation$, this.isActiveMap$).pipe(
+		tap(([pinLocation, isActiveMap]: [boolean, boolean]) => {
 			if (isActiveMap && pinLocation) {
 				this.createSingleClickEvent();
 			} else {
 				this.removeSingleClickEvent();
 			}
-		});
+		})
+	);
 
 	_iconSrc: Style = new Style({
 		image: new Icon({
@@ -76,7 +77,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 	public singleClickListener(e) {
 		this.projectionService
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap)
-			.take(1)
+			.pipe(take(1))
 			.subscribe((point: Point) => {
 				this.store$.dispatch(new SetPinLocationModeAction(false));
 				this.store$.dispatch(new SetActiveCenter(point.coordinates));
@@ -105,7 +106,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 			return this.setEntities([{ id: 'goto', featureJson }]);
 		}
 		this.clearEntities();
-		return Observable.of(true);
+		return of(true);
 	}
 
 	onDispose() {

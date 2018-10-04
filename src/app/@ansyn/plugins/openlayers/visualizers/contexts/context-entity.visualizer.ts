@@ -15,7 +15,7 @@ import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { selectContextEntities } from '@ansyn/context';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
-import { distinctUntilChanged, filter, map, tap } from 'rxjs/internal/operators';
+import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
@@ -30,9 +30,10 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: GeoJSON;
 
 	@AutoSubscription
-	contextEntites$ = this.store$.select(selectContextEntities)
-		.filter(Boolean)
-		.mergeMap(this.setEntities.bind(this));
+	contextEntites$ = this.store$.select(selectContextEntities).pipe(
+		filter(Boolean),
+		mergeMap(this.setEntities.bind(this))
+	);
 
 	@AutoSubscription
 	referenceDate$ = this.store$

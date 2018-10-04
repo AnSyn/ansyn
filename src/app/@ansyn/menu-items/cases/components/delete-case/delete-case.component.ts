@@ -6,7 +6,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
 import { Observable, of } from 'rxjs';
 import { ICasePreview } from '@ansyn/core';
-import { catchError } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
 
 const animationsDuring = '0.2s';
@@ -36,7 +36,7 @@ export class DeleteCaseComponent implements OnInit {
 
 	activeCase$ = this.store
 		.select(casesStateSelector)
-		.map((cases) => cases.entities[cases.modal.id]);
+		.pipe(map((cases) => cases.entities[cases.modal.id]));
 
 	activeCase: ICasePreview;
 

@@ -3,8 +3,7 @@ import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlaysState } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { Observable } from 'rxjs';
-import { Observer } from 'rxjs/Observer';
+import { EMPTY, Observable, Observer } from 'rxjs';
 import {
 	buildFilteredOverlays,
 	IOverlay,
@@ -20,15 +19,15 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

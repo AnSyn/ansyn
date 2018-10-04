@@ -11,6 +11,7 @@ import {
 	mergeLimitedArrays,
 	sortByDateDesc
 } from '@ansyn/core';
+import { catchError, map } from 'rxjs/operators';
 
 export interface IDateRange {
 	start: Date;
@@ -95,14 +96,14 @@ export abstract class BaseOverlaySourceProvider {
 					newFetchParams.sensors = [f.sensor];
 				}
 
-				return this.fetch(newFetchParams).catch(err => {
+				return this.fetch(newFetchParams).pipe(catchError(err => {
 					this.loggerService.error(err);
 					return of({
 						data: null,
 						limited: -1,
 						errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
 					});
-				});
+				}));
 			})
 	}
 
@@ -112,15 +113,16 @@ export abstract class BaseOverlaySourceProvider {
 			return of({ data: [], limited: 0, errors: [] });
 		}
 
-		const multipleFetches: Observable<IOverlaysFetchData> = forkJoin(fetchObservables) // Wait for every fetch to resolve
-			.map((data: Array<IOverlaysFetchData>) => {
+		const multipleFetches: Observable<IOverlaysFetchData> = forkJoin(fetchObservables).pipe( // Wait for every fetch to resolve
+			map((data: Array<IOverlaysFetchData>) => {
 				// All failed
 				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
 					return { data: null, limited: -1, errors: data[0].errors };
 				}
 
 				return this.mergeOverlaysFetchData(data, fetchParams.limit);
-			});
+			})
+		);
 
 		return multipleFetches;
 	}

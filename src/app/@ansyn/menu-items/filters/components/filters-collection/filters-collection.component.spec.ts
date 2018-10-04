@@ -5,7 +5,7 @@ import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { filtersConfig } from '../../services/filters.service';
 import { CoreConfig, LoggerConfig, MockComponent } from '@ansyn/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { UpdateFacetsAction } from '../../actions/filters.actions';

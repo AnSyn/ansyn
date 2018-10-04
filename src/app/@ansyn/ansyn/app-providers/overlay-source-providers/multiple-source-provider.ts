@@ -1,9 +1,10 @@
-import { Observable, throwError } from 'rxjs';
+import { forkJoin, from, Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { BaseOverlaySourceProvider, IDateRange, IFetchParams, IOverlayFilter, IStartAndEndDate } from '@ansyn/overlays';
 import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
+import { map } from 'rxjs/operators';
 
 export interface IFiltersList {
 	name: string,
@@ -129,14 +130,14 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		const mergedSortedOverlays: Observable<IOverlaysFetchData> = Observable.forkJoin(this.sourceConfigs
+		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.sourceConfigs
 			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => {
 				const dataFiltersOfProvider = Boolean(fetchParams.dataInputFilters) ?
 					fetchParams.dataInputFilters.filter((f) => f.providerName === s.provider.sourceType) : [];
 				return s.provider.fetchMultiple({ ...fetchParams, dataInputFilters: dataFiltersOfProvider }, s.filters);
-			}))
-			.map(overlays => {
+			})).pipe(
+			map(overlays => {
 				const allFailed = overlays.every(overlay => this.isFaulty(overlay));
 				const errors = this.mergeErrors(overlays);
 
@@ -149,7 +150,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				}
 
 				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
-			}); // merge the overlays
+			})); // merge the overlays
 
 		return mergedSortedOverlays;
 	}
@@ -171,7 +172,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			}, null))
 			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
 
-		return Observable.from(startEnd);
+		return from(startEnd);
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
@@ -191,7 +192,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			}, null))
 			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
 
-		return Observable.from(startEnd);
+		return from(startEnd);
 	}
 }
 

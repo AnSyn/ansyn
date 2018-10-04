@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode.component';
 import { toolsFeatureKey, ToolsReducer, toolsStateSelector } from '../reducers/tools.reducer';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('overlaysDisplayModeComponent', () => {
 	let component: OverlaysDisplayModeComponent;
@@ -26,7 +26,7 @@ describe('overlaysDisplayModeComponent', () => {
 			[toolsStateSelector, { activeOverlaysFootprintMode: 'None' }]
 		]);
 
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(() => {

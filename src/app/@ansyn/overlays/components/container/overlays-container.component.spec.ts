@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService } from '../../services/overlays.service';
-import { Observable } from 'rxjs/Rx';
+import { EMPTY, Observable } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { createStore, IOverlay, IOverlaysFetchData, IStoreFixture, MockComponent } from '@ansyn/core';
 import { OverlaysEffects } from '../../effects/overlays.effects';
@@ -15,19 +15,19 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	};
 }
 

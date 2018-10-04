@@ -1,10 +1,11 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { Observable } from 'rxjs';
 import { OverlayDisplayMode } from '@ansyn/core';
 import { UUID } from 'angular2-uuid';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-overlays-display-mode',
@@ -24,10 +25,12 @@ export class OverlaysDisplayModeComponent {
 		switchFootprint: UUID.UUID()
 	};
 
-	public selectedMapOverlaysMode$: Observable<OverlayDisplayMode> = this.store$.select(toolsStateSelector)
-		.map((state: IToolsState) => {
+	public selectedMapOverlaysMode$: Observable<OverlayDisplayMode> = this.store$.pipe(
+		select(toolsStateSelector),
+		map((state: IToolsState) => {
 			return state.activeOverlaysFootprintMode;
-		});
+		})
+	);
 
 	public set visualizerType(value: OverlayDisplayMode) {
 		if (this._visualizerType !== value) {

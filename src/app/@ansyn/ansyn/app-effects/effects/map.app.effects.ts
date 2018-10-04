@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable, of, pipe } from 'rxjs';
+import { EMPTY, Observable, of, pipe, from } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -67,6 +67,7 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
+import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 
 @Injectable()
 export class MapAppEffects {
@@ -298,7 +299,7 @@ export class MapAppEffects {
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType });
 
 		if (!sourceLoader) {
-			return Observable.of(new SetToastMessageAction({
+			return of(new SetToastMessageAction({
 				toastText: 'No source loader for ' + overlay.sourceType,
 				showWarningIcon: true
 			}));
@@ -320,15 +321,15 @@ export class MapAppEffects {
 
 		/* -2- */
 		const changeActiveMap = mergeMap((layer) => {
-			let observable = Observable.of(true);
+			let observable = of(true);
 			const geoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
 			const notGeoRegisteredMap = !overlay.isGeoRegistered && communicator.activeMapName === OpenlayersMapName;
 			const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 			if (newActiveMapName) {
-				observable = Observable.fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, layer));
+				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, layer));
 			}
-			return observable.map(() => layer);
+			return observable.pipe(map(() => layer));
 		});
 
 		/* -3- */
@@ -342,13 +343,13 @@ export class MapAppEffects {
 
 		const onError = catchError((exception) => {
 			console.error(exception);
-			return Observable.from([
+			return from([
 				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
 				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
 			]);
 		});
 
-		return Observable.fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
+		return fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
 			.pipe(
 				isActiveMapAlive,
 				changeActiveMap,

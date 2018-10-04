@@ -14,7 +14,7 @@ import {
 	selectDrops,
 	selectTimelineRange
 } from '../../reducers/overlays.reducer';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import {
@@ -24,9 +24,8 @@ import {
 	SetMarkUp,
 	SetTimelineStateAction
 } from '../../actions/overlays.actions';
-import { Subscription } from 'rxjs/Subscription';
 import { schemeCategory10 } from 'd3-scale';
-import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';

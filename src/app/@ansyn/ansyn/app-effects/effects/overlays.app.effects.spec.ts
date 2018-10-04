@@ -17,7 +17,7 @@ import {
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
 } from '@ansyn/overlays';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
 	casesFeatureKey,
 	CasesReducer,
@@ -190,13 +190,13 @@ describe('OverlaysAppEffects', () => {
 					provide: OverlaysService,
 					useValue: {
 						getStartDateViaLimitFasets: () => {
-							return Observable.of({
+							return of({
 								'startDate': new Date('2014-06-27T08:43:03.624Z'),
 								'endDate': new Date('2015-06-27T08:43:03.624Z')
 							});
 						},
 						getStartAndEndDateViaRangeFacets: () => {
-							return Observable.of({
+							return of({
 								'startDate': new Date('2014-06-27T08:43:03.624Z'),
 								'endDate': new Date('2015-06-27T08:43:03.624Z')
 							});
@@ -241,7 +241,7 @@ describe('OverlaysAppEffects', () => {
 			[selectContextsParams, contextState.params]
 		]);
 
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 
 	}));
 

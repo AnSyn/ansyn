@@ -1,3 +1,4 @@
+export { selectTime } from './reducers/core.reducer';
 export { fetchConfigProviders } from './models/fetch-config-providers';
 export { IAlertComponent } from './alerts/alerts.model';
 export { ILoggerConfig } from './models/logger-config.model';

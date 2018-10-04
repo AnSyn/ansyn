@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
-import { merge, Observable, of } from 'rxjs';
+import { merge, Observable, of, throwError } from 'rxjs';
 import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
@@ -139,7 +139,7 @@ export class CommunicatorEntity {
 
 	public setPosition(position: ICaseMapPosition): Observable<boolean> {
 		if (!this.ActiveMap) {
-			return Observable.throw(new Error('missing active map'));
+			return throwError(new Error('missing active map'));
 		}
 
 		return this.ActiveMap.setPosition(position);
@@ -147,7 +147,7 @@ export class CommunicatorEntity {
 
 	public getPosition(): Observable<ICaseMapPosition> {
 		if (!this.ActiveMap) {
-			return Observable.throw(new Error('missing active map'));
+			return throwError(new Error('missing active map'));
 		}
 		return this.ActiveMap.getPosition();
 	}

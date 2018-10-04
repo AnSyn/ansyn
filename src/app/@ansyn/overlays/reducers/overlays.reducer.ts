@@ -162,14 +162,8 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			});
 
 		case OverlaysActionTypes.SET_FILTERED_OVERLAYS: {
-			const overlaysPlusExtras = new Map(state.overlays);
-			(<SetFilteredOverlaysAction>action).extraOverlays.forEach(overlay => {
-				if (!overlaysPlusExtras.has(overlay.id)) {
-					overlaysPlusExtras.set(overlay.id, overlay);
-				}
-			});
+			const overlaysPlusExtras = OverlaysService.cloneOverlaysAndAdd(state.overlays, (<SetFilteredOverlaysAction>action).extraOverlays);
 			const stateWithExtraOverlays: IOverlaysState = { ...state, overlays: overlaysPlusExtras };
-
 			const filteredOverlays = action.payload.filter((id) => stateWithExtraOverlays.overlays.get(id));
 			const drops = OverlaysService.parseOverlayDataForDisplay({ ...stateWithExtraOverlays, filteredOverlays });
 			return { ...state, filteredOverlays, drops };

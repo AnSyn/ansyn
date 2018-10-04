@@ -25,7 +25,7 @@ import {
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
+	OverlaysActionTypes, OverlaysService,
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
@@ -146,12 +146,7 @@ export class FiltersAppEffects {
 			return overlays.size > 0;
 		}),
 		tap(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
-			const overlaysPlusExtras = new Map(overlays);
-			favoriteOverlays.forEach(overlay => {
-				if (!overlaysPlusExtras.has(overlay.id)) {
-					overlaysPlusExtras.set(overlay.id, overlay);
-				}
-			});
+			const overlaysPlusExtras = OverlaysService.cloneOverlaysAndAdd(overlays, favoriteOverlays);
 
 			Array.from(filterState.filters).forEach(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
 				metadata.resetFilteredCount();
@@ -169,7 +164,8 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
-				protected filtersService: FiltersService) {
+				protected filtersService: FiltersService
+	) {
 	}
 
 	initializeMetadata(filter: IFilter, facets: ICaseFacetsState): FilterMetadata {

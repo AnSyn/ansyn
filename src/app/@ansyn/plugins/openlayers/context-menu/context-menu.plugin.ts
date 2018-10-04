@@ -8,7 +8,7 @@ import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
 import { DisplayOverlayFromStoreAction, overlaysStateSelector } from '@ansyn/overlays';
 import { areCoordinatesNumeric, IOverlay } from '@ansyn/core';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
@@ -57,22 +57,21 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			console.warn('no coordinate for pixel');
 			return;
 		}
-		this.positionToPoint(coordinate)
-			.withLatestFrom(this.store$.select(overlaysStateSelector))
-			.do(([point, overlaysState]) => {
+		this.positionToPoint(coordinate).pipe(
+			withLatestFrom(this.store$.select(overlaysStateSelector)),
+			tap(([point, overlaysState]) => {
 				const overlays = overlaysState.filteredOverlays
 					.map((id: string): IOverlay => overlaysState.overlays.get(id))
 					.filter(({ footprint }) => inside(point, footprint));
 
 				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));
-			})
+			}))
 			.subscribe();
 	}
 
 	positionToPoint(coordinates: ol.Coordinate): Observable<any> {
 		const point = <GeoPoint> turf.geometry('Point', coordinates);
 		return this.projectionService
-			.projectAccurately(point, this.iMap)
-			.take(1);
+			.projectAccurately(point, this.iMap).pipe(take(1));
 	}
 }

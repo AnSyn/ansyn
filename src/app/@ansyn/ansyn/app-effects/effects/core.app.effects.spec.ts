@@ -1,6 +1,6 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector, GoNextPresetOverlay, IOverlay, LoggerService } from '@ansyn/core';
@@ -48,7 +48,7 @@ describe('CoreAppEffects', () => {
 			[casesStateSelector, casesState],
 			[mapStateSelector, mapsState]
 		]);
-		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
+		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));
 
 	beforeEach(inject([CoreAppEffects], (_coreAppEffects: CoreAppEffects) => {

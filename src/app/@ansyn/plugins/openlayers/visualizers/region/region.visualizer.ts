@@ -1,5 +1,5 @@
 import * as turf from '@turf/turf';
-import { combineLatest, empty, Observable } from 'rxjs';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
@@ -20,38 +20,43 @@ import {
 	UpdateGeoFilterStatus
 } from '@ansyn/status-bar';
 import { AutoSubscription } from 'auto-subscriptions';
-import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
 	region$ = this.store$.select(selectRegion);
 
-	geoFilter$: Observable<any> = this.region$.map((region) => region.type)
-		.distinctUntilChanged();
+	geoFilter$: Observable<any> = this.region$.pipe(
+		map((region) => region.type),
+		distinctUntilChanged()
+	);
 
-	isActiveMap$ = this.store$.select(selectActiveMapId)
-		.map((activeMapId: string): boolean => activeMapId === this.mapId)
-		.distinctUntilChanged();
+	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
+		map((activeMapId: string): boolean => activeMapId === this.mapId),
+		distinctUntilChanged()
+	);
 
 	isActiveGeoFilter$ = this.geoFilter$
-		.map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter);
+		.pipe(map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter));
 
 	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
 
 	@AutoSubscription
-	toggleOpacity$ = this.geoFilterSearch$
-		.do((geoFilterSearch) => {
+	toggleOpacity$ = this.geoFilterSearch$.pipe(
+		tap((geoFilterSearch) => {
 			if (geoFilterSearch !== SearchModeEnum.none) {
 				this.vector.setOpacity(0);
 			} else {
 				this.vector.setOpacity(1);
 			}
-		});
+		})
+	);
 
-	onSearchMode$ = this.geoFilterSearch$
-		.map((geoFilterSearch) => geoFilterSearch === this.geoFilter)
-		.distinctUntilChanged();
+	onSearchMode$ = this.geoFilterSearch$.pipe(
+		map((geoFilterSearch) => geoFilterSearch === this.geoFilter),
+		distinctUntilChanged()
+	);
 
 	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
 
@@ -65,7 +70,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = Observable.combineLatest(this.onSearchMode$, this.isActiveMap$).pipe(
+	interactionChanges$: Observable<any> = combineLatest(this.onSearchMode$, this.isActiveMap$).pipe(
 		tap(this.interactionChanges.bind(this))
 	);
 
@@ -80,13 +85,13 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	drawChanges([geoFilter, region, geoFilterIndicator]) {
 		if (!geoFilterIndicator) {
 			this.clearEntities();
-			return empty();
+			return EMPTY;
 		}
 		if (geoFilter === this.geoFilter) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();
-		return empty();
+		return EMPTY;
 	}
 
 	onDrawEndEvent({ feature }) {

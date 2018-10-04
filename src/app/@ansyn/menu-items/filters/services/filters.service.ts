@@ -1,7 +1,6 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { IFilter } from '../models/IFilter';
-import 'rxjs/add/observable/of';
 import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';

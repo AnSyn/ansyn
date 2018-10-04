@@ -5,7 +5,7 @@ import { MapEffects } from '../../effects/map.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';

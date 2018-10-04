@@ -1,5 +1,5 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Inject } from '@angular/core';
 import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
 import { Actions, ofType } from '@ngrx/effects';
@@ -55,7 +55,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			const entityToDraw = { id, featureJson };
 			return this.setEntities([entityToDraw]);
 		}
-		return Observable.of(true);
+		return of(true);
 	}
 
 	getStroke() {

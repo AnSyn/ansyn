@@ -13,6 +13,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { isEqual } from 'lodash';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -27,16 +28,16 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
 
-	onDataInputFilterChange$ = this.dataInputFilter$
-		.distinctUntilChanged()
-		.filter(Boolean)
-		.do(_preFilter => {
+	onDataInputFilterChange$ = this.dataInputFilter$.pipe(
+		filter(Boolean),
+		tap(_preFilter => {
 			this._selectedFilters = _preFilter.filters;
 			this.dataInputFiltersActive = _preFilter.active;
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(root => this.updateInputDataFilterMenu(root));
 			}
-		});
+		})
+	);
 
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: false,

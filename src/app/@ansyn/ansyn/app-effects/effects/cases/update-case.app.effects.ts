@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, pipe } from 'rxjs';
 import {
 	ICase,
 	selectAutoSave,
@@ -24,8 +22,7 @@ import {
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
 import { selectContextEntities } from '@ansyn/context';
-import { pipe } from 'rxjs/Rx';
-import { tap } from 'rxjs/internal/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 
 @Injectable()
@@ -53,10 +50,10 @@ export class UpdateCaseAppEffects {
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
 	@Effect()
-	shouldUpdateCase$ = Observable.combineLatest(this.events)
-		.withLatestFrom(this.store$.select(selectSelectedCase))
-		.filter(([events, selectedCase]) => Boolean(selectedCase))    /* SelectCaseAction(selectedCase) already triggered */
-		.map(([events, selectedCase]: [any, any]) => {
+	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
+		withLatestFrom(this.store$.select(selectSelectedCase)),
+		filter(([events, selectedCase]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
+		map(([events, selectedCase]: [any, any]) => {
 			const [
 				activeLayersIds,
 				facets,
@@ -109,7 +106,8 @@ export class UpdateCaseAppEffects {
 			};
 
 			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
-		});
+		})
+	);
 
 	constructor(protected store$: Store<IAppState>) {
 	}

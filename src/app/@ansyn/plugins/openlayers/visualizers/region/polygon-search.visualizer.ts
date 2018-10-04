@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
-import 'rxjs/add/observable/combineLatest';
 import { Position } from 'geojson';
 import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize } from '@ansyn/core';
 import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';

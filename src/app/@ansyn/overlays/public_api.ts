@@ -1,7 +1,5 @@
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/mergeMap';
-export { timeIntersection } from './models/base-overlay-source-provider.model';
 export { selectHoveredOverlay } from './reducers/overlays.reducer';
+export { timeIntersection } from './models/base-overlay-source-provider.model';
 export { ChangeOverlayPreviewRotationAction } from './actions/overlays.actions';
 export { selectLoading } from './reducers/overlays.reducer';
 export { LoadOverlaysSuccessAction } from './actions/overlays.actions';

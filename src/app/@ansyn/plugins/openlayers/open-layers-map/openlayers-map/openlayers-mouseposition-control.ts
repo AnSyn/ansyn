@@ -2,7 +2,7 @@ import MousePosition from 'ol/control/mouseposition';
 import { Point } from 'geojson';
 import { Observable } from 'rxjs';
 import * as turf from '@turf/turf';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import Projection from 'ol/proj/projection';
 import { areCoordinatesNumeric } from '@ansyn/core';
 

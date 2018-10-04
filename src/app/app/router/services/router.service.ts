@@ -4,6 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { IRouterState } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AnsynRouterService {
@@ -16,17 +17,17 @@ export class AnsynRouterService {
 	}
 
 	onNavigationEnd(): Observable<any> {
-		return this.router.events
-			.filter(e => e instanceof NavigationEnd)
-			.map(() => {
+		return this.router.events.pipe(
+			filter(e => e instanceof NavigationEnd),
+			map(() => {
 				let activated = this.router.routerState.root;
 				while (activated.firstChild) {
 					activated = activated.firstChild;
 				}
 				return activated;
-			})
-			.filter(activated => activated.snapshot.data.name === 'case' || activated.snapshot.data.name === 'caseChild')
-			.map(activated => {
+			}),
+			filter(activated => activated.snapshot.data.name === 'case' || activated.snapshot.data.name === 'caseChild'),
+			map(activated => {
 				const queryParamMap = activated.snapshot.queryParamMap;
 				const queryParams = {};
 				queryParamMap.keys.forEach(key => {
@@ -34,8 +35,9 @@ export class AnsynRouterService {
 				});
 				const caseId = activated.snapshot.paramMap.get('caseId');
 				return { caseId, queryParams };
-			})
-			.do(state => this.store.dispatch(new SetStateAction(state)));
+			}),
+			tap(state => this.store.dispatch(new SetStateAction(state)))
+		)
 	}
 
 }

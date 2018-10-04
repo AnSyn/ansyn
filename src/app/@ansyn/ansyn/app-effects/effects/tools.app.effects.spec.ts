@@ -1,6 +1,6 @@
 import { ToolsAppEffects } from './tools.app.effects';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -180,7 +180,7 @@ describe('ToolsAppEffects', () => {
 			[layersStateSelector, layerState],
 			[toolsStateSelector, toolsState]
 		]);
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([ImageryCommunicatorService, ToolsAppEffects], (_imageryCommunicatorService: ImageryCommunicatorService, _toolsAppEffects: ToolsAppEffects) => {
@@ -191,7 +191,7 @@ describe('ToolsAppEffects', () => {
 	it('getActiveCenter$ should get center from active communicator and return SetCenterAction', () => {
 		const activeCommunicator = {
 			getCenter: () => {
-				return Observable.of({ coordinates: [0, 0] });
+				return of({ coordinates: [0, 0] });
 			}
 		};
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
@@ -219,7 +219,7 @@ describe('ToolsAppEffects', () => {
 			}
 		});
 
-		activeCommunicator.setCenter.and.callFake(() => Observable.of(true));
+		activeCommunicator.setCenter.and.callFake(() => of(true));
 		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
 		actions = hot('--a--', { a: new GoToAction([0, 0]) });
 

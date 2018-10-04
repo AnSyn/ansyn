@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
 import { ClearActiveInteractionsAction } from '@ansyn/core';
-import { map } from 'rxjs/internal/operators';
+import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 
 @Component({
@@ -22,23 +22,25 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	isImageControlActive = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
-	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
-		.map((tools: IToolsState) => tools.flags)
-		.distinctUntilChanged();
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector).pipe(
+		map((tools: IToolsState) => tools.flags),
+		distinctUntilChanged()
+	);
 
-	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector)
-		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
-		.distinctUntilChanged()
-		.map((flags) => flags.get(toolsFlags.imageProcessingDisabled))
-		.distinctUntilChanged()
-		.filter(Boolean)
-		.do(this.closeManualProcessingMenu.bind(this));
+	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector).pipe(
+		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
+		distinctUntilChanged(),
+		map((flags) => flags.get(toolsFlags.imageProcessingDisabled)),
+		distinctUntilChanged(),
+		filter(Boolean),
+		tap(this.closeManualProcessingMenu.bind(this))
+	);
 
 	isActiveAnnotationLayer$ = this.store.select(selectActiveAnnotationLayer).pipe(
 		map(Boolean)
 	);
 
-	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
+	subMenu$ = this.store.select(selectSubMenu).pipe(tap((subMenu) => this.subMenu = subMenu));
 	subMenu: SubMenuEnum;
 
 	subscribers = [];

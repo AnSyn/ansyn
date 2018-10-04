@@ -1,10 +1,8 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { select, Store } from '@ngrx/store';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '../../reducers/map.reducer';
 import { ActiveImageryMouseEnter, ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -13,10 +11,10 @@ import {
 	ICoreState,
 	IMapsLayout,
 	LayoutKey,
-	layoutOptions,
+	layoutOptions, selectLayout,
 	SetMapsDataActionStore
 } from '@ansyn/core';
-import { filter, tap } from 'rxjs/operators';
+import { filter, map, pluck, tap, distinctUntilChanged } from 'rxjs/operators';
 
 // @dynamic
 @Component({
@@ -26,27 +24,19 @@ import { filter, tap } from 'rxjs/operators';
 })
 
 export class ImageriesManagerComponent implements OnInit {
-	public core$: Observable<ICoreState> = this.store.select(coreStateSelector);
-	public mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
+	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
+		select(selectLayout),
+		map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout))
+	);
+	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
+	public mapsList$: Observable<ICaseMapState[]> = this.store.select(selectMapsList);
 
-	public selectedLayout$: Observable<IMapsLayout> = this.core$
-		.pluck<ICoreState, LayoutKey>('layout')
-		.distinctUntilChanged()
-		.map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout));
-
-	public activeMapId$: Observable<string> = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
-		.distinctUntilChanged();
-
-	public mapsList$: Observable<ICaseMapState[]> = this.mapState$
-		.pluck<IMapState, ICaseMapState[]>('mapsList')
-		.distinctUntilChanged();
-
-	public showWelcomeNotification$ = this.store.select(coreStateSelector)
-		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
-		.distinctUntilChanged()
-		.map(bool => !bool)
-	;
+	public showWelcomeNotification$ = this.store.pipe(
+		select(coreStateSelector),
+		pluck<ICoreState, boolean>('wasWelcomeNotificationShown'),
+		distinctUntilChanged(),
+		map(bool => !bool)
+	);
 
 	public selectedLayout;
 

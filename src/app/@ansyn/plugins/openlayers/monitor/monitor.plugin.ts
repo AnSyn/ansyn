@@ -7,6 +7,7 @@ import { SetProgressBarAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import { ProjectableRaster } from '../open-layers-map/models/projectable-raster';
+import { tap } from 'rxjs/operators';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -39,7 +40,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	onResetView() {
 		return <Observable<boolean>>super.onResetView()
-			.do(this.monitorSource.bind(this));
+			.pipe(tap(this.monitorSource.bind(this)));
 	}
 
 	getMainSource(): TileSource {

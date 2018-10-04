@@ -32,7 +32,7 @@ import {
 } from '@ansyn/menu-items';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { ContextConfig, contextFeatureKey, ContextReducer, ContextService } from '@ansyn/context';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
@@ -86,7 +86,7 @@ describe('CasesAppEffects', () => {
 				{
 					provide: ContextService,
 					useValue: {
-						loadContexts: () => Observable.of([])
+						loadContexts: () => of([])
 					}
 				},
 				{
@@ -97,10 +97,10 @@ describe('CasesAppEffects', () => {
 								const overlay = <IOverlay> {};
 								overlay.id = id;
 
-								return Observable.of(overlay);
+								return of(overlay);
 							}
 
-							return Observable.throwError(new HttpErrorResponse({ status: 404 }));
+							return throwError(new HttpErrorResponse({ status: 404 }));
 						}
 					}
 				},
@@ -111,7 +111,7 @@ describe('CasesAppEffects', () => {
 				CasesService,
 				{
 					provide: ErrorHandlerService,
-					useValue: { httpErrorHandle: () => Observable.throw(null) }
+					useValue: { httpErrorHandle: () => throwError(null) }
 				},
 				{
 					provide: ContextConfig,
@@ -209,7 +209,7 @@ describe('CasesAppEffects', () => {
 				state: { ...caseMock2.state, favoriteOverlays: [{ id: 'blabla', sourceType: 'PLANET' }] }
 			};
 			store.dispatch(new AddCaseAction(caseItem));
-			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
+			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });
 			const expectedResults = cold('--(bc)--', {
 				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
@@ -221,7 +221,7 @@ describe('CasesAppEffects', () => {
 		it('loadCase$ should dispatch SelectCaseAction if all case and all its overlays exists', () => {
 			const caseItem: ICase = caseMock2;
 			store.dispatch(new AddCaseAction(caseItem));
-			spyOn(casesService, 'loadCase').and.callFake(() => Observable.of(caseItem));
+			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });
 			const expectedResults = cold('--(b)--', {
 				b: new SelectCaseAction(caseItem)

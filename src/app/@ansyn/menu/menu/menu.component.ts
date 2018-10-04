@@ -28,7 +28,6 @@ import {
 } from '../reducers/menu.reducer';
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { DOCUMENT } from '@angular/common';
 import { IMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';

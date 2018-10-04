@@ -1,4 +1,3 @@
-import 'rxjs/add/operator/filter';
 export {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG

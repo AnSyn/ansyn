@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginConfigService } from './login-config.service';
 import { ILoginConfig } from '../models/login.config';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/observable/throw';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +40,7 @@ export class AuthService {
 		const whatToDo = rememberMe ? this.setTokenStorage : this.setTokenSession;
 		return this.httpClient
 			.post(url, body, options)
-			.do(whatToDo);
+			.pipe(tap(whatToDo));
 	}
 
 	loginAuth(authToken: string) {
@@ -54,11 +53,11 @@ export class AuthService {
 
 	isLoggedIn(): Observable<any> {
 		if (!this.config.active) {
-			return Observable.of(true);
+			return of(true);
 		}
 		const token = this.sessionToken ? this.sessionToken : this.localToken;
 		if (!token) {
-			return Observable.throw(401);
+			return throwError(401);
 		}
 		return this.loginAuth(token);
 	}

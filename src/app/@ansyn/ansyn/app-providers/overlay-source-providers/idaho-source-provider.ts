@@ -15,6 +15,7 @@ import {
 } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
+import { catchError, map } from 'rxjs/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';
@@ -52,10 +53,12 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		let url = this._overlaySourceConfig.baseUrl.concat(this._overlaySourceConfig.defaultApi) + '/' + id;
 		return <Observable<IOverlay>>this.httpClient.get(url)
-			.map(this.extractData.bind(this))
-			.catch((error: any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			.pipe(
+				map(this.extractData.bind(this)),
+				catchError((error: any) => {
+					return this.errorHandlerService.httpErrorHandle(error);
+				})
+			);
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
@@ -73,32 +76,33 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const requestParams = Object.assign({}, fetchParams, { limit: fetchParams.limit + 1 });
-		return <Observable<IOverlaysFetchData>>this.httpClient.post(url, requestParams)
-			.map(this.extractArrayData.bind(this))
-			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
+		return <Observable<IOverlaysFetchData>>this.httpClient.post(url, requestParams).pipe(
+			map(this.extractArrayData.bind(this)),
+			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
-			}))
-			.catch((error: any) => {
+			})),
+			catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		)
 
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDate');
 		return <Observable<IStartAndEndDate>>this.httpClient.post<IStartAndEndDate>(url, params)
-			.catch((error: any) => {
+			.pipe(catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			}));
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<IStartAndEndDate> {
 		const url = this._overlaySourceConfig.baseUrl.concat('overlays/findDateRange');
 		return <Observable<IStartAndEndDate>>this.httpClient.post<IStartAndEndDate>(url, params)
-			.catch((error: any) => {
+			.pipe(catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			}));
 	}
 
 	private extractArrayData(data: IIdahoResponse): Array<IOverlay> {

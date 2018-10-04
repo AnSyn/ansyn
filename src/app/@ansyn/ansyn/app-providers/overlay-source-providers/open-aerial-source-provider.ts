@@ -15,6 +15,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
+import { catchError, map } from 'rxjs/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';
@@ -60,28 +61,30 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			acquisition_to: fetchParams.timeRange.end.toISOString()
 		};
 
-		return this.http.get<any>(baseUrl, { params: params })
-			.map(data => {
+		return this.http.get<any>(baseUrl, { params: params }).pipe(
+			map(data => {
 				return this.extractArrayData(data.results);
-			})
-			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
+			}),
+			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
-			}))
-			.catch((error: Response | any) => {
+			})),
+			catchError((error: Response | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		)
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
-		return this.http.get<any>(baseUrl, { params: { _id: id } })
-			.map(data => {
+		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe <any> (
+			map(data => {
 				return this.extractData(data.results);
-			})
-			.catch((error: any) => {
+			}),
+			catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {

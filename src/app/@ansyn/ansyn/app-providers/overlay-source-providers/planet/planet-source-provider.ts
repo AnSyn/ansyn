@@ -1,12 +1,10 @@
 import { forkJoin, Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
-	DEFAULT_CLOUD_COVERAGE,
 	IFetchParams,
 	IOverlayFilter,
 	IStartAndEndDate,
-	timeIntersection,
-	UNKNOWN_NAME
+	timeIntersection
 } from '@ansyn/overlays';
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';

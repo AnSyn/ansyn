@@ -14,7 +14,7 @@ import {
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { catchError, map } from 'rxjs/operators';
 
@@ -122,8 +122,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 		return new Overlay({
 			id: idahoElement.identifier,
 			footprint: footprint.geometry ? footprint.geometry : footprint,
-			sensorType: idahoElement.properties.sensorName ? idahoElement.properties.sensorName : UNKNOWN_NAME,
-			sensorName: idahoElement.properties.platformName ? idahoElement.properties.platformName : UNKNOWN_NAME,
+			sensorType: idahoElement.properties.sensorName,
+			sensorName: idahoElement.properties.platformName,
 			channel: idahoElement.properties.numBands,
 			bestResolution: idahoElement.properties.groundSampleDistanceMeters,
 			name: idahoElement.properties.catalogID,

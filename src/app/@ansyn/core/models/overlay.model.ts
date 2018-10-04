@@ -42,12 +42,16 @@ export interface IOverlay extends IDilutedOverlay {
 }
 
 export class Overlay implements IOverlay {
-	footprint?: any; // @TODO add type geojson multipoligon,
-	sensorType = 'Unknown';
-	sensorName = 'Unknown';
+	static UNKNOWN_NAME = 'Unknown';
+	static DEFAULT_CLOUD_COVERAGE = 1;
+	static DEFAULT_PROJECTION = 'EPSG:3857';
+
+	footprint?: any;
+	sensorType = Overlay.UNKNOWN_NAME;
+	sensorName = Overlay.UNKNOWN_NAME;
 	channel?: number;
 	bestResolution?: number;
-	cloudCoverage = 1;
+	cloudCoverage = Overlay.DEFAULT_CLOUD_COVERAGE;
 	isStereo?: boolean;
 	name: string;
 	imageUrl?: string;
@@ -60,23 +64,15 @@ export class Overlay implements IOverlay {
 	csmState?: string;
 	isGeoRegistered: boolean;
 	tag?: any; // original metadata
-	projection?: string;
+	projection?: string = Overlay.DEFAULT_PROJECTION;
 	id: string;
 	sourceType: string;
 
-	constructor({
-					sensorType = 'Unknown',
-					sensorName = 'Unknown',
-					cloudCoverage = 1,
-					projection = 'EPSG:3857',
-					...restProps
-				}: Partial<IOverlay>) {
-		this.sensorType = sensorType;
-		this.sensorName = sensorName;
-		this.cloudCoverage = cloudCoverage;
-		this.projection = projection;
-		Object.entries(restProps).forEach(([key, value]) => {
-			this[key] = value;
+	constructor(overlayProps: Partial<IOverlay>) {
+		Object.entries(overlayProps).forEach(([key, value]) => {
+			if (value) {
+				this[key] = value;
+			}
 		});
 	}
 }

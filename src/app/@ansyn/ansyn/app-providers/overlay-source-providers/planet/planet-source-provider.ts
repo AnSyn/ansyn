@@ -193,7 +193,9 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const _page_size = `${fetchParams.limit + 1}`;
 
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
-			planetFilters.push(this.buildDataInputFilter(fetchParams.dataInputFilters));
+			planetFilters.forEach((filter) => {
+				filter.config.push(this.buildDataInputFilter(fetchParams.dataInputFilters))
+			});
 		}
 
 		const { baseUrl } = this.planetOverlaysSourceConfig;

@@ -138,7 +138,7 @@ export class DisplayOverlayFailedAction implements Action {
 export class SetFilteredOverlaysAction implements Action {
 	type = OverlaysActionTypes.SET_FILTERED_OVERLAYS;
 
-	constructor(public payload: string[]) {
+	constructor(public payload: string[], public extraOverlays: IOverlay[] = []) {
 	}
 }
 

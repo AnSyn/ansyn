@@ -70,7 +70,7 @@ export class FiltersAppEffects {
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, favoriteOverlays, showOnlyFavorite, removedOverlaysIds, removedOverlaysVisibility);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
 			return [
-				new SetFilteredOverlaysAction(filteredOverlays),
+				new SetFilteredOverlaysAction(filteredOverlays, favoriteOverlays),
 				new SetOverlaysStatusMessage(message)
 			];
 		}));

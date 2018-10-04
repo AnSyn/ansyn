@@ -117,26 +117,26 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(idahoElement: any, token: string): IOverlay {
-		let overlay: IOverlay = new Overlay();
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
-		overlay.id = idahoElement.identifier;
-		overlay.footprint = footprint.geometry ? footprint.geometry : footprint;
-		overlay.sensorType = idahoElement.properties.sensorName ? idahoElement.properties.sensorName : UNKNOWN_NAME;
-		overlay.sensorName = idahoElement.properties.platformName ? idahoElement.properties.platformName : UNKNOWN_NAME;
-		overlay.channel = idahoElement.properties.numBands;
-		overlay.bestResolution = idahoElement.properties.groundSampleDistanceMeters;
-		overlay.name = idahoElement.properties.catalogID;
-		overlay.thumbnailUrl = 'https://api.discover.digitalglobe.com/show?id=' + idahoElement.properties.catalogID + '&f=jpeg';
-		overlay.date = new Date(idahoElement.properties.acquisitionDate);
-		overlay.photoTime = idahoElement.properties.acquisitionDate;
-		overlay.azimuth = toRadians(180 - idahoElement.properties.satAzimuth);
-		overlay.sourceType = this.sourceType;
-		overlay.isGeoRegistered = true;
-		overlay.tag = idahoElement;
-		overlay.baseImageUrl = 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true';
-		(<any>overlay).token = token;
-		(<any>overlay).catalogID = idahoElement.properties.catalogID;
 
-		return overlay;
+		return new Overlay({
+			id: idahoElement.identifier,
+			footprint: footprint.geometry ? footprint.geometry : footprint,
+			sensorType: idahoElement.properties.sensorName ? idahoElement.properties.sensorName : UNKNOWN_NAME,
+			sensorName: idahoElement.properties.platformName ? idahoElement.properties.platformName : UNKNOWN_NAME,
+			channel: idahoElement.properties.numBands,
+			bestResolution: idahoElement.properties.groundSampleDistanceMeters,
+			name: idahoElement.properties.catalogID,
+			thumbnailUrl: 'https://api.discover.digitalglobe.com/show?id=' + idahoElement.properties.catalogID + '&f=jpeg',
+			date: new Date(idahoElement.properties.acquisitionDate),
+			photoTime: idahoElement.properties.acquisitionDate,
+			azimuth: toRadians(180 - idahoElement.properties.satAzimuth),
+			sourceType: this.sourceType,
+			isGeoRegistered: true,
+			tag: idahoElement,
+			baseImageUrl: 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true',
+			token: token,
+			catalogID: idahoElement.properties.catalogID,
+		});
 	}
 }

@@ -37,6 +37,8 @@ export interface IOverlay extends IDilutedOverlay {
 	isGeoRegistered: boolean;
 	tag?: any; // original metadata
 	projection?: string;
+	token?: string;
+	catalogID?: string,
 }
 
 export class Overlay implements IOverlay {
@@ -61,6 +63,22 @@ export class Overlay implements IOverlay {
 	projection?: string;
 	id: string;
 	sourceType: string;
+
+	constructor({
+					sensorType = 'Unknown',
+					sensorName = 'Unknown',
+					cloudCoverage = 1,
+					projection = 'EPSG:3857',
+					...restProps
+				}: Partial<IOverlay>) {
+		this.sensorType = sensorType;
+		this.sensorName = sensorName;
+		this.cloudCoverage = cloudCoverage;
+		this.projection = projection;
+		Object.entries(restProps).forEach(([key, value]) => {
+			this[key] = value;
+		});
+	}
 }
 
 export interface IOverlaysCriteria {

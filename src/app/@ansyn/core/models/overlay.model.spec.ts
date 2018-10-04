@@ -1,6 +1,6 @@
 import { IOverlay, Overlay } from './overlay.model';
 
-fdescribe('Overlay', () => {
+describe('Overlay', () => {
 
 	it('should use default values when values are not passed on the constructor', () => {
 		const overlay: IOverlay = new Overlay( <any> {

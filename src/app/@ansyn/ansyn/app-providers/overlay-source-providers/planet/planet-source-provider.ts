@@ -4,8 +4,7 @@ import {
 	IFetchParams,
 	IOverlayFilter,
 	IStartAndEndDate,
-	timeIntersection,
-	UNKNOWN_NAME
+	timeIntersection
 } from '@ansyn/overlays';
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
@@ -17,6 +16,7 @@ import {
 	IOverlay,
 	limitArray,
 	LoggerService,
+	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
@@ -364,24 +364,24 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(element: PlanetOverlay): IOverlay {
-		const overlay: IOverlay = <IOverlay> {};
+		return new Overlay({
+			id: element.id,
+			footprint: element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry),
+			sensorType: element.properties.item_type,
+			sensorName: element.properties.satellite_id,
+			bestResolution: element.properties.gsd,
+			cloudCoverage: element.properties.cloud_cover,
+			name: element.id,
+			imageUrl: this.appendApiKey(
+				`${this.planetOverlaysSourceConfig.tilesUrl}${element.properties.item_type}/${element.id}/{z}/{x}/{y}.png`),
+			thumbnailUrl: this.appendApiKey(element._links.thumbnail),
+			date: new Date(element.properties.acquired),
+			photoTime: element.properties.acquired,
+			azimuth: toRadians(element.properties.view_angle),
+			sourceType: this.sourceType,
+			isGeoRegistered: true,
+			tag: element
+		});
 
-		overlay.id = element.id;
-		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);
-		overlay.sensorType = element.properties.item_type ? element.properties.item_type : UNKNOWN_NAME;
-		overlay.sensorName = element.properties.satellite_id ? element.properties.satellite_id : UNKNOWN_NAME;
-		overlay.bestResolution = element.properties.gsd;
-		overlay.name = element.id;
-		overlay.imageUrl = this.appendApiKey(
-			`${this.planetOverlaysSourceConfig.tilesUrl}${overlay.sensorType}/${overlay.id}/{z}/{x}/{y}.png`);
-		overlay.thumbnailUrl = this.appendApiKey(element._links.thumbnail);
-		overlay.date = new Date(element.properties.acquired);
-		overlay.photoTime = element.properties.acquired;
-		overlay.azimuth = toRadians(element.properties.view_angle);
-		overlay.sourceType = this.sourceType;
-		overlay.isGeoRegistered = true;
-		overlay.tag = element;
-		overlay.projection = 'EPSG:3857';
-		return overlay;
 	}
 }

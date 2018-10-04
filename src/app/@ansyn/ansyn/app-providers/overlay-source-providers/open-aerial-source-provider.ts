@@ -1,5 +1,5 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
+import { Inject, Injectable } from '@angular/core';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
@@ -9,6 +9,7 @@ import {
 	IOverlay,
 	limitArray,
 	LoggerService,
+	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
@@ -72,12 +73,12 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			catchError((error: Response | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			})
-		)
+		);
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
-		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe <any> (
+		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe <any>(
 			map(data => {
 				return this.extractData(data.results);
 			}),
@@ -111,24 +112,23 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(openAerialElement: any): IOverlay {
-		let overlay: IOverlay = <IOverlay> {};
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
-		overlay.id = openAerialElement._id;
-		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);
-		overlay.sensorType = openAerialElement.platform ? openAerialElement.platform : UNKNOWN_NAME;
-		overlay.sensorName = openAerialElement.properties.sensor ? openAerialElement.properties.sensor : UNKNOWN_NAME;
-		overlay.bestResolution = openAerialElement.gsd;
-		overlay.name = openAerialElement.title;
-		overlay.imageUrl = openAerialElement.properties.tms;
-		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;
-		overlay.date = new Date(openAerialElement.acquisition_end);
-		overlay.photoTime = openAerialElement.acquisition_end;
-		overlay.azimuth = toRadians(180);
-		overlay.sourceType = this.sourceType;
-		overlay.isGeoRegistered = true;
-		overlay.tag = openAerialElement;
-		overlay.projection = 'EPSG:3857';
+		return new Overlay({
+			id: openAerialElement._id,
+			footprint: geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint),
+			sensorType: openAerialElement.platform,
+			sensorName: openAerialElement.properties.sensor,
+			bestResolution: openAerialElement.gsd,
+			name: openAerialElement.title,
+			imageUrl: openAerialElement.properties.tms,
+			thumbnailUrl: openAerialElement.properties.thumbnail,
+			date: new Date(openAerialElement.acquisition_end),
+			photoTime: openAerialElement.acquisition_end,
+			azimuth: toRadians(180),
+			sourceType: this.sourceType,
+			isGeoRegistered: true,
+			tag: openAerialElement
+		});
 
-		return overlay;
 	}
 }

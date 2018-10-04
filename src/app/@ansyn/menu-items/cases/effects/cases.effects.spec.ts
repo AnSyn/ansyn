@@ -15,7 +15,7 @@ import {
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, ICase, IOverlay, LoggerService, StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, ICase, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
@@ -31,9 +31,6 @@ describe('CasesEffects', () => {
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
-
-	const fakeOverlay = <IOverlay> { id: 'test' };
-
 
 	const caseMock: ICase = {
 		id: 'case1',

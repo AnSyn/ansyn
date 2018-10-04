@@ -80,7 +80,7 @@ export {
 	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './models/case.model';
-export { IOverlay, IOverlaysCriteria } from './models/overlay.model';
+export { IOverlay, Overlay, IOverlaysCriteria } from './models/overlay.model';
 export { IVisualizerEntity } from './models/visualizers/visualizers-entity';
 export { MarkerSize } from './models/visualizers/visualizer-style';
 export { ICoreConfig } from './models/core.config.model';

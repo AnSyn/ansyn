@@ -23,6 +23,7 @@ export interface IOverlay extends IDilutedOverlay {
 	sensorName?: string;
 	channel?: number;
 	bestResolution?: number;
+	cloudCoverage?: number;
 	isStereo?: boolean;
 	name: string;
 	imageUrl?: string;
@@ -36,6 +37,44 @@ export interface IOverlay extends IDilutedOverlay {
 	isGeoRegistered: boolean;
 	tag?: any; // original metadata
 	projection?: string;
+	token?: string;
+	catalogID?: string,
+}
+
+export class Overlay implements IOverlay {
+	static UNKNOWN_NAME = 'Unknown';
+	static DEFAULT_CLOUD_COVERAGE = 1;
+	static DEFAULT_PROJECTION = 'EPSG:3857';
+
+	footprint?: any;
+	sensorType = Overlay.UNKNOWN_NAME;
+	sensorName = Overlay.UNKNOWN_NAME;
+	channel?: number;
+	bestResolution?: number;
+	cloudCoverage = Overlay.DEFAULT_CLOUD_COVERAGE;
+	isStereo?: boolean;
+	name: string;
+	imageUrl?: string;
+	baseImageUrl?: string;
+	thumbnailUrl?: string;
+	photoTime: string;
+	date: Date;
+	azimuth: number; // radians
+	approximateTransform?: any;
+	csmState?: string;
+	isGeoRegistered: boolean;
+	tag?: any; // original metadata
+	projection?: string = Overlay.DEFAULT_PROJECTION;
+	id: string;
+	sourceType: string;
+
+	constructor(overlayProps: Partial<IOverlay>) {
+		Object.entries(overlayProps).forEach(([key, value]) => {
+			if (value) {
+				this[key] = value;
+			}
+		});
+	}
 }
 
 export interface IOverlaysCriteria {

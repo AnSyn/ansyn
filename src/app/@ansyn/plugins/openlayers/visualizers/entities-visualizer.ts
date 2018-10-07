@@ -75,7 +75,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,
-			renderBuffer: 5000
+			renderBuffer: 5000,
+			zIndex: 1
 		});
 
 		if (!this.isHidden) {

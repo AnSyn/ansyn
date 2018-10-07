@@ -37,6 +37,8 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addLayer(layer: any): void;
 
+	abstract getMainLayer(): any;
+
 	abstract getLayers(): any[];
 
 	abstract removeLayer(layer: any): void;

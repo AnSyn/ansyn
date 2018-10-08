@@ -1,5 +1,6 @@
 #!/bin/bash
-BUILD_ASSETS=./src/app/@ansyn/assets/build.sh
+BUILD_ASSETS=./src/app/\@ansyn/assets/build.sh
+chmod +x $BUILD_ASSETS
 ng build @ansyn/core
 ng build @ansyn/menu
 ng build @ansyn/overlays

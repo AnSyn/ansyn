@@ -52,9 +52,8 @@ import { filter, map, mergeMap, take, tap, withLatestFrom, distinctUntilChanged 
 import OLGeoJSON from 'ol/format/geojson';
 import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '@ansyn/status-bar';
-import { area, featureCollection, polygon } from '@turf/turf';
+import { featureCollection } from '@turf/turf';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 // @dynamic
@@ -200,7 +199,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
-	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [Dictionary<ILayer>, boolean, string[], boolean, string]): Observable<any> {
+	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {
 		const displayedIds = uniq(
 			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
 		)

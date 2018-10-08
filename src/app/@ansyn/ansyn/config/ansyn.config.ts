@@ -5,16 +5,15 @@ import {
 	LayersManagerComponent,
 	ToolsComponent
 } from '@ansyn/menu-items';
-import { IAlert } from '@ansyn/core';
+import { IAlert, OverlayOutOfBoundsComponent } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
-import { OverlayOutOfBoundsComponent } from '../../core/components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
 		{
 			key: 'noGeoRegistration',
 			background: '#a70b0b',
-			text: 'This Image Has No Geo-Registration'
+			text: 'This Image Haxs No Geo-Registration'
 		},
 		{
 			key: 'overlayIsNotPartOfQuery',
@@ -24,8 +23,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			key: 'overlaysOutOfBounds',
 			component: OverlayOutOfBoundsComponent
-			// background: '#80c5d4',
-			// text: 'Image is out of bounds'
 		}
 	],
 	ansynMenuItems: [

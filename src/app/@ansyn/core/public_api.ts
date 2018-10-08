@@ -1,3 +1,4 @@
+export { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 export { selectTime } from './reducers/core.reducer';
 export { fetchConfigProviders } from './models/fetch-config-providers';
 export { IAlertComponent } from './alerts/alerts.model';

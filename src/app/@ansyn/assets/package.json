@@ -1,5 +1,8 @@
 {
 	"name": "@ansyn/assets",
 	"version": "0.2.82",
-	"license": "MIT"
+	"license": "MIT",
+	"dependencies": {
+		"font-awesome": "^4.7.0"
+	}
 }

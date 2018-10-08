@@ -14,5 +14,16 @@
 		"@types/geojson": "^7946.0.3",
 		"@turf/turf": "5.1.6",
 		"proj4": "2.4.3"
+	},
+	"dependencies": {
+		"@ngrx/core": "^1.2.0",
+		"@ngrx/store": "^6.0.1",
+		"@turf/turf": "5.1.6",
+		"lodash": "4.17.5",
+		"@ngrx/effects": "^6.0.1",
+		"@ngx-translate/core": "^10.0.2",
+		"angular2-uuid": "1.1.1",
+		"auto-subscriptions": "^1.0.3",
+		"lodash-decorators": "4.5.0"
 	}
 }

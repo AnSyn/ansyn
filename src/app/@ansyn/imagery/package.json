@@ -8,5 +8,8 @@
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3",
 		"@ansyn/core": "0.2.82"
+	},
+	"dependencies": {
+		"auto-subscriptions": "^1.0.3"
 	}
 }

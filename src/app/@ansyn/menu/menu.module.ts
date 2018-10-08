@@ -1,8 +1,6 @@
 import { ANALYZE_FOR_ENTRY_COMPONENTS, Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from './menu/menu.component';
-import { EffectsModule } from '@ngrx/effects';
-import { MenuEffects } from './effects/menu.effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IMenuItem } from './models/menu-item.model';
 import { Store, StoreModule } from '@ngrx/store';
@@ -16,7 +14,6 @@ export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(menuFeatureKey, MenuReducer),
-		EffectsModule.forFeature([MenuEffects]),
 		BrowserAnimationsModule
 	],
 	declarations: [MenuComponent],

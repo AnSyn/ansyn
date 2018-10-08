@@ -5,5 +5,14 @@
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3"
 	},
+	"dependencies": {
+		"@ngrx/core": "^1.2.0",
+		"@ngrx/store": "^6.0.1",
+		"@ngrx/effects": "^6.0.1",
+		"lodash": "4.17.5",
+		"@ngx-translate/core": "^10.0.2",
+		"flatpickr": "4.1.2",
+		"ngx-treeview": "^2.0.6"
+	},
 	"license": "MIT"
 }

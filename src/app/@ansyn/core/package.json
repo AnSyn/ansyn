@@ -10,10 +10,7 @@
 	"license": "MIT",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3",
-		"@types/geojson": "^7946.0.3",
-		"@turf/turf": "5.1.6",
-		"proj4": "2.4.3"
+		"@angular/core": "^6.0.3"
 	},
 	"dependencies": {
 		"@ngrx/core": "^1.2.0",

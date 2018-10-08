@@ -1,6 +1,30 @@
 {
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/menu-items",
+  "whitelistedNonPeerDependencies": [
+    "@ansyn/core",
+    "@ngrx/core",
+    "@ngrx/store",
+    "@ngrx/effects",
+    "@turf/turf",
+    "lodash",
+    "moment",
+    "wellknown",
+    "@ansyn/menu",
+    "@ansyn/context",
+    "@ngrx/entity",
+    "@ngx-translate/core",
+    "angular2-uuid",
+    "auto-subscriptions",
+    "file-saver",
+    "ng-infinitescroll",
+    "ngx-bootstrap",
+    "primeng",
+    "proj4",
+    "rison",
+    "togeojson",
+    "tokml"
+  ],
   "lib": {
     "entryFile": "./public_api.ts",
     "styleIncludePaths": [

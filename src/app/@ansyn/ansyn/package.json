@@ -4,7 +4,8 @@
 	"peerDependencies": {
 		"rxjs-compat": "^6.2.1",
 		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3"
+		"@angular/core": "^6.0.3",
+		"@ansyn/assets": "0.2.82"
 	},
 	"dependencies": {
 		"@ansyn/context": "0.2.82",

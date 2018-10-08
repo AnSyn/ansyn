@@ -167,7 +167,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	constructor(@Inject(OverlaysService) protected overlaysService: OverlaysService,
 				protected elementRef: ElementRef,
-				@Inject(DOCUMENT) protected document: Document,
+				@Inject(DOCUMENT) protected document: any,
 				protected store$: Store<IOverlaysState>,
 				protected actions$: Actions) {
 	}

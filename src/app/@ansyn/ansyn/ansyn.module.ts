@@ -23,7 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertsModule, CoreModule } from '@ansyn/core';
-import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
+import { DefaultUrlSerializer, UrlSerializer } from '@angular/router';
 import { ansynConfig } from './config/ansyn.config';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -54,7 +54,6 @@ import { COMPONENT_MODE } from './app-providers/component-mode';
 		MapFacadeModule,
 		ImageryModule,
 		StatusBarModule,
-		RouterModule,
 		HelpModule
 	],
 	providers: [

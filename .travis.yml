@@ -56,11 +56,5 @@ deploy:
     on:
       tags: true
 
-  - provider: script
-		script: npm run publish:libs
-		skip_cleanup: true
-		on:
-			tags: true
-
 notifications:
   email: false

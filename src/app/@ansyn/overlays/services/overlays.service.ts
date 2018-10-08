@@ -37,7 +37,7 @@ export class OverlaysService {
 		return [...overlaysData, ...Array.from(specialObjects.values())];
 	}
 
-	static cloneOverlaysAndAdd(overlays: Map<string, IOverlay>, extraOverlays: IOverlay[]): Map<string, IOverlay> {
+	static cloneOverlaysAndAdd(overlays: Map<string, IOverlay>, extraOverlays: IOverlay[] = []): Map<string, IOverlay> {
 		const result = new Map(overlays);
 		extraOverlays.forEach(overlay => {
 			if (!result.has(overlay.id)) {

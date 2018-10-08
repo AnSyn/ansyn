@@ -4,6 +4,8 @@ declare module '*.json' {
 }
 
 declare module '*package.json' {
-	const value: any;
-	export default <any>value;
+	const value: {
+		version: string;
+	};
+	export default value;
 }

@@ -33,7 +33,7 @@ import {
 	IOverlaySpecialObject,
 	IPendingOverlay,
 	LayoutKey,
-	layoutOptions,
+	layoutOptions, selectFavoriteOverlays,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetRemovedOverlaysIdAction,
@@ -191,9 +191,11 @@ export class OverlaysAppEffects {
 	);
 
 
-	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
-		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
-	);
+	private getOverlayFromDropMarkup = map(([markupMap, overlays, favoriteOverlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>, IOverlay[]]) => {
+		const overlaysPlusExtras = OverlaysService.cloneOverlaysAndAdd(overlays, favoriteOverlays);
+		const result = overlaysPlusExtras.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0]);
+		return result;
+	});
 	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
 	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [IOverlay, CommunicatorEntity]) => {
 		if (!communicator) {
@@ -222,7 +224,7 @@ export class OverlaysAppEffects {
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.pipe(
-			withLatestFrom(this.store$.select(selectOverlaysMap)),
+			withLatestFrom(this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)),
 			this.getOverlayFromDropMarkup,
 			withLatestFrom(this.store$.select(selectActiveMapId)),
 			this.getCommunicatorForActiveMap,

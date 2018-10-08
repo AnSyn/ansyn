@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
-import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
@@ -45,7 +44,6 @@ import { DefaultTranslateLoader } from './translation/default-translate-loader';
 		AnsynCheckboxComponent,
 		ImageryStatusComponent,
 		AnsynTranslationModule,
-		PlaceholderComponent,
 		ToastComponent,
 		WelcomeNotificationComponent,
 		SliderCheckboxComponent,
@@ -59,7 +57,6 @@ import { DefaultTranslateLoader } from './translation/default-translate-loader';
 	declarations: [
 		AnsynCheckboxComponent,
 		ImageryStatusComponent,
-		PlaceholderComponent,
 		ToastComponent,
 		WelcomeNotificationComponent,
 		SliderCheckboxComponent,

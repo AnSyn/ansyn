@@ -33,7 +33,6 @@ export { IEntity } from './services/storage/storage.service';
 export { coreStateSelector, selectFavoriteOverlays, selectPresetOverlays } from './reducers/core.reducer';
 export { IOverlaysFetchData, IOverlaySpecialObject } from './models/overlay.model';
 export { ILimitedArray } from './utils/i-limited-array';
-export { PlaceholderComponent } from './components/placeholder/placeholder.component';
 export { OverlayDisplayMode } from './models/case.model';
 export { ClearActiveInteractionsAction } from './actions/core.actions';
 export { AddAlertMsg, RemoveAlertMsg, SetLayoutSuccessAction } from './actions/core.actions';

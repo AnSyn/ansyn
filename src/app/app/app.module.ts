@@ -10,6 +10,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoginModule } from './login/login.module';
 import { AnsynRouterModule } from './router/router.module';
 import { configuration } from '../../configuration/configuration';
+import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
+import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 
 @NgModule({
 	imports: [
@@ -28,7 +30,7 @@ import { configuration } from '../../configuration/configuration';
 			useClass: LoggerService
 		}
 	],
-	declarations: [AppAnsynComponent],
+	declarations: [AppAnsynComponent, AnsynHostComponent, PlaceholderComponent],
 	exports: [AppAnsynComponent],
 	bootstrap: [AppAnsynComponent]
 })

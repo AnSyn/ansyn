@@ -25,7 +25,6 @@ import { ManualRemovedOverlaysComponent } from './components/manual-removed-over
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
-import { OverlayOutOfBoundsComponent } from '../ansyn/components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 @NgModule({
 	imports: [

@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { UnAuthGuard } from './guards/unauth.guard';
 import { LoginConfig, LoginConfigService } from './services/login-config.service';
 import { ILoginConfig } from './models/login.config';
-import { configuration } from '../../../configuration/configuration';
 
 @NgModule({
 	imports: [
@@ -17,10 +16,7 @@ import { configuration } from '../../../configuration/configuration';
 		HttpClientModule
 	],
 	declarations: [LoginComponent],
-	providers: [AuthGuard, AuthService, UnAuthGuard, LoginConfigService, {
-		provide: LoginConfig,
-		useValue: configuration.loginConfig
-	}]
+	providers: [AuthGuard, AuthService, UnAuthGuard, LoginConfigService]
 })
 
 export class LoginModule {

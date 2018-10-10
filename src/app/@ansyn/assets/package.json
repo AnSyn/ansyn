@@ -1,5 +1,12 @@
 {
 	"name": "@ansyn/assets",
-	"version": "0.2.81.8",
-	"license": "MIT"
+	"version": "0.2.82.2",
+	"license": "MIT",
+	"dependencies": {
+		"@ansyn/event-drops": "0.2.81.7",
+		"ol": "4.6.3",
+		"primeng": "^6.1.4",
+		"flatpickr": "4.1.2",
+		"font-awesome": "^4.7.0"
+	}
 }

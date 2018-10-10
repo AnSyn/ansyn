@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
-import proj from 'ol/proj';
 
 export abstract class ProjectionService {
 	/* Image to ground */

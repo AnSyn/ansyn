@@ -6,7 +6,6 @@ import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/map.actions';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
-import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar';
 import { EffectsModule } from '@ngrx/effects';
 import { coreFeatureKey, CoreReducer } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,7 +20,6 @@ describe('ContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule, TranslateModule.forRoot(), FormsModule, StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer,
-				[statusBarFeatureKey]: StatusBarReducer,
 				[coreFeatureKey]: CoreReducer
 			}), EffectsModule.forRoot([])],
 			declarations: [ContextMenuComponent],

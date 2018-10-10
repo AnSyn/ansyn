@@ -368,6 +368,11 @@
 		"href": "https://github.com/ansyn/ansyn"
     }
   },
+  "loginConfig": {
+  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
+  	"active":  "{{ getv "/ansyn/login/active" "" }}",
+  	"authorizedPath": "/"
+  },
   "visualizersConfig": {
     "FrameVisualizer": {
       "colors": {
@@ -980,7 +985,7 @@
       "Landsat8L1G",
       "Sentinel2L1C"
     ],
-    "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
+    "apiKey": "9cb5e69a1a334a0c9e99a5134b7bb63d",
     "tilesUrl": "https://tiles.planet.com/data/v1/",
     "delayMultiple": 300
   }

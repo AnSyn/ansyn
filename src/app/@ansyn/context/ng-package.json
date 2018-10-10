@@ -1,6 +1,13 @@
 {
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/context",
+  "whitelistedNonPeerDependencies": [
+    "@ansyn/core",
+    "@ngrx/core",
+    "@ngrx/store",
+    "@ansyn/core",
+    "@ngrx/entity"
+  ],
   "lib": {
     "entryFile": "./public_api.ts",
     "styleIncludePaths": [

@@ -23,7 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertsModule, CoreModule } from '@ansyn/core';
-import { RouterModule } from '@angular/router';
+import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ansynConfig } from './config/ansyn.config';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -35,7 +35,6 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 		CommonModule,
 		StoreModule.forRoot({}),
 		EffectsModule.forRoot([]),
-		RouterModule.forRoot([]),
 		AppProvidersModule,
 		CasesModule,
 		FiltersModule,
@@ -63,8 +62,8 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 		{
 			provide: COMPONENT_MODE,
 			useValue: false
-		}
-
+		},
+		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
 		OverlayOutOfBoundsComponent

@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { ILoginConfig } from '../models/login.config';
 
 export const LoginConfig = 'loginConfig';

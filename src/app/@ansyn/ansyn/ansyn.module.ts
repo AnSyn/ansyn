@@ -28,6 +28,7 @@ import { ansynConfig } from './config/ansyn.config';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { COMPONENT_MODE } from './app-providers/component-mode';
+import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 @NgModule({
 	imports: [
@@ -64,7 +65,13 @@ import { COMPONENT_MODE } from './app-providers/component-mode';
 		},
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
-	declarations: [AnsynComponent],
+	entryComponents: [
+		OverlayOutOfBoundsComponent
+	],
+	declarations: [
+		AnsynComponent,
+		OverlayOutOfBoundsComponent
+	],
 	exports: [AnsynComponent]
 })
 

@@ -27,7 +27,7 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -142,7 +142,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setResolution(1);
 
 		if (extent) {
-			this.fitToExtent(extent);
+			this.fitToExtent(extent).subscribe();
 			if (rotation) {
 				this.mapObject.getView().setRotation(rotation);
 			}
@@ -182,10 +182,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
 		const collection: any = turf.featureCollection([ExtentCalculator.extentToPolygon(extent)]);
 
-		this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this)
-			.subscribe((features: olFeature[]) => {
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
+			tap((features: olFeature[]) => {
 				view.fit(features[0].getGeometry() as olPolygon, { nearest: true, constrainResolution: false });
-			});
+			})
+		);
 	}
 
 	public addLayer(layer: any) {

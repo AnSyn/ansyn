@@ -7,6 +7,7 @@ import {
 } from '@ansyn/menu-items';
 import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
+import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -22,8 +23,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		},
 		{
 			key: 'overlaysOutOfBounds',
-			background: '#80c5d4',
-			text: 'Image is out of bounds'
+			component: OverlayOutOfBoundsComponent
 		}
 	],
 	ansynMenuItems: [

@@ -5,8 +5,9 @@ import {
 	LayersManagerComponent,
 	ToolsComponent
 } from '@ansyn/menu-items';
-import { IAlert, OverlayOutOfBoundsComponent } from '@ansyn/core';
+import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
+import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [

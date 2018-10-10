@@ -25,7 +25,7 @@ import { ManualRemovedOverlaysComponent } from './components/manual-removed-over
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
-import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
+import { OverlayOutOfBoundsComponent } from '../ansyn/components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 @NgModule({
 	imports: [
@@ -35,9 +35,6 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 		EffectsModule.forFeature([CoreEffects]),
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader]),
 		AlertsModule
-	],
-	entryComponents: [
-		OverlayOutOfBoundsComponent
 	],
 	providers: [
 		GenericTypeResolverService,
@@ -58,8 +55,7 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 		AnsynLoaderComponent,
 		AnsynInputComponent,
 		ManualRemovedOverlaysComponent,
-		ClickOutsideDirective,
-		OverlayOutOfBoundsComponent
+		ClickOutsideDirective
 	],
 	declarations: [
 		AnsynCheckboxComponent,
@@ -73,8 +69,7 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 		AnsynLoaderComponent,
 		AnsynInputComponent,
 		ManualRemovedOverlaysComponent,
-		ClickOutsideDirective,
-		OverlayOutOfBoundsComponent
+		ClickOutsideDirective
 	]
 })
 

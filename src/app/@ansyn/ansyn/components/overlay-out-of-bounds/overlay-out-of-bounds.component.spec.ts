@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OverlayOutOfBoundsComponent } from './overlay-out-of-bounds.component';
 
-describe('OverlayOutOfBoundsComponent', () => {
+fdescribe('OverlayOutOfBoundsComponent', () => {
 	let component: OverlayOutOfBoundsComponent;
 	let fixture: ComponentFixture<OverlayOutOfBoundsComponent>;
 

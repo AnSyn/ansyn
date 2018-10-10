@@ -1,15 +1,15 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { PlaceholderComponent } from '@ansyn/core';
+import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { UnAuthGuard } from './login/guards/unauth.guard';
-import { AnsynComponent } from '@ansyn/ansyn';
 import { AuthGuard } from './login/guards/auth.guard';
 import { LoginComponent } from './login/login/login.component';
+import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
 
 export const routes: Routes = [
 	{
 		path: '',
-		component: AnsynComponent,
+		component: AnsynHostComponent,
 		data: {
 			name: 'case'
 		},

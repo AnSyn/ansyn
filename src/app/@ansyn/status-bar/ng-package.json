@@ -1,6 +1,16 @@
 {
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/status-bar",
+  "whitelistedNonPeerDependencies": [
+    "@ansyn/core",
+    "@ngrx/core",
+    "@ngrx/store",
+    "@ngrx/effects",
+    "lodash",
+    "@ngx-translate/core",
+    "flatpickr",
+    "ngx-treeview"
+  ],
   "lib": {
     "entryFile": "./public_api.ts",
     "styleIncludePaths": [

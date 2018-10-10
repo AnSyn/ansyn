@@ -30,4 +30,6 @@
 
 <ansyn-overlay-overview></ansyn-overlay-overview>
 
-<router-outlet></router-outlet>
+<ng-container *ngIf="!componentMode">
+	<router-outlet></router-outlet>
+</ng-container>

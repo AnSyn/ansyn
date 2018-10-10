@@ -1,6 +1,12 @@
 import { Action } from '@ngrx/store';
 import { IOverlay, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
-import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import {
+	IMarkUpData,
+	IOverlayDropMarkUp,
+	ITimelineRange,
+	MarkUpClass,
+	OverlayDrop
+} from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -23,6 +29,7 @@ export const OverlaysActionTypes = {
 	SET_FILTERED_OVERLAYS: type('SET_FILTERED_OVERLAYS'),
 	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE'),
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
+	SET_DROPS: type('SET_DROPS'),
 	MOUSE_OVER_DROP: type('MOUSE_OVER_DROP'),
 	MOUSE_OUT_DROP: type('MOUSE_OUT_DROP'),
 	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE'),
@@ -149,11 +156,17 @@ export class SetTimelineStateAction implements Action {
 	}
 }
 
-
 export class SetSpecialObjectsActionStore implements Action {
 	type = OverlaysActionTypes.SET_SPECIAL_OBJECTS;
 
 	constructor(public payload: Array<IOverlaySpecialObject>) {
+	};
+}
+
+export class SetDropsAction implements Action {
+	type = OverlaysActionTypes.SET_DROPS;
+
+	constructor(public payload: Array<OverlayDrop>) {
 	};
 }
 

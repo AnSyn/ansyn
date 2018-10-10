@@ -2,8 +2,9 @@ import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-over
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
-import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
+import { IOverlayDropSources, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
+import { unionBy } from 'lodash';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -31,10 +32,13 @@ export class OverlaysService {
 			});
 	}
 
-
-	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): OverlayDrop[] {
-		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
-		return [...overlaysData, ...Array.from(specialObjects.values())];
+	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): OverlayDrop[] {
+		const criterialOverlays: IOverlay[] = showOnlyFavorites ? [] :
+			overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
+		const allOverlays: IOverlay[] = unionBy( criterialOverlays, favoriteOverlays, ({id}) => id);
+		const dropsFromOverlays: OverlayDrop[] = allOverlays.map(({id, date}) => ({id, date}));
+		const allDrops = [...dropsFromOverlays, ...Array.from(specialObjects.values())];
+		return allDrops;
 	}
 
 	get fetchLimit() {

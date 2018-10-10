@@ -57,7 +57,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addLayerIfNotExist(layer: any);
 
-	fitToExtent(extent: any): any {
+	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');
 	};
 }

@@ -1,8 +1,10 @@
 import {
+	AlgorithmsComponent,
 	CasesComponent,
 	FiltersCollectionComponent,
 	HelpComponent,
 	LayersManagerComponent,
+	SettingsComponent,
 	ToolsComponent
 } from '@ansyn/menu-items';
 import { IAlert } from '@ansyn/core';
@@ -14,7 +16,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			key: 'noGeoRegistration',
 			background: '#a70b0b',
-			text: 'This Image Haxs No Geo-Registration'
+			text: 'This Image Has No Geo-Registration'
 		},
 		{
 			key: 'overlayIsNotPartOfQuery',
@@ -46,6 +48,16 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Tools',
 			component: ToolsComponent,
 			iconClass: 'icon-main-tools'
+		},
+		{
+			name: 'Algorithms',
+			component: AlgorithmsComponent,
+			iconClass: 'icon-main-algorithms'
+		},
+		{
+			name: 'Settings',
+			component: SettingsComponent,
+			iconClass: 'icon-main-settings'
 		},
 		{
 			name: 'Help',

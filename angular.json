@@ -39,16 +39,7 @@
             "dev": {
               "sourceMap": true,
               "extractCss": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/configuration/configuration.ts",
-                  "with": "src/configuration/configuration.dev.ts"
-                },
-                {
-                  "replace": "src/app/@ansyn/ansyn/config/ansyn.config.ts",
-                  "with": "src/app/@ansyn/ansyn/config/ansyn.config.dev.ts"
-                }
-              ]
+              "fileReplacements": []
             },
             "production": {
               "optimization": true,

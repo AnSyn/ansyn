@@ -1,6 +1,11 @@
 import { CoreActionTypes, IOverlay, IOverlaySpecialObject, SetOverlaysCriteriaAction } from '@ansyn/core';
 import { OverlaysService } from '../services/overlays.service';
-import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
+import {
+	LoadOverlaysSuccessAction,
+	OverlaysActions,
+	OverlaysActionTypes,
+	SetFilteredOverlaysAction
+} from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
@@ -157,8 +162,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			});
 
 		case OverlaysActionTypes.SET_FILTERED_OVERLAYS: {
-			const filteredOverlays = action.payload.filter((id) => state.overlays.get(id));
-			const drops = OverlaysService.parseOverlayDataForDisplay({ ...state, filteredOverlays });
+			const overlaysPlusExtras = OverlaysService.cloneOverlaysAndAdd(state.overlays, (<SetFilteredOverlaysAction>action).extraOverlays);
+			const stateWithExtraOverlays: IOverlaysState = { ...state, overlays: overlaysPlusExtras };
+			const filteredOverlays = action.payload.filter((id) => stateWithExtraOverlays.overlays.get(id));
+			const drops = OverlaysService.parseOverlayDataForDisplay({ ...stateWithExtraOverlays, filteredOverlays });
 			return { ...state, filteredOverlays, drops };
 		}
 

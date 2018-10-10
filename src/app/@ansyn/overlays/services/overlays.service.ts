@@ -37,6 +37,16 @@ export class OverlaysService {
 		return [...overlaysData, ...Array.from(specialObjects.values())];
 	}
 
+	static cloneOverlaysAndAdd(overlays: Map<string, IOverlay>, extraOverlays: IOverlay[] = []): Map<string, IOverlay> {
+		const result = new Map(overlays);
+		extraOverlays.forEach(overlay => {
+			if (!result.has(overlay.id)) {
+				result.set(overlay.id, overlay);
+			}
+		});
+		return result;
+	}
+
 	get fetchLimit() {
 		return (this.config) ? this.config.limit : null;
 	}
@@ -102,7 +112,6 @@ export class OverlaysService {
 		};
 	}
 
-
 	getTimeRangeFromDrops(drops: Array<OverlayDrop>): ITimelineRange {
 		let start = drops[0].date;
 		let end = drops[0].date;
@@ -111,6 +120,5 @@ export class OverlaysService {
 			end = drop.date > end ? drop.date : end;
 		});
 		return this.expendByTenth({ start, end });
-
 	}
 }

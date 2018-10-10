@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { OverlaysConfig, OverlaysService } from './overlays.service';
-import { IOverlaysState } from '../reducers/overlays.reducer';
+import { IOverlayDropSources } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { EMPTY, Observable, Observer } from 'rxjs';
@@ -208,16 +208,14 @@ describe('OverlaysService', () => {
 			o6 = { id: '6', date: new Date(3) },
 			parsedFilters = [{ key: 'fakeFilter', filterFunc: () => true }],
 			overlays = <any> [o1, o2, o3],
-			favorites = <any> [o1, o6],
-			removedLayers = <any> [],
-			showOnlyFavorite = false;
+			removedLayers = <any> [];
 
-		let ids = buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite, removedLayers, true);
+		let ids = buildFilteredOverlays(overlays, parsedFilters, removedLayers, true);
 		expect(ids).toEqual(['1', '2', '3', '6']);
 
 		/* only favorite ids */
-		showOnlyFavorite = true;
-		ids = buildFilteredOverlays(overlays, parsedFilters, favorites, showOnlyFavorite, removedLayers, true);
+		// showOnlyFavorite = true;
+		ids = buildFilteredOverlays(overlays, parsedFilters, removedLayers, true);
 		expect(ids).toEqual(['1', '6']);
 
 	});
@@ -226,14 +224,10 @@ describe('OverlaysService', () => {
 	it('parseOverlayDataForDisplay function with special objects', () => {
 
 		const mockData = {
-			overlays: new Map(),
+			overlaysArray: overlaysTmpData,
 			filteredOverlays: ['13'],
 			specialObjects: new Map<string, IOverlaySpecialObject>()
-		} as IOverlaysState;
-
-		overlaysTmpData.forEach(item => {
-			mockData.overlays.set(item.id, item);
-		});
+		} as IOverlayDropSources;
 
 		const result = OverlaysService.parseOverlayDataForDisplay(mockData);
 		expect(result.length).toBe(1);

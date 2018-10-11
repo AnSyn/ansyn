@@ -30,6 +30,7 @@ export class ImageriesManagerComponent implements OnInit {
 	);
 	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
 	public mapsList$: Observable<ICaseMapState[]> = this.store.select(selectMapsList);
+	public renderContextMenu: boolean;
 
 	public showWelcomeNotification$ = this.store.pipe(
 		select(coreStateSelector),
@@ -57,6 +58,13 @@ export class ImageriesManagerComponent implements OnInit {
 		this.initListeners();
 		this.initSubscribers();
 		this.initClickOutside();
+		this.initRenderContextMenu();
+	}
+
+	initRenderContextMenu() {
+		setTimeout(() => {
+			this.renderContextMenu = true;
+		}, 1000)
 	}
 
 	initClickOutside() {

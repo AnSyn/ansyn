@@ -1,3 +1,4 @@
+export { AnsynApi, ANSYN_ID } from './api/ansyn-api.service';
 export {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG

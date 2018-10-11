@@ -23,7 +23,7 @@
 	</ng-template>
 </div>
 
-<ansyn-context-menu></ansyn-context-menu>
+<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 
 <ansyn-welcome-notification *ngIf="showWelcomeNotification$ | async"></ansyn-welcome-notification>
 

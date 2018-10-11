@@ -1,10 +1,10 @@
 import { Store } from '@ngrx/store';
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ICase, ICaseMapState } from '@ansyn/core';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
-import { selectSelectedCase } from '@ansyn/menu-items';
+import { LoadDefaultCaseAction, selectSelectedCase } from '@ansyn/menu-items';
 import { select } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
 import { Inject } from '@angular/core';
@@ -35,8 +35,12 @@ export class AnsynComponent {
 			filter(Boolean)
 		);
 
+	@HostBinding('class.component') component = this.componentMode;
 	@Input() version;
 
 	constructor(protected store$: Store<any>, @Inject(COMPONENT_MODE) public componentMode: boolean) {
+		if (componentMode) {
+			store$.dispatch(new LoadDefaultCaseAction());
+		}
 	}
 }

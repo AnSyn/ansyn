@@ -19,8 +19,25 @@
 }
 
 :host {
+	&.component {
+		.app{
+			ansyn-popover.default-case div.pop-hover:hover .pop-content, .pop-content.visible {
+				visibility: hidden !important;
+			}
+			div.menu {
+				ansyn-menu {
+					display: none;
+				}
+				ansyn-tools.ansynToolsAlone {
+					display: block;
+				}
+			}
+		}
+	}
+
 	font-family: 'Open Sans', sans-serif;
 	font-size: 14px;
+	direction: ltr;
 	div.app {
 		display: flex;
 		height: 100%;

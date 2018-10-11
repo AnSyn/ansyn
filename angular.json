@@ -39,16 +39,7 @@
             "dev": {
               "sourceMap": true,
               "extractCss": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/configuration/configuration.ts",
-                  "with": "src/configuration/configuration.dev.ts"
-                },
-                {
-                  "replace": "src/app/@ansyn/ansyn/config/ansyn.config.ts",
-                  "with": "src/app/@ansyn/ansyn/config/ansyn.config.dev.ts"
-                }
-              ]
+              "fileReplacements": []
             },
             "production": {
               "optimization": true,
@@ -283,7 +274,7 @@
           "options": {
             "outputPath": "build/buildBundle/dist",
             "index": "src/app/builder/dev/index.html",
-            "main": "src/app/builder/dev/devApp.main.ts",
+            "main": "src/app/builder/dev/builder-dev.main.ts",
             "tsConfig": "src/tsconfig.builder.json",
             "showCircularDependencies": true,
             "polyfills": "src/polyfills.ts",

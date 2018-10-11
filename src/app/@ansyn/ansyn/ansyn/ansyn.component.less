@@ -1,9 +1,5 @@
 @import 'core/less/common';
 
-//ansyn-popover.default-case div.pop-hover:hover .pop-content, .pop-content.visible {
-//	visibility: hidden !important;
-//}
-
 @keyframes pinned {
 	from {
 		transform: scale(1.1) translateX(-100px);
@@ -23,6 +19,22 @@
 }
 
 :host {
+	&.component {
+		.app{
+			ansyn-popover.default-case div.pop-hover:hover .pop-content, .pop-content.visible {
+				visibility: hidden !important;
+			}
+			div.menu {
+				ansyn-menu {
+					display: none;
+				}
+				ansyn-tools.ansynToolsAlone {
+					display: block;
+				}
+			}
+		}
+	}
+
 	font-family: 'Open Sans', sans-serif;
 	font-size: 14px;
 	direction: ltr;

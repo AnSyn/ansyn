@@ -168,6 +168,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			return { ...state, specialObjects };
 		}
 
+		case OverlaysActionTypes.SET_DROPS: {
+			return { ...state, drops: action.payload};
+		}
+
 		case OverlaysActionTypes.SET_TIMELINE_STATE:
 			const { start, end } = action.payload.timeLineRange;
 			const startTime = start.getTime();

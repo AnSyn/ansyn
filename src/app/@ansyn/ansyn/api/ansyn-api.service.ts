@@ -1,23 +1,18 @@
 import { Inject, Injectable, InjectionToken, NgModuleRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
-import { MapActionTypes, ShadowMouseProducer } from '@ansyn/map-facade';
+import {
+	MapActionTypes,
+	MapFacadeService,
+	selectActiveMapId,
+	selectMapsList,
+	ShadowMouseProducer
+} from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
-import { ProjectionConverterService } from '@ansyn/menu-items';
-import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { IOverlay } from '@ansyn/core';
+import { GoToAction, ProjectionConverterService } from '@ansyn/menu-items';
+import { ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
-import { SetLayoutAction } from '@ansyn/core';
-import { SelectCaseAction } from '@ansyn/menu-items';
-import { ICoordinatesSystem } from '@ansyn/core';
-import { ProjectionService } from '@ansyn/imagery';
-import { LayoutKey } from '@ansyn/core';
-import { GoToAction } from '@ansyn/menu-items';
-import { casesConfig } from '@ansyn/menu-items';
-import { ICasesConfig } from '@ansyn/menu-items';
 import { map, tap } from 'rxjs/internal/operators';
-import { MapFacadeService } from '@ansyn/map-facade';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');
@@ -53,10 +48,7 @@ export class AnsynApi {
 
 	constructor(public store: Store<any>,
 				protected actions$: Actions,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected projectionService: ProjectionService,
 				protected projectionConverterService: ProjectionConverterService,
-				@Inject(casesConfig) public casesConfig: ICasesConfig,
 				protected moduleRef: NgModuleRef<any>,
 				@Inject(ANSYN_ID) public id: string) {
 		this.init();
@@ -83,10 +75,6 @@ export class AnsynApi {
 
 	changeMapLayout(layout: LayoutKey) {
 		this.store.dispatch(new SetLayoutAction(layout));
-	}
-
-	loadDefaultCase() {
-		this.store.dispatch(new SelectCaseAction(this.casesConfig.defaultCase));
 	}
 
 	transfromHelper(position, convertMethodFrom: ICoordinatesSystem, convertMethodTo: ICoordinatesSystem) {

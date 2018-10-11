@@ -3,6 +3,7 @@ import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from 
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
+import { mapToArray } from '../../core/utils/misc';
 
 export interface ITimelineRange {
 	start: Date;
@@ -286,7 +287,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 }
 
 export const selectDrops: MemoizedSelector<IOverlaysState, OverlayDrop[]> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
-export const selectOverlaysArray = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay[] => Array.from(overlays.overlays.values()));
+export const selectOverlaysArray = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay[] => mapToArray(overlays.overlays));
 export const selectOverlaysMap = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlay> => overlays.overlays);
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);

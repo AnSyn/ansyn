@@ -10,7 +10,7 @@ import {
 } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { GoToAction, ProjectionConverterService } from '@ansyn/menu-items';
-import { ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
+import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { map, tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -29,17 +29,17 @@ export class AnsynApi {
 	mapsList;
 
 	@AutoSubscription
-	activateMap$ = <Observable<string>>this.store.select(selectActiveMapId).pipe(
+	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
 		tap((activeMapId) => this.activeMapId = activeMapId)
 	);
 
 	@AutoSubscription
-	maps$ = this.store.pipe(
+	maps$: Observable<ICaseMapState[]> = this.store.pipe(
 		select(selectMapsList),
 		tap((mapsList) => this.mapsList = mapsList)
 	);
 
-	onShadowMouseProduce$ = this.actions$.pipe(
+	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
 		map(({ payload }: ShadowMouseProducer) => {
 			return payload.point.coordinates;
@@ -54,48 +54,48 @@ export class AnsynApi {
 		this.init();
 	}
 
-	removeElement(id) {
+	removeElement(id): void {
 		const elem: HTMLElement = <any> document.getElementById(id);
 		if (elem) {
 			elem.innerHTML = '';
 		}
 	}
 
-	setOutSourceMouseShadow(coordinates) {
+	setOutSourceMouseShadow(coordinates): void {
 		this.store.dispatch(new ShadowMouseProducer({ point: { coordinates, type: 'point' }, outsideSource: true }));
 	}
 
-	displayOverLay(overlay: IOverlay) {
+	displayOverLay(overlay: IOverlay): void {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
 
-	setOverlays(overlays: IOverlay[]) {
+	setOverlays(overlays: IOverlay[]): void {
 		this.store.dispatch(new LoadOverlaysSuccessAction(overlays, true));
 	}
 
-	changeMapLayout(layout: LayoutKey) {
+	changeMapLayout(layout: LayoutKey): void {
 		this.store.dispatch(new SetLayoutAction(layout));
 	}
 
-	transfromHelper(position, convertMethodFrom: ICoordinatesSystem, convertMethodTo: ICoordinatesSystem) {
+	transfromHelper(position, convertMethodFrom: ICoordinatesSystem, convertMethodTo: ICoordinatesSystem): void {
 		const conversionValid = this.projectionConverterService.isValidConversion(position, convertMethodFrom);
 		if (conversionValid) {
 			this.projectionConverterService.convertByProjectionDatum(position, convertMethodFrom, convertMethodTo);
 		}
 	}
 
-	getMapPosition() {
+	getMapPosition(): ICaseMapPosition {
 		return MapFacadeService.mapById(this.mapsList, this.activeMapId).data.position;
 	}
 
-	goToPosition(position: Array<number>) {
+	goToPosition(position: Array<number>): void {
 		this.store.dispatch(new GoToAction(position));
 	}
 
-	init() {
+	init(): void {
 	}
 
-	destroy() {
+	destroy(): void {
 		this.moduleRef.destroy();
 		this.removeElement(this.id);
 	}

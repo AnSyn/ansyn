@@ -205,18 +205,12 @@ describe('OverlaysService', () => {
 		let o1 = { id: '1', date: new Date(0) },
 			o2 = { id: '2', date: new Date(1) },
 			o3 = { id: '3', date: new Date(2) },
-			o6 = { id: '6', date: new Date(3) },
-			parsedFilters = [{ key: 'fakeFilter', filterFunc: () => true }],
+			parsedFilters = [{ key: 'fakeFilter', filterFunc: ({id}) => id !== '1' }],
 			overlays = <any> [o1, o2, o3],
-			removedLayers = <any> [];
+			removedLayers = <any> ['2'];
 
 		let ids = buildFilteredOverlays(overlays, parsedFilters, removedLayers, true);
-		expect(ids).toEqual(['1', '2', '3', '6']);
-
-		/* only favorite ids */
-		// showOnlyFavorite = true;
-		ids = buildFilteredOverlays(overlays, parsedFilters, removedLayers, true);
-		expect(ids).toEqual(['1', '6']);
+		expect(ids).toEqual(['3']);
 
 	});
 

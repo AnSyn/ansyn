@@ -62,14 +62,15 @@ export class FiltersAppEffects {
 	specialObjects$: Observable<Map<string, IOverlaySpecialObject>> = this.store$.select(selectSpecialObjects);
 	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
 	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
-	onFiltersChanges$: Observable<[Filters, string[], boolean]> = combineLatest(this.filters$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[], string[], boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onCriterialFiltersChanges$: Observable<[Filters, string[], boolean]> = combineLatest(this.filters$, this.removedOverlays$, this.removedOverlaysVisibility$);
 	forOverlayDrops$: Observable<[IOverlay[], string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest(
 		this.overlaysArray$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$);
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
 	oldFilters$: Observable<any> = this.store$.select(selectOldFilters);
 
 	@Effect()
-	updateOverlayFilters$ = this.onFiltersChanges$.pipe(
+	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
 		withLatestFrom(this.overlaysArray$),
 		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, string[], boolean], IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);

@@ -33,9 +33,6 @@
       "@ansyn/status-bar": [
         "src/app/@ansyn/status-bar/public_api"
       ],
-      "@builder/*": [
-        "src/app/builder/*"
-      ],
       "root/package.json": ["./package.json"]
     },
     "outDir": "./dist/out-tsc",

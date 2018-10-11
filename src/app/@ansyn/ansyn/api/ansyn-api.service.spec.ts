@@ -1,20 +1,11 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { coreFeatureKey, CoreReducer, coreStateSelector } from '@ansyn/core';
+import { coreStateSelector, IOverlay, LayoutKey } from '@ansyn/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { ProjectionConverterService } from '@ansyn/menu-items';
-import { ProjectionService } from '@ansyn/imagery';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { toolsConfig } from '@ansyn/menu-items';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
-import { GoToAction } from '@ansyn/menu-items';
-import { SelectCaseAction } from '@ansyn/menu-items';
-import { LayoutKey } from '@ansyn/core';
-import { IOverlay } from '@ansyn/core';
+import { casesConfig, GoToAction, ProjectionConverterService, SelectCaseAction, toolsConfig } from '@ansyn/menu-items';
+import { ImageryCommunicatorService, ProjectionService } from '@ansyn/imagery';
 import { DisplayOverlayAction } from '@ansyn/overlays';
-import { casesConfig } from '@ansyn/menu-items';
-import { ANSYN_BUILDER_ID, AnsynApi } from './ansyn-api.service';
-import { builderFeatureKey, BuilderReducer, builderStateSelector, IWindowLayout } from '../reducers/builder.reducer';
+import { ANSYN_ID, AnsynApi } from './ansyn-api.service';
 
 
 describe('apiService', () => {
@@ -44,7 +35,7 @@ describe('apiService', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [],
-			imports: [StoreModule.forRoot({ [coreFeatureKey]: CoreReducer, [mapFeatureKey]: MapReducer, [builderFeatureKey]: BuilderReducer })],
+			imports: [StoreModule.forRoot({})],
 			providers: [
 				AnsynApi, Actions, ProjectionConverterService, ProjectionService, ImageryCommunicatorService,
 				{
@@ -56,12 +47,12 @@ describe('apiService', () => {
 					}
 				},
 				{
-					provide: ANSYN_BUILDER_ID,
+					provide: ANSYN_ID,
 					useValue: 'fakeId'
 				},
 				{
 					provide: casesConfig,
-					useValue: { defaultCase : {} }
+					useValue: { defaultCase: {} }
 				}
 			]
 		}).compileComponents();
@@ -132,22 +123,5 @@ describe('apiService', () => {
 			forceFirstDisplay: true
 		}));
 	});
-
-
-	it('createCommunicator should raise instanceCreated event', (done) => {
-		const windowLayout: IWindowLayout = {
-			menu: false,
-			statusBar: true,
-			timeLine: true,
-			contextSun: true,
-			toolsOverMenu: true
-		};
-		ansynApi.changeWindowLayout(windowLayout);
-		store.select(builderStateSelector).subscribe((builderState) => {
-			expect(builderState.windowLayout).toEqual(windowLayout);
-			done();
-		});
-	});
-
 
 });

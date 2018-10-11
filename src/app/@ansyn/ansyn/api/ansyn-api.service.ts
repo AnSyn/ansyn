@@ -19,13 +19,12 @@ import { ICasesConfig } from '@ansyn/menu-items';
 import { map, tap } from 'rxjs/internal/operators';
 import { MapFacadeService } from '@ansyn/map-facade';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { DynamicsAnsynModule } from '../dynamic-ansyn/dynamic-ansyn.module';
-import { IWindowLayout } from '../reducers/builder.reducer';
-import { SetWindowLayout } from '../actions/builder.actions';
 
-export const ANSYN_BUILDER_ID = new InjectionToken('ANSYN_BUILDER_ID');
+export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 @AutoSubscriptions({
 	init: 'init',
 	destroy: 'destroy'
@@ -58,8 +57,8 @@ export class AnsynApi {
 				protected projectionService: ProjectionService,
 				protected projectionConverterService: ProjectionConverterService,
 				@Inject(casesConfig) public casesConfig: ICasesConfig,
-				protected moduleRef: NgModuleRef<DynamicsAnsynModule>,
-				@Inject(ANSYN_BUILDER_ID) public id: string) {
+				protected moduleRef: NgModuleRef<any>,
+				@Inject(ANSYN_ID) public id: string) {
 		this.init();
 	}
 
@@ -88,10 +87,6 @@ export class AnsynApi {
 
 	loadDefaultCase() {
 		this.store.dispatch(new SelectCaseAction(this.casesConfig.defaultCase));
-	}
-
-	changeWindowLayout(windowLayout: IWindowLayout) {
-		this.store.dispatch(new SetWindowLayout(windowLayout));
 	}
 
 	transfromHelper(position, convertMethodFrom: ICoordinatesSystem, convertMethodTo: ICoordinatesSystem) {

@@ -29,6 +29,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { COMPONENT_MODE } from './app-providers/component-mode';
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
+import { ANSYN_ID } from './api/ansyn-api.service';
 
 @NgModule({
 	imports: [
@@ -76,13 +77,17 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 })
 
 export class AnsynModule {
-	static component(): ModuleWithProviders {
+	static component(id?: string): ModuleWithProviders {
 		return {
 			ngModule: AnsynModule,
 			providers: [
 				{
 					provide: COMPONENT_MODE,
 					useValue: true
+				},
+				{
+					provide: ANSYN_ID,
+					useValue: id
 				}
 			]
 		}

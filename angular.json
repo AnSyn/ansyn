@@ -274,7 +274,7 @@
           "options": {
             "outputPath": "build/buildBundle/dist",
             "index": "src/app/builder/dev/index.html",
-            "main": "src/app/builder/dev/devApp.main.ts",
+            "main": "src/app/builder/dev/builder-dev.main.ts",
             "tsConfig": "src/tsconfig.builder.json",
             "showCircularDependencies": true,
             "polyfills": "src/polyfills.ts",

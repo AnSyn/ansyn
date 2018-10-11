@@ -5,6 +5,7 @@ import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
 import { IOverlayDropSources, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
+import { mapToArray } from '../../core/utils/misc';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -37,7 +38,7 @@ export class OverlaysService {
 			overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
 		const allOverlays: IOverlay[] = unionBy( criterialOverlays, favoriteOverlays, ({id}) => id);
 		const dropsFromOverlays: OverlayDrop[] = allOverlays.map(({id, date}) => ({id, date}));
-		const allDrops = [...dropsFromOverlays, ...Array.from(specialObjects.values())];
+		const allDrops = [...dropsFromOverlays, ...mapToArray(specialObjects)];
 		return allDrops;
 	}
 

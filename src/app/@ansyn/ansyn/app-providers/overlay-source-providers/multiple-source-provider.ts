@@ -13,16 +13,11 @@ export interface IFiltersList {
 	coverage: number[][][][]
 }
 
-export interface IOverlaysSourceProvider {
-	inActive?: boolean,
-	whitelist: IFiltersList[],
-	blacklist: IFiltersList[]
-}
-
 export interface IMultipleOverlaysSourceConfig {
-	defaultProvider: IOverlaysSourceProvider;
-
-	[key: string]: IOverlaysSourceProvider;
+	[key: string]: {
+		whitelist: IFiltersList[],
+		blacklist: IFiltersList[]
+	}
 }
 
 export type IMultipleOverlaysSources = BaseOverlaySourceProvider;
@@ -55,18 +50,41 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	private prepareWhitelist() {
-		this.overlaysSources
-			.map((provider) => {
-				const type = provider.sourceType;
-				const config = this.multipleOverlaysSourceConfig[type] || this.multipleOverlaysSourceConfig.defaultProvider;
-				console.warn(`Missing config for provider ${type}, using defaultProvider config`);
-				return [provider, config];
-			})
-			.filter(([provider, { inActive }]: [IMultipleOverlaysSources, IOverlaysSourceProvider]) => !inActive)
-			.forEach(([provider, config]: [IMultipleOverlaysSources, IOverlaysSourceProvider]) => {
-				let whiteFilters = [];
+		this.overlaysSources.forEach(provider => {
+			const type = provider.sourceType;
+
+			const config = this.multipleOverlaysSourceConfig[type];
+
+			if (!config || !config.whitelist) {
+				throw new Error('Missing config for provider ' + type);
+			}
+
+			let whiteFilters = [];
+
+			// Separate all sensors, date ranges, and polygons
+			config.whitelist.forEach(filter => {
+				JSON.parse(filter.sensorNames).forEach(sensor => {
+					filter.coverage.forEach(polygon => {
+						filter.dates.forEach(date => {
+							const dateObj = {
+								start: date.start ? new Date(date.start) : null,
+								end: date.end ? new Date(date.end) : null
+							};
+							whiteFilters.push({
+								sensor,
+								timeRange: dateObj,
+								coverage: this.coverageToFeature(polygon)
+							});
+						});
+					});
+				});
+			});
+
+			if (config.blacklist) {
+				let blackFilters = [];
+
 				// Separate all sensors, date ranges, and polygons
-				config.whitelist.forEach(filter => {
+				config.blacklist.forEach(filter => {
 					JSON.parse(filter.sensorNames).forEach(sensor => {
 						filter.coverage.forEach(polygon => {
 							filter.dates.forEach(date => {
@@ -74,7 +92,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 									start: date.start ? new Date(date.start) : null,
 									end: date.end ? new Date(date.end) : null
 								};
-								whiteFilters.push({
+								blackFilters.push({
 									sensor,
 									timeRange: dateObj,
 									coverage: this.coverageToFeature(polygon)
@@ -84,45 +102,23 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 					});
 				});
 
-				if (config.blacklist) {
-					let blackFilters = [];
+				// Sort blackFilters by date (creates less work for the filter
+				blackFilters = blackFilters.sort((a, b) => (!a.timeRange.start || a.timeRange.start > b.timeRange.start) ? 1 : -1);
 
-					// Separate all sensors, date ranges, and polygons
-					config.blacklist.forEach(filter => {
-						JSON.parse(filter.sensorNames).forEach(sensor => {
-							filter.coverage.forEach(polygon => {
-								filter.dates.forEach(date => {
-									const dateObj = {
-										start: date.start ? new Date(date.start) : null,
-										end: date.end ? new Date(date.end) : null
-									};
-									blackFilters.push({
-										sensor,
-										timeRange: dateObj,
-										coverage: this.coverageToFeature(polygon)
-									});
-								});
-							});
-						});
-					});
+				// Remove filters that are blacklisted
+				whiteFilters = whiteFilters
+					.map(filter => filterFilter(filter, blackFilters))
+					.reduce((a, b) => a.concat(b), []);
+			}
 
-					// Sort blackFilters by date (creates less work for the filter
-					blackFilters = blackFilters.sort((a, b) => (!a.timeRange.start || a.timeRange.start > b.timeRange.start) ? 1 : -1);
-
-					// Remove filters that are blacklisted
-					whiteFilters = whiteFilters
-						.map(filter => filterFilter(filter, blackFilters))
-						.reduce((a, b) => a.concat(b), []);
-				}
-
-				// If there are whiteFilters after removing the blackFilters, add it to the sourceConfigs list
-				if (whiteFilters.length > 0) {
-					this.sourceConfigs.push({
-						provider,
-						filters: whiteFilters
-					});
-				}
-			});
+			// If there are whiteFilters after removing the blackFilters, add it to the sourceConfigs list
+			if (whiteFilters.length > 0) {
+				this.sourceConfigs.push({
+					provider,
+					filters: whiteFilters
+				});
+			}
+		});
 	}
 
 	public getById(id: string, sourceType: string): Observable<IOverlay> {

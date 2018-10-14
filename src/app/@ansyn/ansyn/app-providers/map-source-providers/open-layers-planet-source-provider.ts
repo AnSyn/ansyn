@@ -1,8 +1,6 @@
 import XYZ from 'ol/source/xyz';
-import ImageLayer from 'ol/layer/image';
-import proj from 'ol/proj';
-import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
-import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/plugins';
+import { ICaseMapState } from '@ansyn/core';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
@@ -14,25 +12,10 @@ export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 })
 export class OpenLayerPlanetSourceProvider extends OpenLayersMapSourceProvider {
 	create(metaData: ICaseMapState): any[] {
-		const source = new XYZ({
-			url: metaData.data.overlay.imageUrl,
-			crossOrigin: 'Anonymous',
-			projection: 'EPSG:3857'
-		});
-
-
-		let [x, y, x1, y1] = extentFromGeojson(metaData.data.overlay.footprint);
-		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
-		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
-
-		return [new ImageLayer({
-			source: new ProjectableRaster({
-				sources: [source],
-				operation: (pixels) => pixels[0],
-				operationType: 'image'
-			}),
-			extent: [x, y, x1, y1]
-		})];
+		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
+		const extent = this.getExtent(metaData.data.overlay.footprint);
+		const tileLayer = this.getTileLayer(source, extent);
+		return [tileLayer];
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {

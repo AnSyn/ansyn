@@ -143,7 +143,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 		const mainLayer = this.getMainLayer();
 		const imageLayer = mainLayer.get('imageLayer');
-		if (imageLayer) {
+		if (!imageLayer) {
 			return;
 		}
 

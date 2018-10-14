@@ -113,11 +113,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	initListeners() {
 		this._moveEndListener = () => {
-			this.getPosition().pipe(take(1)).subscribe(position => {
-				if (position) {
-					this.positionChanged.emit(position);
-				}
-			});
+			const mainLayer = this.getMainLayer();
+			if (mainLayer) {
+				this.getPosition().pipe(take(1)).subscribe(position => {
+					if (position) {
+						this.positionChanged.emit(position);
+					}
+				});
+			}
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
@@ -266,6 +269,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (!this.isValidPosition) {
 			return of({ extentPolygon: null, layerExtentPolygon: null });
 		}
+
+		const mainLayer = this.getMainLayer();
+		if (!mainLayer) {
+			return of({ extentPolygon: null, layerExtentPolygon: null });
+		}
+
 		const [width, height] = olmap.getSize();
 		const topLeft = olmap.getCoordinateFromPixel([0, 0]);
 		const topRight = olmap.getCoordinateFromPixel([width, 0]);
@@ -277,7 +286,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of({ extentPolygon: null, layerExtentPolygon: null });
 		}
 
-		const mainLayer = this.getMainLayer();
 		const cachedMainExtent = mainLayer.get('mainExtent');
 		const mainExtent = mainLayer.getExtent();
 		if (mainExtent && !Boolean(cachedMainExtent)) {
@@ -349,6 +357,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
+
+		const mainLayer = this.getMainLayer();
+		if (!mainLayer) {
+			return of(null);
+		}
+
 		return this.calculateRotateExtent(this.mapObject).pipe(map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {
 				return null;

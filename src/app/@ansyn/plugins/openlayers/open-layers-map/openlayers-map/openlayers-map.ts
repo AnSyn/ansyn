@@ -16,14 +16,7 @@ import { BaseImageryMap, ImageryMap, ProjectionService } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '../openlayers-map/openlayers-mouseposition-control';
-import {
-	areCoordinatesNumeric,
-	CaseMapExtent,
-	CaseMapExtentPolygon,
-	CoreConfig,
-	ICaseMapPosition,
-	ICoreConfig
-} from '@ansyn/core';
+import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig } from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
@@ -113,14 +106,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	initListeners() {
 		this._moveEndListener = () => {
-			const mainLayer = this.getMainLayer();
-			if (mainLayer) {
-				this.getPosition().pipe(take(1)).subscribe(position => {
-					if (position) {
-						this.positionChanged.emit(position);
-					}
-				});
-			}
+			this.getPosition().pipe(take(1)).subscribe(position => {
+				if (position) {
+					this.positionChanged.emit(position);
+				}
+			});
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
@@ -266,12 +256,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	calculateRotateExtent(olmap: OLMap): Observable<{ extentPolygon: CaseMapExtentPolygon, layerExtentPolygon: CaseMapExtentPolygon }> {
-		if (!this.isValidPosition) {
-			return of({ extentPolygon: null, layerExtentPolygon: null });
-		}
-
 		const mainLayer = this.getMainLayer();
-		if (!mainLayer) {
+		if (!this.isValidPosition || !mainLayer) {
 			return of({ extentPolygon: null, layerExtentPolygon: null });
 		}
 
@@ -357,11 +343,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
-
-		const mainLayer = this.getMainLayer();
-		if (!mainLayer) {
-			return of(null);
-		}
 
 		return this.calculateRotateExtent(this.mapObject).pipe(map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {

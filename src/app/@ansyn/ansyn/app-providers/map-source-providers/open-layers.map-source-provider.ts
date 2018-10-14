@@ -5,7 +5,7 @@ import Layer from 'ol/layer/layer';
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers-config';
 import ImageLayer from 'ol/layer/image';
 import TileLayer from 'ol/layer/tile';
-import { extentFromGeojson } from '@ansyn/core';
+import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
 import proj from 'ol/proj';
 import XYZ from 'ol/source/xyz';
 
@@ -14,6 +14,13 @@ export abstract class OpenLayersMapSourceProvider extends BaseMapSourceProvider 
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected config: IMapSourceProvidersConfig) {
 		super(cacheService, imageryCommunicatorService);
+	}
+
+	create(metaData: ICaseMapState): any[] {
+		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
+		const extent = this.getExtent(metaData.data.overlay.footprint);
+		const tileLayer = this.getTileLayer(source, extent);
+		return [tileLayer];
 	}
 
 	removeExtraData(layer: any) {

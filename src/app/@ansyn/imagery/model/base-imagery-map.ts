@@ -37,7 +37,9 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addLayer(layer: any): void;
 
-	abstract getMainLayer(): any;
+	getMainLayer() {
+		throw new Error('Method not implemented.');
+	}
 
 	abstract getLayers(): any[];
 

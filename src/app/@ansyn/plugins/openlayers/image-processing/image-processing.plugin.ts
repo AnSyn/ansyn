@@ -35,7 +35,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		distinctUntilChanged()
 	);
 
-	imageManualProcessArgsActive$ = this.currentMap$.pipe(
+	imageManualProcessArgs$ = this.currentMap$.pipe(
 		map((currentMap: ICaseMapState) => {
 			return currentMap.data.imageManualProcessArgs;
 		}),
@@ -43,32 +43,24 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest(this.imageManualProcessArgsActive$, this.isAutoImageProcessingActive$).pipe(
-		filter(([imageManualProcessArgs, isAutoImageProcessingActive]: [ImageManualProcessArgs, boolean]) => {
-			return this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs)
-		}),
-		tap(this.createImageLayer.bind(this)),
-		filter(() => {
-			const hasRasterLayer = this.getExistingRasterLayer();
-			return Boolean(hasRasterLayer);
-		}),
-		tap(([imageManualProcessArgs, isAutoImageProcessingActive]: [ImageManualProcessArgs, boolean]) => {
-			// auto
-			this.setAutoImageProcessing(isAutoImageProcessingActive);
-			// manual
-			if (!isAutoImageProcessingActive) {
-				this._imageProcessing.processImage(imageManualProcessArgs)
+	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest(this.isAutoImageProcessingActive$, this.imageManualProcessArgs$).pipe(
+		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) => {
+			const isImageProcessActive = this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs);
+			if (!isImageProcessActive) {
+				this.removeImageLayer();
+				return;
 			}
-		}),
-	);
-
-	@AutoSubscription
-	onAutoImageProcessingAndManualImageProcessInActive = combineLatest(this.imageManualProcessArgsActive$, this.isAutoImageProcessingActive$).pipe(
-		filter(([imageManualProcessArgs, isAutoImageProcessingActive]: [ImageManualProcessArgs, boolean]) => {
-			return !this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs)
-		}),
-		tap(() => {
-			this.removeImageLayer();
+			// else
+			this.createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]);
+			const hasRasterLayer = this.getExistingRasterLayer();
+			if (Boolean(hasRasterLayer)) {
+				// auto
+				this.setAutoImageProcessing(isAutoImageProcessingActive);
+				// manual
+				if (!isAutoImageProcessingActive) {
+					this._imageProcessing.processImage(imageManualProcessArgs);
+				}
+			}
 		})
 	);
 
@@ -83,7 +75,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	defaultImageManualProcessArgs(): ImageManualProcessArgs {
 		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
 			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {})
+		}, {});
 	}
 
 	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: ImageManualProcessArgs) {
@@ -136,7 +128,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		return Boolean(this.imageLayer && this._imageProcessing);
 	}
 
-	createImageLayer([imageManualProcessArgs, isAutoImageProcessingActive]: [ImageManualProcessArgs, boolean]) {
+	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) {
 		this.imageLayer = this.getExistingRasterLayer();
 		if (this.imageLayer) {
 			return;

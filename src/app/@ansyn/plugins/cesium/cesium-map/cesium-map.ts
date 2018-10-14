@@ -38,10 +38,6 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	getMainLayer() {
-		throw new Error('Method not implemented.');
-	}
-
 	removeLayer(layer: any): void {
 		throw new Error('Method not implemented.');
 	}

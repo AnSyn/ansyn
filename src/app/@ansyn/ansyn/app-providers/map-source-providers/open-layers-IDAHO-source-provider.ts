@@ -22,13 +22,6 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		super(cacheService, imageryCommunicatorService, config);
 	}
 
-	create(metaData: ICaseMapState): any[] {
-		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
-		const extent = this.getExtent(metaData.data.overlay.footprint);
-		const tileLayer = this.getTileLayer(source, extent);
-		return [tileLayer];
-	}
-
 	createAsync(metaData: ICaseMapState): Promise<any> {
 		if (metaData.data.overlay.imageUrl) {
 			let layer = this.createOrGetFromCache(metaData);

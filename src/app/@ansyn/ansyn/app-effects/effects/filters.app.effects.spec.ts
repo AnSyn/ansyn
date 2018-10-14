@@ -18,6 +18,7 @@ import {
 	SliderFilterMetadata
 } from '@ansyn/menu-items';
 import {
+	buildFilteredOverlays,
 	coreFeatureKey,
 	CoreReducer,
 	FilterType,
@@ -25,7 +26,13 @@ import {
 	IOverlay,
 	SetFavoriteOverlaysAction
 } from '@ansyn/core';
-import { LoadOverlaysAction, LoadOverlaysSuccessAction, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays';
+import {
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlayReducer,
+	overlaysFeatureKey,
+	OverlaysService, overlaysStatusMessages, SetDropsAction, SetFilteredOverlaysAction, SetOverlaysStatusMessage
+} from '@ansyn/overlays';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 
 describe('Filters app effects', () => {
@@ -71,13 +78,24 @@ describe('Filters app effects', () => {
 	}));
 
 	it('updateOverlayFilters$ effect', () => {
-		// spyOn(OverlaysService, 'buildFilteredOverlays').and.callFake(() => []);
-		// store.dispatch(new InitializeFiltersSuccessAction(new Map()));
-		// const expectedResults = cold('(bc)', {
-		// 	b: new SetFilteredOverlaysAction([]),
-		// 	c: new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchFilters)
-		// });
-		// expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		const fakeObj = {
+			buildFilteredOverlays: buildFilteredOverlays
+		};
+		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
+		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
+		const expectedResults = cold('(bc)', {
+			b: new SetFilteredOverlaysAction([]),
+			c: new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchFilters)
+		});
+		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+	});
+
+	it('updateOverlayDrops$ effect', () => {
+		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
+		const expectedResults = cold('(b)', {
+			b: new SetDropsAction([])
+		});
+		expect(filtersAppEffects.updateOverlayDrops$).toBeObservable(expectedResults);
 	});
 
 	it('initializeFilters$ effect', () => {

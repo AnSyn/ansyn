@@ -1,4 +1,4 @@
-import { cloneDeep, unionBy } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -117,11 +117,10 @@ describe('Overlays Effects ', () => {
 
 
 	it('it should load all the overlays', () => {
-		let tmp = <IOverlay[]>unionBy([...overlays], [...favoriteOverlays], o => o.id);
 		overlaysService.search.and.returnValue(of({ data: overlays, limited: 0, errors: [] }));
 		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
 		const expectedResults = cold('--(a)--', {
-			a: new LoadOverlaysSuccessAction(tmp)
+			a: new LoadOverlaysSuccessAction(overlays)
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});

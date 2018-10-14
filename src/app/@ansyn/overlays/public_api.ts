@@ -18,14 +18,14 @@ export {
 	OverlaysActionTypes,
 	RedrawTimelineAction, RequestOverlayByIDFromBackendAction,
 	SetFilteredOverlaysAction, SetHoveredOverlayAction, SetMarkUp,
-	SetOverlaysStatusMessage, SetSpecialObjectsActionStore
+	SetOverlaysStatusMessage, SetSpecialObjectsActionStore, SetDropsAction
 } from './actions/overlays.actions';
 export {
 	MarkUpClass,
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
 	selectFilteredOveralys, selectOverlaysArray,
-	selectOverlaysMap
+	selectOverlaysMap, selectSpecialObjects
 } from './reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './services/overlays.service';
 export { BaseOverlaySourceProvider } from './models/base-overlay-source-provider.model';

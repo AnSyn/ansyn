@@ -7,7 +7,7 @@ import { of, Subject } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
 import { mapStateSelector } from '@ansyn/map-facade';
-import { COMPONENT_MODE } from '../public_api';
+import { COMPONENT_MODE } from '../app-providers/component-mode';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;

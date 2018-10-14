@@ -107,6 +107,7 @@ export {
 } from './utils/geo';
 export { IContext } from './models/context.model';
 export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
+export { mapValuesToArray } from './utils/misc';
 export {
 	AnnotationInteraction, AnnotationMode,
 	IAnnotationBoundingRect,

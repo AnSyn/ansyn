@@ -34,7 +34,7 @@ import {
 	OverlaysService, overlaysStatusMessages, SetFilteredOverlaysAction, SetOverlaysStatusMessage
 } from '@ansyn/overlays';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
-import { SetDropsAction } from '../../../overlays/actions/overlays.actions';
+import { SetDropsAction } from 'src/app/@ansyn/overlays/public_api';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

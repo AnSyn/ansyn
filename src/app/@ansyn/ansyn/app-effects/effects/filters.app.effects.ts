@@ -1,4 +1,4 @@
-import { Observable, combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
@@ -25,7 +25,8 @@ import {
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes, OverlaysService,
+	OverlaysActionTypes,
+	OverlaysService,
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
@@ -42,15 +43,15 @@ import {
 	ICaseFilter,
 	IFilterModel,
 	InjectionResolverFilter,
-	IOverlay, IOverlaySpecialObject,
+	IOverlay,
+	IOverlaySpecialObject,
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { selectSpecialObjects } from '../../../overlays/reducers/overlays.reducer';
-import { SetDropsAction } from '../../../overlays/actions/overlays.actions';
-import { mapToArray } from '../../../core/utils/misc';
+import { selectSpecialObjects, SetDropsAction } from 'src/app/@ansyn/overlays/public_api';
+import { mapValuesToArray } from 'src/app/@ansyn/core/public_api';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -87,7 +88,7 @@ export class FiltersAppEffects {
 	@Effect()
 	updateOverlayDrops$  = this.forOverlayDrops$.pipe(
 		map(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
-			const drops = OverlaysService.parseOverlayDataForDisplay({overlaysArray: mapToArray(overlaysMap), filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites});
+			const drops = OverlaysService.parseOverlayDataForDisplay({overlaysArray: mapValuesToArray(overlaysMap), filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites});
 			return new SetDropsAction(drops);
 		})
 	);
@@ -143,7 +144,7 @@ export class FiltersAppEffects {
 			if (showOnlyFavorites) {
 				badge = '★';
 			} else {
-				const filterValues = Array.from(filters.values());
+				const filterValues = mapValuesToArray(filters);
 				badge = filterValues.reduce((badgeNum: number, filterMetadata: FilterMetadata) => filterMetadata.isFiltered() ? badgeNum + 1 : badgeNum, 0).toString();
 			}
 

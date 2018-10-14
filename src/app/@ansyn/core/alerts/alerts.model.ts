@@ -1,4 +1,5 @@
 import { FactoryProvider, InjectionToken } from '@angular/core';
+import { mapValuesToArray } from '../utils/misc';
 
 export interface IAlert {
 	key: string;
@@ -15,7 +16,7 @@ export function alertsFactory(alertsCollections: IAlert[][] = []): IAlert[] {
 	const unique = new Map();
 	const alerts = alertsCollections.reduce((prev, next) => [...prev, ...next], []);
 	alerts.forEach((alert: IAlert) => unique.set(alert.key, alert));
-	return Array.from(unique.values());
+	return mapValuesToArray(unique);
 }
 
 export const AlertsProvider: FactoryProvider = {

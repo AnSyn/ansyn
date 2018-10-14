@@ -200,7 +200,6 @@ export class ChangeOverlayPreviewRotationAction implements Action {
 	}
 }
 
-
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
 	| DisplayMultipleOverlaysFromStoreAction
@@ -220,3 +219,5 @@ export type OverlaysActions
 	| RemoveMarkUp
 	| SetHoveredOverlayAction
 	| ChangeOverlayPreviewRotationAction
+	| SetSpecialObjectsActionStore
+	| SetDropsAction

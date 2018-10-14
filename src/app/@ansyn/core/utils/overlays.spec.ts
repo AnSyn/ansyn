@@ -1,4 +1,4 @@
-import { buildFilteredOverlays } from '../public_api';
+import { buildFilteredOverlays } from './overlays';
 
 describe('Overlays utils', () => {
 	describe('buildFilteredOverlays()', () => {

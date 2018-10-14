@@ -7,6 +7,7 @@ import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
 import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
+import { mapValuesToArray } from 'src/app/@ansyn/core/public_api';
 
 export const filtersConfig = 'filtersConfig';
 
@@ -64,7 +65,7 @@ export class FiltersService {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);
-		const filteredOverlays: string[] = buildFilteredOverlays(Array.from(overlays.values()), filterModels, removedOverlaysIds, removedOverlaysVisibility);
+		const filteredOverlays: string[] = buildFilteredOverlays(mapValuesToArray(overlays), filterModels, removedOverlaysIds, removedOverlaysVisibility);
 		metadata.resetFilteredCount();
 		filteredOverlays
 			.map((id) => overlays.get(id))

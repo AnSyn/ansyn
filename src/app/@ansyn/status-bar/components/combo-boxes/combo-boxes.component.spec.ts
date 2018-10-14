@@ -35,7 +35,7 @@ describe('ComboBoxesComponent', () => {
 			providers: [
 				{
 					provide: ORIENTATIONS,
-					useValue: comboBoxesOptions.orientations
+					useValue: JSON.stringify(comboBoxesOptions.orientations)
 				},
 				{
 					provide: TIME_FILTERS,

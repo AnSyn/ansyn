@@ -118,7 +118,6 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 
 	protected parseData(idahoElement: any, token: string): IOverlay {
 		const footprint: any = wellknown.parse(idahoElement.properties.footprintWkt);
-
 		return new Overlay({
 			id: idahoElement.identifier,
 			footprint: footprint.geometry ? footprint.geometry : footprint,
@@ -137,6 +136,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			baseImageUrl: 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true',
 			token: token,
 			catalogID: idahoElement.properties.catalogID,
+			cloudCoverage: idahoElement.properties.cloudCover / 100
 		});
 	}
 }

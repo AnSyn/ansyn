@@ -277,7 +277,7 @@
     },
     "dataInputFiltersConfig": {
       "PLANET": {
-        "inActive": "",
+        "inActive": {{ getv "/ansyn/overlay/planet/inactive" "" }},
         "treeViewItem": {
         "text": "Planet",
         "value": 1,
@@ -329,7 +329,7 @@
           }
         },
         "OPEN_AERIAL": {
-          "inActive": "",
+          "inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "" }},
           "treeViewItem": {
             "text": "OpenAerial",
             "value": 1,
@@ -432,7 +432,49 @@
     }
   },
   "multipleOverlaysSourceConfig": {
+	 "defaultProvider": {
+		"whitelist": [
+		  {
+			"name": "Entire Earth",
+			"dates": [
+			  {
+				"start": null,
+				"end": null
+			  }
+			],
+			"sensorNames": "[null]",
+			"coverage": [
+			  [
+				[
+				  [
+					-180,
+					-90
+				  ],
+				  [
+					-180,
+					90
+				  ],
+				  [
+					180,
+					90
+				  ],
+				  [
+					180,
+					-90
+				  ],
+				  [
+					-180,
+					-90
+				  ]
+				]
+			  ]
+			]
+		  }
+		],
+	  "blacklist": []
+	},
     "IDAHO": {
+	  "inActive": {{ getv "/ansyn/overlay/idaho/inactive" "true" }},
       "whitelist": [
         {
           "name": "Entire Earth",
@@ -473,60 +515,8 @@
       ],
       "blacklist": []
     },
-    "IDAHO2": {
-      "whitelist": [
-        {
-          "name": "Entire Earth",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "[]",
-          "coverage": [
-            [
-              [
-                [
-                  -74.06810760498047,
-                  40.8028950718582
-                ],
-                [
-                  -74.09557342529297,
-                  40.75453936473234
-                ],
-                [
-                  -74.07463073730469,
-                  40.74543623770158
-                ],
-                [
-                  -74.11308288574219,
-                  40.70536767492135
-                ],
-                [
-                  -74.06330108642578,
-                  40.66918118282895
-                ],
-                [
-                  -74.01283264160156,
-                  40.73347023268492
-                ],
-                [
-                  -74.01111602783203,
-                  40.77768170250654
-                ],
-                [
-                  -74.06810760498047,
-                  40.8028950718582
-                ]
-              ]
-            ]
-          ]
-        }
-      ],
-      "blacklist": []
-    },
     "PLANET": {
+	  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "" }},
       "whitelist": [
         {
           "name": "USA",
@@ -931,6 +921,7 @@
       "blacklist": []
     },
     "OPEN_AERIAL": {
+    	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "" }}
 		"whitelist": [
 			{
 				"name": "Entire Earth",

@@ -17,8 +17,13 @@ export interface IToolTipsConfig {
 	quickloop?: string
 }
 
+export interface IDataInputItem {
+	inActive?: boolean;
+	treeViewItem: TreeviewItem;
+}
+
 export interface IDataInputFiltersConfig {
-	[providerName: string]: TreeviewItem;
+	[providerName: string]: IDataInputItem;
 }
 
 export interface IStatusBarConfig {

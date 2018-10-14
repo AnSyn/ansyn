@@ -8,7 +8,7 @@ import {
 } from '@ansyn/core';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
-import { IStatusBarConfig } from '../../models/statusBar-config.model';
+import { IDataInputItem, IStatusBarConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { isEqual } from 'lodash';
 import { Observable } from 'rxjs';
@@ -68,23 +68,21 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	get dataFilters(): TreeviewItem[] {
 		this.leavesCount = 0;
-		Object.keys(this.statusBarConfig.dataInputFiltersConfig)
-			.forEach(providerName => {
-					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
+		return Object.entries(this.statusBarConfig.dataInputFiltersConfig)
+			.filter(([providerName, { inActive }]: [string, IDataInputItem]) => !inActive)
+			.map(([providerName, { treeViewItem }]: [string, IDataInputItem]) => {
+					this.visitLeaves(treeViewItem, (leaf) => {
 						this.leavesCount++;
 						leaf.value.providerName = providerName;
-					});
-					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
 						if (leaf.text) {
 							this.translate.get(leaf.text).subscribe((res: string) => {
 								leaf.text = res;
 							});
 						}
 					});
+					return treeViewItem
 				}
 			);
-
-		return Object.values(this.statusBarConfig.dataInputFiltersConfig);
 	}
 
 	visitLeaves(curr: TreeviewItem, cb: (leaf: TreeviewItem) => void) {

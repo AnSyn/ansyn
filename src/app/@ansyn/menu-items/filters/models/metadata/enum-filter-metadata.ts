@@ -1,7 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { IFilter } from '../IFilter';
-import { FilterType } from '@ansyn/core';
-import { mapValuesToArray } from 'src/app/@ansyn/core/public_api';
+import { FilterType, mapValuesToArray } from '@ansyn/core';
 
 export interface IEnumFiled {
 	count: number;

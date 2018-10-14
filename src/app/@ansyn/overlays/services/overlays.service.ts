@@ -1,11 +1,10 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
+import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, mapValuesToArray } from '@ansyn/core';
 import { IOverlayDropSources, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
-import { mapValuesToArray } from 'src/app/@ansyn/core/public_api';
 
 export const OverlaysConfig = 'overlaysConfig';
 

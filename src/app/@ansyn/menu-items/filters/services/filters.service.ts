@@ -1,13 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { IFilter } from '../models/IFilter';
-import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay } from '@ansyn/core';
+import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
 import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
-import { mapValuesToArray } from 'src/app/@ansyn/core/public_api';
 
 export const filtersConfig = 'filtersConfig';
 

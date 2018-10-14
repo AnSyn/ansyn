@@ -1,9 +1,14 @@
-import { CoreActionTypes, IOverlay, IOverlaySpecialObject, SetOverlaysCriteriaAction } from '@ansyn/core';
+import {
+	CoreActionTypes,
+	IOverlay,
+	IOverlaySpecialObject,
+	mapValuesToArray,
+	SetOverlaysCriteriaAction
+} from '@ansyn/core';
 import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
-import { mapValuesToArray } from 'src/app/@ansyn/core/public_api';
 
 export interface ITimelineRange {
 	start: Date;

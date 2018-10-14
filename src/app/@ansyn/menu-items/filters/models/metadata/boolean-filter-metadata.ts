@@ -114,5 +114,8 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		this.properties.false.value = true;
 	}
 
+	shouldBeHidden(): boolean {
+		return false;
+	}
 
 }

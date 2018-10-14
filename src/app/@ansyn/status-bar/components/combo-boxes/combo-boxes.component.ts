@@ -110,7 +110,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		return Array.from(layoutOptions.keys());
 	}
 
-	public get orientations() {
+	public get orientations(): CaseOrientation[] {
 		return JSON.parse(this.orientationsString);
 	}
 

@@ -1,7 +1,6 @@
 import { Store } from '@ngrx/store';
 import { Component, HostBinding, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ICase, ICaseMapState } from '@ansyn/core';
+import { ICase } from '@ansyn/core';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
 import { LoadDefaultCaseAction, selectSelectedCase } from '@ansyn/menu-items';
@@ -17,17 +16,17 @@ import { COMPONENT_MODE } from '../app-providers/component-mode';
 })
 
 export class AnsynComponent {
-	selectedCaseName$: Observable<string> = this.store$
+	selectedCaseName$ = this.store$
 		.pipe(
 			select(selectSelectedCase),
 			map((selectSelected: ICase) => selectSelected ? selectSelected.name : 'Default Case')
 		);
 
-	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned).pipe(
+	isPinnedClass$ = this.store$.select(selectIsPinned).pipe(
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')
 	);
 
-	activeMap$: Observable<ICaseMapState> = this.store$
+	activeMap$ = this.store$
 		.pipe(
 			select(mapStateSelector),
 			filter(Boolean),

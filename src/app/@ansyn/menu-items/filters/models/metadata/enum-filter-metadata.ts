@@ -10,14 +10,8 @@ export interface IEnumFiled {
 }
 
 export class EnumFilterMetadata implements FilterMetadata {
-
-	enumsFields: Map<string, IEnumFiled>;
-	type: FilterType;
-
-	constructor() {
-		this.enumsFields = new Map<string, IEnumFiled>();
-		this.type = FilterType.Enum;
-	}
+	enumsFields: Map<string, IEnumFiled> = new Map<string, IEnumFiled>();
+	type: FilterType = FilterType.Enum;
 
 	updateMetadata(key: string): void {
 		if (this.enumsFields.get(key)) {
@@ -123,5 +117,8 @@ export class EnumFilterMetadata implements FilterMetadata {
 		this.enumsFields.forEach((value: IEnumFiled) => {
 			value.isChecked = true;
 		});
+	}
+	shouldBeHidden(): boolean {
+		return false;
 	}
 }

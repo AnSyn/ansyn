@@ -5,23 +5,13 @@ export class SliderFilterMetadata implements FilterMetadata {
 	count = 0;
 	filteredCount = 0;
 
-	min: number;
-	max: number;
+	min: number = Number.MAX_SAFE_INTEGER;;
+	max: number = Number.MIN_SAFE_INTEGER;;
 
-	start: number;
-	end: number;
+	start = -Infinity;
+	end = Infinity;
 
-	type: FilterType;
-
-	constructor() {
-		this.type = FilterType.Slider;
-
-		this.min = Number.MAX_SAFE_INTEGER;
-		this.max = Number.MIN_SAFE_INTEGER;
-
-		this.start = -Infinity;
-		this.end = Infinity;
-	}
+	type: FilterType = FilterType.Slider;
 
 	updateMetadata(range: { start: number, end: number }): void {
 		if (!range || (range.start && range.end && range.start > range.end)) {
@@ -78,5 +68,9 @@ export class SliderFilterMetadata implements FilterMetadata {
 	showAll(): void {
 		this.start = -Infinity;
 		this.end = Infinity;
+	}
+
+	shouldBeHidden(): boolean {
+		return this.min === this.max;
 	}
 }

@@ -17,7 +17,8 @@
 	</div>
 
 	<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
-		<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
+		<div *ngIf="metadataFromState && !metadataFromState.shouldBeHidden()" [ngSwitch]="metadataFromState?.type">
+
 			<ansyn-enum-filter-container
 				*ngSwitchCase="'Enum'"
 				[isLongFiltersList]="isLongFiltersList"

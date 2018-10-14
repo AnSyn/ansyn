@@ -1,5 +1,5 @@
 import { SliderFilterMetadata } from './../../models/metadata/slider-filter-metadata';
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-slider-filter-container',
@@ -7,7 +7,6 @@ import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/cor
 	styleUrls: ['./slider-filter-container.component.less']
 })
 export class SliderFilterContainerComponent {
-
 	factor = 1000;
 	_metadata: SliderFilterMetadata;
 	realRange: number[];

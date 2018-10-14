@@ -58,7 +58,11 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	private prepareWhitelist() {
 		const mapProviderConfig = (provider) => {
 			const type = provider.sourceType;
-			const config = this.multipleOverlaysSourceConfig[type];
+			let config = this.multipleOverlaysSourceConfig[type];
+			if (!config) {
+				console.warn(`Missing config for provider ${type}, using defaultProvider config`);
+				config = this.multipleOverlaysSourceConfig.defaultProvider;
+			}
 			return [provider, config];
 		};
 

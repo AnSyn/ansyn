@@ -7,14 +7,14 @@
 		</div>
 		<div class="data-input-filters-buttons">
 			<ansyn-slider-checkbox [checked]="dataInputFiltersActive"
-								   [disabled]="!dataInputFiltersConfig.length"
+								   [disabled]="!dataInputFiltersItems.length"
 								   (checkedChange)="activateDataInputFilters($event)"></ansyn-slider-checkbox>
 			<div>
 				<button>
 					<a (click)="onTreeViewClose()">Cancel</a>
 				</button>
 
-				<button [disabled]="!dataInputFiltersConfig.length">
+				<button [disabled]="!dataInputFiltersItems.length">
 					<a class="ok-button" (click)="dataInputFiltersOk()">Ok</a>
 				</button>
 			</div>

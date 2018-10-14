@@ -5,8 +5,8 @@ export class SliderFilterMetadata implements FilterMetadata {
 	count = 0;
 	filteredCount = 0;
 
-	min: number = Number.MAX_SAFE_INTEGER;;
-	max: number = Number.MIN_SAFE_INTEGER;;
+	min: number = Number.MAX_SAFE_INTEGER;
+	max: number = Number.MIN_SAFE_INTEGER;
 
 	start = -Infinity;
 	end = Infinity;

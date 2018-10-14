@@ -1,6 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { IFilter } from '../IFilter';
-import { FilterType } from '@ansyn/core';
+import { FilterType, mapValuesToArray } from '@ansyn/core';
 
 export interface IEnumFiled {
 	count: number;
@@ -116,7 +116,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	isFiltered(): boolean {
-		return Array.from(this.enumsFields.values()).some((value: IEnumFiled) => !value.isChecked);
+		return mapValuesToArray(this.enumsFields).some((value: IEnumFiled) => !value.isChecked);
 	}
 
 	showAll(): void {

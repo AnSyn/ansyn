@@ -16,8 +16,6 @@ import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import {
 	BackToWorldView,
-	coreStateSelector,
-	ICoreState,
 	IOverlay,
 	IOverlaysFetchData,
 	LoggerService,
@@ -25,8 +23,7 @@ import {
 	selectPresetOverlays,
 	UpdateOverlaysCountAction
 } from '@ansyn/core';
-import { unionBy } from 'lodash';
-import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class OverlaysEffects {
@@ -35,12 +32,10 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe<any>(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		withLatestFrom(this.store$.select(coreStateSelector)),
-		mergeMap(([action, { favoriteOverlays }]: [LoadOverlaysAction, ICoreState]) => {
+		mergeMap((action: LoadOverlaysAction) => {
 			return this.overlaysService.search(action.payload).pipe(
 				mergeMap((overlays: IOverlaysFetchData) => {
-					const overlaysResult = unionBy(Array.isArray(overlays.data) ? overlays.data : [],
-						favoriteOverlays, o => o.id);
+					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
 						return [new LoadOverlaysSuccessAction(overlaysResult),

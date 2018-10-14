@@ -7,12 +7,11 @@ export function isFullOverlay(overlay: IOverlay): boolean {
 	return Boolean(overlay && overlay.date);
 }
 
-export function buildFilteredOverlays(overlays: IOverlay[], parsedFilters: IFilterModel[], favorites: IOverlay[], showOnlyFavorite: boolean, removedOverlaysIds: string[], removedOverlaysVisibility: boolean): string[] {
-	let parsedOverlays: IOverlay[] = favorites;
-	if (!showOnlyFavorite) {
-		const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
-		parsedOverlays = [...parsedOverlays, ...filteredOverlays];
-	}
+export function buildFilteredOverlays(overlays: IOverlay[], parsedFilters: IFilterModel[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean): string[] {
+	let parsedOverlays: IOverlay[] = [];
+
+	const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
+	parsedOverlays = [...parsedOverlays, ...filteredOverlays];
 
 	if (removedOverlaysVisibility) {
 		parsedOverlays = parsedOverlays.filter((overlay) => !removedOverlaysIds.some((overlayId) => overlay.id === overlayId));

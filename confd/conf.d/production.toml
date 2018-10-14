@@ -16,5 +16,8 @@ keys = [
     "/ansyn/tools/displayid",
     "/ansyn/overlay/planet/sensor/names",
     "/ansyn/overlay/open/aerial/sensor/names",
-    "/ansyn/overlay/idaho/sensor/names"
+    "/ansyn/overlay/idaho/sensor/names",
+	"/ansyn/overlay/open/aerial/inactive",
+	"/ansyn/overlay/planet/inactive",
+	"/ansyn/overlay/idaho/inactive"
 ]

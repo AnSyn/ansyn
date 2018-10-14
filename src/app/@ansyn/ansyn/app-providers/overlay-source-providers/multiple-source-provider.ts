@@ -13,11 +13,16 @@ export interface IFiltersList {
 	coverage: number[][][][]
 }
 
+export interface IOverlaysSourceProvider {
+	inActive?: boolean,
+	whitelist: IFiltersList[],
+	blacklist: IFiltersList[]
+}
+
 export interface IMultipleOverlaysSourceConfig {
-	[key: string]: {
-		whitelist: IFiltersList[],
-		blacklist: IFiltersList[]
-	}
+	defaultProvider: IOverlaysSourceProvider;
+
+	[key: string]: IOverlaysSourceProvider;
 }
 
 export type IMultipleOverlaysSources = BaseOverlaySourceProvider;
@@ -49,15 +54,21 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		};
 	}
 
+
 	private prepareWhitelist() {
-		this.overlaysSources.forEach(provider => {
+		const mapProviderConfig = (provider) => {
 			const type = provider.sourceType;
-
-			const config = this.multipleOverlaysSourceConfig[type];
-
-			if (!config || !config.whitelist) {
-				throw new Error('Missing config for provider ' + type);
+			let config = this.multipleOverlaysSourceConfig[type];
+			if (!config) {
+				console.warn(`Missing config for provider ${type}, using defaultProvider config`);
+				config = this.multipleOverlaysSourceConfig.defaultProvider;
 			}
+			return [provider, config];
+		};
+
+		const filterWhiteList = ([provider, { inActive }]: [IMultipleOverlaysSources, IOverlaysSourceProvider]) => !inActive;
+
+		this.overlaysSources.map(mapProviderConfig).filter(filterWhiteList).forEach(([provider, config]) => {
 
 			let whiteFilters = [];
 

@@ -62,6 +62,10 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		}
 	}
 
+	getMainLayer() {
+		return this.mainLayer;
+	}
+
 	generateNewView(layer: Layer, position?: ICaseMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
 

@@ -36,6 +36,7 @@ export class CasesAppEffects {
 			updatedMapsList.forEach((map) => {
 				if (mapId === map.id) {
 					map.data.overlay = action.payload.overlay;
+					map.data.isAutoImageProcessingActive = false;
 				}
 			});
 			return new SetMapsDataActionStore({ mapsList: updatedMapsList });

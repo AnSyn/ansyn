@@ -1,10 +1,7 @@
-import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
-import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/plugins';
-import XYZ from 'ol/source/xyz';
-import proj from 'ol/proj';
-import ImageLayer from 'ol/layer/image';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
+import { ICaseMapState } from '@ansyn/core';
 
 export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 
@@ -13,26 +10,6 @@ export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerOpenAerialSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: ICaseMapState): any[] {
-		const source = new XYZ({
-			url: metaData.data.overlay.imageUrl,
-			crossOrigin: 'Anonymous',
-			projection: 'EPSG:3857'
-		});
-
-		let [x, y, x1, y1] = extentFromGeojson(metaData.data.overlay.footprint);
-		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
-		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
-
-		return [new ImageLayer({
-			source: new ProjectableRaster({
-				sources: [source],
-				operation: (pixels) => pixels[0],
-				operationType: 'image'
-			}),
-			extent: [x, y, x1, y1]
-		})];
-	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);

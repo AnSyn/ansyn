@@ -8,3 +8,4 @@ export { OpenLayersProjectionService } from './openlayers/open-layers-map/projec
 export { AnsynPluginsModule } from './ansyn-plugins.module';
 export { NorthCalculationsPlugin } from './openlayers/north-calculations/north-calculations.plugin';
 export { ImageProcessingPlugin } from './openlayers/image-processing/image-processing.plugin';
+export { isRasterLayer, removeWorkers } from './openlayers/open-layers-map/shared/openlayers-shared';

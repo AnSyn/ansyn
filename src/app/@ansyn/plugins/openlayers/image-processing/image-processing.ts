@@ -62,6 +62,9 @@ export class OpenLayersImageProcessing {
 	}
 
 	processImage(operationsArguments: Object) {
+		if (!this._raster) {
+			return;
+		}
 		// collection operation by processingParams
 		const pixelOperations: IProcessOperation[] = [];
 		const imageOperations: IProcessOperation[] = [];

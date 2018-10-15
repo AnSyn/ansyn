@@ -5,7 +5,7 @@ import { UnAuthGuard } from './login/guards/unauth.guard';
 import { AuthGuard } from './login/guards/auth.guard';
 import { LoginComponent } from './login/login/login.component';
 import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
-import { CallbackComponent } from './components/callback/callback.component';
+import { CallbackComponent } from '../@ansyn/ansyn/app-providers/imisight/components/callback/callback.component';
 
 export const routes: Routes = [
 	{

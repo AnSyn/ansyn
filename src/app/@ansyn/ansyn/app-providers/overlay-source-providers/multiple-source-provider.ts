@@ -1,12 +1,12 @@
-import { from, Observable, throwError } from 'rxjs';
+import { forkJoin, from, Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { BaseOverlaySourceProvider, IDateRange, IFetchParams, IOverlayFilter, IStartAndEndDate } from '@ansyn/overlays';
 import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
-import { Auth0Service } from '@ansyn/ansyn/app-providers/imisight/auth0.service';
-import { Auth0Config, IAuth0Config } from '@ansyn/ansyn/app-providers/imisight/auth0.model';
+import { Auth0Config, IAuth0Config } from '../imisight/auth0.model';
+import { Auth0Service } from '../imisight/auth0.service';
 
 export interface IFiltersList {
 	name: string,
@@ -146,7 +146,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 
-		if (this.auth0Config.auth0Active === "true" && !this.auth0Service.isValidToken()) {
+		if (this.auth0Config.auth0Active === 'true' && !this.auth0Service.isValidToken()) {
 			this.auth0Service.login();
 			return;
 		}

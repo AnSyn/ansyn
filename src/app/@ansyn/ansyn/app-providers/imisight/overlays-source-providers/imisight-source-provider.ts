@@ -7,9 +7,15 @@ import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansy
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
-	geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon,
-	getPolygonByPointAndRadius, IOverlay, limitArray,
-	LoggerService, sortByDateDesc, toRadians
+	geojsonMultiPolygonToPolygon,
+	geojsonPolygonToMultiPolygon,
+	getPolygonByPointAndRadius,
+	IOverlay,
+	limitArray,
+	LoggerService,
+	Overlay,
+	sortByDateDesc,
+	toRadians
 } from '@ansyn/core';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from '../imisight.model';
 import { IOverlaysPlanetFetchData } from '../../overlay-source-providers/planet/planet.model';
@@ -123,22 +129,22 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	protected parseData(imiSightElement: ImiSightElement): IOverlay {
 		const companyId = 1;
 		const gatewayUrl = 'https://gw.sat.imisight.net';
-		let overlay: IOverlay = <IOverlay> {};
 		const footprint: any = imiSightElement.geojson;
-		overlay.id = imiSightElement._id;
-		overlay.footprint = geojsonPolygonToMultiPolygon(footprint ? footprint : footprint);
-		overlay.sensorType = '';
-		overlay.sensorName = imiSightElement.sensorName;
-		overlay.bestResolution = 1;
-		overlay.name = imiSightElement.s3Id;
-		overlay.imageUrl = `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;
-		overlay.thumbnailUrl = `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`;
-		overlay.date = new Date(imiSightElement.timestamp);
-		overlay.photoTime = imiSightElement.timestamp;
-		overlay.azimuth = toRadians(180);
-		overlay.sourceType = this.sourceType;
-		overlay.isGeoRegistered = true;
-		overlay.tag = imiSightElement;
-		return overlay;
+		return new Overlay({
+			id: imiSightElement._id,
+			footprint: geojsonPolygonToMultiPolygon(footprint ? footprint : footprint),
+			sensorType: '',
+			sensorName: imiSightElement.sensorName,
+			bestResolution: 1,
+			name: imiSightElement.s3Id,
+			imageUrl: `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`,
+			thumbnailUrl: `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`,
+			date: new Date(imiSightElement.timestamp),
+			photoTime: imiSightElement.timestamp,
+			azimuth: toRadians(180),
+			sourceType: this.sourceType,
+			isGeoRegistered: true,
+			tag: imiSightElement
+		});
 	}
 }

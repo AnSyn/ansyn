@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, forkJoin, Observable, pipe, UnaryFunction } from 'rxjs';
+import { EMPTY, forkJoin, Observable, of, pipe, UnaryFunction } from 'rxjs';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -169,9 +169,9 @@ export class CasesEffects {
 		.pipe(
 			ofType(CasesActionTypes.LOAD_CASE),
 			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
+			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase)),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
-			catchError(() => EMPTY),
-			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase))
+			catchError(() => of(new LoadDefaultCaseAction()))
 		);
 
 	saveLayers: UnaryFunction<any, any> = pipe(

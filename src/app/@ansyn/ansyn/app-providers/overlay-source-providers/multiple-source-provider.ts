@@ -5,7 +5,6 @@ import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } fr
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
-import { Auth0Config, IAuth0Config } from '../imisight/auth0.model';
 import { Auth0Service } from '../imisight/auth0.service';
 
 export interface IFiltersList {
@@ -38,7 +37,6 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				@Inject(Auth0Config) protected auth0Config: IAuth0Config,
 				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[],
 				protected loggerService: LoggerService,
 				protected auth0Service: Auth0Service) {
@@ -146,7 +144,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 
-		if (this.auth0Config.auth0Active === 'true' && !this.auth0Service.isValidToken()) {
+		if (this.auth0Service.auth0Active && !this.auth0Service.isValidToken()) {
 			this.auth0Service.login();
 			return;
 		}

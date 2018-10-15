@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OpenLayersImisightSourceProvider } from './map-source-providers/open-layers-imisight-source-provider';
-import { Auth0Service } from './auth0.service';
 import { CoreModule } from '@ansyn/core';
 import { ImageryModule } from '@ansyn/imagery';
 import { CallbackComponent } from './components/callback/callback.component';
+import { Auth0Service } from './auth0.service';
 
 @NgModule({
 	imports: [
@@ -18,7 +18,6 @@ import { CallbackComponent } from './components/callback/callback.component';
 			maps: []
 		})
 	],
-	providers: [Auth0Service],
 	declarations: [CallbackComponent]
 })
 

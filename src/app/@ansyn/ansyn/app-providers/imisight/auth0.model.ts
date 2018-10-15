@@ -1,7 +1,7 @@
 export const Auth0Config = 'auth0Config';
 
 export interface IAuth0Config {
-	auth0Active: string;
+	auth0Active: boolean;
 	clientID: string;
 	domain: string;
 	responseType: string;

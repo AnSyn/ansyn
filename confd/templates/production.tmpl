@@ -1048,7 +1048,7 @@
     "delayMultiple": 300
   },
   "auth0Config": {
-      "auth0Active": "{{ getv "/ansyn/auth0/auth0Active" "false" }}",
+      "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},
       "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",
       "domain": "{{ getv "/ansyn/auth0/domain" "imisight-sat.auth0.com" }}",
       "responseType": "{{ getv "/ansyn/auth0/responseType" "token id_token" }}",

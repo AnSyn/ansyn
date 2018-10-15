@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
 import { Auth0Config, IAuth0Config } from './auth0.model';
 
-(window as any).global = window;
-
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class Auth0Service {
 	auth0 = new auth0.WebAuth({
 		clientID: this.auth0Config.clientID,
@@ -16,10 +16,11 @@ export class Auth0Service {
 		scope: this.auth0Config.scope
 	});
 
-	constructor(
-		public router: Router,
-		@Inject(Auth0Config)
-		protected auth0Config: IAuth0Config) {
+	public get auth0Active(): boolean {
+		return this.auth0Config.auth0Active;
+	}
+
+	constructor(public router: Router, @Inject(Auth0Config) protected auth0Config: IAuth0Config) {
 	}
 
 	public login(): void {

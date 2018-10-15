@@ -13,7 +13,6 @@ import { Injectable } from '@angular/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Auth0Service } from '../imisight/auth0.service';
-import { Auth0Config } from '../imisight/auth0.model';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -132,7 +131,9 @@ const whitelist = [
 ];
 const loggerServiceMock = { error: (some) => null };
 
-describe('MultipleSourceProvider with one truthy provider', () => {
+describe('MultipleSourceProvider', () => {
+
+	describe('MultipleSourceProvider with one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -153,19 +154,7 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 					useClass: TruthyOverlaySourceProviderMock,
 					multi: true
 				},
-				Auth0Service,
-				{
-					provide: Auth0Config,
-					useValue: {
-						auth0Active: 'false',
-						clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
-						domain: 'imisight-sat.auth0.com',
-						responseType: 'token id_token',
-						audience: 'https://gw.sat.imisight.net',
-						callbackURL: 'http://localhost:4200/#/callback/',
-						scope: 'openid'
-					}
-				}
+				{ provide: Auth0Service, useValue: {} }
 			]
 		});
 	});
@@ -188,11 +177,10 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 
 });
 
-describe('MultipleSourceProvider with one faulty provider', () => {
+	describe('MultipleSourceProvider with one faulty provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [RouterTestingModule],
 			providers: [
 				{
 					provide: LoggerService,
@@ -210,19 +198,7 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
 				},
-				Auth0Service,
-				{
-					provide: Auth0Config,
-					useValue: {
-						auth0Active: 'false',
-						clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
-						domain: 'imisight-sat.auth0.com',
-						responseType: 'token id_token',
-						audience: 'https://gw.sat.imisight.net',
-						callbackURL: 'http://localhost:4200/#/callback/',
-						scope: 'openid'
-					}
-				}
+				{ provide: Auth0Service, useValue: {} }
 			]
 		});
 	});
@@ -239,7 +215,7 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 
 });
 
-describe('MultipleSourceProvider with one faulty provider and one truthy provider', () => {
+	describe('MultipleSourceProvider with one faulty provider and one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -266,19 +242,7 @@ describe('MultipleSourceProvider with one faulty provider and one truthy provide
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
 				},
-				Auth0Service,
-				{
-					provide: Auth0Config,
-					useValue: {
-						auth0Active: 'false',
-						clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
-						domain: 'imisight-sat.auth0.com',
-						responseType: 'token id_token',
-						audience: 'https://gw.sat.imisight.net',
-						callbackURL: 'http://localhost:4200/#/callback/',
-						scope: 'openid'
-					}
-				}
+				{ provide: Auth0Service, useValue: {} }
 			]
 		});
 	});
@@ -298,5 +262,7 @@ describe('MultipleSourceProvider with one faulty provider and one truthy provide
 
 		expect(this.multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
 	});
+
+});
 
 });

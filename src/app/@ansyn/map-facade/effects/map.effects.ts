@@ -1,19 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { Observable } from 'rxjs';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/share';
+import { forkJoin, Observable, UnaryFunction } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import {
+	AddAlertMsg,
+	AlertMsgTypes,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseGeoFilter,
+	CoreActionTypes,
+	ICaseMapPosition,
+	ICaseMapState,
+	isFullOverlay,
+	RemoveAlertMsg,
+	selectRegion,
+	SetLayoutSuccessAction,
+	SetMapsDataActionStore,
+	SetOverlaysCriteriaAction
+} from '@ansyn/core';
+import * as turf from '@turf/turf';
 import { intersect, polygon } from '@turf/turf';
-
-import 'rxjs/add/observable/forkJoin';
 import {
 	ActiveMapChangedAction,
 	AnnotationSelectAction,
+	ContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
@@ -22,134 +34,106 @@ import {
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
 	SynchronizeMapsAction
-} from '@ansyn/map-facade/actions/map.actions';
-import {
-	AddAlertMsg,
-	BackToWorldSuccess,
-	BackToWorldView,
-	CoreActionTypes,
-	RemoveAlertMsg,
-	SetLayoutSuccessAction, SetMapsDataActionStore
-} from '@ansyn/core/actions/core.actions';
-import { AlertMsgTypes } from '@ansyn/core/reducers/core.reducer';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { OpenlayersMapName } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { pipe } from 'rxjs/internal-compatibility';
+} from '../actions/map.actions';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { fromPromise, pipe } from 'rxjs/internal-compatibility';
+import { Position } from 'geojson';
 
 @Injectable()
 export class MapEffects {
 
-	/**
-	 * @type Effect
-	 * @name annotationContextMenuTrigger$
-	 * @ofType AnnotationContextMenuTriggerAction
-	 */
-	@Effect({ dispatch: false })
-	annotationContextMenuTrigger$ = this.actions$
-		.ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT)
-		.share();
+	region$ = this.store$.select(selectRegion);
 
-	/**
-	 * @type Effect
-	 * @name onUpdateSize$
-	 * @ofType UpdateMapSizeAction
-	 */
+	isPinPointSearch$ = this.region$.pipe(
+		filter(Boolean),
+		map((region) => region.type === CaseGeoFilter.PinPoint),
+		distinctUntilChanged()
+	);
+
+	@Effect()
+	onPinPointSearch$: Observable<SetOverlaysCriteriaAction> = this.actions$.pipe(
+		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
+		withLatestFrom(this.isPinPointSearch$),
+		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
+		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
+		map((payload: Position) => {
+			const region = turf.geometry('Point', payload);
+			return new SetOverlaysCriteriaAction({ region });
+		})
+	);
+
+
 	@Effect({ dispatch: false })
-	onUpdateSize$: Observable<void> = this.actions$
-		.ofType(MapActionTypes.UPDATE_MAP_SIZE)
-		.map(() => {
+	annotationContextMenuTrigger$ = this.actions$.pipe(
+		ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT),
+		share()
+	);
+
+	@Effect({ dispatch: false })
+	onUpdateSize$: Observable<void> = this.actions$.pipe(
+		ofType(MapActionTypes.UPDATE_MAP_SIZE),
+		map(() => {
 			// @TODO move this to service we will need it pass function name and send it to all the maps
 			Object.keys(this.communicatorsService.communicators).forEach((imageryId: string) => {
 				this.communicatorsService.provide(imageryId).updateSize();
 			});
-		});
+		})
+	);
 
-	/**
-	 * @type Effect
-	 * @name onCommunicatorChange$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction
-	 */
 	@Effect({ dispatch: false })
-	onCommunicatorChange$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.do(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction, IMapState]) => {
+	onCommunicatorChange$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		tap(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction, IMapState]) => {
 			if (action instanceof ImageryCreatedAction) {
 				this.mapFacadeService.initEmitters(action.payload.id);
 			} else {
 				this.mapFacadeService.removeEmitters(action.payload.id);
 			}
-		});
-
-	/**
-	 * @type Effect
-	 * @name onContextMenuShow$
-	 * @ofType ContextMenuShowAction
-	 */
-	@Effect({ dispatch: false })
-	onContextMenuShow$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
-		.share();
-
-	/**
-	 * @type Effect
-	 * @name onMapCreatedDecreasePendingCount$
-	 * @ofType ImageryCreatedAction, ImageryRemovedAction
-	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is greater than 0
-	 * @action DecreasePendingMapsCountAction
-	 */
-	@Effect()
-	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_REMOVED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapState]) => mapState.pendingMapsCount > 0)
-		.map(() => new DecreasePendingMapsCountAction());
-
-	/**
-	 * @type Effect
-	 * @name onMapPendingCountReachedZero$
-	 * @ofType DecreasePendingMapsCountAction
-	 * @dependencies pendingMapsCount
-	 * @filter pendingMapsCount is 0
-	 * @action SetLayoutSuccessAction
-	 */
-	@Effect()
-	onMapPendingCountReachedZero$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.DECREASE_PENDING_MAPS_COUNT)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([action, mapState]) => mapState.pendingMapsCount === 0)
-		.map(() => new SetLayoutSuccessAction());
-
-	/**
-	 * @type Effect
-	 * @name positionChanged$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action SetMapsDataActionStore
-	 */
-	@Effect()
-	positionChanged$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.POSITION_CHANGED)
-		.withLatestFrom(this.store$.select(mapStateSelector), (action: PositionChangedAction, state: IMapState): any => {
-			return [action, MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList];
 		})
-		.filter(([action, selectedMap, mapsList]) => Boolean(selectedMap) && action.payload.mapInstance === selectedMap)
-		.map(([action, selectedMap, mapsList]) => {
+	);
+
+	@Effect({ dispatch: false })
+	onContextMenuShow$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.CONTEXT_MENU.SHOW),
+		share()
+	);
+
+	@Effect()
+	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.IMAGERY_REMOVED),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		filter(([action, mapState]) => mapState.pendingMapsCount > 0),
+		map(() => new DecreasePendingMapsCountAction())
+	);
+
+	@Effect()
+	onMapPendingCountReachedZero$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.DECREASE_PENDING_MAPS_COUNT),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		filter(([action, mapState]) => mapState.pendingMapsCount === 0),
+		map(() => new SetLayoutSuccessAction())
+	);
+
+	@Effect()
+	positionChanged$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.POSITION_CHANGED),
+		withLatestFrom(this.store$.select(mapStateSelector), (action: PositionChangedAction, state: IMapState): any => {
+			return [action, MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList];
+		}),
+		filter(([action, selectedMap, mapsList]) => Boolean(selectedMap) && action.payload.mapInstance === selectedMap),
+		map(([action, selectedMap, mapsList]) => {
 			selectedMap.data.position = action.payload.position;
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
-		});
+		})
+	);
 
-	checkOverlaysOutOfBounds$ = pipe(
+	checkOverlaysOutOfBounds$: UnaryFunction<any, any> = pipe(
 		filter(Boolean),
 		map((map: ICaseMapState) => {
 			const key = AlertMsgTypes.OverlaysOutOfBounds;
-			const isWorldView = !OverlaysService.isFullOverlay(map.data.overlay);
+			const isWorldView = !isFullOverlay(map.data.overlay);
 			let isInBound;
 			if (!isWorldView) {
 				const { extentPolygon } = map.data.position;
@@ -170,14 +154,6 @@ export class MapEffects {
 		})
 	);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
 	@Effect()
 	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.pipe(
@@ -186,14 +162,6 @@ export class MapEffects {
 			this.checkOverlaysOutOfBounds$.bind(this)
 		);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBoundsFromBackToWorlds$
-	 * @ofType BackToWorldSuccess
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg?, AddAlertMsg?
-	 */
 	@Effect()
 	checkImageOutOfBoundsFromBackToWorlds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
 		.pipe(
@@ -202,29 +170,15 @@ export class MapEffects {
 			this.checkOverlaysOutOfBounds$.bind(this)
 		);
 
-	/**
-	 * @type Effect
-	 * @name checkImageOutOfBounds$
-	 * @ofType PositionChangedAction
-	 * @dependencies map
-	 * @filter There is a selected map
-	 * @action RemoveAlertMsg
-	 */
 	@Effect()
-	updateOutOfBoundList: Observable<RemoveAlertMsg> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_REMOVED)
-		.map((action: ImageryRemovedAction) => {
+	updateOutOfBoundList: Observable<RemoveAlertMsg> = this.actions$.pipe(
+		ofType(MapActionTypes.IMAGERY_REMOVED),
+		map((action: ImageryRemovedAction) => {
 			return new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: action.payload.id });
-		});
+		})
+	);
 
 
-	/**
-	 * @type Effect
-	 * @name backToWorldView$
-	 * @ofType BackToWorldAction
-	 * @dependencies map
-	 * @action SetMapsDataActionStore, BackToWorldSuccessAction
-	 */
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
@@ -239,7 +193,7 @@ export class MapEffects {
 			}),
 			filter(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => {
-				const disabledMap = communicator.ActiveMap instanceof OpenLayersDisabledMap;
+				const disabledMap = communicator.mapType === 'disabledOpenLayersMap';
 				const updatedMapsList = [...mapsList];
 				updatedMapsList.forEach(
 					(map) => {
@@ -249,66 +203,44 @@ export class MapEffects {
 						}
 					});
 				this.store$.dispatch(new SetMapsDataActionStore({ mapsList: updatedMapsList }));
-				return Observable.fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
-					.map(() => new BackToWorldSuccess(payload));
+				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
+					.pipe(map(() => new BackToWorldSuccess(payload)));
 			})
 		);
 
-	/**
-	 * @type Effect
-	 * @name onMapsDataActiveMapIdChanged$
-	 * @ofType SetMapsDataActionStore
-	 * @filter There is an activeMapId
-	 * @action ActiveMapChangedAction
-	 */
 	@Effect()
-	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$
-		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
-		.map(({ payload }) => payload)
-		.filter(({ activeMapId }) => Boolean(activeMapId))
-		.map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId));
+	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$.pipe(
+		ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA),
+		map(({ payload }) => payload),
+		filter(({ activeMapId }) => Boolean(activeMapId)),
+		map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId))
+	);
 
-	/**
-	 * @type Effect
-	 * @name onMapsData1MapsListChanged$
-	 * @ofType SetMapsDataActionStore
-	 * @filter There is a mapsList
-	 * @action MapsListChangedAction
-	 */
 	@Effect()
-	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$
-		.ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA)
-		.map(({ payload }) => payload)
-		.filter(({ mapsList }) => Boolean(mapsList))
-		.map(({ mapsList }) => new MapsListChangedAction(mapsList));
+	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$.pipe(
+		ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA),
+		map(({ payload }) => payload),
+		filter(({ mapsList }) => Boolean(mapsList)),
+		map(({ mapsList }) => new MapsListChangedAction(mapsList))
+	);
 
-	/**
-	 * @type Effect
-	 * @name pinLocationModeTriggerAction$
-	 * @ofType PinLocationModeTriggerAction
-	 */
 	@Effect({ dispatch: false })
-	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$
-		.ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE)
-		.map(({ payload }) => payload);
+	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(
+		ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE),
+		map(({ payload }) => payload)
+	);
 
-	/**
-	 * @type Effect
-	 * @name newInstanceInitPosition$
-	 * @ofType ImageryCreatedAction
-	 * @dispatch: false
-	 */
 	@Effect()
-	newInstanceInitPosition$: Observable<any> = this.actions$
-		.ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED)
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(mapsList, payload.id).data.position)
-		.switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+	newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
+		ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(mapsList, payload.id).data.position),
+		switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const communicator = this.communicatorsService.provide(payload.id);
-			return communicator.setPosition(activeMap.data.position).map(() => [{ payload }, mapState]);
-		})
-		.mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+			return communicator.setPosition(activeMap.data.position).pipe(map(() => [{ payload }, mapState]));
+		}),
+		mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
 			const updatedMapsList = [...mapState.mapsList];
@@ -322,24 +254,20 @@ export class MapEffects {
 				actions.push(new DecreasePendingMapsCountAction());
 			}
 			return actions;
-		});
-
-	/**
-	 * @type Effect
-	 * @name onSynchronizeAppMaps$
-	 * @ofType SynchronizeMapsAction
-	 * @dependencies maps
-	 */
-	@Effect({ dispatch: false })
-	onSynchronizeAppMaps$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.SYNCHRONIZE_MAPS)
-		.switchMap((action: SynchronizeMapsAction) => {
-			const mapId = action.payload.mapId;
-			return this.communicatorsService.provide(mapId).getPosition()
-				.map((position: ICaseMapPosition) => [position, action]);
 		})
-		.withLatestFrom(this.store$.select(mapStateSelector))
-		.switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
+	);
+
+
+	@Effect({ dispatch: false })
+	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
+		switchMap((action: SynchronizeMapsAction) => {
+			const mapId = action.payload.mapId;
+			return this.communicatorsService.provide(mapId).getPosition().pipe(
+				map((position: ICaseMapPosition) => [position, action]));
+		}),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
 			const mapId = action.payload.mapId;
 			if (!mapPosition) {
 				const map: ICaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
@@ -354,18 +282,18 @@ export class MapEffects {
 				}
 			});
 
-			return Observable.forkJoin(setPositionObservables).map(() => [action, mapState]);
-		});
+			return forkJoin(setPositionObservables).pipe(map(() => [action, mapState]));
+		})
+	);
 
 	@Effect()
 	imageryCreated$ = this.communicatorsService
-		.instanceCreated
-		.map((payload) => new ImageryCreatedAction(payload));
+		.instanceCreated.pipe(map((payload) => new ImageryCreatedAction(payload)));
 
 	@Effect()
 	imageryRemoved$ = this.communicatorsService
-		.instanceRemoved
-		.map((payload) => new ImageryRemovedAction(payload));
+		.instanceRemoved.pipe(
+			map((payload) => new ImageryRemovedAction(payload)));
 
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,

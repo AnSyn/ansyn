@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, HostBinding } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
 
 export interface IBooleanFilterCustomData {
@@ -14,8 +14,9 @@ export interface IBooleanFilterCustomData {
 export class BooleanFilterContainerComponent {
 	@Input() metadata: BooleanFilterMetadata;
 	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>();
+
 	@Input()
-	set customData(value: IBooleanFilterCustomData ) {
+	set customData(value: IBooleanFilterCustomData) {
 		if (value) {
 			this.metadata.properties.true.displayName = value.displayTrueName;
 			this.metadata.properties.false.displayName = value.displayFalseName;
@@ -25,11 +26,11 @@ export class BooleanFilterContainerComponent {
 	@HostBinding('hidden')
 	get hidden() {
 		const countAll = this.metadata.properties.true.count + this.metadata.properties.false.count;
-		return  countAll < 1;
+		return countAll < 1;
 	}
 
 	get metadataValues() {
-		return Object.values(this.metadata.properties)
+		return Object.values(this.metadata.properties);
 	}
 
 	onInputClicked(key: string, value: boolean) {

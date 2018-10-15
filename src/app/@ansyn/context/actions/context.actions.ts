@@ -1,5 +1,5 @@
-import { IContext } from '@ansyn/core/models/context.model';
-import { IContextParams } from '@ansyn/context/reducers/context.reducer';
+import { IContext } from '@ansyn/core';
+import { IContextParams } from '../reducers/context.reducer';
 
 export enum ContextActionTypes {
 	ADD_ALL_CONTEXT = '[Context] Add All Contexts',
@@ -8,12 +8,14 @@ export enum ContextActionTypes {
 
 export class AddAllContextsAction {
 	readonly type = ContextActionTypes.ADD_ALL_CONTEXT;
+
 	constructor(public payload: IContext[]) {
 	}
 }
 
 export class SetContextParamsAction {
 	readonly type = ContextActionTypes.SET_CONTEXT_PARAMS;
+
 	constructor(public payload: Partial<IContextParams>) {
 	}
 }

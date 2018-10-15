@@ -2,11 +2,10 @@ import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angul
 import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
-import { IToolsConfig, toolsConfig } from '../../models/tools-config';
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs';
-import { ImageManualProcessArgs } from '@ansyn/core/models/case.model';
-import { IImageProcParam } from '@ansyn/menu-items/tools/models/tools-config';
+import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
+import { Observable, Subscription } from 'rxjs';
+import { ImageManualProcessArgs } from '@ansyn/core';
+import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -18,11 +17,12 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	private subscriptions: Subscription[] = [];
 
-	public manualImageProcessingParams$: Observable<Object> = this.store$.select(toolsStateSelector)
-		.map((tools: IToolsState) => tools.manualImageProcessingParams)
-		.distinctUntilChanged()
-		.filter(Boolean)
-		.do((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs);
+	public manualImageProcessingParams$: Observable<Object> = this.store$.select(toolsStateSelector).pipe(
+		map((tools: IToolsState) => tools.manualImageProcessingParams),
+		distinctUntilChanged(),
+		filter(Boolean),
+		tap((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs)
+	);
 
 	get params(): Array<IImageProcParam> {
 		return this.config.ImageProcParams;

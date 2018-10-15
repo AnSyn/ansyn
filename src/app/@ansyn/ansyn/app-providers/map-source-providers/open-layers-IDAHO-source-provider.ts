@@ -1,22 +1,11 @@
 import XYZ from 'ol/source/xyz';
-import ImageLayer from 'ol/layer/image';
-import proj from 'ol/proj';
-import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { ICaseMapState, IOverlay } from '@ansyn/core';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
+import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import {
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
 import { Inject } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
+import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers-config';
+import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
@@ -31,28 +20,6 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected config: IMapSourceProvidersConfig) {
 		super(cacheService, imageryCommunicatorService, config);
-	}
-
-	create(metaData: ICaseMapState): any[] {
-		const source = new XYZ({
-			url: metaData.data.overlay.imageUrl,
-			crossOrigin: 'Anonymous',
-			projection: 'EPSG:3857'
-		});
-
-		let [x, y, x1, y1] = extentFromGeojson(metaData.data.overlay.footprint);
-		[x, y] = proj.transform([x, y], 'EPSG:4326', 'EPSG:3857');
-		[x1, y1] = proj.transform([x1, y1], 'EPSG:4326', 'EPSG:3857');
-
-		const result = new ImageLayer({
-			source: new ProjectableRaster({
-				sources: [source],
-				operation: (pixels) => pixels[0],
-				operationType: 'image'
-			}),
-			extent: [x, y, x1, y1]
-		});
-		return [result];
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {

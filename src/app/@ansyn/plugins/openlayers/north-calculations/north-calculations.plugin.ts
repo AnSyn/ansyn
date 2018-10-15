@@ -1,29 +1,37 @@
-import { toDegrees } from '@ansyn/core/utils/math';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/forkJoin';
+import {
+	areCoordinatesNumeric,
+	BackToWorldSuccess,
+	BackToWorldView,
+	CaseOrientation,
+	CoreActionTypes,
+	IOverlay,
+	LoggerService,
+	toDegrees
+} from '@ansyn/core';
+import { forkJoin, Observable, Observer, of, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
-import { Actions } from '@ngrx/effects';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays/actions/overlays.actions';
-import { Store } from '@ngrx/store';
-import 'rxjs/add/operator/retry';
-import { Observer } from 'rxjs/Observer';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CaseOrientation } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { BackToWorldSuccess, BackToWorldView, CoreActionTypes } from '@ansyn/core/actions/core.actions';
-import { SetIsVisibleAcion } from '@ansyn/map-facade/actions/map.actions';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
+import { Actions, ofType } from '@ngrx/effects';
+import {
+	ChangeOverlayPreviewRotationAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	selectHoveredOverlay
+} from '@ansyn/overlays';
+import { select, Store } from '@ngrx/store';
+import {
+	BaseImageryMap,
+	BaseImageryPlugin,
+	CommunicatorEntity,
+	ImageryPlugin,
+	ProjectionService
+} from '@ansyn/imagery';
+import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
+import { selectActiveMapId, SetIsVisibleAcion } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { comboBoxesOptions } from '@ansyn/status-bar/models/combo-boxes.model';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
+import { catchError, filter, map, mergeMap, retry, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -43,18 +51,31 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	protected thresholdDegrees = 0.1;
 
 	@AutoSubscription
-	pointNorth$ = this.actions$
-		.ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)
-		.filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id)
-		.withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
+	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
+		withLatestFrom(this.store$.pipe(select(selectActiveMapId))),
+		filter(([overlay, activeMapId]: [IOverlay, string]) => Boolean(overlay) && Boolean(this.communicator) && activeMapId === this.mapId),
+		mergeMap(([{ projection }]: [IOverlay, string]) => {
+			return this.getPreviewNorth(projection)
+				.pipe(
+					catchError(() => of(0))
+				);
+		}),
+		tap((north: number) => this.store$.dispatch(new ChangeOverlayPreviewRotationAction(north)))
+	);
+
+	@AutoSubscription
+	pointNorth$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id),
+		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
 			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
-		})
-		.filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+		}),
+		filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
-		})
-		.switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
-			return this.pointNorth()
-				.do(virtualNorth => {
+		}),
+		switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+			return this.pointNorth().pipe(
+				tap(virtualNorth => {
 					this.communicator.setVirtualNorth(virtualNorth);
 					if (!forceFirstDisplay) {
 						switch (orientation) {
@@ -66,22 +87,24 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 								break;
 						}
 					}
-				});
-		});
+				}));
+		})
+	);
 
 	@AutoSubscription
-	backToWorldSuccessSetNorth$ = this.actions$
-		.ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS)
-		.filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id)
-		.withLatestFrom(this.store$.select(statusBarStateSelector))
-		.do(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+	backToWorldSuccessSetNorth$ = this.actions$.pipe(
+		ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS),
+		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
+		withLatestFrom(this.store$.select(statusBarStateSelector)),
+		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
 			this.communicator.setVirtualNorth(0);
 			switch (comboBoxesProperties.orientation) {
 				case 'Align North':
 				case 'Imagery Perspective':
 					this.communicator.setRotation(0);
 			}
-		});
+		})
+	);
 
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
@@ -90,9 +113,20 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		super();
 	}
 
+	getPreviewNorth(projection: string) {
+		return this.getProjectedCenters(projection).pipe(
+			map((projectedCenters: Point[]): number => {
+				const projectedCenterView = projectedCenters[0].coordinates;
+				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
+				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
+				return northOffsetRad * -1;
+			})
+		);
+	}
+
 	getCorrectedNorth(): Observable<INorthData> {
-		return this.getProjectedCenters()
-			.map((projectedCenters: Point[]): INorthData => {
+		return this.getProjectedCenters().pipe(
+			map((projectedCenters: Point[]): INorthData => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
@@ -100,27 +134,31 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				const view = (<BaseImageryMap>this.iMap).mapObject.getView();
 				const actualNorth = northOffsetRad + view.getRotation();
 				return { northOffsetRad, northOffsetDeg, actualNorth };
-			})
-			.mergeMap((northData: INorthData) => {
+			}),
+			mergeMap((northData: INorthData) => {
 				this.iMap.mapObject.getView().setRotation(northData.actualNorth);
 				this.iMap.mapObject.renderSync();
 				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-					return Observable.throw({ result: northData.actualNorth });
+					return throwError({ result: northData.actualNorth });
 				}
-				return Observable.of(northData.actualNorth);
-			})
-			.retry(this.maxNumberOfRetries)
-			.catch((e) => e.result ? Observable.of(e.result) : Observable.throw(e));
+				return of(northData.actualNorth);
+			}),
+			retry(this.maxNumberOfRetries),
+			catchError((e) => e.result ? of(e.result) : throwError(e))
+		);
 	}
 
-	projectPoints(coordinates: ol.Coordinate[]): Observable<Point[]> {
-		return Observable.forkJoin(coordinates.map((coordinate) => {
+	projectPoints(coordinates: ol.Coordinate[], projection?: string): Observable<Point[] | any> {
+		return forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
+			if (projection) {
+				return this.projectionService.projectApproximatelyFromProjection(point, projection);
+			}
 			return this.projectionService.projectAccurately(point, this.iMap);
 		}));
 	}
 
-	getProjectedCenters(): Observable<Point[]> {
+	getProjectedCenters(projection?: string): Observable<Point[]> {
 		return Observable.create((observer: Observer<any>) => {
 			const mapObject = this.iMap.mapObject;
 			const size = mapObject.getSize();
@@ -134,24 +172,25 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-			.switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers));
+			.pipe(switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, projection)));
 	}
 
 	pointNorth(): Observable<any> {
 		this.communicator.updateSize();
 		const currentRotation = this.iMap.mapObject.getView().getRotation();
-		return Observable.of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false })))
-			.mergeMap(() => this.getCorrectedNorth())
-			.do(() => {
+		return of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false }))).pipe(
+			mergeMap(() => this.getCorrectedNorth()),
+			tap(() => {
 				this.iMap.mapObject.getView().setRotation(currentRotation);
 				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
-			})
-			.catch(reason => {
+			}),
+			catchError(reason => {
 				const error = `setCorrectedNorth failed: ${reason}`;
 				this.loggerService.warn(error);
 				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
-				return Observable.throw(error);
-			});
+				return throwError(error);
+			})
+		);
 	}
 
 }

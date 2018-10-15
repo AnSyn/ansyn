@@ -116,7 +116,11 @@
     "schema": "layers"
   },
   "overlaysConfig": {
-    "limit": 249,
+    "limit": 249
+  },
+  "mapFacadeConfig": {
+    "overlayCoverage": 0.1,
+    "displayDebounceTime": 400,
     "sourceTypeNotices": {
 		"PLANET": {
 			"Default": "Open California Satellite Imagery © 2016 Planet Labs Inc. licensed under CC BY-SA 4.0.",
@@ -126,11 +130,7 @@
 		"OPEN_AERIAL": {
 			"Default": "© Copyright 2010, OpenAerialMap contributors"
 		}
-    }
-  },
-  "mapFacadeConfig": {
-    "overlayCoverage": 0.1,
-    "displayDebounceTime": 400,
+	},
     "sensorTypeShortcuts": {
       "Panchromatic": "P",
       "8-band (Coastal, Blue, Green, Yellow, Red, Red-edge, NIR1, NIR2) Multispectral": "8B",
@@ -191,6 +191,11 @@
       {
         "modelName": "bestResolution",
         "displayName": "Resolution",
+        "type": "Slider"
+      },
+      {
+        "modelName": "cloudCoverage",
+        "displayName": "Cloud Coverage",
         "type": "Slider"
       }
     ]
@@ -285,69 +290,75 @@
         ]
       },
       "PLANET": {
+        "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
+        "treeViewItem": {
         "text": "Planet",
         "value": 1,
-        "collapsed":true,
-        "children": [
-          {
-            "text":"REScene",
-            "value": {
-              "sensorType": "REScene"
-            }
-          },
-          {
-            "text": "PSScene3Band",
-            "value": {
-              "sensorType": "PSScene3Band"
-            }
-          },
-		  {
-            "text": "PSOrthoTile",
-            "value": {
-              "sensorType": "PSOrthoTile"
-            }
-          },
-		  {
-            "text": "REOrthoTile",
-            "value": {
-              "sensorType": "REOrthoTile"
-            }
-          },
-		  {
-            "text": "SkySatScene",
-            "value": {
-              "sensorType": "SkySatScene"
-            }
-          },
-		  {
-            "text": "Landsat8L1G",
-            "value": {
-              "sensorType": "Landsat8L1G"
-            }
-          },
-		  {
-            "text": "Sentinel2L1C",
-            "value": {
-              "sensorType": "Sentinel2L1C"
-            }
+            "collapsed": true,
+            "children": [
+              {
+                "text": "REScene",
+                "value": {
+                  "sensorType": "REScene"
+                }
+              },
+              {
+                "text": "PSScene3Band",
+                "value": {
+                  "sensorType": "PSScene3Band"
+                }
+              },
+              {
+                "text": "PSOrthoTile",
+                "value": {
+                  "sensorType": "PSOrthoTile"
+                }
+              },
+              {
+                "text": "REOrthoTile",
+                "value": {
+                  "sensorType": "REOrthoTile"
+                }
+              },
+              {
+                "text": "SkySatScene",
+                "value": {
+                  "sensorType": "SkySatScene"
+                }
+              },
+              {
+                "text": "Landsat8L1G",
+                "value": {
+                  "sensorType": "Landsat8L1G"
+                }
+              },
+              {
+                "text": "Sentinel2L1C",
+                "value": {
+                  "sensorType": "Sentinel2L1C"
+                }
+              }
+            ]
           }
-        ]
-      },
-      "OPEN_AERIAL": {
-        "text":"OpenAerial",
-        "value": 1,
-        "collapsed": true,
-        "children": [
-          {
-            "text": "UAV",
-            "value": {
-              "sensorType": "UAV"
-            }
+        },
+        "OPEN_AERIAL": {
+          "inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
+          "treeViewItem": {
+            "text": "OpenAerial",
+            "value": 1,
+            "indeterminate": true,
+            "collapsed": true,
+            "children": [
+              {
+                "text": "UAV",
+                "value": {
+                  "sensorType": "UAV"
+                }
+              }
+            ]
           }
-        ]
+        }
       }
-    }
-
   },
   "coreConfig": {
 	"welcomeNotification": {
@@ -361,12 +372,8 @@
     	"default": {
 		 	"Sentinel-2A": "Sentinel 2A"
 	   	}
-    }
-  },
-  "loginConfig": {
-    "baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
-    "active":  "{{ getv "/ansyn/login/active" "" }}",
-    "authorizedPath": "/"
+    },
+    "needToUseLayerExtent": false
   },
   "menuConfig": {
     "path": "assets/logo.svg",
@@ -379,6 +386,11 @@
     	"title": "Fork me on github",
 		"href": "https://github.com/ansyn/ansyn"
     }
+  },
+  "loginConfig": {
+  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
+  	"active":  "{{ getv "/ansyn/login/active" "" }}",
+  	"authorizedPath": "/"
   },
   "visualizersConfig": {
     "FrameVisualizer": {
@@ -432,8 +444,50 @@
       }
     }
   },
-  "multipleOverlaysSource": {
+  "multipleOverlaysSourceConfig": {
+	 "defaultProvider": {
+		"whitelist": [
+		  {
+			"name": "Entire Earth",
+			"dates": [
+			  {
+				"start": null,
+				"end": null
+			  }
+			],
+			"sensorNames": "[null]",
+			"coverage": [
+			  [
+				[
+				  [
+					-180,
+					-90
+				  ],
+				  [
+					-180,
+					90
+				  ],
+				  [
+					180,
+					90
+				  ],
+				  [
+					180,
+					-90
+				  ],
+				  [
+					-180,
+					-90
+				  ]
+				]
+			  ]
+			]
+		  }
+		],
+	  "blacklist": []
+	},
     "IDAHO": {
+	  "inActive": {{ getv "/ansyn/overlay/idaho/inactive" "true" }},
       "whitelist": [
         {
           "name": "Entire Earth",
@@ -474,60 +528,8 @@
       ],
       "blacklist": []
     },
-    "IDAHO2": {
-      "whitelist": [
-        {
-          "name": "Entire Earth",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "[]",
-          "coverage": [
-            [
-              [
-                [
-                  -74.06810760498047,
-                  40.8028950718582
-                ],
-                [
-                  -74.09557342529297,
-                  40.75453936473234
-                ],
-                [
-                  -74.07463073730469,
-                  40.74543623770158
-                ],
-                [
-                  -74.11308288574219,
-                  40.70536767492135
-                ],
-                [
-                  -74.06330108642578,
-                  40.66918118282895
-                ],
-                [
-                  -74.01283264160156,
-                  40.73347023268492
-                ],
-                [
-                  -74.01111602783203,
-                  40.77768170250654
-                ],
-                [
-                  -74.06810760498047,
-                  40.8028950718582
-                ]
-              ]
-            ]
-          ]
-        }
-      ],
-      "blacklist": []
-    },
     "PLANET": {
+	  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
       "whitelist": [
         {
           "name": "USA",
@@ -929,103 +931,10 @@
           ]
         }
       ],
-      "blacklist": [
-        {
-          "name": "San Francisco",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "[ null ]",
-          "coverage": [
-            [
-              [
-                [
-                  -122.4281,
-                  37.7068
-                ],
-                [
-                  -122.5048,
-                  37.7068
-                ],
-                [
-                  -122.5158,
-                  37.7835
-                ],
-                [
-                  -122.4062,
-                  37.8108
-                ],
-                [
-                  -122.3569,
-                  37.7287
-                ],
-                [
-                  -122.3898,
-                  37.7068
-                ],
-                [
-                  -122.4281,
-                  37.7068
-                ]
-              ]
-            ]
-          ]
-        }
-      ]
-    },
-    "NOT-GEO-REGISTERED-PLANET": {
-      "whitelist": [
-        {
-          "name": "San Francisco",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" "[ null ]" }}",
-          "coverage": [
-            [
-              [
-                [
-                  -122.4281,
-                  37.7068
-                ],
-                [
-                  -122.5048,
-                  37.7068
-                ],
-                [
-                  -122.5158,
-                  37.7835
-                ],
-                [
-                  -122.4062,
-                  37.8108
-                ],
-                [
-                  -122.3569,
-                  37.7287
-                ],
-                [
-                  -122.3898,
-                  37.7068
-                ],
-                [
-                  -122.4281,
-                  37.7068
-                ]
-              ]
-            ]
-          ]
-        }
-      ],
       "blacklist": []
     },
     "OPEN_AERIAL": {
+    	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
 		"whitelist": [
 			{
 				"name": "Entire Earth",
@@ -1131,7 +1040,8 @@
       "Sentinel2L1C"
     ],
     "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
-    "tilesUrl": "https://tiles.planet.com/data/v1/"
+    "tilesUrl": "https://tiles.planet.com/data/v1/",
+    "delayMultiple": 300
   },
   "auth0Config": {
       "auth0Active": "{{ getv "/ansyn/auth0/auth0Active" "false" }}",
@@ -1142,4 +1052,5 @@
       "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
       "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
   }
+  "ORIENTATIONS": "[\"Align North\",\"User Perspective\",\"Imagery Perspective\"]"
 }

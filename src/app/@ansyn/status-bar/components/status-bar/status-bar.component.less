@@ -9,6 +9,7 @@
 	height: @status-bar-height;
 	box-shadow: 0 -10px 20px 0 rgba(0, 0, 0, 0.3);
 	display: flex;
+	justify-content: space-between;
 	transform: translate(0, -100%);
 
 	.ansyn-tree-view {
@@ -21,11 +22,11 @@
 	}
 
 	.status-bar {
-		flex: 1;
+		flex-grow: 1;
+		flex-shrink: 1;
 		height: 100%;
 		color: white;
 		display: flex;
-		margin-left: auto;
 		justify-content: space-between;
 		border-left: 2px solid transparent;
 
@@ -67,7 +68,6 @@
 			.selected-case, .status {
 				display: inherit;
 			}
-			flex: inherit;
 			border-color: white;
 			justify-content: space-around;
 			/deep/ .selectedCase {
@@ -100,7 +100,6 @@
 }
 
 .screens(@screens-list);
-
 
 @media screen and (max-width: 1600px) {
 	:host {

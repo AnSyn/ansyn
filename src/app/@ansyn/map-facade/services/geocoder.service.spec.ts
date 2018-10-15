@@ -2,13 +2,11 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { GeocoderService } from './geocoder.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
+import { asyncData, ErrorHandlerService } from '@ansyn/core';
 import { HttpClient } from '@angular/common/http';
-import { asyncData } from '@ansyn/core/test/async-observable-helpers';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
+import { Observable, of } from 'rxjs';
+import { mapFacadeConfig } from '../models/map-facade.config';
+import { IMapFacadeConfig } from '../models/map-config.model';
 
 describe('GeocoderService', () => {
 	let me;
@@ -67,7 +65,7 @@ describe('GeocoderService', () => {
 			result$ = me.getLocation$('hehe');
 			expect(httpClient.get).toHaveBeenCalledWith('find/hehe/key/myKey');
 			result$.subscribe(res => {
-				endResult = res
+				endResult = res;
 			});
 			tick();
 			expect(endResult).toEqual({ type: 'Point', coordinates: [4, 3] });
@@ -83,7 +81,7 @@ describe('GeocoderService', () => {
 			}));
 			result$ = me.getLocation$('hehe');
 			result$.subscribe(res => {
-				endResult = res
+				endResult = res;
 			});
 			tick();
 			expect(endResult).toBeFalsy();
@@ -93,7 +91,7 @@ describe('GeocoderService', () => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');
 			result$.subscribe(res => {
-				endResult = res
+				endResult = res;
 			});
 			tick();
 			expect(endResult).toBeFalsy();

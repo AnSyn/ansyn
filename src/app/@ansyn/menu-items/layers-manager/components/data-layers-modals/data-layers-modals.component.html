@@ -2,20 +2,20 @@
 
 	<ansyn-modal [show]="modal.type !== SelectedModalEnum.none" (showChange)="closeModal()" [ngSwitch]="modal.type">
 
-			<ansyn-download-layers
-				*ngSwitchCase="SelectedModalEnum.download"
-				[layer]="modal.layer">
-			</ansyn-download-layers>
+		<ansyn-download-layers
+			*ngSwitchCase="SelectedModalEnum.download"
+			[layer]="modal.layer">
+		</ansyn-download-layers>
 
-			<ansyn-edit-layer
-				*ngSwitchCase=SelectedModalEnum.edit
-				[layer]="modal.layer">
-			</ansyn-edit-layer>
+		<ansyn-edit-layer
+			*ngSwitchCase=SelectedModalEnum.edit
+			[layer]="modal.layer">
+		</ansyn-edit-layer>
 
-			<ansyn-delete-layer
-				*ngSwitchCase=SelectedModalEnum.remove
-				[layer]="modal.layer">
-			</ansyn-delete-layer>
+		<ansyn-delete-layer
+			*ngSwitchCase=SelectedModalEnum.remove
+			[layer]="modal.layer">
+		</ansyn-delete-layer>
 
 	</ansyn-modal>
 

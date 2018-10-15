@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../../dist/ansyn/plugins",
+  "whitelistedNonPeerDependencies": [
+    "@ansyn/core",
+    "@ngrx/core",
+    "@ngrx/store",
+    "@ngrx/effects",
+    "@turf/turf",
+    "lodash",
+    "ol",
+    "@ansyn/status-bar",
+    "@ansyn/overlays",
+    "@ansyn/menu-items",
+    "@ansyn/map-facade",
+    "@ansyn/imagery",
+    "@ansyn/context",
+    "angular2-uuid",
+    "auto-subscriptions"
+  ],
+  "lib": {
+    "entryFile": "./public_api.ts",
+    "styleIncludePaths": [
+      "../"
+    ]
+  }
+}

@@ -1,8 +1,9 @@
 import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { mapStateSelector, IMapState } from '../../reducers/map.reducer';
+import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged, pluck, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-imagery-loader',
@@ -20,13 +21,14 @@ export class ImageryLoaderComponent implements OnInit, OnDestroy {
 	}
 
 	get loaderText(): string {
-		return this.isLoadingMaps.get(this.mapId)
+		return this.isLoadingMaps.get(this.mapId);
 	}
 
-	isLoadingMaps$: Observable<Map<string, string>> = this.store$.select(mapStateSelector)
-		.pluck<IMapState, Map<string, string>>('isLoadingMaps')
-		.distinctUntilChanged()
-		.do((isLoadingMaps) => this.isLoadingMaps = isLoadingMaps);
+	isLoadingMaps$: Observable<Map<string, string>> = this.store$.select(mapStateSelector).pipe(
+		pluck<IMapState, Map<string, string>>('isLoadingMaps'),
+		distinctUntilChanged(),
+		tap((isLoadingMaps) => this.isLoadingMaps = isLoadingMaps)
+	);
 
 	constructor(public store$: Store<IMapState>) {
 	}

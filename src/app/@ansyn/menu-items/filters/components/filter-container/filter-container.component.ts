@@ -5,13 +5,12 @@ import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import 'rxjs/add/operator/distinctUntilChanged';
-import { IFiltersConfig } from '@ansyn/menu-items/filters/models/filters-config';
-import { filtersConfig } from '@ansyn/menu-items/filters/services/filters.service';
-import { FilterType } from '@ansyn/core/models/case.model';
-import { EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { FilterType } from '@ansyn/core';
 import { clone } from 'lodash';
-import { SliderFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/slider-filter-metadata';
+import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
+import { filtersConfig } from '../../services/filters.service';
+import { IFiltersConfig } from '../../models/filters-config';
+import { filter, map, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -53,22 +52,25 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	@ViewChild('fields') fields: ElementRef;
 
 
-	metadataFromState$: Observable<any> = this.store.select(selectFilters)
-		.map((filters: Filters) => filters.get(this.filter))
-		.do((metadata: FilterMetadata) => this.metadataFromState = metadata);
+	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
+		map((filters: Filters) => filters.get(this.filter)),
+		tap((metadata: FilterMetadata) => this.metadataFromState = metadata)
+	);
 
-	isGotSmallListFromProvider$ = this.metadataFromState$
-		.filter((metadata) => this.filter.type === FilterType.Enum && Boolean(metadata))
-		.do((metadata) => {
+	isGotSmallListFromProvider$ = this.metadataFromState$.pipe(
+		filter((metadata) => this.filter.type === FilterType.Enum && Boolean(metadata)),
+		tap((metadata) => {
 			this.isGotSmallListFromProvider = (<EnumFilterMetadata>metadata).enumsFields.size <= this.config.shortFilterListLength;
-		});
+		})
+	);
 
 
-	showOnlyFavorites$: Observable<any> = this.store.select(selectShowOnlyFavorites)
-		.do((showOnlyFavorites) => {
+	showOnlyFavorites$: Observable<any> = this.store.select(selectShowOnlyFavorites).pipe(
+		tap((showOnlyFavorites) => {
 			this.showOnlyFavorite = showOnlyFavorites;
 			this.isLongFiltersList = false;
-		});
+		})
+	);
 
 	constructor(protected store: Store<IFiltersState>, @Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
@@ -90,7 +92,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	}
 
 	onMetadataChange(metadata: any): void {
-		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata ) } ));
+		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata) }));
 	}
 
 	showAll(): void {

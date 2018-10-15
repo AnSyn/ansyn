@@ -3,28 +3,21 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
 import { inside } from '@turf/turf';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { fromEvent, Observable, pipe } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade/actions/map.actions';
-import { overlaysStateSelector } from '@ansyn/overlays/reducers/overlays.reducer';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
-import { DisplayOverlayFromStoreAction } from '@ansyn/overlays/actions/overlays.actions';
-import { tap, filter, withLatestFrom, map } from 'rxjs/operators';
-import { selectActiveMapId } from '@ansyn/map-facade/reducers/map.reducer';
-import { cold, hot } from 'jasmine-marbles';
+import { BaseImageryPlugin, ImageryPlugin, ProjectionService } from '@ansyn/imagery';
+import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
+import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
+import { DisplayOverlayFromStoreAction, overlaysStateSelector } from '@ansyn/overlays';
+import { areCoordinatesNumeric, IOverlay } from '@ansyn/core';
+import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })
 export class ContextMenuPlugin extends BaseImageryPlugin {
-	isActiveOperators = pipe(
+	isActiveOperators: UnaryFunction<any, any> = pipe(
 		withLatestFrom(this.store$.select(selectActiveMapId).pipe(map((activeMapId: string) => activeMapId === this.mapId))),
 		filter(([prevData, isActive]: [any, boolean]) => isActive),
 		map(([prevData]: [any, boolean]) => prevData)
@@ -36,7 +29,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY),
 			map(({ payload }) => payload),
 			this.isActiveOperators,
-			map(id => new DisplayOverlayFromStoreAction({ id })),
+			map((id: string) => new DisplayOverlayFromStoreAction({ id })),
 			tap((action) => this.store$.dispatch(action))
 		);
 
@@ -50,7 +43,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		return <HTMLElement> this.iMap.mapObject.getViewport();
 	}
 
-	constructor(protected store$: Store<IAppState>, protected actions$: Actions, protected projectionService: ProjectionService) {
+	constructor(protected store$: Store<any>, protected actions$: Actions, protected projectionService: ProjectionService) {
 		super();
 	}
 
@@ -64,22 +57,21 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			console.warn('no coordinate for pixel');
 			return;
 		}
-		this.positionToPoint(coordinate)
-			.withLatestFrom(this.store$.select(overlaysStateSelector))
-			.do(([point, overlaysState]) => {
+		this.positionToPoint(coordinate).pipe(
+			withLatestFrom(this.store$.select(overlaysStateSelector)),
+			tap(([point, overlaysState]) => {
 				const overlays = overlaysState.filteredOverlays
 					.map((id: string): IOverlay => overlaysState.overlays.get(id))
 					.filter(({ footprint }) => inside(point, footprint));
 
 				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));
-			})
+			}))
 			.subscribe();
 	}
 
 	positionToPoint(coordinates: ol.Coordinate): Observable<any> {
 		const point = <GeoPoint> turf.geometry('Point', coordinates);
 		return this.projectionService
-			.projectAccurately(point, this.iMap)
-			.take(1);
+			.projectAccurately(point, this.iMap).pipe(take(1));
 	}
 }

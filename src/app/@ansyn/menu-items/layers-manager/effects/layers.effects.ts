@@ -7,12 +7,6 @@ import {
 	LayersActionTypes,
 	UpdateLayer
 } from '../actions/layers.actions';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/from';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -21,29 +15,19 @@ import { mergeMap } from 'rxjs/operators';
 import { catchError, filter, map, withLatestFrom } from 'rxjs/internal/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
-import { selectAutoSave } from '@ansyn/core/reducers/core.reducer';
-import { rxPreventCrash } from '@ansyn/core/utils/rxjs-operators/rxPreventCrash';
+import { rxPreventCrash, selectAutoSave } from '@ansyn/core';
 
 
 @Injectable()
 export class LayersEffects {
-	/**
-	 * @type Effect
-	 * @name beginLayerTreeLoad$
-	 * @ofType BeginLayerCollectionLoadAction
-	 * @dependencies layers
-	 * @action LayerCollectionLoadedAction?, ErrorLoadingLayersAction?
-	 */
+
 	@Effect()
 	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
 		.pipe(
 			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
 			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
 			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers)),
-			catchError((exception) => {
-				this.store$.dispatch(new LayerCollectionLoadedAction([]));
-				return EMPTY;
-			})
+			catchError(() => of(new LayerCollectionLoadedAction([])))
 		);
 
 	@Effect()
@@ -57,7 +41,7 @@ export class LayersEffects {
 	);
 
 	@Effect({ dispatch: false })
-	addLayer$ = this.actions$.pipe(
+	addLayer$: Observable<any> = this.actions$.pipe(
 		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
@@ -66,7 +50,7 @@ export class LayersEffects {
 	);
 
 	@Effect({ dispatch: false })
-	updateLayer$ = this.actions$.pipe(
+	updateLayer$: Observable<any> = this.actions$.pipe(
 		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
@@ -82,7 +66,7 @@ export class LayersEffects {
 		ofType<UpdateLayer>(LayersActionTypes.REMOVE_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.removeLayer(action.payload)
+		mergeMap(([action]: [any, boolean]) => this.dataLayersService.removeLayer(action.payload)
 			.pipe(
 				catchError(() => EMPTY)
 			)

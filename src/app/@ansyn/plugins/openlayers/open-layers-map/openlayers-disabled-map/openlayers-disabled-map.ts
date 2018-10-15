@@ -3,10 +3,9 @@ import * as ol from 'openlayers';
 import Map from 'ol/map';
 import View from 'ol/view';
 import Layer from 'ol/layer/layer';
-import { ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
 import * as olShared from '../shared/openlayers-shared';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
@@ -24,7 +23,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 			controls: []
 		});
 		this.setMainLayer(mainLayer, position);
-		return Observable.of(true);
+		return of(true);
 	}
 
 	addLayerIfNotExist(layer: any) {
@@ -42,13 +41,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	setCenter(center: Point, animation: boolean): Observable<boolean> {
-		return Observable.of(true);
+		return of(true);
 	}
 
 
 	resetView(layer: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
-		return Observable.of(true);
+		return of(true);
 	}
 
 	setMainLayer(layer: Layer, position?: ICaseMapPosition) {
@@ -61,6 +60,10 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		if (layerExtent) {
 			this.fitToMainLayerExtent(layerExtent);
 		}
+	}
+
+	getMainLayer() {
+		return this.mainLayer;
 	}
 
 	generateNewView(layer: Layer, position?: ICaseMapPosition): View {
@@ -89,7 +92,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	addLayer(layer: Layer): void {
-		throw new Error('Can\'t find implementation')
+		throw new Error('Can\'t find implementation');
 	}
 
 	removeMainLayer() {
@@ -106,11 +109,11 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	setPosition(position: ICaseMapPosition): Observable<boolean> {
-		return Observable.of(true);
+		return of(true);
 	}
 
 	getPosition(): Observable<ICaseMapPosition> {
-		return Observable.of(undefined);
+		return of(undefined);
 	}
 
 	setRotation(rotation: number): void {

@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { GeocoderService } from '@ansyn/map-facade/services/geocoder.service';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { GeocoderService } from '../../services/geocoder.service';
 import { Point } from 'geojson';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -33,24 +33,24 @@ export class MapSearchBoxComponent implements OnDestroy {
 	}
 
 	onSubmit() {
-		if (! this._communicator) {
+		if (!this._communicator) {
 			this._communicator = this.imageryCommunicatorService.provide(this.mapId);
 		}
 		if (!this._communicator || !this.searchString) {
 			return;
 		}
 		this._subscriptions.push(
-			this.geocoderService.getLocation$(this.searchString)
-				.do((point: Point) => {
+			this.geocoderService.getLocation$(this.searchString).pipe(
+				tap((point: Point) => {
 						if (point) {
-							this._subscriptions.push(this._communicator.setCenter(point, false).take(1).subscribe())
+							this._subscriptions.push(this._communicator.setCenter(point, false).pipe(take(1)).subscribe());
 						} else {
 							this.error = true;
 						}
 					}
-				)
-				.take(1).subscribe())
-		;
+				),
+				take(1)
+		).subscribe());
 	}
 
 	ngOnDestroy(): void {

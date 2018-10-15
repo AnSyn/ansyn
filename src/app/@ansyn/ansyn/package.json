@@ -1,18 +1,31 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "0.2.81",
-	"license": "MIT",
+	"version": "0.2.82.3",
 	"peerDependencies": {
-		"@ansyn/context": "0.2.81",
-		"@ansyn/core": "0.2.81",
-		"@ansyn/imagery": "0.2.81",
-		"@ansyn/login": "0.2.81",
-		"@ansyn/map-facade": "0.2.81",
-		"@ansyn/menu": "0.2.81",
-		"@ansyn/menu-items": "0.2.81",
-		"@ansyn/overlays": "0.2.81",
-		"@ansyn/plugins": "0.2.81",
-		"@ansyn/router": "0.2.81",
-		"@ansyn/status-bar": "0.2.81"
-	}
+		"rxjs-compat": "^6.2.1",
+		"@angular/common": "^6.0.3",
+		"@angular/core": "^6.0.3",
+		"@ansyn/assets": "0.2.82.3"
+	},
+	"dependencies": {
+		"@ansyn/context": "0.2.82.3",
+		"@ansyn/core": "0.2.82.3",
+		"@ansyn/imagery": "0.2.82.3",
+		"@ansyn/map-facade": "0.2.82.3",
+		"@ansyn/menu": "0.2.82.3",
+		"@ansyn/menu-items": "0.2.82.3",
+		"@ansyn/overlays": "0.2.82.3",
+		"@ansyn/plugins": "0.2.82.3",
+		"@ansyn/status-bar": "0.2.82.3",
+		"@ngrx/core": "^1.2.0",
+		"@ngrx/store": "^6.0.1",
+		"@ngrx/effects": "^6.0.1",
+		"@turf/turf": "5.1.6",
+		"geojson": "^0.5.0",
+		"lodash": "4.17.5",
+		"moment": "^2.21.0",
+		"ol": "4.6.3",
+		"wellknown": "0.5.0"
+	},
+	"license": "MIT"
 }

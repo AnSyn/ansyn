@@ -1,6 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { IFilter } from '../IFilter';
-import { FilterType } from '@ansyn/core/models/case.model';
+import { FilterType, mapValuesToArray } from '@ansyn/core';
 
 export interface IEnumFiled {
 	count: number;
@@ -10,14 +10,8 @@ export interface IEnumFiled {
 }
 
 export class EnumFilterMetadata implements FilterMetadata {
-
-	enumsFields: Map<string, IEnumFiled>;
-	type: FilterType;
-
-	constructor() {
-		this.enumsFields = new Map<string, IEnumFiled>();
-		this.type = FilterType.Enum;
-	}
+	enumsFields: Map<string, IEnumFiled> = new Map<string, IEnumFiled>();
+	type: FilterType = FilterType.Enum;
 
 	updateMetadata(key: string): void {
 		if (this.enumsFields.get(key)) {
@@ -116,12 +110,15 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	isFiltered(): boolean {
-		return Array.from(this.enumsFields.values()).some((value: IEnumFiled) => !value.isChecked);
+		return mapValuesToArray(this.enumsFields).some((value: IEnumFiled) => !value.isChecked);
 	}
 
 	showAll(): void {
 		this.enumsFields.forEach((value: IEnumFiled) => {
 			value.isChecked = true;
 		});
+	}
+	shouldBeHidden(): boolean {
+		return false;
 	}
 }

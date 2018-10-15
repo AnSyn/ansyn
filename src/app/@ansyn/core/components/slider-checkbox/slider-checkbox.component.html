@@ -1,5 +1,6 @@
 <label class="switch">
 	<span class="slider-text"><ng-content></ng-content>&nbsp;</span>
-	<input class="auto-save" [checked]="checked" (change)="checkedChange.emit($event)" [disabled]="disabled" type="checkbox"/>
+	<input class="auto-save" [checked]="checked" (change)="checkedChange.emit($event)" [disabled]="disabled"
+		   type="checkbox"/>
 	<span class="slider round"></span>
 </label>

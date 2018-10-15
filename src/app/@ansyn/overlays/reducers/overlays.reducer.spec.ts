@@ -2,14 +2,14 @@ import { IOverlaysState, OverlayReducer, overlaysInitialState } from './overlays
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	SelectOverlayAction,
+	SelectOverlayAction, SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetSpecialObjectsActionStore,
 	SetTimelineStateAction,
 	UnSelectOverlayAction
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
-import { IOverlaySpecialObject } from '@ansyn/core/models/overlay.model';
+import { IOverlaySpecialObject } from '@ansyn/core';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
@@ -102,7 +102,8 @@ describe('Overlay Reducer', () => {
 
 
 	it('Set Filters actions, should filter only overlays from "overlays" Map', () => {
-		const filteredOverlays = ['1', '2', '3', '4', '5', '6']; /*  -> '5' and '6' does not exist on "overlays" */
+		const filteredOverlays = ['1', '2', '3', '4', '5', '6'];
+		/*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
 		const overlays: any = new Map([
 			['1', { id: '1' }],
@@ -110,7 +111,7 @@ describe('Overlay Reducer', () => {
 			['3', { id: '1' }],
 			['4', { id: '1' }]
 		]);
-		const state = OverlayReducer({...overlaysInitialState, overlays }, setFilteredOverlaysAction);
+		const state = OverlayReducer({ ...overlaysInitialState, overlays }, setFilteredOverlaysAction);
 		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});
 
@@ -128,10 +129,17 @@ describe('Overlay Reducer', () => {
 		const data1 = {
 			start: new Date(Date.now() - (1000 * 60 * 60 * 24 * 30)),
 			end: new Date(Date.now())
-		}
+		};
 		const action = new SetTimelineStateAction({ timeLineRange: data1 });
 		const result = OverlayReducer(overlaysInitialState, action);
 		expect(result.timeLineRange.start.getTime()).toBe(data1.start.getTime());
 		expect(result.timeLineRange.end.getTime()).toBe(data1.end.getTime());
 	});
+
+	it('set drops action', () => {
+		const newDrops = [{id: '23'}];
+		const action = new SetDropsAction(newDrops);
+		const result = OverlayReducer(overlaysInitialState, action);
+		expect(result.drops).toEqual(newDrops);
+	})
 });

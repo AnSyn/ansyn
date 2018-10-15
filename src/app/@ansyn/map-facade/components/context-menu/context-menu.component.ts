@@ -9,17 +9,14 @@ import {
 	MapActionTypes
 } from '../../actions/map.actions';
 import { uniq as _uniq } from 'lodash';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { CaseGeoFilter, ICaseMapState, IOverlay, selectRegion } from '@ansyn/core';
 import { MapFacadeService } from '../../services/map-facade.service';
-import { CaseGeoFilter, ICaseMapState } from '@ansyn/core/models/case.model';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { Point } from 'geojson';
-import { Actions } from '@ngrx/effects';
-import { selectRegion } from '@ansyn/core/reducers/core.reducer';
+import { Actions, ofType } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
+import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 
 
 export interface IOverlayButton {
@@ -40,15 +37,17 @@ export class ContextMenuComponent implements OnInit {
 		return this.config.contextMenu.filterField;
 	}
 
-	displayedOverlay$: Observable<IOverlay> = this.mapState$
-		.map(MapFacadeService.activeMap)
-		.filter(Boolean)
-		.map((activeMap: ICaseMapState) => activeMap.data.overlay)
-		.distinctUntilChanged();
+	displayedOverlay$: Observable<IOverlay> = this.mapState$.pipe(
+		map(MapFacadeService.activeMap),
+		filter(Boolean),
+		map((activeMap: ICaseMapState) => activeMap.data.overlay),
+		distinctUntilChanged()
+	);
 
-	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectRegion)
-		.filter(Boolean)
-		.do((region) => this.geoFilter = region.type);
+	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectRegion).pipe(
+		filter(Boolean),
+		tap((region) => this.geoFilter = region.type)
+	);
 
 	geoFilter;
 
@@ -153,13 +152,12 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-
-		this.actions$
-			.ofType(MapActionTypes.CONTEXT_MENU.SHOW)
-			.do(this.show.bind(this))
-			.withLatestFrom(this.displayedOverlay$)
-			.do(this.setFilteredOverlays.bind(this))
-			.subscribe();
+		this.actions$.pipe(
+			ofType(MapActionTypes.CONTEXT_MENU.SHOW),
+			tap(this.show.bind(this)),
+			withLatestFrom(this.displayedOverlay$),
+			tap(this.setFilteredOverlays.bind(this))
+		).subscribe();
 		this.geoFilter$.subscribe();
 	}
 

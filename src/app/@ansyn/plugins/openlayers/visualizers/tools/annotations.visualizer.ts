@@ -2,69 +2,61 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import Draw from 'ol/interaction/draw';
 import Select from 'ol/interaction/select';
 import Sphere from 'ol/sphere';
-import OlCircle from 'ol/geom/circle';
-import OlLineString from 'ol/geom/linestring';
-import OlMultiLineString from 'ol/geom/multilinestring';
-import OlPolygon from 'ol/geom/polygon';
-import OlFeature from 'ol/feature';
-import OlStyle from 'ol/style/style';
-import OlFill from 'ol/style/fill';
-import OlText from 'ol/style/text';
-import OlStroke from 'ol/style/stroke';
-import Stroke from 'ol/style/stroke';
-
+import olCircle from 'ol/geom/circle';
+import olLineString from 'ol/geom/linestring';
+import olMultiLineString from 'ol/geom/multilinestring';
+import olPolygon from 'ol/geom/polygon';
+import olFeature from 'ol/feature';
+import olStyle from 'ol/style/style';
+import olFill from 'ol/style/fill';
+import olText from 'ol/style/text';
+import olStroke from 'ol/style/stroke';
 
 import condition from 'ol/events/condition';
-import { VisualizerInteractions } from '@ansyn/imagery/model/base-imagery-visualizer';
+import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import { cloneDeep, uniq } from 'lodash';
 import * as ol from 'openlayers';
 import {
 	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData
-} from '@ansyn/core/models/visualizers/annotations.model';
+	IAnnotationsSelectionEventData,
+	ICaseMapState,
+	IOverlay,
+	IVisualizerEntity,
+	IVisualizerStyle,
+	MarkerSize,
+	VisualizerStates
+} from '@ansyn/core';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
-import { AnnotationSelectAction } from '@ansyn/map-facade/actions/map.actions';
+import { AnnotationSelectAction, MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import {
+	ILayer,
+	IToolsConfig,
+	LayerType,
+	selectActiveAnnotationLayer,
 	selectAnnotationMode,
 	selectAnnotationProperties,
-	selectSubMenu,
-	SubMenuEnum
-} from '@ansyn/menu-items/tools/reducers/tools.reducer';
-import { combineLatest, Observable } from 'rxjs';
-import {
-	selectActiveAnnotationLayer,
 	selectLayersEntities,
-	selectSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import 'rxjs/add/operator/take';
-import { SetAnnotationMode } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade/reducers/map.reducer';
-import 'rxjs/add/observable/combineLatest';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { IVisualizerEntity } from '@ansyn/core/models/visualizers/visualizers-entity';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { ImageryVisualizer } from '@ansyn/imagery/decorators/imagery-visualizer';
-import { IToolsConfig, toolsConfig } from '@ansyn/menu-items/tools/models/tools-config';
+	selectSelectedLayersIds,
+	selectSubMenu,
+	SetAnnotationMode,
+	SubMenuEnum,
+	toolsConfig,
+	UpdateLayer
+} from '@ansyn/menu-items';
+import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { MapFacadeService } from '@ansyn/map-facade/services/map-facade.service';
-import { filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { filter, map, mergeMap, take, tap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/geojson';
-import { IVisualizerStyle, MarkerSize } from '@ansyn/core/models/visualizers/visualizer-style';
 import { AutoSubscription } from 'auto-subscriptions';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
-import { UpdateLayer } from '@ansyn/menu-items/layers-manager/actions/layers.actions';
 import { UUID } from 'angular2-uuid';
-import { Dictionary } from '@ngrx/entity/src/models';
-import { selectGeoFilterSearchMode } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '@ansyn/status-bar';
 import { featureCollection } from '@turf/turf';
-import { VisualizerStates } from '@ansyn/core/models/visualizers/visualizer-state';
+import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
+// @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, ProjectionService, toolsConfig],
@@ -78,10 +70,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
-		fill: new OlFill({
+		fill: new olFill({
 			color: '#fff'
 		}),
-		stroke: new OlStroke({
+		stroke: new olStroke({
 			color: '#000',
 			width: 3
 		}),
@@ -102,13 +94,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		map((map: ICaseMapState) => map.data.overlay)
 	);
 
-	annotationFlag$ = this.store$.select(selectSubMenu)
-		.map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations)
-		.distinctUntilChanged();
+	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
+		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
+		distinctUntilChanged());
 
-	isActiveMap$ = this.store$.select(selectActiveMapId)
-		.map((activeMapId: string): boolean => activeMapId === this.mapId)
-		.distinctUntilChanged();
+	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
+		map((activeMapId: string): boolean => activeMapId === this.mapId),
+		distinctUntilChanged()
+	);
 
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 
@@ -206,7 +199,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
-	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [Dictionary<ILayer>, boolean, string[], boolean, string]): Observable<any> {
+	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {
 		const displayedIds = uniq(
 			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
 		)
@@ -231,7 +224,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					font: '27px Calibri,sans-serif',
 					stroke: '#000',
 					fill: 'white',
-					text: (feature: OlFeature) => {
+					text: (feature: olFeature) => {
 						const properties = feature.getProperties();
 						const { showLabel, label } = properties;
 						return showLabel ? label : '';
@@ -389,8 +382,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any> geometry.clone();
 
-		if (cloneGeometry instanceof OlCircle) {
-			cloneGeometry = <any> OlPolygon.fromCircle(<any>cloneGeometry);
+		if (cloneGeometry instanceof olCircle) {
+			cloneGeometry = <any> olPolygon.fromCircle(<any>cloneGeometry);
 		}
 
 		feature.setGeometry(cloneGeometry);
@@ -420,7 +413,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };
-					this.store$.dispatch(new UpdateLayer({ ...activeAnnotationLayer, data }));
+					this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 				})
 			).subscribe();
 
@@ -460,7 +453,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const [x2, y2] = this.iMap.mapObject.getPixelFromCoordinate(bottomRight);
 		const topRight = this.iMap.mapObject.getCoordinateFromPixel([x2, y1]);
 		const bottomLeft = this.iMap.mapObject.getCoordinateFromPixel([x1, y2]);
-		const geometry = opt_geometry || new OlPolygon(null);
+		const geometry = opt_geometry || new olPolygon(null);
 		const boundingBox = [topLeft, topRight, bottomRight, bottomLeft, topLeft];
 		geometry.setCoordinates([boundingBox]);
 		return geometry;
@@ -477,13 +470,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			const rotation = Math.atan2(dy, dx);
 			const lineLength = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 			const factor = lineLength * 0.1;
-			const lineStr1 = new OlLineString([end, [end[0] - factor, end[1] + factor]]);
-			const lineStr2 = new OlLineString([end, [end[0] - factor, end[1] - factor]]);
+			const lineStr1 = new olLineString([end, [end[0] - factor, end[1] + factor]]);
+			const lineStr2 = new olLineString([end, [end[0] - factor, end[1] - factor]]);
 			lineStr1.rotate(rotation, end);
 			lineStr2.rotate(rotation, end);
 			geometry.setCoordinates([coordinates, lineStr1.getCoordinates(), lineStr2.getCoordinates()]);
 		} else {
-			geometry = new OlMultiLineString([coordinates]);
+			geometry = new olMultiLineString([coordinates]);
 		}
 		return geometry;
 	}
@@ -493,8 +486,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.removeDrawInteraction();
 	}
 
-	featureStyle(feature: OlFeature, state: string = VisualizerStates.INITIAL) {
-		const style: OlStyle = super.featureStyle(feature, state);
+	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
+		const style: olStyle = super.featureStyle(feature, state);
 		const entity = this.getEntity(feature);
 		if (entity && entity.showMeasures) {
 			return [style, ...this.getMeasuresAsStyles(feature)];
@@ -503,55 +496,57 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	getMeasuresAsStyles(feature: OlFeature): OlStyle[] {
+	getMeasuresAsStyles(feature: olFeature): olStyle[] {
 		const { mode } = feature.getProperties();
 		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
-		const moreStyles: OlStyle[] = [];
+		const moreStyles: olStyle[] = [];
 		let coordinates: any[] = [];
 		switch (mode) {
-			case 'LineString':
-				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates();
+			case 'LineString': {
+				coordinates = (<olLineString>feature.getGeometry()).getCoordinates();
 				for (let i = 0; i < coordinates.length - 1; i++) {
-					const line: OlLineString = new OlLineString([coordinates[i], coordinates[i + 1]]);
-					moreStyles.push(new OlStyle({
+					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					moreStyles.push(new olStyle({
 						geometry: line,
-						text: new OlText({
+						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(Sphere.getLength(line, { projection }))
 						})
 					}));
 				}
+			}
 				break;
 			case 'Polygon':
 			case 'Arrow':
-				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates()[0];
+				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < coordinates.length - 1; i++) {
-					const line: OlLineString = new OlLineString([coordinates[i], coordinates[i + 1]]);
-					moreStyles.push(new OlStyle({
+					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					moreStyles.push(new olStyle({
 						geometry: line,
-						text: new OlText({
+						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(Sphere.getLength(line, { projection }))
 						})
 					}));
 				}
 				break;
-			case 'Rectangle':
-				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates()[0];
+			case 'Rectangle': {
+				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < 2; i++) {
-					const line: OlLineString = new OlLineString([coordinates[i], coordinates[i + 1]]);
-					moreStyles.push(new OlStyle({
+					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					moreStyles.push(new olStyle({
 						geometry: line,
-						text: new OlText({
+						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line, projection)
+							text: this.formatLength(Sphere.getLength(line, { projection }))
 						})
 					}));
 				}
+			}
 				break;
 			case 'Circle':
-				coordinates = (<OlLineString>feature.getGeometry()).getCoordinates()[0];
+				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				const leftright = coordinates.reduce((prevResult, currCoord) => {
 					if (currCoord[0] > prevResult.right[0]) {
 						return { left: prevResult.left, right: currCoord };
@@ -561,40 +556,64 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						return prevResult;
 					}
 				}, { left: [Infinity, 0], right: [-Infinity, 0] });
-				const line: OlLineString = new OlLineString([leftright.left, leftright.right]);
-				moreStyles.push(new OlStyle({
-					geometry: line,
-					stroke: new OlStroke({
-						color: '#27b2cfe6',
-						width: 1
-					}),
-					text: new OlText({
-						...this.measuresTextStyle,
-						text: this.formatLength(line, projection)
-					})
-				}));
+				const line: olLineString = new olLineString([leftright.left, leftright.right]);
+				moreStyles.push(
+					new olStyle({
+						geometry: line,
+						stroke: new olStroke({
+							color: '#27b2cfe6',
+							width: 1
+						}),
+						text: new olText({
+							...this.measuresTextStyle,
+							text: this.formatLength(Sphere.getLength(line, { projection }))
+						})
+					}));
 				break;
 		}
+		moreStyles.push(...this.areaCircumferenceStyles(feature, projection));
 		return moreStyles;
 	}
 
-	/**
-	 * Format length output.
-	 * @param line The line.
-	 * @param projection The Projection.
-	 */
-	formatLength(line, projection): string {
-		const length = Sphere.getLength(line, { projection: projection });
+	formatArea(calcArea: number): string {
+		return Math.round(calcArea * 100) / 100 + ' Km²';
+	};
+
+	formatLength(calcLength): string {
 		let output;
-		if (length >= 1000) {
-			output = (Math.round(length / 1000 * 100) / 100) +
-				' ' + 'km';
+		if (calcLength >= 1000) {
+			output = (Math.round(calcLength / 1000 * 100) / 100) + ' Km';
 		} else {
-			output = (Math.round(length * 100) / 100) +
-				' ' + 'm';
+			output = (Math.round(calcLength * 100) / 100) + ' m';
 		}
 		return output;
 	};
+
+	areaCircumferenceStyles(feature: any, projection: any): olStyle[] {
+
+		const calcCircumference = Sphere.getLength(feature.getGeometry(), { projection });
+		const calcArea = Sphere.getArea(feature.getGeometry(), { projection });
+		const { height } = this.getFeatureBoundingRect(feature);
+		if (!calcArea || !calcCircumference) {
+			return [];
+		}
+		return [
+			new olStyle({
+				text: new olText({
+					...this.measuresTextStyle,
+					text: `Circumference: ${this.formatLength(calcCircumference)}`,
+					offsetY: -height / 2 - 44
+				})
+			}),
+			new olStyle({
+				text: new olText({
+					...this.measuresTextStyle,
+					text: `Area: ${this.formatArea(calcArea / 1000000)}`,
+					offsetY: -height / 2 - 25
+				})
+			})
+		];
+	}
 
 }
 

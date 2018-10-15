@@ -2,27 +2,20 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
-import { SelectCaseAppEffects } from '@ansyn/ansyn/app-effects/effects/cases/select-case.app.effects';
 
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
+	SelectCaseAction,
+	UpdateFacetsAction,
+	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import {
-	SetAutoSave,
-	SetFavoriteOverlaysAction,
-	SetLayoutAction, SetMapsDataActionStore,
-	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction
-} from '@ansyn/core/actions/core.actions';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { HttpClientModule } from '@angular/common/http';
+} from '@ansyn/menu-items';
 import {
 	CaseOrientation,
 	CaseRegionState,
 	CaseTimeFilter,
+	CoreConfig,
 	ICase,
 	ICaseDataInputFiltersState,
 	ICaseFacetsState,
@@ -31,14 +24,21 @@ import {
 	ICaseState,
 	ICaseTimeState,
 	IContextEntity,
-	IOverlaysManualProcessArgs
-} from '@ansyn/core/models/case.model';
-import { SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
-import { CoreConfig } from '@ansyn/core/models/core.config';
+	IOverlay,
+	IOverlaysManualProcessArgs,
+	SetAutoSave,
+	SetFavoriteOverlaysAction,
+	SetLayoutAction,
+	SetMapsDataActionStore,
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction
+} from '@ansyn/core';
+import { HttpClientModule } from '@angular/common/http';
+import { SetComboBoxesProperties } from '@ansyn/status-bar';
+import { SetContextParamsAction } from '@ansyn/context';
+import { SelectCaseAppEffects } from './select-case.app.effects';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;

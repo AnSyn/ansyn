@@ -9,9 +9,9 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
-import { ClearActiveInteractionsAction } from '@ansyn/core/actions/core.actions';
-import { selectActiveAnnotationLayer } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { map } from 'rxjs/internal/operators';
+import { ClearActiveInteractionsAction } from '@ansyn/core';
+import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
+import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -22,23 +22,25 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	isImageControlActive = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
-	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector)
-		.map((tools: IToolsState) => tools.flags)
-		.distinctUntilChanged();
-
-	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector)
-		.pluck<IToolsState, Map<toolsFlags, boolean>>('flags')
-		.distinctUntilChanged()
-		.map((flags) => flags.get(toolsFlags.imageProcessingDisabled))
-		.distinctUntilChanged()
-		.filter(Boolean)
-		.do(this.closeManualProcessingMenu.bind(this));
-
-	isActiveAnnotationLayer$ = this.store.select(selectActiveAnnotationLayer).pipe(
-		map(Boolean),
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector).pipe(
+		map((tools: IToolsState) => tools.flags),
+		distinctUntilChanged()
 	);
 
-	subMenu$ = this.store.select(selectSubMenu).do((subMenu) => this.subMenu = subMenu);
+	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector).pipe(
+		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
+		distinctUntilChanged(),
+		map((flags) => flags.get(toolsFlags.imageProcessingDisabled)),
+		distinctUntilChanged(),
+		filter(Boolean),
+		tap(this.closeManualProcessingMenu.bind(this))
+	);
+
+	isActiveAnnotationLayer$ = this.store.select(selectActiveAnnotationLayer).pipe(
+		map(Boolean)
+	);
+
+	subMenu$ = this.store.select(selectSubMenu).pipe(tap((subMenu) => this.subMenu = subMenu));
 	subMenu: SubMenuEnum;
 
 	subscribers = [];

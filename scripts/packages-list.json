@@ -1,4 +1,13 @@
 [
-	"core",
-  "imagery"
+  "ansyn",
+  "assets",
+  "context",
+  "core",
+  "imagery",
+  "map-facade",
+  "menu",
+  "menu-items",
+  "overlays",
+  "plugins",
+  "status-bar"
 ]

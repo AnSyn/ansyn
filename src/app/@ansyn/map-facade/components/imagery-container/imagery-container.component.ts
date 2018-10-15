@@ -1,13 +1,12 @@
 import { Component, Inject, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActiveImageryMouseEnter, ActiveImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
+import { AnnotationInteraction, ICaseMapState, IOverlay } from '@ansyn/core';
+import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
-import { IMapFacadeConfig } from '@ansyn/map-facade/models/map-config.model';
-import { mapFacadeConfig } from '@ansyn/map-facade/models/map-facade.config';
-import { AnnotationInteraction } from '@ansyn/core/models/visualizers/annotations.model';
+import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFacadeConfig } from '../../models/map-facade.config';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -20,8 +19,9 @@ export class ImageryContainerComponent {
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
 
-	isHidden$: Observable<boolean> = this.store.select(mapStateSelector)
-		.map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id));
+	isHidden$: Observable<boolean> = this.store.select(mapStateSelector).pipe(
+		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))
+	);
 
 	get overlay(): IOverlay {
 		return this.mapState.data.overlay;
@@ -33,7 +33,8 @@ export class ImageryContainerComponent {
 
 	constructor(protected store: Store<any>,
 				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig
-	) {}
+	) {
+	}
 
 	toggleMapSynchronization() {
 		this.store.dispatch(new SynchronizeMapsAction({ mapId: this.mapState.id }));

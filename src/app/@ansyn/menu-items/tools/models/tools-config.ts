@@ -1,9 +1,9 @@
 import { InjectionToken } from '@angular/core';
-import { ICoordinatesSystem } from '@ansyn/core/models/coordinate-system.model';
+import { ICoordinatesSystem } from '@ansyn/core';
 
 export interface IToolsConfig {
 	Annotations: {
-		displayId: "0" | "1";
+		displayId: '0' | '1';
 	},
 	GoTo: {
 		from: ICoordinatesSystem;
@@ -23,7 +23,7 @@ export interface IImageProcParam {
 	max: number
 }
 
-export const toolsConfig: InjectionToken<IToolsConfig> = new InjectionToken('toolsConfig');
+export const toolsConfig = 'toolsConfig';
 
 
 

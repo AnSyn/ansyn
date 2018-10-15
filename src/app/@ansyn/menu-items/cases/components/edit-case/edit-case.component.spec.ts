@@ -3,15 +3,14 @@ import { EditCaseComponent } from './edit-case.component';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
 import { CasesModule } from '../../cases.module';
-import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { casesConfig, CasesService } from '../../services/cases.service';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
+import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -46,14 +45,14 @@ describe('EditCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));
 
 	beforeEach(inject([Store, CasesService], (_store: Store<ICasesState>, _casesService: CasesService) => {
 		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
+		spyOn(_store, 'select').and.callFake(() => of(fakeICasesState));
 
 		fixture = TestBed.createComponent(EditCaseComponent);
 		component = fixture.componentInstance;
@@ -76,7 +75,10 @@ describe('EditCaseComponent', () => {
 			component.editMode = true;
 			spyOn(component, 'close');
 			component.onSubmitCase(0);
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({updatedCase: component.caseModel, forceUpdate: true}));
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({
+				updatedCase: component.caseModel,
+				forceUpdate: true
+			}));
 			expect(component.close).toHaveBeenCalled();
 		});
 
@@ -85,7 +87,7 @@ describe('EditCaseComponent', () => {
 			spyOn(component, 'close');
 			spyOn(casesService.queryParamsHelper, 'updateCaseViaContext').and.returnValue(component.caseModel);
 			component.contextsList = ['fakeContext' as any];
-			spyOn(casesService, 'createCase').and.callFake((value) => Observable.of(value));
+			spyOn(casesService, 'createCase').and.callFake((value) => of(value));
 			component.onSubmitCase(0);
 			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith('fakeContext', component.caseModel);
 			expect(store.dispatch).toHaveBeenCalledWith(new AddCaseAction(component.caseModel));

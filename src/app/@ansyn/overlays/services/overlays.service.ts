@@ -1,39 +1,16 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IOverlay } from '../models/overlay.model';
-import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
-import { IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, mapValuesToArray } from '@ansyn/core';
+import { IOverlayDropSources, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import { union } from 'lodash';
-import { IFilterModel } from '@ansyn/core/models/IFilterModel';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { unionBy } from 'lodash';
 
-export const OverlaysConfig: InjectionToken<IOverlaysConfig> = new InjectionToken('overlays-config');
+export const OverlaysConfig = 'overlaysConfig';
 
+// @dynamic
 @Injectable()
 export class OverlaysService {
-
-	static buildFilteredOverlays(overlays: IOverlay[], parsedFilters: IFilterModel[], favorites: IOverlay[], showOnlyFavorite: boolean, removedOverlaysIds: string[], removedOverlaysVisibility: boolean): string[] {
-		let parsedOverlays: IOverlay[] = favorites;
-		if (!showOnlyFavorite) {
-			const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
-			parsedOverlays = [...parsedOverlays, ...filteredOverlays];
-		}
-
-		if (removedOverlaysVisibility) {
-			parsedOverlays = parsedOverlays.filter((overlay) => !removedOverlaysIds.some((overlayId) => overlay.id === overlayId));
-		}
-		parsedOverlays.sort(sortByDateDesc);
-		return union(parsedOverlays.map(({ id }) => id));
-	}
-
-	static isFullOverlay(overlay: IOverlay): boolean {
-		return Boolean(overlay && overlay.date);
-	}
-
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
 	 * @param items
@@ -55,10 +32,13 @@ export class OverlaysService {
 			});
 	}
 
-
-	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): OverlayDrop[] {
-		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
-		return [...overlaysData, ...Array.from(specialObjects.values())];
+	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): OverlayDrop[] {
+		const criterialOverlays: IOverlay[] = showOnlyFavorites ? [] :
+			overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
+		const allOverlays: IOverlay[] = unionBy( criterialOverlays, favoriteOverlays, ({id}) => id);
+		const dropsFromOverlays: OverlayDrop[] = allOverlays.map(({id, date}) => ({id, date}));
+		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)];
+		return allDrops;
 	}
 
 	get fetchLimit() {

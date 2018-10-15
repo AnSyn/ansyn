@@ -1,8 +1,4 @@
 import { Component } from '@angular/core';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/throttleTime';
-import 'rxjs/add/operator/skip';
-import 'rxjs/add/operator/pluck';
 import { Store } from '@ngrx/store';
 import { IOverlaysState, selectLoading } from '../../reducers/overlays.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';

@@ -3,7 +3,7 @@ import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
 import { IBaseImageryMapConstructor } from './base-imagery-map';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
+import { ICaseMapState } from '@ansyn/core';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
@@ -41,7 +41,15 @@ export abstract class BaseMapSourceProvider {
 		return Promise.resolve(layer);
 	}
 
+	existsInCache(metaData: ICaseMapState): boolean {
+		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
+		return cacheLayers.length > 0;
+	}
+
 	getThumbnailUrl(overlay, position): Observable<string> {
 		return of(overlay.thumbnailUrl);
+	}
+
+	removeExtraData(layer: any) {
 	}
 }

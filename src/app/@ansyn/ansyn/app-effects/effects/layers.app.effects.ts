@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/withLatestFrom';
-import { CasesActionTypes, SaveCaseAsSuccessAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { mergeMap } from 'rxjs/internal/operators';
-import { Store } from '@ngrx/store';
 import {
 	BeginLayerCollectionLoadAction,
+	CasesActionTypes,
+	ILayer,
+	LayerType,
+	SaveCaseAsSuccessAction,
+	selectLayers,
 	UpdateLayer,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { selectLayers } from '@ansyn/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer, LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+} from '@ansyn/menu-items';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { map, mergeMap, withLatestFrom } from 'rxjs/internal/operators';
+import { Store } from '@ngrx/store';
 import { Feature } from 'geojson';
-import {
-	AnnotationRemoveFeature,
-	AnnotationUpdateFeature,
-	MapActionTypes
-} from '@ansyn/map-facade/actions/map.actions';
+import { AnnotationRemoveFeature, AnnotationUpdateFeature, MapActionTypes } from '@ansyn/map-facade';
 import { Observable } from 'rxjs/index';
 
 
@@ -35,10 +32,10 @@ export class LayersAppEffects {
 		);
 
 	@Effect()
-	removeAnnotationFeature$: Observable<any> = this.actions$
-		.ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE)
-		.withLatestFrom(this.store$.select(selectLayers))
-		.map(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
+	removeAnnotationFeature$: Observable<any> = this.actions$.pipe(
+		ofType<AnnotationRemoveFeature>(MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE),
+		withLatestFrom(this.store$.select(selectLayers)),
+		map(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
@@ -49,13 +46,14 @@ export class LayersAppEffects {
 					features: layer.data.features.filter(({ properties }) => properties.id !== action.payload)
 				}
 			});
-		});
+		})
+	);
 
 	@Effect()
-	updateAnnotationFeature$: Observable<any> = this.actions$
-		.ofType<AnnotationUpdateFeature>(MapActionTypes.TRIGGER.ANNOTATION_UPDATE_FEATURE)
-		.withLatestFrom(this.store$.select(selectLayers))
-		.map(([action, layers]: [AnnotationUpdateFeature, ILayer[]]) => {
+	updateAnnotationFeature$: Observable<any> = this.actions$.pipe(
+		ofType<AnnotationUpdateFeature>(MapActionTypes.TRIGGER.ANNOTATION_UPDATE_FEATURE),
+		withLatestFrom(this.store$.select(selectLayers)),
+		map(([action, layers]: [AnnotationUpdateFeature, ILayer[]]) => {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload.featureId));
@@ -68,7 +66,8 @@ export class LayersAppEffects {
 						feature)
 				}
 			});
-		});
+		})
+	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>) {

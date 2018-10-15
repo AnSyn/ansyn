@@ -1,48 +1,46 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import {
-	SetRemovedOverlaysVisibilityAction,
+	CoreConfig,
+	ICase,
+	ICaseMapState,
+	ICoreConfig,
+	IOverlay,
+	isFullOverlay,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
+	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction, SetMapsDataActionStore
-} from '@ansyn/core/actions/core.actions';
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction
+} from '@ansyn/core';
 import {
 	BeginLayerCollectionLoadAction,
+	CasesActionTypes,
+	CasesService,
+	SelectCaseAction,
+	UpdateFacetsAction,
+	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { ICase, ICaseMapState } from '@ansyn/core/models/case.model';
-import { SetComboBoxesProperties } from '@ansyn/status-bar/actions/status-bar.actions';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { IAppState } from '@ansyn/ansyn/app-effects/app.effects.module';
-import { UpdateOverlaysManualProcessArgs } from '@ansyn/menu-items/tools/actions/tools.actions';
-import { UpdateFacetsAction } from '@ansyn/menu-items/filters/actions/filters.actions';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { SetContextParamsAction } from '@ansyn/context/actions/context.actions';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { ICoreConfig } from '@ansyn/core/models/core.config.model';
+} from '@ansyn/menu-items';
+import { SetComboBoxesProperties } from '@ansyn/status-bar';
+import { SetContextParamsAction } from '@ansyn/context';
+import { IAppState } from '../../app.effects.module';
+import { ofType } from '@ngrx/effects';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class SelectCaseAppEffects {
 
-	/**
-	 * @type Effect
-	 * @name selectCase$
-	 * @ofType SelectCaseAction
-	 * @action ChangeLayoutAction, SetComboBoxesProperties, SetOverlaysCriteriaAction, SetMapsDataActionStore, SetFavoriteOverlaysAction, ToggleDisplayAnnotation
-	 */
 	@Effect()
-	selectCase$: Observable<any> = this.actions$
-		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch));
+	selectCase$: Observable<any> = this.actions$.pipe(
+		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE),
+		mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
+	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
@@ -101,6 +99,6 @@ export class SelectCaseAppEffects {
 	}
 
 	parseOverlay(overlay: IOverlay): IOverlay {
-		return OverlaysService.isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
+		return isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
 	}
 }

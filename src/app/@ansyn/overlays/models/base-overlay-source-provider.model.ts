@@ -1,12 +1,17 @@
-import { Observable } from 'rxjs';
-import { intersect, area } from '@turf/turf';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { ILimitedArray, mergeLimitedArrays } from '@ansyn/core/utils/i-limited-array';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
+import { forkJoin, Observable, of } from 'rxjs';
+import { feature, intersect } from '@turf/turf';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
+import {
+	IDataInputFilterValue,
+	ILimitedArray,
+	IOverlay,
+	IOverlaysFetchData,
+	LoggerService,
+	mergeLimitedArrays,
+	sortByDateDesc
+} from '@ansyn/core';
+import { catchError, map } from 'rxjs/operators';
 
 export interface IDateRange {
 	start: Date;
@@ -52,28 +57,22 @@ export function timeIntersection(whiteRange: IDateRange, blackRange: IDateRange)
 	return null;
 }
 
-export const UNKNOWN_NAME = 'Unknown';
-
 @Injectable()
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
-	constructor(protected loggerService: LoggerService) {}
+	protected constructor(protected loggerService: LoggerService) {
+	}
 
-	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
-		const regionFeature: Feature<any> = {
-			type: 'Feature',
-			properties: {},
-			geometry: fetchParams.region
-		};
-
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+		const regionFeature: Feature<any> = feature(<any> fetchParams.region);
 		// They are strings!
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		const fetchObservables = filters
+		return filters
 			.filter(f => { // Make sure they have a common region
 				const intersection = intersect(regionFeature, f.coverage);
 				return intersection && intersection.geometry;
@@ -85,7 +84,7 @@ export abstract class BaseOverlaySourceProvider {
 				let newFetchParams: IFetchParams = <any> {
 					...fetchParams,
 					region: intersect(f.coverage, regionFeature).geometry,
-					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange),
+					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
 				};
 
 				// Add sensor if exists on the filter
@@ -93,29 +92,33 @@ export abstract class BaseOverlaySourceProvider {
 					newFetchParams.sensors = [f.sensor];
 				}
 
-				return this.fetch(newFetchParams).catch(err => {
-						this.loggerService.error(err);
-						return Observable.of({
-							data: null,
-							limited: -1,
-							errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
-						});
+				return this.fetch(newFetchParams).pipe(catchError(err => {
+					this.loggerService.error(err);
+					return of({
+						data: null,
+						limited: -1,
+						errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
 					});
-			});
+				}));
+			})
+	}
 
+	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
+		const fetchObservables = this.buildFetchObservables(fetchParams, filters);
 		if (fetchObservables.length <= 0) {
-			return Observable.of({data: [], limited: 0, errors: []});
+			return of({ data: [], limited: 0, errors: [] });
 		}
 
-		const multipleFetches: Observable<IOverlaysFetchData> = Observable.forkJoin(fetchObservables) // Wait for every fetch to resolve
-			.map((data: Array<IOverlaysFetchData>) => {
+		const multipleFetches: Observable<IOverlaysFetchData> = forkJoin(fetchObservables).pipe( // Wait for every fetch to resolve
+			map((data: Array<IOverlaysFetchData>) => {
 				// All failed
 				if (data.reduce((acc, element) => Array.isArray(element.errors) ? acc + element.errors.length : acc, 0) >= fetchObservables.length) {
 					return { data: null, limited: -1, errors: data[0].errors };
 				}
 
-				return this.mergeOverlaysFetchData(data, fetchParams.limit)
-			});
+				return this.mergeOverlaysFetchData(data, fetchParams.limit);
+			})
+		);
 
 		return multipleFetches;
 	}
@@ -124,16 +127,16 @@ export abstract class BaseOverlaySourceProvider {
 		return {
 			...mergeLimitedArrays(data.filter(item => !this.isFaulty(item)) as Array<ILimitedArray>,
 				limit, {
-				sortFn: sortByDateDesc,
-				uniqueBy: o => o.id
-			}),
+					sortFn: sortByDateDesc,
+					uniqueBy: o => o.id
+				}),
 			errors: errors ? errors : this.mergeErrors(data)
 		};
 	}
 
 	mergeErrors(data: IOverlaysFetchData[]): Error[] {
 		return [].concat.apply([],
-				data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
+			data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
 	}
 
 	isFaulty(data: IOverlaysFetchData): boolean {

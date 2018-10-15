@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
+import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 
 export interface IImageryMapMetaData {
@@ -14,6 +14,7 @@ export interface IBaseImageryMapConstructor extends IImageryMapMetaData {
 	new(...args): BaseImageryMap;
 }
 
+// @dynamic
 export abstract class BaseImageryMap<T = any> {
 	static groupLayers = new Map<string, any>();
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
@@ -36,6 +37,10 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addLayer(layer: any): void;
 
+	getMainLayer() {
+		throw new Error('Method not implemented.');
+	}
+
 	abstract getLayers(): any[];
 
 	abstract removeLayer(layer: any): void;
@@ -55,4 +60,8 @@ export abstract class BaseImageryMap<T = any> {
 	abstract dispose(): void;
 
 	abstract addLayerIfNotExist(layer: any);
+
+	fitToExtent(extent: any): Observable<any> {
+		throw new Error('Method not implemented.');
+	};
 }

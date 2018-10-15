@@ -5,6 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
+	AddCasesAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
@@ -13,23 +14,15 @@ import {
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
-import { Observable } from 'rxjs/Rx';
-import { ICase } from '../models/case.model';
+import { Observable, of, throwError } from 'rxjs';
+import { CoreConfig, ErrorHandlerService, ICase, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { AddCasesAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { StorageService } from '@ansyn/core/services/storage/storage.service';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { OverlaysConfig } from '@ansyn/overlays/services/overlays.service';
-import { IOverlay } from '@ansyn/overlays/models/overlay.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
-import { LayerType } from '@ansyn/menu-items/layers-manager/models/layers.model';
+import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
+import { LayerType } from '../../layers-manager/models/layers.model';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -38,9 +31,6 @@ describe('CasesEffects', () => {
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
-
-	const fakeOverlay = <IOverlay> { id: 'test' };
-
 
 	const caseMock: ICase = {
 		id: 'case1',
@@ -71,7 +61,7 @@ describe('CasesEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer, [overlaysFeatureKey]: OverlayReducer }),
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				RouterTestingModule
 			],
 			providers: [
@@ -82,12 +72,11 @@ describe('CasesEffects', () => {
 				{ provide: layersConfig, useValue: {} },
 				{
 					provide: ErrorHandlerService,
-					useValue: { httpErrorHandle: () => Observable.throw(null) }
+					useValue: { httpErrorHandle: () => throwError(null) }
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
-				{ provide: OverlaysConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]
 		}).compileComponents();
@@ -98,10 +87,10 @@ describe('CasesEffects', () => {
 		let selectLayersState =
 			[
 				{ type: LayerType.annotation }
-			]
+			];
 
 
-		spyOn(store, 'select').and.callFake(() => Observable.of(selectLayersState));
+		spyOn(store, 'select').and.callFake(() => of(selectLayersState));
 	}));
 
 	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
@@ -126,7 +115,7 @@ describe('CasesEffects', () => {
 			...caseMock,
 			id: 'loadedCase2'
 		}, { ...caseMock, id: 'loadedCase1' }];
-		spyOn(casesService, 'loadCases').and.callFake(() => Observable.of(loadedCases));
+		spyOn(casesService, 'loadCases').and.callFake(() => of(loadedCases));
 		actions = hot('--a--', { a: new LoadCasesAction() });
 		const expectedResults = cold('--b--', { b: new AddCasesAction(loadedCases) });
 		expect(casesEffects.loadCases$).toBeObservable(expectedResults);
@@ -134,7 +123,7 @@ describe('CasesEffects', () => {
 
 	it('onAddCase$ should call casesService.createCase with action.payload(new case), and return AddCaseSuccessAction', () => {
 		let newCasePayload: ICase = { ...caseMock, id: 'newCaseId', name: 'newCaseName' };
-		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(newCasePayload));
+		spyOn(casesService, 'createCase').and.callFake(() => of(newCasePayload));
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
 		const expectedResults = cold('--a--', { a: new SelectCaseAction(newCasePayload) });
 		expect(casesEffects.onAddCase$).toBeObservable(expectedResults);
@@ -181,7 +170,7 @@ describe('CasesEffects', () => {
 					activeLayersIds: [
 						'111',
 						'222'
-					],
+					]
 				}
 			}
 		} as ICase;
@@ -201,8 +190,8 @@ describe('CasesEffects', () => {
 			}
 		];
 
-		spyOn(dataLayersService, 'addLayer').and.returnValue(Observable.of(serverResponse));
-		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(selectedCase));
+		spyOn(dataLayersService, 'addLayer').and.returnValue(of(serverResponse));
+		spyOn(casesService, 'createCase').and.callFake(() => of(selectedCase));
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);

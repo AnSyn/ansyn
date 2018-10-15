@@ -1,17 +1,19 @@
 {
 	"name": "@ansyn/status-bar",
-	"version": "0.2.81",
-	"description": "status-bar",
-	"main": "index.ts",
-	"scripts": {
-		"test": "npm test"
-	},
-	"author": "",
-	"license": "MIT",
+	"version": "0.2.82.3",
 	"peerDependencies": {
-		"@angular/core": "^6.0.3",
 		"@angular/common": "^6.0.3",
-		"@ansyn/core": "0.2.81"
+		"@angular/core": "^6.0.3"
 	},
-	"typings": "index.d.ts"
+	"dependencies": {
+		"@ansyn/core": "0.2.82.3",
+		"@ngrx/core": "^1.2.0",
+		"@ngrx/store": "^6.0.1",
+		"@ngrx/effects": "^6.0.1",
+		"lodash": "4.17.5",
+		"@ngx-translate/core": "^10.0.2",
+		"flatpickr": "4.1.2",
+		"ngx-treeview": "^2.0.6"
+	},
+	"license": "MIT"
 }

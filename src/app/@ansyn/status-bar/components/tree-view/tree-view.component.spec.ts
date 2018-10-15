@@ -2,22 +2,15 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 
 import { TreeViewComponent } from './tree-view.component';
 import { TreeviewModule } from 'ngx-treeview';
-import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import {
-	IStatusBarState,
-	StatusBarInitialState,
-	statusBarStateSelector
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
+import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
-import { IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreInitialState, coreStateSelector, IOverlaysCriteria, SliderCheckboxComponent } from '@ansyn/core';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
-import { SliderCheckboxComponent } from '@ansyn/core/components/slider-checkbox/slider-checkbox.component';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -40,13 +33,8 @@ describe('TreeViewComponent', () => {
 					provide: StatusBarConfig,
 					useValue: { toolTips: {}, dataInputFiltersConfig: {} }
 				},
-				provideMockActions(() => actions),
-				{
-					provide: CasesService,
-					useValue: {
-						defaultCase: { id: 'defualtId' }
-					}
-				}]
+				provideMockActions(() => actions)
+			]
 		})
 			.compileComponents();
 	}));
@@ -96,7 +84,7 @@ describe('TreeViewComponent', () => {
 			[coreStateSelector, coreState]
 		]);
 
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(() => {

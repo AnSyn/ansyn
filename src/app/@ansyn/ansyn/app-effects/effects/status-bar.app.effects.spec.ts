@@ -1,40 +1,40 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ExpandAction, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
-import { statusBarFeatureKey, StatusBarReducer } from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { ICase } from '@ansyn/menu-items/cases/models/case.model';
-import { AddCaseAction, SelectCaseAction } from '@ansyn/menu-items/cases/actions/cases.actions';
-import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { Observable } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { OverlaysConfig, OverlaysService } from '@ansyn/overlays/services/overlays.service';
-import { OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays/reducers/overlays.reducer';
-import { HttpClientModule, HttpBackend  } from '@angular/common/http';
+import { ExpandAction, statusBarFeatureKey, StatusBarReducer, UpdateGeoFilterStatus } from '@ansyn/status-bar';
+import { AddCaseAction, casesFeatureKey, CasesReducer, CasesService, SelectCaseAction } from '@ansyn/menu-items';
+import { ICase, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { EMPTY, Observable } from 'rxjs';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams,
+	OverlayReducer,
+	OverlaysConfig,
+	overlaysFeatureKey,
+	OverlaysService
+} from '@ansyn/overlays';
+import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
 
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	};
 }
 

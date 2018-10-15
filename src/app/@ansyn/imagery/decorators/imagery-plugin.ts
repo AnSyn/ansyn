@@ -6,6 +6,6 @@ import { AutoSubscriptions } from 'auto-subscriptions';
 export function ImageryPlugin(metaData: IImageryPluginMetaData) {
 	return function (constructor: IBaseImageryPluginConstructor) {
 		ImageryDecorator<IImageryPluginMetaData, IBaseImageryPluginConstructor>(metaData)(constructor);
-		AutoSubscriptions({ init: 'onInitSubscriptions', destroy: 'onDispose' })(constructor)
-	}
+		AutoSubscriptions({ init: 'onInitSubscriptions', destroy: 'onDispose' })(constructor);
+	};
 }

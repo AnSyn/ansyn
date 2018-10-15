@@ -1,16 +1,16 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { PlaceholderComponent } from '@ansyn/core/components/placeholder/placeholder.component';
-import { UnAuthGuard } from '@ansyn/login/guards/unauth.guard';
-import { AnsynComponent } from '@ansyn/ansyn/ansyn/ansyn.component';
-import { AuthGuard } from '@ansyn/login/guards/auth.guard';
-import { LoginComponent } from '@ansyn/login/login/login.component';
-import { CallbackComponent } from '@ansyn/ansyn/app-providers/imisight/components/callback/callback.component';
+import { PlaceholderComponent } from './components/placeholder/placeholder.component';
+import { UnAuthGuard } from './login/guards/unauth.guard';
+import { AuthGuard } from './login/guards/auth.guard';
+import { LoginComponent } from './login/login/login.component';
+import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
+import { CallbackComponent } from './components/callback/callback.component';
 
 export const routes: Routes = [
 	{
 		path: '',
-		component: AnsynComponent,
+		component: AnsynHostComponent,
 		data: {
 			name: 'case'
 		},

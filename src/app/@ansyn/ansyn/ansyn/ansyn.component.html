@@ -1,7 +1,7 @@
 <div class="app animations" [ngClass]="(isPinnedClass$ | async)">
 	<div class="menu">
 		<ansyn-menu [version]="version"></ansyn-menu>
-		<ansyn-tools class="ansynToolsAlone" ></ansyn-tools>
+		<ansyn-tools class="ansynToolsAlone"></ansyn-tools>
 	</div>
 
 	<div class="layer">
@@ -30,4 +30,6 @@
 
 <ansyn-overlay-overview></ansyn-overlay-overview>
 
-<router-outlet></router-outlet>
+<ng-container *ngIf="!componentMode">
+	<router-outlet></router-outlet>
+</ng-container>

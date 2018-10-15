@@ -21,8 +21,23 @@ function fix(fileName) {
 				packageJson.peerDependencies[name] = mainPackage.dependencies[name];
 			}
 
-			if (name.substr(0, 7) === '@ansyn/') {
+			if (name.substr(0, 7) === '@ansyn/' && packages.includes(name.substr(7))) {
 				packageJson.peerDependencies[name] = packageJson.version;
+			}
+		});
+	}
+	if (packageJson.dependencies) {
+		Object.keys(packageJson.dependencies).forEach(name => {
+			if (name in mainPackage.dependencies) {
+				packageJson.dependencies[name] = mainPackage.devDependencies[name];
+			}
+
+			if (name in mainPackage.dependencies) {
+				packageJson.dependencies[name] = mainPackage.dependencies[name];
+			}
+
+			if (name.substr(0, 7) === '@ansyn/' && packages.includes(name.substr(7))) {
+				packageJson.dependencies[name] = packageJson.version;
 			}
 		});
 	}
@@ -39,6 +54,6 @@ function fix(fileName) {
 }
 
 packages.forEach((pkg) => {
-	const fileName = 'projects/ansyn/' + pkg + '/package.json';
+	const fileName = 'src/app/@ansyn/' + pkg + '/package.json';
 	fix(fileName);
 });

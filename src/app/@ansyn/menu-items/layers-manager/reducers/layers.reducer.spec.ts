@@ -27,19 +27,19 @@ describe('LayersReducer', () => {
 			entities: <any> {
 				'annotations': {
 					id: 'annotations',
-					type: LayerType.annotation,
+					type: LayerType.annotation
 				},
 				'annotations1': {
 					id: 'annotations1',
-					type: LayerType.annotation,
+					type: LayerType.annotation
 				},
 				'staticLayerId': {
 					id: 'staticLayerId',
-					type: LayerType.static,
+					type: LayerType.static
 				},
 				'staticLayerId2': {
 					id: 'staticLayerId2',
-					type: LayerType.static,
+					type: LayerType.static
 				}
 			},
 			ids: ['annotations', 'annotations1', 'staticLayerId', 'staticLayerId2']
@@ -49,7 +49,7 @@ describe('LayersReducer', () => {
 		let result: ILayerState = LayersReducer(layersState, action);
 		['annotations', 'annotations1', 'staticLayerId2'].forEach((id) => {
 			expect(result.selectedLayersIds).toContain(id);
-		})
+		});
 	});
 
 });

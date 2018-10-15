@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { IOverlaysState, overlaysStateSelector } from '../../reducers/overlays.reducer';
+import { IOverlaysState, selectLoading, selectStatusMessage } from '../../reducers/overlays.reducer';
 import { SetOverlaysStatusMessage } from '../../actions/overlays.actions';
 
 const animations: any[] = [
@@ -27,16 +27,15 @@ const animations: any[] = [
 export class OverlayStatusComponent implements OnInit {
 	loading: boolean;
 	statusMessage: string;
-
 	subscribers: any = {};
-	overlaysState$: Observable<IOverlaysState> = this.store$.select(overlaysStateSelector);
-	overlaysStatusMessage$: Observable<any> = this.overlaysState$
-		.pluck <IOverlaysState, string>('statusMessage')
-		.distinctUntilChanged();
 
-	overlaysLoader$: Observable<any> = this.overlaysState$
-		.pluck <IOverlaysState, boolean>('loading')
-		.distinctUntilChanged();
+	overlaysStatusMessage$: Observable<any> = this.store$.pipe(
+		select(selectStatusMessage)
+	);
+
+	overlaysLoader$: Observable<any> = this.store$.pipe(
+		select(selectLoading)
+	);
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}

@@ -1,14 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, ViewChild } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { ICase } from '../../models/case.model';
+import { AnsynInputComponent, cloneDeep, ICase } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
-import { CasesService } from '@ansyn/menu-items/cases/services/cases.service';
+import { CasesService } from '../../services/cases.service';
 import { take } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
-import { cloneDeep } from '@ansyn/core/utils/rxjs-operators/cloneDeep';
-import { AnsynInputComponent } from '@ansyn/core/components/ansyn-input/ansyn-input.component';
 
 const animationsDuring = '0.2s';
 

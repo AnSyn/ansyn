@@ -15,13 +15,13 @@ describe('WelcomeNotificationComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({[coreFeatureKey]: CoreReducer}),
-				EffectsModule.forRoot([]),
+				StoreModule.forRoot({ [coreFeatureKey]: CoreReducer }),
+				EffectsModule.forRoot([])
 			],
 			declarations: [WelcomeNotificationComponent],
 			providers: [{
 				provide: CoreConfig,
-				useValue: <ICoreConfig> {welcomeNotification: {headerText: 'hhh', mainText: 'mmm'}}
+				useValue: <ICoreConfig> { welcomeNotification: { headerText: 'hhh', mainText: 'mmm' } }
 			}]
 		})
 			.compileComponents();
@@ -56,7 +56,9 @@ describe('WelcomeNotificationComponent', () => {
 
 		describe('onBlur()', () => {
 			beforeEach(() => {
-				spyOn(window, 'setTimeout').and.callFake(fn => {fn()});
+				spyOn(window, 'setTimeout').and.callFake(fn => {
+					fn();
+				});
 				spyOn(store, 'dispatch');
 				fixture.debugElement.triggerEventHandler('blur', null);
 				fixture.detectChanges();

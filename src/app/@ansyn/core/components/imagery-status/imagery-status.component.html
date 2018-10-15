@@ -51,7 +51,7 @@
 
 <div class="description">
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
-					   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
+				   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription}}</span>
 		</button>
@@ -68,7 +68,7 @@
 
 			<ng-container
 				*ngIf="alert.component; else textAlert"
-				[ansynAlertComponent]="{ component: alert.component, mapId: mapId }">
+				[ansynAlertComponent]="{ component: alert.component, mapId: mapId, overlay: overlay }">
 			</ng-container>
 
 			<ng-template #textAlert>

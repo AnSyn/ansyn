@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ResetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction } from '../../actions/core.actions';
-import { ICoreState, selectRemovedOverlays, selectRemovedOverlaysVisibility } from '../../reducers/core.reducer';
-import { Store, select } from '@ngrx/store';
+import {
+	ICoreState,
+	selectRemovedOverlaysIdsCount,
+	selectRemovedOverlaysVisibility
+} from '../../reducers/core.reducer';
+import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap, withLatestFrom, filter, map } from 'rxjs/internal/operators';
-import { IOverlay } from '../../models/overlay.model';
-import { selectOverlaysArray, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
-import { ICase } from '../../models/case.model';
-import { combineLatest } from 'rxjs';
+import { tap } from 'rxjs/internal/operators';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-manual-removed-overlays',
@@ -23,16 +24,17 @@ export class ManualRemovedOverlaysComponent implements OnInit, OnDestroy {
 	removedOverlaysCount = 0;
 
 	@AutoSubscription
-	removedOverlaysVisibility$ = this.store.select(selectRemovedOverlaysVisibility).pipe(
+	removedOverlaysVisibility$: Observable<any> = this.store.select(selectRemovedOverlaysVisibility).pipe(
 		tap((visibility) => {
 			this.removedOverlaysVisibility = visibility;
 		})
 	);
 
 	@AutoSubscription
-	removedOverlaysCount$ = combineLatest(this.store.select(selectRemovedOverlays), this.store.select(selectOverlaysMap)).pipe(
-		tap(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
-			this.removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
+	removedOverlaysCount$: Observable<any> = this.store.pipe(
+		select(selectRemovedOverlaysIdsCount),
+		tap((removedOverlaysCount: number) => {
+			this.removedOverlaysCount = removedOverlaysCount;
 		})
 	);
 

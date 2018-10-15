@@ -1,13 +1,13 @@
-import { SetToastMessageAction } from '@ansyn/core/actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import { ProjectableRaster } from '@ansyn/plugins/openlayers/open-layers-map/models/projectable-raster';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
 import TileSource from 'ol/source/tile';
 import { Observable } from 'rxjs';
-import { BaseImageryPlugin } from '@ansyn/imagery/model/base-imagery-plugin';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { SetProgressBarAction } from '@ansyn/map-facade/actions/map.actions';
-import { ImageryPlugin } from '@ansyn/imagery/decorators/imagery-plugin';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
+import { SetProgressBarAction } from '@ansyn/map-facade';
+import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '../open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { ProjectableRaster } from '../open-layers-map/models/projectable-raster';
+import { tap } from 'rxjs/operators';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -40,7 +40,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	onResetView() {
 		return <Observable<boolean>>super.onResetView()
-			.do(this.monitorSource.bind(this));
+			.pipe(tap(this.monitorSource.bind(this)));
 	}
 
 	getMainSource(): TileSource {

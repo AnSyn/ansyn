@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ComboBoxTriggerComponent } from '@ansyn/status-bar/components/combo-box-trigger/combo-box-trigger.component';
+import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger.component';
 
 @Component({
 	selector: 'ansyn-combo-box',

@@ -1,25 +1,22 @@
-import { ICase } from '../../models/case.model';
+import {
+	getPolygonByPointAndRadius,
+	ICase,
+	ICaseMapsState,
+	ICaseMapState,
+	ICaseState,
+	IContext,
+	ImageManualProcessArgs,
+	IOverlaysManualProcessArgs
+} from '@ansyn/core';
 import { Params } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
-import { bbox, bboxPolygon, centroid, geometry, transformScale } from '@turf/turf';
-import {
-	ICaseMapsState,
-	ICaseMapState,
-	ICaseState,
-	ImageManualProcessArgs,
-	IOverlaysManualProcessArgs
-} from '@ansyn/core/models/case.model';
-import { extentFromGeojson } from '@ansyn/core/utils/calc-extent';
-import { CaseMapExtent } from '@ansyn/core/models/case-map-position.model';
-import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
-import { IContext } from '@ansyn/core/models/context.model';
-import { getPolygonByPointAndRadius } from '@ansyn/core/utils/geo';
-import { point } from '@turf/turf';
-import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';
+import { bbox, bboxPolygon, centroid, point } from '@turf/turf';
+import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
+import { UUID } from 'angular2-uuid';
 
 export class QueryParamsHelper {
 
@@ -55,7 +52,7 @@ export class QueryParamsHelper {
 		});
 
 		if (selectedContext.requirements && Boolean(qParams)) {
-			this.updateCaseViaContextGeometry(updatedCaseModel, selectedContext, qParams)
+			this.updateCaseViaContextGeometry(updatedCaseModel, selectedContext, qParams);
 		}
 
 		return this.casesService.parseCase(updatedCaseModel);
@@ -68,15 +65,15 @@ export class QueryParamsHelper {
 				case 'geopoint': {
 					const { geopoint } = qParams;
 					if (geopoint) {
-						const coordinates = geopoint.split(',').map(Number).reverse();
+						const coordinates = geopoint.split(',').map(Number).reverse(); // todo: check if reverse is needed?
 						const region = turf.geometry('Point', coordinates);
 						updatedCaseModel.state.region = region;
 						// Put the requested position in the case. This is needed in order to set correct map position, when no overlays are found
-						updatedCaseModel.state.maps.data[ 0 ].data.position.projectedState = null;
-						updatedCaseModel.state.maps.data[ 0 ].data.position.extentPolygon = getPolygonByPointAndRadius(coordinates, 1).geometry;
+						updatedCaseModel.state.maps.data[0].data.position.projectedState = null;
+						updatedCaseModel.state.maps.data[0].data.position.extentPolygon = getPolygonByPointAndRadius(coordinates, 1).geometry;
 					}
 				}
-				break;
+					break;
 				case 'geometry':
 					const { geometry } = qParams;
 					if (geometry) {
@@ -85,10 +82,7 @@ export class QueryParamsHelper {
 						switch (geoJsonGeomtry.type) {
 							case 'Point': {
 								const geoPoint: Point = <any>geoJsonGeomtry;
-								geoPoint.coordinates = geoPoint.coordinates.reverse();
-
 								updatedCaseModel.state.region = geoPoint;
-
 								updatedCaseModel.state.contextEntities = [{
 									id: UUID.UUID(),
 									date: qParams.time ? new Date(qParams.time) : new Date(),
@@ -100,18 +94,21 @@ export class QueryParamsHelper {
 									map.data.position.extentPolygon = extentPolygon;
 								});
 							}
-							break;
+								break;
 							case 'Polygon': {
-								const region = <Polygon> geoJsonGeomtry;
+								const region = <Polygon>geoJsonGeomtry;
 								const feature: Feature<any> = turf.polygon(region.coordinates);
 								const centroidOfGeometry = centroid(feature);
 								const extentPolygon = bboxPolygon(bbox(feature)).geometry;
 								const polygonContextEntity = this.generatContextEntity(qParams.time, feature);
 								const centerContextEntity = this.generatContextEntity(qParams.time, centroidOfGeometry);
-								const contextEntities = [ polygonContextEntity, centerContextEntity ];
+								const contextEntities = [polygonContextEntity, centerContextEntity];
 								const maps = {
 									...updatedCaseModel.state.maps,
-									data: updatedCaseModel.state.maps.data.map((map) => ({ ...map, data: { ...map, position: { projectedState: null, extentPolygon } } }))
+									data: updatedCaseModel.state.maps.data.map((map) => ({
+										...map,
+										data: { ...map, position: { projectedState: null, extentPolygon } }
+									}))
 								};
 								updatedCaseModel.state = { ...updatedCaseModel.state, region, maps, contextEntities };
 							}
@@ -126,7 +123,7 @@ export class QueryParamsHelper {
 			id: UUID.UUID(),
 			date: time ? new Date(time) : new Date(),
 			featureJson
-		}
+		};
 	}
 
 	generateQueryParamsViaCase(sCase: ICase): string {

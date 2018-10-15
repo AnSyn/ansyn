@@ -1,47 +1,62 @@
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
-	IStartAndEndDate, UNKNOWN_NAME
-} from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+	IOverlayFilter,
+	IStartAndEndDate,
+	timeIntersection
+} from '@ansyn/overlays';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon } from '@ansyn/core/utils/geo';
-import { limitArray } from '@ansyn/core/utils/i-limited-array';
-import { toRadians } from '@ansyn/core/utils/math';
+import {
+	ErrorHandlerService,
+	geojsonMultiPolygonToPolygon,
+	geojsonPolygonToMultiPolygon,
+	IDataInputFilterValue,
+	IOverlay,
+	limitArray,
+	LoggerService,
+	Overlay,
+	sortByDateDesc,
+	toRadians
+} from '@ansyn/core';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import * as moment from 'moment';
-import { IDataInputFilterValue } from '@ansyn/core/models/case.model';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { map } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
+/* Do not change this ( rollup issue ) */
+import * as momentNs from 'moment';
+import { feature, intersect } from '@turf/turf';
+import { isEqual, uniq } from 'lodash';
+
+const moment = momentNs;
 
 const DEFAULT_OVERLAYS_LIMIT = 249;
 export const PlanetOverlaySourceType = 'PLANET';
 
-export const PlanetOverlaysSourceConfig: InjectionToken<IPlanetOverlaySourceConfig> = new InjectionToken('planet-overlays-source-config');
+export const PlanetOverlaysSourceConfig = 'planetOverlaysSourceConfig';
 
 export interface IPlanetOverlaySourceConfig {
 	baseUrl: string;
 	itemTypes: string[];
 	apiKey: string;
 	tilesUrl: string;
+	delayMultiple: number;
 }
 
 export interface IPlanetFilter {
 	type: string,
 	field_name?: string,
-	config: object;
+	config: any | Array<IPlanetFilter>;
+}
+
+export interface IPlanetFetchParams extends IFetchParams {
+	planetFilters: IPlanetFilter[]
 }
 
 @Injectable()
 export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	sourceType = PlanetOverlaySourceType;
-	private httpHeaders: HttpHeaders;
+	readonly httpHeaders: HttpHeaders;
 
 	protected planetDic = {
 		'sensorType': 'item_type',
@@ -63,13 +78,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	buildFilters(config: IPlanetFilter[], sensors?: string[]) {
+	buildFilters({ config, sensors, type = 'AndFilter' }: { config: IPlanetFilter[], sensors?: string[], type?: 'AndFilter' | 'OrFilter' }) {
 		return {
 			item_types: Array.isArray(sensors) ? sensors : this.planetOverlaysSourceConfig.itemTypes,
-			filter: {
-				type: 'AndFilter',
-				config: config
-			}
+			filter: { type, config }
 		};
 	}
 
@@ -77,74 +89,145 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return `${url}?api_key=${this.planetOverlaysSourceConfig.apiKey}`;
 	}
 
-	fetch(fetchParams: IFetchParams): Observable<IOverlaysPlanetFetchData> {
-		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
-		}
-		// if limit not provided by config - set default value
-		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
-		let baseUrl = this.planetOverlaysSourceConfig.baseUrl;
-		// add 1 to limit - so we'll know if provider have more then X overlays
-		const limit = `${fetchParams.limit + 1}`;
-
-		const bboxFilter = { type: 'GeometryFilter', field_name: 'geometry', config: fetchParams.region };
-		const dateFilter = {
-			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: fetchParams.timeRange.start.toISOString(), lte: fetchParams.timeRange.end.toISOString() }
-		};
-
-		const filters: IPlanetFilter[] = [bboxFilter, dateFilter];
-
-		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
-			const configFilters = [];
-			const preFilter = { type: 'OrFilter', config: configFilters };
-			fetchParams.dataInputFilters.forEach((aFilter: IDataInputFilterValue) => {
+	buildDataInputFilter(dataInputFilters: IDataInputFilterValue[]): IPlanetFilter {
+		return {
+			type: 'OrFilter',
+			config: dataInputFilters.map((aFilter: IDataInputFilterValue) => {
 				const sensorTypeFilter = {
 					type: 'StringInFilter',
 					field_name: 'item_type',
 					config: [aFilter.sensorType]
 				};
 				if (Boolean(aFilter.sensorName)) {
-					configFilters.push({
+					return {
 						type: 'AndFilter', config: [
 							sensorTypeFilter,
 							{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
 						]
-					});
-				} else {
-					configFilters.push(sensorTypeFilter);
+					};
 				}
-			});
+				return sensorTypeFilter;
+			})
+		};
+	}
 
-			filters.push(preFilter);
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+		const regionFeature = feature(<any>fetchParams.region);
+		const fetchParamsTimeRange = {
+			start: new Date(fetchParams.timeRange.start),
+			end: new Date(fetchParams.timeRange.end)
+		};
+
+		const planetFilters: IPlanetFilter[] = filters
+			.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
+			.reduce((res, item) => {
+				const equalItem = res.find((f) => isEqual({
+					coverage: f.coverage,
+					timeRange: f.timeRange
+				}, { coverage: item.coverage, timeRange: item.timeRange }));
+				if (equalItem) {
+					equalItem.sensors = uniq([...equalItem.sensors, ...item.sensors]);
+					return res;
+				}
+				return [...res, item];
+			}, [])
+			.map((item): Partial<IFetchParams> => {
+				const intersection = intersect(regionFeature, item.coverage);
+				const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
+				const { sensors } = item;
+				return {
+					timeRange: time,
+					region: intersection && intersection.geometry,
+					sensors
+				};
+			})
+			.filter(({ timeRange, region }: IFetchParams) => Boolean(timeRange && region))
+			.map(this.paramsToFilter);
+		if (!planetFilters.length) {
+			return [];
+		}
+		return [this.fetch(<any>{
+			...fetchParams,
+			planetFilters
+		})];
+	}
+
+	paramsToFilter(fetchParams: IFetchParams): IPlanetFilter {
+
+		const filters: IPlanetFilter = {
+			type: 'AndFilter',
+			config: [
+				{
+					type: 'GeometryFilter',
+					field_name: 'geometry',
+					config: fetchParams.region
+				},
+				{
+					type: 'DateRangeFilter',
+					field_name: 'acquired',
+					config: {
+						gte: fetchParams.timeRange.start.toISOString(),
+						lte: fetchParams.timeRange.end.toISOString()
+					}
+				}
+			]
+		};
+		if (fetchParams.sensors.length) {
+			filters.config.push({
+				type: 'StringInFilter',
+				field_name: 'item_type',
+				config: fetchParams.sensors
+			});
+		}
+		return filters;
+	}
+
+	fetch(fetchParams: IPlanetFetchParams): Observable<IOverlaysPlanetFetchData> {
+		const { planetFilters } = fetchParams;
+
+		if (!fetchParams.limit) {
+			fetchParams.limit = DEFAULT_OVERLAYS_LIMIT;
 		}
 
-		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters(filters, fetchParams.sensors),
-			{ headers: this.httpHeaders, params: { _page_size: limit } })
-			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+		// add 1 to limit - so we'll know if provider have more then X overlays
+		const _page_size = `${fetchParams.limit + 1}`;
+
+		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
+			planetFilters.forEach((filter) => {
+				filter.config.push(this.buildDataInputFilter(fetchParams.dataInputFilters))
+			});
+		}
+
+		const { baseUrl } = this.planetOverlaysSourceConfig;
+		const body = this.buildFilters({ config: planetFilters, sensors: fetchParams.sensors, type: 'OrFilter' });
+		const options = { headers: this.httpHeaders, params: { _page_size } };
+		return this.http.post(baseUrl, body, options).pipe(
+			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
+			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
-			}))
-			.catch((error: HttpResponseBase | any) => {
+			})),
+			catchError((error: HttpResponseBase | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
-		const body = this.buildFilters([{ type: 'StringInFilter', field_name: 'id', config: [id] }]);
-		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders })
-			.map(data => {
+		const body = this.buildFilters({ config: [{ type: 'StringInFilter', field_name: 'id', config: [id] }] });
+		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders }).pipe(
+			map(data => {
 				if (data.features.length <= 0) {
 					throw new HttpErrorResponse({ status: 404 });
 				}
 
 				return this.extractData(data.features);
-			})
-			.catch((error: HttpErrorResponse) => {
+			}),
+			catchError((error: HttpErrorResponse) => {
 				return Observable.throw(error);
-			});
+			})
+		);
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
@@ -158,7 +241,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		const pageLimit: any = params.limit ? params.limit : DEFAULT_OVERLAYS_LIMIT;
 
-		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
+		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
 			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
 			.pipe(
 				map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
@@ -173,14 +256,14 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 						endDate = moment.max(overlaysDates).toISOString();
 					}
 					return { startDate, endDate };
+				}),
+				catchError((error: HttpResponseBase | any) => {
+					return this.errorHandlerService.httpErrorHandle(error);
 				})
-			)
-			.catch((error: HttpResponseBase | any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			);
 	}
 
-	private _getBboxFilter(region: {type}): {type; field_name; config} {
+	private _getBboxFilter(region: { type }): { type; field_name; config } {
 		let fetchRegion = region;
 		if (fetchRegion.type === 'MultiPolygon') {
 			fetchRegion = geojsonMultiPolygonToPolygon(fetchRegion as GeoJSON.MultiPolygon);
@@ -220,10 +303,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		let pageLimit: any = params.limitBefore ? params.limitBefore : DEFAULT_OVERLAYS_LIMIT / 2;
 
-		const startDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
-			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
-			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: IOverlay[]) => {
+		const startDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
+			{ headers: this.httpHeaders, params: { _page_size: pageLimit } }).pipe(
+			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
+			map((overlays: IOverlay[]) => {
 				let startDate: Date;
 				if (overlays.length === 0) {
 					startDate = moment(params.date).subtract(1, 'month').toDate();  // a month before
@@ -232,10 +315,11 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 					startDate = moment.min(overlaysDates).toDate();
 				}
 				return startDate;
-			})
-			.catch((error: HttpResponseBase | any) => {
+			}),
+			catchError((error: HttpResponseBase | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
 
 		dateFilter = {
 			type: 'DateRangeFilter', field_name: 'acquired',
@@ -243,10 +327,10 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 		pageLimit = params.limitAfter ? params.limitAfter : DEFAULT_OVERLAYS_LIMIT / 2;
 
-		const endDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters([...filters, bboxFilter, dateFilter]),
-			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
-			.map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features))
-			.map((overlays: IOverlay[]) => {
+		const endDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
+			{ headers: this.httpHeaders, params: { _page_size: pageLimit } }).pipe(
+			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
+			map((overlays: IOverlay[]) => {
 				let endDate: Date;
 				if (overlays.length === 0) {
 					endDate = moment.min([moment(params.date).add(1, 'month'), moment()]).toDate();  // a month after
@@ -255,13 +339,15 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 					endDate = moment.max(overlaysDates).toDate();
 				}
 				return endDate;
-			})
-			.catch((error: HttpResponseBase | any) => {
+			}),
+			catchError((error: HttpResponseBase | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
 
-		return forkJoin(startDate$, endDate$)
-			.map(([start, end]: [Date, Date]) => ({startDate: start.toISOString(), endDate: end.toString()}));
+		return forkJoin(startDate$, endDate$).pipe(
+			map(([start, end]: [Date, Date]) => ({ startDate: start.toISOString(), endDate: end.toString() }))
+		);
 	}
 
 	private extractArrayData(overlays: PlanetOverlay[]): IOverlay[] {
@@ -280,24 +366,24 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(element: PlanetOverlay): IOverlay {
-		const overlay: IOverlay = <IOverlay> {};
+		return new Overlay({
+			id: element.id,
+			footprint: element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry),
+			sensorType: element.properties.item_type,
+			sensorName: element.properties.satellite_id,
+			bestResolution: element.properties.gsd,
+			cloudCoverage: element.properties.cloud_cover,
+			name: element.id,
+			imageUrl: this.appendApiKey(
+				`${this.planetOverlaysSourceConfig.tilesUrl}${element.properties.item_type}/${element.id}/{z}/{x}/{y}.png`),
+			thumbnailUrl: this.appendApiKey(element._links.thumbnail),
+			date: new Date(element.properties.acquired),
+			photoTime: element.properties.acquired,
+			azimuth: toRadians(element.properties.view_angle),
+			sourceType: this.sourceType,
+			isGeoRegistered: true,
+			tag: element
+		});
 
-		overlay.id = element.id;
-		overlay.footprint = element.geometry.type === 'MultiPolygon' ? element.geometry : geojsonPolygonToMultiPolygon(element.geometry);
-		overlay.sensorType = element.properties.item_type ? element.properties.item_type : UNKNOWN_NAME;
-		overlay.sensorName = element.properties.satellite_id ? element.properties.satellite_id : UNKNOWN_NAME;
-		overlay.bestResolution = element.properties.gsd;
-		overlay.name = element.id;
-		overlay.imageUrl = this.appendApiKey(
-			`${this.planetOverlaysSourceConfig.tilesUrl}${overlay.sensorType}/${overlay.id}/{z}/{x}/{y}.png`);
-		overlay.thumbnailUrl = this.appendApiKey(element._links.thumbnail);
-		overlay.date = new Date(element.properties.acquired);
-		overlay.photoTime = element.properties.acquired;
-		overlay.azimuth = toRadians(element.properties.view_angle);
-		overlay.sourceType = this.sourceType;
-		overlay.isGeoRegistered = true;
-		overlay.tag = element;
-
-		return overlay;
 	}
 }

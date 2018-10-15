@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../../dist/ansyn/overlays",
+  "whitelistedNonPeerDependencies": [
+    "@ansyn/core",
+    "@ngrx/core",
+    "@ngrx/store",
+    "@ngrx/effects",
+    "@turf/turf",
+    "lodash",
+    "@ansyn/event-drops",
+    "@ngx-translate/core",
+    "auto-subscriptions",
+    "d3"
+  ],
+  "lib": {
+    "entryFile": "./public_api.ts",
+    "styleIncludePaths": [
+      "../"
+    ]
+  }
+}

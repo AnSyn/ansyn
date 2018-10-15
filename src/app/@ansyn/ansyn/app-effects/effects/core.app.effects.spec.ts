@@ -1,16 +1,13 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
-import { coreInitialState, coreStateSelector } from '@ansyn/core/reducers/core.reducer';
+import { coreInitialState, coreStateSelector, GoNextPresetOverlay, IOverlay, LoggerService } from '@ansyn/core';
 import { cold, hot } from 'jasmine-marbles';
-import { GoNextPresetOverlay } from '@ansyn/core/actions/core.actions';
-import { casesStateSelector, initialCasesState } from '@ansyn/menu-items/cases/reducers/cases.reducer';
-import { initialMapState, mapStateSelector } from '@ansyn/map-facade/reducers/map.reducer';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
-import { DisplayOverlayAction } from '@ansyn/overlays/actions/overlays.actions';
+import { casesStateSelector, initialCasesState } from '@ansyn/menu-items';
+import { initialMapState, mapStateSelector } from '@ansyn/map-facade';
+import { DisplayOverlayAction } from '@ansyn/overlays';
 
 function mockOverlay(id: string): IOverlay {
 	const overlay = <IOverlay> {};
@@ -51,7 +48,7 @@ describe('CoreAppEffects', () => {
 			[casesStateSelector, casesState],
 			[mapStateSelector, mapsState]
 		]);
-		spyOn(store, 'select').and.callFake((selector) => Observable.of(fakeStore.get(selector)));
+		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));
 
 	beforeEach(inject([CoreAppEffects], (_coreAppEffects: CoreAppEffects) => {

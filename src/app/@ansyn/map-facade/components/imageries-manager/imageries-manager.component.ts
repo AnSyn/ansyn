@@ -1,19 +1,22 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
-import { UpdateMapSizeAction, ClickOutsideMap } from '../../actions/map.actions';
+import { fromEvent, Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '../../reducers/map.reducer';
+import { ActiveImageryMouseEnter, ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
-import { coreStateSelector, ICoreState } from '@ansyn/core/reducers/core.reducer';
-import { IMapsLayout } from '@ansyn/core/models/i-maps-layout';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { ActiveImageryMouseEnter } from '@ansyn/map-facade/actions/map.actions';
-import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
+import {
+	coreStateSelector,
+	ICaseMapState,
+	ICoreState,
+	IMapsLayout,
+	LayoutKey,
+	layoutOptions, selectLayout,
+	SetMapsDataActionStore
+} from '@ansyn/core';
+import { filter, map, pluck, tap, distinctUntilChanged } from 'rxjs/operators';
 
+// @dynamic
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
@@ -21,27 +24,20 @@ import { SetMapsDataActionStore } from '@ansyn/core/actions/core.actions';
 })
 
 export class ImageriesManagerComponent implements OnInit {
-	public core$: Observable<ICoreState> = this.store.select(coreStateSelector);
-	public mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
+	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
+		select(selectLayout),
+		map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout))
+	);
+	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
+	public mapsList$: Observable<ICaseMapState[]> = this.store.select(selectMapsList);
+	public renderContextMenu: boolean;
 
-	public selectedLayout$: Observable<IMapsLayout> = this.core$
-		.pluck<ICoreState, LayoutKey>('layout')
-		.distinctUntilChanged()
-		.map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout));
-
-	public activeMapId$: Observable<string> = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
-		.distinctUntilChanged();
-
-	public mapsList$: Observable<ICaseMapState[]> = this.mapState$
-		.pluck<IMapState, ICaseMapState[]>('mapsList')
-		.distinctUntilChanged();
-
-	public showWelcomeNotification$ = this.store.select(coreStateSelector)
-		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
-		.distinctUntilChanged()
-		.map(bool => !bool)
-	;
+	public showWelcomeNotification$ = this.store.pipe(
+		select(coreStateSelector),
+		pluck<ICoreState, boolean>('wasWelcomeNotificationShown'),
+		distinctUntilChanged(),
+		map(bool => !bool)
+	);
 
 	public selectedLayout;
 
@@ -62,14 +58,21 @@ export class ImageriesManagerComponent implements OnInit {
 		this.initListeners();
 		this.initSubscribers();
 		this.initClickOutside();
+		this.initRenderContextMenu();
+	}
+
+	initRenderContextMenu() {
+		setTimeout(() => {
+			this.renderContextMenu = true;
+		}, 1000)
 	}
 
 	initClickOutside() {
-		Observable
-			.fromEvent(this.document, 'click')
-			.filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element))
-			.do((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
-			.subscribe()
+		fromEvent(this.document, 'click').pipe(
+			filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element)),
+			filter((event: any) => !event.path.some((element) => element.id === 'editGeoFilter' || element.id === 'contextGeoFilter')),
+			tap((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
+		).subscribe();
 	}
 
 	initSubscribers() {

@@ -5,13 +5,10 @@ import { MapEffects } from '../../effects/map.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import {
-	AnnotationInteraction,
-	IAnnotationsSelectionEventData
-} from '@ansyn/core/models/visualizers/annotations.model';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
 
 
 describe('AnnotationContextMenuComponent', () => {
@@ -98,7 +95,7 @@ describe('AnnotationContextMenuComponent', () => {
 				height: 100,
 				left: 100,
 				width: 100
-			},
+			}
 		};
 		fixture.detectChanges();
 		spyOn(component, 'removeFeature');

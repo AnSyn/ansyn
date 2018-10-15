@@ -1,19 +1,16 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { IFiltersConfig } from '../models/filters-config';
 import { IFilter } from '../models/IFilter';
-import 'rxjs/add/observable/of';
-import { Filters, IFiltersState } from '@ansyn/menu-items/filters/reducer/filters.reducer';
-import { FilterMetadata } from '@ansyn/menu-items/filters/models/metadata/filter-metadata.interface';
-import { CaseFilters } from '@ansyn/core/models/case.model';
-import { IFilterModel } from '@ansyn/core/models/IFilterModel';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
-import { BooleanFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { OverlaysService } from '@ansyn/overlays/services/overlays.service';
+import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
-import { IEnumFiled, EnumFilterMetadata } from '@ansyn/menu-items/filters/models/metadata/enum-filter-metadata';
+import { Filters, IFiltersState } from '../reducer/filters.reducer';
+import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
+import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
+import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
 
-export const filtersConfig: InjectionToken<IFiltersConfig> = new InjectionToken('filtersConfig');
+export const filtersConfig = 'filtersConfig';
 
+// @dynamic
 @Injectable()
 export class FiltersService {
 	static buildCaseFilters(filters: Filters): CaseFilters {
@@ -67,7 +64,7 @@ export class FiltersService {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);
-		const filteredOverlays: string[] = OverlaysService.buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites, removedOverlaysIds, removedOverlaysVisibility );
+		const filteredOverlays: string[] = buildFilteredOverlays(mapValuesToArray(overlays), filterModels, removedOverlaysIds, removedOverlaysVisibility);
 		metadata.resetFilteredCount();
 		filteredOverlays
 			.map((id) => overlays.get(id))

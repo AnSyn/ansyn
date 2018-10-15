@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../../dist/ansyn/imagery",
+  "whitelistedNonPeerDependencies": [
+    "@ansyn/core",
+    "auto-subscriptions"
+  ],
+  "lib": {
+    "entryFile": "./public_api.ts",
+    "styleIncludePaths": [
+      "../"
+    ]
+  }
+}

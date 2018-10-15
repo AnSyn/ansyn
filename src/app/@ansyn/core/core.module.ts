@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
-import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
 import { ToastComponent } from './components/toast/toast.component';
@@ -14,7 +13,7 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
@@ -45,7 +44,6 @@ import { DefaultTranslateLoader } from './translation/default-translate-loader';
 		AnsynCheckboxComponent,
 		ImageryStatusComponent,
 		AnsynTranslationModule,
-		PlaceholderComponent,
 		ToastComponent,
 		WelcomeNotificationComponent,
 		SliderCheckboxComponent,
@@ -59,7 +57,6 @@ import { DefaultTranslateLoader } from './translation/default-translate-loader';
 	declarations: [
 		AnsynCheckboxComponent,
 		ImageryStatusComponent,
-		PlaceholderComponent,
 		ToastComponent,
 		WelcomeNotificationComponent,
 		SliderCheckboxComponent,

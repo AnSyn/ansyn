@@ -1,47 +1,41 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { IStatusBarConfig, IToolTipsConfig } from '@ansyn/status-bar/models/statusBar-config.model';
+import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
 import {
 	IGeoFilterStatus,
 	IStatusBarState,
 	selectComboBoxesProperties,
 	selectGeoFilterStatus
-} from '@ansyn/status-bar/reducers/status-bar.reducer';
-import { StatusBarConfig } from '@ansyn/status-bar/models/statusBar.config';
+} from '../../reducers/status-bar.reducer';
+import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import {
-	IComboBoxesProperties,
-	GEO_FILTERS,
-	ORIENTATIONS,
-	TIME_FILTERS
-} from '@ansyn/status-bar/models/combo-boxes.model';
-import {
-	CoreActionTypes,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction,
-	UpdateOverlaysCountAction
-} from '@ansyn/core/actions/core.actions';
-import {
-	ICaseDataInputFiltersState,
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	ICaseTimeState
-} from '@ansyn/core/models/case.model';
-import { LayoutKey, layoutOptions } from '@ansyn/core/models/layout-options.model';
-import { IOverlay, IOverlaysCriteria } from '@ansyn/core/models/overlay.model';
-import {
+	CoreActionTypes,
+	ICaseDataInputFiltersState,
+	ICaseTimeState,
+	IOverlay,
+	LayoutKey,
+	layoutOptions,
 	selectDataInputFilter,
 	selectLayout,
-	selectOverlaysCriteria,
-	selectRegion
-} from '@ansyn/core/reducers/core.reducer';
-import { CaseDataFilterTitle } from '@ansyn/status-bar/models/data-input-filters.model';
+	selectRegion,
+	selectTime,
+	SetLayoutAction,
+	SetOverlaysCriteriaAction,
+	UpdateOverlaysCountAction
+} from '@ansyn/core';
+import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';
-import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '@ansyn/status-bar/actions/status-bar.actions';
+import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { SearchMode, SearchModeEnum } from '@ansyn/status-bar/models/search-mode.enum';
+import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
+import { filter, map, tap } from 'rxjs/operators';
+import { ofType } from '@ngrx/effects';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -62,25 +56,29 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 })
 export class ComboBoxesComponent implements OnInit, OnDestroy {
 	comboBoxesProperties$: Observable<IComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
-	geoFilterStatus$ = this.store.select(selectGeoFilterStatus).do((geoFilterStatus: IGeoFilterStatus) => this.geoFilterStatus = geoFilterStatus);
+	geoFilterStatus$ = this.store.select(selectGeoFilterStatus).pipe(tap((geoFilterStatus: IGeoFilterStatus) => this.geoFilterStatus = geoFilterStatus));
 
-	regionType$ = this.store.select(selectRegion).filter(Boolean).map((region) => region.type).do((regionType) => this.regionType = regionType);
-	overlaysCriteria$: Observable<IOverlaysCriteria> = this.store.select(selectOverlaysCriteria);
-	time$: Observable<ICaseTimeState> = this.overlaysCriteria$
-		.pluck<IOverlaysCriteria, ICaseTimeState>('time')
-		.distinctUntilChanged();
+	regionType$ = this.store.select(selectRegion).pipe(
+		filter(Boolean),
+		map((region) => region.type),
+		tap((regionType) => this.regionType = regionType)
+	);
+
+	time$: Observable<ICaseTimeState> = this.store.select(selectTime);
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout);
 
-	dataInputFilters$ = this.store.select(selectDataInputFilter)
-		.filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters))
-		.do((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
+	dataInputFilters$ = this.store.select(selectDataInputFilter).pipe(
+		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
+		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : caseDataInputFiltersState.fullyChecked ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
 			this.dataInputFilters = caseDataInputFiltersState;
-		});
+		})
+	);
 
-	overlaysCount$: Observable<number> = this.actions$
-		.ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT)
-		.map(({ payload }: UpdateOverlaysCountAction) => payload);
+	overlaysCount$: Observable<number> = this.actions$.pipe(
+		ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT),
+		map(({ payload }: UpdateOverlaysCountAction) => payload)
+	);
 
 	geoFilterStatus: IGeoFilterStatus;
 	regionType: CaseGeoFilter;
@@ -112,9 +110,13 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		return Array.from(layoutOptions.keys());
 	}
 
+	public get orientations(): CaseOrientation[] {
+		return JSON.parse(this.orientationsString);
+	}
+
 	constructor(protected store: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
-				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
+				@Inject(ORIENTATIONS) public orientationsString: string,
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
 				protected actions$: Actions) {

@@ -11,29 +11,27 @@ import olFeature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
-import { ExtentCalculator } from '@ansyn/core/utils/extent-calculator';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { Observable } from 'rxjs';
+import { ExtentCalculator } from '../utils/extent-calculator';
+import { BaseImageryMap, ImageryMap, ProjectionService } from '@ansyn/imagery';
+import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
-import { OpenLayersMousePositionControl } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-mouseposition-control';
-import 'rxjs/add/operator/take';
-import { CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition } from '@ansyn/core/models/case-map-position.model';
-import { areCoordinatesNumeric } from '@ansyn/core/utils/geo';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/of';
-import { ImageryMap } from '@ansyn/imagery/decorators/imagery-map';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
+import { OpenLayersMousePositionControl } from '../openlayers-map/openlayers-mouseposition-control';
+import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig } from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
+import { Utils } from '../utils/utils';
+import { Inject } from '@angular/core';
+import { map, take, tap } from 'rxjs/operators';
 
 export const OpenlayersMapName = 'openLayersMap';
 
-enum StaticGroupsKeys {
+export enum StaticGroupsKeys {
 	layers = 'layers'
 }
 
+// @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [ProjectionService]
+	deps: [ProjectionService, CoreConfig]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
@@ -47,7 +45,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 
 
-	constructor(public projectionService: ProjectionService) {
+	constructor(public projectionService: ProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
 
@@ -95,18 +93,24 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
 		const renderer = 'canvas';
-		this._mapObject = new OLMap({ target, renderer, controls, loadTilesWhileInteracting: true, loadTilesWhileAnimating: true });
+		this._mapObject = new OLMap({
+			target,
+			renderer,
+			controls,
+			loadTilesWhileInteracting: true,
+			loadTilesWhileAnimating: true
+		});
 		this.initListeners();
 		return this.resetView(layers[0], position);
 	}
 
 	initListeners() {
 		this._moveEndListener = () => {
-			this.getPosition().take(1).subscribe(position => {
+			this.getPosition().pipe(take(1)).subscribe(position => {
 				if (position) {
 					this.positionChanged.emit(position);
 				}
-			})
+			});
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
@@ -131,7 +135,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setResolution(1);
 
 		if (extent) {
-			this.fitToExtent(extent);
+			this.fitToExtent(extent).subscribe();
 			if (rotation) {
 				this.mapObject.getView().setRotation(rotation);
 			}
@@ -140,7 +144,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return this.setPosition(position);
 		}
 
-		return Observable.of(true);
+		return of(true);
 	}
 
 	public getLayerById(id: string): Layer {
@@ -157,18 +161,25 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	setMainLayer(layer: Layer) {
 		layer.set('name', 'main');
+		layer.set('mainExtent', null);
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
 	}
 
+	getMainLayer(): Layer {
+		let mainLayer = this._mapLayers.find((layer: Layer) => layer.get('name') === 'main');
+		return mainLayer;
+	}
+
 	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
 		const collection: any = turf.featureCollection([ExtentCalculator.extentToPolygon(extent)]);
 
-		this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this)
-			.subscribe((features: olFeature[]) => {
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
+			tap((features: olFeature[]) => {
 				view.fit(features[0].getGeometry() as olPolygon, { nearest: true, constrainResolution: false });
-			});
+			})
+		);
 	}
 
 	public addLayer(layer: any) {
@@ -208,7 +219,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
-		return this.projectionService.projectAccuratelyToImage(center, this).map(projectedCenter => {
+		return this.projectionService.projectAccuratelyToImage(center, this).pipe(map(projectedCenter => {
 			const olCenter = <ol.Coordinate> projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
@@ -218,7 +229,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}
 
 			return true;
-		});
+		}));
 	}
 
 	public updateSize(): void {
@@ -232,57 +243,79 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public getCenter(): Observable<GeoPoint> {
 		if (!this.isValidPosition) {
-			return Observable.of(null);
+			return of(null);
 		}
 		const view = this._mapObject.getView();
 		const center = view.getCenter();
 		if (!areCoordinatesNumeric(center)) {
-			return Observable.of(null);
+			return of(null);
 		}
 		const point = <GeoPoint> turf.geometry('Point', center);
 
 		return this.projectionService.projectAccurately(point, this);
 	}
 
-	calculateRotateExtent(map: OLMap): Observable<CaseMapExtentPolygon> {
-		if (!this.isValidPosition) {
-			return Observable.of(null);
+	calculateRotateExtent(olmap: OLMap): Observable<{ extentPolygon: CaseMapExtentPolygon, layerExtentPolygon: CaseMapExtentPolygon }> {
+		const mainLayer = this.getMainLayer();
+		if (!this.isValidPosition || !mainLayer) {
+			return of({ extentPolygon: null, layerExtentPolygon: null });
 		}
-		const [width, height] = map.getSize();
-		const topLeft = map.getCoordinateFromPixel([0, 0]);
-		const topRight = map.getCoordinateFromPixel([width, 0]);
-		const bottomRight = map.getCoordinateFromPixel([width, height]);
-		const bottomLeft = map.getCoordinateFromPixel([0, height]);
+
+		const [width, height] = olmap.getSize();
+		const topLeft = olmap.getCoordinateFromPixel([0, 0]);
+		const topRight = olmap.getCoordinateFromPixel([width, 0]);
+		const bottomRight = olmap.getCoordinateFromPixel([width, height]);
+		const bottomLeft = olmap.getCoordinateFromPixel([0, height]);
 		const coordinates = [[topLeft, topRight, bottomRight, bottomLeft, topLeft]];
 		const someIsNaN = !coordinates[0].every(areCoordinatesNumeric);
 		if (someIsNaN) {
-			return Observable.of(null);
+			return of({ extentPolygon: null, layerExtentPolygon: null });
 		}
 
+		const cachedMainExtent = mainLayer.get('mainExtent');
+		const mainExtent = mainLayer.getExtent();
+		if (mainExtent && !Boolean(cachedMainExtent)) {
+			const layerExtentPolygon = Utils.extentToOlPolygon(mainExtent);
+			return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates)), new olFeature(layerExtentPolygon)], this).pipe(
+				map((collection: FeatureCollection<GeometryObject>) => {
+					mainLayer.set('mainExtent', collection.features[1].geometry as Polygon);
+					return {
+						extentPolygon: collection.features[0].geometry as Polygon,
+						layerExtentPolygon: collection.features[1].geometry as Polygon
+					};
+				})
+			);
+		}
 		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], this)
-			.map((collection: FeatureCollection<GeometryObject>) => collection.features[0].geometry as Polygon);
+			.pipe(map((collection: FeatureCollection<GeometryObject>) => {
+				return {
+					extentPolygon: collection.features[0].geometry as Polygon,
+					layerExtentPolygon: cachedMainExtent
+				};
+			}));
 	}
 
-	fitRotateExtent(map: OLMap, extentFeature: CaseMapExtentPolygon): Observable<boolean> {
+	fitRotateExtent(olmap: OLMap, extentFeature: CaseMapExtentPolygon): Observable<boolean> {
 		const collection: any = turf.featureCollection([turf.feature(extentFeature)]);
 
-		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this)
-			.map((features: olFeature[]) => {
-				const view: View = map.getView();
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
+			map((features: olFeature[]) => {
+				const view: View = olmap.getView();
 				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });
 				const geoJsonExtent = geoJsonFeature.features[0].geometry;
 
 				const center = ExtentCalculator.calcCenter(geoJsonExtent);
 				const rotation = ExtentCalculator.calcRotation(geoJsonExtent);
-				const resolution = ExtentCalculator.calcResolution(geoJsonExtent, map.getSize(), rotation);
+				const resolution = ExtentCalculator.calcResolution(geoJsonExtent, olmap.getSize(), rotation);
 
 				view.setCenter(center);
 				view.setRotation(rotation);
-				view.setResolution(resolution);
+				view.setResolution(Math.abs(resolution));
 				this.isValidPosition = true;
 				return true;
-			});
+			})
+		);
 	}
 
 	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
@@ -300,7 +333,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			view.setZoom(zoom);
 			view.setRotation(rotation);
 			this.isValidPosition = true;
-			return Observable.of(true);
+			return of(true);
 		} else {
 			return this.fitRotateExtent(this.mapObject, extentPolygon);
 		}
@@ -310,7 +343,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
-		return this.calculateRotateExtent(this.mapObject).map((extentPolygon: Polygon) => {
+
+		return this.calculateRotateExtent(this.mapObject).pipe(map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {
 				return null;
 			}
@@ -320,8 +354,29 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				console.warn('ol map getPosition failed invalid coordinates ', extentPolygon);
 				return null;
 			}
+
+			if (this.coreConfig.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
+				extentPolygon = layerExtentPolygon;
+			}
+
 			return { extentPolygon, projectedState };
-		});
+		}));
+	}
+
+	needToUseLayerExtent(layerExtentPolygon: CaseMapExtentPolygon, extentPolygon: CaseMapExtentPolygon) {
+		if (!layerExtentPolygon) {
+			return false;
+		}
+
+		// check if 3 out of 4 coordinates inside main layer extent
+		let cornersInside = 0;
+		for (let i = 0; i < extentPolygon.coordinates[0].length - 1; i++) { // -1 in order to ignore duplicated coordinate
+			const isInside = turf.booleanPointInPolygon(turf.point(extentPolygon.coordinates[0][i]), turf.polygon(layerExtentPolygon.coordinates), { ignoreBoundary: false });
+			if (isInside) {
+				cornersInside++;
+			}
+		}
+		return cornersInside < 3;
 	}
 
 	public setRotation(rotation: number, view: View = this.mapObject.getView()) {

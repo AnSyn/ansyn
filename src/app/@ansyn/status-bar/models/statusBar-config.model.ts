@@ -6,7 +6,7 @@ export interface IToolTipsConfig {
 	geoFilterEdit?: string,
 	geoFilterShow?: string,
 	dataInputFilter?: string,
-	timeFilter ?: string,
+	timeFilter?: string,
 	timeFilterEdit?: string,
 	screenNumber?: string,
 	overlayCount?: string,
@@ -17,8 +17,13 @@ export interface IToolTipsConfig {
 	quickloop?: string
 }
 
+export interface IDataInputItem {
+	inActive?: boolean;
+	treeViewItem: TreeviewItem;
+}
+
 export interface IDataInputFiltersConfig {
-	[providerName: string]: TreeviewItem;
+	[providerName: string]: IDataInputItem;
 }
 
 export interface IStatusBarConfig {

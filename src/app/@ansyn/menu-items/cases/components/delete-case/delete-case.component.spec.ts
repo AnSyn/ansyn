@@ -4,14 +4,13 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerConfig } from '@ansyn/core/models/logger.config';
-import { CoreConfig } from '@ansyn/core/models/core.config';
-import { casesConfig, CasesService } from '@ansyn/menu-items/cases/services/cases.service';
-import { DataLayersService, layersConfig } from '@ansyn/menu-items/layers-manager/services/data-layers.service';
+import { CoreConfig, LoggerConfig } from '@ansyn/core';
+import { casesConfig, CasesService } from '../../services/cases.service';
+import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -47,14 +46,14 @@ describe('DeleteCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {}}
+				{ provide: layersConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));
 
 	beforeEach(inject([Store, CasesService], (_store: Store<ICasesState>, _casesService: CasesService) => {
 		spyOn(_store, 'dispatch');
-		spyOn(_store, 'select').and.callFake(() => Observable.of(fakeICasesState));
+		spyOn(_store, 'select').and.callFake(() => of(fakeICasesState));
 
 		fixture = TestBed.createComponent(DeleteCaseComponent);
 		component = fixture.componentInstance;
@@ -78,7 +77,7 @@ describe('DeleteCaseComponent', () => {
 	});
 
 	it('onSubmitRemove should call store.dispatch with CloseModalAction', () => {
-		spyOn(casesService, 'removeCase').and.returnValue(Observable.of(component.activeCase));
+		spyOn(casesService, 'removeCase').and.returnValue(of(component.activeCase));
 		spyOn(component, 'close');
 		component.onSubmitRemove();
 		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction(component.activeCase.id));

@@ -12,6 +12,9 @@ export interface IMapFacadeConfig {
 		filterField: string;
 	};
 	mapSearch: IMapSearchConfig;
+	sourceTypeNotices: {
+		[propName: string]: string
+	};
 }
 
 

@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ProjectionService } from '@ansyn/imagery/projection-service/projection.service';
-import { Observable } from 'rxjs';
+import { BaseImageryMap, CommunicatorEntity, ProjectionService } from '@ansyn/imagery';
+import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';
-import { BaseImageryMap } from '@ansyn/imagery/model/base-imagery-map';
-import { CommunicatorEntity } from '@ansyn/imagery/communicator-service/communicator.entity';
 
 @Injectable()
 export class OpenLayersProjectionService extends ProjectionService {
@@ -25,13 +23,18 @@ export class OpenLayersProjectionService extends ProjectionService {
 	projectApproximatelyToImage<olGeometry>(point: Point, map: BaseImageryMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
 		point.coordinates = proj.fromLonLat(<[number, number]>point.coordinates, projection);
-		return Observable.of(point);
+		return of(point);
 	}
 
 	projectApproximately(point: Point, map: BaseImageryMap): Observable<Point> {
 		const projection = map.mapObject.getView().getProjection();
 		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
-		return Observable.of(point);
+		return of(point);
+	}
+
+	projectApproximatelyFromProjection(point: Point, projection: string): Observable<Point> {
+		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
+		return of(point);
 	}
 
 	/* collections */
@@ -51,7 +54,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 		const dataProjection = 'EPSG:4326';
 		const options = { featureProjection, dataProjection };
 		const features: olFeature[] = <any> this.olGeoJSON.readFeatures(featureCollection, options);
-		return Observable.of(features);
+		return of(features);
 	}
 
 	projectCollectionApproximately<olFeature>(features: olFeature[] | any, map: BaseImageryMap): Observable<FeatureCollection<GeometryObject>> {
@@ -59,7 +62,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 		const dataProjection = 'EPSG:4326';
 		const options = { featureProjection, dataProjection };
 		const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features, options);
-		return Observable.of(geoJsonFeature);
+		return of(geoJsonFeature);
 	}
 
 	getProjectionProperties(communicator: CommunicatorEntity, annotationLayer: any, feature: any, overlay: any): Object {

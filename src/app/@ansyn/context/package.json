@@ -1,14 +1,15 @@
 {
 	"name": "@ansyn/context",
-	"version": "0.2.81",
-	"main": "index.ts",
+	"version": "0.2.82.3",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3",
-		"@ngrx/store": "^6.0.1",
-		"@ansyn/core": "0.2.81",
-		"rxjs": "^6.2.1"
+		"@angular/core": "^6.0.3"
 	},
-	"license": "MIT",
-	"typings": "index.d.ts"
+	"dependencies": {
+		"@ansyn/core": "0.2.82.3",
+		"@ngrx/core": "^1.2.0",
+		"@ngrx/store": "^6.0.1",
+		"@ngrx/entity": "^6.0.1"
+	},
+	"license": "MIT"
 }

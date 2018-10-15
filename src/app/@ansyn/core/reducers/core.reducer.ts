@@ -11,6 +11,7 @@ import { IOverlay, IOverlaysCriteria } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
 import { uniq } from 'lodash';
+import { ICaseDataInputFiltersState } from '../models/case.model';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -28,6 +29,7 @@ export interface ICoreState {
 	toastMessage: IToastMessage;
 	favoriteOverlays: IOverlay[];
 	removedOverlaysIds: string[];
+	removedOverlaysIdsCount: number;
 	removedOverlaysVisibility: boolean;
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
@@ -42,6 +44,7 @@ export const coreInitialState: ICoreState = {
 	toastMessage: null,
 	favoriteOverlays: [],
 	removedOverlaysIds: [],
+	removedOverlaysIdsCount: 0,
 	removedOverlaysVisibility: true,
 	presetOverlays: [],
 	alertMsg: new Map([
@@ -132,19 +135,23 @@ export function CoreReducer(state = coreInitialState, action: CoreActions | any)
 		case CoreActionTypes.SET_AUTO_SAVE:
 			return { ...state, autoSave: action.payload };
 
+		case CoreActionTypes.SET_REMOVED_OVERLAY_IDS_COUNT:
+			return { ...state, removedOverlaysIdsCount: action.payload };
+
 		default:
 			return state;
 	}
 }
 
-export const selectFavoriteOverlays = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
-export const selectRemovedOverlays = createSelector(coreStateSelector, (core) => core.removedOverlaysIds);
-export const selectRemovedOverlaysVisibility = createSelector(coreStateSelector, (core) => core.removedOverlaysVisibility);
-export const selectPresetOverlays = createSelector(coreStateSelector, (core) => core.presetOverlays);
-export const selectLayout = createSelector(coreStateSelector, (core) => core.layout);
-export const selectOverlaysCriteria = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
-export const selectDataInputFilter = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
-export const selectRegion = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
-export const selectEnableCopyOriginalOverlayDataFlag = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
-export const selectAutoSave = createSelector(coreStateSelector, (core) => core.autoSave);
-
+export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(coreStateSelector, (core) => core.favoriteOverlays);
+export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(coreStateSelector, (core) => core.removedOverlaysIds);
+export const selectRemovedOverlaysVisibility: MemoizedSelector<any, boolean> = createSelector(coreStateSelector, (core) => core.removedOverlaysVisibility);
+export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(coreStateSelector, (core) => core.presetOverlays);
+export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(coreStateSelector, (core) => core.layout);
+export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(coreStateSelector, (core) => core.overlaysCriteria);
+export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
+export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectTime: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
+export const selectEnableCopyOriginalOverlayDataFlag: MemoizedSelector<any, any> = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
+export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(coreStateSelector, (core) => core.autoSave);
+export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(coreStateSelector, (core) => core.removedOverlaysIdsCount);

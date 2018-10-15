@@ -1,20 +1,19 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import {
 	MultipleOverlaysSource,
-	MultipleOverlaysSourceConfig
-} from '@ansyn/ansyn/app-providers/overlay-source-providers/multiple-source-provider';
-import { IOverlay } from '@ansyn/overlays/models/overlay.model';
-import { Observable } from 'rxjs/Rx';
-import { IOverlaysFetchData } from '@ansyn/core/models/overlay.model';
+	MultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceProvider
+} from './multiple-source-provider';
+
+import { IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
-import { LoggerService } from '@ansyn/core/services/logger.service';
 import { Injectable } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { Auth0Config } from '@ansyn/login/services/auth0.model';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
+import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Auth0Service } from '../../../login/services/auth0.service';
+import { Auth0Config } from '../../../login/services/auth0.model';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -44,22 +43,22 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		if (fetchParams.limit <= 0) {
-			return Observable.of(emptyOverlays);
+			return of(emptyOverlays);
 		}
 
-		return Observable.of(overlays);
+		return of(overlays);
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	}
 }
 
@@ -68,19 +67,19 @@ class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = faultySourceType;
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.throw(new Error('Failed to fetch overlays'));
+		return throwError(new Error('Failed to fetch overlays'));
 	}
 
 	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return Observable.empty();
+		return EMPTY;
 	}
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return Observable.empty();
+		return EMPTY;
 	}
 }
 
@@ -137,7 +136,6 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [RouterTestingModule],
 			providers: [
 				{
 					provide: LoggerService,

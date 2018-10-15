@@ -1,7 +1,9 @@
-import * as ol from 'openlayers';
+import olPolygon from 'ol/geom/polygon';
 import olExtent from 'ol/extent';
 import { Point } from 'geojson';
+import { CaseMapExtent } from '@ansyn/core';
 
+// @dynamic
 export class Utils {
 	static BoundingBoxToOLExtent(bbox: Point[]): ol.Extent | any {
 		const coordinates = <ol.Coordinate[]> bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
@@ -21,5 +23,9 @@ export class Utils {
 			boundingBox.push(coord);
 		});
 		return boundingBox;
+	}
+
+	static extentToOlPolygon(extent: CaseMapExtent): olPolygon {
+		return olPolygon.fromExtent(extent);
 	}
 }

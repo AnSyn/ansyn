@@ -20,13 +20,13 @@ import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
-	overlaysStateSelector,
 	selectOverlaysMap
 } from '@ansyn/overlays';
 import { CasesActionTypes } from '@ansyn/menu-items';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
-import { filter, map, pluck, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { OverlayDrop, selectDrops } from '../../../overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class CoreAppEffects {
@@ -78,13 +78,13 @@ export class CoreAppEffects {
 			return { isNext, overlayId };
 		}),
 		filter(({ isNext, overlayId }) => Boolean(overlayId)),
-		withLatestFrom((this.store$.select(overlaysStateSelector).pipe(pluck('filteredOverlays'))), ({ isNext, overlayId }, filteredOverlays: string[]): string => {
-			const index = filteredOverlays.indexOf(overlayId);
+		withLatestFrom(this.store$.select(selectDrops), ({ isNext, overlayId }, drops: OverlayDrop[]): OverlayDrop => {
+			const index = drops.findIndex(({ id }) => id === overlayId);
 			const adjacent = isNext ? 1 : -1;
-			return filteredOverlays[index + adjacent];
+			return drops[index + adjacent];
 		}),
 		filter(Boolean),
-		map(id => new DisplayOverlayFromStoreAction({ id })));
+		map(({ id }) => new DisplayOverlayFromStoreAction({ id })));
 
 	@Effect()
 	onNextPresetOverlay$: Observable<any> = this.actions$.pipe(

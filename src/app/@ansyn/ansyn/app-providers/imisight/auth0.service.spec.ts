@@ -1,11 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Auth0Service } from './auth0.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-	IImisightOverlaySourceConfig,
-	ImisightOverlaySourceConfig
-} from '@ansyn/ansyn/app-providers/imisight/imisight.model';
-import { Auth0Config } from '@ansyn/login/services/auth0.model';
+import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
+import { Auth0Config } from './auth0.model';
 
 describe('Auth0Service', () => {
 	beforeEach(() => {

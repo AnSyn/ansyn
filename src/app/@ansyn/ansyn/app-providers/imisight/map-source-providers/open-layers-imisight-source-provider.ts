@@ -1,20 +1,18 @@
 import TileLayer from 'ol/layer/tile';
 import TileWMS from 'ol/source/tilewms';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn/app-providers/map-source-providers/open-layers.map-source-provider';
-import { OpenLayersDisabledMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMap } from '@ansyn/plugins/openlayers/open-layers-map/openlayers-map/openlayers-map';
-import { ICaseMapState } from '@ansyn/core/models/case.model';
-import { ImageryMapSource } from '@ansyn/imagery/decorators/map-source-provider';
-import { ImisightOverlaySourceType } from '@ansyn/ansyn/app-providers/imisight/overlays-source-providers/imisight-source-provider';
 import { HttpClient } from '@angular/common/http';
+import { Inject } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import { ImisightOverlaySourceType } from '../overlays-source-providers/imisight-source-provider';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
+import { OpenLayersMapSourceProvider } from '../../map-source-providers/open-layers.map-source-provider';
 import {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/ansyn/app-providers/map-source-providers/map-source-providers-config';
-import { CacheService } from '@ansyn/imagery/cache-service/cache.service';
-import { ImageryCommunicatorService } from '@ansyn/imagery/communicator-service/communicator.service';
-import { Inject } from '@angular/core';
-import { JwtHelperService } from '@auth0/angular-jwt';
+} from '../../map-source-providers/map-source-providers-config';
+import { ICaseMapState } from '@ansyn/core';
+import { map } from 'rxjs/operators';
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,
@@ -30,7 +28,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		super(cacheService, imageryCommunicatorService, config);
 	}
 
-	protected create(metaData: ICaseMapState): any[] {
+	public create(metaData: ICaseMapState): any[] {
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
 		const projection = 'EPSG:3857';
@@ -74,7 +72,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		};
 		return this.httpClient
 			.get(url, { headers: headers, responseType: 'blob' })
-			.map(blob => URL.createObjectURL(blob));
+			.pipe(map(blob => URL.createObjectURL(blob)));
 	}
 
 	parseTokenObjects(obj: any): any {

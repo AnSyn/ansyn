@@ -5,8 +5,8 @@ import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } fr
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
-import { Auth0Config, IAuth0Config } from '@ansyn/login/services/auth0.model';
+import { Auth0Service } from '@ansyn/ansyn/app-providers/imisight/auth0.service';
+import { Auth0Config, IAuth0Config } from '@ansyn/ansyn/app-providers/imisight/auth0.model';
 
 export interface IFiltersList {
 	name: string,

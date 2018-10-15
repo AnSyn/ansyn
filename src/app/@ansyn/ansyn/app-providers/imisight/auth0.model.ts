@@ -1,6 +1,4 @@
-import { InjectionToken } from '@angular/core';
-
-export const Auth0Config: InjectionToken<IAuth0Config> = new InjectionToken('auth0-config');
+export const Auth0Config = 'auth0Config';
 
 export interface IAuth0Config {
 	auth0Active: string;

@@ -1,6 +1,4 @@
-import { InjectionToken } from '@angular/core';
-
-export const ImisightOverlaySourceConfig: InjectionToken<IImisightOverlaySourceConfig> = new InjectionToken('imisight-overlays-source-config');
+export const ImisightOverlaySourceConfig = 'imisightOverlaysSourceConfig';
 
 export interface IImisightOverlaySourceConfig {
 	baseUrl: string;

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
-import { Auth0Config, IAuth0Config } from 'src/app/@ansyn/login/services/auth0.model';
+import { Auth0Config, IAuth0Config } from './auth0.model';
 
 (window as any).global = window;
 

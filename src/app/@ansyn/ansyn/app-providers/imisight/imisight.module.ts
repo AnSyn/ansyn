@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageryModule } from '@ansyn/imagery/imagery.module';
 import { OpenLayersImisightSourceProvider } from './map-source-providers/open-layers-imisight-source-provider';
-import { Auth0Service } from '../../../login/services/auth0.service';
-import { CallbackComponent } from '@ansyn/ansyn/app-providers/imisight/components/callback/callback.component';
-import { CoreModule } from '@ansyn/core/core.module';
+import { Auth0Service } from './auth0.service';
+import { CoreModule } from '@ansyn/core';
+import { ImageryModule } from '@ansyn/imagery';
+import { CallbackComponent } from './components/callback/callback.component';
 
 @NgModule({
 	imports: [

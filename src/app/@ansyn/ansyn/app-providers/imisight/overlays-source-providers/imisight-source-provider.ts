@@ -1,31 +1,18 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-	BaseOverlaySourceProvider,
-	IFetchParams,
-	IStartAndEndDate
-} from '@ansyn/overlays/models/base-overlay-source-provider.model';
-import { LoggerService } from '@ansyn/core/services/logger.service';
 import { EMPTY, Observable } from 'rxjs/index';
-import { limitArray } from '@ansyn/core/utils/i-limited-array';
-import { IOverlay } from '@ansyn/core/models/overlay.model';
+import { HttpClient } from '@angular/common/http';
+import { catchError, map } from 'rxjs/internal/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
-	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon,
-	getPolygonByPointAndRadius
-} from '@ansyn/core/utils/geo';
-import { sortByDateDesc } from '@ansyn/core/utils/sorting';
-import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core/services/error-handler.service';
-import { Auth0Service } from '@ansyn/login/services/auth0.service';
-import { toRadians } from '@ansyn/core/utils/math';
-import { IOverlaysPlanetFetchData } from '@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
-import { catchError, map } from 'rxjs/internal/operators';
-import {
-	IImisightOverlaySourceConfig,
-	ImisightOverlaySourceConfig
-} from '@ansyn/ansyn/app-providers/imisight/imisight.model';
-import { JwtHelperService } from '@auth0/angular-jwt';
+	ErrorHandlerService,
+	geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon,
+	getPolygonByPointAndRadius, IOverlay, limitArray,
+	LoggerService, sortByDateDesc, toRadians
+} from '@ansyn/core';
+import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from '../imisight.model';
+import { IOverlaysPlanetFetchData } from '../../overlay-source-providers/planet/planet.model';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 

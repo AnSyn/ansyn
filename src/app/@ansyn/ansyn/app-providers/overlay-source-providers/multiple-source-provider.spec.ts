@@ -12,8 +12,8 @@ import * as turf from '@turf/turf';
 import { Injectable } from '@angular/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Auth0Service } from '../../../login/services/auth0.service';
-import { Auth0Config } from '../../../login/services/auth0.model';
+import { Auth0Service } from '../imisight/auth0.service';
+import { Auth0Config } from '../imisight/auth0.model';
 
 const overlays: IOverlaysFetchData = {
 	data: [

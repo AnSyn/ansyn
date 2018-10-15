@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 export interface IFiltersList {
 	name: string,
 	dates: IDateRange[]
-	sensorNames: string,
+	sensorNames: string[],
 	coverage: number[][][][]
 }
 
@@ -74,7 +74,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 			// Separate all sensors, date ranges, and polygons
 			config.whitelist.forEach(filter => {
-				JSON.parse(filter.sensorNames).forEach(sensor => {
+				filter.sensorNames.forEach(sensor => {
 					filter.coverage.forEach(polygon => {
 						filter.dates.forEach(date => {
 							const dateObj = {
@@ -96,7 +96,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 				// Separate all sensors, date ranges, and polygons
 				config.blacklist.forEach(filter => {
-					JSON.parse(filter.sensorNames).forEach(sensor => {
+					filter.sensorNames.forEach(sensor => {
 						filter.coverage.forEach(polygon => {
 							filter.dates.forEach(date => {
 								const dateObj = {

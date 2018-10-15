@@ -123,7 +123,7 @@ const whitelist = [
 				end: null
 			}
 		],
-		sensorNames: '[ null ]',
+		sensorNames: [ null ],
 		coverage: [regionCoordinates]
 	}
 ];

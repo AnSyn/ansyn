@@ -110,13 +110,9 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		return Array.from(layoutOptions.keys());
 	}
 
-	public get orientations(): CaseOrientation[] {
-		return JSON.parse(this.orientationsString);
-	}
-
 	constructor(protected store: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
-				@Inject(ORIENTATIONS) public orientationsString: string,
+				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
 				protected actions$: Actions) {

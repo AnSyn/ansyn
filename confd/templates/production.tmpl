@@ -277,18 +277,21 @@
     },
     "dataInputFiltersConfig": {
       "IMISIGHT": {
-        "text":"Imisight",
-        "value": 1,
-        "collapsed": true,
-        "children": [
-          {
-            "text": "All",
-            "value": {
-              "sensorType": "All"
-            }
-          }
-        ]
-      },
+        "inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+      	"treeViewItem": {
+		  "text":"Imisight",
+		  "value": 1,
+		  "collapsed": true,
+		  "children": [
+			 {
+				"text": "All",
+				"value": {
+				  "sensorType": "All"
+				}
+			  }
+			]
+		  }
+	  },
       "PLANET": {
         "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
         "treeViewItem": {
@@ -976,6 +979,7 @@
 		"blacklist": []
 	},
     "IMISIGHT": {
+    	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
 		"whitelist": [
 			{
 				"name": "Entire Earth",
@@ -985,7 +989,7 @@
 						"end": null
 					}
 				],
-				"sensorNames": "{{ getv "/ansyn/overlay/open/aerial/sensor/names" "[ null ]" }}",
+				"sensorNames": "[null]",
 				"coverage": [
 					[
 						[

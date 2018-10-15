@@ -17,13 +17,6 @@ import { DataLayersModalsComponent } from './components/data-layers-modals/data-
 import { EditLayerComponent } from './components/data-layers-modals/edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
-import { Observable } from 'rxjs';
-
-export class ImisightDataLayersService extends DataLayersService {
-	getAllLayersInATree() {
-		return Observable.of([]);
-	}
-}
 
 // @dynamic
 @NgModule({
@@ -36,17 +29,15 @@ export class ImisightDataLayersService extends DataLayersService {
 	],
 	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
 	entryComponents: [LayersManagerComponent],
-	providers: [{ provide: DataLayersService, useClass: ImisightDataLayersService }]
+	providers: [DataLayersService]
 })
 
 export class LayersManagerModule {
 	static forRoot(config: ILayersManagerConfig): ModuleWithProviders {
-
-
 		return {
 			ngModule: LayersManagerModule,
 			providers: [
-				{ provide: DataLayersService, useClass: ImisightDataLayersService },
+				DataLayersService,
 				{ provide: layersConfig, useValue: config }
 			]
 		};

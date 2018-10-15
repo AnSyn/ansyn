@@ -23,7 +23,7 @@ import {
 	selectPresetOverlays,
 	UpdateOverlaysCountAction
 } from '@ansyn/core';
-import { catchError, filter, map, mergeMap } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class OverlaysEffects {
@@ -32,7 +32,7 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe<any>(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		mergeMap((action: LoadOverlaysAction) => {
+		switchMap((action: LoadOverlaysAction) => {
 			return this.overlaysService.search(action.payload).pipe(
 				mergeMap((overlays: IOverlaysFetchData) => {
 					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];

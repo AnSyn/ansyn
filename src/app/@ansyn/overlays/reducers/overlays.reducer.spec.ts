@@ -137,7 +137,7 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('set drops action', () => {
-		const newDrops = [{id: '23'}];
+		const newDrops = [{id: '23', date: new Date()}];
 		const action = new SetDropsAction(newDrops);
 		const result = OverlayReducer(overlaysInitialState, action);
 		expect(result.drops).toEqual(newDrops);

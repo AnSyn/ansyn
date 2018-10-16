@@ -1,3 +1,5 @@
+import { IOverlayDrop } from './models/overlay.model';
+
 export { selectTime } from './reducers/core.reducer';
 export { fetchConfigProviders } from './models/fetch-config-providers';
 export { IAlertComponent } from './alerts/alerts.model';
@@ -31,7 +33,7 @@ export { IAlert } from './alerts/alerts.model';
 export { LoggerConfig } from './models/logger.config';
 export { IEntity } from './services/storage/storage.service';
 export { coreStateSelector, selectFavoriteOverlays, selectPresetOverlays } from './reducers/core.reducer';
-export { IOverlaysFetchData, IOverlaySpecialObject } from './models/overlay.model';
+export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './models/overlay.model';
 export { ILimitedArray } from './utils/i-limited-array';
 export { OverlayDisplayMode } from './models/case.model';
 export { ClearActiveInteractionsAction } from './actions/core.actions';

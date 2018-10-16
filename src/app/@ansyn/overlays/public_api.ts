@@ -25,7 +25,7 @@ export {
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
 	selectFilteredOveralys, selectOverlaysArray,
-	selectOverlaysMap, selectSpecialObjects
+	selectOverlaysMap, selectSpecialObjects, selectDropsWithoutSpecialObjects
 } from './reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './services/overlays.service';
 export { BaseOverlaySourceProvider } from './models/base-overlay-source-provider.model';

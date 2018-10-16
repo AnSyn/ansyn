@@ -7,7 +7,7 @@ import {
 	coreStateSelector,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
-	IOverlay,
+	IOverlay, IOverlayDrop,
 	LoggerService,
 	selectRemovedOverlays,
 	SetOverlaysCriteriaAction,
@@ -19,14 +19,13 @@ import {
 	DisplayOverlayFromStoreAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
+	OverlaysActionTypes, selectDropsWithoutSpecialObjects,
 	selectOverlaysMap
 } from '@ansyn/overlays';
 import { CasesActionTypes } from '@ansyn/menu-items';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { OverlayDrop, selectDrops } from '../../../overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class CoreAppEffects {
@@ -78,7 +77,7 @@ export class CoreAppEffects {
 			return { isNext, overlayId };
 		}),
 		filter(({ isNext, overlayId }) => Boolean(overlayId)),
-		withLatestFrom(this.store$.select(selectDrops), ({ isNext, overlayId }, drops: OverlayDrop[]): OverlayDrop => {
+		withLatestFrom(this.store$.select(selectDropsWithoutSpecialObjects), ({ isNext, overlayId }, drops: IOverlayDrop[]): IOverlayDrop => {
 			const index = drops.findIndex(({ id }) => id === overlayId);
 			const adjacent = isNext ? 1 : -1;
 			return drops[index + adjacent];

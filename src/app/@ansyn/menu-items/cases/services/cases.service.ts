@@ -178,7 +178,7 @@ export class CasesService {
 	generateLinkWithCaseId(caseId: string) {
                 const baseLocation = location.href.split('#')[0];
                 const href = this.config.useHash ? `${baseLocation}/#` : baseLocation;
-		return `${href}/case/${caseId}`;
+                return `${href}/case/${caseId}`;
 	}
 
 	get decodeCaseObjects() {

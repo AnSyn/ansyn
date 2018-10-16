@@ -1,5 +1,5 @@
-import { IOverlayDrop } from './models/overlay.model';
-
+export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
+export { mergeArrays } from './utils/merge-arrays';
 export { selectTime } from './reducers/core.reducer';
 export { fetchConfigProviders } from './models/fetch-config-providers';
 export { IAlertComponent } from './alerts/alerts.model';
@@ -97,8 +97,8 @@ export { toDegrees, toRadians } from './utils/math';
 export { toastMessages } from './models/toast-messages';
 export { IContextEntity } from './models/case.model';
 export { ICoordinatesSystem } from './models/coordinate-system.model';
-export { cloneDeep } from './utils/rxjs-operators/cloneDeep';
-export { rxPreventCrash } from './utils/rxjs-operators/rxPreventCrash';
+export { cloneDeep } from './utils/rxjs/operators/cloneDeep';
+export { rxPreventCrash } from './utils/rxjs/operators/rxPreventCrash';
 export {
 	areCoordinatesNumeric,
 	bboxFromGeoJson,

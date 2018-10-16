@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { forkJoin, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
+	IOverlayByIdMetaData,
 	OverlaysActionTypes,
 	OverlaysService
 } from '@ansyn/overlays';
@@ -42,7 +43,6 @@ export class CasesAppEffects {
 			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		}),
 		share()
-
 	);
 
 	@Effect()
@@ -51,20 +51,14 @@ export class CasesAppEffects {
 			ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
 			map(({ payload }: SelectDilutedCaseAction) => payload),
 			mergeMap((caseValue: IDilutedCase) => {
-				let resultObservable = of([]);
-
-				const observablesArray = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
+				const ids: IOverlayByIdMetaData[] = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 						.map((mapData) => mapData.data.overlay)
 						.concat(caseValue.state.favoriteOverlays,
 							caseValue.state.presetOverlays || [])
 					, 'id')
-					.map(({ id, sourceType }: IOverlay) => this.overlaysService.getOverlayById(id, sourceType));
+					.map(({ id, sourceType }: IOverlay): IOverlayByIdMetaData => ({ id, sourceType }));
 
-				if (observablesArray.length > 0) {
-					resultObservable = forkJoin(observablesArray);
-				}
-
-				return resultObservable
+				return this.overlaysService.getOverlaysById(ids)
 					.pipe(
 						map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay]))),
 						map((mapOverlay: Map<string, IOverlay>) => {
@@ -82,7 +76,7 @@ export class CasesAppEffects {
 						}),
 						catchError((result: HttpErrorResponse) => {
 							return [new SetToastMessageAction({
-								toastText: `Failed to load case (${result.status})`,
+								toastText: `Failed to load case ${result.status ? `(${result.status})` : ''}`,
 								showWarningIcon: true
 							}),
 								new LoadDefaultCaseIfNoActiveCaseAction()];

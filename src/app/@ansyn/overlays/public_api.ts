@@ -1,3 +1,4 @@
+export { IOverlayByIdMetaData } from './services/overlays.service';
 export { selectHoveredOverlay } from './reducers/overlays.reducer';
 export { timeIntersection } from './models/base-overlay-source-provider.model';
 export { ChangeOverlayPreviewRotationAction } from './actions/overlays.actions';

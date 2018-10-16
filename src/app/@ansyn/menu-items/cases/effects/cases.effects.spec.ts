@@ -5,12 +5,12 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
-	AddCasesAction,
+	AddCasesAction, LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction,
+	SelectCaseAction, SelectDilutedCaseAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
@@ -195,6 +195,24 @@ describe('CasesEffects', () => {
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
+	});
+
+	describe('loadCase$', () => {
+		it('should load the given case', () => {
+			const myCaseId = 'myCaseId';
+			const caseToLoad: ICase = { ...caseMock, id: myCaseId };
+			spyOn(casesService, 'loadCase').and.returnValue(of(caseToLoad));
+			actions = hot('--a--', { a: new LoadCaseAction(myCaseId) });
+			const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction(caseToLoad) });
+			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
+		});
+		it('should load the default case, if the given case fails to load', () => {
+			const myCaseId = 'myCaseId';
+			spyOn(casesService, 'loadCase').and.throwError('');
+			actions = hot('--a--', { a: new LoadCaseAction(myCaseId) });
+			const expectedResults = cold('--(b|)', { b: new LoadDefaultCaseAction() });
+			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
+		});
 	});
 
 });

@@ -18,7 +18,7 @@
 
 		<div class="logo">
 
-			<ng-container *ngIf="menuConfig?.forkMe?.active === 'true'">
+			<ng-container *ngIf="menuConfig?.forkMe?.active">
 				<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
 					<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"
 						 [title]="menuConfig.forkMe?.title">

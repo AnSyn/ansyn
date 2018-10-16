@@ -11,7 +11,7 @@ describe('ManualRemovedOverlaysComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [SliderCheckboxComponent, ManualRemovedOverlaysComponent],
-			imports: [StoreModule.forRoot({})]
+			imports: [StoreModule.forRoot({})]ices/cases.service.ts
 		})
 			.compileComponents();
 	}));

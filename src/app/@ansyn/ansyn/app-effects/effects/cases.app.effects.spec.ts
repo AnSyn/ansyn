@@ -35,6 +35,7 @@ import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
 import { ContextConfig, contextFeatureKey, ContextReducer, ContextService } from '@ansyn/context';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { IOverlayByIdMetaData } from '@ansyn/overlays';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -101,7 +102,17 @@ describe('CasesAppEffects', () => {
 							}
 
 							return throwError(new HttpErrorResponse({ status: 404 }));
-						}
+						},
+
+						getOverlaysById: (ids: IOverlayByIdMetaData[]) => {
+							if (ids.every(({ id }) => ['uuu', 'eee'].includes(id))) {
+								const overlay = <IOverlay> {};
+								return of([overlay]);
+							}
+
+							return throwError(new HttpErrorResponse({ status: 404 }));
+						},
+
 					}
 				},
 				ImageryCommunicatorService,

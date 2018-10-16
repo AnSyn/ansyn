@@ -1,10 +1,25 @@
 import { forkJoin, from, Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { BaseOverlaySourceProvider, IDateRange, IFetchParams, IOverlayFilter, IStartAndEndDate } from '@ansyn/overlays';
-import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import {
+	BaseOverlaySourceProvider,
+	IDateRange,
+	IFetchParams,
+	IOverlayByIdMetaData,
+	IOverlayFilter,
+	IStartAndEndDate
+} from '@ansyn/overlays';
+import {
+	forkJoinSafe,
+	IDataInputFilterValue,
+	IOverlay,
+	IOverlaysFetchData,
+	LoggerService,
+	mergeArrays
+} from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
+import { groupBy } from 'lodash';
 
 export interface IFiltersList {
 	name: string,
@@ -32,7 +47,6 @@ export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = 
 
 @Injectable()
 export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
-
 	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
@@ -117,9 +131,9 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				blackFilters = blackFilters.sort((a, b) => (!a.timeRange.start || a.timeRange.start > b.timeRange.start) ? 1 : -1);
 
 				// Remove filters that are blacklisted
-				whiteFilters = whiteFilters
+				whiteFilters = mergeArrays(whiteFilters
 					.map(filter => filterFilter(filter, blackFilters))
-					.reduce((a, b) => a.concat(b), []);
+				);
 			}
 
 			// If there are whiteFilters after removing the blackFilters, add it to the sourceConfigs list
@@ -138,6 +152,20 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			return overlaysSource.getById(id, sourceType);
 		}
 		return throwError(`Cannot find overlay for source = ${sourceType} id = ${id}`);
+	}
+
+	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
+		const grouped = groupBy(ids, 'sourceType');
+		const observables = Object.entries(grouped)
+			.map(([sourceType, ids]): Observable<IOverlay[]> => {
+				const overlaysSource = this.overlaysSources.find(s => s.sourceType === sourceType);
+				if (overlaysSource) {
+					return overlaysSource.getByIds(ids);
+				}
+				return throwError(`Cannot find overlay for source = ${sourceType}`);
+			});
+
+		return forkJoinSafe(observables).pipe(map(mergeArrays));
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
@@ -252,7 +280,7 @@ export function filterFilter(whiteFilter: IOverlayFilter, blackFilters: IOverlay
 		}
 	}
 
-	return filters
+	return mergeArrays(filters
 		.map(filter => filterFilter(filter, newBlackFilters))
-		.reduce((a, b) => a.concat(b), []);
+	);
 }

@@ -13,6 +13,7 @@ import {
 } from '../../map-source-providers/map-source-providers-config';
 import { ICaseMapState } from '@ansyn/core';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,
@@ -63,7 +64,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		return Promise.resolve(layer[0]);
 	}
 
-	getImageURL(url: string) {
+	getImageURL(url: string): Observable<any> {
 		const token = localStorage.getItem('access_token');
 		const headers = {
 			'Content-Type': 'application/json',

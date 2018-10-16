@@ -13,6 +13,7 @@ import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
+import { mergeArrays } from '../../../core/utils/merge-arrays';
 
 export interface IFiltersList {
 	name: string,
@@ -124,9 +125,9 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				blackFilters = blackFilters.sort((a, b) => (!a.timeRange.start || a.timeRange.start > b.timeRange.start) ? 1 : -1);
 
 				// Remove filters that are blacklisted
-				whiteFilters = whiteFilters
+				whiteFilters = mergeArrays(whiteFilters
 					.map(filter => filterFilter(filter, blackFilters))
-					.reduce((a, b) => a.concat(b), []);
+				);
 			}
 
 			// If there are whiteFilters after removing the blackFilters, add it to the sourceConfigs list
@@ -160,9 +161,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 		if (!observables.length) {
 			return of([]);
 		}
-		return forkJoin(observables).pipe(
-			map((results: IOverlay[][]) => results.reduce((prev, current) => [...prev, ...current], []))
-		);
+		return forkJoin(observables).pipe(map(mergeArrays));
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
@@ -277,7 +276,7 @@ export function filterFilter(whiteFilter: IOverlayFilter, blackFilters: IOverlay
 		}
 	}
 
-	return filters
+	return mergeArrays(filters
 		.map(filter => filterFilter(filter, newBlackFilters))
-		.reduce((a, b) => a.concat(b), []);
+	);
 }

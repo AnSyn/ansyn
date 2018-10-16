@@ -154,9 +154,6 @@ export abstract class BaseOverlaySourceProvider {
 
 	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
 		const requests = ids.map(({ id, sourceType }) => this.getById(id, sourceType));
-		if (!requests.length) {
-			return of([])
-		}
-		return forkJoin(requests);
+		return forkJoinSafe(requests);
 	};
 }

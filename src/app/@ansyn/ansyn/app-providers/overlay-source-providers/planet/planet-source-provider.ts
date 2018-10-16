@@ -231,7 +231,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const body = this.buildFilters({ config: [{ type: 'StringInFilter', field_name: 'id', config: ids.map(({ id }) => id) }] });
 		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders }).pipe(
 			map(data => {
-				if (data.features.length <= 0) {
+				if (data.features.length <= ids.length) {
 					throw new HttpErrorResponse({ status: 404 });
 				}
 				return data.features.map((overlay) => this.parseData(overlay));

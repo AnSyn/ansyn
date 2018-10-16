@@ -235,9 +235,6 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 					throw new HttpErrorResponse({ status: 404 });
 				}
 				return data.features.map((overlay) => this.parseData(overlay));
-			}),
-			tap((res) => {
-				console.log(res);
 			})
 		);
 	}

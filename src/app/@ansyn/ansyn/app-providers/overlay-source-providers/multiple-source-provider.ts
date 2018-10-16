@@ -11,7 +11,7 @@ import {
 import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
-import { map, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
 
 export interface IFiltersList {

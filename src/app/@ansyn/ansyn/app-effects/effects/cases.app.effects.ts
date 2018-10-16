@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { forkJoin, merge, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	DisplayOverlayAction,
-	DisplayOverlaySuccessAction, IOverlayByIdMetaData,
+	DisplayOverlaySuccessAction,
+	IOverlayByIdMetaData,
 	OverlaysActionTypes,
 	OverlaysService
 } from '@ansyn/overlays';
@@ -20,7 +21,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, concatAll, map, mergeMap, share, withLatestFrom, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class CasesAppEffects {
@@ -42,7 +43,6 @@ export class CasesAppEffects {
 			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		}),
 		share()
-
 	);
 
 	@Effect()

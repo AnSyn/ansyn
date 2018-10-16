@@ -1,6 +1,6 @@
 import {
 	CoreActionTypes,
-	IOverlay,
+	IOverlay, IOverlayDrop,
 	IOverlaySpecialObject,
 	mapValuesToArray,
 	SetOverlaysCriteriaAction
@@ -14,8 +14,6 @@ export interface ITimelineRange {
 	start: Date;
 	end: Date;
 }
-
-export type OverlayDrop = Partial<IOverlay>;
 
 export interface IOverlayDropMarkUp {
 	id: string,
@@ -59,7 +57,7 @@ export interface IOverlaysState {
 	selectedOverlays: string[];
 	specialObjects: Map<string, IOverlaySpecialObject>;
 	filteredOverlays: string[];
-	drops: OverlayDrop[];
+	drops: IOverlayDrop[];
 	timeLineRange: ITimelineRange;
 	statusMessage: string;
 	dropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData>;
@@ -291,11 +289,12 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 }
 
-export const selectDrops: MemoizedSelector<IOverlaysState, OverlayDrop[]> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
-export const selectOverlaysArray = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay[] => mapValuesToArray(overlays.overlays));
 export const selectOverlaysMap = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlay> => overlays.overlays);
+export const selectOverlaysArray = createSelector(selectOverlaysMap, (overlays: Map<string, IOverlay>): IOverlay[] => mapValuesToArray(overlays));
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
+export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
+export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay => overlays.hoveredOverlay);

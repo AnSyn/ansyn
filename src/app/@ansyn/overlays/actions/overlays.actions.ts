@@ -1,11 +1,10 @@
 import { Action } from '@ngrx/store';
-import { IOverlay, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
+import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
 import {
 	IMarkUpData,
 	IOverlayDropMarkUp,
 	ITimelineRange,
-	MarkUpClass,
-	OverlayDrop
+	MarkUpClass
 } from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
@@ -166,7 +165,7 @@ export class SetSpecialObjectsActionStore implements Action {
 export class SetDropsAction implements Action {
 	type = OverlaysActionTypes.SET_DROPS;
 
-	constructor(public payload: Array<OverlayDrop>) {
+	constructor(public payload: Array<IOverlayDrop>) {
 	};
 }
 

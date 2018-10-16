@@ -18,7 +18,6 @@ import {
 	ITimelineRange,
 	MarkUpClass,
 	MarkUpTypes,
-	OverlayDrop,
 	selectDropMarkup,
 	selectDrops,
 	selectTimelineRange
@@ -39,6 +38,7 @@ import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
+import { IOverlayDrop } from '@ansyn/core';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -143,8 +143,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			})
 		);
 
-	dropsIdMap: Map<string, OverlayDrop> = new Map();
-	dropsChange$: Observable<OverlayDrop[]> = this.store$
+	dropsIdMap: Map<string, IOverlayDrop> = new Map();
+	dropsChange$: Observable<IOverlayDrop[]> = this.store$
 		.pipe(
 			select(selectDrops),
 			distinctUntilChanged(isEqual),

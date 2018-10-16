@@ -87,8 +87,13 @@ export interface IOverlaysCriteriaOptions {
 	noInitialSearch?: boolean;
 }
 
-export interface IOverlaySpecialObject {
+
+export interface IOverlayDrop {
 	id: string;
 	date: Date;
+	shape?: string;
+}
+
+export interface IOverlaySpecialObject extends IOverlayDrop {
 	shape: string; // this will be type soon or I will add another property for shapeType
 }

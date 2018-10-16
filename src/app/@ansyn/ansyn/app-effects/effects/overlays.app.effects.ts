@@ -16,7 +16,6 @@ import {
 	overlaysStateSelector,
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
-	selectOverlaysMap,
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetSpecialObjectsActionStore
@@ -222,7 +221,7 @@ export class OverlaysAppEffects {
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.pipe(
-			withLatestFrom(this.store$.select(selectOverlaysMap)),
+			withLatestFrom(this.overlaysService.getAllOverlays$),
 			this.getOverlayFromDropMarkup,
 			withLatestFrom(this.store$.select(selectActiveMapId)),
 			this.getCommunicatorForActiveMap,

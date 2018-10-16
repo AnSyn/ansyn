@@ -8,6 +8,11 @@ import { unionBy } from 'lodash';
 
 export const OverlaysConfig = 'overlaysConfig';
 
+export interface IOverlayByIdMetaData {
+	id: string;
+	sourceType: string
+}
+
 // @dynamic
 @Injectable()
 export class OverlaysService {
@@ -64,6 +69,10 @@ export class OverlaysService {
 
 	getOverlayById(id: string, sourceType: string): Observable<IOverlay> {
 		return this._overlaySourceProvider.getById(id, sourceType);
+	}
+
+	getOverlaysById(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
+		return this._overlaySourceProvider.getByIds(ids);
 	}
 
 	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {

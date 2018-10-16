@@ -3,6 +3,7 @@ import { feature, intersect } from '@turf/turf';
 import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import {
+	forkJoinSafe,
 	IDataInputFilterValue,
 	ILimitedArray,
 	IOverlay,
@@ -12,6 +13,7 @@ import {
 	sortByDateDesc
 } from '@ansyn/core';
 import { catchError, map } from 'rxjs/operators';
+import { IOverlayByIdMetaData } from '../services/overlays.service';
 
 export interface IDateRange {
 	start: Date;
@@ -150,4 +152,9 @@ export abstract class BaseOverlaySourceProvider {
 	abstract getById(id: string, sourceType: string): Observable<IOverlay>;
 
 	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
+
+	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
+		const requests = ids.map(({ id, sourceType }) => this.getById(id, sourceType));
+		return forkJoinSafe(requests);
+	};
 }

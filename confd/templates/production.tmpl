@@ -276,6 +276,22 @@
       "quickloop": "Next overlay from the quick loop (key: Q)"
     },
     "dataInputFiltersConfig": {
+      "IMISIGHT": {
+        "inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+      	"treeViewItem": {
+		  "text":"Imisight",
+		  "value": 1,
+		  "collapsed": true,
+		  "children": [
+			 {
+				"text": "All",
+				"value": {
+				  "sensorType": "All"
+				}
+			  }
+			]
+		  }
+	  },
       "PLANET": {
         "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
         "treeViewItem": {
@@ -962,6 +978,48 @@
 			}
 		],
 		"blacklist": []
+	},
+    "IMISIGHT": {
+    	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": [null],
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": []
 	}
   },
   "idahoOverlaysSourceConfig": {
@@ -971,6 +1029,9 @@
   },
   "openAerialOverlaysSourceConfig": {
   	"baseUrl": "https://api.openaerialmap.org/meta"
+  },
+  "imisightOverlaysSourceConfig": {
+    "baseUrl": "https://gw.sat.imisight.net/a3/search"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",
@@ -983,9 +1044,18 @@
       "Landsat8L1G",
       "Sentinel2L1C"
     ],
-    "apiKey": "9cb5e69a1a334a0c9e99a5134b7bb63d",
+    "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
     "tilesUrl": "https://tiles.planet.com/data/v1/",
     "delayMultiple": 300
+  },
+  "auth0Config": {
+      "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},
+      "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",
+      "domain": "{{ getv "/ansyn/auth0/domain" "imisight-sat.auth0.com" }}",
+      "responseType": "{{ getv "/ansyn/auth0/responseType" "token id_token" }}",
+      "audience": "{{ getv "/ansyn/auth0/audience" "https://gw.sat.imisight.net" }}",
+      "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
+      "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
   },
   "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"]
 }

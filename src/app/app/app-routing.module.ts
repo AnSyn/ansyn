@@ -5,6 +5,7 @@ import { UnAuthGuard } from './login/guards/unauth.guard';
 import { AuthGuard } from './login/guards/auth.guard';
 import { LoginComponent } from './login/login/login.component';
 import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
+import { CallbackComponent } from '../@ansyn/ansyn/components/callback/callback.component';
 
 export const routes: Routes = [
 	{
@@ -28,6 +29,10 @@ export const routes: Routes = [
 	{
 		path: 'login',
 		component: LoginComponent
+	},
+	{
+		path: 'access_token',
+		component: CallbackComponent
 	}
 ];
 

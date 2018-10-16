@@ -11,6 +11,8 @@ import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
 import { Injectable } from '@angular/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Auth0Service } from './imisight/auth0.service';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -129,7 +131,9 @@ const whitelist = [
 ];
 const loggerServiceMock = { error: (some) => null };
 
-describe('MultipleSourceProvider with one truthy provider', () => {
+describe('MultipleSourceProvider', () => {
+
+	describe('MultipleSourceProvider with one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -149,7 +153,8 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 					provide: MultipleOverlaysSource,
 					useClass: TruthyOverlaySourceProviderMock,
 					multi: true
-				}
+				},
+				{ provide: Auth0Service, useValue: {} }
 			]
 		});
 	});
@@ -172,7 +177,7 @@ describe('MultipleSourceProvider with one truthy provider', () => {
 
 });
 
-describe('MultipleSourceProvider with one faulty provider', () => {
+	describe('MultipleSourceProvider with one faulty provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -192,7 +197,8 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 					provide: MultipleOverlaysSource,
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
-				}
+				},
+				{ provide: Auth0Service, useValue: {} }
 			]
 		});
 	});
@@ -209,10 +215,11 @@ describe('MultipleSourceProvider with one faulty provider', () => {
 
 });
 
-describe('MultipleSourceProvider with one faulty provider and one truthy provider', () => {
+	describe('MultipleSourceProvider with one faulty provider and one truthy provider', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
+			imports: [RouterTestingModule],
 			providers: [
 				{
 					provide: LoggerService,
@@ -234,7 +241,8 @@ describe('MultipleSourceProvider with one faulty provider and one truthy provide
 					provide: MultipleOverlaysSource,
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
-				}
+				},
+				{ provide: Auth0Service, useValue: {} }
 			]
 		});
 	});
@@ -254,5 +262,7 @@ describe('MultipleSourceProvider with one faulty provider and one truthy provide
 
 		expect(this.multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
 	});
+
+});
 
 });

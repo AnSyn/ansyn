@@ -16,7 +16,7 @@ import { OpenLayerOpenAerialSourceProvider } from './map-source-providers/open-l
 import {
 	MultipleOverlaysSource,
 	MultipleOverlaysSourceProvider
-} from './overlay-source-providers/multiple-source-provider';
+} from '../../overlays/services/multiple-source-provider';
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
@@ -41,9 +41,6 @@ import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-pro
 		})
 	],
 	providers: [
-		// Source provider for overlays
-		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
-
 		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },

@@ -63,6 +63,26 @@ export function timeIntersection(whiteRange: IDateRange, blackRange: IDateRange)
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
 
+	static isFaulty(data: IOverlaysFetchData): boolean {
+		return Array.isArray(data.errors) && data.errors.length > 0;
+	}
+
+	static mergeErrors(data: IOverlaysFetchData[]): Error[] {
+		return [].concat.apply([],
+			data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
+	}
+
+	static mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: Error[]): IOverlaysFetchData {
+		return {
+			...mergeLimitedArrays(data.filter(item => !BaseOverlaySourceProvider.isFaulty(item)) as Array<ILimitedArray>,
+				limit, {
+					sortFn: sortByDateDesc,
+					uniqueBy: o => o.id
+				}),
+			errors: errors ? errors : BaseOverlaySourceProvider.mergeErrors(data)
+		};
+	}
+
 	protected constructor(protected loggerService: LoggerService) {
 	}
 
@@ -118,31 +138,11 @@ export abstract class BaseOverlaySourceProvider {
 					return { data: null, limited: -1, errors: data[0].errors };
 				}
 
-				return this.mergeOverlaysFetchData(data, fetchParams.limit);
+				return BaseOverlaySourceProvider.mergeOverlaysFetchData(data, fetchParams.limit);
 			})
 		);
 
 		return multipleFetches;
-	}
-
-	mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: Error[]): IOverlaysFetchData {
-		return {
-			...mergeLimitedArrays(data.filter(item => !this.isFaulty(item)) as Array<ILimitedArray>,
-				limit, {
-					sortFn: sortByDateDesc,
-					uniqueBy: o => o.id
-				}),
-			errors: errors ? errors : this.mergeErrors(data)
-		};
-	}
-
-	mergeErrors(data: IOverlaysFetchData[]): Error[] {
-		return [].concat.apply([],
-			data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
-	}
-
-	isFaulty(data: IOverlaysFetchData): boolean {
-		return Array.isArray(data.errors) && data.errors.length > 0;
 	}
 
 	abstract fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData>;

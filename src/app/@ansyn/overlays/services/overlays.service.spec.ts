@@ -7,6 +7,7 @@ import { EMPTY, Observable, Observer } from 'rxjs';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject, LoggerService } from '@ansyn/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
+import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -69,7 +70,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 describe('OverlaysService', () => {
 	let overlaysService: OverlaysService, mockBackend, lastConnection, http;
-	let baseSourceProvider: BaseOverlaySourceProvider;
+	let multipleOverlaysSourceProvider: MultipleOverlaysSourceProvider;
 	let overlaysTmpData: IOverlay[];
 	let favoriteOverlays: IOverlay[];
 	let response = {
@@ -125,17 +126,17 @@ describe('OverlaysService', () => {
 				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{ provide: XHRBackend, useClass: MockBackend },
 				{ provide: OverlaysConfig, useValue: {} },
-				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
 			],
 			imports: [HttpClientModule]
 		});
 	});
 
-	beforeEach(inject([OverlaysService, XHRBackend, HttpClient, BaseOverlaySourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http, _baseSourceProvider: BaseOverlaySourceProvider) => {
+	beforeEach(inject([OverlaysService, XHRBackend, HttpClient, MultipleOverlaysSourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http, _multipleOverlaysSourceProvider: MultipleOverlaysSourceProvider) => {
 		overlaysService = _overlaysService;
 		mockBackend = _mockBackend;
 		http = _http;
-		baseSourceProvider = _baseSourceProvider;
+		multipleOverlaysSourceProvider = _multipleOverlaysSourceProvider;
 
 		mockBackend.connections.subscribe((connection: any) => {
 			if (connection.request.url === '//localhost:8037/api/mock/eventDrops/data') {
@@ -233,7 +234,7 @@ describe('OverlaysService', () => {
 	it('check the method fetchData with spyOn', () => {
 		let response = { key: 'value' };
 
-		spyOn(baseSourceProvider, 'fetch').and.callFake(() => {
+		spyOn(multipleOverlaysSourceProvider, 'fetch').and.callFake(() => {
 			return Observable.create((observer: Observer<any>) => observer.next(response));
 		});
 
@@ -252,7 +253,7 @@ describe('OverlaysService', () => {
 	it('check the method searchOverlay with spyOn', () => {
 		let response = { key: 'value' };
 
-		let calls = spyOn(baseSourceProvider, 'fetch').and.callFake(function () {
+		let calls = spyOn(multipleOverlaysSourceProvider, 'fetch').and.callFake(function () {
 			return Observable.create((observer: Observer<any>) => observer.next(response));
 		}).calls;
 

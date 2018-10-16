@@ -1,7 +1,7 @@
 import { forkJoin, Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
-	IFetchParams,
+	IFetchParams, IOverlayByIdMetaData,
 	IOverlayFilter,
 	IStartAndEndDate,
 	timeIntersection
@@ -22,7 +22,7 @@ import {
 } from '@ansyn/core';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
@@ -78,7 +78,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		});
 	}
 
-	buildFilters({ config, sensors, type = 'AndFilter' }: { config: IPlanetFilter[], sensors?: string[], type?: 'AndFilter' | 'OrFilter' }) {
+	buildFilters({ config, sensors, type = 'AndFilter' }: { config: IPlanetFilter | IPlanetFilter[], sensors?: string[], type?: 'AndFilter' | 'OrFilter' }) {
 		return {
 			item_types: Array.isArray(sensors) ? sensors : this.planetOverlaysSourceConfig.itemTypes,
 			filter: { type, config }
@@ -221,11 +221,23 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				if (data.features.length <= 0) {
 					throw new HttpErrorResponse({ status: 404 });
 				}
-
 				return this.extractData(data.features);
+			})
+		);
+	}
+
+	getByIds(ids: IOverlayByIdMetaData[]) {
+		const { baseUrl } = this.planetOverlaysSourceConfig;
+		const body = this.buildFilters({ config: [{ type: 'StringInFilter', field_name: 'id', config: ids.map(({ id }) => id) }] });
+		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders }).pipe(
+			map(data => {
+				if (data.features.length <= 0) {
+					throw new HttpErrorResponse({ status: 404 });
+				}
+				return data.features.map((overlay) => this.parseData(overlay));
 			}),
-			catchError((error: HttpErrorResponse) => {
-				return Observable.throw(error);
+			tap((res) => {
+				console.log(res);
 			})
 		);
 	}

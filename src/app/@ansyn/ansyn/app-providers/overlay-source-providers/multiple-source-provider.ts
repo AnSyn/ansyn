@@ -8,12 +8,11 @@ import {
 	IOverlayFilter,
 	IStartAndEndDate
 } from '@ansyn/overlays';
-import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService, mergeArrays } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
-import { mergeArrays } from '../../../core/utils/merge-arrays';
 
 export interface IFiltersList {
 	name: string,

@@ -1,7 +1,19 @@
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
-import { Auth0Config, IAuth0Config } from './auth0.model';
+
+export const Auth0Config = 'auth0Config';
+
+export interface IAuth0Config {
+	auth0Active: boolean;
+	clientID: string;
+	domain: string;
+	responseType: string;
+	audience: string;
+	callbackURL: string;
+	scope: string;
+
+}
 
 @Injectable({
 	providedIn: 'root'
@@ -21,6 +33,7 @@ export class Auth0Service {
 	}
 
 	constructor(public router: Router, @Inject(Auth0Config) protected auth0Config: IAuth0Config) {
+		this.handleAuthentication();
 	}
 
 	public login(): void {

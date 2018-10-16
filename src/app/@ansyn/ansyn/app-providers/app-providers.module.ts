@@ -20,13 +20,12 @@ import {
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
-import { ImisightModule } from './imisight/imisight.module';
-import { ImisightSourceProvider } from './imisight/overlays-source-providers/imisight-source-provider';
+import { ImisightSourceProvider } from './overlay-source-providers/imisight/imisight-source-provider';
+import { OpenLayersImisightSourceProvider } from './map-source-providers/open-layers-imisight-source-provider';
 
 @NgModule({
 	imports: [
 		HttpClientModule,
-		ImisightModule,
 		ImageryModule.provide({
 			mapSourceProviders: [
 				OpenLayerTileWMSSourceProvider,
@@ -37,7 +36,8 @@ import { ImisightSourceProvider } from './imisight/overlays-source-providers/imi
 				OpenLayerNotGeoRegisteredPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
-				OpenLayerOpenAerialSourceProvider
+				OpenLayerOpenAerialSourceProvider,
+				OpenLayersImisightSourceProvider
 			],
 			plugins: [],
 			maps: []

@@ -17,8 +17,8 @@ import {
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from '../imisight.model';
-import { IOverlaysPlanetFetchData } from '../../overlay-source-providers/planet/planet.model';
+import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
+import { IOverlaysPlanetFetchData } from '../planet/planet.model';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 

@@ -1,8 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { Auth0Service } from './auth0.service';
+import { Auth0Config, Auth0Service } from './auth0.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
-import { Auth0Config } from './auth0.model';
 
 describe('Auth0Service', () => {
 	beforeEach(() => {
@@ -12,8 +11,7 @@ describe('Auth0Service', () => {
 				Auth0Service,
 				{
 					provide: ImisightOverlaySourceConfig, useValue: <IImisightOverlaySourceConfig> {
-					baseUrl: 'imisight.com',
-					callbackURL: 'callback'
+						baseUrl: 'imisight.com',
 					}
 				},
 				{

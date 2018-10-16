@@ -19,7 +19,7 @@ import {
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
-import { Auth0Service } from '../imisight/auth0.service';
+import { Auth0Service } from './imisight/auth0.service';
 import { groupBy } from 'lodash';
 
 export interface IFiltersList {

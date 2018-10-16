@@ -1,4 +1,4 @@
-import { forkJoin, from, Observable, of, throwError } from 'rxjs';
+import { forkJoin, from, Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
@@ -8,7 +8,14 @@ import {
 	IOverlayFilter,
 	IStartAndEndDate
 } from '@ansyn/overlays';
-import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService, mergeArrays } from '@ansyn/core';
+import {
+	forkJoinSafe,
+	IDataInputFilterValue,
+	IOverlay,
+	IOverlaysFetchData,
+	LoggerService,
+	mergeArrays
+} from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
@@ -157,10 +164,8 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				}
 				return throwError(`Cannot find overlay for source = ${sourceType}`);
 			});
-		if (!observables.length) {
-			return of([]);
-		}
-		return forkJoin(observables).pipe(map(mergeArrays));
+
+		return forkJoinSafe(observables).pipe(map(mergeArrays));
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

@@ -1,10 +1,18 @@
-import { forkJoin, from, Observable, throwError } from 'rxjs';
+import { forkJoin, from, Observable, of, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { BaseOverlaySourceProvider, IDateRange, IFetchParams, IOverlayFilter, IStartAndEndDate } from '@ansyn/overlays';
+import {
+	BaseOverlaySourceProvider,
+	IDateRange,
+	IFetchParams,
+	IOverlayByIdMetaData,
+	IOverlayFilter,
+	IStartAndEndDate
+} from '@ansyn/overlays';
 import { IDataInputFilterValue, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
-import { map } from 'rxjs/operators';
+import { map, map } from 'rxjs/operators';
+import { groupBy } from 'lodash';
 
 export interface IFiltersList {
 	name: string,
@@ -32,7 +40,6 @@ export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = 
 
 @Injectable()
 export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
-
 	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
@@ -138,6 +145,24 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			return overlaysSource.getById(id, sourceType);
 		}
 		return throwError(`Cannot find overlay for source = ${sourceType} id = ${id}`);
+	}
+
+	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
+		const grouped = groupBy(ids, 'sourceType');
+		const observables = Object.entries(grouped)
+			.map(([sourceType, ids]): Observable<IOverlay[]> => {
+				const overlaysSource = this.overlaysSources.find(s => s.sourceType === sourceType);
+				if (overlaysSource) {
+					return overlaysSource.getByIds(ids);
+				}
+				return throwError(`Cannot find overlay for source = ${sourceType}`);
+			});
+		if (!observables.length) {
+			return of([]);
+		}
+		return forkJoin(observables).pipe(
+			map((results: IOverlay[][]) => results.reduce((prev, current) => [...prev, ...current], []))
+		);
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

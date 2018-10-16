@@ -12,6 +12,7 @@ import {
 	sortByDateDesc
 } from '@ansyn/core';
 import { catchError, map } from 'rxjs/operators';
+import { IOverlayByIdMetaData } from '../services/overlays.service';
 
 export interface IDateRange {
 	start: Date;
@@ -150,4 +151,12 @@ export abstract class BaseOverlaySourceProvider {
 	abstract getById(id: string, sourceType: string): Observable<IOverlay>;
 
 	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
+
+	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
+		const requests = ids.map(({ id, sourceType }) => this.getById(id, sourceType));
+		if (!requests.length) {
+			return of([])
+		}
+		return forkJoin(requests);
+	};
 }

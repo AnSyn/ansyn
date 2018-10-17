@@ -23,8 +23,8 @@ fdescribe('EnumFilterMetadata', () => {
 
 			enumFilterMetadata.updateMetadata('thirdFeild');
 
-			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeFalsy();
+			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeTruthy();
 			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeTruthy();
 
 			expect(enumFilterMetadata.enumsFields.get('firstFeild').count).toBe(1);
@@ -42,9 +42,9 @@ fdescribe('EnumFilterMetadata', () => {
 
 			enumFilterMetadata.updateMetadata('lady gaga');
 
-			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeFalsy();
+			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeTruthy();
 
 			expect(enumFilterMetadata.enumsFields.get('firstFeild').count).toBe(1);
 			expect(enumFilterMetadata.enumsFields.get('secondFeild').count).toBe(2);

@@ -1,3 +1,4 @@
+export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
 export { mergeArrays } from './utils/merge-arrays';
 export { selectTime } from './reducers/core.reducer';

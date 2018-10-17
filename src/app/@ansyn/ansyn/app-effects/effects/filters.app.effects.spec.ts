@@ -7,10 +7,10 @@ import { cold, hot } from 'jasmine-marbles';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	EnumFilterMetadata,
-	FilterMetadata, filtersConfig,
+	FilterMetadata,
+	filtersConfig,
 	filtersFeatureKey,
 	FiltersReducer,
-	FiltersService,
 	IFilter,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
@@ -27,10 +27,13 @@ import {
 } from '@ansyn/core';
 import {
 	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
 	OverlayReducer,
 	overlaysFeatureKey,
-	OverlaysService, overlaysStatusMessages, SetDropsAction, SetFilteredOverlaysAction, SetOverlaysStatusMessage
+	OverlaysService,
+	overlaysStatusMessages,
+	SetDropsAction,
+	SetFilteredOverlaysAction,
+	SetOverlaysStatusMessage
 } from '@ansyn/overlays';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 
@@ -98,7 +101,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('initializeFilters$ effect', () => {
-		actions = hot('--a--', { a: new LoadOverlaysSuccessAction([]) });
+		actions = hot('--a--', { a: new LoadOverlaysAction(<any> {}) });
 		const expectedResults = cold('--b--', { b: new InitializeFiltersAction() });
 		expect(filtersAppEffects.initializeFilters$).toBeObservable(expectedResults);
 	});

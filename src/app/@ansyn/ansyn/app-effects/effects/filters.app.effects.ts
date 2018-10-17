@@ -93,7 +93,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS),
+		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		map(() => new InitializeFiltersAction()));
 
 	@Effect()

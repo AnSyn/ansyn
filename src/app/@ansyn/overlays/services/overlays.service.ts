@@ -61,12 +61,12 @@ export class OverlaysService {
 	}
 
 	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
-				protected multipleOverlaysSourceProvider: MultipleOverlaysSourceProvider) {
+				protected _overlaySourceProvider: MultipleOverlaysSourceProvider) {
 	}
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
 		let feature = params.region;
-		return this.multipleOverlaysSourceProvider.fetch({
+		return this._overlaySourceProvider.fetch({
 			dataInputFilters: Boolean(params.dataInputFilters) && params.dataInputFilters.active ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,
 			region: feature,
@@ -78,19 +78,19 @@ export class OverlaysService {
 	}
 
 	getOverlayById(id: string, sourceType: string): Observable<IOverlay> {
-		return this.multipleOverlaysSourceProvider.getById(id, sourceType);
+		return this._overlaySourceProvider.getById(id, sourceType);
 	}
 
 	getOverlaysById(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
-		return this.multipleOverlaysSourceProvider.getByIds(ids);
+		return this._overlaySourceProvider.getByIds(ids);
 	}
 
 	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
-		return this.multipleOverlaysSourceProvider.getStartDateViaLimitFacets(params);
+		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
 	}
 
 	getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return this.multipleOverlaysSourceProvider.getStartAndEndDateViaRangeFacets(params);
+		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
 	}
 
 	getTimeStateByOverlay(displayedOverlay: IOverlayDrop, timeLineRange: ITimelineRange): ITimelineRange {

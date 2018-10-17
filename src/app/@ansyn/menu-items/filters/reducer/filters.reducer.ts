@@ -49,12 +49,6 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return { ...state, filters: clonedFilters, facets };
 		}
 
-		case FiltersActionTypes.RESET_FILTERS: {
-			return { ...state, isLoading: true };
-		}
-
-		// filters: new Map<IFilter, FilterMetadata>(),
-
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
 			return Object.assign({}, state, { enableOnlyFavoritesSelection: action.payload });
 

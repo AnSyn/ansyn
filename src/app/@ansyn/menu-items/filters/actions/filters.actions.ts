@@ -11,7 +11,6 @@ export const FiltersActionTypes = {
 	INITIALIZE_SINGLE_FILTER: 'INITIALIZE_SINGLE_FILTER',
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
 
-	RESET_FILTERS: 'RESET_FILTERS',
 	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION',
 	UPDATE_FACETS: 'UPDATE_FACETS'
 };
@@ -37,13 +36,6 @@ export class UpdateFilterAction implements Action {
 	}
 }
 
-export class ResetFiltersAction implements Action {
-	type = FiltersActionTypes.RESET_FILTERS;
-
-	constructor(public payload?: any) {
-	}
-}
-
 export class EnableOnlyFavoritesSelectionAction implements Action {
 	type = FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION;
 
@@ -62,6 +54,5 @@ export class UpdateFacetsAction implements Action {
 export type FiltersActions = InitializeFiltersAction
 	| InitializeFiltersSuccessAction
 	| UpdateFilterAction
-	| ResetFiltersAction
 	| EnableOnlyFavoritesSelectionAction
 	| UpdateFacetsAction;

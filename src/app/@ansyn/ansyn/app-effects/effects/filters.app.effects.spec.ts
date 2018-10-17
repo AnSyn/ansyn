@@ -14,7 +14,6 @@ import {
 	IFilter,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction,
 	SliderFilterMetadata
 } from '@ansyn/menu-items';
 import {
@@ -102,12 +101,6 @@ describe('Filters app effects', () => {
 		actions = hot('--a--', { a: new LoadOverlaysSuccessAction([]) });
 		const expectedResults = cold('--b--', { b: new InitializeFiltersAction() });
 		expect(filtersAppEffects.initializeFilters$).toBeObservable(expectedResults);
-	});
-
-	it('resetFilters$ effect', () => {
-		actions = hot('--a--', { a: new LoadOverlaysAction(<any>null) });
-		const expectedResults = cold('--b--', { b: new ResetFiltersAction() });
-		expect(filtersAppEffects.resetFilters$).toBeObservable(expectedResults);
 	});
 
 	it('updateFiltersBadge$ should calculate filters number', () => {

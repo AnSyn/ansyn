@@ -31,7 +31,6 @@ export class FiltersService {
 				caseFilters.splice(index, 1);
 			}
 		});
-		console.log(caseFilters);
 		return caseFilters;
 	}
 

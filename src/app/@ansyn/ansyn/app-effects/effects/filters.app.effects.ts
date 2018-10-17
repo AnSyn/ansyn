@@ -16,10 +16,11 @@ import {
 	IFiltersState,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction,
 	selectFacets,
 	selectFilters,
-	selectShowOnlyFavorites
+	selectShowOnlyFavorites,
+	filtersConfig,
+	IFiltersConfig
 } from '@ansyn/menu-items';
 import {
 	LoadOverlaysAction,
@@ -49,8 +50,6 @@ import {
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { filtersConfig } from '../../../menu-items/filters/services/filters.service';
-import { IFiltersConfig } from '../../../menu-items/filters/models/filters-config';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -93,12 +92,12 @@ export class FiltersAppEffects {
 
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		map(() => new InitializeFiltersAction()));
 
 	@Effect()
 	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$.pipe(
-		ofType<InitializeFiltersAction>(FiltersActionTypes.INITIALIZE_FILTERS),
+		ofType<InitializeFiltersAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.overlaysArray$, this.facets$),
 		map(([action, overlays, facets]: [Action, IOverlay[], ICaseFacetsState]) => {
 			const filtersConfig: IFilter[] = this.config.filters;
@@ -117,13 +116,6 @@ export class FiltersAppEffects {
 
 			return new InitializeFiltersSuccessAction(filters);
 		}));
-
-
-	@Effect()
-	resetFilters$: Observable<ResetFiltersAction> = this.actions$.pipe(
-		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		map(() => new ResetFiltersAction()));
-
 
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$.pipe(

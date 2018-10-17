@@ -28,10 +28,9 @@ export interface IOverlayByIdMetaData {
 export class OverlaysService {
 
 	/**
-	 * Observable: get a map with both query overlays and favorite overlays
-	 * @type {Observable<Map<any, any>>}
+	 * @description Observable: get a map with both query overlays and favorite overlays
 	 */
-	getAllOverlays$ = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)).pipe(
+	getAllOverlays$: Observable<Map<string, IOverlay>> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)).pipe(
 		map(([queryOverlays, favoriteOverlays]: [Map<string, IOverlay>, IOverlay[]]) => {
 			const result = new Map(queryOverlays);
 			favoriteOverlays.forEach(overlay => {

@@ -74,7 +74,6 @@ export {
 	filtersStateSelector,
 	selectFacets,
 	selectFilters,
-	selectOldFilters,
 	selectShowOnlyFavorites
 } from './filters/reducer/filters.reducer';
 export { ToolsComponent } from './tools/tools/tools.component';

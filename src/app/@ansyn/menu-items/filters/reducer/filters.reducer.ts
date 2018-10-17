@@ -9,7 +9,6 @@ export type Filters = Map<IFilter, FilterMetadata>;
 
 export interface IFiltersState {
 	filters: Filters;
-	oldFilters: Map<IFilter, FilterMetadata>;
 	isLoading: boolean;
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
@@ -17,7 +16,6 @@ export interface IFiltersState {
 
 export const initialFiltersState: IFiltersState = {
 	filters: new Map<IFilter, FilterMetadata>(),
-	oldFilters: null,
 	isLoading: true,
 	facets: {
 		showOnlyFavorites: false,
@@ -52,13 +50,10 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 		}
 
 		case FiltersActionTypes.RESET_FILTERS: {
-			return {
-				...state,
-				oldFilters: state.filters,
-				filters: new Map<IFilter, FilterMetadata>(),
-				isLoading: true
-			};
+			return { ...state, isLoading: true };
 		}
+
+		// filters: new Map<IFilter, FilterMetadata>(),
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
 			return Object.assign({}, state, { enableOnlyFavoritesSelection: action.payload });
@@ -72,6 +67,6 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 }
 
 export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
-export const selectOldFilters = createSelector(filtersStateSelector, ({ oldFilters }) => oldFilters);
 export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
 export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
+export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);

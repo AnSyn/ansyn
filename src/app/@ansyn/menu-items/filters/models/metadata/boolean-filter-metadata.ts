@@ -83,7 +83,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	postInitializeFilter(value: any): void {
+	postInitializeFilter(): void {
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

@@ -46,7 +46,7 @@ export class SliderFilterMetadata implements FilterMetadata {
 		this.updateMetadata(range);
 	}
 
-	postInitializeFilter(value: any): void {
+	postInitializeFilter(): void {
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
-import { IFiltersConfig } from '../models/filters-config';
+import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
 import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
@@ -11,7 +10,9 @@ import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadat
 export const filtersConfig = 'filtersConfig';
 
 // @dynamic
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class FiltersService {
 	static buildCaseFilters(filters: Filters): CaseFilters {
 		const caseFilters: CaseFilters = [];
@@ -30,7 +31,7 @@ export class FiltersService {
 				caseFilters.splice(index, 1);
 			}
 		});
-
+		console.log(caseFilters);
 		return caseFilters;
 	}
 
@@ -70,13 +71,6 @@ export class FiltersService {
 			.map((id) => overlays.get(id))
 			.filter(Boolean)
 			.forEach((overlay) => metadata.incrementFilteredCount(overlay[metadataKey.modelName]));
-	}
-
-	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {
-	}
-
-	getFilters(): IFilter[] {
-		return this.config.filters;
 	}
 
 }

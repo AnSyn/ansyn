@@ -33,7 +33,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
 			const filters = action.payload;
-			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(filters) };
+			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(filters, state.facets.filters) };
 			return { ...state, filters, facets, isLoading: false };
 		}
 
@@ -45,7 +45,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			const clonedFilters = new Map(state.filters);
 
 			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
-			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(clonedFilters) };
+			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
 			return { ...state, filters: clonedFilters, facets };
 		}
 

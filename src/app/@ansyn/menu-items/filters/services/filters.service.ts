@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
+import { buildFilteredOverlays, CaseFilters, FilterType, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
@@ -14,22 +14,19 @@ export const filtersConfig = 'filtersConfig';
 	providedIn: 'root'
 })
 export class FiltersService {
-	static buildCaseFilters(filters: Filters): CaseFilters {
+	static buildCaseFilters(filters: Filters, facetsFilters?: CaseFilters): CaseFilters {
 		const caseFilters: CaseFilters = [];
 
 		filters.forEach((newMetadata: FilterMetadata, filter: IFilter) => {
-			const currentFilter: any = caseFilters.find(({ fieldName }) => fieldName === filter.modelName);
-			const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
-
-			if (!currentFilter && Boolean(outerStateMetadata)) {
-				const [fieldName, metadata] = [filter.modelName, outerStateMetadata];
-				caseFilters.push({ fieldName, metadata, type: filter.type });
-			} else if (currentFilter && Boolean(outerStateMetadata)) {
-				currentFilter.metadata = outerStateMetadata;
-			} else if (currentFilter && !Boolean(outerStateMetadata)) {
-				const index = caseFilters.indexOf(currentFilter);
-				caseFilters.splice(index, 1);
+			let outerStateMetadata: any = newMetadata.getMetadataForOuterState();
+			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName)
+			if (historyEnumFilter) {
+				const facetsFilterToContact = (<string[]>historyEnumFilter.metadata).filter((key) => {
+					return !(<EnumFilterMetadata>newMetadata).enumsFields.has(key)
+				});
+				outerStateMetadata = outerStateMetadata.concat(facetsFilterToContact);
 			}
+			caseFilters.push({ fieldName: filter.modelName, metadata: outerStateMetadata, type: filter.type });
 		});
 		return caseFilters;
 	}

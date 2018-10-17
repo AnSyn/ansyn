@@ -27,6 +27,11 @@ export interface IOverlayByIdMetaData {
 // @dynamic
 @Injectable()
 export class OverlaysService {
+
+	/**
+	 * Observable: get a map with both query overlays and favorite overlays
+	 * @type {Observable<Map<any, any>>}
+	 */
 	getAllOverlays$ = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)).pipe(
 		map(([queryOverlays, favoriteOverlays]: [Map<string, IOverlay>, IOverlay[]]) => {
 			const result = new Map(queryOverlays);
@@ -36,6 +41,7 @@ export class OverlaysService {
 			return result;
 		})
 	);
+
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
 	 * @param items

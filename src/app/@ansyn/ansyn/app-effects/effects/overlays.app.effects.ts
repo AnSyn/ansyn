@@ -157,8 +157,8 @@ export class OverlaysAppEffects {
 	@Effect()
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
-		withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
-		map(([{ payload }, { overlays }, { activeMapId }]: [DisplayOverlayFromStoreAction, IOverlaysState, IMapState]) => {
+		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(mapStateSelector)),
+		map(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
 			return new DisplayOverlayAction({ overlay, mapId, extent: payload.extent });

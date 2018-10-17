@@ -7,7 +7,7 @@ import { cold, hot } from 'jasmine-marbles';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	EnumFilterMetadata,
-	FilterMetadata,
+	FilterMetadata, filtersConfig,
 	filtersFeatureKey,
 	FiltersReducer,
 	FiltersService,
@@ -65,7 +65,7 @@ describe('Filters app effects', () => {
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
-				{ provide: FiltersService, useValue: {} },
+				{ provide: filtersConfig, useValue: {} },
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();

@@ -14,7 +14,6 @@ import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reduc
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
 import { Store } from '@ngrx/store';
-import { IAppState } from '../../ansyn/app-effects/app.effects.module';
 import { map } from 'rxjs/internal/operators';
 
 export const OverlaysConfig = 'overlaysConfig';
@@ -78,7 +77,7 @@ export class OverlaysService {
 
 	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
 				protected _overlaySourceProvider: BaseOverlaySourceProvider,
-				protected store$: Store<IAppState>) {
+				protected store$: Store<any>) {
 	}
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {

@@ -5,7 +5,7 @@ import { OverlaysService, selectDrops } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { ICaseMapState, IOverlay } from '@ansyn/core';
-import { mergeMap } from 'rxjs/internal/operators';
+import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EMPTY } from 'rxjs/index';
 
@@ -21,9 +21,10 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 		);
 
 	@AutoSubscription
-	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.select(selectDrops), this.overlaysService.getAllOverlays$)
+	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.select(selectDrops))
 		.pipe(
-			mergeMap(([overlayDisplayMode, drops, overlays]: [string, IOverlay[], Map<string, IOverlay>]) => {
+			withLatestFrom(this.overlaysService.getAllOverlays$),
+			mergeMap(([[overlayDisplayMode, drops], overlays]: [[string, IOverlay[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === this.overlayDisplayMode) {
 					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));

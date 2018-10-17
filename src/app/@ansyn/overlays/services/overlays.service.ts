@@ -1,17 +1,20 @@
 import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import {
 	IOverlay,
 	IOverlayDrop,
 	IOverlaysCriteria,
 	IOverlaysFetchData,
 	mapValuesToArray,
+	selectFavoriteOverlays,
 	sortByDateDesc
 } from '@ansyn/core';
-import { IOverlayDropSources, ITimelineRange } from '../reducers/overlays.reducer';
+import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs/internal/operators';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -23,6 +26,20 @@ export interface IOverlayByIdMetaData {
 // @dynamic
 @Injectable()
 export class OverlaysService {
+
+	/**
+	 * @description Observable: get a map with both query overlays and favorite overlays
+	 */
+	getAllOverlays$: Observable<Map<string, IOverlay>> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)).pipe(
+		map(([queryOverlays, favoriteOverlays]: [Map<string, IOverlay>, IOverlay[]]) => {
+			const result = new Map(queryOverlays);
+			favoriteOverlays.forEach(overlay => {
+				result.set(overlay.id, overlay);
+			});
+			return result;
+		})
+	);
+
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
 	 * @param items
@@ -58,7 +75,8 @@ export class OverlaysService {
 	}
 
 	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
-				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
+				protected _overlaySourceProvider: BaseOverlaySourceProvider,
+				protected store$: Store<any>) {
 	}
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {

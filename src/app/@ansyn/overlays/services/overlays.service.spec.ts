@@ -7,6 +7,8 @@ import { EMPTY, Observable, Observer } from 'rxjs';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject, LoggerService } from '@ansyn/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
+import { OverlayReducer, overlaysFeatureKey } from '../public_api';
+import { StoreModule } from '@ngrx/store';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -127,7 +129,12 @@ describe('OverlaysService', () => {
 				{ provide: OverlaysConfig, useValue: {} },
 				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 			],
-			imports: [HttpClientModule]
+			imports: [
+				HttpClientModule,
+				StoreModule.forRoot({
+					[overlaysFeatureKey]: OverlayReducer
+				})
+			]
 		});
 	});
 

@@ -1,5 +1,5 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, mapValuesToArray } from '@ansyn/core';
+import { FilterType, IOverlay, mapValuesToArray } from '@ansyn/core';
 
 export interface IEnumFiled {
 	count: number;
@@ -42,11 +42,13 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	initializeFilter(): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, selectedValues: string[]): void {
 		this.enumsFields = new Map<string, IEnumFiled>();
-	}
 
-	postInitializeFilter(selectedValues: string[]): void {
+		overlays.forEach((overlay: any) => {
+			this.accumulateData(overlay[modelName]);
+		});
+
 		if (selectedValues) {
 			selectedValues
 				.map(key => this.enumsFields.get(key))

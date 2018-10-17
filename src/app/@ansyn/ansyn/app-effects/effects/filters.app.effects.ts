@@ -50,6 +50,7 @@ import {
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { get } from 'lodash';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -100,23 +101,14 @@ export class FiltersAppEffects {
 		ofType<InitializeFiltersAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.overlaysArray$, this.facets$),
 		map(([action, overlays, facets]: [Action, IOverlay[], ICaseFacetsState]) => {
-			const filtersConfig: IFilter[] = this.config.filters;
-
 			const filters = new Map<IFilter, FilterMetadata>(
-				filtersConfig.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
-					const metadata: FilterMetadata = this.initializeMetadata(filter.type);
-
-					overlays.forEach((overlay: any) => {
-						metadata.accumulateData(overlay[filter.modelName]);
-					});
-
-					const currentFilterInit = <ICaseFilter> (facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName));
-					metadata.postInitializeFilter(currentFilterInit && currentFilterInit.metadata);
-
+				this.config.filters.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
+					const metadata: FilterMetadata = this.resolveMetadata(filter.type);
+					const facetsMetadata = get(facets.filters.find(({ fieldName }) => fieldName === filter.modelName), 'metadata');
+					metadata.initializeFilter(overlays, filter.modelName, facetsMetadata);
 					return [filter, metadata];
 				})
 			);
-
 			return new InitializeFiltersSuccessAction(filters);
 		}));
 
@@ -168,17 +160,12 @@ export class FiltersAppEffects {
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
-	initializeMetadata(filterType: FilterType): FilterMetadata {
+	resolveMetadata(filterType: FilterType): FilterMetadata {
 		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
 			return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
 				return filterMetadata.find((item) => item.type === FilterType[filterType]);
 			};
 		})();
-
-		const metaData: FilterMetadata =
-			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
-
-		metaData.initializeFilter();
-		return metaData;
+		return this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 	}
 }

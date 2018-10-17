@@ -42,19 +42,17 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, selectedValues: string[]): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, selectedValues: string[] = []): void {
 		this.enumsFields = new Map<string, IEnumFiled>();
 
 		overlays.forEach((overlay: any) => {
 			this.accumulateData(overlay[modelName]);
 		});
 
-		if (selectedValues) {
-			selectedValues
-				.map(key => this.enumsFields.get(key))
-				.filter(Boolean)
-				.forEach((enumsField: IEnumFiled) => enumsField.isChecked = false);
-		}
+		selectedValues
+			.map(key => this.enumsFields.get(key))
+			.filter(Boolean)
+			.forEach((enumsField: IEnumFiled) => enumsField.isChecked = false);
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

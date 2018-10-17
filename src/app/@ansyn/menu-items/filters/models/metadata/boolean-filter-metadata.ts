@@ -68,7 +68,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, selectedValues: any): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, { displayTrue = true, displayFalse = true }: ICaseBooleanFilterMetadata): void {
 		this.properties.true.count = 0;
 		this.properties.true.value = true;
 		this.properties.false.value = true;
@@ -78,10 +78,8 @@ export class BooleanFilterMetadata implements FilterMetadata {
 			this.accumulateData(overlay[modelName]);
 		});
 
-		if (selectedValues) {
-			this.properties.false.value = selectedValues.displayFalse;
-			this.properties.true.value = selectedValues.displayTrue;
-		}
+		this.properties.false.value = displayFalse;
+		this.properties.true.value = displayTrue;
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

@@ -121,10 +121,10 @@ describe('EnumFilterMetadata', () => {
 
 	describe('initializeFilter', () => {
 		it('initializeFilter should select the initialized fields', () => {
-			enumFilterMetadata.initializeFilter(['firstFeild', 'secondFeild']);
+			enumFilterMetadata.initializeFilter(<any>[{ field: 'firstFeild' }, { field: 'secondFeild' }], 'field', ['firstFeild', 'secondFeild']);
 
-			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeTruthy();
-			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeFalsy();
+			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeFalsy();
 			expect(enumFilterMetadata.enumsFields.get('thirdFeild')).toBeUndefined();
 		});
 	});

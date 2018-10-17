@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import { ImageryVisualizer, IVisualizersConfig, VisualizerInteractions, VisualizersConfig } from '@ansyn/imagery';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/multipolygon';
@@ -10,8 +9,8 @@ import Select from 'ol/interaction/select';
 import SourceVector from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
 import { Inject } from '@angular/core';
-import { combineLatest, EMPTY, Observable } from 'rxjs';
-import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import {
 	DisplayOverlayFromStoreAction,
 	ExtendMap,
@@ -19,50 +18,26 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	OverlaysService,
-	overlaysStateSelector, selectDrops,
+	overlaysStateSelector,
 	SetMarkUp
 } from '@ansyn/overlays';
-import { ICaseMapState, IOverlay, IVisualizerEntity, VisualizerStates } from '@ansyn/core';
+import { IVisualizerEntity, VisualizerStates } from '@ansyn/core';
 import { MultiLineString } from 'geojson';
-import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
-import { distinctUntilChanged, filter, map, mergeMap, pluck, tap } from 'rxjs/operators';
+import { distinctUntilChanged, pluck, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
+import { BaseFootprintsVisualizer } from './base-footprints-visualizer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, VisualizersConfig, OverlaysService]
 })
-export class FootprintPolylineVisualizer extends EntitiesVisualizer {
+export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	protected hoverLayer: VectorLayer;
 	markups: ExtendMap<MarkUpClass, IMarkUpData>;
 
 	protected disableCache = true;
-
-	overlayDisplayMode$: Observable<string> = this.store
-		.pipe(
-			select(mapStateSelector),
-			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
-			filter(Boolean),
-			map((map: ICaseMapState) => map.data.overlayDisplayMode),
-			distinctUntilChanged()
-		);
-
-	@AutoSubscription
-	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.select(selectDrops), this.overlaysService.getAllOverlays$)
-		.pipe(
-			mergeMap(([overlayDisplayMode, drops, overlays]: [string, IOverlay[], Map<string, IOverlay>]) => {
-				if (overlayDisplayMode === 'Polygon') {
-					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
-					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
-					return this.setEntities(entitiesToDraw);
-				} else if (this.getEntities().length > 0) {
-					this.clearEntities();
-				}
-				return EMPTY;
-			})
-		);
 
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
 
@@ -79,7 +54,7 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 				public overlaysService: OverlaysService
 	) {
 
-		super(config.FootprintPolylineVisualizer);
+		super(store, overlaysService, 'Polygon', config.FootprintPolylineVisualizer);
 
 		this.updateStyle({
 			opacity: 0.5,

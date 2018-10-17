@@ -19,22 +19,20 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	OverlaysService,
-	overlaysStateSelector,
-	selectFilteredOveralys,
-	selectOverlaysMap,
+	overlaysStateSelector, selectDrops,
 	SetMarkUp
 } from '@ansyn/overlays';
 import { ICaseMapState, IOverlay, IVisualizerEntity, VisualizerStates } from '@ansyn/core';
 import { MultiLineString } from 'geojson';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
-import { distinctUntilChanged, filter, map, mergeMap, pluck, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, pluck, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, VisualizersConfig]
+	deps: [Store, VisualizersConfig, OverlaysService]
 })
 export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 	protected hoverLayer: VectorLayer;
@@ -52,12 +50,11 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		);
 
 	@AutoSubscription
-	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.pipe(select(selectFilteredOveralys)))
+	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.select(selectDrops), this.overlaysService.getAllOverlays$)
 		.pipe(
-			withLatestFrom(this.store.select(selectOverlaysMap)),
-			mergeMap(([[overlayDisplayMode, filteredOverlays], overlays]: [[string, string[]], Map<string, IOverlay>]) => {
+			mergeMap(([overlayDisplayMode, drops, overlays]: [string, IOverlay[], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === 'Polygon') {
-					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, filteredOverlays, ['id', 'footprint']);
+					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
 					return this.setEntities(entitiesToDraw);
 				} else if (this.getEntities().length > 0) {
@@ -77,7 +74,10 @@ export class FootprintPolylineVisualizer extends EntitiesVisualizer {
 		tap(this.onMarkupsChange.bind(this))
 	);
 
-	constructor(public store: Store<any>, @Inject(VisualizersConfig) config: IVisualizersConfig) {
+	constructor(public store: Store<any>,
+				@Inject(VisualizersConfig) config: IVisualizersConfig,
+				public overlaysService: OverlaysService
+	) {
 
 		super(config.FootprintPolylineVisualizer);
 

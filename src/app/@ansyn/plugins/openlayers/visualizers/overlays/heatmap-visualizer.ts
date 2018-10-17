@@ -1,28 +1,30 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { combineLatest, empty, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { OverlaysService, selectFilteredOveralys, selectOverlaysMap } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { IOverlay, IVisualizerEntity } from '@ansyn/core';
+import { ICaseMapState, IOverlay, IVisualizerEntity } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
+import { EMPTY } from 'rxjs/index';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions]
 })
 export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
+
 	overlayDisplayMode$: Observable<string> = this.store$
 		.pipe(
 			select(mapStateSelector),
 			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
 			filter(Boolean),
-			map((map) => map.data.overlayDisplayMode),
+			map((map: ICaseMapState) => map.data.overlayDisplayMode),
 			distinctUntilChanged()
 		);
 
@@ -38,7 +40,7 @@ export class FootprintHeatmapVisualizer extends EntitiesVisualizer {
 				} else if (this.getEntities().length > 0) {
 					this.clearEntities();
 				}
-				return empty();
+				return EMPTY;
 			})
 		);
 

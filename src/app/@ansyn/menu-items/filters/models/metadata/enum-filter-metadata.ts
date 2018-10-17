@@ -1,5 +1,4 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { IFilter } from '../IFilter';
 import { FilterType, mapValuesToArray } from '@ansyn/core';
 
 export interface IEnumFiled {
@@ -43,21 +42,17 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	initializeFilter(selectedValues: string[]): void {
-		this.enumsFields = new Map<string, { count: number, filteredCount: number, isChecked: boolean }>();
-		if (selectedValues) {
-			for (let key of selectedValues) {
-				this.enumsFields.set(key, { count: 0, filteredCount: 0, isChecked: false });
-			}
-		}
+	initializeFilter(): void {
+		this.enumsFields = new Map<string, IEnumFiled>();
 	}
 
-	postInitializeFilter(): void {
-		this.enumsFields.forEach((value, key, mapObj: Map<any, any>) => {
-			if (!value.count) {
-				mapObj.delete(key);
-			}
-		});
+	postInitializeFilter(selectedValues: string[]): void {
+		if (selectedValues) {
+			selectedValues
+				.map(key => this.enumsFields.get(key))
+				.filter(Boolean)
+				.forEach((enumsField: IEnumFiled) => enumsField.isChecked = false);
+		}
 	}
 
 	filterFunc(overlay: any, key: string): boolean {
@@ -65,8 +60,8 @@ export class EnumFilterMetadata implements FilterMetadata {
 			return false;
 		}
 		const selectedFields: string[] = [];
-		this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
-			if (value.isChecked) {
+		this.enumsFields.forEach(({ isChecked }: IEnumFiled, key: string) => {
+			if (isChecked) {
 				selectedFields.push(key);
 			}
 		});

@@ -41,12 +41,12 @@ export class SliderFilterMetadata implements FilterMetadata {
 		this.filteredCount = 0;
 	}
 
-	initializeFilter(range: { start: number, end: number }): void {
+	initializeFilter(): void {
 		this.count = 0;
-		this.updateMetadata(range);
 	}
 
-	postInitializeFilter(): void {
+	postInitializeFilter(range: { start: number, end: number }): void {
+		this.updateMetadata(range);
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

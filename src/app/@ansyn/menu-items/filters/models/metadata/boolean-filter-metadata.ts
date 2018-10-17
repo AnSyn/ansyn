@@ -37,8 +37,6 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	};
 
-	baseFilter: IFilter;
-
 	updateMetadata({ key, value }): void {
 		this.properties[key].value = value;
 	}
@@ -70,20 +68,18 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	initializeFilter(selectedValues: ICaseBooleanFilterMetadata, filter: IFilter): void {
-		this.properties.true.count = 0;
-		this.properties.true.value = true;
-		this.properties.false.value = true;
-		this.properties.false.count = 0;
-
-		this.baseFilter = filter;
+	postInitializeFilter(selectedValues: ICaseBooleanFilterMetadata): void {
 		if (selectedValues) {
 			this.properties.false.value = selectedValues.displayFalse;
 			this.properties.true.value = selectedValues.displayTrue;
 		}
 	}
 
-	postInitializeFilter(): void {
+	initializeFilter(): void {
+		this.properties.true.count = 0;
+		this.properties.true.value = true;
+		this.properties.false.value = true;
+		this.properties.false.count = 0;
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

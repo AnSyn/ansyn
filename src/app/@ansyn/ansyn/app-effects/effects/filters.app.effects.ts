@@ -101,18 +101,21 @@ export class FiltersAppEffects {
 		withLatestFrom(this.overlaysArray$, this.facets$),
 		map(([action, overlays, facets]: [Action, IOverlay[], ICaseFacetsState]) => {
 			const filtersConfig: IFilter[] = this.config.filters;
-			const filters: Map<IFilter, FilterMetadata> = new Map<IFilter, FilterMetadata>();
 
-			filtersConfig.forEach((filter: IFilter) => {
-				const metadata: FilterMetadata = this.initializeMetadata(filter, facets);
+			const filters = new Map<IFilter, FilterMetadata>(
+				filtersConfig.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
+					const metadata: FilterMetadata = this.initializeMetadata(filter.type);
 
-				overlays.forEach((overlay: any) => {
-					metadata.accumulateData(overlay[filter.modelName]);
-				});
+					overlays.forEach((overlay: any) => {
+						metadata.accumulateData(overlay[filter.modelName]);
+					});
 
-				metadata.postInitializeFilter();
-				filters.set(filter, metadata);
-			});
+					const currentFilterInit = <ICaseFilter> (facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName));
+					metadata.postInitializeFilter(currentFilterInit && currentFilterInit.metadata);
+
+					return [filter, metadata];
+				})
+			);
 
 			return new InitializeFiltersSuccessAction(filters);
 		}));
@@ -165,9 +168,7 @@ export class FiltersAppEffects {
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
-	initializeMetadata(filter: IFilter, facets: ICaseFacetsState): FilterMetadata {
-		const filterType = filter.type;
-
+	initializeMetadata(filterType: FilterType): FilterMetadata {
 		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
 			return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
 				return filterMetadata.find((item) => item.type === FilterType[filterType]);
@@ -177,9 +178,7 @@ export class FiltersAppEffects {
 		const metaData: FilterMetadata =
 			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 
-		const currentFilterInit = <ICaseFilter> (facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName));
-
-		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata, filter);
+		metaData.initializeFilter();
 		return metaData;
 	}
 }

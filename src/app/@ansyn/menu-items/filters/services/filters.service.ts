@@ -22,7 +22,7 @@ export class FiltersService {
 			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName)
 			if (historyEnumFilter) {
 				const facetsFilterToContact = (<string[]>historyEnumFilter.metadata).filter((key) => {
-					return !(<EnumFilterMetadata>newMetadata).enumsFields.has(key)
+					return !(<any>newMetadata).enumsFields.has(key)
 				});
 				outerStateMetadata = outerStateMetadata.concat(facetsFilterToContact);
 			}

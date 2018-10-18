@@ -341,7 +341,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 					if (booleanContains(layerExtentFeature, extentFeature)) {
 						return this.fitRotateExtent(this.mapObject, extentFeature);
 					}
-					return throwError('')
+					return of(false)
 				})
 			);
 	}

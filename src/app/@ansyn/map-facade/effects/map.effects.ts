@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { forkJoin, Observable, UnaryFunction } from 'rxjs';
+import { forkJoin, Observable, of, UnaryFunction } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
@@ -290,7 +290,12 @@ export class MapEffects {
 					const comm = this.communicatorsService.provide(mapItem.id);
 					setPositionObservables.push(
 						comm.setPosition(mapPosition).pipe(
-							catchError((error) => this.errorHandlerService.httpErrorHandle(error, 'At least one map couldn\'t be synchronized')),
+							mergeMap((result) => {
+								if (!result) {
+									return this.errorHandlerService.httpErrorHandle({}, 'At least one map couldn\'t be synchronized')
+								}
+								return of(result);
+							}),
 							rxPreventCrash()
 						)
 					);

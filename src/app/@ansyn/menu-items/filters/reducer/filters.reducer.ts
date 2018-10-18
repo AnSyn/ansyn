@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { ICaseBooleanFilterMetadata, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
+import { CaseEnumFilterMetadata, ICaseBooleanFilterMetadata, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';

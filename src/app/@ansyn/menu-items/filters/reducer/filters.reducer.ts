@@ -4,7 +4,6 @@ import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FiltersService } from '../services/filters.service';
-import { CaseEnumFilterMetadata } from '../../../core/models/case.model';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 

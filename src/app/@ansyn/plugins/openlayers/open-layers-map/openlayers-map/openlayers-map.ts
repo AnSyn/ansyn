@@ -335,7 +335,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const layerExtent = this.getMainLayer().getExtent();
 		if (layerExtent) {
 			const layerExtentOLFeature = new olFeature(new olPolygon(bboxPolygon(layerExtent).geometry.coordinates as any));
-			return this.projectionService.projectCollectionApproximately([layerExtentOLFeature], this)
+			return this.projectionService.projectCollectionAccurately([layerExtentOLFeature], this)
 				.pipe(
 					take(1),
 					mergeMap((extent4326: FeatureCollection<GeometryObject>) => {

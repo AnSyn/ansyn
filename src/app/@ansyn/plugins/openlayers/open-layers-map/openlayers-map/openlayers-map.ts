@@ -334,7 +334,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const extentFeature = feature(extentPolygon);
 		const layerExtent = this.getMainLayer().getExtent();
 		if (layerExtent) {
-			const layerExtentOLFeature = new olFeature(new olPolygon(bboxPolygon(layerExtent).geometry.coordinates));
+			const layerExtentOLFeature = new olFeature(new olPolygon(bboxPolygon(layerExtent).geometry.coordinates as any));
 			return this.projectionService.projectCollectionApproximately([layerExtentOLFeature], this)
 				.pipe(
 					take(1),

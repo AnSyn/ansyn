@@ -1,26 +1,50 @@
-import { FilterType, IOverlay } from '@ansyn/core';
+import {
+	CaseEnumFilterMetadata,
+	CaseFilterMetadata,
+	CaseFilters,
+	FilterType,
+	ICaseFilter,
+	IOverlay
+} from '@ansyn/core';
+import { IFiltersConfig } from '../filters-config';
+import { IFilter } from '../IFilter';
 
-export abstract class FilterMetadata {
-	type: FilterType;
+export interface IFilterModel<T = any> {
+	[model: string]: T;
+}
 
-	abstract initializeFilter(overlays: IOverlay[], modelName: string, selectedValues?: any): void;
+export abstract class FilterMetadata<M = any> {
+	models: IFilterModel<M> = this.config.filters.reduce((obj, item: IFilter) => {
+		if (item.type === this.type) {
+			return { ...obj, [item.modelName]: this.initialModelObject() };
+		}
+		return obj;
+	}, {});
 
-	abstract accumulateData(value: any): void;
+	abstract initialModelObject(): M;
 
-	abstract incrementFilteredCount(value: any): void;
+	abstract initializeFilter(overlays: IOverlay[], caseFilters?: ICaseFilter[]): void;
 
-	abstract updateMetadata(value: any): void;
+	abstract accumulateData(model: string, value: any): void;
 
-	abstract filterFunc(ovrelay: any, filteringParams: any): boolean;
+	abstract incrementFilteredCount(model: string, value: any): void;
+
+	abstract updateMetadata(model: string, value: any): void;
+
+	abstract filterFunc(model: string, ovrelay: any, filteringParams: any): boolean;
 
 	abstract getMetadataForOuterState(): any;
 
-	abstract isFiltered(): boolean;
+	abstract isFiltered(model: string): boolean;
 
-	abstract resetFilteredCount(): void;
+	abstract resetFilteredCount(model: string): void;
 
-	abstract showAll(): void;
+	abstract showAll(model: string): void;
 
-	abstract shouldBeHidden(): boolean;
+	abstract shouldBeHidden(model: string): boolean;
+
+	constructor(protected type: FilterType, protected config: IFiltersConfig) {
+	}
+
 }
 

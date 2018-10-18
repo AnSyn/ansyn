@@ -24,7 +24,6 @@ import {
 } from '@ansyn/menu-items';
 import {
 	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	OverlaysService,
 	overlaysStatusMessages,
@@ -39,8 +38,7 @@ import {
 	buildFilteredOverlays,
 	FilterType,
 	GenericTypeResolverService,
-	ICaseFacetsState,
-	ICaseFilter,
+	ICaseFacetsState, ICaseFilter,
 	IFilterModel,
 	InjectionResolverFilter,
 	IOverlay,
@@ -101,15 +99,15 @@ export class FiltersAppEffects {
 		ofType<InitializeFiltersAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.overlaysArray$, this.facets$),
 		map(([action, overlays, facets]: [Action, IOverlay[], ICaseFacetsState]) => {
-			const filters = new Map<IFilter, FilterMetadata>(
-				this.config.filters.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
-					const metadata: FilterMetadata = this.resolveMetadata(filter.type);
-					const facetsMetadata = get(facets.filters.find(({ fieldName }) => fieldName === filter.modelName), 'metadata');
-					metadata.initializeFilter(overlays, filter.modelName, facetsMetadata);
-					return [filter, metadata];
-				})
-			);
-			return new InitializeFiltersSuccessAction(filters);
+			const caseFilters: ICaseFilter[] = [];
+
+			this.filterMetadata.forEach((metadata) => {
+				metadata.initializeFilter(overlays, facets.filters);
+				caseFilters.push(
+					...metadata.getMetadataForOuterState()
+				)
+			});
+			return new InitializeFiltersSuccessAction(caseFilters);
 		}));
 
 	@Effect()
@@ -156,16 +154,17 @@ export class FiltersAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				protected genericTypeResolverService: GenericTypeResolverService,
+				@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[],
+				// protected genericTypeResolverService: GenericTypeResolverService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
-	resolveMetadata(filterType: FilterType): FilterMetadata {
-		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
-			return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
-				return filterMetadata.find((item) => item.type === FilterType[filterType]);
-			};
-		})();
-		return this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
-	}
+	// resolveMetadata(filterType: FilterType): FilterMetadata {
+	// 	const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
+	// 		return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
+	// 			return filterMetadata.find((item) => item.type === FilterType[filterType]);
+	// 		};
+	// 	})();
+	// 	return this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
+	// }
 }

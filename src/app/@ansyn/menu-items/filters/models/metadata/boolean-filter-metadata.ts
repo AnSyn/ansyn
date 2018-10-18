@@ -1,6 +1,16 @@
-import { IFilter } from '../IFilter';
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseBooleanFilterMetadata, IOverlay } from '@ansyn/core';
+import {
+	CaseEnumFilterMetadata,
+	FilterType,
+	ICaseBooleanFilterMetadata,
+	ICaseFilter,
+	ICaseSliderFilterMetadata,
+	IOverlay
+} from '@ansyn/core';
+import { Inject } from '@angular/core';
+import { filtersConfig } from '../../services/filters.service';
+import { IFiltersConfig } from '../filters-config';
+import { ISliderFilterModel } from './slider-filter-metadata';
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';
@@ -11,106 +21,124 @@ export interface IBooleanProperty {
 	disabled?: boolean;
 }
 
-export interface IBooleanProperties {
+export interface IBooleanFilterModel {
 	true: IBooleanProperty;
 	false: IBooleanProperty;
 }
 
-export class BooleanFilterMetadata implements FilterMetadata {
-	type: FilterType = FilterType.Boolean;
-	properties: IBooleanProperties = {
-		true: {
-			name: 'true',
-			displayName: 'true',
-			value: true,
-			filteredCount: 0,
-			count: 0,
-			disabled: false
-		},
-		false: {
-			name: 'false',
-			displayName: 'false',
-			value: true,
-			filteredCount: 0,
-			count: 0,
-			disabled: false
-		}
-	};
-
-	updateMetadata({ key, value }): void {
-		this.properties[key].value = value;
+export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
+	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {
+		super(FilterType.Boolean, config);
 	}
 
-	resetFilteredCount(): void {
-		this.properties.true.filteredCount = 0;
-		this.properties.false.filteredCount = 0;
+	initialModelObject(): IBooleanFilterModel {
+		return {
+			'true': {
+				name: 'true',
+				displayName: 'true',
+				value: true,
+				filteredCount: 0,
+				count: 0,
+				disabled: false
+			},
+			'false': {
+				name: 'false',
+				displayName: 'false',
+				value: true,
+				filteredCount: 0,
+				count: 0,
+				disabled: false
+			}
+		};
 	}
 
-	selectOnly(key: string): void {
-		this.properties.true.value = false;
-		this.properties.false.value = false;
-		this.properties[key].value = true;
+	updateMetadata(model: string, { key, value }): void {
+		this.models[model][key].value = value;
 	}
 
-	accumulateData(value: boolean): void {
+	resetFilteredCount(model: string): void {
+		this.models[model].true.filteredCount = 0;
+		this.models[model].false.filteredCount = 0;
+	}
+
+	selectOnly(model: string, key: string): void {
+		this.models[model].true.value = false;
+		this.models[model].false.value = false;
+		this.models[model][key].value = true;
+	}
+
+	accumulateData(model: string, value: boolean): void {
 		if (value) {
-			this.properties.true.count += 1;
+			this.models[model].true.count += 1;
 		} else {
-			this.properties.false.count += 1;
+			this.models[model].false.count += 1;
 		}
 	}
 
-	incrementFilteredCount(value: boolean): void {
+	incrementFilteredCount(model: string, value: boolean): void {
 		if (value) {
-			this.properties.true.filteredCount += 1;
+			this.models[model].true.filteredCount += 1;
 		} else {
-			this.properties.false.filteredCount += 1;
+			this.models[model].false.filteredCount += 1;
 		}
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, { displayTrue = true, displayFalse = true }: ICaseBooleanFilterMetadata): void {
-		this.properties.true.count = 0;
-		this.properties.true.value = true;
-		this.properties.false.value = true;
-		this.properties.false.count = 0;
+	initializeFilter(overlays: IOverlay[], caseFilters: ICaseFilter<ICaseBooleanFilterMetadata>[] = []): void {
+		Object.entries(this.models).forEach(([model, booleanFilterModel]: [string, IBooleanFilterModel]) => {
+			booleanFilterModel.true.count = 0;
+			booleanFilterModel.true.value = true;
+			booleanFilterModel.false.value = true;
+			booleanFilterModel.false.count = 0;
 
-		overlays.forEach((overlay: any) => {
-			this.accumulateData(overlay[modelName]);
+			overlays.forEach((overlay: any) => {
+				this.accumulateData(model, overlay[model]);
+			});
+			const caseFilter = caseFilters.find(({ type, fieldName }: ICaseFilter) => this.type === type && model === fieldName);
+			if (caseFilter) {
+				this.models[model].false.value = caseFilter.metadata.displayFalse;
+				this.models[model].true.value = caseFilter.metadata.displayTrue;
+			}
 		});
 
-		this.properties.false.value = displayFalse;
-		this.properties.true.value = displayTrue;
 	}
 
-	filterFunc(overlay: any, key: string): boolean {
-		if (this.properties.true.value && this.properties.false.value) {
+	filterFunc(model: string, overlay: any, key: string): boolean {
+		if (this.models[model].true.value && this.models[model].false.value) {
 			return true;
 		}
-		if (this.properties.true.value && overlay[key]) {
+		if (this.models[model].true.value && overlay[key]) {
 			return true;
 		}
-		if (this.properties.false.value && !overlay[key]) {
+		if (this.models[model].false.value && !overlay[key]) {
 			return true;
 		}
 		return false;
 	}
 
-	getMetadataForOuterState(): { displayTrue: boolean, displayFalse: boolean } {
-		const displayTrue = this.properties.true.value;
-		const displayFalse = this.properties.false.value;
-		return { displayTrue, displayFalse };
+	getMetadataForOuterState(): ICaseFilter<ICaseBooleanFilterMetadata>[] {
+		return Object.entries(this.models).map(([fieldName, booleanFilterModel]) => {
+			const metadata = {
+				displayTrue: booleanFilterModel.true.value,
+				displayFalse: booleanFilterModel.false.value
+			};
+			return {
+				type: this.type,
+				fieldName,
+				metadata
+			};
+		});
 	}
 
-	isFiltered(): boolean {
-		return (!this.properties.true.value && this.properties.true.count > 0) || (!this.properties.false.value && this.properties.false.count > 0);
+	isFiltered(model: string): boolean {
+		return (!this.models[model].true.value && this.models[model].true.count > 0) || (!this.models[model].false.value && this.models[model].false.count > 0);
 	}
 
-	showAll(): void {
-		this.properties.true.value = true;
-		this.properties.false.value = true;
+	showAll(model: string): void {
+		this.models[model].true.value = true;
+		this.models[model].false.value = true;
 	}
 
-	shouldBeHidden(): boolean {
+	shouldBeHidden(model: string): boolean {
 		return false;
 	}
 

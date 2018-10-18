@@ -96,9 +96,14 @@ export interface ICaseBooleanFilterMetadata {
 	displayFalse: boolean;
 }
 
+export interface ICaseSliderFilterMetadata {
+	start: number;
+	end: number;
+}
+
 export type CaseEnumFilterMetadata = string[];
 
-export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata;
+export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata ;
 
 export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
 
@@ -111,7 +116,7 @@ export interface ICaseFilter<T = CaseFilterMetadata> {
 export type CaseFilters = ICaseFilter[];
 
 export interface ICaseFacetsState {
-	filters?: CaseFilters;
+	filters?: ICaseFilter[];
 	showOnlyFavorites?: boolean;
 }
 

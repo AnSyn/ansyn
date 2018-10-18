@@ -1,78 +1,108 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, IOverlay } from '@ansyn/core';
+import { FilterType, ICaseBooleanFilterMetadata, ICaseFilter, ICaseSliderFilterMetadata, IOverlay } from '@ansyn/core';
+import { Inject } from '@angular/core';
+import { filtersConfig } from '../../services/filters.service';
+import { IFiltersConfig } from '../filters-config';
 
-export class SliderFilterMetadata implements FilterMetadata {
-	count = 0;
-	filteredCount = 0;
+export interface ISliderFilterModel {
+	count: number;
+	filteredCount: number;
+	min: number;
+	max: number;
+	start: number;
+	end: number;
+}
 
-	min: number = Number.MAX_SAFE_INTEGER;
-	max: number = Number.MIN_SAFE_INTEGER;
+export class SliderFilterMetadata extends FilterMetadata<ISliderFilterModel> {
+	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {
+		super(FilterType.Slider, config);
+	}
 
-	start = -Infinity;
-	end = Infinity;
-
-	type: FilterType = FilterType.Slider;
-
-	updateMetadata(range: { start: number, end: number }): void {
+	initialModelObject(): ISliderFilterModel {
+		return {
+			count: 0,
+			filteredCount: 0,
+			min: Number.MAX_SAFE_INTEGER,
+			max: Number.MIN_SAFE_INTEGER,
+			start: -Infinity,
+			end: Infinity,
+		}
+	}
+	updateMetadata(model: string, range: { start: number, end: number }): void {
 		if (!range || (range.start && range.end && range.start > range.end)) {
 			return;
 		}
 
-		this.start = range.start || -Infinity;
-		this.end = range.end || Infinity;
+		this.models[model].start = range.start || -Infinity;
+		this.models[model].end = range.end || Infinity;
 	}
 
-	accumulateData(value: number): void {
-		if (value < this.min) {
-			this.min = value;
+	accumulateData(model: string, value: number): void {
+		if (value < this.models[model].min) {
+			this.models[model].min = value;
 		}
 
-		if (value > this.max) {
-			this.max = value;
+		if (value > this.models[model].max) {
+			this.models[model].max = value;
 		}
-		this.count++;
+		this.models[model].count++;
 	}
 
-	incrementFilteredCount(value: number): void {
-		this.filteredCount++;
+	incrementFilteredCount(model: string, value: number): void {
+		this.models[model].filteredCount++;
 	}
 
-	resetFilteredCount(): void {
-		this.filteredCount = 0;
+	resetFilteredCount(model: string): void {
+		this.models[model].filteredCount = 0;
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, range: { start: number, end: number }): void {
-		this.count = 0;
+	initializeFilter(overlays: IOverlay[], caseFilters: ICaseFilter<ICaseSliderFilterMetadata>[] = []): void {
+		Object.entries(this.models).forEach(([model, sliderFilterModel]: [string, ISliderFilterModel]) => {
 
-		overlays.forEach((overlay: any) => {
-			this.accumulateData(overlay[modelName]);
+			sliderFilterModel.count = 0;
+
+			overlays.forEach((overlay: any) => {
+				this.accumulateData(model, overlay[model]);
+			});
+
+			const caseFilter = caseFilters.find(({ type, fieldName }: ICaseFilter) => this.type === type && model === fieldName);
+			if (caseFilter) {
+				this.updateMetadata(model, caseFilter.metadata);
+			}
 		});
 
-		this.updateMetadata(range);
 	}
 
-	filterFunc(overlay: any, key: string): boolean {
-		return overlay[key] >= this.start &&
-			overlay[key] <= this.end;
+	filterFunc(model: string, overlay: any, key: string): boolean {
+		return overlay[key] >= this.models[model].start &&
+			overlay[key] <= this.models[model].end;
 	}
 
-	getMetadataForOuterState(): { start: number, end: number } {
-		if (this.start === -Infinity && this.end === Infinity) {
-			return null;
-		}
-		return { start: this.start, end: this.end };
+	getMetadataForOuterState(): ICaseFilter<ICaseSliderFilterMetadata>[] {
+		return Object.entries(this.models).map(([fieldName, sliderFilterModel]) => {
+			let metadata;
+			if (sliderFilterModel.start === -Infinity && sliderFilterModel.end === Infinity) {
+				metadata = null;
+			}
+			metadata = { start: sliderFilterModel.start, end: sliderFilterModel.end };
+			return {
+				type: this.type,
+				fieldName,
+				metadata
+			};
+		});
 	}
 
-	isFiltered(): boolean {
-		return this.start > this.min || this.end < this.max;
+	isFiltered(model: string): boolean {
+		return this.models[model].start > this.models[model].min || this.models[model].end < this.models[model].max;
 	}
 
-	showAll(): void {
-		this.start = -Infinity;
-		this.end = Infinity;
+	showAll(model: string): void {
+		this.models[model].start = -Infinity;
+		this.models[model].end = Infinity;
 	}
 
-	shouldBeHidden(): boolean {
-		return this.min === this.max;
+	shouldBeHidden(model: string): boolean {
+		return this.models[model].min === this.models[model].max;
 	}
 }

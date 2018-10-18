@@ -8,14 +8,12 @@ import { FiltersService } from '../services/filters.service';
 export type Filters = Map<IFilter, FilterMetadata>;
 
 export interface IFiltersState {
-	filters: Filters;
 	isLoading: boolean;
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
 }
 
 export const initialFiltersState: IFiltersState = {
-	filters: new Map<IFilter, FilterMetadata>(),
 	isLoading: true,
 	facets: {
 		showOnlyFavorites: false,
@@ -32,9 +30,8 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	switch (action.type) {
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
-			const filters = action.payload;
-			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(filters, state.facets.filters) };
-			return { ...state, filters, facets, isLoading: false };
+			const facets = { ...state.facets, filters: action.payload };
+			return { ...state, facets, isLoading: false };
 		}
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
@@ -42,9 +39,9 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
 			const actionPayload: { filter: IFilter, newMetadata: FilterMetadata } = action.payload;
-			const clonedFilters = new Map(state.filters);
+			// const clonedFilters = new Map(state.filters);
 
-			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
+			// clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
 			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
 			return { ...state, filters: clonedFilters, facets };
 		}
@@ -60,7 +57,6 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	}
 }
 
-export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
 export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
 export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
 export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);

@@ -58,17 +58,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	positionChanged$ = () => this.communicator.positionChanged.pipe(
-		tap((position: ICaseMapPosition) => {
-			if (this.isEnabled && position) {
-				this.getVirtualNorth().pipe(take(1)).subscribe((virtualNorth: number) => {
-					this.communicator.setVirtualNorth(virtualNorth);
-				});
-			}
-		})
-	);
-
-	@AutoSubscription
 	pointNorth$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id),
@@ -107,6 +96,17 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				case 'Align North':
 				case 'Imagery Perspective':
 					this.communicator.setRotation(0);
+			}
+		})
+	);
+
+	@AutoSubscription
+	positionChanged$ = () => this.communicator.positionChanged.pipe(
+		tap((position: ICaseMapPosition) => {
+			if (this.isEnabled && position) {
+				this.getVirtualNorth().pipe(take(1)).subscribe((virtualNorth: number) => {
+					this.communicator.setVirtualNorth(virtualNorth);
+				});
 			}
 		})
 	);

@@ -20,10 +20,9 @@ import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig,
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { map, take, tap } from 'rxjs/operators';
-import { intersect, feature, bboxPolygon, area, booleanContains } from '@turf/turf';
+import { map, mergeMap, take, tap } from 'rxjs/operators';
+import { feature, bboxPolygon, booleanContains } from '@turf/turf';
 
-export const WorldPolygon = bboxPolygon([-180, -90, 180, 90]);
 export const OpenlayersMapName = 'openLayersMap';
 
 export enum StaticGroupsKeys {
@@ -333,10 +332,18 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of(true);
 		}
 		const extentFeature = feature(extentPolygon);
-		if (booleanContains(WorldPolygon, extentFeature)) {
-			return this.fitRotateExtent(this.mapObject, extentFeature);
-		}
-		return throwError('')
+		const layerExtent = new olFeature(new olPolygon(<any>bboxPolygon(this.getMainLayer().getExtent()).geometry.coordinates));
+		return this.projectionService.projectCollectionApproximately([layerExtent], this)
+			.pipe(
+				take(1),
+				mergeMap((extent4326: FeatureCollection<GeometryObject>) => {
+					const [layerExtentFeature] = extent4326.features;
+					if (booleanContains(layerExtentFeature, extentFeature)) {
+						return this.fitRotateExtent(this.mapObject, extentFeature);
+					}
+					return throwError('')
+				})
+			);
 	}
 
 	public getPosition(): Observable<ICaseMapPosition> {

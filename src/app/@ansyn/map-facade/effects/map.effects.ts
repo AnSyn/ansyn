@@ -288,16 +288,16 @@ export class MapEffects {
 			mapState.mapsList.forEach((mapItem: ICaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
-					setPositionObservables.push(comm.setPosition(mapPosition));
+					setPositionObservables.push(
+						comm.setPosition(mapPosition).pipe(
+							catchError((error) => this.errorHandlerService.httpErrorHandle(error, 'At least one map couldn\'t be synchronized')),
+							rxPreventCrash()
+						)
+					);
 				}
 			});
 
-			return forkJoin(setPositionObservables)
-				.pipe(
-					map(() => [action, mapState]),
-					catchError((error) => this.errorHandlerService.httpErrorHandle(error, 'Failed to synchronize maps')),
-					rxPreventCrash()
-				);
+			return forkJoin(setPositionObservables).pipe(map(() => [action, mapState]));
 		})
 	);
 

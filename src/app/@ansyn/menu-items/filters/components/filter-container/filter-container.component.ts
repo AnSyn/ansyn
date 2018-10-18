@@ -1,6 +1,12 @@
 import { UpdateFilterAction } from '../../actions/filters.actions';
 import { Store } from '@ngrx/store';
-import { Filters, IFiltersState, selectFilters, selectShowOnlyFavorites } from '../../reducer/filters.reducer';
+import {
+	Filters,
+	IFiltersState,
+	selectFilters,
+	selectIsLoading,
+	selectShowOnlyFavorites
+} from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -50,7 +56,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	@Input() filter;
 	@ViewChild('fields') fields: ElementRef;
-
+	public isLoading$: Observable<boolean> = this.store.select(selectIsLoading);
 
 	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
 		map((filters: Filters) => filters.get(this.filter)),

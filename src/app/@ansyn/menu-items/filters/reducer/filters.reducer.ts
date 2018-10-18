@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { ICaseFacetsState, ICaseFilter } from '@ansyn/core';
+import { CaseEnumFilterMetadata, ICaseBooleanFilterMetadata, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
@@ -9,7 +9,6 @@ export type Filters = Map<IFilter, FilterMetadata>;
 
 export interface IFiltersState {
 	filters: Filters;
-	oldFilters: Map<IFilter, FilterMetadata>;
 	isLoading: boolean;
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
@@ -17,7 +16,6 @@ export interface IFiltersState {
 
 export const initialFiltersState: IFiltersState = {
 	filters: new Map<IFilter, FilterMetadata>(),
-	oldFilters: null,
 	isLoading: true,
 	facets: {
 		showOnlyFavorites: false,
@@ -35,7 +33,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
 			const filters = action.payload;
-			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(filters) };
+			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(filters, state.facets.filters) };
 			return { ...state, filters, facets, isLoading: false };
 		}
 
@@ -47,17 +45,8 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			const clonedFilters = new Map(state.filters);
 
 			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
-			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(clonedFilters) };
+			const facets = { ...state.facets, filters: <ICaseFilter<ICaseBooleanFilterMetadata | CaseEnumFilterMetadata>[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
 			return { ...state, filters: clonedFilters, facets };
-		}
-
-		case FiltersActionTypes.RESET_FILTERS: {
-			return {
-				...state,
-				oldFilters: state.filters,
-				filters: new Map<IFilter, FilterMetadata>(),
-				isLoading: true
-			};
 		}
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
@@ -72,6 +61,6 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 }
 
 export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
-export const selectOldFilters = createSelector(filtersStateSelector, ({ oldFilters }) => oldFilters);
 export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
 export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
+export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);

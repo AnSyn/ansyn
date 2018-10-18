@@ -1,5 +1,5 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType } from '@ansyn/core';
+import { FilterType, IOverlay } from '@ansyn/core';
 
 export class SliderFilterMetadata implements FilterMetadata {
 	count = 0;
@@ -41,12 +41,14 @@ export class SliderFilterMetadata implements FilterMetadata {
 		this.filteredCount = 0;
 	}
 
-	initializeFilter(range: { start: number, end: number }): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, range: { start: number, end: number }): void {
 		this.count = 0;
-		this.updateMetadata(range);
-	}
 
-	postInitializeFilter(value: any): void {
+		overlays.forEach((overlay: any) => {
+			this.accumulateData(overlay[modelName]);
+		});
+
+		this.updateMetadata(range);
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

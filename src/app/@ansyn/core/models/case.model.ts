@@ -102,10 +102,10 @@ export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMeta
 
 export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
 
-export interface ICaseFilter {
+export interface ICaseFilter<T = CaseFilterMetadata> {
 	type: FilterType;
 	fieldName: string;
-	metadata: CaseFilterMetadata;
+	metadata: T;
 }
 
 export type CaseFilters = ICaseFilter[];

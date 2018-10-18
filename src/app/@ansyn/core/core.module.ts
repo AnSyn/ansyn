@@ -24,6 +24,7 @@ import { ManualRemovedOverlaysComponent } from './components/manual-removed-over
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
+import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 
 @NgModule({
 	imports: [
@@ -52,7 +53,8 @@ import { DefaultTranslateLoader } from './translation/default-translate-loader';
 		AnsynLoaderComponent,
 		AnsynInputComponent,
 		ManualRemovedOverlaysComponent,
-		ClickOutsideDirective
+		ClickOutsideDirective,
+		AnimatedEllipsisComponent
 	],
 	declarations: [
 		AnsynCheckboxComponent,
@@ -65,7 +67,8 @@ import { DefaultTranslateLoader } from './translation/default-translate-loader';
 		AnsynLoaderComponent,
 		AnsynInputComponent,
 		ManualRemovedOverlaysComponent,
-		ClickOutsideDirective
+		ClickOutsideDirective,
+		AnimatedEllipsisComponent
 	]
 })
 

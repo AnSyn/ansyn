@@ -22,24 +22,24 @@
 
 	<ng-template #filterBody>
 		<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
-			<div *ngIf="metadataFromState && !metadataFromState.shouldBeHidden()" [ngSwitch]="metadataFromState?.type">
+			<div *ngIf="metadataFromState && !metadataFromState.shouldBeHidden(filter.modelName)" [ngSwitch]="metadataFromState?.type">
 
 				<ansyn-enum-filter-container
 					*ngSwitchCase="'Enum'"
 					[isLongFiltersList]="isLongFiltersList"
-					[metadata]="metadataFromState"
+					[model]="filter.modelName"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-enum-filter-container>
 
 				<ansyn-slider-filter-container
 					*ngSwitchCase="'Slider'"
-					[metadata]="metadataFromState"
+					[model]="filter.modelName"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-slider-filter-container>
 
 				<ansyn-boolean-filter-container
 					*ngSwitchCase="'Boolean'"
-					[metadata]="metadataFromState"
+					[model]="filter.modelName"
 					[customData]="filter.customData"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-boolean-filter-container>

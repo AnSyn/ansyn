@@ -80,12 +80,12 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 		});
 	}
 
-	filterFunc(model: string, overlay: any, key: string): boolean {
+	filterFunc(overlay: any, key: string): boolean {
 		if (!overlay) {
 			return false;
 		}
 		const selectedFields: string[] = [];
-		this.models[model].enumsFields.forEach(({ isChecked }: IEnumFiled, key: string) => {
+		this.models[key].enumsFields.forEach(({ isChecked }: IEnumFiled, key: string) => {
 			if (isChecked) {
 				selectedFields.push(key);
 			}

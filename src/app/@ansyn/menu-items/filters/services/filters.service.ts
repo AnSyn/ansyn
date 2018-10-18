@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { buildFilteredOverlays, CaseFilters, FilterType, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
+import {
+	buildFilteredOverlays,
+	CaseFilters,
+	FilterType,
+	ICaseFilter,
+	IFilterModel,
+	IOverlay,
+	mapValuesToArray
+} from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
@@ -31,11 +39,12 @@ export class FiltersService {
 		return caseFilters;
 	}
 
-	static pluckFilterModels(filters: Filters): IFilterModel[] {
-		return Array.from(filters).map(([key, value]): IFilterModel => ({
-			key: key.modelName,
-			filterFunc: value.filterFunc.bind(value)
-		}));
+	static pluckFilterModels(filterMetadata: FilterMetadata[]): IFilterModel[] {
+		return filterMetadata.reduce((array: IFilterModel[], item: FilterMetadata): IFilterModel[] => {
+			const temp = Object.keys(item.models)
+				.map((key: string) => ({ key, filterFunc: item.filterFunc.bind(item) }));
+			return [...array, ...temp ];
+		}, []);
 	}
 
 	static calculatePotentialOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean, filterState: IFiltersState): void {

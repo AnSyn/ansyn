@@ -43,7 +43,13 @@ export abstract class FilterMetadata<M = any> {
 
 	abstract shouldBeHidden(model: string): boolean;
 
-	constructor(protected type: FilterType, protected config: IFiltersConfig) {
+	constructor(public type: FilterType, protected config: IFiltersConfig) {
+	}
+
+	filteredCount() {
+		return Object.keys(this.models).reduce((num, model: string) => {
+			return this.isFiltered(model) ? num + 1 : num;
+		}, 0)
 	}
 
 }

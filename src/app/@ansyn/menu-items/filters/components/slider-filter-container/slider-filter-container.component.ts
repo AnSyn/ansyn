@@ -1,5 +1,9 @@
 import { SliderFilterMetadata } from './../../models/metadata/slider-filter-metadata';
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
+import { FilterType } from '@ansyn/core';
+import { ISliderFilterModel } from '../../models/metadata/slider-filter-metadata';
+import { IEnumFilterModel } from '../../models/metadata/enum-filter-metadata';
 
 @Component({
 	selector: 'ansyn-slider-filter-container',
@@ -7,28 +11,34 @@ import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/cor
 	styleUrls: ['./slider-filter-container.component.less']
 })
 export class SliderFilterContainerComponent {
-
+	protected _model: string;
+	protected metadata: ISliderFilterModel;
 	factor = 1000;
-	_metadata: SliderFilterMetadata;
 	realRange: number[];
-
-	@Input()
-	set metadata(value: SliderFilterMetadata) {
-		this._metadata = value;
-		const rangeValuesStart = value.start <= value.min ? value.min : value.start;
-		const rangeValuesEnd = value.end >= value.max ? value.max : value.end;
-		this.realRange = [value.start, value.end];
-		this.rangeValues = [this.factor * rangeValuesStart, this.factor * rangeValuesEnd];
-	}
-
-	get metadata(): SliderFilterMetadata {
-		return this._metadata;
-	}
-
-	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>();
 	rangeValues: number[];
 
-	constructor(protected elem: ElementRef) {
+	@Input()
+	set model(value: string) {
+		this._model = value;
+		this.metadata = this.filterMetadata
+			.find((filter: FilterMetadata) => filter.type === FilterType.Slider)
+			.models[this.model];
+		this.realRange = [this.metadata.start, this.metadata.end];
+		this.rangeValues = [
+			this.factor * this.metadata.start <= this.metadata.min ? this.metadata.min : this.metadata.start,
+			this.factor * this.metadata.end >= this.metadata.max ? this.metadata.max : this.metadata.end
+		];
+	};
+
+	get model() {
+		return this._model;
+	}
+
+
+	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>();
+
+
+	constructor(protected elem: ElementRef, @Inject(FilterMetadata) protected filterMetadata: FilterMetadata[]) {
 	}
 
 	getMinRangeValue(number: number): string {
@@ -54,13 +64,13 @@ export class SliderFilterContainerComponent {
 		};
 
 		const min = event.values[0] / this.factor;
-		updateValue.start = min === this._metadata.min ? -Infinity : min;
+		updateValue.start = min === this.metadata.min ? -Infinity : min;
 		const max = event.values[1] / this.factor;
-		updateValue.end = max === this._metadata.max ? Infinity : max;
+		updateValue.end = max === this.metadata.max ? Infinity : max;
 
 		const clonedMetadata: SliderFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
-		clonedMetadata.updateMetadata(updateValue);
+		// clonedMetadata.updateMetadata(updateValue);
 
-		this.onMetadataChange.emit(clonedMetadata);
+		// this.onMetadataChange.emit(clonedMetadata);
 	}
 }

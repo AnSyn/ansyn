@@ -1,22 +1,16 @@
-import { UpdateFilterAction } from '../../actions/filters.actions';
 import { Store } from '@ngrx/store';
-import {
-	Filters,
-	IFiltersState,
-	selectFilters,
-	selectIsLoading,
-	selectShowOnlyFavorites
-} from '../../reducer/filters.reducer';
+import { IFiltersState, selectIsLoading, selectShowOnlyFavorites } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FilterType } from '@ansyn/core';
-import { clone } from 'lodash';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../../models/filters-config';
-import { filter, map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { IFilter } from '../../models/IFilter';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -45,32 +39,37 @@ import { filter, map, tap } from 'rxjs/operators';
 		])
 	]
 })
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
 export class FilterContainerComponent implements OnInit, OnDestroy {
+	protected _filter: IFilter;
+	public metadataFromState: FilterMetadata;
+	public isGotSmallListFromProvider;
+
+	@Input()
+	set filter(value: IFilter) {
+		this._filter = value;
+		this.metadataFromState = this.filterMetadata.find((filterMetadata: FilterMetadata) => {
+			return filterMetadata.type === this.filter.type
+		});
+		this.isGotSmallListFromProvider = this.filter.type === FilterType.Enum ?
+			(<EnumFilterMetadata> this.metadataFromState).models[this.filter.modelName].enumsFields.size <= this.config.shortFilterListLength : true;
+
+	}
+
+	get filter() {
+		return this._filter;
+	}
 
 	public show = true;
 	public isLongFiltersList = false;
 	public showOnlyFavorite = false;
-	public isGotSmallListFromProvider = true;
-	public metadataFromState: FilterMetadata;
-	subscribers = [];
-
-	@Input() filter;
 	@ViewChild('fields') fields: ElementRef;
 	public isLoading$: Observable<boolean> = this.store.select(selectIsLoading);
 
-	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
-		map((filters: Filters) => filters.get(this.filter)),
-		tap((metadata: FilterMetadata) => this.metadataFromState = metadata)
-	);
-
-	isGotSmallListFromProvider$ = this.metadataFromState$.pipe(
-		filter((metadata) => this.filter.type === FilterType.Enum && Boolean(metadata)),
-		tap((metadata) => {
-			this.isGotSmallListFromProvider = (<EnumFilterMetadata>metadata).enumsFields.size <= this.config.shortFilterListLength;
-		})
-	);
-
-
+	@AutoSubscription
 	showOnlyFavorites$: Observable<any> = this.store.select(selectShowOnlyFavorites).pipe(
 		tap((showOnlyFavorites) => {
 			this.showOnlyFavorite = showOnlyFavorites;
@@ -78,7 +77,9 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(protected store: Store<IFiltersState>, @Inject(filtersConfig) protected config: IFiltersConfig) {
+	constructor(protected store: Store<IFiltersState>,
+				@Inject(filtersConfig) protected config: IFiltersConfig,
+				@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[]) {
 	}
 
 	get disabledShowAll() {
@@ -86,25 +87,19 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.subscribers.push(
-			this.metadataFromState$.subscribe(),
-			this.isGotSmallListFromProvider$.subscribe(),
-			this.showOnlyFavorites$.subscribe()
-		);
 	}
 
 	ngOnDestroy() {
-		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
-	onMetadataChange(metadata: FilterMetadata): void {
-		this.store.dispatch(new UpdateFilterAction(metadata.getMetadataForOuterState()));
+	onMetadataChange(metadata: any): void {
+		// this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata) }));
 	}
 
 	showAll(): void {
 		if (this.metadataFromState) {
 			// const clonedMetadata: FilterMetadata = Object.assign(Object.create(this.metadataFromState), this.metadataFromState);
-			this.metadataFromState.showAll();
+			this.metadataFromState.showAll(this.filter.modelName);
 			this.onMetadataChange(this.metadataFromState);
 		}
 	}

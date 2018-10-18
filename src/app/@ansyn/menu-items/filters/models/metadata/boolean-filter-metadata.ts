@@ -102,14 +102,14 @@ export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
 
 	}
 
-	filterFunc(model: string, overlay: any, key: string): boolean {
-		if (this.models[model].true.value && this.models[model].false.value) {
+	filterFunc(overlay: any, key: string): boolean {
+		if (this.models[key].true.value && this.models[key].false.value) {
 			return true;
 		}
-		if (this.models[model].true.value && overlay[key]) {
+		if (this.models[key].true.value && overlay[key]) {
 			return true;
 		}
-		if (this.models[model].false.value && !overlay[key]) {
+		if (this.models[key].false.value && !overlay[key]) {
 			return true;
 		}
 		return false;

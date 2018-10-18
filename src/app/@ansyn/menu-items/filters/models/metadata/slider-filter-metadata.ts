@@ -73,9 +73,9 @@ export class SliderFilterMetadata extends FilterMetadata<ISliderFilterModel> {
 
 	}
 
-	filterFunc(model: string, overlay: any, key: string): boolean {
-		return overlay[key] >= this.models[model].start &&
-			overlay[key] <= this.models[model].end;
+	filterFunc(overlay: any, key: string): boolean {
+		return overlay[key] >= this.models[key].start &&
+			overlay[key] <= this.models[key].end;
 	}
 
 	getMetadataForOuterState(): ICaseFilter<ICaseSliderFilterMetadata>[] {

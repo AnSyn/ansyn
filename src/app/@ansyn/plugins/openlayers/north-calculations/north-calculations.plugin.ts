@@ -3,12 +3,13 @@ import {
 	BackToWorldSuccess,
 	BackToWorldView,
 	CaseOrientation,
-	CoreActionTypes, ICaseMapPosition,
+	CoreActionTypes,
+	ICaseMapPosition,
 	IOverlay,
 	LoggerService,
 	toDegrees
 } from '@ansyn/core';
-import { forkJoin, Observable, Observer, of, throwError } from 'rxjs';
+import { forkJoin, Observable, Observer, of } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
@@ -20,15 +21,9 @@ import {
 	selectHoveredOverlay
 } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
-import {
-	BaseImageryMap,
-	BaseImageryPlugin,
-	CommunicatorEntity,
-	ImageryPlugin,
-	ProjectionService
-} from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, ProjectionService } from '@ansyn/imagery';
 import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
-import { selectActiveMapId, SetIsVisibleAcion } from '@ansyn/map-facade';
+import { selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 import { catchError, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -47,7 +42,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
-	protected maxNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
 	@AutoSubscription
@@ -64,13 +58,15 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: ICaseMapPosition) => {
-		if (this.isEnabled && position) {
-			this.getVirtualNorth().pipe(take(1)).subscribe((virtualNorth: number) => {
-				this.communicator.setVirtualNorth(virtualNorth);
-			});
-		}
-	});
+	positionChanged$ = () => this.communicator.positionChanged.pipe(
+		tap((position: ICaseMapPosition) => {
+			if (this.isEnabled && position) {
+				this.getVirtualNorth().pipe(take(1)).subscribe((virtualNorth: number) => {
+					this.communicator.setVirtualNorth(virtualNorth);
+				});
+			}
+		})
+	);
 
 	@AutoSubscription
 	pointNorth$ = this.actions$.pipe(
@@ -133,7 +129,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	private getVirtualNorth() {
+	getVirtualNorth() {
 		return this.getProjectedCenters().pipe(
 			map((projectedCenters: Point[]): number => {
 				const projectedCenterView = projectedCenters[0].coordinates;
@@ -146,7 +142,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				return this.communicator.getRotation() - northRad;
 			}),
 			catchError(() => of(0))
-		)
+		);
 	}
 
 	projectPoints(coordinates: ol.Coordinate[], projection?: string): Observable<Point[] | any> {

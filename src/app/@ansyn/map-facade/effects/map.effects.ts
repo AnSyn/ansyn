@@ -10,11 +10,11 @@ import {
 	BackToWorldSuccess,
 	BackToWorldView,
 	CaseGeoFilter,
-	CoreActionTypes,
+	CoreActionTypes, ErrorHandlerService,
 	ICaseMapPosition,
 	ICaseMapState,
 	isFullOverlay,
-	RemoveAlertMsg,
+	RemoveAlertMsg, rxPreventCrash,
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
@@ -36,7 +36,17 @@ import {
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import {
+	catchError,
+	distinctUntilChanged,
+	filter,
+	map,
+	mergeMap,
+	share,
+	switchMap,
+	tap,
+	withLatestFrom
+} from 'rxjs/operators';
 import { fromPromise, pipe } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
 
@@ -282,7 +292,12 @@ export class MapEffects {
 				}
 			});
 
-			return forkJoin(setPositionObservables).pipe(map(() => [action, mapState]));
+			return forkJoin(setPositionObservables)
+				.pipe(
+					map(() => [action, mapState]),
+					catchError((error) => this.errorHandlerService.httpErrorHandle(error, 'Failed to synchronize maps')),
+					rxPreventCrash()
+				);
 		})
 	);
 
@@ -298,6 +313,7 @@ export class MapEffects {
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,
 				protected communicatorsService: ImageryCommunicatorService,
+				protected errorHandlerService: ErrorHandlerService,
 				protected store$: Store<any>) {
 	}
 }

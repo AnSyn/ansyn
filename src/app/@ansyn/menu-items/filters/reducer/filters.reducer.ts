@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { ICaseFacetsState, ICaseFilter } from '@ansyn/core';
+import { CaseEnumFilterMetadata, ICaseBooleanFilterMetadata, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
@@ -38,15 +38,21 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return { ...state, isLoading: true };
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
-			const payload: ICaseFilter[] = action.payload;
-			const cloneFilters: ICaseFilter[] = state.facets.filters.map((caseFilter: ICaseFilter) => {
-				if (caseFilter.type === payload.type && caseFilter.fieldName === payload.fieldName) {
-					return { ...caseFilter, metadata: payload };
-				}
-				return { ...caseFilter }
-			});
-			const facets = { ...state.facets, filters: cloneFilters };
-			return { ...state, facets };
+			const actionPayload: { filter: IFilter, newMetadata: FilterMetadata } = action.payload;
+			const clonedFilters = new Map(state.filters);
+
+			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
+			const facets = { ...state.facets, filters: <ICaseFilter<ICaseBooleanFilterMetadata | CaseEnumFilterMetadata>[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
+			return { ...state, filters: clonedFilters, facets };
+			// const payload: ICaseFilter[] = action.payload;
+			// const cloneFilters: ICaseFilter[] = state.facets.filters.map((caseFilter: ICaseFilter) => {
+			// 	if (caseFilter.type === payload.type && caseFilter.fieldName === payload.fieldName) {
+			// 		return { ...caseFilter, metadata: payload };
+			// 	}
+			// 	return { ...caseFilter }
+			// });
+			// const facets = { ...state.facets, filters: cloneFilters };
+			// return { ...state, facets };
 		}
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:

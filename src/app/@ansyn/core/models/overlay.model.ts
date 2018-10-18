@@ -45,6 +45,7 @@ export class Overlay implements IOverlay {
 	static UNKNOWN_NAME = 'Unknown';
 	static DEFAULT_CLOUD_COVERAGE = 1;
 	static DEFAULT_PROJECTION = 'EPSG:3857';
+	static DEFAULT_AZIMUTH = 0;
 
 	footprint?: any;
 	sensorType = Overlay.UNKNOWN_NAME;
@@ -59,7 +60,7 @@ export class Overlay implements IOverlay {
 	thumbnailUrl?: string;
 	photoTime: string;
 	date: Date;
-	azimuth: number; // radians
+	azimuth: number = Overlay.DEFAULT_AZIMUTH; // radians
 	approximateTransform?: any;
 	csmState?: string;
 	isGeoRegistered: boolean;

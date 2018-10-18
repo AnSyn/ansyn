@@ -3,7 +3,7 @@ import {
 	BackToWorldSuccess,
 	BackToWorldView,
 	CaseOrientation,
-	CoreActionTypes,
+	CoreActionTypes, ICaseMapPosition,
 	IOverlay,
 	LoggerService,
 	toDegrees
@@ -31,7 +31,7 @@ import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ans
 import { selectActiveMapId, SetIsVisibleAcion } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
-import { catchError, filter, map, mergeMap, retry, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 export interface INorthData {
 	northOffsetDeg: number;
@@ -64,6 +64,15 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
+	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: ICaseMapPosition) => {
+		if (this.isEnabled && position) {
+			this.getVirtualNorth().pipe(take(1)).subscribe((virtualNorth: number) => {
+				this.communicator.setVirtualNorth(virtualNorth);
+			});
+		}
+	});
+
+	@AutoSubscription
 	pointNorth$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.communicator.id),
@@ -74,8 +83,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
 		switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
-			return this.pointNorth().pipe(
-				tap(virtualNorth => {
+			return this.getVirtualNorth().pipe(take(1)).pipe(
+				tap((virtualNorth: number) => {
 					this.communicator.setVirtualNorth(virtualNorth);
 					if (!forceFirstDisplay) {
 						switch (orientation) {
@@ -124,28 +133,20 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	getCorrectedNorth(): Observable<INorthData> {
+	private getVirtualNorth() {
 		return this.getProjectedCenters().pipe(
-			map((projectedCenters: Point[]): INorthData => {
+			map((projectedCenters: Point[]): number => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-				const northOffsetDeg = toDegrees(northOffsetRad);
-				const view = (<BaseImageryMap>this.iMap).mapObject.getView();
-				const actualNorth = northOffsetRad + view.getRotation();
-				return { northOffsetRad, northOffsetDeg, actualNorth };
-			}),
-			mergeMap((northData: INorthData) => {
-				this.iMap.mapObject.getView().setRotation(northData.actualNorth);
-				this.iMap.mapObject.renderSync();
-				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-					return throwError({ result: northData.actualNorth });
+				const northRad = northOffsetRad * -1;
+				if (this.thresholdDegrees > Math.abs(toDegrees(this.communicator.getRotation() - northRad))) {
+					return 0;
 				}
-				return of(northData.actualNorth);
+				return this.communicator.getRotation() - northRad;
 			}),
-			retry(this.maxNumberOfRetries),
-			catchError((e) => e.result ? of(e.result) : throwError(e))
-		);
+			catchError(() => of(0))
+		)
 	}
 
 	projectPoints(coordinates: ol.Coordinate[], projection?: string): Observable<Point[] | any> {
@@ -174,23 +175,4 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		})
 			.pipe(switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, projection)));
 	}
-
-	pointNorth(): Observable<any> {
-		this.communicator.updateSize();
-		const currentRotation = this.iMap.mapObject.getView().getRotation();
-		return of(this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: false }))).pipe(
-			mergeMap(() => this.getCorrectedNorth()),
-			tap(() => {
-				this.iMap.mapObject.getView().setRotation(currentRotation);
-				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
-			}),
-			catchError(reason => {
-				const error = `setCorrectedNorth failed: ${reason}`;
-				this.loggerService.warn(error);
-				this.store$.dispatch(new SetIsVisibleAcion({ mapId: this.mapId, isVisible: true }));
-				return throwError(error);
-			})
-		);
-	}
-
 }

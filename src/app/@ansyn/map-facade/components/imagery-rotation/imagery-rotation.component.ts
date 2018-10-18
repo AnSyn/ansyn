@@ -20,6 +20,8 @@ export interface IsGeoRegisteredProperties {
 export class ImageryRotationComponent {
 	@Input() mapState: ICaseMapState;
 
+	protected thresholdDegrees = 0.1;
+
 	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: 'N',
 		color: 'red',
@@ -79,7 +81,7 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		if (this.rotationAngle === 0) {
+		if (Math.abs(this.rotationAngle) < this.thresholdDegrees) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
 				this.setRotation(overlay.azimuth);

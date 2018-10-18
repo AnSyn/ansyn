@@ -1,7 +1,7 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
 import { Action } from '@ngrx/store';
-import { ICaseFacetsState } from '@ansyn/core';
+import { CaseFilterMetadata, ICaseFacetsState } from '@ansyn/core';
 import { Filters } from '../reducer/filters.reducer';
 import { ICaseFilter } from '../../../core/models/case.model';
 
@@ -33,7 +33,7 @@ export class InitializeFiltersSuccessAction implements Action {
 export class UpdateFilterAction implements Action {
 	type = FiltersActionTypes.UPDATE_FILTER_METADATA;
 
-	constructor(public payload?: { filter: IFilter, newMetadata: FilterMetadata }) {
+	constructor(public payload?: ICaseFilter[]) {
 	}
 }
 

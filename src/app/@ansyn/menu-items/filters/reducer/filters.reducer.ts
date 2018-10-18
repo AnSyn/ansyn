@@ -38,12 +38,15 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return { ...state, isLoading: true };
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
-			const actionPayload: { filter: IFilter, newMetadata: FilterMetadata } = action.payload;
-			// const clonedFilters = new Map(state.filters);
-
-			// clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
-			const facets = { ...state.facets, filters: <ICaseFilter[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
-			return { ...state, filters: clonedFilters, facets };
+			const payload: ICaseFilter[] = action.payload;
+			const cloneFilters: ICaseFilter[] = state.facets.filters.map((caseFilter: ICaseFilter) => {
+				if (caseFilter.type === payload.type && caseFilter.fieldName === payload.fieldName) {
+					return { ...caseFilter, metadata: payload };
+				}
+				return { ...caseFilter }
+			});
+			const facets = { ...state.facets, filters: cloneFilters };
+			return { ...state, facets };
 		}
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:

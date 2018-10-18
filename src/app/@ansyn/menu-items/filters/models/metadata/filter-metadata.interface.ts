@@ -33,7 +33,7 @@ export abstract class FilterMetadata<M = any> {
 
 	abstract filterFunc(model: string, ovrelay: any, filteringParams: any): boolean;
 
-	abstract getMetadataForOuterState(): any;
+	abstract getMetadataForOuterState(): ICaseFilter[] ;
 
 	abstract isFiltered(model: string): boolean;
 

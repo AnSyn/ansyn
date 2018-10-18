@@ -97,8 +97,8 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
-	onMetadataChange(metadata: any): void {
-		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata) }));
+	onMetadataChange(metadata: FilterMetadata): void {
+		this.store.dispatch(new UpdateFilterAction(metadata.getMetadataForOuterState()));
 	}
 
 	showAll(): void {

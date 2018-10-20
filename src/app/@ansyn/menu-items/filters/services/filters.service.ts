@@ -1,19 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import {
-	buildFilteredOverlays,
-	CaseFilters,
-	FilterType,
-	ICaseFilter,
-	IFilterModel,
-	IOverlay,
-	mapValuesToArray
-} from '@ansyn/core';
-import { cloneDeep } from 'lodash';
+import { CaseFilters, FilterType, IFilterModel, IOverlay } from '@ansyn/core';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
-import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
 
 export const filtersConfig = 'filtersConfig';
 
@@ -27,10 +16,10 @@ export class FiltersService {
 
 		filters.forEach((newMetadata: FilterMetadata, filter: IFilter) => {
 			let outerStateMetadata: any = newMetadata.getMetadataForOuterState();
-			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName)
+			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName);
 			if (historyEnumFilter) {
 				const facetsFilterToContact = (<string[]>historyEnumFilter.metadata).filter((key) => {
-					return !(<any>newMetadata).enumsFields.has(key)
+					return !(<any>newMetadata).enumsFields.has(key);
 				});
 				outerStateMetadata = outerStateMetadata.concat(facetsFilterToContact);
 			}
@@ -43,7 +32,7 @@ export class FiltersService {
 		return filterMetadata.reduce((array: IFilterModel[], item: FilterMetadata): IFilterModel[] => {
 			const temp = Object.keys(item.models)
 				.map((key: string) => ({ key, filterFunc: item.filterFunc.bind(item) }));
-			return [...array, ...temp ];
+			return [...array, ...temp];
 		}, []);
 	}
 
@@ -77,5 +66,4 @@ export class FiltersService {
 		// 	.filter(Boolean)
 		// 	.forEach((overlay) => metadata.incrementFilteredCount(overlay[metadataKey.modelName]));
 	}
-
 }

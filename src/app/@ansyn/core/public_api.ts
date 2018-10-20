@@ -1,5 +1,5 @@
-export { CaseEnumFilterMetadata, CaseFilterMetadata, ICaseBooleanFilterMetadata, ICaseSliderFilterMetadata } from './models/case.model';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
+export { CaseEnumFilterMetadata, CaseFilterMetadata, ICaseBooleanFilterMetadata, ICaseSliderFilterMetadata } from './models/case.model';
 export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
 export { mergeArrays } from './utils/merge-arrays';
 export { selectTime } from './reducers/core.reducer';

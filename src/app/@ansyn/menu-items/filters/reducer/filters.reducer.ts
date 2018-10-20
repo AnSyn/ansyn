@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { ICaseFacetsState } from '@ansyn/core';
+import { CaseEnumFilterMetadata, ICaseBooleanFilterMetadata, ICaseFacetsState } from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
@@ -34,7 +34,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			filterMetadata.forEach((metadata: FilterMetadata) => {
 				metadata.initializeFilter(overlays, state.facets.filters);
 			});
-			const filters = FiltersService.buildCaseFilters(filterMetadata, state.facets.filters);
+			const filters = FiltersService.buildCaseFilters(filterMetadata, state.facets.filters, state.facets.filters);
 			const facets = { ...state.facets, filters };
 			return { ...state, facets, isLoading: false };
 		}

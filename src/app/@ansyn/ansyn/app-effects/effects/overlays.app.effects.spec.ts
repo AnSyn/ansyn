@@ -202,7 +202,8 @@ describe('OverlaysAppEffects', () => {
 							});
 						},
 						getTimeStateByOverlay: () => {
-						}
+						},
+						getAllOverlays$: of(new Map<string, any>(exampleOverlays))
 					}
 				},
 				{

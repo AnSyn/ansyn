@@ -14,7 +14,7 @@ import {
 	ImageryRemovedAction,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
-import { ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { ErrorHandlerService, ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -31,6 +31,7 @@ describe('MapEffects', () => {
 			],
 			providers: [
 				MapEffects,
+				{ provide: ErrorHandlerService, useClass: class Fake {} },
 				MapFacadeService,
 				provideMockActions(() => actions),
 				ImageryCommunicatorService

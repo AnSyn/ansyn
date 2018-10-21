@@ -8,7 +8,7 @@ import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer
 import {
 	AlertComponentDirective,
 	coreFeatureKey,
-	CoreReducer,
+	CoreReducer, ErrorHandlerService,
 	ImageryStatusComponent,
 	MockComponent,
 	SetLayoutAction,
@@ -16,6 +16,7 @@ import {
 } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
+import { throwError } from 'rxjs';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -52,7 +53,8 @@ describe('ImageriesManagerComponent', () => {
 				MapEffects,
 				ImageryCommunicatorService,
 				Actions,
-				MapFacadeService
+				MapFacadeService,
+				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } }
 			],
 			imports: [
 				TranslateModule.forRoot(),

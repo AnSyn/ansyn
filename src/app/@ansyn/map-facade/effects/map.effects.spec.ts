@@ -1,5 +1,5 @@
 import { MapEffects } from './map.effects';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Store, StoreModule } from '@ngrx/store';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';
@@ -31,7 +31,7 @@ describe('MapEffects', () => {
 			],
 			providers: [
 				MapEffects,
-				{ provide: ErrorHandlerService, useClass: class Fake {} },
+				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
 				MapFacadeService,
 				provideMockActions(() => actions),
 				ImageryCommunicatorService

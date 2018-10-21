@@ -4,7 +4,7 @@ import {
 	BackToWorldView,
 	CaseOrientation,
 	CoreActionTypes,
-	ICaseMapPosition, ICaseMapState,
+	ICaseMapPosition,
 	IOverlay,
 	LoggerService,
 	toDegrees
@@ -23,10 +23,10 @@ import {
 import { select, Store } from '@ngrx/store';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, ProjectionService } from '@ansyn/imagery';
 import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
-import { IMapState, MapFacadeService, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade';
+import { selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
-import { catchError, distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -37,24 +37,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	isEnabled = true;
 
 	protected thresholdDegrees = 0.1;
-
-	@AutoSubscription
-	baseMap$ = this.store$
-		.pipe(
-			select(mapStateSelector),
-			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
-			filter(Boolean),
-			map((map: ICaseMapState) => map.data.overlay),
-			distinctUntilChanged(),
-			tap((overlay) => {
-				if (Boolean(overlay)) {
-					this.isEnabled = true;
-				} else {
-					this.isEnabled = false;
-					this.communicator.setVirtualNorth(0);
-				}
-			})
-		);
 
 	@AutoSubscription
 	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
@@ -114,13 +96,16 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	positionChanged$ = () => this.communicator.positionChanged.pipe(
-		tap((position: ICaseMapPosition) => {
-			if (this.isEnabled && position) {
-				this.getVirtualNorth().pipe(take(1)).subscribe((virtualNorth: number) => {
-					// console.log(`after position chenged virtualNorth= '${toDegrees(virtualNorth)}'`);
-					this.communicator.setVirtualNorth(virtualNorth);
-				});
+		mergeMap((position: ICaseMapPosition) => {
+			const view = this.communicator.ActiveMap.mapObject.getView();
+			const projection = view.getProjection();
+			if (projection.getUnits() === 'pixels' && position) {
+				return this.getVirtualNorth().pipe(take(1));
 			}
+			return of(0);
+		}),
+		tap((virtualNorth: number) => {
+			this.communicator.setVirtualNorth(virtualNorth);
 		})
 	);
 
@@ -145,11 +130,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	getVirtualNorth() {
 		return this.getProjectedCenters().pipe(
 			map((projectedCenters: Point[]): number => {
-				// console.log(`----------------------------------------`);
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-				// console.log(`northOffset= '${toDegrees(northOffsetRad)}'`);
 				const northRad = northOffsetRad * -1;
 				const communicatorRad = this.communicator.getRotation();
 				let currentRotationDegrees = toDegrees(communicatorRad);
@@ -157,13 +140,11 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 					currentRotationDegrees = 360 + currentRotationDegrees;
 				}
 				currentRotationDegrees = currentRotationDegrees % 360;
-				// console.log(`mapRotationDegrees= '${currentRotationDegrees}'`);
 				let northDeg = toDegrees(northRad);
 				if (northDeg < 0) {
 					northDeg = 360 + northDeg;
 				}
 				northDeg = northDeg % 360;
-				// console.log(`calcedNorthDegrees= '${toDegrees(northRad)}'`);
 				if (this.thresholdDegrees > Math.abs(currentRotationDegrees - northDeg)) {
 					return 0;
 				}

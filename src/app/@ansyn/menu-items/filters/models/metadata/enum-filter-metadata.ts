@@ -36,7 +36,7 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 			filter(Boolean),
 			tap((caseFilters: ICaseFilter<CaseEnumFilterMetadata>[]) => {
 				this.caseFilters = caseFilters;
-				this.updateModels();
+				this.updateFieldsViaCase();
 			})
 		).subscribe();
 	}
@@ -45,11 +45,16 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 		return new Map<string, IEnumFiled>();
 	}
 
+	concatPrevMeta() {
+
+	}
+
 	updateMetadata(model: string, key: string): void {
 		const metadata = [];
 		this.store.dispatch(new UpdateFilterAction({
 			type: FilterType.Enum,
 			fieldName: model,
+			// prev state ???
 			metadata
 		}));
 		// if (this.models[model].get(key)) {
@@ -62,6 +67,7 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 		this.store.dispatch(new UpdateFilterAction({
 			type: FilterType.Enum,
 			fieldName: model,
+			// prev state ???
 			metadata: Array.from(this.models[model].keys()).filter((key) => key !== selectedKey)
 		}));
 	}
@@ -86,7 +92,7 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 
 	initializeFilter(overlays: IOverlay[]): void {
 		this.initializeModels(overlays);
-		this.updateModels();
+		this.updateFieldsViaCase();
 	}
 
 	private initializeModels(overlays: IOverlay[]) {
@@ -97,20 +103,16 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 		});
 	}
 
-	private updateModels() {
+	private updateFieldsViaCase() {
 		Object.keys(this.models).forEach((model: string) => {
-			this.updateFields(model);
+			this.models[model] = new Map<string, IEnumFiled>();
+			const caseFilter = this.caseFilters.find(({ type, fieldName }: ICaseFilter) => this.type === type && model === fieldName);
+			if (caseFilter) {
+				this.models[model].forEach((enumsField, key) => {
+					enumsField.isChecked = caseFilter.metadata.includes(key) ? false : true
+				});
+			}
 		});
-	}
-
-	private updateFields(model: string) {
-		this.models[model] = new Map<string, IEnumFiled>();
-		const caseFilter = this.caseFilters.find(({ type, fieldName }: ICaseFilter) => this.type === type && model === fieldName);
-		if (caseFilter) {
-			this.models[model].forEach((enumsField, key) => {
-				enumsField.isChecked = caseFilter.metadata.includes(key) ? false : true
-			});
-		}
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

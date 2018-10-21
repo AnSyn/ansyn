@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SetToastMessageAction } from '../actions/core.actions';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { LoggerService } from './logger.service';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class ErrorHandlerService {
 
 	}
 
-	public httpErrorHandle(error: any, toastMessage?) {
+	public httpErrorHandle(error: any, toastMessage?): Observable<any> {
 		let errMsg = error.message ? error.message : error.toString();
 		this.loggerService.error(errMsg);
 		this.store.dispatch(new SetToastMessageAction({

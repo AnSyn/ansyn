@@ -113,8 +113,6 @@ export interface ICaseFilter<T = CaseFilterMetadata> {
 	metadata: T;
 }
 
-export type CaseFilters = ICaseFilter[];
-
 export interface ICaseFacetsState {
 	filters?: ICaseFilter[];
 	showOnlyFavorites?: boolean;

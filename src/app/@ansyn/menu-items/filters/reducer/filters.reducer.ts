@@ -4,6 +4,7 @@ import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FiltersService } from '../services/filters.service';
+import { ICaseFilter } from '../../../core/models/case.model';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 
@@ -30,35 +31,22 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	switch (action.type) {
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
-			const { overlays, filterMetadata } = action.payload;
-			filterMetadata.forEach((metadata: FilterMetadata) => {
-				metadata.initializeFilter(overlays, state.facets.filters);
-			});
-			const filters = FiltersService.buildCaseFilters(filterMetadata, state.facets.filters, state.facets.filters);
-			const facets = { ...state.facets, filters };
-			return { ...state, facets, isLoading: false };
+			const facets = { ...state.facets, filters: action.payload.filters };
+			return { ...state, isLoading: false, facets };
 		}
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
 			return { ...state, isLoading: true };
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
-			// const actionPayload: { filter: IFilter, newMetadata: FilterMetadata } = action.payload;
-			// const clonedFilters = new Map(state.filters);
-			//
-			// clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
-			// const facets = { ...state.facets, filters: <ICaseFilter<ICaseBooleanFilterMetadata | CaseEnumFilterMetadata>[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
-			// return { ...state, filters: clonedFilters, facets };
-			// const payload: ICaseFilter[] = action.payload;
-			// const cloneFilters: ICaseFilter[] = state.facets.filters.map((caseFilter: ICaseFilter) => {
-			// 	if (caseFilter.type === payload.type && caseFilter.fieldName === payload.fieldName) {
-			// 		return { ...caseFilter, metadata: payload };
-			// 	}
-			// 	return { ...caseFilter }
-			// });
-			// const facets = { ...state.facets, filters: cloneFilters };
-			// return { ...state, facets };
-			return state;
+			const actionPayload: ICaseFilter = action.payload;
+			const filters = state.facets.filters.map((filter) => {
+				if (filter.type === actionPayload.type && filter.fieldName === actionPayload.fieldName) {
+					return { ...actionPayload }
+				}
+				return filter;
+			});
+			return { ...state, facets: { ... state.facets, filters } };
 		}
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:

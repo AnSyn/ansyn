@@ -1,7 +1,4 @@
 import {
-	CaseEnumFilterMetadata,
-	CaseFilterMetadata,
-	CaseFilters,
 	FilterType,
 	ICaseFilter,
 	IOverlay

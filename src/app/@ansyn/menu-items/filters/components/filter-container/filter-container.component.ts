@@ -55,7 +55,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 			return filterMetadata.type === this.filter.type
 		});
 		this.isGotSmallListFromProvider = this.filter.type === FilterType.Enum ?
-			(<EnumFilterMetadata> this.metadataFromState).models[this.filter.modelName].enumsFields.size <= this.config.shortFilterListLength : true;
+			(<EnumFilterMetadata> this.metadataFromState).models[this.filter.modelName].size <= this.config.shortFilterListLength : true;
 
 	}
 

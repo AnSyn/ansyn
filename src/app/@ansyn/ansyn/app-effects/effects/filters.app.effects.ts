@@ -46,7 +46,7 @@ import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operator
 @Injectable()
 export class FiltersAppEffects {
 
-	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
+	// facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
 	filters$: Observable<ICaseFilter[]> = this.store$.select(selectFilters);
 	showOnlyFavorite$: Observable<boolean> = this.store$.select(selectShowOnlyFavorites);
 	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
@@ -99,10 +99,8 @@ export class FiltersAppEffects {
 		ofType<InitializeFiltersAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.overlaysArray$),
 		map(([action, overlays]: [Action, IOverlay[]]) => {
-			return new InitializeFiltersSuccessAction({
-				overlays,
-				filterMetadata: this.filterMetadata
-			});
+			const filters = this.filtersService.buildCaseFilters(overlays);
+			return new InitializeFiltersSuccessAction({ filters });
 		}));
 
 	@Effect()
@@ -151,6 +149,7 @@ export class FiltersAppEffects {
 				protected store$: Store<IAppState>,
 				@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[],
 				// protected genericTypeResolverService: GenericTypeResolverService,
+				protected filtersService: FiltersService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 

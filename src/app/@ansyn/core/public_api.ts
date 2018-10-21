@@ -18,7 +18,7 @@ export { ICaseLayersState } from './models/case.model';
 export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 export { AlertComponentDirective } from './alerts/alert-component.directive';
 export { coreFeatureKey, coreInitialState, CoreReducer } from './reducers/core.reducer';
-export { CaseFilters, ICaseState, IOverlaysManualProcessArgs } from './models/case.model';
+export { ICaseState, IOverlaysManualProcessArgs } from './models/case.model';
 export { type } from './utils/type';
 export { selectAutoSave, selectRemovedOverlays, selectRemovedOverlaysVisibility } from './reducers/core.reducer';
 export {

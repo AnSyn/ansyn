@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { CaseFilters, FilterType, IFilterModel, IOverlay } from '@ansyn/core';
+import { FilterType, IFilterModel, IOverlay } from '@ansyn/core';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
+import { ICaseFilter } from '../../../core/models/case.model';
 
 export const filtersConfig = 'filtersConfig';
 
@@ -11,23 +12,6 @@ export const filtersConfig = 'filtersConfig';
 	providedIn: 'root'
 })
 export class FiltersService {
-	static buildCaseFilters(filters: Filters, facetsFilters?: CaseFilters): CaseFilters {
-		const caseFilters: CaseFilters = [];
-
-		filters.forEach((newMetadata: FilterMetadata, filter: IFilter) => {
-			let outerStateMetadata: any = newMetadata.getMetadataForOuterState();
-			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName);
-			if (historyEnumFilter) {
-				const facetsFilterToContact = (<string[]>historyEnumFilter.metadata).filter((key) => {
-					return !(<any>newMetadata).enumsFields.has(key);
-				});
-				outerStateMetadata = outerStateMetadata.concat(facetsFilterToContact);
-			}
-			caseFilters.push({ fieldName: filter.modelName, metadata: outerStateMetadata, type: filter.type });
-		});
-		return caseFilters;
-	}
-
 	static pluckFilterModels(filterMetadata: FilterMetadata[]): IFilterModel[] {
 		return filterMetadata.reduce((array: IFilterModel[], item: FilterMetadata): IFilterModel[] => {
 			const temp = Object.keys(item.models)
@@ -65,5 +49,19 @@ export class FiltersService {
 		// 	.map((id) => overlays.get(id))
 		// 	.filter(Boolean)
 		// 	.forEach((overlay) => metadata.incrementFilteredCount(overlay[metadataKey.modelName]));
+	}
+
+	constructor(@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[]) {
+	}
+
+	buildCaseFilters(overlays: IOverlay[]): ICaseFilter[] {
+		this.filterMetadata.forEach((metadata: FilterMetadata) => {
+			metadata.initializeFilter(overlays);
+		});
+
+		return this.filterMetadata.reduce((caseFilters: ICaseFilter[], metadata: FilterMetadata) => {
+			const outerStateMetadata: any = metadata.getMetadataForOuterState();
+			return [...caseFilters, ...outerStateMetadata];
+		}, []);
 	}
 }

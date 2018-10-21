@@ -9,7 +9,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { CoreEffects } from './effects/core.effects';
 import { AlertsModule } from './alerts/alerts.module';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
-import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
@@ -36,7 +35,6 @@ import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 		AlertsModule
 	],
 	providers: [
-		GenericTypeResolverService,
 		LoggerService,
 		ErrorHandlerService,
 		StorageService

@@ -1,9 +1,8 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { CaseEnumFilterMetadata, ICaseBooleanFilterMetadata, ICaseFacetsState } from '@ansyn/core';
+import { ICaseFacetsState } from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
-import { FiltersService } from '../services/filters.service';
 import { ICaseFilter } from '../../../core/models/case.model';
 
 export type Filters = Map<IFilter, FilterMetadata>;
@@ -42,11 +41,11 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			const actionPayload: ICaseFilter = action.payload;
 			const filters = state.facets.filters.map((filter) => {
 				if (filter.type === actionPayload.type && filter.fieldName === actionPayload.fieldName) {
-					return { ...actionPayload }
+					return { ...actionPayload };
 				}
 				return filter;
 			});
-			return { ...state, facets: { ... state.facets, filters } };
+			return { ...state, facets: { ...state.facets, filters } };
 		}
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
@@ -61,6 +60,6 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 }
 
 export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
-export const selectFilters = createSelector(selectFacets, ({ filters }: ICaseFacetsState) => filters);
+export const selectFilters = createSelector(selectFacets, ({ filters }: ICaseFacetsState): ICaseFilter[] => filters);
 export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
 export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);

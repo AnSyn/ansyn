@@ -4,7 +4,8 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import {
-	EnableOnlyFavoritesSelectionAction,
+	BooleanFilterMetadata,
+	EnableOnlyFavoritesSelectionAction, EnumFilterMetadata,
 	FilterMetadata,
 	Filters,
 	filtersConfig,
@@ -56,7 +57,7 @@ export class FiltersAppEffects {
 	specialObjects$: Observable<Map<string, IOverlaySpecialObject>> = this.store$.select(selectSpecialObjects);
 	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
 	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
-	onFiltersChanges$: Observable<[ICaseFilter[], boolean, IOverlay[], string[], boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onFiltersChanges$: Observable<[boolean, ICaseFilter[], IOverlay[], string[], boolean]> = combineLatest(this.showOnlyFavorite$, this.filters$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
 	onCriterialFiltersChanges$: Observable<[ICaseFilter[], string[], boolean]> = combineLatest(this.filters$, this.removedOverlays$, this.removedOverlaysVisibility$);
 	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest(
 		this.overlaysMap$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$);
@@ -111,8 +112,7 @@ export class FiltersAppEffects {
 			if (showOnlyFavorites) {
 				badge = '★';
 			} else {
-				const filterValues = this.filterMetadata;
-				badge = filterValues.reduce((badgeNum: number, filterMetadata: FilterMetadata) => badgeNum + filterMetadata.filteredCount(), 0).toString();
+				badge = this.filterMetadata.reduce((badgeNum: number, filterMetadata: FilterMetadata) => badgeNum + filterMetadata.filteredCount(), 0).toString();
 			}
 
 			return new SetBadgeAction({ key: 'Filters', badge });
@@ -131,34 +131,25 @@ export class FiltersAppEffects {
 			return overlays.size > 0;
 		}),
 		tap(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
-
-			// Array.from(filterState.filters).forEach(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
-			// 	metadata.resetFilteredCount();
-			// 	filteredOverlays.forEach((id: string) => {
-			// 		const overlay = overlays.get(id);
-			// 		metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
-			// 	});
-			// 	if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
-			// 		FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);
-			// 	}
-			// });
+			this.filterMetadata.forEach((metadata: FilterMetadata) => {
+				Object.keys(metadata.models).forEach((model) => {
+					metadata.resetFilteredCount(model);
+					filteredOverlays.forEach((id: string) => {
+						const overlay = overlays.get(id);
+						metadata.incrementFilteredCount(model, overlay[model]);
+					});
+					if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
+						FiltersService.calculatePotentialOverlaysCount(model, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);
+					}
+				});
+			});
 		}));
 
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[],
-				// protected genericTypeResolverService: GenericTypeResolverService,
 				protected filtersService: FiltersService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
-
-	// resolveMetadata(filterType: FilterType): FilterMetadata {
-	// 	const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
-	// 		return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
-	// 			return filterMetadata.find((item) => item.type === FilterType[filterType]);
-	// 		};
-	// 	})();
-	// 	return this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
-	// }
 }

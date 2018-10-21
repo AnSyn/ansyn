@@ -20,7 +20,7 @@ export abstract class FilterMetadata<M = any> {
 
 	abstract initialModelObject(): M;
 
-	abstract initializeFilter(overlays: IOverlay[], caseFilters?: ICaseFilter[]): void;
+	abstract initializeFilter(overlays: IOverlay[]): void;
 
 	abstract accumulateData(model: string, value: any): void;
 

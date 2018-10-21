@@ -45,31 +45,40 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 		return new Map<string, IEnumFiled>();
 	}
 
-	concatPrevMeta() {
-
-	}
-
 	updateMetadata(model: string, key: string): void {
-		const metadata = [];
-		this.store.dispatch(new UpdateFilterAction({
+		const metadata = Array.from(this.models[model].entries()).filter(([key, value]) => !value.isChecked).map(([key]) => key);
+		this.store.dispatch(new UpdateFilterAction(this.concatPrev({
 			type: FilterType.Enum,
 			fieldName: model,
-			// prev state ???
-			metadata
-		}));
-		// if (this.models[model].get(key)) {
-		// 	this.models[model].get(key).isChecked = !this.models[model].get(key).isChecked;
-		// }
-		// this.updateState(model);
+			metadata: metadata.includes(key) ? metadata.filter((metaKey) => metaKey !== key) : [...metadata, key]
+		})));
+	}
+
+	updateFieldsViaCase(): void {
+		Object.entries(this.models).forEach(([model, value]: [string, IEnumFilterModel]) => {
+			const prevMetadata = this.caseFilters.find(({ fieldName }) => fieldName === model);
+			if (prevMetadata) {
+				value.forEach((value: IEnumFiled, key: string) => {
+					value.isChecked = prevMetadata.metadata.includes(key) ? false : true
+				});
+			}
+		})
+	}
+
+	concatPrev(payload: ICaseFilter<CaseEnumFilterMetadata>): ICaseFilter<CaseEnumFilterMetadata> {
+		const prevMetadata = get(this.caseFilters.find(({ fieldName }) => fieldName === payload.fieldName), 'metadata') || [];
+		return {
+			...payload,
+			metadata: payload.metadata.concat(prevMetadata.filter((key) => !this.models[payload.fieldName].has(key)))
+		}
 	}
 
 	selectOnly(model: string, selectedKey: string): void {
-		this.store.dispatch(new UpdateFilterAction({
+		this.store.dispatch(new UpdateFilterAction(this.concatPrev({
 			type: FilterType.Enum,
 			fieldName: model,
-			// prev state ???
 			metadata: Array.from(this.models[model].keys()).filter((key) => key !== selectedKey)
-		}));
+		})));
 	}
 
 	accumulateData(model: string, value: string): void {
@@ -91,28 +100,12 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 	}
 
 	initializeFilter(overlays: IOverlay[]): void {
-		this.initializeModels(overlays);
-		this.updateFieldsViaCase();
-	}
-
-	private initializeModels(overlays: IOverlay[]) {
 		Object.keys(this.models).forEach((model: string) => {
 			overlays.forEach((overlay: any) => {
 				this.accumulateData(model, overlay[model]);
 			});
 		});
-	}
-
-	private updateFieldsViaCase() {
-		Object.keys(this.models).forEach((model: string) => {
-			this.models[model] = new Map<string, IEnumFiled>();
-			const caseFilter = this.caseFilters.find(({ type, fieldName }: ICaseFilter) => this.type === type && model === fieldName);
-			if (caseFilter) {
-				this.models[model].forEach((enumsField, key) => {
-					enumsField.isChecked = caseFilter.metadata.includes(key) ? false : true
-				});
-			}
-		});
+		this.updateFieldsViaCase();
 	}
 
 	filterFunc(overlay: any, key: string): boolean {
@@ -131,23 +124,16 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 
 	getMetadataForOuterState(): ICaseFilter<CaseEnumFilterMetadata>[] {
 		return Object.entries(this.models)
-			.map(this.getOneMetadataForOuterState.bind(this));
+			.map(this.modelMetadataForOuterState.bind(this));
 	}
 
-	getOneMetadataForOuterState([fieldName, enumFilterModel]: [string, IEnumFilterModel]): ICaseFilter<CaseEnumFilterMetadata> {
-		const metadata: string[] = [];
-		enumFilterModel.forEach((value: { count: number, isChecked: boolean }, key: string) => {
-			if (!value.isChecked) {
-				metadata.push(key);
-			}
-		});
-		const prevMetadata = get(this.caseFilters.find((caseFilter: ICaseFilter) => caseFilter.fieldName === fieldName), 'metadata') || [];
-		prevMetadata.filter((uncheckField: string) => !enumFilterModel.has(uncheckField));
-		return {
+	modelMetadataForOuterState([fieldName, enumFilterModel]: [string, IEnumFilterModel]): ICaseFilter<CaseEnumFilterMetadata> {
+		const metadata: string[] = Array.from(enumFilterModel.entries()).filter(([key, value]) => !value.isChecked).map(([key]) => key);
+		return this.concatPrev({
 			type: this.type,
 			fieldName,
-			metadata: [...prevMetadata, ...metadata]
-		};
+			metadata
+		});
 	}
 
 	isFiltered(model: string): boolean {

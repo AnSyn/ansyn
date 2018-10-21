@@ -50,7 +50,7 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 		this.store.dispatch(new UpdateFilterAction({
 			type: FilterType.Enum,
 			fieldName: model,
-			metadata: Array.from(this.models[fieldName].keys()).filter((key) => key !== selectedKey)
+			metadata
 		}));
 		// if (this.models[model].get(key)) {
 		// 	this.models[model].get(key).isChecked = !this.models[model].get(key).isChecked;
@@ -62,7 +62,7 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 		this.store.dispatch(new UpdateFilterAction({
 			type: FilterType.Enum,
 			fieldName: model,
-			metadata: Array.from(this.models[fieldName].keys()).filter((key) => key !== selectedKey)
+			metadata: Array.from(this.models[model].keys()).filter((key) => key !== selectedKey)
 		}));
 	}
 

@@ -17,6 +17,7 @@ import {
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
 import { throwError } from 'rxjs';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -54,7 +55,8 @@ describe('ImageriesManagerComponent', () => {
 				ImageryCommunicatorService,
 				Actions,
 				MapFacadeService,
-				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } }
+				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
+				{ provide: mapFacadeConfig, useValue: { } }
 			],
 			imports: [
 				TranslateModule.forRoot(),

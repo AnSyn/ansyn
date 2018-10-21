@@ -293,7 +293,7 @@ export class MapAppEffects {
 		const caseMapState = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId);
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
-		const isIntersect = MapFacadeService.isIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
+		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType });
@@ -335,7 +335,7 @@ export class MapAppEffects {
 		/* -3- */
 		const resetView = pipe(
 			mergeMap((layer) => {
-				const extent = isIntersect && extentFromGeojson(overlay.footprint);
+				const extent = isNotIntersect && extentFromGeojson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
 			map(() => new DisplayOverlaySuccessAction(payload))

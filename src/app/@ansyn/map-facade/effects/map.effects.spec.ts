@@ -15,6 +15,7 @@ import {
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { ErrorHandlerService, ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { mapFacadeConfig } from '../models/map-facade.config';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -31,6 +32,7 @@ describe('MapEffects', () => {
 			],
 			providers: [
 				MapEffects,
+				{ provide: mapFacadeConfig, useValue: { } },
 				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
 				MapFacadeService,
 				provideMockActions(() => actions),

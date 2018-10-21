@@ -307,10 +307,10 @@ export class MapEffects {
 				protected store$: Store<any>) {
 	}
 
-	getPosition(position, comm, mapItem): Observable<any> {
+	getPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
 		if (mapItem.data.overlay) {
-			const isIntersect = MapFacadeService.isIntersect(position, mapItem.data.overlay.footprint, this.config.overlayCoverage);
-			if (!isIntersect) {
+			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+			if (isNotIntersect) {
 				return this.errorHandlerService.httpErrorHandle({}, 'At least one map couldn\'t be synchronized').pipe(
 					rxPreventCrash()
 				);

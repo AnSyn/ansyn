@@ -14,8 +14,8 @@ export class MapFacadeService {
 	mapsList$ = this.store.select(selectMapsList);
 	mapsList: ICaseMapState[] = [];
 
-	static isIntersect(position, footprint, overlayCoverage): boolean {
-		const intersection = getFootprintIntersectionRatioInExtent(position.extentPolygon, footprint);
+	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
+		const intersection = getFootprintIntersectionRatioInExtent(extentPolygon, footprint);
 		return intersection < overlayCoverage;
 	}
 

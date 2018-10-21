@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '../utils/extent-calculator';
 import { BaseImageryMap, ImageryMap, ProjectionService } from '@ansyn/imagery';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '../openlayers-map/openlayers-mouseposition-control';
 import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig } from '@ansyn/core';

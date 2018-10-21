@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { forkJoin, Observable, UnaryFunction } from 'rxjs';
+import { EMPTY, forkJoin, Observable, UnaryFunction } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
@@ -20,7 +20,7 @@ import {
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction, SetToastMessageAction
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import { intersect, polygon } from '@turf/turf';
@@ -282,7 +282,7 @@ export class MapEffects {
 			mapState.mapsList.forEach((mapItem: ICaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
-					setPositionObservables.push(this.getPosition(mapPosition, comm, mapItem));
+					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
 				}
 			});
 
@@ -302,18 +302,19 @@ export class MapEffects {
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,
 				protected communicatorsService: ImageryCommunicatorService,
-				protected errorHandlerService: ErrorHandlerService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				protected store$: Store<any>) {
 	}
 
-	getPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
+	setPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
 		if (mapItem.data.overlay) {
 			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
 			if (isNotIntersect) {
-				return this.errorHandlerService.httpErrorHandle({}, 'At least one map couldn\'t be synchronized').pipe(
-					rxPreventCrash()
-				);
+				this.store$.dispatch(new SetToastMessageAction({
+					toastText: 'At least one map couldn\'t be synchronized',
+					showWarningIcon: true
+				}));
+				return EMPTY;
 			}
 		}
 		return comm.setPosition(position);

@@ -111,12 +111,12 @@ describe('MapEffects', () => {
 			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPosition').and.callFake(() => of(true));
-			spyOn(mapEffects, 'getPosition').and.callFake(() => of(true));
+			spyOn(mapEffects, 'setPosition').and.callFake(() => of(true));
 			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
 			actions = hot('--a--', { a: action });
 			const expectedResults = cold('--b--', { b: [action, mapState] });
 			expect(mapEffects.onSynchronizeAppMaps$).toBeObservable(expectedResults);
-			expect(mapEffects.getPosition).toHaveBeenCalled();
+			expect(mapEffects.setPosition).toHaveBeenCalled();
 		});
 	});
 });

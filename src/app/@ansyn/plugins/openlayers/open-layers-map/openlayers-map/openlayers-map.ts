@@ -330,25 +330,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			view.setRotation(rotation);
 			this.isValidPosition = true;
 			return of(true);
+		} else {
+			const extentFeature = feature(extentPolygon);
+			return this.fitRotateExtent(this.mapObject, extentFeature);
 		}
-		const extentFeature = feature(extentPolygon);
-		const layerExtent = this.getMainLayer().getExtent();
-		if (layerExtent) {
-			const layerExtentOLFeature = new olFeature(new olPolygon(bboxPolygon(layerExtent).geometry.coordinates as any));
-			return this.projectionService.projectCollectionAccurately([layerExtentOLFeature], this)
-				.pipe(
-					take(1),
-					mergeMap((extent4326: FeatureCollection<GeometryObject>) => {
-						const [layerExtentFeature] = extent4326.features;
-						if (booleanContains(layerExtentFeature, extentFeature)) {
-							return this.fitRotateExtent(this.mapObject, extentFeature);
-						}
-						return of(false)
-					})
-				);
-		}
-
-		return this.fitRotateExtent(this.mapObject, extentFeature);
 	}
 
 	public getPosition(): Observable<ICaseMapPosition> {

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { forkJoin, Observable, of, UnaryFunction } from 'rxjs';
+import { forkJoin, Observable, UnaryFunction } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
@@ -10,11 +10,13 @@ import {
 	BackToWorldSuccess,
 	BackToWorldView,
 	CaseGeoFilter,
-	CoreActionTypes, ErrorHandlerService,
+	CoreActionTypes,
+	ErrorHandlerService,
 	ICaseMapPosition,
 	ICaseMapState,
 	isFullOverlay,
-	RemoveAlertMsg, rxPreventCrash,
+	RemoveAlertMsg,
+	rxPreventCrash,
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
@@ -36,19 +38,11 @@ import {
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import {
-	catchError,
-	distinctUntilChanged,
-	filter,
-	map,
-	mergeMap,
-	share,
-	switchMap,
-	tap,
-	withLatestFrom
-} from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise, pipe } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
+import { mapFacadeConfig } from '../models/map-facade.config';
+import { IMapFacadeConfig } from '../models/map-config.model';
 
 @Injectable()
 export class MapEffects {
@@ -288,17 +282,7 @@ export class MapEffects {
 			mapState.mapsList.forEach((mapItem: ICaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
-					setPositionObservables.push(
-						comm.setPosition(mapPosition).pipe(
-							mergeMap((result) => {
-								if (!result) {
-									return this.errorHandlerService.httpErrorHandle({}, 'At least one map couldn\'t be synchronized')
-								}
-								return of(result);
-							}),
-							rxPreventCrash()
-						)
-					);
+					setPositionObservables.push(this.getPosition(mapPosition, comm, mapItem));
 				}
 			});
 
@@ -319,6 +303,20 @@ export class MapEffects {
 				protected mapFacadeService: MapFacadeService,
 				protected communicatorsService: ImageryCommunicatorService,
 				protected errorHandlerService: ErrorHandlerService,
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				protected store$: Store<any>) {
 	}
+
+	getPosition(position, comm, mapItem): Observable<any> {
+		if (mapItem.data.overlay) {
+			const isIntersect = MapFacadeService.isIntersect(position, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+			if (!isIntersect) {
+				return this.errorHandlerService.httpErrorHandle({}, 'At least one map couldn\'t be synchronized').pipe(
+					rxPreventCrash()
+				);
+			}
+		}
+		return comm.setPosition(position);
+	}
+
 }

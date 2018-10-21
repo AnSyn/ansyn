@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector, selectMapsList } from '../reducers/map.reducer';
+import { IMapState, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
-import { ICaseMapPosition, ICaseMapState, IOverlay } from '@ansyn/core';
+import { getFootprintIntersectionRatioInExtent, ICaseMapPosition, ICaseMapState, IOverlay } from '@ansyn/core';
 import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 
@@ -13,6 +13,11 @@ export class MapFacadeService {
 
 	mapsList$ = this.store.select(selectMapsList);
 	mapsList: ICaseMapState[] = [];
+
+	static isIntersect(position, footprint, overlayCoverage): boolean {
+		const intersection = getFootprintIntersectionRatioInExtent(position.extentPolygon, footprint);
+		return intersection < overlayCoverage;
+	}
 
 	static isOverlayGeoRegistered(overlay: IOverlay): boolean {
 		if (!overlay) {

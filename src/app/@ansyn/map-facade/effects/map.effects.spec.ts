@@ -1,5 +1,5 @@
 import { MapEffects } from './map.effects';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Store, StoreModule } from '@ngrx/store';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';
@@ -14,7 +14,8 @@ import {
 	ImageryRemovedAction,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
-import { ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { ErrorHandlerService, ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { mapFacadeConfig } from '../models/map-facade.config';
 
 describe('MapEffects', () => {
 	let mapEffects: MapEffects;
@@ -31,6 +32,8 @@ describe('MapEffects', () => {
 			],
 			providers: [
 				MapEffects,
+				{ provide: mapFacadeConfig, useValue: { } },
+				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
 				MapFacadeService,
 				provideMockActions(() => actions),
 				ImageryCommunicatorService
@@ -107,12 +110,13 @@ describe('MapEffects', () => {
 			const fakeMap: ICaseMapState = <any> { id: 'imagery2' };
 			mapState.mapsList = [fakeMap];
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
-			spyOn(communicator, 'setPosition').and.callFake(() => of(true));
+			spyOn(communicator, 'getPosition').and.callFake(() => of(true));
+			spyOn(mapEffects, 'setPosition').and.callFake(() => of(true));
 			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
 			actions = hot('--a--', { a: action });
 			const expectedResults = cold('--b--', { b: [action, mapState] });
 			expect(mapEffects.onSynchronizeAppMaps$).toBeObservable(expectedResults);
-			expect(communicator.setPosition).toHaveBeenCalled();
+			expect(mapEffects.setPosition).toHaveBeenCalled();
 		});
 	});
 });

@@ -14,13 +14,14 @@ import * as turf from '@turf/turf';
 import { ExtentCalculator } from '../utils/extent-calculator';
 import { BaseImageryMap, ImageryMap, ProjectionService } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
-import { FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
+import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from '../openlayers-map/openlayers-mouseposition-control';
 import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig } from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { map, take, tap } from 'rxjs/operators';
+import { map, mergeMap, take, tap } from 'rxjs/operators';
+import { feature, bboxPolygon, booleanContains } from '@turf/turf';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -295,8 +296,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}));
 	}
 
-	fitRotateExtent(olmap: OLMap, extentFeature: CaseMapExtentPolygon): Observable<boolean> {
-		const collection: any = turf.featureCollection([turf.feature(extentFeature)]);
+	fitRotateExtent(olmap: OLMap, extentFeature: Feature<CaseMapExtentPolygon>): Observable<boolean> {
+		const collection: any = turf.featureCollection([extentFeature]);
 
 		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
 			map((features: olFeature[]) => {
@@ -319,11 +320,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
-		const rotation = this._mapObject.getView().getRotation();
-		view.setCenter([0, 0]);
-		view.setRotation(rotation ? rotation : 0);
-		view.setResolution(1);
-
 		const { extentPolygon, projectedState } = position;
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = projectedState && viewProjection.getCode() === projectedState.projection.code;
@@ -335,7 +331,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this.isValidPosition = true;
 			return of(true);
 		} else {
-			return this.fitRotateExtent(this.mapObject, extentPolygon);
+			const extentFeature = feature(extentPolygon);
+			return this.fitRotateExtent(this.mapObject, extentFeature);
 		}
 	}
 

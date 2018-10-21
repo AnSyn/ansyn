@@ -11,7 +11,7 @@ export class ErrorHandlerService {
 
 	}
 
-	public httpErrorHandle(error: any, toastMessage?) {
+	public httpErrorHandle(error: any, toastMessage?): Observable<any> {
 		let errMsg = error.message ? error.message : error.toString();
 		this.loggerService.error(errMsg);
 		this.store.dispatch(new SetToastMessageAction({

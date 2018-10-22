@@ -9,7 +9,7 @@ import {
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
-import { GoToAction, ProjectionConverterService } from '@ansyn/menu-items';
+import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter } from '@ansyn/menu-items';
 import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { map, tap } from 'rxjs/internal/operators';
@@ -43,6 +43,13 @@ export class AnsynApi {
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
 		map(({ payload }: ShadowMouseProducer) => {
 			return payload.point.coordinates;
+		})
+	);
+
+	getActiveCenter$: Observable<any> = this.actions$.pipe(
+		ofType(ToolsActionsTypes.SET_ACTIVE_CENTER),
+		map(({ payload }: SetActiveCenter) => {
+			return payload;
 		})
 	);
 
@@ -92,6 +99,7 @@ export class AnsynApi {
 		this.store.dispatch(new GoToAction(position));
 	}
 
+	
 	init(): void {
 	}
 

@@ -3,6 +3,7 @@
   "dest": "../../../../dist/ansyn/menu-items",
   "whitelistedNonPeerDependencies": [
     "@ansyn/core",
+    "@ansyn/overlays",
     "@ngrx/core",
     "@ngrx/store",
     "@ngrx/effects",

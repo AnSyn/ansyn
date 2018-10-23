@@ -5,6 +5,9 @@
       "@ansyn/core": [
         "dist/ansyn/core"
       ],
+      "@ansyn/overlays": [
+        "dist/ansyn/overlays"
+      ],
       "@ansyn/menu": [
         "dist/ansyn/menu"
       ],

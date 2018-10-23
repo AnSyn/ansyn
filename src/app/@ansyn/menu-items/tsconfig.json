@@ -5,6 +5,9 @@
       "@ansyn/core": [
         "src/app/@ansyn/core/public_api"
       ],
+      "@ansyn/overlays": [
+        "src/app/@ansyn/overlays/public_api"
+      ],
       "@ansyn/context": [
         "src/app/@ansyn/context/public_api"
       ],

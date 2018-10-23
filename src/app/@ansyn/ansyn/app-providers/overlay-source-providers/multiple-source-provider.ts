@@ -19,7 +19,6 @@ import {
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
-import { Auth0Service } from './imisight/auth0.service';
 import { groupBy } from 'lodash';
 
 export interface IFiltersList {
@@ -52,8 +51,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[],
-				protected loggerService: LoggerService,
-				protected auth0Service: Auth0Service) {
+				protected loggerService: LoggerService) {
 		super(loggerService);
 
 		this.prepareWhitelist();
@@ -171,12 +169,6 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-
-		if (this.auth0Service.auth0Active && !this.auth0Service.isValidToken()) {
-			this.auth0Service.login();
-			return;
-		}
-
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.sourceConfigs
 			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => {

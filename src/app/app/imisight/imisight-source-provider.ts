@@ -18,7 +18,8 @@ import {
 	toRadians
 } from '@ansyn/core';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
-import { IOverlaysPlanetFetchData } from '../planet/planet.model';
+import { IOverlaysPlanetFetchData } from '../../@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
+import { Auth0Service } from './auth0.service';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 
@@ -48,12 +49,18 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
+		protected auth0Service: Auth0Service,
 		@Inject(ImisightOverlaySourceConfig)
 		protected imisightOverlaysSourceConfig: IImisightOverlaySourceConfig) {
 		super(loggerService);
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
+
+		if (this.auth0Service.auth0Active && !this.auth0Service.isValidToken()) {
+			this.auth0Service.login();
+			return;
+		}
 
 		const helper = new JwtHelperService();
 		const token = localStorage.getItem('id_token');

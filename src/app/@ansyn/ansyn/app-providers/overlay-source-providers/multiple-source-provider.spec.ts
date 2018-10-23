@@ -12,7 +12,6 @@ import * as turf from '@turf/turf';
 import { Injectable } from '@angular/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Auth0Service } from './imisight/auth0.service';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -153,8 +152,7 @@ describe('MultipleSourceProvider', () => {
 					provide: MultipleOverlaysSource,
 					useClass: TruthyOverlaySourceProviderMock,
 					multi: true
-				},
-				{ provide: Auth0Service, useValue: {} }
+				}
 			]
 		});
 	});
@@ -197,8 +195,7 @@ describe('MultipleSourceProvider', () => {
 					provide: MultipleOverlaysSource,
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
-				},
-				{ provide: Auth0Service, useValue: {} }
+				}
 			]
 		});
 	});
@@ -241,8 +238,7 @@ describe('MultipleSourceProvider', () => {
 					provide: MultipleOverlaysSource,
 					useClass: FaultyOverlaySourceProviderMock,
 					multi: true
-				},
-				{ provide: Auth0Service, useValue: {} }
+				}
 			]
 		});
 	});

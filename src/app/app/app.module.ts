@@ -12,6 +12,7 @@ import { AnsynRouterModule } from './router/router.module';
 import { configuration } from '../../configuration/configuration';
 import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
 import { PlaceholderComponent } from './components/placeholder/placeholder.component';
+import { ImisightModule } from './imisight/imisight.module';
 
 @NgModule({
 	imports: [
@@ -21,6 +22,7 @@ import { PlaceholderComponent } from './components/placeholder/placeholder.compo
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),
 		AnsynModule,
 		LoginModule,
+		ImisightModule,
 		AnsynRouterModule,
 		AppRoutingModule
 	],

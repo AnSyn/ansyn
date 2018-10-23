@@ -10,6 +10,7 @@ export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOUR
 export interface IImageryMapSourceMetaData {
 	sourceType?: string;
 	supported?: IBaseImageryMapConstructor[];
+	forOverlay?: boolean;
 }
 
 export interface IBaseMapSourceProviderConstructor extends IImageryMapSourceMetaData {
@@ -23,14 +24,22 @@ export abstract class BaseMapSourceProvider {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
+	generateLayerId(metaData: ICaseMapState): string {
+		if ((this.constructor as IBaseMapSourceProviderConstructor).forOverlay) {
+			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
+		}
+		return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
+	}
+
 	protected createOrGetFromCache(metaData: ICaseMapState) {
-		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
+		const cacheId = this.generateLayerId(metaData);
+		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
 		if (cacheLayers.length) {
 			return cacheLayers;
 		}
 
 		const layers = this.create(metaData);
-		this.cacheService.addLayerToCache(metaData, layers);
+		this.cacheService.addLayerToCache(cacheId, layers);
 		return layers;
 	}
 
@@ -42,7 +51,8 @@ export abstract class BaseMapSourceProvider {
 	}
 
 	existsInCache(metaData: ICaseMapState): boolean {
-		const cacheLayers = this.cacheService.getLayerFromCache(metaData);
+		const cacheId = this.generateLayerId(metaData);
+		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
 		return cacheLayers.length > 0;
 	}
 

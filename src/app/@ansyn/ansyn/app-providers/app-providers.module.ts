@@ -6,7 +6,6 @@ import { BaseOverlaySourceProvider } from '@ansyn/overlays';
 import { OpenLayersProjectionService } from '@ansyn/plugins';
 import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
 import { OpenLayerMapBoxSourceProvider } from './map-source-providers/open-layers-MapBox-source-provider';
-import { OpenLayerNotGeoRegisteredPlanetSourceProvider } from './map-source-providers/open-layers-not-geo-registered-planet-source-provider';
 import { OpenLayerBingSourceProvider } from './map-source-providers/open-layers-BING-source-provider';
 import { OpenLayerOSMSourceProvider } from './map-source-providers/open-layers-OSM-source-provider';
 import { OpenLayerPlanetSourceProvider } from './map-source-providers/open-layers-planet-source-provider';
@@ -33,7 +32,6 @@ import { OpenLayersImisightSourceProvider } from './map-source-providers/open-la
 				OpenLayerOSMSourceProvider,
 				OpenLayerIDAHOSourceProvider,
 				OpenLayerPlanetSourceProvider,
-				OpenLayerNotGeoRegisteredPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
 				OpenLayerOpenAerialSourceProvider,

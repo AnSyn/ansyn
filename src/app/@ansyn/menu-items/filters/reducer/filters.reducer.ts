@@ -1,9 +1,9 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { ICaseFacetsState } from '@ansyn/core';
+import { ICaseFacetsState, ICaseFilter } from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
-import { ICaseFilter } from '../../../core/models/case.model';
+import { OverlaysActionTypes } from '@ansyn/overlays';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 
@@ -28,23 +28,26 @@ export const filtersStateSelector: MemoizedSelector<any, IFiltersState> = create
 
 export function FiltersReducer(state: IFiltersState = initialFiltersState, action: FiltersActions) {
 	switch (action.type) {
-
-		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
-			const facets = { ...state.facets, filters: action.payload.filters };
-			return { ...state, isLoading: false, facets };
-		}
-
-		case FiltersActionTypes.INITIALIZE_FILTERS:
+		case OverlaysActionTypes.LOAD_OVERLAYS:
 			return { ...state, isLoading: true };
+
+		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS:
+			return { ...state, isLoading: false };
+
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
 			const actionPayload: ICaseFilter = action.payload;
-			const filters = state.facets.filters.map((filter) => {
-				if (filter.type === actionPayload.type && filter.fieldName === actionPayload.fieldName) {
-					return { ...actionPayload };
-				}
-				return filter;
-			});
+			const filters = [...state.facets.filters];
+
+			const caseFilter = state.facets
+				.filters.find(({ fieldName, type }: ICaseFilter) => fieldName === actionPayload.fieldName && actionPayload.type === type);
+
+			if (caseFilter) {
+				caseFilter.metadata = actionPayload.metadata;
+			} else {
+				filters.push(actionPayload);
+			}
+
 			return { ...state, facets: { ...state.facets, filters } };
 		}
 
@@ -62,4 +65,4 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
 export const selectFilters = createSelector(selectFacets, ({ filters }: ICaseFacetsState): ICaseFilter[] => filters);
 export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
-export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);
+export const selectIsFiltersLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);

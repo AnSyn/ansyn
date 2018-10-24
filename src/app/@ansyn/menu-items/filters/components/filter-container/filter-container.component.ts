@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { IFiltersState, selectIsLoading, selectShowOnlyFavorites } from '../../reducer/filters.reducer';
+import { IFiltersState, selectIsFiltersLoading, selectShowOnlyFavorites } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -67,7 +67,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	public isLongFiltersList = false;
 	public showOnlyFavorite = false;
 	@ViewChild('fields') fields: ElementRef;
-	public isLoading$: Observable<boolean> = this.store.select(selectIsLoading);
+	public isLoading$: Observable<boolean> = this.store.select(selectIsFiltersLoading);
 
 	@AutoSubscription
 	showOnlyFavorites$: Observable<any> = this.store.select(selectShowOnlyFavorites).pipe(
@@ -92,15 +92,9 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 	}
 
-	onMetadataChange(metadata: any): void {
-		// this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata) }));
-	}
-
 	showAll(): void {
 		if (this.metadataFromState) {
-			// const clonedMetadata: FilterMetadata = Object.assign(Object.create(this.metadataFromState), this.metadataFromState);
 			this.metadataFromState.showAll(this.filter.modelName);
-			this.onMetadataChange(this.metadataFromState);
 		}
 	}
 

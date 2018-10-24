@@ -11,6 +11,10 @@ import { Inject } from '@angular/core';
 import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../filters-config';
 import { ISliderFilterModel } from './slider-filter-metadata';
+import { UpdateFilterAction } from '../../actions/filters.actions';
+import { uniq } from 'lodash';
+import { IEnumFiled } from './enum-filter-metadata';
+import { Store } from '@ngrx/store';
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';
@@ -27,8 +31,8 @@ export interface IBooleanFilterModel {
 }
 
 export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
-	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {
-		super(FilterType.Boolean, config);
+	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, protected stroe$: Store<any>) {
+		super(FilterType.Boolean, config, stroe$);
 	}
 
 	initialModelObject(): IBooleanFilterModel {
@@ -53,7 +57,21 @@ export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
 	}
 
 	updateMetadata(model: string, { key, value }): void {
-		this.models[model][key].value = value;
+		this.store$.dispatch(new UpdateFilterAction({
+			type: FilterType.Boolean,
+			fieldName: model,
+			metadata: {
+				displayTrue: this.models[model].false.value,
+				displayFalse: this.models[model].false.value,
+				[key === 'true' ? 'displayTrue' : 'displayFalse']: value
+			}
+		}));
+	}
+
+	updateFilter(caseFilter: ICaseFilter<ICaseBooleanFilterMetadata>) {
+		const modelObject = this.models[caseFilter.fieldName];
+		modelObject.true.value = caseFilter.metadata.displayTrue;
+		modelObject.false.value = caseFilter.metadata.displayFalse;
 	}
 
 	resetFilteredCount(model: string): void {
@@ -62,9 +80,15 @@ export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
 	}
 
 	selectOnly(model: string, key: string): void {
-		this.models[model].true.value = false;
-		this.models[model].false.value = false;
-		this.models[model][key].value = true;
+		this.store$.dispatch(new UpdateFilterAction({
+			type: FilterType.Boolean,
+			fieldName: model,
+			metadata: {
+				displayTrue: false,
+				displayFalse: false,
+				[key === 'true' ? 'displayTrue' : 'displayFalse']: true
+			}
+		}));
 	}
 
 	accumulateData(model: string, value: boolean): void {
@@ -81,25 +105,6 @@ export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
 		} else {
 			this.models[model].false.filteredCount += 1;
 		}
-	}
-
-	initializeFilter(overlays: IOverlay[], caseFilters: ICaseFilter<ICaseBooleanFilterMetadata>[] = []): void {
-		Object.entries(this.models).forEach(([model, booleanFilterModel]: [string, IBooleanFilterModel]) => {
-			booleanFilterModel.true.count = 0;
-			booleanFilterModel.true.value = true;
-			booleanFilterModel.false.value = true;
-			booleanFilterModel.false.count = 0;
-
-			overlays.forEach((overlay: any) => {
-				this.accumulateData(model, overlay[model]);
-			});
-			const caseFilter = caseFilters.find(({ type, fieldName }: ICaseFilter) => this.type === type && model === fieldName);
-			if (caseFilter) {
-				this.models[model].false.value = caseFilter.metadata.displayFalse;
-				this.models[model].true.value = caseFilter.metadata.displayTrue;
-			}
-		});
-
 	}
 
 	filterFunc(overlay: any, key: string): boolean {
@@ -134,8 +139,14 @@ export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
 	}
 
 	showAll(model: string): void {
-		this.models[model].true.value = true;
-		this.models[model].false.value = true;
+		this.store$.dispatch(new UpdateFilterAction({
+			type: FilterType.Boolean,
+			fieldName: model,
+			metadata: {
+				displayTrue: true,
+				displayFalse: true,
+			}
+		}));
 	}
 
 	shouldBeHidden(model: string): boolean {

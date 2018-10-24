@@ -1,44 +1,34 @@
 import { SliderFilterMetadata } from './../../models/metadata/slider-filter-metadata';
-import { Component, ElementRef, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { FilterType } from '@ansyn/core';
 import { ISliderFilterModel } from '../../models/metadata/slider-filter-metadata';
-import { IEnumFilterModel } from '../../models/metadata/enum-filter-metadata';
+import { EnumFilterMetadata, IEnumFilterModel } from '../../models/metadata/enum-filter-metadata';
 
 @Component({
 	selector: 'ansyn-slider-filter-container',
 	templateUrl: './slider-filter-container.component.html',
 	styleUrls: ['./slider-filter-container.component.less']
 })
-export class SliderFilterContainerComponent {
-	protected _model: string;
-	protected metadata: ISliderFilterModel;
+export class SliderFilterContainerComponent implements OnInit {
+	@Input() model: string;
 	factor = 1000;
-	realRange: number[];
-	rangeValues: number[];
+	realRange: number[] = [];
+	rangeValues: number[] = [];
 
-	@Input()
-	set model(value: string) {
-		this._model = value;
-		this.metadata = this.filterMetadata
-			.find((filter: FilterMetadata) => filter.type === FilterType.Slider)
-			.models[this.model];
-		this.realRange = [this.metadata.start, this.metadata.end];
-		this.rangeValues = [
-			this.factor * this.metadata.start <= this.metadata.min ? this.metadata.min : this.metadata.start,
-			this.factor * this.metadata.end >= this.metadata.max ? this.metadata.max : this.metadata.end
-		];
-	};
-
-	get model() {
-		return this._model;
+	get metadata(): SliderFilterMetadata {
+		return <any> this.filterMetadata.find(({ type }: FilterMetadata): any => type === FilterType.Slider);
 	}
 
-
-	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>();
-
-
 	constructor(protected elem: ElementRef, @Inject(FilterMetadata) protected filterMetadata: FilterMetadata[]) {
+	}
+
+	ngOnInit() {
+		this.realRange = [this.metadata[this.model].start, this.metadata[this.model].end];
+		this.rangeValues = [
+			this.factor * this.metadata[this.model].start <= this.metadata[this.model].min ? this.metadata[this.model].min : this.metadata[this.model].start,
+			this.factor * this.metadata[this.model].end >= this.metadata[this.model].max ? this.metadata[this.model].max : this.metadata[this.model].end
+		];
 	}
 
 	getMinRangeValue(number: number): string {
@@ -62,15 +52,10 @@ export class SliderFilterContainerComponent {
 			start: this.realRange[0],
 			end: this.realRange[1]
 		};
-
 		const min = event.values[0] / this.factor;
-		updateValue.start = min === this.metadata.min ? -Infinity : min;
+		updateValue.start = min === this.metadata[this.model].min ? -Infinity : min;
 		const max = event.values[1] / this.factor;
-		updateValue.end = max === this.metadata.max ? Infinity : max;
-
-		const clonedMetadata: SliderFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
-		// clonedMetadata.updateMetadata(updateValue);
-
-		// this.onMetadataChange.emit(clonedMetadata);
+		updateValue.end = max === this.metadata[this.model].max ? Infinity : max;
+		this.metadata.updateMetadata(this.model, updateValue);
 	}
 }

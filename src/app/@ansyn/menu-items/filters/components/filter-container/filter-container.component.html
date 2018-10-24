@@ -32,15 +32,13 @@
 
 				<ansyn-slider-filter-container
 					*ngSwitchCase="'Slider'"
-					[model]="filter.modelName"
-					(onMetadataChange)="onMetadataChange($event)">
+					[model]="filter.modelName">
 				</ansyn-slider-filter-container>
 
 				<ansyn-boolean-filter-container
 					*ngSwitchCase="'Boolean'"
 					[model]="filter.modelName"
-					[customData]="filter.customData"
-					(onMetadataChange)="onMetadataChange($event)">
+					[customData]="filter.customData">
 				</ansyn-boolean-filter-container>
 			</div>
 		</div>

@@ -1,8 +1,10 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseBooleanFilterMetadata, ICaseFilter, ICaseSliderFilterMetadata, IOverlay } from '@ansyn/core';
+import { FilterType, ICaseFilter, ICaseSliderFilterMetadata } from '@ansyn/core';
 import { Inject } from '@angular/core';
 import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../filters-config';
+import { Store } from '@ngrx/store';
+import { UpdateFilterAction } from '../../actions/filters.actions';
 
 export interface ISliderFilterModel {
 	count: number;
@@ -14,8 +16,8 @@ export interface ISliderFilterModel {
 }
 
 export class SliderFilterMetadata extends FilterMetadata<ISliderFilterModel> {
-	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {
-		super(FilterType.Slider, config);
+	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, protected store$: Store<any>) {
+		super(FilterType.Slider, config, store$);
 	}
 
 	initialModelObject(): ISliderFilterModel {
@@ -25,16 +27,28 @@ export class SliderFilterMetadata extends FilterMetadata<ISliderFilterModel> {
 			min: Number.MAX_SAFE_INTEGER,
 			max: Number.MIN_SAFE_INTEGER,
 			start: -Infinity,
-			end: Infinity,
-		}
+			end: Infinity
+		};
 	}
+
 	updateMetadata(model: string, range: { start: number, end: number }): void {
 		if (!range || (range.start && range.end && range.start > range.end)) {
 			return;
 		}
+		this.store$.dispatch(new UpdateFilterAction({
+			type: FilterType.Boolean,
+			fieldName: model,
+			metadata: {
+				start: range.start || -Infinity,
+				end: range.end || Infinity
+			}
+		}));
+	}
 
-		this.models[model].start = range.start || -Infinity;
-		this.models[model].end = range.end || Infinity;
+	updateFilter(caseFilter: ICaseFilter<ICaseSliderFilterMetadata>) {
+		const modelObject = this.models[caseFilter.fieldName];
+		modelObject.start = caseFilter.metadata.start;
+		modelObject.end = caseFilter.metadata.end;
 	}
 
 	accumulateData(model: string, value: number): void {
@@ -54,23 +68,6 @@ export class SliderFilterMetadata extends FilterMetadata<ISliderFilterModel> {
 
 	resetFilteredCount(model: string): void {
 		this.models[model].filteredCount = 0;
-	}
-
-	initializeFilter(overlays: IOverlay[], caseFilters: ICaseFilter<ICaseSliderFilterMetadata>[] = []): void {
-		Object.entries(this.models).forEach(([model, sliderFilterModel]: [string, ISliderFilterModel]) => {
-
-			sliderFilterModel.count = 0;
-
-			overlays.forEach((overlay: any) => {
-				this.accumulateData(model, overlay[model]);
-			});
-
-			const caseFilter = caseFilters.find(({ type, fieldName }: ICaseFilter) => this.type === type && model === fieldName);
-			if (caseFilter) {
-				this.updateMetadata(model, caseFilter.metadata);
-			}
-		});
-
 	}
 
 	filterFunc(overlay: any, key: string): boolean {
@@ -98,8 +95,11 @@ export class SliderFilterMetadata extends FilterMetadata<ISliderFilterModel> {
 	}
 
 	showAll(model: string): void {
-		this.models[model].start = -Infinity;
-		this.models[model].end = Infinity;
+		this.store$.dispatch(new UpdateFilterAction({
+			type: FilterType.Boolean,
+			fieldName: model,
+			metadata: null
+		}));
 	}
 
 	shouldBeHidden(model: string): boolean {

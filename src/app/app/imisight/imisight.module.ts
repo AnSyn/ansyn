@@ -5,10 +5,12 @@ import { MultipleOverlaysSource } from '@ansyn/ansyn';
 import { ImageryModule } from '@ansyn/imagery';
 import { OpenLayersImisightSourceProvider } from './open-layers-imisight-source-provider';
 import { CallbackComponent } from './callback/callback.component';
+import { CoreModule } from '@ansyn/core';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		CoreModule,
 		ImageryModule.provide({
 			maps: [],
 			plugins: [],

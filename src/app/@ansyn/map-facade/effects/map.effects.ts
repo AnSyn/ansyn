@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { forkJoin, Observable, UnaryFunction } from 'rxjs';
+import { EMPTY, forkJoin, Observable, UnaryFunction } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
@@ -11,14 +11,16 @@ import {
 	BackToWorldView,
 	CaseGeoFilter,
 	CoreActionTypes,
+	ErrorHandlerService,
 	ICaseMapPosition,
 	ICaseMapState,
 	isFullOverlay,
 	RemoveAlertMsg,
+	rxPreventCrash,
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction, SetToastMessageAction
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import { intersect, polygon } from '@turf/turf';
@@ -39,6 +41,8 @@ import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise, pipe } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
+import { mapFacadeConfig } from '../models/map-facade.config';
+import { IMapFacadeConfig } from '../models/map-config.model';
 
 @Injectable()
 export class MapEffects {
@@ -278,7 +282,7 @@ export class MapEffects {
 			mapState.mapsList.forEach((mapItem: ICaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
-					setPositionObservables.push(comm.setPosition(mapPosition));
+					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
 				}
 			});
 
@@ -298,6 +302,22 @@ export class MapEffects {
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,
 				protected communicatorsService: ImageryCommunicatorService,
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				protected store$: Store<any>) {
 	}
+
+	setPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
+		if (mapItem.data.overlay) {
+			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+			if (isNotIntersect) {
+				this.store$.dispatch(new SetToastMessageAction({
+					toastText: 'At least one map couldn\'t be synchronized',
+					showWarningIcon: true
+				}));
+				return EMPTY;
+			}
+		}
+		return comm.setPosition(position);
+	}
+
 }

@@ -5,7 +5,6 @@ import { ImageryModule, ProjectionService } from '@ansyn/imagery';
 import { OpenLayersProjectionService } from '@ansyn/plugins';
 import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
 import { OpenLayerMapBoxSourceProvider } from './map-source-providers/open-layers-MapBox-source-provider';
-import { OpenLayerNotGeoRegisteredPlanetSourceProvider } from './map-source-providers/open-layers-not-geo-registered-planet-source-provider';
 import { OpenLayerBingSourceProvider } from './map-source-providers/open-layers-BING-source-provider';
 import { OpenLayerOSMSourceProvider } from './map-source-providers/open-layers-OSM-source-provider';
 import { OpenLayerPlanetSourceProvider } from './map-source-providers/open-layers-planet-source-provider';
@@ -16,8 +15,6 @@ import { MultipleOverlaysSource } from '@ansyn/overlays';
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
-import { ImisightSourceProvider } from './overlay-source-providers/imisight/imisight-source-provider';
-import { OpenLayersImisightSourceProvider } from './map-source-providers/open-layers-imisight-source-provider';
 
 @NgModule({
 	imports: [
@@ -29,11 +26,9 @@ import { OpenLayersImisightSourceProvider } from './map-source-providers/open-la
 				OpenLayerOSMSourceProvider,
 				OpenLayerIDAHOSourceProvider,
 				OpenLayerPlanetSourceProvider,
-				OpenLayerNotGeoRegisteredPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
-				OpenLayerOpenAerialSourceProvider,
-				OpenLayersImisightSourceProvider
+				OpenLayerOpenAerialSourceProvider
 			],
 			plugins: [],
 			maps: []
@@ -43,7 +38,6 @@ import { OpenLayersImisightSourceProvider } from './map-source-providers/open-la
 		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
-		{ provide: MultipleOverlaysSource, useClass: ImisightSourceProvider, multi: true },
 
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },

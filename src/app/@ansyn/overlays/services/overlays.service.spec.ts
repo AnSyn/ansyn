@@ -8,6 +8,8 @@ import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject,
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
+import { OverlayReducer, overlaysFeatureKey } from '../public_api';
+import { StoreModule } from '@ngrx/store';
 
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	sourceType = 'Mock';
@@ -128,7 +130,12 @@ describe('OverlaysService', () => {
 				{ provide: OverlaysConfig, useValue: {} },
 				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
 			],
-			imports: [HttpClientModule]
+			imports: [
+				HttpClientModule,
+				StoreModule.forRoot({
+					[overlaysFeatureKey]: OverlayReducer
+				})
+			]
 		});
 	});
 

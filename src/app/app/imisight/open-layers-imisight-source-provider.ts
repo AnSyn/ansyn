@@ -4,16 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
-import { ImisightOverlaySourceType } from '../overlay-source-providers/imisight/imisight-source-provider';
+import { ImisightOverlaySourceType } from './imisight-source-provider';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
-import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
-import {
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG
-} from './map-source-providers-config';
 import { ICaseMapState } from '@ansyn/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG, OpenLayersMapSourceProvider } from '@ansyn/ansyn';
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,

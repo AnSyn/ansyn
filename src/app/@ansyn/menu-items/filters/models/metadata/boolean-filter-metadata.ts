@@ -1,6 +1,6 @@
 import { IFilter } from '../IFilter';
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseBooleanFilterMetadata } from '@ansyn/core';
+import { FilterType, ICaseBooleanFilterMetadata, IOverlay } from '@ansyn/core';
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';
@@ -37,8 +37,6 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	};
 
-	baseFilter: IFilter;
-
 	updateMetadata({ key, value }): void {
 		this.properties[key].value = value;
 	}
@@ -70,20 +68,18 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	initializeFilter(selectedValues: ICaseBooleanFilterMetadata, filter: IFilter): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, { displayTrue = true, displayFalse = true }: ICaseBooleanFilterMetadata): void {
 		this.properties.true.count = 0;
 		this.properties.true.value = true;
 		this.properties.false.value = true;
 		this.properties.false.count = 0;
 
-		this.baseFilter = filter;
-		if (selectedValues) {
-			this.properties.false.value = selectedValues.displayFalse;
-			this.properties.true.value = selectedValues.displayTrue;
-		}
-	}
+		overlays.forEach((overlay: any) => {
+			this.accumulateData(overlay[modelName]);
+		});
 
-	postInitializeFilter(value: any): void {
+		this.properties.false.value = displayFalse;
+		this.properties.true.value = displayTrue;
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

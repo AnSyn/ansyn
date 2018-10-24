@@ -1,7 +1,7 @@
 import { combineLatest, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import {
 	BooleanFilterMetadata,
@@ -16,11 +16,11 @@ import {
 	IFiltersState,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction,
 	selectFacets,
 	selectFilters,
-	selectOldFilters,
-	selectShowOnlyFavorites
+	selectShowOnlyFavorites,
+	filtersConfig,
+	IFiltersConfig
 } from '@ansyn/menu-items';
 import {
 	LoadOverlaysAction,
@@ -50,6 +50,7 @@ import {
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { get } from 'lodash';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -68,7 +69,6 @@ export class FiltersAppEffects {
 	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest(
 		this.overlaysMap$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$);
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
-	oldFilters$: Observable<any> = this.store$.select(selectOldFilters);
 
 	@Effect()
 	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
@@ -93,46 +93,24 @@ export class FiltersAppEffects {
 
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		map(() => new InitializeFiltersAction()));
 
 	@Effect()
 	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$.pipe(
-		ofType<InitializeFiltersAction>(FiltersActionTypes.INITIALIZE_FILTERS),
-		withLatestFrom(this.oldFilters$, this.overlaysArray$, this.facets$),
-		map(([action, oldFilters, overlays, facets]: [Action, Filters, IOverlay[], ICaseFacetsState]) => {
-			const filtersConfig: IFilter[] = this.filtersService.getFilters();
-			const filters: Map<IFilter, FilterMetadata> = new Map<IFilter, FilterMetadata>();
-			const oldFiltersArray = oldFilters ? Array.from(oldFilters) : [];
-
-			filtersConfig.forEach((filter: IFilter) => {
-				const metadata: FilterMetadata = this.initializeMetadata(filter, facets);
-
-				overlays.forEach((overlay: any) => {
-					metadata.accumulateData(overlay[filter.modelName]);
-				});
-
-				metadata.postInitializeFilter({ oldFiltersArray: oldFiltersArray, modelName: filter.modelName });
-
-				const currentFilterInit = facets.filters &&
-					facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
-
-				if (!currentFilterInit) {
-					metadata.showAll();
-				}
-
-				filters.set(filter, metadata);
-			});
-
+		ofType<InitializeFiltersAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		withLatestFrom(this.overlaysArray$, this.facets$),
+		map(([action, overlays, facets]: [Action, IOverlay[], ICaseFacetsState]) => {
+			const filters = new Map<IFilter, FilterMetadata>(
+				this.config.filters.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
+					const metadata: FilterMetadata = this.resolveMetadata(filter.type);
+					const facetsMetadata = get(facets.filters.find(({ fieldName }) => fieldName === filter.modelName), 'metadata');
+					metadata.initializeFilter(overlays, filter.modelName, facetsMetadata);
+					return [filter, metadata];
+				})
+			);
 			return new InitializeFiltersSuccessAction(filters);
 		}));
-
-
-	@Effect()
-	resetFilters$: Observable<ResetFiltersAction> = this.actions$.pipe(
-		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		map(() => new ResetFiltersAction()));
-
 
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$.pipe(
@@ -179,24 +157,15 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
-				protected filtersService: FiltersService) {
+				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
-	initializeMetadata(filter: IFilter, facets: ICaseFacetsState): FilterMetadata {
-		const filterType = filter.type;
-
+	resolveMetadata(filterType: FilterType): FilterMetadata {
 		const resolveFilterFunction: InjectionResolverFilter = (function wrapperFunction() {
 			return function resolverFilteringFunction(filterMetadata: FilterMetadata[]): FilterMetadata {
 				return filterMetadata.find((item) => item.type === FilterType[filterType]);
 			};
 		})();
-
-		const metaData: FilterMetadata =
-			this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
-
-		const currentFilterInit = <ICaseFilter> (facets.filters && facets.filters.find(({ fieldName }) => fieldName === filter.modelName));
-
-		metaData.initializeFilter(currentFilterInit && currentFilterInit.metadata, filter);
-		return metaData;
+		return this.genericTypeResolverService.resolveMultiInjection(FilterMetadata, resolveFilterFunction, false);
 	}
 }

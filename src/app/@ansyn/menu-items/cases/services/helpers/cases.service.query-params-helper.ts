@@ -133,8 +133,9 @@ export class QueryParamsHelper {
 		keys.forEach(key => {
 			urlTree.queryParams[key] = this.encodeCaseObjects(key, sCase.state[key], sCase.state);
 		});
-		const baseLocation = this.casesService.config.useHash ? `${location.origin}/#` : location.origin;
-		return decodeURIComponent(`${baseLocation}${urlTree.toString()}`);
+		const baseLocation = location.href.split('#')[0];
+		const href = this.casesService.config.useHash ? `${baseLocation}/#` : baseLocation;
+		return decodeURIComponent(`${href}${urlTree.toString()}`);
 	}
 
 	encodeCaseObjects(key, value, caseState?: ICaseState) {

@@ -1,5 +1,5 @@
 import { ICasesConfig } from '../models/cases-config';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
 	ErrorHandlerService,
@@ -176,8 +176,9 @@ export class CasesService {
 	}
 
 	generateLinkWithCaseId(caseId: string) {
-		const baseLocation = this.config.useHash ? `${location.origin}/#` : location.origin;
-		return `${baseLocation}/case/${caseId}`;
+		const baseLocation = location.href.split('#')[0];
+		const href = this.config.useHash ? `${baseLocation}/#` : baseLocation;
+		return `${href}/case/${caseId}`;
 	}
 
 	get decodeCaseObjects() {

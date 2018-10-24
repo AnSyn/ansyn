@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState, toDegrees } from '@ansyn/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 
 export interface IsGeoRegisteredProperties {
@@ -19,6 +19,8 @@ export interface IsGeoRegisteredProperties {
 })
 export class ImageryRotationComponent {
 	@Input() mapState: ICaseMapState;
+
+	protected thresholdDegrees = 0.1;
 
 	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: 'N',
@@ -79,7 +81,7 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		if (this.rotationAngle === 0) {
+		if (Math.abs(toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
 				this.setRotation(overlay.azimuth);

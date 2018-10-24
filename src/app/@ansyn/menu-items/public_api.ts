@@ -1,3 +1,4 @@
+export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
@@ -47,7 +48,6 @@ export {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes, InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction,
 	UpdateFacetsAction
 } from './filters/actions/filters.actions';
 export {
@@ -74,7 +74,6 @@ export {
 	filtersStateSelector,
 	selectFacets,
 	selectFilters,
-	selectOldFilters,
 	selectShowOnlyFavorites
 } from './filters/reducer/filters.reducer';
 export { ToolsComponent } from './tools/tools/tools.component';

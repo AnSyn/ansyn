@@ -7,7 +7,8 @@ export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 
 @ImageryMapSource({
 	sourceType: OpenLayerOpenAerialSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	forOverlay: true
 })
 export class OpenLayerOpenAerialSourceProvider extends OpenLayersMapSourceProvider {
 

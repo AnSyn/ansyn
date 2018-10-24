@@ -11,7 +11,8 @@ export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
 @ImageryMapSource({
 	sourceType: OpenLayerIDAHOSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	forOverlay: true
 })
 export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 

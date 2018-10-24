@@ -23,9 +23,9 @@ describe('EnumFilterMetadata', () => {
 
 			enumFilterMetadata.updateMetadata('thirdFeild');
 
-			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeFalsy();
 
 			expect(enumFilterMetadata.enumsFields.get('firstFeild').count).toBe(1);
 			expect(enumFilterMetadata.enumsFields.get('secondFeild').count).toBe(2);
@@ -42,9 +42,9 @@ describe('EnumFilterMetadata', () => {
 
 			enumFilterMetadata.updateMetadata('lady gaga');
 
-			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeFalsy();
+			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeTruthy();
 
 			expect(enumFilterMetadata.enumsFields.get('firstFeild').count).toBe(1);
 			expect(enumFilterMetadata.enumsFields.get('secondFeild').count).toBe(2);
@@ -100,7 +100,7 @@ describe('EnumFilterMetadata', () => {
 
 	describe('accumulateData', () => {
 
-		it('accumulateData should count the fields and set false in the checked attribute', () => {
+		it('accumulateData should count the fields and set true in the checked attribute', () => {
 			enumFilterMetadata.accumulateData('firstFeild');
 			enumFilterMetadata.accumulateData('secondFeild');
 			enumFilterMetadata.accumulateData('secondFeild');
@@ -108,9 +108,9 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.accumulateData('thirdFeild');
 			enumFilterMetadata.accumulateData('thirdFeild');
 
-			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeFalsy();
-			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeFalsy();
+			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('thirdFeild').isChecked).toBeTruthy();
 
 			expect(enumFilterMetadata.enumsFields.get('firstFeild').count).toBe(1);
 			expect(enumFilterMetadata.enumsFields.get('secondFeild').count).toBe(2);
@@ -121,10 +121,10 @@ describe('EnumFilterMetadata', () => {
 
 	describe('initializeFilter', () => {
 		it('initializeFilter should select the initialized fields', () => {
-			enumFilterMetadata.initializeFilter(['firstFeild', 'secondFeild']);
+			enumFilterMetadata.initializeFilter(<any>[{ field: 'firstFeild' }, { field: 'secondFeild' }], 'field', ['firstFeild', 'secondFeild']);
 
-			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeTruthy();
-			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeTruthy();
+			expect(enumFilterMetadata.enumsFields.get('firstFeild').isChecked).toBeFalsy();
+			expect(enumFilterMetadata.enumsFields.get('secondFeild').isChecked).toBeFalsy();
 			expect(enumFilterMetadata.enumsFields.get('thirdFeild')).toBeUndefined();
 		});
 	});
@@ -144,10 +144,10 @@ describe('EnumFilterMetadata', () => {
 
 			const result: boolean = enumFilterMetadata.filterFunc(overlay, 'value');
 
-			expect(result).toBeTruthy();
+			expect(result).toBeFalsy();
 		});
 
-		it('filterFunc with unselected value should return false', () => {
+		it('filterFunc with unselected value should return true', () => {
 			enumFilterMetadata.accumulateData('firstFeild');
 			enumFilterMetadata.accumulateData('secondFeild');
 			enumFilterMetadata.accumulateData('secondFeild');
@@ -160,7 +160,7 @@ describe('EnumFilterMetadata', () => {
 
 			const result: boolean = enumFilterMetadata.filterFunc(overlay, 'value');
 
-			expect(result).toBeFalsy();
+			expect(result).toBeTruthy();
 		});
 
 		it('filterFunc with unknown value should return false', () => {
@@ -228,7 +228,7 @@ describe('EnumFilterMetadata', () => {
 	});
 
 	describe('isFiltered', () => {
-		it('isFiltered should return true if one value are selected', () => {
+		it('isFiltered should return false if one value are selected', () => {
 			enumFilterMetadata.accumulateData('firstFeild');
 			enumFilterMetadata.accumulateData('secondFeild');
 			enumFilterMetadata.accumulateData('secondFeild');
@@ -269,7 +269,7 @@ describe('EnumFilterMetadata', () => {
 
 			const result: any = enumFilterMetadata.isFiltered();
 
-			expect(result).toBeTruthy();
+			expect(result).toBeFalsy();
 		});
 	});
 

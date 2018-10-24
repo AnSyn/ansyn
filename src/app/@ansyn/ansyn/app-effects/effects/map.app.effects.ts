@@ -188,21 +188,6 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	setOverlaysNotInCase$: Observable<any> = this.actions$
-		.ofType(OverlaysActionTypes.SET_FILTERED_OVERLAYS, CoreActionTypes.SET_MAPS_DATA)
-		.pipe(
-			withLatestFrom(this.store$.select(overlaysStateSelector), this.store$.select(mapStateSelector)),
-			mergeMap(([action, { filteredOverlays }, { mapsList }]: [Action, IOverlaysState, IMapState]) => {
-				const key = AlertMsgTypes.overlayIsNotPartOfQuery;
-				return mapsList.map(({ data, id }) => {
-					const { overlay } = data;
-					const shouldRemoved = !overlay || filteredOverlays.includes(overlay.id);
-					return shouldRemoved ? new RemoveAlertMsg({ key, value: id }) : new AddAlertMsg({ key, value: id });
-				});
-			})
-		);
-
-	@Effect()
 	markupOnMapsDataChanges$ = this.actions$
 		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
 		.pipe(

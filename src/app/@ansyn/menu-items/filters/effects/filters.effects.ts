@@ -134,7 +134,6 @@ export class FiltersEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>,
 				@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[],
-				protected filtersService: FiltersService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 }

@@ -56,15 +56,4 @@ export class FiltersService {
 
 	constructor(@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[]) {
 	}
-
-	buildCaseFilters(overlays: IOverlay[]): ICaseFilter[] {
-		// this.filterMetadata.forEach((metadata: FilterMetadata) => {
-		// 	metadata.initializeFilter(overlays);
-		// });
-		//
-		// return this.filterMetadata.reduce((caseFilters: ICaseFilter[], metadata: FilterMetadata) => {
-		// 	const outerStateMetadata: any = metadata.getMetadataForOuterState();
-		// 	return [...caseFilters, ...outerStateMetadata];
-		// }, []);
-	}
 }

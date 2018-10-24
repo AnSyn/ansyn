@@ -46,8 +46,7 @@ export {
 } from './tools/reducers/tools.reducer';
 export {
 	EnableOnlyFavoritesSelectionAction,
-	FiltersActionTypes, InitializeFiltersAction,
-	InitializeFiltersSuccessAction,
+	FiltersActionTypes,
 	UpdateFacetsAction
 } from './filters/actions/filters.actions';
 export {

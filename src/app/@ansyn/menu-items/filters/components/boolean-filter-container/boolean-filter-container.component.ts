@@ -32,11 +32,11 @@ export class BooleanFilterContainerComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.customData) {
-			this.metadata[this.model].true.displayName = this.customData.displayTrueName;
-			this.metadata[this.model].false.displayName = this.customData.displayFalseName;
+			this.metadata.models[this.model].true.displayName = this.customData.displayTrueName;
+			this.metadata.models[this.model].false.displayName = this.customData.displayFalseName;
 		}
 
-		const countAll = this.metadata[this.model].true.count + this.metadata[this.model].false.count;
+		const countAll = this.metadata.models[this.model].true.count + this.metadata.models[this.model].false.count;
 		this.hidden = countAll < 1;
 
 	}

@@ -1,4 +1,3 @@
-import { FiltersAppEffects } from './effects/filters.app.effects';
 import { ICasesState, IFiltersState, ILayerState, IToolsState } from '@ansyn/menu-items';
 import { LayersAppEffects } from './effects/layers.app.effects';
 import { IMenuState } from '@ansyn/menu';
@@ -41,7 +40,6 @@ export interface IAppState {
 			MenuAppEffects,
 			LayersAppEffects,
 			StatusBarAppEffects,
-			FiltersAppEffects,
 			ToolsAppEffects,
 			CoreAppEffects,
 			UpdateCaseAppEffects,

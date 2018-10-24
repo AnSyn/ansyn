@@ -19,8 +19,6 @@ import {
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
-import { ImisightSourceProvider } from './overlay-source-providers/imisight/imisight-source-provider';
-import { OpenLayersImisightSourceProvider } from './map-source-providers/open-layers-imisight-source-provider';
 
 @NgModule({
 	imports: [
@@ -34,8 +32,7 @@ import { OpenLayersImisightSourceProvider } from './map-source-providers/open-la
 				OpenLayerPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
-				OpenLayerOpenAerialSourceProvider,
-				OpenLayersImisightSourceProvider
+				OpenLayerOpenAerialSourceProvider
 			],
 			plugins: [],
 			maps: []
@@ -48,7 +45,6 @@ import { OpenLayersImisightSourceProvider } from './map-source-providers/open-la
 		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
-		{ provide: MultipleOverlaysSource, useClass: ImisightSourceProvider, multi: true },
 
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },

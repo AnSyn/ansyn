@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs/index';
+import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/internal/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -18,7 +18,6 @@ import {
 	toRadians
 } from '@ansyn/core';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
-import { IOverlaysPlanetFetchData } from '../../@ansyn/ansyn/app-providers/overlay-source-providers/planet/planet.model';
 import { Auth0Service } from './auth0.service';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
@@ -94,7 +93,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		};
 		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
 			map(data => this.extractData(data)),
-			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+			map((overlays: IOverlay[]) => <any> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			})),

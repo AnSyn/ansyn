@@ -117,8 +117,8 @@ describe('OverlayOverviewComponent', () => {
 		expect(component.mouseMove$.subscribe).toHaveBeenCalled();
 	});
 
-	it('showPreview should change value of isHoveringOverDrop to false', () => {
-		component.showOverview();
-		expect(component.isHoveringOverDrop).toBeTruthy();
+	it('hidePreview should change value of isHoveringOverDrop to false', () => {
+		component.hideOverview();
+		expect(component.isHoveringOverDrop).toBeFalsy();
 	});
 });

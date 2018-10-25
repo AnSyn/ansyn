@@ -37,7 +37,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		takeWhile(() => this.isHoveringOverDrop)
 	);
 
-	public mouseMoveSubscriber;
 	public sensorName: string;
 	public formattedTime: string;
 	public overlayId: string;

@@ -5,7 +5,6 @@ export {
 } from './app-providers/map-source-providers/map-source-providers-config';
 export { OpenLayersMapSourceProvider } from './app-providers/map-source-providers/open-layers.map-source-provider';
 export { MapAppEffects } from './app-effects/effects/map.app.effects';
-export { MultipleOverlaysSource } from '../overlays/services/multiple-source-provider';
 export { ContextAppEffects } from './app-effects/effects/context.app.effects';
 export { AppProvidersModule } from './app-providers/app-providers.module';
 export { AppEffectsModule } from './app-effects/app.effects.module';

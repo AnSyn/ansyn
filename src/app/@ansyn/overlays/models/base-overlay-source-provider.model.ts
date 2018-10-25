@@ -58,30 +58,29 @@ export function timeIntersection(whiteRange: IDateRange, blackRange: IDateRange)
 
 	return null;
 }
+export function isFaulty(data: IOverlaysFetchData): boolean {
+	return Array.isArray(data.errors) && data.errors.length > 0;
+}
+
+export function mergeErrors(data: IOverlaysFetchData[]): Error[] {
+	return [].concat.apply([],
+		data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
+}
+
+export function mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: Error[]): IOverlaysFetchData {
+	return {
+		...mergeLimitedArrays(data.filter(item => !isFaulty(item)) as Array<ILimitedArray>,
+			limit, {
+				sortFn: sortByDateDesc,
+				uniqueBy: o => o.id
+			}),
+		errors: errors ? errors : mergeErrors(data)
+	};
+}
 
 @Injectable()
 export abstract class BaseOverlaySourceProvider {
 	sourceType: string;
-
-	static isFaulty(data: IOverlaysFetchData): boolean {
-		return Array.isArray(data.errors) && data.errors.length > 0;
-	}
-
-	static mergeErrors(data: IOverlaysFetchData[]): Error[] {
-		return [].concat.apply([],
-			data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
-	}
-
-	static mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: Error[]): IOverlaysFetchData {
-		return {
-			...mergeLimitedArrays(data.filter(item => !BaseOverlaySourceProvider.isFaulty(item)) as Array<ILimitedArray>,
-				limit, {
-					sortFn: sortByDateDesc,
-					uniqueBy: o => o.id
-				}),
-			errors: errors ? errors : BaseOverlaySourceProvider.mergeErrors(data)
-		};
-	}
 
 	protected constructor(protected loggerService: LoggerService) {
 	}
@@ -138,7 +137,7 @@ export abstract class BaseOverlaySourceProvider {
 					return { data: null, limited: -1, errors: data[0].errors };
 				}
 
-				return BaseOverlaySourceProvider.mergeOverlaysFetchData(data, fetchParams.limit);
+				return mergeOverlaysFetchData(data, fetchParams.limit);
 			})
 		);
 

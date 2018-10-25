@@ -4,10 +4,17 @@ import {
 	BaseOverlaySourceProvider,
 	IDateRange,
 	IFetchParams,
-	IOverlayFilter,
-	IStartAndEndDate
+	IOverlayFilter, isFaulty,
+	IStartAndEndDate, mergeErrors, mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
-import { forkJoinSafe, IDataInputFilterValue, IOverlay, IOverlaysFetchData, mergeArrays } from '@ansyn/core';
+import {
+	forkJoinSafe,
+	IDataInputFilterValue, ILimitedArray,
+	IOverlay,
+	IOverlaysFetchData,
+	mergeArrays,
+	mergeLimitedArrays, sortByDateDesc
+} from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
@@ -167,8 +174,8 @@ export class MultipleOverlaysSourceProvider {
 				return s.provider.fetchMultiple({ ...fetchParams, dataInputFilters: dataFiltersOfProvider }, s.filters);
 			})).pipe(
 			map(overlays => {
-				const allFailed = overlays.every(overlay => BaseOverlaySourceProvider.isFaulty(overlay));
-				const errors = BaseOverlaySourceProvider.mergeErrors(overlays);
+				const allFailed = overlays.every(overlay => isFaulty(overlay));
+				const errors = mergeErrors(overlays);
 
 				if (allFailed) {
 					return {
@@ -178,7 +185,7 @@ export class MultipleOverlaysSourceProvider {
 					};
 				}
 
-				return BaseOverlaySourceProvider.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
+				return mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
 			})); // merge the overlays
 
 		return mergedSortedOverlays;

@@ -4,22 +4,22 @@ import {
 	BaseOverlaySourceProvider,
 	IDateRange,
 	IFetchParams,
-	IOverlayByIdMetaData,
-	IOverlayFilter,
-	IStartAndEndDate
-} from '@ansyn/overlays';
+	IOverlayFilter, isFaulty,
+	IStartAndEndDate, mergeErrors, mergeOverlaysFetchData
+} from '../models/base-overlay-source-provider.model';
 import {
 	forkJoinSafe,
-	IDataInputFilterValue,
+	IDataInputFilterValue, ILimitedArray,
 	IOverlay,
 	IOverlaysFetchData,
-	LoggerService,
-	mergeArrays
+	mergeArrays,
+	mergeLimitedArrays, sortByDateDesc
 } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
+import { IOverlayByIdMetaData } from './overlays.service';
 
 export interface IFiltersList {
 	name: string,
@@ -40,20 +40,17 @@ export interface IMultipleOverlaysSourceConfig {
 	[key: string]: IOverlaysSourceProvider;
 }
 
-export type IMultipleOverlaysSources = BaseOverlaySourceProvider;
-
 export const MultipleOverlaysSourceConfig = 'multipleOverlaysSourceConfig';
-export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSources> = new InjectionToken('multiple-overlays-sources');
+export const MultipleOverlaysSource: InjectionToken<BaseOverlaySourceProvider[]> = new InjectionToken('multiple-overlays-sources');
 
-@Injectable()
-export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
+@Injectable({
+	providedIn: 'root'
+})
+export class MultipleOverlaysSourceProvider {
 	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSources[],
-				protected loggerService: LoggerService) {
-		super(loggerService);
-
+				@Inject(MultipleOverlaysSource) protected overlaysSources: BaseOverlaySourceProvider[]) {
 		this.prepareWhitelist();
 	}
 
@@ -80,7 +77,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 			return [provider, config];
 		};
 
-		const filterWhiteList = ([provider, { inActive }]: [IMultipleOverlaysSources, IOverlaysSourceProvider]) => !inActive;
+		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive;
 
 		this.overlaysSources.map(mapProviderConfig).filter(filterWhiteList).forEach(([provider, config]) => {
 
@@ -177,8 +174,8 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 				return s.provider.fetchMultiple({ ...fetchParams, dataInputFilters: dataFiltersOfProvider }, s.filters);
 			})).pipe(
 			map(overlays => {
-				const allFailed = overlays.every(overlay => this.isFaulty(overlay));
-				const errors = this.mergeErrors(overlays);
+				const allFailed = overlays.every(overlay => isFaulty(overlay));
+				const errors = mergeErrors(overlays);
 
 				if (allFailed) {
 					return {
@@ -188,7 +185,7 @@ export class MultipleOverlaysSourceProvider extends BaseOverlaySourceProvider {
 					};
 				}
 
-				return this.mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
+				return mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
 			})); // merge the overlays
 
 		return mergedSortedOverlays;

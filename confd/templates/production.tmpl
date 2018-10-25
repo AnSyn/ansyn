@@ -1506,19 +1506,8 @@
     "delayMultiple": 300
   },
   "tbOverlaysSourceConfig": {
-    "baseUrl": "https://api.planet.com/data/v1/quick-search",
-    "itemTypes": [
-      "PSScene3Band",
-      "PSOrthoTile",
-      "REOrthoTile",
-      "REScene",
-      "SkySatScene",
-      "Landsat8L1G",
-      "Sentinel2L1C"
+    "baseUrl": "http://tb-server.webiks.com/api/ansyn/ansynService",
     ],
-    "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
-    "tilesUrl": "https://tiles.planet.com/data/v1/",
-    "delayMultiple": 300
   },
   "auth0Config": {
       "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},

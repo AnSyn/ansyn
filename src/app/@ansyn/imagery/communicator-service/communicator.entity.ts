@@ -12,7 +12,7 @@ import { filter } from 'rxjs/operators';
 export class CommunicatorEntity {
 	private _managerSubscriptions = [];
 
-	public positionChanged = new EventEmitter<{ id: string, position: ICaseMapPosition }>();
+
 	public mapInstanceChanged = new EventEmitter<IMapInstanceChanged>();
 	private _virtualNorth = 0;
 
@@ -32,6 +32,10 @@ export class CommunicatorEntity {
 		return this._manager.getMapSourceProvider.bind(this._manager);
 	}
 
+	get positionChanged() {
+		return this.ActiveMap.positionChanged;
+	}
+
 	constructor(public _manager: ImageryComponentManager) {
 		this.registerToManagerEvents();
 	}
@@ -41,10 +45,6 @@ export class CommunicatorEntity {
 	}
 
 	private registerToManagerEvents() {
-		this._managerSubscriptions.push(this._manager.positionChanged.subscribe((position: ICaseMapPosition) => {
-			this.positionChanged.emit({ id: this._manager.id, position });
-		}));
-
 		this._managerSubscriptions.push(this._manager.mapInstanceChanged.subscribe((event: any) => {
 			this.mapInstanceChanged.emit(event);
 		}));

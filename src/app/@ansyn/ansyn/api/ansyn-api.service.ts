@@ -45,7 +45,7 @@ export class AnsynApi {
 			return payload.point.coordinates;
 		})
 	);
-
+	
 	getActiveCenter$: Observable<any> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.SET_ACTIVE_CENTER),
 		map(({ payload }: SetActiveCenter) => {

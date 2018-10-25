@@ -114,7 +114,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	showOverview() {
 		this.isHoveringOverDrop = true;
-		this.mouseMoveSubscriber = this.mouseMove$.subscribe();
+		this.mouseMove$.subscribe();
 	}
 
 	hideOverview() {

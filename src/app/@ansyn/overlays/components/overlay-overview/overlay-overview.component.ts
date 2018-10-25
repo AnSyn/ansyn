@@ -1,6 +1,6 @@
-import { Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat, IOverlay } from '@ansyn/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
@@ -12,7 +12,7 @@ import {
 	SetMarkUp
 } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/operators';
+import { takeWhile, tap } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
@@ -27,6 +27,17 @@ import { Actions, ofType } from '@ngrx/effects';
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('img') img: ElementRef;
 
+	mouseMove$ = fromEvent(window, 'mousemove').pipe(
+		tap(($event: any) => {
+			const excludeElements = [this.el.nativeElement, this.hoveredElement];
+			if (!$event.path.some((elem) => excludeElements.includes(elem))) {
+				this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			}
+		}),
+		takeWhile(() => this.isHoveringOverDrop)
+	);
+
+	public mouseMoveSubscriber;
 	public sensorName: string;
 	public formattedTime: string;
 	public overlayId: string;
@@ -34,12 +45,16 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
 
+	get hoveredElement(): Element {
+		return this.topElement.querySelector(`#dropId-${this.overlayId}`);
+	}
+
 	public get const() {
 		return overlayOverviewComponentConstants;
 	}
 
 	public get errorSrc() {
-		return this.const.OVERLAY_OVERVIEW_FAILED
+		return this.const.OVERLAY_OVERVIEW_FAILED;
 	};
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
@@ -58,13 +73,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
-
-	// Mark the original overlay as un-hovered when mouse leaves
-	@HostListener('mouseleave')
-	onMouseOut() {
-		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
-	}
-
 	constructor(
 		public store$: Store<IOverlaysState>,
 		public actions$: Actions,
@@ -82,18 +90,17 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
-			const hoveredElement: Element = this.topElement.querySelector(`#dropId-${this.overlayId}`);
+			const hoveredElement: Element = this.hoveredElement;
 			if (!hoveredElement) {
 				return;
 			}
 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
 			this.left = hoveredElementBounds.left - 50;
 			this.top = hoveredElementBounds.top;
-			this.isHoveringOverDrop = true;
-
+			this.showOverview();
 			this.sensorName = overlay.sensorName;
 			if (fetching) {
-				this.img.nativeElement.removeAttribute('src')
+				this.img.nativeElement.removeAttribute('src');
 			} else {
 				this.img.nativeElement.src = overlay.thumbnailUrl;
 			}
@@ -102,8 +109,17 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				this.startedLoadingImage();
 			}
 		} else {
-			this.isHoveringOverDrop = false;
+			this.hideOverview();
 		}
+	}
+
+	showOverview() {
+		this.isHoveringOverDrop = true;
+		this.mouseMoveSubscriber = this.mouseMove$.subscribe();
+	}
+
+	hideOverview() {
+		this.isHoveringOverDrop = false;
 	}
 
 	onDblClick() {

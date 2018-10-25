@@ -27,7 +27,7 @@ import { Actions, ofType } from '@ngrx/effects';
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('img') img: ElementRef;
 
-	mouseMove$ = fromEvent(window, 'mousemove').pipe(
+	public mouseMove$: Observable<any> = fromEvent(window, 'mousemove').pipe(
 		tap(($event: any) => {
 			const excludeElements = [this.el.nativeElement, this.hoveredElement];
 			if (!$event.path.some((elem) => excludeElements.includes(elem))) {

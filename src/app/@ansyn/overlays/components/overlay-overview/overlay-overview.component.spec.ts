@@ -101,12 +101,15 @@ describe('OverlayOverviewComponent', () => {
 		});
 	});
 
-	describe('on mouse leave', () => {
-		it('should call store.dispatch on mouse leave event', () => {
-			let spy = spyOn(component.store$, 'dispatch');
-			fixture.debugElement.triggerEventHandler('mouseleave', {});
-			fixture.detectChanges();
-			expect(spy).toHaveBeenCalled();
-		});
+	it('showPreview should change value of isHoveringOverDrop to true, and call mouseMove$.subscribe ', () => {
+		spyOn(component.mouseMove$, 'subscribe');
+		component.showOverview();
+		expect(component.isHoveringOverDrop).toBeTruthy();
+		expect(component.mouseMove$.subscribe).toHaveBeenCalled();
+	});
+
+	it('hidePreview should change value of isHoveringOverDrop to false', () => {
+		component.hideOverview();
+		expect(component.isHoveringOverDrop).toBeFalsy();
 	});
 });

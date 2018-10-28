@@ -224,10 +224,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					font: '27px Calibri,sans-serif',
 					stroke: '#000',
 					fill: 'white',
-					offsetY: <any>((feature: olFeature) => {
+					offsetY: (feature: olFeature) => {
 						const { mode } = feature.getProperties();
 						return mode === 'Point' ? 30 : 0;
-					}),
+					},
 					text: (feature: olFeature) => {
 						const properties = feature.getProperties();
 						const { showLabel, label } = properties;

@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService } from '@ansyn/imagery';
+import { BaseMapSourceProvider, CacheService, IBaseMapSourceProviderConstructor, ImageryCommunicatorService } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { ProjectableRaster } from '@ansyn/plugins';
 import Layer from 'ol/layer/layer';
@@ -73,5 +73,15 @@ export abstract class OpenLayersMapSourceProvider extends BaseMapSourceProvider 
 			projection: 'EPSG:3857'
 		});
 		return source;
+	}
+
+	addFootprintToLayerPromise(layerPromise: Promise<any>, metaData: ICaseMapState): Promise<any> {
+		if ((this.constructor as IBaseMapSourceProviderConstructor).forOverlay) {
+			return layerPromise.then((layer) => {
+				layer.set('footprint', metaData.data.overlay.footprint);
+				return layer;
+			})
+		}
+		return layerPromise;
 	}
 }

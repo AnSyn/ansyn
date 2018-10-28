@@ -14,6 +14,8 @@ export class OpenLayerOpenAerialSourceProvider extends OpenLayersMapSourceProvid
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);
-		return Promise.resolve(layer[0]);
+		let layerPromise = Promise.resolve(layer[0]);
+		layerPromise = this.addFootprintToLayerPromise(layerPromise, metaData);
+		return layerPromise;
 	}
 }

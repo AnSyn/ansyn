@@ -11,10 +11,6 @@ export interface IFilterModel<T = any> {
 }
 
 export abstract class FilterMetadata<M = any> {
-	calculateCounts$ = this.store$.select(selectFilteredOveralys).pipe(
-		map((filteredOverlays) => this.calculateCounts(filteredOverlays))
-	);
-
 	models: IFilterModel<M> = this.config.filters.reduce((obj, item: IFilter) => {
 		if (item.type === this.type) {
 			return { ...obj, [item.modelName]: this.initialModelObject() };
@@ -51,7 +47,7 @@ export abstract class FilterMetadata<M = any> {
 
 	abstract updateMetadata(model: string, value: any): void;
 
-	abstract filterFunc(model: string, ovrelay: any, filteringParams: any): boolean;
+	abstract filterFunc(ovrelay: any, filteringParams: any): boolean;
 
 	abstract getMetadataForOuterState(): ICaseFilter[] ;
 
@@ -83,7 +79,7 @@ export abstract class FilterMetadata<M = any> {
 
 		/* CalculateCounts */
 		this.store$.select(selectFilteredOveralys).pipe(
-			withLatestFrom(selectOverlaysMap),
+			withLatestFrom(this.store$.select(selectOverlaysMap)),
 			tap(this.calculateCounts.bind(this))
 		).subscribe();
 	}

@@ -6,8 +6,7 @@ import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } fr
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FilterType } from '@ansyn/core';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
-import { filtersConfig } from '../../services/filters.service';
-import { IFiltersConfig } from '../../models/filters-config';
+import { filtersConfig, IFiltersConfig } from '../../models/filters-config';
 import { tap } from 'rxjs/operators';
 import { IFilter } from '../../models/IFilter';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';

@@ -17,7 +17,6 @@ import {
 import { SetBadgeAction } from '@ansyn/menu';
 import {
 	ICaseFilter,
-	IFilterModel,
 	IOverlay,
 	IOverlaySpecialObject,
 	mapValuesToArray,
@@ -25,21 +24,11 @@ import {
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
-import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { filtersConfig, FiltersService } from '../services/filters.service';
-import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
-import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
-import { IFiltersConfig } from '../models/filters-config';
+import { map, mergeMap, share } from 'rxjs/operators';
+import { FiltersService } from '../services/filters.service';
+import { filtersConfig, IFiltersConfig } from '../models/filters-config';
 import { EnableOnlyFavoritesSelectionAction } from '../actions/filters.actions';
-import {
-	Filters,
-	filtersStateSelector,
-	IFiltersState,
-	selectFilters,
-	selectShowOnlyFavorites
-} from '../reducer/filters.reducer';
-import { FILTERS_PROVIDERS, IFiltersProviders } from '../models/metadata/filters-manager';
+import { Filters, selectFilters, selectShowOnlyFavorites } from '../reducer/filters.reducer';
 
 @Injectable()
 export class FiltersEffects {
@@ -98,7 +87,7 @@ export class FiltersEffects {
 			if (showOnlyFavorites) {
 				badge = '★';
 			} else {
-				badge = this.filtersService.toString();
+				badge = this.filtersService.getFilteredCount().toString();
 			}
 
 			return new SetBadgeAction({ key: 'Filters', badge });
@@ -110,31 +99,7 @@ export class FiltersEffects {
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$.pipe(
 		map((favoriteOverlays: IOverlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length))));
 
-	@Effect({ dispatch: false })
-	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys).pipe(
-		// withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays), this.store$.select(selectRemovedOverlays), this.store$.select(selectRemovedOverlaysVisibility)),
-		// filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
-		// 	return overlays.size > 0;
-		// }),
-		// tap(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
-		// 	Object.values(this.filtersProviders).forEach((metadata: FilterMetadata) => {
-		// 		Object.keys(metadata.models).forEach((model) => {
-		// 			metadata.resetFilteredCount(model);
-		// 			filteredOverlays.forEach((id: string) => {
-		// 				const overlay = overlays.get(id);
-		// 				metadata.incrementFilteredCount(model, overlay[model]);
-		// 			});
-		// 			if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
-		// 				FiltersService.calculatePotentialOverlaysCount(model, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);
-		// 			}
-		// 		});
-		// 	});
-		// })
-		);
-
-
 	constructor(protected actions$: Actions,
-				@Inject(FILTERS_PROVIDERS) protected filtersProviders: IFiltersProviders,
 				protected store$: Store<any>,
 				protected filtersService: FiltersService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {

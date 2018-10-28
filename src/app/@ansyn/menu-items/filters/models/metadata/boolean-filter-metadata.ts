@@ -1,8 +1,7 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType, ICaseBooleanFilterMetadata, ICaseFilter } from '@ansyn/core';
 import { Inject, Injectable } from '@angular/core';
-import { filtersConfig } from '../../services/filters.service';
-import { IFiltersConfig } from '../filters-config';
+import { filtersConfig, IFiltersConfig } from '../filters-config';
 import { UpdateFilterAction } from '../../actions/filters.actions';
 import { Store } from '@ngrx/store';
 

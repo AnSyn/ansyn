@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AnsynCheckboxComponent } from '@ansyn/core';
 import { ShowMorePipe } from '../../pipes/show-more.pipe';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
-import { filtersConfig } from '../../services/filters.service';
+import { filtersConfig } from '../../models/filters-config';
 
 describe('EnumFilterContainerComponent', () => {
 	let component: EnumFilterContainerComponent;

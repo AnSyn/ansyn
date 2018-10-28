@@ -1,4 +1,4 @@
-export { IFiltersConfig } from './filters/models/filters-config';
+export { filtersConfig, IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
@@ -67,7 +67,7 @@ export {
 	selectSelectedLayersIds
 } from './layers-manager/reducers/layers.reducer';
 export { HelpComponent } from './help/components/help.component';
-export { filtersConfig, FiltersService } from './filters/services/filters.service';
+export { FiltersService } from './filters/services/filters.service';
 export { casesStateSelector, selectSelectedCase } from './cases/reducers/cases.reducer';
 export {
 	filtersStateSelector,

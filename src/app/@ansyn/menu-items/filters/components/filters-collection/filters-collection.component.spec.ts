@@ -3,12 +3,12 @@ import { FiltersModule } from '../../filters.module';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersCollectionComponent } from './filters-collection.component';
-import { filtersConfig } from '../../services/filters.service';
 import { CoreConfig, LoggerConfig, MockComponent } from '@ansyn/core';
 import { Subject } from 'rxjs';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { UpdateFacetsAction } from '../../actions/filters.actions';
+import { filtersConfig } from '../../models/filters-config';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;

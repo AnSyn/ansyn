@@ -1,6 +1,5 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { IFiltersConfig } from '../../filters/models/filters-config';
-import { filtersConfig } from '../../filters/services/filters.service';
+import { filtersConfig, IFiltersConfig } from '../../filters/models/filters-config';
 
 @Pipe({
 	name: 'showMore'

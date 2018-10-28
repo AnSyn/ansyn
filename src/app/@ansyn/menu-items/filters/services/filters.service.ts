@@ -1,13 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { buildFilteredOverlays, cloneDeep, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
+import { IFilterModel, IOverlay } from '@ansyn/core';
 import { IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
-import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadata';
 import { union } from 'lodash';
 import { FILTERS_PROVIDERS, IFiltersProviders } from '../models/metadata/filters-manager';
-
-export const filtersConfig = 'filtersConfig';
+import { filtersConfig, IFiltersConfig } from '../models/filters-config';
 
 // @dynamic
 @Injectable({
@@ -53,14 +50,14 @@ export class FiltersService {
 		// 	.forEach((overlay) => metadata.incrementFilteredCount(metadataKey, overlay[metadataKey.modelName]));
 	}
 
-	constructor(@Inject(FILTERS_PROVIDERS) protected filtersProviders: IFiltersProviders) {
+	constructor(@Inject(FILTERS_PROVIDERS) protected filtersProviders: IFiltersProviders, @Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
 	buildFilteredOverlays(overlays: IOverlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean): string[] {
 		let parsedOverlays: IOverlay[] = [];
-		const parsedFilters: IFilterModel[] = Object.values(this.filtersProviders);
 
-		const filteredOverlays = overlays.filter((overlay) => parsedFilters.every(filter => filter.filterFunc(overlay, filter.key)));
+		const filteredOverlays = overlays.filter((overlay) => this.config.filters.every(({ type, modelName }) => this.filtersProviders[type].filterFunc(overlay, modelName)));
+
 		parsedOverlays = [...parsedOverlays, ...filteredOverlays];
 
 		if (removedOverlaysVisibility) {
@@ -70,7 +67,7 @@ export class FiltersService {
 	}
 
 	getFilteredCount() {
-		return Object.values(this.filtersProviders).reduce((badgeNum: number, filterMetadata: FilterMetadata) => badgeNum + filterMetadata.filteredCount(), 0)
+		return Object.values(this.filtersProviders).reduce((badgeNum: number, filterMetadata: FilterMetadata) => badgeNum + filterMetadata.filteredCount(), 0);
 	}
 
 }

@@ -1,6 +1,7 @@
-import { filtersConfig, FiltersService } from './filters.service';
+import { FiltersService } from './filters.service';
 import { inject, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { filtersConfig } from '../models/filters-config';
 
 describe('FiltersService', () => {
 

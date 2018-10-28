@@ -1,7 +1,6 @@
 import { MapIteratorPipe } from './pipes/map-iterator.pipe';
 import { EffectsModule } from '@ngrx/effects';
-import { filtersConfig } from './services/filters.service';
-import { IFiltersConfig } from './models/filters-config';
+import { filtersConfig, IFiltersConfig } from './models/filters-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FiltersCollectionComponent } from './components/filters-collection/filters-collection.component';

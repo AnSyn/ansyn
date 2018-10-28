@@ -5,3 +5,5 @@ export interface IFiltersConfig {
 	shortFilterListLength: number,
 	filters: IFilter[]
 }
+
+export const filtersConfig = 'filtersConfig';

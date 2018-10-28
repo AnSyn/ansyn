@@ -1,4 +1,3 @@
-import { filtersConfig } from '../../services/filters.service';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IFilter } from '../../models/IFilter';
 import { Store } from '@ngrx/store';
@@ -8,7 +7,7 @@ import { distinctUntilChanged, map } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { IFiltersConfig } from '../../models/filters-config';
+import { filtersConfig, IFiltersConfig } from '../../models/filters-config';
 
 
 @Component({

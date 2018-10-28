@@ -5,7 +5,6 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 
 import {
-	buildFilteredOverlays,
 	coreFeatureKey,
 	CoreReducer,
 	FilterType,
@@ -29,7 +28,7 @@ import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
 import { SliderFilterMetadata } from '../models/metadata/slider-filter-metadata';
 import { IFilter } from '../models/IFilter';
 import { filtersFeatureKey, FiltersReducer } from '../reducer/filters.reducer';
-import { filtersConfig } from '../services/filters.service';
+import { filtersConfig } from '../models/filters-config';
 
 describe('Filters app effects', () => {
 	let filtersEffects: FiltersEffects;

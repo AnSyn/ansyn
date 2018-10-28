@@ -1,4 +1,4 @@
-export type FeatureField<T> = (feature: any) => T | T;
+export type FeatureField<T> = T | ((feature: any) => T);
 
 export interface IStroke {
 	stroke?: string | any;

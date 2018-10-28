@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { OverlayStatusComponent } from './components/overlay-status/overlay-status.component';
 import { OverlaysContainerComponent } from './components/container/overlays-container.component';
-import { OverlaysService } from './services/overlays.service';
 import { OverlaysEffects } from './effects/overlays.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
@@ -30,9 +29,6 @@ import { CoreModule } from '@ansyn/core';
 		OverlaysContainerComponent,
 		TimelineComponent,
 		OverlayOverviewComponent
-	],
-	providers: [
-		OverlaysService
 	]
 
 })

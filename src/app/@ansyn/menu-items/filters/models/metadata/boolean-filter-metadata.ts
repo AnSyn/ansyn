@@ -1,19 +1,9 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import {
-	CaseEnumFilterMetadata,
-	FilterType,
-	ICaseBooleanFilterMetadata,
-	ICaseFilter,
-	ICaseSliderFilterMetadata,
-	IOverlay
-} from '@ansyn/core';
-import { Inject } from '@angular/core';
+import { FilterType, ICaseBooleanFilterMetadata, ICaseFilter } from '@ansyn/core';
+import { Inject, Injectable } from '@angular/core';
 import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../filters-config';
-import { ISliderFilterModel } from './slider-filter-metadata';
 import { UpdateFilterAction } from '../../actions/filters.actions';
-import { uniq } from 'lodash';
-import { IEnumFiled } from './enum-filter-metadata';
 import { Store } from '@ngrx/store';
 
 export interface IBooleanProperty {
@@ -30,6 +20,9 @@ export interface IBooleanFilterModel {
 	false: IBooleanProperty;
 }
 
+@Injectable({
+	providedIn: 'root'
+})
 export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
 	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, protected stroe$: Store<any>) {
 		super(FilterType.Boolean, config, stroe$);
@@ -144,7 +137,7 @@ export class BooleanFilterMetadata extends FilterMetadata<IBooleanFilterModel> {
 			fieldName: model,
 			metadata: {
 				displayTrue: true,
-				displayFalse: true,
+				displayFalse: true
 			}
 		}));
 	}

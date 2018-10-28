@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs/index';
+import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/internal/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -18,7 +18,7 @@ import {
 	toRadians
 } from '@ansyn/core';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
-import { IOverlaysPlanetFetchData } from '../planet/planet.model';
+import { Auth0Service } from './auth0.service';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 
@@ -48,12 +48,18 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
+		protected auth0Service: Auth0Service,
 		@Inject(ImisightOverlaySourceConfig)
 		protected imisightOverlaysSourceConfig: IImisightOverlaySourceConfig) {
 		super(loggerService);
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
+
+		if (this.auth0Service.auth0Active && !this.auth0Service.isValidToken()) {
+			this.auth0Service.login();
+			return;
+		}
 
 		const helper = new JwtHelperService();
 		const token = localStorage.getItem('id_token');
@@ -87,7 +93,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		};
 		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
 			map(data => this.extractData(data)),
-			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+			map((overlays: IOverlay[]) => <any> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			})),

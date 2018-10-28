@@ -1,7 +1,7 @@
-import { CaseEnumFilterMetadata, FilterType, ICaseBooleanFilterMetadata, ICaseFilter, IOverlay } from '@ansyn/core';
+import { CaseEnumFilterMetadata, FilterType, ICaseFilter, IOverlay } from '@ansyn/core';
 import { IFiltersConfig } from '../filters-config';
 import { IFilter } from '../IFilter';
-import { selectOverlaysMap } from '@ansyn/overlays';
+import { selectFilteredOveralys, selectOverlaysMap } from '@ansyn/overlays';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import { selectFilters } from '../../reducer/filters.reducer';
@@ -11,6 +11,10 @@ export interface IFilterModel<T = any> {
 }
 
 export abstract class FilterMetadata<M = any> {
+	calculateCounts$ = this.store$.select(selectFilteredOveralys).pipe(
+		map((filteredOverlays) => this.calculateCounts(filteredOverlays))
+	);
+
 	models: IFilterModel<M> = this.config.filters.reduce((obj, item: IFilter) => {
 		if (item.type === this.type) {
 			return { ...obj, [item.modelName]: this.initialModelObject() };
@@ -27,6 +31,7 @@ export abstract class FilterMetadata<M = any> {
 				this.accumulateData(model, overlay[model]);
 			});
 		});
+
 		this.updateFilters(caseFilters);
 	};
 
@@ -76,6 +81,11 @@ export abstract class FilterMetadata<M = any> {
 			})
 		).subscribe();
 
+		/* CalculateCounts */
+		this.store$.select(selectFilteredOveralys).pipe(
+			withLatestFrom(selectOverlaysMap),
+			tap(this.calculateCounts.bind(this))
+		).subscribe();
 	}
 
 	filteredCount() {
@@ -84,5 +94,17 @@ export abstract class FilterMetadata<M = any> {
 		}, 0);
 	}
 
+	calculateCounts([filteredOverlays, overlays]: [string[], Map<string, IOverlay>]) {
+		Object.keys(this.models).forEach((model) => {
+			this.resetFilteredCount(model);
+			filteredOverlays.forEach((id: string) => {
+				const overlay = overlays.get(id);
+				this.incrementFilteredCount(model, overlay[model]);
+			});
+			// if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
+			// 	FiltersService.calculatePotentialOverlaysCount(model, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);
+			// }
+		});
+	}
 }
 

@@ -1,7 +1,6 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
-import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
-import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
-import { FilterType } from '@ansyn/core';
+import { BooleanFilterMetadata, IBooleanFilterModel } from '../../models/metadata/boolean-filter-metadata';
+import { FILTERS_PROVIDERS, IFiltersProviders } from '../../models/metadata/filters-manager';
 
 export interface IBooleanFilterCustomData {
 	displayTrueName: string;
@@ -16,27 +15,27 @@ export interface IBooleanFilterCustomData {
 export class BooleanFilterContainerComponent implements OnInit {
 	@Input() model: string;
 
-	get metadata(): BooleanFilterMetadata {
-		return <any> this.filterMetadata.find(({ type }: FilterMetadata): any => type === FilterType.Boolean);
+	get modelObject(): IBooleanFilterModel {
+		return this.metadata.models[this.model];
 	}
 
 	@Input() customData: IBooleanFilterCustomData;
 	@HostBinding('hidden') hidden: boolean;
 
 	get metadataValues() {
-		return Object.values(this.metadata);
+		return Object.values(this.modelObject);
 	}
 
-	constructor(@Inject(FilterMetadata) protected filterMetadata: FilterMetadata[]) {
+	constructor(protected metadata: BooleanFilterMetadata) {
 	}
 
 	ngOnInit() {
 		if (this.customData) {
-			this.metadata.models[this.model].true.displayName = this.customData.displayTrueName;
-			this.metadata.models[this.model].false.displayName = this.customData.displayFalseName;
+			this.modelObject.true.displayName = this.customData.displayTrueName;
+			this.modelObject.false.displayName = this.customData.displayFalseName;
 		}
 
-		const countAll = this.metadata.models[this.model].true.count + this.metadata.models[this.model].false.count;
+		const countAll = this.modelObject.true.count + this.modelObject.false.count;
 		this.hidden = countAll < 1;
 
 	}

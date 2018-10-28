@@ -5,7 +5,6 @@ import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../filters-config';
 import { Store } from '@ngrx/store';
 import { UpdateFilterAction } from '../../actions/filters.actions';
-import { IEnumFiled } from '../../../public_api';
 import { uniq } from 'lodash';
 
 export interface IEnumFiled {
@@ -24,7 +23,9 @@ export interface IEnumFiled {
 	disabled?: boolean;
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, protected store$: Store<any>) {
 		super(FilterType.Enum, config, store$);
@@ -36,8 +37,8 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 
 	updateMetadata(model: string, key: string): void {
 		const metadata = Array.from(this.models[model])
-			.filter(([key, value]) => !value.isChecked)
-			.map(([key]) => key);
+			.filter(([field, value]) => !value.isChecked)
+			.map(([field]) => field);
 
 		this.store$.dispatch(new UpdateFilterAction({
 			type: FilterType.Enum,
@@ -48,6 +49,7 @@ export class EnumFilterMetadata extends FilterMetadata<IEnumFilterModel> {
 
 	updateFilter(caseFilter: ICaseFilter<CaseEnumFilterMetadata>): void {
 		const enumFields = this.models[caseFilter.fieldName];
+		enumFields.forEach((enumField) => enumField.isChecked = true);
 		caseFilter.metadata.forEach((unCheckedKey) => {
 			if (enumFields.has(unCheckedKey)) {
 				enumFields.get(unCheckedKey).isChecked = false;

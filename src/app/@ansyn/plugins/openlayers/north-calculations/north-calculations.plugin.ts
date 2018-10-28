@@ -28,12 +28,6 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 import { catchError, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
-export interface INorthData {
-	northOffsetDeg: number;
-	northOffsetRad: number;
-	actualNorth: number;
-}
-
 @ImageryPlugin({
 	supported: [OpenLayersMap],
 	deps: [Actions, LoggerService, Store, ProjectionService]
@@ -102,12 +96,16 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	positionChanged$ = () => this.communicator.positionChanged.pipe(
-		tap((position: ICaseMapPosition) => {
-			if (this.isEnabled && position) {
-				this.getVirtualNorth().pipe(take(1)).subscribe((virtualNorth: number) => {
-					this.communicator.setVirtualNorth(virtualNorth);
-				});
+		mergeMap((position: ICaseMapPosition) => {
+			const view = this.communicator.ActiveMap.mapObject.getView();
+			const projection = view.getProjection();
+			if (projection.getUnits() === 'pixels' && position) {
+				return this.getVirtualNorth().pipe(take(1));
 			}
+			return of(0);
+		}),
+		tap((virtualNorth: number) => {
+			this.communicator.setVirtualNorth(virtualNorth);
 		})
 	);
 
@@ -136,10 +134,21 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
 				const northRad = northOffsetRad * -1;
-				if (this.thresholdDegrees > Math.abs(toDegrees(this.communicator.getRotation() - northRad))) {
+				const communicatorRad = this.communicator.getRotation();
+				let currentRotationDegrees = toDegrees(communicatorRad);
+				if (currentRotationDegrees < 0) {
+					currentRotationDegrees = 360 + currentRotationDegrees;
+				}
+				currentRotationDegrees = currentRotationDegrees % 360;
+				let northDeg = toDegrees(northRad);
+				if (northDeg < 0) {
+					northDeg = 360 + northDeg;
+				}
+				northDeg = northDeg % 360;
+				if (this.thresholdDegrees > Math.abs(currentRotationDegrees - northDeg)) {
 					return 0;
 				}
-				return this.communicator.getRotation() - northRad;
+				return (this.communicator.getRotation() - northRad) % (Math.PI * 2);
 			}),
 			catchError(() => of(0))
 		);

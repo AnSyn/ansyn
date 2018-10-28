@@ -15,15 +15,11 @@ export class SliderFilterContainerComponent implements OnInit {
 	realRange: number[] = [];
 	rangeValues: number[] = [];
 
-	get metadata(): SliderFilterMetadata {
-		return <any> this.filterMetadata.find(({ type }: FilterMetadata): any => type === FilterType.Slider);
-	}
-
 	get modelObject(): ISliderFilterModel {
 		return this.metadata.models[this.model];
 	}
 
-	constructor(protected elem: ElementRef, @Inject(FilterMetadata) protected filterMetadata: FilterMetadata[]) {
+	constructor(protected metadata: SliderFilterMetadata) {
 	}
 
 	ngOnInit() {

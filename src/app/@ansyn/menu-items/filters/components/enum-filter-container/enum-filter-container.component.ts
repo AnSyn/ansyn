@@ -2,6 +2,8 @@ import { EnumFilterMetadata, IEnumFiled, IEnumFilterModel } from '../../models/m
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { FilterType } from '@ansyn/core';
+import { FILTERS_PROVIDERS, IFiltersProviders } from '../../models/metadata/filters-manager';
+import { IBooleanFilterModel } from '../../models/metadata/boolean-filter-metadata';
 
 @Component({
 	selector: 'ansyn-enum-filter-container',
@@ -13,11 +15,7 @@ export class EnumFilterContainerComponent implements OnInit {
 	@Input() isLongFiltersList: boolean;
 	enumsFields = new Map<string, IEnumFiled>();
 
-	get metadata(): EnumFilterMetadata {
-		return <any> this.filterMetadata.find(({ type }: FilterMetadata): any => type === FilterType.Enum);
-	}
-
-	constructor(@Inject(FilterMetadata) protected filterMetadata: FilterMetadata<IEnumFilterModel>[]) {
+	constructor(protected metadata: EnumFilterMetadata) {
 	}
 
 	ngOnInit() {

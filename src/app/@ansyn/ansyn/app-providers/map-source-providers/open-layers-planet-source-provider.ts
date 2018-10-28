@@ -7,7 +7,8 @@ export const OpenLayerPlanetSourceProviderSourceType = 'PLANET';
 
 @ImageryMapSource({
 	sourceType: OpenLayerPlanetSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	forOverlay: true
 })
 export class OpenLayerPlanetSourceProvider extends OpenLayersMapSourceProvider {
 

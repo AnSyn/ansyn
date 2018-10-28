@@ -21,6 +21,10 @@ export class EnableOnlyFavoritesSelectionAction implements Action {
 	}
 }
 
+export class UpdateFilters {
+
+}
+
 export class UpdateFacetsAction implements Action {
 	readonly type = FiltersActionTypes.UPDATE_FACETS;
 

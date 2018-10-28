@@ -1,27 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { forkJoin, Observable, UnaryFunction } from 'rxjs';
+import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector } from '../reducers/map.reducer';
 import {
-	AddAlertMsg,
-	AlertMsgTypes,
 	BackToWorldSuccess,
 	BackToWorldView,
 	CaseGeoFilter,
 	CoreActionTypes,
 	ICaseMapPosition,
 	ICaseMapState,
-	isFullOverlay,
-	RemoveAlertMsg,
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction,
+	SetToastMessageAction
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
-import { intersect, polygon } from '@turf/turf';
 import {
 	ActiveMapChangedAction,
 	AnnotationSelectAction,
@@ -37,8 +33,10 @@ import {
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { fromPromise, pipe } from 'rxjs/internal-compatibility';
+import { fromPromise } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
+import { mapFacadeConfig } from '../models/map-facade.config';
+import { IMapFacadeConfig } from '../models/map-config.model';
 
 @Injectable()
 export class MapEffects {
@@ -128,56 +126,6 @@ export class MapEffects {
 			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
 		})
 	);
-
-	checkOverlaysOutOfBounds$: UnaryFunction<any, any> = pipe(
-		filter(Boolean),
-		map((map: ICaseMapState) => {
-			const key = AlertMsgTypes.OverlaysOutOfBounds;
-			const isWorldView = !isFullOverlay(map.data.overlay);
-			let isInBound;
-			if (!isWorldView) {
-				const { extentPolygon } = map.data.position;
-				const { footprint } = map.data.overlay;
-				try {
-					isInBound = Boolean(intersect(polygon(extentPolygon.coordinates), polygon(footprint.coordinates[0])));
-				} catch (e) {
-					console.warn('checkImageOutOfBounds$: turf exception', e);
-				}
-			}
-
-			if (isWorldView || isInBound) {
-				return new RemoveAlertMsg({ key, value: map.id });
-			}
-
-			return new AddAlertMsg({ key, value: map.id });
-
-		})
-	);
-
-	@Effect()
-	checkImageOutOfBounds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
-		.pipe(
-			ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED),
-			withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.id)),
-			this.checkOverlaysOutOfBounds$.bind(this)
-		);
-
-	@Effect()
-	checkImageOutOfBoundsFromBackToWorlds$: Observable<AddAlertMsg | RemoveAlertMsg> = this.actions$
-		.pipe(
-			ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS),
-			withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { mapsList }) => MapFacadeService.mapById(mapsList, payload.mapId)),
-			this.checkOverlaysOutOfBounds$.bind(this)
-		);
-
-	@Effect()
-	updateOutOfBoundList: Observable<RemoveAlertMsg> = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_REMOVED),
-		map((action: ImageryRemovedAction) => {
-			return new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: action.payload.id });
-		})
-	);
-
 
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
@@ -278,7 +226,7 @@ export class MapEffects {
 			mapState.mapsList.forEach((mapItem: ICaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
-					setPositionObservables.push(comm.setPosition(mapPosition));
+					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
 				}
 			});
 
@@ -298,6 +246,22 @@ export class MapEffects {
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,
 				protected communicatorsService: ImageryCommunicatorService,
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				protected store$: Store<any>) {
 	}
+
+	setPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
+		if (mapItem.data.overlay) {
+			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+			if (isNotIntersect) {
+				this.store$.dispatch(new SetToastMessageAction({
+					toastText: 'At least one map couldn\'t be synchronized',
+					showWarningIcon: true
+				}));
+				return EMPTY;
+			}
+		}
+		return comm.setPosition(position);
+	}
+
 }

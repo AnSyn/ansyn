@@ -88,7 +88,6 @@ export { ICoreConfig } from './models/core.config.model';
 export { CoreConfig } from './models/core.config';
 export { endTimingLog, startTimingLog } from './utils/logs/timer-logs';
 export { AlertsModule } from './alerts/alerts.module';
-export { buildFilteredOverlays } from './utils/overlays';
 export { isFullOverlay } from './utils/overlays';
 export { IFilterModel } from './models/IFilterModel';
 export { sortByDate, sortByDateDesc } from './utils/sorting';

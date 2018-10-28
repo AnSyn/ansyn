@@ -21,6 +21,7 @@ import { OpenLayersDisabledMap } from './openlayers/open-layers-map/openlayers-d
 import { OpenlayersGeoJsonLayersVisualizer } from './openlayers/layers/openlayers-geoJson-layers.visualizer';
 import { PolygonSearchVisualizer } from './openlayers/visualizers/region/polygon-search.visualizer';
 import { MouseShadowVisualizer } from './openlayers/visualizers/tools/mouse-shadow.visualizer';
+import { AlertsPlugin } from './openlayers/alerts/alerts.plugin';
 
 @NgModule({
 	imports: [
@@ -33,6 +34,7 @@ import { MouseShadowVisualizer } from './openlayers/visualizers/tools/mouse-shad
 				MonitorPlugin,
 				ContextMenuPlugin,
 				OpenlayersOsmLayersPlugin,
+				AlertsPlugin,
 				// Visualizers
 				ContextEntityVisualizer,
 				FootprintHeatmapVisualizer,

@@ -19,7 +19,6 @@ export class ImageryComponentManager {
 
 	private _activeMap: BaseImageryMap;
 	private _subscriptions = [];
-	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
 	public mapInstanceChanged: EventEmitter<IMapInstanceChanged> = new EventEmitter<IMapInstanceChanged>();
 	public activeMapName: string;
 
@@ -157,13 +156,6 @@ export class ImageryComponentManager {
 
 	private internalSetActiveMap(activeMap: BaseImageryMap) {
 		this._activeMap = activeMap;
-		this.registerToActiveMapEvents();
-	}
-
-	private registerToActiveMapEvents() {
-		this._subscriptions.push(this._activeMap.positionChanged.subscribe((position: ICaseMapPosition) => {
-			this.positionChanged.emit(position);
-		}));
 	}
 
 	public get ActiveMap(): BaseImageryMap {

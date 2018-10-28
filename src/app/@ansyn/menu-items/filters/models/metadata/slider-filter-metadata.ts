@@ -1,6 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType, ICaseFilter, ICaseSliderFilterMetadata } from '@ansyn/core';
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../filters-config';
 import { Store } from '@ngrx/store';
@@ -15,6 +15,9 @@ export interface ISliderFilterModel {
 	end: number;
 }
 
+@Injectable({
+	providedIn: 'root'
+})
 export class SliderFilterMetadata extends FilterMetadata<ISliderFilterModel> {
 	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, protected store$: Store<any>) {
 		super(FilterType.Slider, config, store$);

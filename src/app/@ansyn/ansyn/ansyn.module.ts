@@ -30,6 +30,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { COMPONENT_MODE } from './app-providers/component-mode';
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { ANSYN_ID } from './api/ansyn-api.service';
+import { UploadsModule } from '../menu-items/uploads/uploads.module';
 
 @NgModule({
 	imports: [
@@ -57,7 +58,8 @@ import { ANSYN_ID } from './api/ansyn-api.service';
 		ImageryModule,
 		StatusBarModule,
 		RouterModule,
-		HelpModule
+		HelpModule,
+		UploadsModule
 	],
 	providers: [
 		{

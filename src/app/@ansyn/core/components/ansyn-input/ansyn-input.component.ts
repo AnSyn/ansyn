@@ -19,8 +19,11 @@ const noop = () => {
 })
 export class AnsynInputComponent implements ControlValueAccessor {
 	@Input() label: string;
-	@Input() required: boolean;
-	id = UUID.UUID();
+	@Input() required = true;
+	@Input() name;
+	@Input() autocomplete: 'off' | 'on' = 'off';
+	@Input() id = UUID.UUID();
+
 	private innerValue: any = '';
 	private onTouchedCallback: () => void = noop;
 	private onChangeCallback: (_: any) => void = noop;

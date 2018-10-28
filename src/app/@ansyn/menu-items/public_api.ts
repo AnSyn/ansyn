@@ -1,3 +1,5 @@
+export { UploadsComponent } from './uploads/components/uploads/uploads.component';
+export { UploadsModule } from './uploads/uploads.module';
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';

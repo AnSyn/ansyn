@@ -1,0 +1,36 @@
+@import "core/less/common";
+
+:host {
+	&:extend(.default-menu-item);
+	position: relative;
+	form {
+		margin: 50px;
+		position: relative;
+		div {
+			margin: 15px 0;
+		}
+
+		ansyn-input {
+			/deep/ input {
+				color: white;
+				border-color: white;
+				&:focus {
+					border-color: white;
+				}
+				&:focus ~ label, &:valid ~ label {
+					color: white;
+				}
+			}
+			/deep/ span {
+				&:before, &:after {
+					background: white;
+				}
+			}
+			/deep/ label {
+				color: white;
+			}
+		}
+	}
+
+}
+

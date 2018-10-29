@@ -47,7 +47,8 @@ export class DownloadLayersComponent {
 	visualizerToSimpleStyle(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial, label: feature.properties.label, title: feature.properties.label };
+			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial,
+				label: feature.properties.label, title: feature.properties.label, name: feature.properties.label };
 		});
 	}
 

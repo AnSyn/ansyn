@@ -31,7 +31,7 @@ export class DownloadLayersComponent {
 		const annotationsLayer = cloneDeep(this.layer.data);
 		this.generateFeaturesIds(annotationsLayer);
 		this.visualizerToSimpleStyle(annotationsLayer);
-		const blob = new Blob([tokml(annotationsLayer, { simplestyle: true })], { type: 'application/vnd.google-earth.kml+xml' });
+		const blob = new Blob([tokml(annotationsLayer, { simplestyle: true, name: 'label' })], { type: 'application/vnd.google-earth.kml+xml' });
 		saveAs(blob, `${this.layer.name}.kml`);
 		this.store.dispatch(new CloseLayersModal());
 	}
@@ -47,8 +47,7 @@ export class DownloadLayersComponent {
 	visualizerToSimpleStyle(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial,
-				label: feature.properties.label, title: feature.properties.label, name: feature.properties.label };
+			feature.properties = { id: feature.properties.id, ...feature.properties.style.initial, label: feature.properties.label };
 		});
 	}
 

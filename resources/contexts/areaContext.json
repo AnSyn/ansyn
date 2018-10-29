@@ -9,19 +9,23 @@
     "facets": {
       "filters": [
         {
+          "type": "Enum",
           "metadata": [
             "Landsat8",
             "Sentinel-2A",
             "Sentinel-2B"
           ],
-          "fieldName": "sensorName"
+          "fieldName": "sensorName",
+          "positive": true
         },
         {
+          "type": "Enum",
           "metadata": [
             "Landsat8L1G",
             "Sentinel2L1C"
           ],
-          "fieldName": "sensorType"
+          "fieldName": "sensorType",
+          "positive": true
         }
       ]
     },

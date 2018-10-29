@@ -8,7 +8,7 @@ import { FiltersService } from '../services/filters.service';
 export type Filters = Map<IFilter, FilterMetadata>;
 
 export interface IFiltersState {
-	filters: Filters;
+	filters: Map<IFilter, FilterMetadata>;
 	isLoading: boolean;
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;

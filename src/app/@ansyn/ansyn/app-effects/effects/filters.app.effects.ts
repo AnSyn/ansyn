@@ -104,8 +104,11 @@ export class FiltersAppEffects {
 			const filters = new Map<IFilter, FilterMetadata>(
 				this.config.filters.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
 					const metadata: FilterMetadata = this.resolveMetadata(filter.type);
-					const facetsMetadata = get(facets.filters.find(({ fieldName }) => fieldName === filter.modelName), 'metadata');
-					metadata.initializeFilter(overlays, filter.modelName, facetsMetadata);
+					const selectedFilter = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
+					const selectedMetadata = get(selectedFilter, 'metadata');
+					const positive = get(selectedFilter, 'positive');
+
+					metadata.initializeFilter(overlays, filter.modelName, selectedMetadata, positive);
 					return [filter, metadata];
 				})
 			);

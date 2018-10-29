@@ -106,12 +106,11 @@ export interface ICaseFilter<T = CaseFilterMetadata> {
 	type: FilterType;
 	fieldName: string;
 	metadata: T;
+	positive?: boolean;
 }
 
-export type CaseFilters = ICaseFilter[];
-
 export interface ICaseFacetsState {
-	filters?: CaseFilters;
+	filters?: ICaseFilter[];
 	showOnlyFavorites?: boolean;
 }
 

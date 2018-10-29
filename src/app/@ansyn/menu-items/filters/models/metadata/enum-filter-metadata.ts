@@ -1,5 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, IOverlay, mapValuesToArray } from '@ansyn/core';
+import { FilterType, ICaseFilter, IOverlay, mapValuesToArray } from '@ansyn/core';
+import { CaseEnumFilterMetadata } from '../../../../core/models/case.model';
 
 export interface IEnumFiled {
 	key: string;
@@ -43,24 +44,26 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, selectedValues: string[] = [], positive = false): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<CaseEnumFilterMetadata>): void {
 		this.enumsFields = new Map<string, IEnumFiled>();
 
 		overlays.forEach((overlay: any) => {
 			this.accumulateData(overlay[modelName]);
 		});
 
-		if (positive) {
-			this.enumsFields.forEach((enumsField: IEnumFiled) => {
-				enumsField.isChecked = selectedValues.includes(enumsField.key);
-			});
-		} else {
-			selectedValues
-				.map(key => this.enumsFields.get(key))
-				.filter(Boolean)
-				.forEach((enumsField: IEnumFiled) => enumsField.isChecked = false);
-
+		if (caseFilter) {
+			if (caseFilter.positive) {
+				this.enumsFields.forEach((enumsField: IEnumFiled) => {
+					enumsField.isChecked = caseFilter.metadata.includes(enumsField.key);
+				});
+			} else {
+				caseFilter.metadata
+					.map(key => this.enumsFields.get(key))
+					.filter(Boolean)
+					.forEach((enumsField: IEnumFiled) => enumsField.isChecked = false);
+			}
 		}
+
 	}
 
 	filterFunc(overlay: any, key: string): boolean {

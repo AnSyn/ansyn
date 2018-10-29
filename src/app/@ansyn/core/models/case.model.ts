@@ -96,9 +96,14 @@ export interface ICaseBooleanFilterMetadata {
 	displayFalse: boolean;
 }
 
+export interface ICaseSliderFilterMetadata {
+	start: number;
+	end: number;
+}
+
 export type CaseEnumFilterMetadata = string[];
 
-export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata;
+export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata;
 
 export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
 

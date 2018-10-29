@@ -1,9 +1,9 @@
 import { FilterType, IOverlay } from '@ansyn/core';
 
-export abstract class FilterMetadata {
+export abstract class FilterMetadata<M = any> {
 	type: FilterType;
 
-	abstract initializeFilter(overlays: IOverlay[], modelName: string, selectedValues?: any, positive?: boolean): void;
+	abstract initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: M): void;
 
 	abstract accumulateData(value: any): void;
 

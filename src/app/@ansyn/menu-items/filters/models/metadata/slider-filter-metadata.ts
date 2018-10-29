@@ -1,6 +1,5 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseFilter, IOverlay } from '@ansyn/core';
-import { ICaseSliderFilterMetadata } from '../../../../core/models/case.model';
+import { FilterType, ICaseFilter, ICaseSliderFilterMetadata, IOverlay } from '@ansyn/core';
 
 export class SliderFilterMetadata implements FilterMetadata {
 	count = 0;

@@ -1,3 +1,4 @@
+export { ICaseSliderFilterMetadata } from './models/case.model';
 export { AnsynFormsModule } from './forms/ansyn-forms.module';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';

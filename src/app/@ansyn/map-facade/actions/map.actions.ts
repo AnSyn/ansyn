@@ -11,6 +11,7 @@ import {
 } from '@ansyn/core';
 
 export const MapActionTypes = {
+	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
 	IMAGERY_CREATED: 'IMAGERY_CREATED',
@@ -68,6 +69,13 @@ export class SetProgressBarAction implements Action {
 
 export class ActiveMapChangedAction implements Action {
 	type = MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class PointToRealNorthAction implements Action {
+	type = MapActionTypes.POINT_TO_REAL_NORTH;
 
 	constructor(public payload: string) {
 	}

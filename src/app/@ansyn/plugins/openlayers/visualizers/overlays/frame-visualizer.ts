@@ -2,14 +2,14 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import { Observable, of } from 'rxjs';
 import { Inject } from '@angular/core';
 import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade';
-import { IOverlay } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
+import { UUID } from 'angular2-uuid';
+import { feature } from '@turf/turf';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -17,13 +17,6 @@ import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-m
 })
 export class FrameVisualizer extends EntitiesVisualizer {
 	public isActive = false;
-
-	@AutoSubscription
-	overlay$ = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		filter((action: DisplayOverlaySuccessAction) => this.mapId === action.payload.mapId),
-		mergeMap((action: DisplayOverlaySuccessAction) => this.setOverlay(action.payload.overlay))
-	);
 
 	@AutoSubscription
 	isActive$: Observable<boolean> = this.store$.pipe(
@@ -48,16 +41,6 @@ export class FrameVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	setOverlay(overlay: IOverlay) {
-		if (overlay) {
-			const { id, footprint } = overlay;
-			const featureJson: GeoJSON.Feature<any> = { type: 'Feature', geometry: footprint, properties: {} };
-			const entityToDraw = { id, featureJson };
-			return this.setEntities([entityToDraw]);
-		}
-		return of(true);
-	}
-
 	getStroke() {
 		return this.isActive ? this.visualizerStyle.colors.active : this.visualizerStyle.colors.inactive;
 	}
@@ -75,6 +58,13 @@ export class FrameVisualizer extends EntitiesVisualizer {
 
 	onResetView(): Observable<any> {
 		this.clearEntities();
-		return super.onResetView();
+		this.initLayers();
+		const footprint = this.iMap.getMainLayer().get('footprint');
+		if (footprint) {
+			const featureJson = feature(footprint);
+			const entityToDraw = { id: UUID.UUID(), featureJson };
+			return this.setEntities([entityToDraw]);
+		}
+		return of(true);
 	}
 }

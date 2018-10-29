@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { buildFilteredOverlays, CaseFilters, FilterType, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
+import { buildFilteredOverlays, FilterType, ICaseFilter, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
@@ -14,8 +14,8 @@ export const filtersConfig = 'filtersConfig';
 	providedIn: 'root'
 })
 export class FiltersService {
-	static buildCaseFilters(filters: Filters, facetsFilters?: CaseFilters): CaseFilters {
-		const caseFilters: CaseFilters = [];
+	static buildCaseFilters(filters: Filters, facetsFilters?: ICaseFilter[]): ICaseFilter[] {
+		const caseFilters: ICaseFilter[] = [];
 
 		filters.forEach((newMetadata: FilterMetadata, filter: IFilter) => {
 			let outerStateMetadata: any = newMetadata.getMetadataForOuterState();

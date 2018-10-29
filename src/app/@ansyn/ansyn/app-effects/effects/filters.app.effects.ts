@@ -9,28 +9,28 @@ import {
 	EnumFilterMetadata,
 	FilterMetadata,
 	Filters,
-	FiltersActionTypes,
+	filtersConfig,
 	FiltersService,
 	filtersStateSelector,
 	IFilter,
+	IFiltersConfig,
 	IFiltersState,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
 	selectFacets,
 	selectFilters,
-	selectShowOnlyFavorites,
-	filtersConfig,
-	IFiltersConfig
+	selectShowOnlyFavorites
 } from '@ansyn/menu-items';
 import {
 	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	OverlaysService,
 	overlaysStatusMessages,
 	selectFilteredOveralys,
 	selectOverlaysArray,
-	selectOverlaysMap, selectSpecialObjects, SetDropsAction,
+	selectOverlaysMap,
+	selectSpecialObjects,
+	SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
 } from '@ansyn/overlays';
@@ -40,17 +40,16 @@ import {
 	FilterType,
 	GenericTypeResolverService,
 	ICaseFacetsState,
-	ICaseFilter,
 	IFilterModel,
 	InjectionResolverFilter,
 	IOverlay,
-	IOverlaySpecialObject, mapValuesToArray,
+	IOverlaySpecialObject,
+	mapValuesToArray,
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { get } from 'lodash';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -84,9 +83,15 @@ export class FiltersAppEffects {
 		}));
 
 	@Effect()
-	updateOverlayDrops$  = this.forOverlayDrops$.pipe(
+	updateOverlayDrops$ = this.forOverlayDrops$.pipe(
 		map(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
-			const drops = OverlaysService.parseOverlayDataForDisplay({overlaysArray: mapValuesToArray(overlaysMap), filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites});
+			const drops = OverlaysService.parseOverlayDataForDisplay({
+				overlaysArray: mapValuesToArray(overlaysMap),
+				filteredOverlays,
+				specialObjects,
+				favoriteOverlays,
+				showOnlyFavorites
+			});
 			return new SetDropsAction(drops);
 		})
 	);
@@ -105,10 +110,7 @@ export class FiltersAppEffects {
 				this.config.filters.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
 					const metadata: FilterMetadata = this.resolveMetadata(filter.type);
 					const selectedFilter = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
-					const selectedMetadata = get(selectedFilter, 'metadata');
-					const positive = get(selectedFilter, 'positive');
-
-					metadata.initializeFilter(overlays, filter.modelName, selectedMetadata, positive);
+					metadata.initializeFilter(overlays, filter.modelName, selectedFilter);
 					return [filter, metadata];
 				})
 			);

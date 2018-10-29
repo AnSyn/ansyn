@@ -1,6 +1,5 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseFilter, IOverlay, mapValuesToArray } from '@ansyn/core';
-import { CaseEnumFilterMetadata } from '../../../../core/models/case.model';
+import { CaseEnumFilterMetadata, FilterType, ICaseFilter, IOverlay, mapValuesToArray } from '@ansyn/core';
 
 export interface IEnumFiled {
 	key: string;
@@ -44,7 +43,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<CaseEnumFilterMetadata>): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<CaseEnumFilterMetadata>): void {
 		this.enumsFields = new Map<string, IEnumFiled>();
 
 		overlays.forEach((overlay: any) => {

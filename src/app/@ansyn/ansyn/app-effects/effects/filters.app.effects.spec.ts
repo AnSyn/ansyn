@@ -108,22 +108,26 @@ describe('Filters app effects', () => {
 
 	it('updateFiltersBadge$ should calculate filters number', () => {
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', {
+			key: 'example',
 			count: 10,
 			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', {
+			key: 'example2',
 			count: 10,
 			filteredCount: 0,
 			isChecked: false
 		}); // (!isChecked) => 1
 
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', {
+			key: 'example',
 			count: 10,
 			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', {
+			key: 'example2',
 			count: 10,
 			filteredCount: 0,
 			isChecked: false

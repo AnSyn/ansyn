@@ -17,7 +17,7 @@
 			<label for="context">Context</label>
 			<select id="context"
 					#selectContextElement
-					name="context" required [disabled]="editMode">
+					name="context" required [disabled]="editMode || true">
 				<option
 					*ngFor="let context of contextsList"
 					[selected]="context.id === caseModel.selectedContextId">

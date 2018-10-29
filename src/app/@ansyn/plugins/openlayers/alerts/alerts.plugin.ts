@@ -40,15 +40,14 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	}
 
 	setOverlaysNotInCase([drops, currentMap]: [IOverlayDrop[], ICaseMapState]): RemoveAlertMsg | AddAlertMsg {
-		const key = AlertMsgTypes.overlayIsNotPartOfQuery;
 		const { data, id } = currentMap;
 		const { overlay } = data;
 		const shouldRemoved = !overlay || drops.some((overlayDrop: IOverlayDrop) => overlayDrop.id === overlay.id);
-		return shouldRemoved ? new RemoveAlertMsg({ key, value: id }) : new AddAlertMsg({ key, value: id });
+		const payload = { key: AlertMsgTypes.overlayIsNotPartOfQuery, value: id };
+		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
 	positionChanged([position, currentMap]: [any, ICaseMapState]): RemoveAlertMsg | AddAlertMsg {
-		const key = AlertMsgTypes.OverlaysOutOfBounds;
 		const isWorldView = !isFullOverlay(currentMap.data.overlay);
 		let isInBound;
 		if (!isWorldView) {
@@ -60,11 +59,8 @@ export class AlertsPlugin extends BaseImageryPlugin {
 				console.warn('checkImageOutOfBounds$: turf exception', e);
 			}
 		}
-		if (isWorldView || isInBound) {
-			return new RemoveAlertMsg({ key, value: currentMap.id });
-		}
-
-		return new AddAlertMsg({ key, value: currentMap.id });
+		const payload = { key: AlertMsgTypes.OverlaysOutOfBounds, value: currentMap.id };
+		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
 	onResetView() {

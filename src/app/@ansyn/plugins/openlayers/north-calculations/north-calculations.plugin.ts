@@ -167,7 +167,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				return of(northData.actualNorth);
 			}),
 			retry(this.maximumNumberOfRetries),
-			catchError((e) => e.result ? of(e.result): throwError(e))
+			catchError((e) => e.result ? of(e.result) : throwError(e))
 		);
 	}
 

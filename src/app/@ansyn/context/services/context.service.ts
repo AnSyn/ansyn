@@ -4,8 +4,6 @@ import { IContextConfig } from '../models/context.config.model';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService, IContext, rxPreventCrash, StorageService } from '@ansyn/core';
-import * as areaContext from '../../../../../resources/contexts/areaContext.json';
-console.log(areaContext);
 
 @Injectable()
 export class ContextService {
@@ -24,9 +22,6 @@ export class ContextService {
 	}
 
 	loadContext(selectedContextId: string): Observable<IContext> {
-		if (1 === 1) {
-			return of(this.parseContext({ ...(<any>areaContext).preview, ...(<any>areaContext).data }));
-		};
 		return this.storageService.get<IContext, IContext>(this.config.schema, selectedContextId).pipe(
 			map(storedEntity =>
 				this.parseContext({ ...storedEntity.preview, ...storedEntity.data })),

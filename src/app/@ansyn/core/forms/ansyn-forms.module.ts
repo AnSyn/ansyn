@@ -4,6 +4,7 @@ import { AnsynCheckboxComponent } from './ansyn-checkbox/ansyn-checkbox.componen
 import { AnsynInputComponent } from './ansyn-input/ansyn-input.component';
 import { SliderCheckboxComponent } from './slider-checkbox/slider-checkbox.component';
 import { FormsModule } from '@angular/forms';
+import { AnsynButtonComponent } from './ansyn-button/ansyn-button.component';
 
 @NgModule({
 	imports: [
@@ -13,12 +14,14 @@ import { FormsModule } from '@angular/forms';
 	declarations: [
 		AnsynCheckboxComponent,
 		AnsynInputComponent,
-		SliderCheckboxComponent
+		SliderCheckboxComponent,
+		AnsynButtonComponent
 	],
 	exports: [
 		AnsynCheckboxComponent,
 		AnsynInputComponent,
-		SliderCheckboxComponent
+		SliderCheckboxComponent,
+		AnsynButtonComponent
 	]
 })
 export class AnsynFormsModule {

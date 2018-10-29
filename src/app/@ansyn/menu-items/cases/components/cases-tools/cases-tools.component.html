@@ -1,11 +1,11 @@
 <div class="buttons-group">
-	<button class="add-case" type="button" (click)="showEditCaseModal()">
+	<button ansynButton type="button" (click)="showEditCaseModal()">
 		Add Case
 	</button>
-	<button class="save-case" type="button" (click)="showSaveCaseModal()">
+	<button ansynButton type="button" (click)="showSaveCaseModal()">
 		Save As
 	</button>
-	<button class="save-case" type="button" [disabled]="isDefaultCaseId" (click)="manualSave()">
+	<button ansynButton type="button" [disabled]="isDefaultCaseId" (click)="manualSave()">
 		Save
 	</button>
 </div>

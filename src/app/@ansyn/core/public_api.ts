@@ -1,3 +1,4 @@
+export { ICaseSliderFilterMetadata } from './models/case.model';
 export { AnsynFormsModule } from './forms/ansyn-forms.module';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
@@ -18,7 +19,7 @@ export { ICaseLayersState } from './models/case.model';
 export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 export { AlertComponentDirective } from './alerts/alert-component.directive';
 export { coreFeatureKey, coreInitialState, CoreReducer } from './reducers/core.reducer';
-export { CaseFilters, ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './models/case.model';
+export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './models/case.model';
 export { type } from './utils/type';
 export { selectAutoSave, selectRemovedOverlays, selectRemovedOverlaysVisibility } from './reducers/core.reducer';
 export {

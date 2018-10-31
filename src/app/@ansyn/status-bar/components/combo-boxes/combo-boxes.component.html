@@ -26,6 +26,7 @@
 		<ansyn-combo-box
 			class="combo-box-width"
 			icon="icon-status-bar-orientation"
+			direction="top"
 			[options]="orientations"
 			[selected]="comboBoxesProperties.orientation"
 			[comboBoxToolTipDescription]="toolTips.orientation"
@@ -38,6 +39,7 @@
 
 		<ansyn-combo-box
 			class="combo-box-width"
+			direction="top"
 			[comboBoxToolTipDescription]="toolTips.geoFilter"
 			icon="icon-status-bar-geo"
 			[options]="geoFilters"
@@ -68,6 +70,7 @@
 	<div class="combo-box-container block with-buttons hidden-low-resolution">
 		<ansyn-combo-box
 			class="combo-box-width"
+			direction="top"
 			icon="icon-status-bar-time"
 			[comboBoxToolTipDescription]="toolTips.timeFilter"
 			[options]="timeFilters"
@@ -101,6 +104,7 @@
 	<div class="combo-box-container block">
 		<ansyn-combo-box
 			class="combo-center"
+			direction="top"
 			[comboBoxToolTipDescription]="toolTips.screenNumber"
 			[options]="layouts"
 			[renderFunction]="layoutRender.bind(this)"

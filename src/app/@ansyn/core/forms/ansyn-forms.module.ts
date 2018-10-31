@@ -15,7 +15,7 @@ import { AnsynButtonComponent } from './ansyn-button/ansyn-button.component';
 		AnsynCheckboxComponent,
 		AnsynInputComponent,
 		SliderCheckboxComponent,
-		AnsynButtonComponent,
+		AnsynButtonComponent
 	],
 	exports: [
 		AnsynCheckboxComponent,

@@ -1,6 +1,31 @@
 @import 'core/less/tooltip';
+@import 'core/less/colors';
 
 :host {
+	&.transparent {
+		@transparent-color: rgba(255, 255, 255, 0.4);
+
+		/deep/ div.combo-container ansyn-combo-box-trigger button.trigger {
+			background: transparent;
+			border: none;
+			border-bottom: 1px solid @transparent-color;
+			padding: 6px;
+		}
+
+		div.combo-container .options-container {
+			background: @application-main-color;
+			border-color: @transparent-color;
+		}
+		.combo-container {
+			&.top {
+				/deep/ ansyn-combo-box-trigger button.trigger {
+					border-bottom: none;
+					border-top: 1px solid @transparent-color;
+				}
+			}
+		}
+	}
+
 	&.combo-center .combo-container .options-container .option {
 		justify-content: center;
 		text-align: center;
@@ -14,9 +39,22 @@
 		width: 100%;
 		position: relative;
 
+		&.bottom {
+			.options-container {
+				border-top: none;
+			}
+		}
+
+		&.top {
+			.options-container {
+				top: initial;
+				bottom: 100%;
+				border-bottom: none;
+			}
+		}
+
 		.options-container {
 			border: 1px solid;
-			border-bottom: none;
 			width: auto;
 			min-width: 100%;
 			background: black;
@@ -30,8 +68,7 @@
 			}
 			visibility: hidden;
 			position: absolute;
-			top: 0;
-			transform: translate(0, -100%);
+			top: 100%;
 			box-sizing: border-box;
 			.option {
 				line-height: 29px;

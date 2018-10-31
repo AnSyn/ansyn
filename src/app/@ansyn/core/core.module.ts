@@ -22,6 +22,8 @@ import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
+import { ComboBoxTriggerComponent } from './forms/combo-box-trigger/combo-box-trigger.component';
+import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 
 @NgModule({
 	imports: [
@@ -49,7 +51,9 @@ import { AnsynFormsModule } from './forms/ansyn-forms.module';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent
+		AnimatedEllipsisComponent,
+		ComboBoxComponent,
+		ComboBoxTriggerComponent
 	],
 	declarations: [
 		ImageryStatusComponent,
@@ -60,7 +64,9 @@ import { AnsynFormsModule } from './forms/ansyn-forms.module';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent
+		AnimatedEllipsisComponent,
+		ComboBoxComponent,
+		ComboBoxTriggerComponent
 	]
 })
 

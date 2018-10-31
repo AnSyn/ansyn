@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
 import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger.component';
 
 @Component({
@@ -9,13 +9,15 @@ import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger
 export class ComboBoxComponent {
 	@ViewChild(ComboBoxTriggerComponent) trigger: ComboBoxTriggerComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
-
 	@Input() icon: string;
 	@Input() options: any[];
 	@Input() selected: any;
 	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
 	@Input() comboBoxToolTipDescription: string;
+	@Input() direction: 'top' | 'bottom' = 'bottom';
+	@HostBinding('class')
+	@Input() color: 'black' | 'transparent' = 'black';
 
 	@Output() selectedChange = new EventEmitter();
 

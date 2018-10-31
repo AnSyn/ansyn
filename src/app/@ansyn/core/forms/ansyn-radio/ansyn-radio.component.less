@@ -1,0 +1,37 @@
+@color-half-white: rgba(255,255,255,0.7);
+
+input {
+	display: none;
+}
+
+label {
+	display: flex;
+	align-items: center;
+	user-select: none;
+	color: @color-half-white;
+
+	.outer-circle {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		border: 2px solid @color-half-white;
+		margin-right: 15px;
+
+		.inner-circle {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background-color: white;
+		}
+	}
+
+	&.selected {
+		color: white;
+		.outer-circle {
+			border-color: white;
+		}
+	}
+}

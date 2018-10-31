@@ -1,17 +1,15 @@
 <div>
 	<form>
 		<div>
-
 			<ansyn-input label="Title"
 						 name="title"
 						 [(ngModel)]="title">
 			</ansyn-input>
-
 		</div>
 
 		<div>
-			<ansyn-checkbox text="I agree to this rules" [checked]="licence">
-
+			<ansyn-checkbox [checked]="licence">
+				I agree to this <a href="http://google.com/" target="_blank">rules</a>
 			</ansyn-checkbox>
 
 		</div>
@@ -26,7 +24,7 @@
 		<!--<span class="bar"></span>-->
 
 		<!--<label class="case-name" for="123">Title</label>-->
-		<button type="submit">Submit</button>
+		<button ansynButton type="submit">Submit</button>
 	</form>
 
 	<!--<h3>platform</h3>-->

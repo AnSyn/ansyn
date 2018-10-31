@@ -6,7 +6,12 @@
 		   [disabled]="disabled"/>
 	<label [for]="id"></label>
 </div>
+
 <div class="ansyn-checkbox-text">
-	<span>{{text}}</span>
+	<label [for]="id">
+		<ng-content></ng-content>
+	</label>
 </div>
-<ng-content></ng-content>
+<!--<div class="ansyn-checkbox-text">-->
+	<!--<span>{{text}}</span>-->
+<!--</div>-->

@@ -1,13 +1,16 @@
 @import "core/less/common";
 
 :host {
+	font-size: 13px;
+	font-weight: 300;
+	color: white;
 	&:extend(.default-menu-item);
 	position: relative;
 	form {
 		margin: 50px;
 		position: relative;
-		div {
-			margin: 15px 0;
+		div.form-field {
+			margin: 20px 0;
 		}
 
 		ansyn-input {
@@ -19,7 +22,6 @@
 				}
 				&:focus ~ label, &:valid ~ label {
 					color: white;
-					font-weight: 700;
 				}
 			}
 			/deep/ span {
@@ -28,6 +30,8 @@
 				}
 			}
 			/deep/ label {
+				font-size: 12px;
+				font-weight: 300;
 				color: white;
 			}
 		}
@@ -42,9 +46,29 @@
 			color: white;
 		}
 	}
-	.sensorTypes {
+	.sensor-type {
 		display: flex;
 		flex-direction: column;
+		color: white;
+
+		.sensor-types {
+			max-height: 90px;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			ansyn-radio {
+				margin-bottom: 5px;
+			}
+		}
+
 	}
 }
 
+input[type='file'] {
+	display: none;
+	background: transparent;
+}
+
+div.title {
+	margin-bottom: 10px;
+}

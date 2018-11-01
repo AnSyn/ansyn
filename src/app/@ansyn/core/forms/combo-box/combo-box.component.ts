@@ -18,7 +18,7 @@ export class ComboBoxComponent {
 	@Input() direction: 'top' | 'bottom' = 'bottom';
 	@HostBinding('class')
 	@Input() color: 'black' | 'transparent' = 'black';
-
+	@Input() placeholder: string;
 	@Output() selectedChange = new EventEmitter();
 
 	optionsVisible = false;

@@ -7,9 +7,14 @@ import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 	styleUrls: ['./uploads.component.less']
 })
 export class UploadsComponent implements OnInit {
+	readonly sharingOptions = ['Public', 'Private'];
+	readonly sensorNames = [ ...this.config.sensorNames, 'Custom' ];
+	readonly sensorTypes = this.config.sensorTypes;
+
 	title = '';
 	licence = false;
-	sensorType: string = this.config.sensorTypes[0];
+	sensorType = '';
+	sensorName = '';
 
 	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig) {
 	}

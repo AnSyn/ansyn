@@ -3,7 +3,7 @@
 	<ansyn-combo-box-trigger
 		[isActive]="optionsVisible"
 		[comboBoxToolTipDescription]="comboBoxToolTipDescription"
-		[render]="render(selected)"
+		[render]="render(selected || placeholder)"
 		[icon]="icon"
 		(click)="toggleShow()">
 	</ansyn-combo-box-trigger>

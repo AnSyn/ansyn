@@ -1,49 +1,60 @@
 <div>
 	<form>
-		<div>
+
+		<div class="form-field">
 			<ansyn-input label="Title"
 						 name="title"
 						 [(ngModel)]="title">
 			</ansyn-input>
 		</div>
-		<div class="sensorTypes">
-			<ansyn-radio *ngFor="let value of config.sensorTypes"
-						 [ngModelOptions]="{standalone: true}"
-						 [value]="value"
-						 [(ngModel)]="sensorType">
-				{{value}}
-			</ansyn-radio>
 
+		<div class="form-field sensor-type">
+			<div class="title">Sensor type</div>
+			<div class="sensor-types">
+				<ansyn-radio *ngFor="let value of sensorTypes"
+							 [ngModelOptions]="{standalone: true}"
+							 [value]="value"
+							 [(ngModel)]="sensorType">
+					{{value}}
+				</ansyn-radio>
+			</div>
 		</div>
-		<div>
+
+		<div class="form-field">
+			<div class="title">Sensor name</div>
+			<ansyn-combo-box color="transparent"
+							 placeholder="Sensor name"
+							 [(selected)]="sensorName"
+							 [options]="sensorNames">
+
+			</ansyn-combo-box>
+		</div>
+
+		<div class="form-field">
+			<div class="title">Sharing Options</div>
+			<ansyn-combo-box color="transparent"
+							 placeholder="Sharing Options"
+							 [(selected)]="sharing"
+							 [options]="sharingOptions">
+
+			</ansyn-combo-box>
+		</div>
+
+		<div class="form-field">
+			<label>
+
+				<input type="file"/>
+				Choose file
+			</label>
+		</div>
+
+		<div class="form-field">
 			<ansyn-checkbox [checked]="licence">
 				<span class="licence">I agree to this <a href="http://google.com/" target="_blank">rules</a></span>
 			</ansyn-checkbox>
-
 		</div>
 
-		<!--<input-->
-			<!--id="123"-->
-			<!--[(ngModel)]="value"-->
-			<!--required-->
-			<!--#input-->
-			<!--autocomplete="off">-->
-
-		<!--<span class="bar"></span>-->
-
-		<!--<label class="case-name" for="123">Title</label>-->
 		<button ansynButton type="submit">Submit</button>
-	</form>
 
-	<!--<h3>platform</h3>-->
-	<!--<input/>-->
-	<!--<h3>Sensor Type</h3>-->
-	<!--<input/>-->
-	<!--<h3>Sensor</h3>-->
-	<!--<input/>-->
-	<!--<h3>title</h3>-->
-	<!--<hr/>-->
-	<!--<input/>-->
-	<!--<h3>title</h3>-->
-	<!--<input/>-->
+	</form>
 </div>

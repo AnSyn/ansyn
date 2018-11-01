@@ -13,7 +13,7 @@ export { Filters, IFiltersState } from './filters/reducer/filters.reducer';
 export { IFilter } from './filters/models/IFilter';
 export { ILayer } from './layers-manager/models/layers.model';
 export { SetAutoImageProcessing, ShowOverlaysFootprintAction } from './tools/actions/tools.actions';
-export { AlgorithmsComponent } from './algorithms/algorithms/algorithms.component';
+export { AlgorithmsComponent } from './algorithms/components/algorithms/algorithms.component';
 export {
 	DisableImageProcessing,
 	EnableImageProcessing,

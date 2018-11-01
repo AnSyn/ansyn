@@ -1,7 +1,12 @@
-<label [class.selected]="model === value">
-	<input type="radio" [value]="value" [(ngModel)]="model">
+<input
+	[id]="id"
+	[value]="value"
+	type="radio"
+	[(ngModel)]="model"/>
+
+<label [for]="id">
 	<div class="outer-circle">
-		<div class="inner-circle" *ngIf="model === value"></div>
+		<div class="inner-circle"></div>
 	</div>
 	<ng-content></ng-content>
 </label>

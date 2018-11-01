@@ -1,6 +1,7 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs/index';
+import { UUID } from 'angular2-uuid';
 
 @Component({
 	selector: 'ansyn-radio',
@@ -16,6 +17,7 @@ import { noop } from 'rxjs/index';
 })
 export class AnsynRadioComponent implements OnInit, ControlValueAccessor {
 	@Input() value;
+	id = UUID.UUID();
 	private _model: any = '';
 	private onTouchedCallback: () => void = noop;
 	private onChangeCallback: (_: any) => void = noop;

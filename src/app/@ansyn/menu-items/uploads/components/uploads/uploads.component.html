@@ -6,10 +6,18 @@
 						 [(ngModel)]="title">
 			</ansyn-input>
 		</div>
+		<div class="sensorTypes">
+			<ansyn-radio *ngFor="let value of config.sensorTypes"
+						 [ngModelOptions]="{standalone: true}"
+						 [value]="value"
+						 [(ngModel)]="sensorType">
+				{{value}}
+			</ansyn-radio>
 
+		</div>
 		<div>
 			<ansyn-checkbox [checked]="licence">
-				I agree to this <a href="http://google.com/" target="_blank">rules</a>
+				<span class="licence">I agree to this <a href="http://google.com/" target="_blank">rules</a></span>
 			</ansyn-checkbox>
 
 		</div>

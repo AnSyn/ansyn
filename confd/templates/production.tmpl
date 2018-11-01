@@ -1057,5 +1057,8 @@
       "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
       "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
   },
-  "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"]
+  "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
+  "uploadsConfig": {
+    "sensorTypes": [ "Satellite", "Aircraft", "UAV", "Ballon", "Kite" ]
+  }
 }

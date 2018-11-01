@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 
 @Component({
 	selector: 'ansyn-uploads',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./uploads.component.less']
 })
 export class UploadsComponent implements OnInit {
-	title: string;
-	licence: boolean;
+	title = '';
+	licence = false;
+	sensorType: string = this.config.sensorTypes[0];
 
-	constructor() {
+	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig) {
 	}
 
 	ngOnInit() {

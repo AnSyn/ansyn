@@ -16,9 +16,10 @@ export class ComboBoxComponent {
 	@Input() toolTipField: string;
 	@Input() comboBoxToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
-	@HostBinding('class')
 	@Input() color: 'black' | 'transparent' = 'black';
+
 	@Input() placeholder: string;
+
 	@Output() selectedChange = new EventEmitter();
 
 	optionsVisible = false;

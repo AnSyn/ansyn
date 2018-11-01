@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-tasks-table-page-header',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./tasks-table-page-header.component.less']
 })
 export class TasksTablePageHeaderComponent implements OnInit {
+	@Output() goto = new EventEmitter<string>();
 
 	constructor() {
 	}

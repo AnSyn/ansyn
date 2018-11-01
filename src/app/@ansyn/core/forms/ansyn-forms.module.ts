@@ -5,6 +5,7 @@ import { AnsynInputComponent } from './ansyn-input/ansyn-input.component';
 import { SliderCheckboxComponent } from './slider-checkbox/slider-checkbox.component';
 import { FormsModule } from '@angular/forms';
 import { AnsynButtonComponent } from './ansyn-button/ansyn-button.component';
+import { AnsynRadioComponent } from './ansyn-radio/ansyn-radio.component';
 
 @NgModule({
 	imports: [
@@ -15,13 +16,15 @@ import { AnsynButtonComponent } from './ansyn-button/ansyn-button.component';
 		AnsynCheckboxComponent,
 		AnsynInputComponent,
 		SliderCheckboxComponent,
-		AnsynButtonComponent
+		AnsynButtonComponent,
+		AnsynRadioComponent
 	],
 	exports: [
 		AnsynCheckboxComponent,
 		AnsynInputComponent,
 		SliderCheckboxComponent,
-		AnsynButtonComponent
+		AnsynButtonComponent,
+		AnsynRadioComponent
 	]
 })
 export class AnsynFormsModule {

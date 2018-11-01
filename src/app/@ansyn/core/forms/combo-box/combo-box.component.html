@@ -5,7 +5,7 @@
 		[render]="render(selected)"
 		[icon]="icon"
 		(click)="toggleShow()">
-		<div class="placeholder" [class.float]="selected || optionsVisible" [hidden]="!placeholder"> {{ placeholder }} </div>
+		<div class="placeholder" *ngIf="placeholder" [class.float]="selected || optionsVisible"> {{ placeholder }} </div>
 	</ansyn-combo-box-trigger>
 
 	<div class="options-container"

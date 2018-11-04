@@ -17,9 +17,9 @@
 <footer>
 	<label>
 		<ansyn-checkbox
-			text="Don't show on startup"
 			[checked]="helpLocalStorageService.getHelpLocalStorageData().dontShowHelpOnStartup"
-			(checkedChange)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event })"
-		></ansyn-checkbox>
+			(checkedChange)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event })">
+			Don't show on startup
+		</ansyn-checkbox>
 	</label>
 </footer>

@@ -6,15 +6,13 @@
 			[disabled]="enumMetadata.value.disabled"
 			[checked]="enumMetadata.value.isChecked"
 			(checkedChange)='onInputClicked(enumMetadata.key)'>
+			<span class="field-name" [title]="enumMetadata.key | translate">{{enumMetadata.key | translate}}</span>
 		</ansyn-checkbox>
-		<div class="filter-row">
-			<div class="field-name-container">
-				<span class="field-name">{{enumMetadata.key | translate}}</span>
-			</div>
-			<span class="only-filter"
-				  [hidden]="enumMetadata.value.disabled"
-				  (click)="selectOnly(enumMetadata.key)">only</span>
-		</div>
+
+		<span class="only-filter"
+			  [hidden]="enumMetadata.value.disabled"
+			  (click)="selectOnly(enumMetadata.key)">only</span>
+
 	</div>
 
 

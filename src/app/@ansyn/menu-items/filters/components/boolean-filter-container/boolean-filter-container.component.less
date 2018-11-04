@@ -9,46 +9,23 @@ div.enum-fields-enumerator {
 	justify-content: space-between;
 
 	&:hover {
-		div.left-side div.filter-row span.only-filter {
+		div.left-side span.only-filter {
 			visibility: visible;
 		}
 	}
 
 	div.left-side {
 		display: flex;
+		span.only-filter {
+			visibility: hidden;
+			font-size: 12px;
+			font-style: normal;
+			color: rgba(255, 255, 255, 0.75);
+			cursor: pointer;
+			margin-left: 2px;
 
-		div.filter-row {
-			display: inline-block;
-			position: relative;
-			bottom: 5px;
-
-			div.field-name-container {
-				max-width: 150px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: inline-block;
-				color: #FFFFFF;
-				top: 4px;
-				position: relative;
-
-				span.field-name {
-					font-size: 14px;
-					font-style: normal;
-				}
-			}
-
-			span.only-filter {
-				visibility: hidden;
-				font-size: 12px;
-				font-style: normal;
-				color: rgba(255, 255, 255, 0.75);
-				cursor: pointer;
-				margin-left: 2px;
-
-				&:hover {
-					text-decoration: underline;
-				}
+			&:hover {
+				text-decoration: underline;
 			}
 		}
 	}

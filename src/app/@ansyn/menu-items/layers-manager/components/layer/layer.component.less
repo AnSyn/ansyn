@@ -9,42 +9,19 @@ div.layer {
 	padding: 2.5px 5px;
 	position: relative;
 
-	&:hover div.layer-row button.only-filter {
+	&:hover span.only-filter {
 		visibility: visible;
 	}
 
-	div.layer-row {
-		display: flex;
-
-		div.field-name-container {
-			max-width: 150px;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			display: inline-block;
-			color: #FFFFFF;
-			position: relative;
-
-			span.field-name {
-				font-size: 14px;
-				font-style: normal;
-			}
-		}
-	}
-
-	button.only-filter {
+	span.only-filter {
 		visibility: hidden;
 		font-size: 12px;
 		font-style: normal;
 		color: rgba(255, 255, 255, 0.75);
 		cursor: pointer;
 		margin-left: 2px;
-		background: transparent;
-		border: none;
-		outline: none;
 		&:hover {
 			text-decoration: underline;
 		}
 	}
 }
-

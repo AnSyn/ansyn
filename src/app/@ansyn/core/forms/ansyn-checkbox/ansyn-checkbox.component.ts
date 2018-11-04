@@ -12,5 +12,4 @@ export class AnsynCheckboxComponent {
 	@Input() readonly checked: boolean;
 	@Input() readonly disabled: boolean;
 	@Output() readonly checkedChange = new EventEmitter<boolean>();
-	@Input() text;
 }

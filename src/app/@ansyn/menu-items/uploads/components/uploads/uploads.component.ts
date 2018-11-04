@@ -12,14 +12,18 @@ export class UploadsComponent implements OnInit {
 	readonly sensorTypes = this.config.sensorTypes;
 
 	title = '';
-	licence = false;
-	sensorType = '';
+	licence: boolean;
+	sensorType = this.config.defaultSensorType;
 	sensorName = '';
+	fileInputValue: string;
+	files: FileList;
 
 	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig) {
 	}
 
 	ngOnInit() {
 	}
-
+	print() {
+		console.log(this.files)
+	}
 }

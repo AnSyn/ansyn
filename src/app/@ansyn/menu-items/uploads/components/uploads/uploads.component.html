@@ -4,17 +4,18 @@
 		<div class="form-field">
 			<ansyn-input label="Title"
 						 name="title"
-						 required
+						 [required]="false"
 						 [(ngModel)]="title">
 			</ansyn-input>
 		</div>
 
 		<div class="form-field sensor-type">
-			<div class="title">Sensor type</div>
+			<div class="title">*Sensor type</div>
 			<div class="sensor-types">
 				<ansyn-radio *ngFor="let value of sensorTypes"
 							 [ngModelOptions]="{standalone: true}"
 							 [value]="value"
+							 required
 							 [(ngModel)]="sensorType">
 					{{value}}
 				</ansyn-radio>
@@ -23,7 +24,7 @@
 
 		<div class="form-field">
 			<ansyn-combo-box color="transparent"
-							 placeholder="Sensor name"
+							 placeholder="*Sensor name"
 							 [(selected)]="sensorName"
 							 [options]="sensorNames">
 
@@ -32,23 +33,33 @@
 
 		<div class="form-field">
 			<ansyn-combo-box color="transparent"
-							 placeholder="Sharing Options"
+							 placeholder="*Sharing Options"
 							 [(selected)]="sharing"
 							 [options]="sharingOptions">
 			</ansyn-combo-box>
 		</div>
 
-		<div class="form-field">
-			<label>
+		<div class="form-field fileinput">
+			<label tabindex="0">
 
-				<input type="file"/>
-				Choose file
+				<input required
+					   name="images"
+					   type="file"
+					   accept="image/jpeg"
+					   multiple
+					   [(ngModel)]="fileInputValue"
+					   #input
+					   (change)="files = $event.target.files"/>
+				*Choose file
+				<p *ngIf="files">
+					{{ files.length > 1 ?  files.length + ' files' : fileInputValue }}
+				</p>
 			</label>
 		</div>
 
 		<div class="form-field">
 			<ansyn-checkbox [checked]="licence">
-				<span class="licence">I agree to this <a href="http://google.com/" target="_blank">rules</a></span>
+				<span class="licence">I agree to this <a [href]="config.rulesLink" target="_blank">rules</a></span>
 			</ansyn-checkbox>
 		</div>
 

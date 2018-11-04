@@ -28,9 +28,9 @@
 			icon="icon-status-bar-orientation"
 			direction="top"
 			[options]="orientations"
-			[selected]="comboBoxesProperties.orientation"
+			[ngModel]="comboBoxesProperties.orientation"
 			[comboBoxToolTipDescription]="toolTips.orientation"
-			(selectedChange)="comboBoxesChange({ orientation: $event })">
+			(ngModelChange)="comboBoxesChange({ orientation: $event })">
 		</ansyn-combo-box>
 	</div>
 
@@ -43,8 +43,8 @@
 			[comboBoxToolTipDescription]="toolTips.geoFilter"
 			icon="icon-status-bar-geo"
 			[options]="geoFilters"
-			[selected]="geoFilter"
-			(selectedChange)="geoFilterChanged($event)">
+			[ngModel]="geoFilter"
+			(ngModelChange)="geoFilterChanged($event)">
 		</ansyn-combo-box>
 
 		<div class="buttons" [class.active]="geoFilterStatus.searchMode !== SearchModeEnum.none">
@@ -74,8 +74,8 @@
 			icon="icon-status-bar-time"
 			[comboBoxToolTipDescription]="toolTips.timeFilter"
 			[options]="timeFilters"
-			[selected]="comboBoxesProperties.timeFilter"
-			(selectedChange)="comboBoxesChange({ timeFilter: $event })">
+			[ngModel]="comboBoxesProperties.timeFilter"
+			(ngModelChange)="comboBoxesChange({ timeFilter: $event })">
 		</ansyn-combo-box>
 		<div class="buttons" [class.active]="timeSelectionEditIcon">
 			<button (click)="toggleTimelineStartEndSearch()"
@@ -108,9 +108,9 @@
 			[comboBoxToolTipDescription]="toolTips.screenNumber"
 			[options]="layouts"
 			[renderFunction]="layoutRender.bind(this)"
-			[selected]="layout"
+			[ngModel]="layout"
 			toolTipField="mapsCount"
-			(selectedChange)="layoutSelectChange($event)">
+			(ngModelChange)="layoutSelectChange($event)">
 		</ansyn-combo-box>
 	</div>
 

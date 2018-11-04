@@ -15,8 +15,8 @@ describe('ComboBoxesComponent', () => {
 	let fixture: ComponentFixture<ComboBoxesComponent>;
 	const mockComboBoxComponent = MockComponent({
 		selector: 'ansyn-combo-box',
-		inputs: ['options', 'selected', 'renderFunction', 'comboBoxToolTipDescription'],
-		outputs: ['comboBoxToolTipDescription', 'selectedChange']
+		inputs: ['options', 'renderFunction', 'comboBoxToolTipDescription'],
+		outputs: ['comboBoxToolTipDescription']
 	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({

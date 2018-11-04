@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./tasks-form.component.less']
 })
 export class TasksFormComponent implements OnInit {
+	taskName: string;
+	taskStatus: 'New' | 'Sent' = 'New';
 
 	constructor() {
 	}

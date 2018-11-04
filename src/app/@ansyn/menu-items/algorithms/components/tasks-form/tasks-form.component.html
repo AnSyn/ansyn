@@ -1,3 +1,19 @@
-<p>
-  tasks-form works!
-</p>
+<div class="small-font small-padding-left">Status</div>
+<div class="big-font wide-underline small-padding-left margin">{{taskStatus}}</div>
+
+<label>
+	<div class="label-text small-padding-left">Name</div>
+	<input
+		[(ngModel)]="taskName"
+		required
+		class="small-padding-left margin"
+	>
+</label>
+
+<ansyn-combo-box
+	[options]="['aaa', 'bbb', 'ccc']"
+	[color]="'transparent'"
+	[placeholder]="'Select algorithm'"
+	class="margin"
+>
+</ansyn-combo-box>

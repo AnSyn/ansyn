@@ -8,9 +8,10 @@ import { TasksTablePageHeaderComponent } from './components/tasks-table-page-hea
 import { TasksFormPageComponent } from './components/tasks-form-page/tasks-form-page.component';
 import { TasksFormPageHeaderComponent } from './components/tasks-form-page-header/tasks-form-page-header.component';
 import { TasksFormComponent } from './components/tasks-form/tasks-form.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-	imports: [CoreModule, CommonModule],
+	imports: [CoreModule, CommonModule, FormsModule],
 	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent],
 	entryComponents: [AlgorithmsComponent],
 	exports: [AlgorithmsComponent]

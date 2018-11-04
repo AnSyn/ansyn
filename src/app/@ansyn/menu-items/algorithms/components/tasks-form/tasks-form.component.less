@@ -1,0 +1,40 @@
+@color-half-white: rgba(255,255,255,0.7);
+@color-weak-white: rgba(255,255,255,0.4);
+
+.margin {
+	margin-bottom: 20px;
+}
+
+.small-font {
+	font-size: 13px;
+	color: @color-half-white;
+}
+
+.big-font {
+	font-size: 14px;
+	color: white;
+}
+
+.small-padding-left {
+	padding-left: 6px;
+}
+
+.wide-underline {
+	width: 100%;
+	min-height: 1em;
+	border-bottom: 1px solid @color-weak-white;
+}
+
+label {
+	.label-text {
+		.small-font;
+	}
+	input {
+		width: 100%;
+		background-color: transparent;
+		.big-font;
+		border: none;
+		border-bottom: 1px solid @color-weak-white;
+		outline: none;
+	}
+}

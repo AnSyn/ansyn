@@ -1,9 +1,10 @@
 <div>
-	<form>
+	<form  #f="ngForm" >
 
 		<div class="form-field">
 			<ansyn-input label="Title"
 						 name="title"
+						 required
 						 [(ngModel)]="title">
 			</ansyn-input>
 		</div>
@@ -21,7 +22,6 @@
 		</div>
 
 		<div class="form-field">
-			<div class="title">Sensor name</div>
 			<ansyn-combo-box color="transparent"
 							 placeholder="Sensor name"
 							 [(selected)]="sensorName"
@@ -31,12 +31,10 @@
 		</div>
 
 		<div class="form-field">
-			<div class="title">Sharing Options</div>
 			<ansyn-combo-box color="transparent"
 							 placeholder="Sharing Options"
 							 [(selected)]="sharing"
 							 [options]="sharingOptions">
-
 			</ansyn-combo-box>
 		</div>
 
@@ -54,7 +52,7 @@
 			</ansyn-checkbox>
 		</div>
 
-		<button ansynButton type="submit">Submit</button>
+		<button ansynButton type="submit" [disabled]="f.invalid">Submit</button>
 
 	</form>
 </div>

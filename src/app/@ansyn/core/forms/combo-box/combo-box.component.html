@@ -2,7 +2,7 @@
 	<ansyn-combo-box-trigger
 		[isActive]="optionsVisible"
 		[comboBoxToolTipDescription]="comboBoxToolTipDescription"
-		[render]="render(selected || placeholder)"
+		[render]="render(selected)"
 		[icon]="icon"
 		(click)="toggleShow()">
 		<div class="placeholder" *ngIf="placeholder" [class.float]="selected || optionsVisible"> {{ placeholder }} </div>

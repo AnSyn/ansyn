@@ -20,8 +20,8 @@ describe('ComboBoxesComponent', () => {
 	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
-		selector: 'ansyn-combo-box-trigger',
-		inputs: ['isActive', 'comboBoxToolTipDescription', 'render']
+		selector: 'button[ansynComboBoxTrigger]',
+		inputs: ['isActive', 'render']
 	});
 	let store: Store<IStatusBarState>;
 

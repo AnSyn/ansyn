@@ -2,21 +2,21 @@
 
 	<!-- data input filter-->
 	<div class="combo-box-container block hidden-medium-resolution">
-		<ansyn-combo-box-trigger
+		<button ansynComboBoxTrigger
 			#trigger
 			class="combo-box-width"
 			(click)="toggleDataInputFilterIcon()"
 			icon="icon-status-bar-input-data"
 			[isActive]="dataInputFilterExpand"
-			[comboBoxToolTipDescription]="toolTips.dataInputFilter"
+			[attr.tooltip-value]="comboBoxToolTipDescription || null"
+			tooltip-class="top"
 			[render]="dataInputFiltersTitle">
-		</ansyn-combo-box-trigger>
+		</button>
 
 		<ansyn-tree-view [@fade]
 						 *ngIf="dataInputFilterExpand"
 						 (ansynClickOutside)="toggleDataInputFilterIcon()"
-						 [trigger]="trigger.elementRef.nativeElement"
-
+						 [trigger]="trigger.optionsTrigger.nativeElement"
 						 (closeTreeView)="toggleDataInputFilterIcon()"
 						 class="ansyn-tree-view"></ansyn-tree-view>
 	</div>

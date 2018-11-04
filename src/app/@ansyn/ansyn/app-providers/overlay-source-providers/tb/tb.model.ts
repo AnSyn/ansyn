@@ -11,6 +11,7 @@ export class TBOverlay{
 	sensorType: string;
 	sensorName: string;
 	format: string;
+	gps: object;
 	extension: string;
 	fileCreated: string;
 	layerUpload: string;

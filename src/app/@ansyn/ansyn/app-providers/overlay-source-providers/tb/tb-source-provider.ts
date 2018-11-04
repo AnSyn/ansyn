@@ -18,9 +18,8 @@ import {
 	toRadians
 } from '@ansyn/core';
 import { ITBOverlaySourceConfig, TBOverlaySourceConfig, TBOverlay } from './tb.model';
-import { IOverlaysPlanetFetchData } from '../planet/planet.model';
 
-export const TBOverlaySourceType = 'IMISIGHT';
+export const TBOverlaySourceType = 'TB';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 
@@ -73,7 +72,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		};
 		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
 			map(data => this.extractData(data)),
-			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			})),
@@ -114,11 +113,11 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 	protected parseData(tbOverlay: TBOverlay): IOverlay {
 		const companyId = 1;
-		// const footprint: any = tbOverlay.geojson;
+		const gps: any = tbOverlay.gps;
 		return new Overlay({
 			id: tbOverlay.worldName + tbOverlay.fileName, // for now, api not clear 
-			// footprint: geojsonPolygonToMultiPolygon(footprint ? footprint : footprint),
-			sensorType: '',
+			footprint: gps, // for now there's only a point, not a polygon
+			sensorType: tbOverlay.sensorType,
 			sensorName: tbOverlay.sensorName,
 			bestResolution: 1,
 			name: tbOverlay.fileName,

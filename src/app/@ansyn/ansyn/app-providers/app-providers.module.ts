@@ -49,7 +49,7 @@ import { OpenLayersImisightSourceProvider } from './map-source-providers/open-la
 		{ provide: BaseOverlaySourceProvider, useClass: MultipleOverlaysSourceProvider },
 
 		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
-		// { provide: MultipleOverlaysSource, useClass: TBSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: TBSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: ImisightSourceProvider, multi: true },

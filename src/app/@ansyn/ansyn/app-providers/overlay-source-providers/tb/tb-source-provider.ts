@@ -24,20 +24,6 @@ export const TBOverlaySourceType = 'IMISIGHT';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 
-export interface ImiSightElement {
-	s3Id: string;
-	geojson: object;
-	timestamp: string;
-	available: boolean;
-	geoServerUrl: string;
-	urls: object;
-	geoFile: string;
-	metaData: object;
-	source: string;
-	_id: string;
-	sensorName: string;
-}
-
 @Injectable()
 export class TBSourceProvider extends BaseOverlaySourceProvider {
 

@@ -8,6 +8,7 @@ export class TBOverlay{
 	worldName: string;
 	fileName: string;
 	fileType: string;
+	sensorType: string;
 	sensorName: string;
 	format: string;
 	extension: string;

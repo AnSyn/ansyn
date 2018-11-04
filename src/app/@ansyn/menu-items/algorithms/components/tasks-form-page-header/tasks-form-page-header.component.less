@@ -1,4 +1,26 @@
-.back:before {
+:host {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+}
+
+.back {
+	display: inline-block;
+	width: 20px;
 	font-size: 20px;
-	content: '\1f850';
+	margin: -3px 20px 0 0;
+	color: white;
+
+	&:before {
+		content: '\1f850';
+	}
+
+	&:hover {
+		color: yellow;
+		transform: translateX(2px);
+	}
+
+	&:active {
+		color: white;
+	}
 }

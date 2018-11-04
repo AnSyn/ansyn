@@ -7,10 +7,11 @@ import { TasksTablePageComponent } from './components/tasks-table-page/tasks-tab
 import { TasksTablePageHeaderComponent } from './components/tasks-table-page-header/tasks-table-page-header.component';
 import { TasksFormPageComponent } from './components/tasks-form-page/tasks-form-page.component';
 import { TasksFormPageHeaderComponent } from './components/tasks-form-page-header/tasks-form-page-header.component';
+import { TasksFormComponent } from './components/tasks-form/tasks-form.component';
 
 @NgModule({
 	imports: [CoreModule, CommonModule],
-	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent],
+	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent],
 	entryComponents: [AlgorithmsComponent],
 	exports: [AlgorithmsComponent]
 })

@@ -4,7 +4,7 @@ export interface ITBOverlaySourceConfig {
 	baseUrl: string;
 }
 
-export class TBOverlay{
+export class TBOverlay {
 	worldName: string;
 	fileName: string;
 	fileType: string;

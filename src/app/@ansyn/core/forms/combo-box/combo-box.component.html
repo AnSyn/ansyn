@@ -11,6 +11,7 @@
 	</button>
 
 	<div class="options-container"
+		 *ngIf="!disabled"
 		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
 		<ng-content></ng-content>

@@ -2,7 +2,7 @@
 @import 'core/less/colors';
 
 :host {
-	&.combo-center .combo-container .options-container .option {
+	&.combo-center .combo-container .options-container /deep/ .option {
 		justify-content: center;
 		text-align: center;
 	}
@@ -31,56 +31,12 @@
 			position: absolute;
 			top: 100%;
 			box-sizing: border-box;
-			.option {
-				line-height: 29px;
-				align-self: center;
-				background: transparent;
-				padding: 0 6px;
-				color: white;
-				cursor: pointer;
-				box-sizing: border-box;
-				width: 100%;
-				white-space: nowrap;
-				text-overflow-ellipsis: active;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				border: none;
-				text-align: left;
-				height: 29px;
-				display: block;
-				align-items: center;
-				i {
-					align-text: center;
-					opacity: .8;
-					font-size: 16px;
-				}
-				&.selected {
-					background-color: white;
-					color: black;
-					border-color: white;
-					i {
-						opacity: 1;
-					}
-				}
-				&:hover {
-					background-color: white;
-					color: black;
-					border-color: white;
-					i {
-						opacity: 1;
-					}
-				}
-			}
 		}
 
 		&.transparent {
-			.options-container {
-				border-left: none;
-				border-right: none;
-			}
 			@transparent-color: rgba(255, 255, 255, 0.4);
 
-			/deep/ ansyn-combo-box-trigger button.trigger {
+			/deep/ button[ansynComboBoxTrigger] {
 				background: transparent;
 				border: none;
 				border-bottom: 1px solid @transparent-color;
@@ -88,12 +44,20 @@
 			}
 
 			.options-container {
-				background: @application-main-color;
+				box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.2);
+				background: white;
 				border-color: @transparent-color;
+				/deep/ .option {
+					font-weight: 500;
+					&:hover {
+						background-color: whitesmoke;
+					}
+					color: @application-main-color
+				}
 			}
 
 			&.top {
-				/deep/ ansyn-combo-box-trigger button.trigger {
+				/deep/ button[ansynComboBoxTrigger] {
 					border-bottom: none;
 					border-top: 1px solid @transparent-color;
 				}
@@ -119,7 +83,7 @@
 div.placeholder {
 	position: absolute;
 	width: 100%;
-	color: white;
+	color: rgba(255, 255, 255, 0.8);
 	transition: .2s;
 	text-align: left;
 	bottom: 6px;

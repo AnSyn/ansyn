@@ -51,9 +51,7 @@ import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent,
-		ComboBoxComponent,
-		ComboBoxTriggerComponent
+		AnimatedEllipsisComponent
 	],
 	declarations: [
 		ImageryStatusComponent,
@@ -64,9 +62,7 @@ import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent,
-		ComboBoxComponent,
-		ComboBoxTriggerComponent
+		AnimatedEllipsisComponent
 	]
 })
 

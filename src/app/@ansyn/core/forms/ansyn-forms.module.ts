@@ -6,6 +6,9 @@ import { SliderCheckboxComponent } from './slider-checkbox/slider-checkbox.compo
 import { FormsModule } from '@angular/forms';
 import { AnsynButtonComponent } from './ansyn-button/ansyn-button.component';
 import { AnsynRadioComponent } from './ansyn-radio/ansyn-radio.component';
+import { ComboBoxOptionComponent } from './combo-box-option/combo-box-option.component';
+import { ComboBoxComponent } from './combo-box/combo-box.component';
+import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.component';
 
 @NgModule({
 	imports: [
@@ -17,14 +20,20 @@ import { AnsynRadioComponent } from './ansyn-radio/ansyn-radio.component';
 		AnsynInputComponent,
 		SliderCheckboxComponent,
 		AnsynButtonComponent,
-		AnsynRadioComponent
+		AnsynRadioComponent,
+		ComboBoxComponent,
+		ComboBoxTriggerComponent,
+		ComboBoxOptionComponent
 	],
 	exports: [
 		AnsynCheckboxComponent,
 		AnsynInputComponent,
 		SliderCheckboxComponent,
 		AnsynButtonComponent,
-		AnsynRadioComponent
+		AnsynRadioComponent,
+		ComboBoxComponent,
+		ComboBoxTriggerComponent,
+		ComboBoxOptionComponent
 	]
 })
 export class AnsynFormsModule {

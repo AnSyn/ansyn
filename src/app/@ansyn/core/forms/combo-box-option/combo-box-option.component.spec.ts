@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComboBoxOptionComponent } from './combo-box-option.component';
 import { ComboBoxComponent } from '../combo-box/combo-box.component';
 
-describe('ComboBoxOptionComponent', () => {
+xdescribe('ComboBoxOptionComponent', () => {
 	let component: ComboBoxOptionComponent;
 	let fixture: ComponentFixture<ComboBoxOptionComponent>;
 

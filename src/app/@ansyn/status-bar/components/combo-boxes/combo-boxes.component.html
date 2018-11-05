@@ -28,8 +28,8 @@
 			icon="icon-status-bar-orientation"
 			direction="top"
 			name="orientation"
-			[ngModel]="comboBoxesProperties.orientation"
-			[comboBoxToolTipDescription]="toolTips.orientation"
+			[ngModel]="comboBoxesProperties?.orientation"
+			[comboBoxToolTipDescription]="toolTips?.orientation"
 			(ngModelChange)="comboBoxesChange({ orientation: $event })">
 
 			<ansyn-combo-box-option *ngFor="let orientation of orientations" [value]="orientation">
@@ -90,7 +90,6 @@
 			<ansyn-combo-box-option *ngFor="let timeFilter of timeFilters" [value]="timeFilter">
 				{{ timeFilter }}
 			</ansyn-combo-box-option>
-
 
 		</ansyn-combo-box>
 

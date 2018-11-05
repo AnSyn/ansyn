@@ -35,7 +35,15 @@ describe('ComboBoxesComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ComboBoxesComponent, mockComboBoxComponent, mockComboBoxOptionComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
+			declarations: [
+				ComboBoxesComponent,
+				mockComboBoxComponent,
+				mockComboBoxOptionComponent,
+				TimelineTimepickerComponent,
+				ansynTreeView,
+				ansynComboTrigger,
+				ClickOutsideDirective
+			],
 			imports: [StoreModule.forRoot({
 				[coreFeatureKey]: CoreReducer,
 				[statusBarFeatureKey]: StatusBarReducer
@@ -43,7 +51,7 @@ describe('ComboBoxesComponent', () => {
 			providers: [
 				{
 					provide: ORIENTATIONS,
-					useValue: JSON.stringify(comboBoxesOptions.orientations)
+					useValue: comboBoxesOptions.orientations
 				},
 				{
 					provide: TIME_FILTERS,

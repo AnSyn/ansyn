@@ -13,21 +13,37 @@ import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
 	let fixture: ComponentFixture<ComboBoxesComponent>;
+
+	const mockComboBoxOptionComponent = MockComponent({
+		selector: 'ansyn-combo-box-option',
+		inputs: ['value'],
+		outputs: []
+	});
+
 	const mockComboBoxComponent = MockComponent({
 		selector: 'ansyn-combo-box',
-		inputs: ['options', 'selected', 'renderFunction', 'comboBoxToolTipDescription'],
-		outputs: ['comboBoxToolTipDescription', 'selectedChange']
+		inputs: ['options', 'renderFunction', 'comboBoxToolTipDescription', 'ngModel'],
+		outputs: ['ngModelChange']
 	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
-		selector: 'ansyn-combo-box-trigger',
-		inputs: ['isActive', 'comboBoxToolTipDescription', 'render']
+		selector: 'button[ansynComboBoxTrigger]',
+		inputs: ['isActive', 'render', 'ngModel'],
+		outputs: ['ngModelChange']
 	});
 	let store: Store<IStatusBarState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ComboBoxesComponent, mockComboBoxComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
+			declarations: [
+				ComboBoxesComponent,
+				mockComboBoxComponent,
+				mockComboBoxOptionComponent,
+				TimelineTimepickerComponent,
+				ansynTreeView,
+				ansynComboTrigger,
+				ClickOutsideDirective
+			],
 			imports: [StoreModule.forRoot({
 				[coreFeatureKey]: CoreReducer,
 				[statusBarFeatureKey]: StatusBarReducer
@@ -35,7 +51,7 @@ describe('ComboBoxesComponent', () => {
 			providers: [
 				{
 					provide: ORIENTATIONS,
-					useValue: JSON.stringify(comboBoxesOptions.orientations)
+					useValue: comboBoxesOptions.orientations
 				},
 				{
 					provide: TIME_FILTERS,

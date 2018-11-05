@@ -1,17 +1,28 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
 import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger.component';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { noop } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-combo-box',
 	templateUrl: './combo-box.component.html',
-	styleUrls: ['./combo-box.component.less']
+	styleUrls: ['./combo-box.component.less'],
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => ComboBoxComponent),
+			multi: true
+		}
+	]
 })
-export class ComboBoxComponent {
+export class ComboBoxComponent implements ControlValueAccessor {
+	onTouchedCallback: () => void = noop;
+	onChangeCallback: (_: any) => void = noop;
 	@ViewChild(ComboBoxTriggerComponent) trigger: ComboBoxTriggerComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
-	@Input() options: any[];
-	@Input() selected: any;
+	disabled: boolean;
+	selected: any;
 	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
 	@Input() comboBoxToolTipDescription: string;
@@ -19,9 +30,7 @@ export class ComboBoxComponent {
 	@Input() color: 'black' | 'transparent' = 'black';
 
 	@Input() placeholder: string;
-
-	@Output() selectedChange = new EventEmitter();
-
+	@Input() required: boolean;
 	optionsVisible = false;
 
 	get optionsTrigger(): ElementRef {
@@ -46,7 +55,7 @@ export class ComboBoxComponent {
 
 		if (selected !== this.selected) {
 			this.selected = selected;
-			this.selectedChange.emit(selected);
+			this.onChangeCallback(selected);
 		}
 	}
 
@@ -55,5 +64,23 @@ export class ComboBoxComponent {
 			return this.renderFunction(selected);
 		}
 		return selected;
+	}
+
+	registerOnChange(fn: any): void {
+		this.onChangeCallback = fn;
+	}
+
+	registerOnTouched(fn: any): void {
+		this.onTouchedCallback = fn;
+	}
+
+	setDisabledState(isDisabled: boolean): void {
+		this.disabled = isDisabled;
+	}
+
+	writeValue(value: any): void {
+		if (value !== this.selected) {
+			this.selected = value;
+		}
 	}
 }

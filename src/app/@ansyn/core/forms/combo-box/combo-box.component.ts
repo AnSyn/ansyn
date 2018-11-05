@@ -21,6 +21,7 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	@ViewChild(ComboBoxTriggerComponent) trigger: ComboBoxTriggerComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
+	disabled: boolean;
 	selected: any;
 	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
@@ -74,6 +75,7 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	}
 
 	setDisabledState(isDisabled: boolean): void {
+		this.disabled = isDisabled;
 	}
 
 	writeValue(value: any): void {

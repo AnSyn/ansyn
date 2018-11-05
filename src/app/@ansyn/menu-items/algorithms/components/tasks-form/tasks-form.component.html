@@ -11,12 +11,14 @@
 </label>
 
 <ansyn-combo-box
-	[options]="['aaa', 'bbb', 'ccc']"
-	[selected]="algorithm"
+	[(ngModel)]="algorithm"
 	[color]="'transparent'"
 	[placeholder]="'Select algorithm'"
 	class="margin"
 >
+	<ansyn-combo-box-option *ngFor="let algName of algorithms" [value]="algName">
+		{{ algName }}
+	</ansyn-combo-box-option>
 </ansyn-combo-box>
 
 <hr class="big-font margin">

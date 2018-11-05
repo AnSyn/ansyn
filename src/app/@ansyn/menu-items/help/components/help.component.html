@@ -17,8 +17,8 @@
 <footer>
 	<label>
 		<ansyn-checkbox
-			[checked]="helpLocalStorageService.getHelpLocalStorageData().dontShowHelpOnStartup"
-			(checkedChange)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event })">
+			[ngModel]="helpLocalStorageService.getHelpLocalStorageData().dontShowHelpOnStartup"
+			(ngModelChange)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event })">
 			Don't show on startup
 		</ansyn-checkbox>
 	</label>

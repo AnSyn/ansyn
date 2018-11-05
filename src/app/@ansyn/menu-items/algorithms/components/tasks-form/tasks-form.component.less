@@ -1,6 +1,10 @@
 @color-half-white: rgba(255,255,255,0.7);
 @color-weak-white: rgba(255,255,255,0.4);
 
+:host {
+	.small-font;
+}
+
 .margin {
 	margin-bottom: 20px;
 }
@@ -37,4 +41,39 @@ label {
 		border-bottom: 1px solid @color-weak-white;
 		outline: none;
 	}
+}
+
+.pin {
+	display: inline-block;
+	margin-left: 20px;
+	&:before {
+		content: '\1f589';
+	}
+	&:hover {
+		color: white;
+		transform: translateX(2px);
+	}
+	&:active {
+		color: @color-half-white;
+	}
+}
+
+.two-columns-table > div {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 10px;
+
+	& > :first-child {
+		width: 60%;
+	}
+}
+
+.run-bar {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.errors {
+	color: red;
 }

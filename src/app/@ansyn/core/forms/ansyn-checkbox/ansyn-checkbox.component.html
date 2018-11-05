@@ -1,8 +1,8 @@
 <div>
 	<input type="checkbox"
 		   [id]="id"
-		   [checked]="checked"
-		   (change)='checkedChange.emit($event.target.checked)'
+		   [(ngModel)]="value"
+		   (change)="change.emit($event)"
 		   [disabled]="disabled"/>
 	<label [for]="id"></label>
 </div>

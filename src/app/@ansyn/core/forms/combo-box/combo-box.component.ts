@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger.component';
 
 @Component({
@@ -45,6 +45,7 @@ export class ComboBoxComponent {
 		this.optionsVisible = false;
 
 		if (selected !== this.selected) {
+			this.selected = selected;
 			this.selectedChange.emit(selected);
 		}
 	}

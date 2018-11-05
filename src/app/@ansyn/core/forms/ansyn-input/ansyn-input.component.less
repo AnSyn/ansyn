@@ -10,7 +10,7 @@
 			&:focus {
 				border-color: white;
 			}
-			&:focus ~ label, &[value]:not([value=""]) ~ label {
+			&:focus ~ label {
 				color: white;
 			}
 		}
@@ -46,12 +46,15 @@
 				height: 2px;
 			}
 		}
-		&:focus ~ label, &[value]:not([value=""]) ~ label  {
+		&:focus ~ label, &:not([ng-reflect-model=""]) ~ label {
 			top: -10px;
 			font-size: 11px;
-			color: @application-main-color;
 			font-weight: 500;
 		}
+		&:focus ~ label {
+			color: @application-main-color;
+		}
+
 	}
 
 	label {

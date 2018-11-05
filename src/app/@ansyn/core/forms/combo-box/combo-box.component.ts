@@ -1,7 +1,19 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	EventEmitter,
+	forwardRef, Inject,
+	Injectable, InjectionToken,
+	Input,
+	OnDestroy,
+	OnInit,
+	ViewChild
+} from '@angular/core';
 import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger.component';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-combo-box',
@@ -15,14 +27,16 @@ import { noop } from 'rxjs';
 		}
 	]
 })
-export class ComboBoxComponent implements ControlValueAccessor {
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
+export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	onTouchedCallback: () => void = noop;
 	onChangeCallback: (_: any) => void = noop;
-
 	@ViewChild(ComboBoxTriggerComponent) trigger: ComboBoxTriggerComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
-	@Input() options: any[];
 	selected: any;
 	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
@@ -84,4 +98,9 @@ export class ComboBoxComponent implements ControlValueAccessor {
 		}
 	}
 
+	ngOnDestroy(): void {
+	}
+
+	ngOnInit(): void {
+	}
 }

@@ -12,10 +12,6 @@
 	<div class="options-container"
 		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
-		<div class="option" *ngFor="let option of options"
-			 [class.selected]="selected === option "
-			 (click)="selectOption(option)"
-			 [innerHTML]="render(option)">
-		</div>
+		<ng-content></ng-content>
 	</div>
 </div>

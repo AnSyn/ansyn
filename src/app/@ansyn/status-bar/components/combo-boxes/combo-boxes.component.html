@@ -28,10 +28,14 @@
 			icon="icon-status-bar-orientation"
 			direction="top"
 			name="orientation"
-			[options]="orientations"
 			[ngModel]="comboBoxesProperties.orientation"
 			[comboBoxToolTipDescription]="toolTips.orientation"
 			(ngModelChange)="comboBoxesChange({ orientation: $event })">
+
+			<ansyn-combo-box-option *ngFor="let orientation of orientations" [value]="orientation">
+				{{ orientation }}
+			</ansyn-combo-box-option>
+
 		</ansyn-combo-box>
 	</div>
 
@@ -44,9 +48,13 @@
 			name="GeoFilter"
 			[comboBoxToolTipDescription]="toolTips.geoFilter"
 			icon="icon-status-bar-geo"
-			[options]="geoFilters"
 			[ngModel]="geoFilter"
 			(ngModelChange)="geoFilterChanged($event)">
+
+			<ansyn-combo-box-option *ngFor="let _geoFilter of geoFilters" [value]="_geoFilter">
+				{{ _geoFilter }}
+			</ansyn-combo-box-option>
+
 		</ansyn-combo-box>
 
 		<div class="buttons" [class.active]="geoFilterStatus.searchMode !== SearchModeEnum.none">
@@ -76,10 +84,16 @@
 			name="time"
 			icon="icon-status-bar-time"
 			[comboBoxToolTipDescription]="toolTips.timeFilter"
-			[options]="timeFilters"
 			[ngModel]="comboBoxesProperties.timeFilter"
 			(ngModelChange)="comboBoxesChange({ timeFilter: $event })">
+
+			<ansyn-combo-box-option *ngFor="let timeFilter of timeFilters" [value]="timeFilter">
+				{{ timeFilter }}
+			</ansyn-combo-box-option>
+
+
 		</ansyn-combo-box>
+
 		<div class="buttons" [class.active]="timeSelectionEditIcon">
 			<button (click)="toggleTimelineStartEndSearch()"
 					[attr.tooltip-value]="toolTips.timeFilterEdit"
@@ -110,11 +124,15 @@
 			direction="top"
 			name="layout"
 			[comboBoxToolTipDescription]="toolTips.screenNumber"
-			[options]="layouts"
 			[renderFunction]="layoutRender.bind(this)"
 			[ngModel]="layout"
 			toolTipField="mapsCount"
 			(ngModelChange)="layoutSelectChange($event)">
+
+			<ansyn-combo-box-option *ngFor="let layout of layouts; index as index" [value]="layout">
+				<i class="icon-screen-{{index + 1}}" ></i>
+			</ansyn-combo-box-option>
+
 		</ansyn-combo-box>
 	</div>
 

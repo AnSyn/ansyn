@@ -13,6 +13,13 @@ import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
 	let fixture: ComponentFixture<ComboBoxesComponent>;
+
+	const mockComboBoxOptionComponent = MockComponent({
+		selector: 'ansyn-combo-box-option',
+		inputs: ['value'],
+		outputs: []
+	});
+
 	const mockComboBoxComponent = MockComponent({
 		selector: 'ansyn-combo-box',
 		inputs: ['options', 'renderFunction', 'comboBoxToolTipDescription', 'ngModel'],
@@ -28,7 +35,7 @@ describe('ComboBoxesComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ComboBoxesComponent, mockComboBoxComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
+			declarations: [ComboBoxesComponent, mockComboBoxComponent, mockComboBoxOptionComponent, TimelineTimepickerComponent, ansynTreeView, ansynComboTrigger, ClickOutsideDirective],
 			imports: [StoreModule.forRoot({
 				[coreFeatureKey]: CoreReducer,
 				[statusBarFeatureKey]: StatusBarReducer

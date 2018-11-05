@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComboBoxOptionComponent } from './combo-box-option.component';
+import { ComboBoxComponent } from '../combo-box/combo-box.component';
 
 describe('ComboBoxOptionComponent', () => {
 	let component: ComboBoxOptionComponent;
@@ -8,7 +9,11 @@ describe('ComboBoxOptionComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ComboBoxOptionComponent]
+			declarations: [ComboBoxOptionComponent],
+			providers: [{
+				provide: ComboBoxComponent,
+				useValue: { selectOption: () => {} }
+			}]
 		})
 			.compileComponents();
 	}));

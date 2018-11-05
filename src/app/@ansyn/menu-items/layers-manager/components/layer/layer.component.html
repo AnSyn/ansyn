@@ -3,8 +3,8 @@
 	<ansyn-checkbox
 		class="regular-checkbox"
 		[id]="'checkbox' + layer?.id"
-		(checkedChange)="onCheckboxClicked($event)"
-		[checked]="isChecked">
+		(ngModelChange)="onCheckboxClicked($event)"
+		[ngModel]="isChecked">
 		{{layer?.name}}
 	</ansyn-checkbox>
 

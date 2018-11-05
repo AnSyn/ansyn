@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostBinding, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { UUID } from 'angular2-uuid';
 
@@ -23,6 +23,9 @@ export class AnsynInputComponent implements ControlValueAccessor {
 	@Input() name;
 	@Input() autocomplete: 'off' | 'on' = 'off';
 	@Input() id = UUID.UUID();
+
+	@Input()
+	@HostBinding('class.white') white: boolean;
 
 	private innerValue: any = '';
 	private onTouchedCallback: () => void = noop;

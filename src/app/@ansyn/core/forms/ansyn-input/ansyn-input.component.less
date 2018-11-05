@@ -1,6 +1,33 @@
 @import "core/less/common";
 
 :host {
+	&.white {
+		@white-inactive: rgba(255, 255, 255, 0.8);
+
+		input {
+			color: white;
+			border-color: @white-inactive;;
+			&:focus {
+				border-color: white;
+			}
+			&:focus ~ label, &[value]:not([value=""]) ~ label {
+				color: white;
+			}
+		}
+		span {
+			&:before, &:after {
+				background: white;
+			}
+		}
+		label {
+			font-size: 12px;
+			font-weight: 300;
+			color: @white-inactive;
+		}
+
+	}
+
+
 	input {
 		font-size: 11px;
 		padding: 10px 0;
@@ -10,6 +37,7 @@
 		border-bottom: 1px solid #999;
 		color: #999;
 		background: transparent;
+		font-weight: 300;
 		&:focus {
 			outline: none;
 			border-color: @application-main-color;
@@ -18,10 +46,11 @@
 				height: 2px;
 			}
 		}
-		&:focus ~ label, &:valid ~ label {
+		&:focus ~ label, &[value]:not([value=""]) ~ label  {
 			top: -10px;
 			font-size: 11px;
 			color: @application-main-color;
+			font-weight: 500;
 		}
 	}
 

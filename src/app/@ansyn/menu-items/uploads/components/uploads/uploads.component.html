@@ -3,8 +3,8 @@
 
 		<div class="form-field">
 			<ansyn-input label="Title"
+						 [white]="true"
 						 name="title"
-						 [required]="false"
 						 [(ngModel)]="title">
 			</ansyn-input>
 		</div>
@@ -71,7 +71,10 @@
 		</div>
 
 		<div class="form-field">
-			<ansyn-checkbox [checked]="licence">
+			<ansyn-checkbox
+				name="licence"
+				required
+				[(ngModel)]="licence">
 				<span class="licence">I agree to this <a [href]="config.rulesLink" target="_blank">rules</a></span>
 			</ansyn-checkbox>
 		</div>

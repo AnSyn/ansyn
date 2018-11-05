@@ -59,6 +59,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		// let headers = new HttpHeaders( );
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const params = {
+			world: 'dafna-remote-sofi',
 			geoShape: fetchParams.region,
 			fromDate: fetchParams.timeRange.start.toISOString(),
 			toDate: fetchParams.timeRange.end.toISOString()

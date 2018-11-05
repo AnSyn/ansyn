@@ -1436,6 +1436,48 @@
 		],
 		"blacklist": []
 	},
+    "TB": {
+    	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": [ null ],
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": []
+	},
     "IMISIGHT": {
     	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
 		"whitelist": [

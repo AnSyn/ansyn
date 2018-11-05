@@ -23,6 +23,7 @@ import { TBSourceProvider } from './overlay-source-providers/tb/tb-source-provid
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
 import { ImisightSourceProvider } from './overlay-source-providers/imisight/imisight-source-provider';
 import { OpenLayersImisightSourceProvider } from './map-source-providers/open-layers-imisight-source-provider';
+import { OpenLayerTBSourceProvider } from 'src/app/@ansyn/ansyn/app-providers/map-source-providers/open-layers-TB-source-provider';
 
 @NgModule({
 	imports: [
@@ -38,7 +39,8 @@ import { OpenLayersImisightSourceProvider } from './map-source-providers/open-la
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
 				OpenLayerOpenAerialSourceProvider,
-				OpenLayersImisightSourceProvider
+				OpenLayersImisightSourceProvider,
+				OpenLayerTBSourceProvider
 			],
 			plugins: [],
 			maps: []

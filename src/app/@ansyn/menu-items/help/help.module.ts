@@ -6,10 +6,13 @@ import { CoreModule } from '@ansyn/core';
 import { EffectsModule } from '@ngrx/effects';
 import { HelpLocalStorageService } from './services/help.local-storage.service';
 import { HelpEffects } from './effects/help.effects';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-	imports: [CoreModule,
+	imports: [
+		CoreModule,
 		CommonModule,
+		FormsModule,
 		CarouselModule.forRoot(),
 		EffectsModule.forFeature([HelpEffects])
 	],

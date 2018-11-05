@@ -3,8 +3,8 @@
 		<div class="left-side">
 			<ansyn-checkbox
 				[disabled]="properties.disabled"
-				[checked]="properties.value"
-				(checkedChange)='onInputClicked(properties.name, $event)'>
+				[ngModel]="properties.value"
+				(ngModelChange)='onInputClicked(properties.name, $event)'>
 				<span class="field-name" [title]="true">{{properties.displayName}}</span>
 			</ansyn-checkbox>
 

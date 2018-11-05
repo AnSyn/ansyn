@@ -1,6 +1,33 @@
 @import "core/less/common";
 
 :host {
+	&.white {
+		@white-inactive: rgba(255, 255, 255, 0.8);
+
+		input {
+			color: white;
+			border-color: @white-inactive;;
+			&:focus {
+				border-color: white;
+			}
+			&:focus ~ label {
+				color: white;
+			}
+		}
+		span {
+			&:before, &:after {
+				background: white;
+			}
+		}
+		label {
+			font-size: 12px;
+			font-weight: 300;
+			color: @white-inactive;
+		}
+
+	}
+
+
 	input {
 		font-size: 11px;
 		padding: 10px 0;
@@ -8,16 +35,29 @@
 		width: 100%;
 		border: none;
 		border-bottom: 1px solid #999;
-		color: @application-main-color;
-		-webkit-text-fill-color: #999;
+		color: #999;
+		background: transparent;
+		font-weight: 300;
+		&:focus {
+			outline: none;
+			border-color: @application-main-color;
+			~ span:before, ~ span:after {
+				width: 50%;
+				height: 2px;
+			}
+		}
+		&:focus ~ label, &:not([ng-reflect-model=""]) ~ label {
+			top: -10px;
+			font-size: 11px;
+			font-weight: 500;
+		}
+		&:focus ~ label {
+			color: @application-main-color;
+		}
+
 	}
 
-	input:focus {
-		outline: none;
-		border-color: @application-main-color;
-	}
-
-	label.case-name {
+	label {
 		color: #999;
 		font-weight: normal;
 		position: absolute;
@@ -25,19 +65,10 @@
 		left: 0;
 		top: 11px;
 		transition: 0.2s ease all;
-		-moz-transition: 0.2s ease all;
-		-webkit-transition: 0.2s ease all;
 		font-size: 11px;
-
 	}
 
-	input:focus ~ label, input:valid ~ label {
-		top: -10px;
-		font-size: 11px;
-		color: @application-main-color;
-	}
-
-	.bar {
+	span {
 		position: relative;
 		display: block;
 		width: 100%;
@@ -49,66 +80,12 @@
 			position: absolute;
 			background: @application-main-color;
 			transition: 0.2s ease all;
-			-moz-transition: 0.2s ease all;
-			-webkit-transition: 0.2s ease all;
 		}
 		&:before {
 			left: 50%;
 		}
 		&:after {
 			right: 50%;
-		}
-	}
-
-	input:focus ~ .bar:before, input:focus ~ .bar:after {
-		width: 50%;
-		height: 2px;
-	}
-
-	.highlight {
-		display: none;
-		position: absolute;
-		height: 60%;
-		width: 100px;
-		top: 25%;
-		left: 0;
-		pointer-events: none;
-		opacity: 0.5;
-	}
-
-	input:focus ~ .highlight {
-		-webkit-animation: inputHighlighter 0.3s ease;
-		-moz-animation: inputHighlighter 0.3s ease;
-		animation: inputHighlighter 0.3s ease;
-	}
-
-	@-webkit-keyframes inputHighlighter {
-		from {
-			background: #5264AE;
-		}
-		to {
-			width: 0;
-			background: transparent;
-		}
-	}
-
-	@-moz-keyframes inputHighlighter {
-		from {
-			background: #5264AE;
-		}
-		to {
-			width: 0;
-			background: transparent;
-		}
-	}
-
-	@keyframes inputHighlighter {
-		from {
-			background: #5264AE;
-		}
-		to {
-			width: 0;
-			background: transparent;
 		}
 	}
 }

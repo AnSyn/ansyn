@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
@@ -18,8 +18,7 @@ import { noop } from 'rxjs';
 
 export class AnsynCheckboxComponent implements ControlValueAccessor {
 	@Input() id = UUID.UUID();
-	@Input() disabled: boolean;
-	@Output() readonly change = new EventEmitter<boolean>();
+	disabled: boolean;
 
 	protected _value;
 	private onTouchedCallback: () => void = noop;

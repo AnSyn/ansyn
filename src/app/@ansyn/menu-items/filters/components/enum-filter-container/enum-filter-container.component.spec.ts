@@ -8,6 +8,7 @@ import { AnsynCheckboxComponent } from '@ansyn/core';
 import { ShowMorePipe } from '../../pipes/show-more.pipe';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
 import { filtersConfig } from '../../services/filters.service';
+import { FormsModule } from '@angular/forms';
 
 describe('EnumFilterContainerComponent', () => {
 	let component: EnumFilterContainerComponent;
@@ -15,7 +16,7 @@ describe('EnumFilterContainerComponent', () => {
 
 	beforeEach(async(() => {
 			TestBed.configureTestingModule({
-				imports: [TranslateModule.forRoot()],
+				imports: [TranslateModule.forRoot(), FormsModule],
 				declarations: [EnumFilterContainerComponent, SortPipe, MapIteratorPipe, ShowMorePipe, FilterCounterComponent, AnsynCheckboxComponent],
 				providers: [{ provide: filtersConfig, useValue: {} }]
 			}).compileComponents();

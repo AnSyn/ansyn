@@ -15,13 +15,14 @@ describe('ComboBoxesComponent', () => {
 	let fixture: ComponentFixture<ComboBoxesComponent>;
 	const mockComboBoxComponent = MockComponent({
 		selector: 'ansyn-combo-box',
-		inputs: ['options', 'renderFunction', 'comboBoxToolTipDescription'],
-		outputs: ['comboBoxToolTipDescription']
+		inputs: ['options', 'renderFunction', 'comboBoxToolTipDescription', 'ngModel'],
+		outputs: ['ngModelChange']
 	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
-		inputs: ['isActive', 'render']
+		inputs: ['isActive', 'render', 'ngModel'],
+		outputs: ['ngModelChange']
 	});
 	let store: Store<IStatusBarState>;
 

@@ -27,6 +27,7 @@
 			class="combo-box-width"
 			icon="icon-status-bar-orientation"
 			direction="top"
+			name="orientation"
 			[options]="orientations"
 			[ngModel]="comboBoxesProperties.orientation"
 			[comboBoxToolTipDescription]="toolTips.orientation"
@@ -40,6 +41,7 @@
 		<ansyn-combo-box
 			class="combo-box-width"
 			direction="top"
+			name="GeoFilter"
 			[comboBoxToolTipDescription]="toolTips.geoFilter"
 			icon="icon-status-bar-geo"
 			[options]="geoFilters"
@@ -71,6 +73,7 @@
 		<ansyn-combo-box
 			class="combo-box-width"
 			direction="top"
+			name="time"
 			icon="icon-status-bar-time"
 			[comboBoxToolTipDescription]="toolTips.timeFilter"
 			[options]="timeFilters"
@@ -105,6 +108,7 @@
 		<ansyn-combo-box
 			class="combo-center"
 			direction="top"
+			name="layout"
 			[comboBoxToolTipDescription]="toolTips.screenNumber"
 			[options]="layouts"
 			[renderFunction]="layoutRender.bind(this)"

@@ -1,11 +1,13 @@
 <input [(ngModel)]="value"
 	   [id]="id"
 	   [required]="required"
+	   [name]="name"
 	   #input
-	   name="ansyn-input"
-	   class="form-control"
+	   [autocomplete]="autocomplete"
 	   (blur)="onBlur()">
 
-<span class="bar"></span>
+<span></span>
 
-<label class="case-name" [for]="id">{{label}}</label>
+<label [for]="id">
+	{{label}}
+</label>

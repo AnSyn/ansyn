@@ -1,9 +1,7 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostBinding, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { UUID } from 'angular2-uuid';
-
-const noop = () => {
-};
+import { noop } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-input',
@@ -19,8 +17,14 @@ const noop = () => {
 })
 export class AnsynInputComponent implements ControlValueAccessor {
 	@Input() label: string;
-	@Input() required: boolean;
-	id = UUID.UUID();
+	@Input() required = true;
+	@Input() name;
+	@Input() autocomplete: 'off' | 'on' = 'off';
+	@Input() id = UUID.UUID();
+
+	@Input()
+	@HostBinding('class.white') white: boolean;
+
 	private innerValue: any = '';
 	private onTouchedCallback: () => void = noop;
 	private onChangeCallback: (_: any) => void = noop;

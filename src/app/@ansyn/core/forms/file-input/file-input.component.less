@@ -1,0 +1,21 @@
+label {
+	color: white;
+	outline: none;
+	input[type='file'] {
+		display: none;
+		background: transparent;
+	}
+
+	span.placeholder {
+		&:focus, &:hover {
+			outline: none;
+			box-shadow: 0px 0px 1px 0px white inset;
+		}
+		padding: 5px 0;
+	}
+
+	span.files {
+		font-size: 13px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+}

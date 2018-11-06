@@ -11,14 +11,16 @@ export class TasksFormComponent implements OnInit {
 	taskStatus: 'New' | 'Sent' = 'New';
 	algName: string;
 	whichOverlays: 'case_overlays' | 'favorite_overlays' | 'displayed_overlays' = 'favorite_overlays';
-	algorithms = {};
 	algNames: string[] = [];
+
+	get algorithms() {
+		return this.algorithmsService.config;
+	}
 
 	constructor(protected algorithmsService: AlgorithmsService) {
 	}
 
 	ngOnInit() {
-		this.algorithms = this.algorithmsService.config;
 		this.algNames = Object.keys(this.algorithms);
 	}
 

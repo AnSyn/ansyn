@@ -45,29 +45,44 @@
 				placeholder="*Sharing Options"
 				[(ngModel)]="sharing">
 
-				<ansyn-combo-box-option *ngFor="let sharingOption of sharingOptions" [value]="sharingOption">
-					{{ sharingOption }}
+				<ansyn-combo-box-option value="Public">
+					Public
+				</ansyn-combo-box-option>
+
+				<ansyn-combo-box-option value="Private" [disabled]="true">
+					Private
 				</ansyn-combo-box-option>
 
 			</ansyn-combo-box>
 		</div>
 
 		<div class="form-field fileinput">
-			<label tabindex="0">
+			<ansyn-file-input
+				required
+				accept="image/jpeg"
+				[multiple]="true"
+				name="files"
+				placeholder="*Choose file"
+				[(ngModel)]="fileInputValue"
+				(change)="files = $event.target.files"
+			>
 
-				<input required
-					   name="images"
-					   type="file"
-					   accept="image/jpeg"
-					   multiple
-					   [(ngModel)]="fileInputValue"
-					   #input
-					   (change)="files = $event.target.files"/>
-				*Choose file
-				<p *ngIf="files">
-					{{ files.length > 1 ? files.length + ' files' : fileInputValue }}
-				</p>
-			</label>
+			</ansyn-file-input>
+			<!--<label tabindex="0">-->
+
+				<!--<input required-->
+					   <!--name="images"-->
+					   <!--type="file"-->
+					   <!--accept="image/jpeg"-->
+					   <!--multiple-->
+					   <!--[(ngModel)]="fileInputValue"-->
+					   <!--#input-->
+					   <!--(change)="files = $event.target.files"/>-->
+				<!--*Choose file-->
+				<!--<p *ngIf="files">-->
+					<!--{{ files.length > 1 ? files.length + ' files' : fileInputValue }}-->
+				<!--</p>-->
+			<!--</label>-->
 		</div>
 
 		<div class="form-field">

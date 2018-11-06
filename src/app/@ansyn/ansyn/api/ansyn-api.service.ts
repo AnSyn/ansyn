@@ -8,12 +8,15 @@ import {
 	selectMapsList,
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
-import { Observable } from 'rxjs';
-import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter } from '@ansyn/menu-items';
+import { Observable, empty } from 'rxjs';
+import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter, UpdateLayer, ILayer, CasesService, selectLayersEntities, selectActiveAnnotationLayer } from '@ansyn/menu-items';
 import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
-import { map, tap } from 'rxjs/internal/operators';
+import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { FeatureCollection } from 'geojson';
+import { window } from 'd3';
+import { featureCollection } from '@turf/turf';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 
@@ -38,6 +41,19 @@ export class AnsynApi {
 		select(selectMapsList),
 		tap((mapsList) => this.mapsList = mapsList)
 	);
+	
+	@AutoSubscription
+	activeAnnotationLayer$: Observable<ILayer> = this.store
+		.pipe(
+			select(selectActiveAnnotationLayer),
+			withLatestFrom(this.store.select(selectLayersEntities)),
+			map(([activeAnnotationLayerId, entities]) => entities[activeAnnotationLayerId]),
+			tap((activeAnnotationLayer)=> {
+				this.activeAnnotationLayer = activeAnnotationLayer;
+			})
+		);
+
+	 activeAnnotationLayer;
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
@@ -57,6 +73,7 @@ export class AnsynApi {
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
 				protected moduleRef: NgModuleRef<any>,
+				protected casesService: CasesService,
 				@Inject(ANSYN_ID) public id: string) {
 		this.init();
 	}
@@ -74,6 +91,14 @@ export class AnsynApi {
 
 	displayOverLay(overlay: IOverlay): void {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
+	}
+	
+	setAnnotations(featureCollection: FeatureCollection<any>): void {
+		this.store.dispatch(new UpdateLayer(<ILayer>{ ...this.activeAnnotationLayer, data: featureCollection }));
+	}
+
+	deleteAllAnnotations(){
+		this.setAnnotations(<FeatureCollection>(featureCollection([]))
 	}
 
 	setOverlays(overlays: IOverlay[]): void {
@@ -101,6 +126,7 @@ export class AnsynApi {
 
 	
 	init(): void {
+		window['api'] = this;
 	}
 
 	destroy(): void {

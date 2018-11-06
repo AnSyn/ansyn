@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlgorithmsService } from '../../services/algorithms.service';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -12,10 +13,11 @@ export class TasksFormComponent implements OnInit {
 	whichOverlays: 'case_overlays' | 'favorite_overlays' | 'displayed_overlays' = 'favorite_overlays';
 	algorithms = ['aaa', 'bbb', 'ccc'];
 
-	constructor() {
+	constructor(protected algorithmsService: AlgorithmsService) {
 	}
 
 	ngOnInit() {
+		console.log(this.algorithmsService);
 	}
 
 	onSubmit() {

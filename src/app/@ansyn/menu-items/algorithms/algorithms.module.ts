@@ -9,12 +9,14 @@ import { TasksFormPageComponent } from './components/tasks-form-page/tasks-form-
 import { TasksFormPageHeaderComponent } from './components/tasks-form-page-header/tasks-form-page-header.component';
 import { TasksFormComponent } from './components/tasks-form/tasks-form.component';
 import { FormsModule } from '@angular/forms';
+import { AlgorithmsService } from './services/algorithms.service';
 
 @NgModule({
 	imports: [CoreModule, CommonModule, FormsModule],
 	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent],
 	entryComponents: [AlgorithmsComponent],
-	exports: [AlgorithmsComponent]
+	exports: [AlgorithmsComponent],
+	providers: [AlgorithmsService]
 })
 export class AlgorithmsModule {
 

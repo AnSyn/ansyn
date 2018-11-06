@@ -9,15 +9,16 @@ import { AlgorithmsService } from '../../services/algorithms.service';
 export class TasksFormComponent implements OnInit {
 	taskName: string;
 	taskStatus: 'New' | 'Sent' = 'New';
-	algorithm: string;
+	algName: string;
 	whichOverlays: 'case_overlays' | 'favorite_overlays' | 'displayed_overlays' = 'favorite_overlays';
-	algorithms = ['aaa', 'bbb', 'ccc'];
+	algNames: string[] = [];
 
 	constructor(protected algorithmsService: AlgorithmsService) {
 	}
 
 	ngOnInit() {
 		console.log(this.algorithmsService);
+		this.algNames = Object.keys(this.algorithmsService.config);
 	}
 
 	onSubmit() {

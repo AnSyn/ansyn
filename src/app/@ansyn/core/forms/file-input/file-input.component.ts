@@ -2,6 +2,7 @@ import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { Input } from '@angular/core';
+import { UUID } from 'angular2-uuid';
 
 @Component({
 	selector: 'ansyn-file-input',
@@ -18,8 +19,8 @@ import { Input } from '@angular/core';
 export class FileInputComponent implements ControlValueAccessor {
 	@Output() change = new EventEmitter<any>();
 	@Input() placeholder = 'Choose file';
-
-	private _value: FileList;
+	id = UUID.UUID();
+	private _value: string;
 	private onTouchedCallback: () => void = noop;
 	private onChangeCallback: (_: any) => void = noop;
 	disabled: boolean;

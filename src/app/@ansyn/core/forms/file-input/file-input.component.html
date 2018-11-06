@@ -1,14 +1,17 @@
-<label>
-	<input #input
-		   name="images"
-		   type="file"
-		   accept="image/jpeg"
-		   multiple
-		   [(ngModel)]="value"
-		   #input
-		   (change)="change.emit($event)"/>
-	<span class="placeholder" tabindex="0">{{placeholder}}</span>
-	<span class="files" *ngIf="input.files">
-		{{ input.files.length > 1 ? input.files.length + ' files' : input.value }}
-	</span>
+<input [id]="id"
+	   #input
+	   name="images"
+	   type="file"
+	   accept="image/jpeg"
+	   multiple
+	   [disabled]="disabled"
+	   [(ngModel)]="value"
+	   (change)="change.emit($event)"/>
+
+<label [for]="id">
+	<span class="placeholder">{{placeholder}}</span>
 </label>
+
+<span class="files">
+	{{ input.files.length > 1 ? input.files.length + ' files' : input.value}}
+</span>

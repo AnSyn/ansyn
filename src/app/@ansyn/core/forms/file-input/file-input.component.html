@@ -1,9 +1,8 @@
 <input [id]="id"
 	   #input
-	   name="images"
 	   type="file"
-	   accept="image/jpeg"
-	   multiple
+	   [accept]="accept"
+	   [multiple]="multiple"
 	   [disabled]="disabled"
 	   [(ngModel)]="value"
 	   (change)="change.emit($event)"/>

@@ -19,6 +19,9 @@ import { UUID } from 'angular2-uuid';
 export class FileInputComponent implements ControlValueAccessor {
 	@Output() change = new EventEmitter<any>();
 	@Input() placeholder = 'Choose file';
+	@Input() accept = '';
+	@Input() multiple = false;
+
 	id = UUID.UUID();
 	private _value: string;
 	private onTouchedCallback: () => void = noop;

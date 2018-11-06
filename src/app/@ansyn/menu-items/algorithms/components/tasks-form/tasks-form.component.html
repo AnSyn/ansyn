@@ -32,7 +32,7 @@
 
 	<div class=" small-padding-left margin">
 		<span>Pin Location</span>
-		<span class="pin"></span>
+		<span class="pin" (click)="hasError() ? clearError() : showError('Oyoyoy!')"></span>
 	</div>
 
 	<div class="big-font wide-underline margin"></div>
@@ -86,6 +86,6 @@
 		<div *ngIf="currentAlgorithm">Time Estimation: {{timeEstimation}}m</div>
 	</div>
 
-	<div class="errors"></div>
+	<div *ngIf="hasError()" class="errors">{{errorMsg}}</div>
 
 </form>

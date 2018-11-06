@@ -1,6 +1,9 @@
 @import "core/less/common";
 
 :host {
+	display: block;
+	position: relative;
+
 	&.white {
 		@white-inactive: rgba(255, 255, 255, 0.8);
 
@@ -46,7 +49,7 @@
 				height: 2px;
 			}
 		}
-		&:focus ~ label, &:not([ng-reflect-model=""]) ~ label {
+		&:focus ~ label, &[ng-reflect-model]:not([ng-reflect-model=""]) ~ label {
 			top: -10px;
 			font-size: 11px;
 			font-weight: 500;

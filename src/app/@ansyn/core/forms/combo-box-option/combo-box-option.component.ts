@@ -1,4 +1,4 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, HostBinding, HostListener, Input } from '@angular/core';
 import { ComboBoxComponent } from '../combo-box/combo-box.component';
 
 @Component({
@@ -8,6 +8,9 @@ import { ComboBoxComponent } from '../combo-box/combo-box.component';
 })
 export class ComboBoxOptionComponent {
 	@Input() value;
+
+	@HostBinding('class.disabled')
+	@Input() disabled: boolean;
 
 	@HostListener('click') onClick() {
 		this._parent.selectOption(this.value);

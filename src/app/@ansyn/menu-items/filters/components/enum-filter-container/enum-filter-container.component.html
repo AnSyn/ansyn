@@ -5,7 +5,7 @@
 
 		<ansyn-checkbox
 			[disabled]="enumMetadata.value.disabled"
-			[(ngModel)]="enumMetadata.value.isChecked"
+			[ngModel]="enumMetadata.value.isChecked"
 			(ngModelChange)="onInputClicked(enumMetadata.key)">
 			<span class="field-name" [title]="enumMetadata.key | translate">{{enumMetadata.key | translate}}</span>
 		</ansyn-checkbox>

@@ -1,79 +1,91 @@
-<div class=" small-padding-left">Status</div>
-<div class="big-font wide-underline small-padding-left margin">{{taskStatus}}</div>
+<form #f="ngForm" (ngSubmit)="onSubmit()">
 
-<ansyn-input
-	[(ngModel)]="taskName"
-	required
-	[white]="true"
-	name="name"
-	class="margin"
-	label="Name"
-></ansyn-input>
+	<div class=" small-padding-left">Status</div>
+	<div class="big-font wide-underline small-padding-left margin">{{taskStatus}}</div>
 
-<ansyn-combo-box
-	[(ngModel)]="algorithm"
-	[color]="'transparent'"
-	[placeholder]="'Select algorithm'"
-	class="margin"
->
-	<ansyn-combo-box-option *ngFor="let algName of algorithms" [value]="algName">
-		{{ algName }}
-	</ansyn-combo-box-option>
-</ansyn-combo-box>
+	<ansyn-input
+		[(ngModel)]="taskName"
+		required
+		[white]="true"
+		name="name"
+		id="ansyn-task-name"
+		class="margin"
+		label="Name"
+	></ansyn-input>
 
-<hr class="big-font margin">
+	<ansyn-combo-box
+		[(ngModel)]="algorithm"
+		required
+		name="algorithm"
+		[color]="'transparent'"
+		[placeholder]="'Select algorithm'"
+		class="margin"
+	>
+		<ansyn-combo-box-option *ngFor="let algName of algorithms" [value]="algName">
+			{{ algName }}
+		</ansyn-combo-box-option>
+	</ansyn-combo-box>
 
-<div class=" small-padding-left margin">Area of interest</div>
+	<hr class="big-font margin">
 
-<div class=" small-padding-left margin">
-	<span>Pin Location</span>
-	<span class="pin"></span>
-</div>
+	<div class=" small-padding-left margin">Area of interest</div>
 
-<div class="big-font wide-underline margin"></div>
-
-<div class="two-columns-table">
-	<div>
-		<div>Imagery input</div>
-		<div>Master image</div>
+	<div class=" small-padding-left margin">
+		<span>Pin Location</span>
+		<span class="pin"></span>
 	</div>
 
-	<div>
-		<ansyn-radio
-			[(ngModel)]="whichOverlays"
-			[value]="'case_overlays'"
-		>Case overlays
-		</ansyn-radio>
-		<div>Active overlay</div>
+	<div class="big-font wide-underline margin"></div>
+
+	<div class="two-columns-table">
+		<div>
+			<div>Imagery input</div>
+			<div>Master image</div>
+		</div>
+
+		<div>
+			<ansyn-radio
+				[(ngModel)]="whichOverlays"
+				[value]="'case_overlays'"
+				name="whichOverlays1"
+				disabled
+			>Case overlays
+			</ansyn-radio>
+			<div>Active overlay</div>
+		</div>
+
+		<div>
+			<ansyn-radio
+				[(ngModel)]="whichOverlays"
+				[value]="'favorite_overlays'"
+				name="whichOverlays2"
+			>Favorite overlays
+			</ansyn-radio>
+		</div>
+
+
+		<div>
+			<ansyn-radio
+				[(ngModel)]="whichOverlays"
+				[value]="'displayed_overlays'"
+				name="whichOverlays3"
+				disabled
+			>Displayed overlays
+			</ansyn-radio>
+		</div>
 	</div>
 
-	<div>
-		<ansyn-radio
-			[(ngModel)]="whichOverlays"
-			[value]="'favorite_overlays'"
-		>Favorite overlays
-		</ansyn-radio>
+	<div>Note: this algorithm is only available for 20 overlays</div>
+
+	<div class="big-font wide-underline margin"></div>
+
+	<div class="margin">The results will be available for download when the task is completed</div>
+
+	<div class="run-bar margin">
+		<button ansynButton [disabled]="f.invalid">Run Task</button>
+		<div>Time Estimation: 2h 30m</div>
 	</div>
 
+	<div class="errors"></div>
 
-	<div>
-		<ansyn-radio
-			[(ngModel)]="whichOverlays"
-			[value]="'displayed_overlays'"
-		>Displayed overlays
-		</ansyn-radio>
-	</div>
-</div>
-
-<div>Note: this algorithm is only available for 20 overlays</div>
-
-<div class="big-font wide-underline margin"></div>
-
-<div class="margin">The results will be available for download when the task is completed</div>
-
-<div class="run-bar margin">
-	<button ansynButton>Run Task</button>
-	<div>Time Estimation: 2h 30m</div>
-</div>
-
-<div class="errors"></div>
+</form>

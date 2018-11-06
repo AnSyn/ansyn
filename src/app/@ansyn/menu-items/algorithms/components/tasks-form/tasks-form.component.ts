@@ -18,4 +18,7 @@ export class TasksFormComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	onSubmit() {
+	}
+
 }

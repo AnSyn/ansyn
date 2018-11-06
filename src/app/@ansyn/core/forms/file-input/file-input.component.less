@@ -1,0 +1,39 @@
+input[type='file'] {
+	display: none;
+	background: transparent;
+
+	+ label {
+		span.placeholder {
+			color: rgba(255, 255, 255, 0.8);
+			cursor: pointer;
+			padding: 5px 0;
+			&:hover{
+				color: white;
+			}
+		}
+	}
+
+	~ span.files {
+		font-size: 13px;
+		color: white;
+		pointer-events: none;
+	}
+
+	&:disabled + label {
+		span.placeholder {
+			color: rgba(255, 255, 255, 0.6);
+			cursor: default;
+			&:hover{
+				color: rgba(255, 255, 255, 0.6);
+			}
+		}
+	}
+
+	&:disabled ~ span.files {
+		display: none;
+	}
+
+}
+
+
+

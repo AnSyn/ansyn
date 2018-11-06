@@ -1,9 +1,7 @@
 import { Component, ElementRef, forwardRef, HostBinding, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { UUID } from 'angular2-uuid';
-
-const noop = () => {
-};
+import { noop } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-input',

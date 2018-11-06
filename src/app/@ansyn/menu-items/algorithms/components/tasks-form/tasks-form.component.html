@@ -83,7 +83,7 @@
 
 	<div class="run-bar margin">
 		<button ansynButton [disabled]="f.invalid">Run Task</button>
-		<div>Time Estimation: 2h 30m</div>
+		<div *ngIf="currentAlgorithm">Time Estimation: {{timeEstimation}}m</div>
 	</div>
 
 	<div class="errors"></div>

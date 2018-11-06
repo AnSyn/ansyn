@@ -37,7 +37,7 @@ export class AnsynCheckboxComponent implements ControlValueAccessor {
 
 	writeValue(value: boolean): void {
 		if (this.value !== value) {
-			this.value = value;
+			this._value = value;
 		}
 	}
 

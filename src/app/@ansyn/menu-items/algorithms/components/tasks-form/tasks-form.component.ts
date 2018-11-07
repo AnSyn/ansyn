@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlgorithmsService } from '../../services/algorithms.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -27,7 +28,10 @@ export class TasksFormComponent implements OnInit {
 		return this.currentAlgorithm.timeEstimationPerOverlayInMinutes * this.overlays.length;
 	}
 
-	constructor(protected algorithmsService: AlgorithmsService) {
+	constructor(
+		protected algorithmsService: AlgorithmsService,
+		public translate: TranslateService
+	) {
 	}
 
 	ngOnInit() {

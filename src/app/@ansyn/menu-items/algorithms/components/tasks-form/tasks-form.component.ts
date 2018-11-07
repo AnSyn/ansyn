@@ -2,11 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlgorithmsService } from '../../services/algorithms.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/index';
-import { Store } from '@ngrx/store';
-import { selectFavoriteOverlays } from '@ansyn/core';
+import { select, Store } from '@ngrx/store';
+import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
 import { IAlgorithmsConfig, WhichOverlays } from '../../models/algorithms.model';
+import { MapFacadeService, mapStateSelector } from '../../../../map-facade/public_api';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -26,6 +28,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	overlays = ['a', 'b', 'c'];
 	errorMsg = '';
 	MIN_NUM_OF_OVERLAYS = 2;
+	activeOverlay: IOverlay;
 
 	get algorithms() {
 		return this.algorithmsService.config;
@@ -42,10 +45,23 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	getOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {
-			this.overlays = favoriteOverlays;
+				this.overlays = favoriteOverlays;
+				this.checkForErrors();
+			}
+		));
+
+	@AutoSubscription
+	activeOverlay$: Observable<IOverlay> = this.store$.pipe(
+		select(mapStateSelector),
+		filter(Boolean),
+		map(MapFacadeService.activeMap),
+		filter(Boolean),
+		map((map: ICaseMapState) => map.data.overlay),
+		tap((overlay: IOverlay) => {
+			this.activeOverlay = overlay;
 			this.checkForErrors();
-		}
-	));
+		})
+	);
 
 	constructor(
 		protected algorithmsService: AlgorithmsService,
@@ -65,12 +81,10 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			message = `The number of selected overlays is less than ${this.MIN_NUM_OF_OVERLAYS}`;
 		} else if (this.currentAlgorithm && this.overlays.length > this.currentAlgorithm.maxOverlays) {
 			message = `The number of selected overlays is more than ${this.currentAlgorithm.maxOverlays}`;
+		} else if (!this.activeOverlay) {
+			message = 'No master overlay selected'
 		}
 		this.showError(message);
-	}
-
-	clearError() {
-		this.showError('');
 	}
 
 	showError(msg: string) {

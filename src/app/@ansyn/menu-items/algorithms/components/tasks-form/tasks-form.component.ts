@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
-import { WhichOverlays } from '../../models/algorithms.model';
+import { IAlgorithmsConfig, WhichOverlays } from '../../models/algorithms.model';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -24,13 +24,14 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	whichOverlays: WhichOverlays = 'favorite_overlays';
 	algNames: string[] = [];
 	overlays = ['a', 'b', 'c'];
-	errorMsg: string;
+	errorMsg = '';
+	MIN_NUM_OF_OVERLAYS = 2;
 
 	get algorithms() {
 		return this.algorithmsService.config;
 	}
 
-	get currentAlgorithm() {
+	get currentAlgorithm(): IAlgorithmsConfig {
 		return this.algorithms[this.algName];
 	}
 
@@ -42,6 +43,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	getOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {
 			this.overlays = favoriteOverlays;
+			this.checkForErrors();
 		}
 	));
 
@@ -53,13 +55,22 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.clearError();
 		console.log(this.algorithms);
 		this.algNames = Object.keys(this.algorithms);
 	}
 
+	checkForErrors() {
+		let message = '';
+		if (this.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
+			message = `The number of selected overlays is less than ${this.MIN_NUM_OF_OVERLAYS}`;
+		} else if (this.currentAlgorithm && this.overlays.length > this.currentAlgorithm.maxOverlays) {
+			message = `The number of selected overlays is more than ${this.currentAlgorithm.maxOverlays}`;
+		}
+		this.showError(message);
+	}
+
 	clearError() {
-		this.errorMsg = '';
+		this.showError('');
 	}
 
 	showError(msg: string) {

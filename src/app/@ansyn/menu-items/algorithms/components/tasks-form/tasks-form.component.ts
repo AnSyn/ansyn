@@ -8,7 +8,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
 import { IAlgorithmsConfig, WhichOverlays } from '../../models/algorithms.model';
 import { MapFacadeService, mapStateSelector } from '../../../../map-facade/public_api';
-import { filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -57,6 +57,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		map(MapFacadeService.activeMap),
 		filter(Boolean),
 		map((map: ICaseMapState) => map.data.overlay),
+		distinctUntilChanged(),
 		tap((overlay: IOverlay) => {
 			this.activeOverlay = overlay;
 			this.checkForErrors();

@@ -6,3 +6,5 @@ export interface IAlgorithmsConfig {
 	timeEstimationPerOverlayInMinutes: number,
 	sensorNames: string[]
 }
+
+export type WhichOverlays = 'case_overlays' | 'favorite_overlays' | 'displayed_overlays';

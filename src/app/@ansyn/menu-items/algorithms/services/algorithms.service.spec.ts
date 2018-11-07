@@ -5,7 +5,13 @@ import { AlgorithmsService } from './algorithms.service';
 describe('AlgorithmsService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [AlgorithmsService]
+			providers: [
+				AlgorithmsService,
+				{
+					provide: 'algorithmsConfig',
+					useValue: {}
+				}
+			]
 		});
 	});
 

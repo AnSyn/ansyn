@@ -2,11 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
-import { CoreModule } from '../../../../core/core.module';
 import { StoreModule } from '@ngrx/store';
-import { coreFeatureKey, CoreReducer } from '../../../../core/reducers/core.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { MockComponent } from '@ansyn/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AlgorithmsService } from '../../services/algorithms.service';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -38,7 +38,7 @@ describe('TasksFormComponent', () => {
 
 	const mockInput = MockComponent({
 		selector: 'ansyn-input',
-		inputs: ['ngModel', 'value', 'required'],
+		inputs: ['ngModel', 'value', 'required', 'white'],
 		outputs: ['ngModelChange']
 	});
 
@@ -52,7 +52,18 @@ describe('TasksFormComponent', () => {
 				mockRadioBtn,
 				mockInput
 			],
-			imports: []
+			imports: [
+				FormsModule,
+				TranslateModule.forRoot(),
+				StoreModule.forRoot({}),
+				EffectsModule.forRoot([])
+			],
+			providers: [
+				{
+					provide: AlgorithmsService,
+					useValue: {}
+				}
+			]
 		})
 			.compileComponents();
 	}));

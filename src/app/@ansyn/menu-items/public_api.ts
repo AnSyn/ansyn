@@ -1,3 +1,5 @@
+import { SetAlgorithmTaskDrawIndicator } from './algorithms/actions/algorithms.actions';
+
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';
@@ -103,3 +105,11 @@ export { AddCaseAction } from './cases/actions/cases.actions';
 export { QueryParamsHelper } from './cases/services/helpers/cases.service.query-params-helper';
 export { UpdateFilterAction } from './filters/actions/filters.actions';
 export { IEnumFiled } from './filters/models/metadata/enum-filter-metadata';
+export {
+	selectAlgorithmTaskRegion,
+	selectAlgorithmTaskDrawIndicator
+} from './algorithms/reducers/algorithms.reducer';
+export {
+	SetAlgorithmTaskDrawIndicator,
+	SetAlgorithmTaskRegion
+} from './algorithms/actions/algorithms.actions';

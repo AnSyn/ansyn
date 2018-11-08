@@ -97,8 +97,8 @@ export class AnsynApi {
 		this.store.dispatch(new UpdateLayer(<ILayer>{ ...this.activeAnnotationLayer, data: featureCollection }));
 	}
 
-	deleteAllAnnotations(){
-		this.setAnnotations(<FeatureCollection>(featureCollection([]))
+	deleteAllAnnotations(): void {
+		this.setAnnotations(<FeatureCollection>(featureCollection([])));
 	}
 
 	setOverlays(overlays: IOverlay[]): void {

@@ -10,9 +10,16 @@ import { TasksFormPageHeaderComponent } from './components/tasks-form-page-heade
 import { TasksFormComponent } from './components/tasks-form/tasks-form.component';
 import { FormsModule } from '@angular/forms';
 import { AlgorithmsService } from './services/algorithms.service';
+import { StoreModule } from '@ngrx/store';
+import { algorithmsFeatureKey, AlgorithmsReducer } from './reducers/algorithms.reducer';
 
 @NgModule({
-	imports: [CoreModule, CommonModule, FormsModule],
+	imports: [
+		CoreModule,
+		CommonModule,
+		FormsModule,
+		StoreModule.forFeature(algorithmsFeatureKey, AlgorithmsReducer)
+	],
 	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent],
 	entryComponents: [AlgorithmsComponent],
 	exports: [AlgorithmsComponent],

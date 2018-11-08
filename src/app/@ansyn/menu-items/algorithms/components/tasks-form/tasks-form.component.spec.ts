@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { MockComponent } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { AlgorithmsConfigService } from '../../services/algorithms-config.service';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -57,7 +57,7 @@ describe('TasksFormComponent', () => {
 			],
 			providers: [
 				{
-					provide: AlgorithmsService,
+					provide: AlgorithmsConfigService,
 					useValue: {}
 				},
 				{

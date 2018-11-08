@@ -1,18 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { AlgorithmsConfigService } from '../../services/algorithms-config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/index';
 import { select, Store } from '@ngrx/store';
 import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
-import { IAlgorithmsConfig, WhichOverlays } from '../../models/algorithms.model';
+import {
+	AlgorithmTaskStatus,
+	IAlgorithmsConfig,
+	AlgorithmTaskWhichOverlays,
+	AlgorithmTask
+} from '../../models/algorithms.model';
 import { MapFacadeService, mapStateSelector } from '../../../../map-facade/public_api';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { SetAlgorithmTaskDrawIndicator } from '../../actions/algorithms.actions';
 import { selectAlgorithmTaskRegion } from '../../reducers/algorithms.reducer';
-import { GeometryObject } from 'geojson';
 import { ToggleIsPinnedAction } from '../../../../menu/actions/menu.actions';
+import { AlgorithmsService } from '../../services/algorithms.service';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -24,19 +29,16 @@ import { ToggleIsPinnedAction } from '../../../../menu/actions/menu.actions';
 	destroy: 'ngOnDestroy'
 })
 export class TasksFormComponent implements OnInit, OnDestroy {
-	taskName: string;
-	taskStatus: 'New' | 'Sent' = 'New';
+	task: AlgorithmTask = new AlgorithmTask();
+	taskStatus: AlgorithmTaskStatus = 'New';
 	algName: string;
-	whichOverlays: WhichOverlays = 'favorite_overlays';
+	whichOverlays: AlgorithmTaskWhichOverlays = 'favorite_overlays';
 	algNames: string[] = [];
-	overlays = ['a', 'b', 'c'];
 	errorMsg = '';
 	MIN_NUM_OF_OVERLAYS = 2;
-	activeOverlay: IOverlay;
-	region: GeometryObject;
 
 	get algorithms() {
-		return this.algorithmsService.config;
+		return this.configService.config;
 	}
 
 	get currentAlgorithm(): IAlgorithmsConfig {
@@ -44,13 +46,13 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	get timeEstimation() {
-		return this.currentAlgorithm.timeEstimationPerOverlayInMinutes * this.overlays.length;
+		return this.currentAlgorithm.timeEstimationPerOverlayInMinutes * this.task.overlays.length;
 	}
 
 	@AutoSubscription
 	getOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {
-				this.overlays = favoriteOverlays;
+				this.task.overlays = favoriteOverlays;
 				this.checkForErrors();
 			}
 		));
@@ -64,7 +66,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		map((map: ICaseMapState) => map.data.overlay),
 		distinctUntilChanged(),
 		tap((overlay: IOverlay) => {
-			this.activeOverlay = overlay;
+			this.task.masterOverlay = overlay;
 			this.checkForErrors();
 		})
 	);
@@ -72,12 +74,13 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	getRegion$: Observable<any[]> = this.store$.select(selectAlgorithmTaskRegion).pipe(
 		tap((region) => {
-				this.region = region;
+				this.task.region = region;
 				this.checkForErrors();
 			}
 		));
 
 	constructor(
+		protected configService: AlgorithmsConfigService,
 		protected algorithmsService: AlgorithmsService,
 		public translate: TranslateService,
 		protected store$: Store<any>
@@ -91,11 +94,11 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	checkForErrors() {
 		let message = '';
-		if (this.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
+		if (this.task.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
 			message = `The number of selected overlays is less than ${this.MIN_NUM_OF_OVERLAYS}`;
-		} else if (this.currentAlgorithm && this.overlays.length > this.currentAlgorithm.maxOverlays) {
+		} else if (this.currentAlgorithm && this.task.overlays.length > this.currentAlgorithm.maxOverlays) {
 			message = `The number of selected overlays is more than ${this.currentAlgorithm.maxOverlays}`;
-		} else if (!this.activeOverlay) {
+		} else if (!this.task.masterOverlay) {
 			message = 'No master overlay selected'
 		}
 		this.showError(message);
@@ -110,6 +113,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
+		this.algorithmsService.runTask(this.task);
 	}
 
 	ngOnDestroy(): void {

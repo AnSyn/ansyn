@@ -1,9 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
-import { AlgorithmsConfig, IAlgorithmsConfig } from '../models/algorithms.model';
+import { AlgorithmTask } from '../models/algorithms.model';
 
-@Injectable()
-export class AlgorithmsService {
-
-	constructor(@Inject(AlgorithmsConfig) public config: IAlgorithmsConfig) {
-	}
+export abstract class AlgorithmsService {
+	abstract runTask(task: AlgorithmTask);
 }

@@ -4,7 +4,7 @@
 	<div class="big-font wide-underline small-padding-left margin">{{taskStatus}}</div>
 
 	<ansyn-input
-		[(ngModel)]="taskName"
+		[(ngModel)]="task.name"
 		required
 		[white]="true"
 		name="name"
@@ -33,7 +33,7 @@
 
 	<div class=" small-padding-left margin">
 		<span>Pin Location</span>
-		<span class="pin" [class.done]="region" (click)="startDrawMode()"></span>
+		<span class="pin" [class.done]="task.region" (click)="startDrawMode()"></span>
 	</div>
 
 	<div class="big-font wide-underline margin"></div>
@@ -83,7 +83,7 @@
 	<div class="margin">The results will be available for download when the task is completed</div>
 
 	<div class="run-bar margin">
-		<button ansynButton [disabled]="f.invalid || hasError() || !region">Run Task</button>
+		<button ansynButton [disabled]="f.invalid || hasError() || !task.region">Run Task</button>
 		<div *ngIf="currentAlgorithm">Time Estimation: {{timeEstimation}}m</div>
 	</div>
 

@@ -9,7 +9,7 @@ import { TasksFormPageComponent } from './components/tasks-form-page/tasks-form-
 import { TasksFormPageHeaderComponent } from './components/tasks-form-page-header/tasks-form-page-header.component';
 import { TasksFormComponent } from './components/tasks-form/tasks-form.component';
 import { FormsModule } from '@angular/forms';
-import { AlgorithmsService } from './services/algorithms.service';
+import { AlgorithmsConfigService } from './services/algorithms-config.service';
 import { StoreModule } from '@ngrx/store';
 import { algorithmsFeatureKey, AlgorithmsReducer } from './reducers/algorithms.reducer';
 
@@ -23,7 +23,7 @@ import { algorithmsFeatureKey, AlgorithmsReducer } from './reducers/algorithms.r
 	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent],
 	entryComponents: [AlgorithmsComponent],
 	exports: [AlgorithmsComponent],
-	providers: [AlgorithmsService]
+	providers: [AlgorithmsConfigService]
 })
 export class AlgorithmsModule {
 

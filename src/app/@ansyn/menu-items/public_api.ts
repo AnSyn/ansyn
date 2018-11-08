@@ -1,4 +1,5 @@
 import { SetAlgorithmTaskDrawIndicator } from './algorithms/actions/algorithms.actions';
+import { AlgorithmsService } from './algorithms/services/algorithms.service';
 
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
@@ -113,3 +114,10 @@ export {
 	SetAlgorithmTaskDrawIndicator,
 	SetAlgorithmTaskRegion
 } from './algorithms/actions/algorithms.actions';
+export {
+	AlgorithmsService
+} from './algorithms/services/algorithms.service';
+export {
+	AlgorithmsDefaultService
+} from './algorithms/services/algorithms-default.service';
+

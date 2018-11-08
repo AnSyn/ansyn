@@ -9,6 +9,7 @@ import { tap } from 'rxjs/internal/operators';
 import { IAlgorithmsConfig, WhichOverlays } from '../../models/algorithms.model';
 import { MapFacadeService, mapStateSelector } from '../../../../map-facade/public_api';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { SetAlgorithmTaskDrawIndicator } from '../../actions/algorithms.actions';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -100,6 +101,10 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	startDrawMode() {
+		this.store$.dispatch(new SetAlgorithmTaskDrawIndicator(true));
 	}
 
 }

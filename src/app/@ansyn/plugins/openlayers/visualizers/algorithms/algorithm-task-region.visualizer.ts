@@ -45,8 +45,19 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 
 	drawIndicator$ = this.store$.select(selectAlgorithmTaskDrawIndicator);
 
+	// @AutoSubscription
+	// toggleOpacity$ = this.drawIndicator$.pipe(
+	// 	tap((drawIndicator) => {
+	// 		if (!drawIndicator) {
+	// 			this.vector.setOpacity(0);
+	// 		} else {
+	// 			this.vector.setOpacity(1);
+	// 		}
+	// 	})
+	// );
+
 	@AutoSubscription
-	interactionChanges$: Observable<any> = this.isActiveMap$.pipe(
+	interactionChanges$: Observable<any> = combineLatest(this.isActiveMap$, this.drawIndicator$).pipe(
 		tap(this.interactionChanges.bind(this))
 	);
 
@@ -59,7 +70,7 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 	}
 
 	drawChanges([region, drawIndicator]) {
-		if (!drawIndicator) {
+		if (!region) {
 			this.clearEntities();
 			return EMPTY;
 		}
@@ -107,9 +118,9 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new SetAlgorithmTaskDrawIndicator(false));
 	}
 
-	interactionChanges(isActiveMap: boolean): void {
+	interactionChanges([isActiveMap, drawIndicator]: [boolean, boolean]): void {
 		this.removeDrawInteraction();
-		if (isActiveMap) {
+		if (isActiveMap && drawIndicator) {
 			this.createDrawInteraction();
 		}
 	}

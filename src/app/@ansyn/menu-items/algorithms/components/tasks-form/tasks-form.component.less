@@ -43,15 +43,20 @@
 .pin {
 	display: inline-block;
 	margin-left: 20px;
+	opacity: 1;
+	color: red;
+	font-size: 20px;
 	&:before {
 		content: '\1f589';
 	}
 	&:hover {
-		color: white;
 		transform: translateX(2px);
 	}
 	&:active {
-		color: @color-half-white;
+		color: black;
+	}
+	&.done {
+		color: green;
 	}
 }
 

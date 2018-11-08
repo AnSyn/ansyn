@@ -10,6 +10,9 @@ import { IAlgorithmsConfig, WhichOverlays } from '../../models/algorithms.model'
 import { MapFacadeService, mapStateSelector } from '../../../../map-facade/public_api';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { SetAlgorithmTaskDrawIndicator } from '../../actions/algorithms.actions';
+import { selectAlgorithmTaskRegion } from '../../reducers/algorithms.reducer';
+import { GeometryObject } from 'geojson';
+import { ToggleIsPinnedAction } from '../../../../menu/actions/menu.actions';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -30,6 +33,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	errorMsg = '';
 	MIN_NUM_OF_OVERLAYS = 2;
 	activeOverlay: IOverlay;
+	region: GeometryObject;
 
 	get algorithms() {
 		return this.algorithmsService.config;
@@ -64,6 +68,14 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			this.checkForErrors();
 		})
 	);
+
+	@AutoSubscription
+	getRegion$: Observable<any[]> = this.store$.select(selectAlgorithmTaskRegion).pipe(
+		tap((region) => {
+				this.region = region;
+				this.checkForErrors();
+			}
+		));
 
 	constructor(
 		protected algorithmsService: AlgorithmsService,
@@ -104,6 +116,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	startDrawMode() {
+		this.store$.dispatch(new ToggleIsPinnedAction(true));
 		this.store$.dispatch(new SetAlgorithmTaskDrawIndicator(true));
 	}
 

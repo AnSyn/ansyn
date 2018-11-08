@@ -2,10 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { MockComponent } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AlgorithmsConfigService } from '../../services/algorithms-config.service';
+import { EffectsModule } from '@ngrx/effects';
+import { AlgorithmsService } from '../../services/algorithms.service';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -53,21 +55,20 @@ describe('TasksFormComponent', () => {
 			],
 			imports: [
 				FormsModule,
-				TranslateModule.forRoot()
+				TranslateModule.forRoot(),
+				StoreModule.forRoot({}),
+				EffectsModule.forRoot([])
 			],
 			providers: [
 				{
 					provide: AlgorithmsConfigService,
-					useValue: {}
+					useValue: {
+						config: {}
+					}
 				},
 				{
-					provide: Store,
-					useValue: {
-						select: () => ({
-							pipe: () => ({})
-						}),
-						pipe: () => ({})
-					}
+					provide: AlgorithmsService,
+					useValue: {}
 				}
 			]
 		})

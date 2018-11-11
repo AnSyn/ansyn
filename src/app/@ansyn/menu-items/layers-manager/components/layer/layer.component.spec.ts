@@ -3,6 +3,7 @@ import { LayerComponent } from './layer.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { SelectOnlyLayer } from '../../actions/layers.actions';
 import { AnsynCheckboxComponent } from '@ansyn/core';
+import { FormsModule } from '@angular/forms';
 
 describe('LayerComponent', () => {
 	let component: LayerComponent;
@@ -12,7 +13,7 @@ describe('LayerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [LayerComponent, AnsynCheckboxComponent],
-			imports: [StoreModule.forRoot({})]
+			imports: [StoreModule.forRoot({}), FormsModule]
 		})
 			.compileComponents();
 	}));

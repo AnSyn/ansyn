@@ -3,16 +3,15 @@
 		<div class="left-side">
 			<ansyn-checkbox
 				[disabled]="properties.disabled"
-				[checked]="properties.value"
-				(checkedChange)='onInputClicked(properties.name, $event)'>
+				[ngModel]="properties.value"
+				(ngModelChange)='onInputClicked(properties.name, $event)'>
+				<span class="field-name" [title]="true">{{properties.displayName}}</span>
 			</ansyn-checkbox>
-			<div class="filter-row">
-				<div class="field-name-container">
-					<span class="field-name" [title]="true">{{properties.displayName}}</span>
-				</div>
-				<span class="only-filter" (click)="selectOnly(properties.name)"
-					  [hidden]="properties.disabled">only</span>
-			</div>
+
+			<span class="only-filter"
+				  (click)="selectOnly(properties.name)"
+				  [hidden]="properties.disabled || false">only</span>
+
 		</div>
 
 		<ansyn-filter-counter

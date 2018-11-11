@@ -31,7 +31,6 @@ before_script:
 script:
   - npm run lint
   - npm run test:single-run
-  - npm run test:e2e
   - npm run build:libs
   - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
 

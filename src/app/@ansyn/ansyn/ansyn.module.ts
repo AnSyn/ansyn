@@ -29,8 +29,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { COMPONENT_MODE } from './app-providers/component-mode';
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
-import { ANSYN_ID, AnsynApi } from './api/ansyn-api.service';
-import { CallbackComponent } from './components/callback/callback.component';
+import { ANSYN_ID } from './api/ansyn-api.service';
 
 @NgModule({
 	imports: [
@@ -72,8 +71,7 @@ import { CallbackComponent } from './components/callback/callback.component';
 	],
 	declarations: [
 		AnsynComponent,
-		OverlayOutOfBoundsComponent,
-		CallbackComponent
+		OverlayOutOfBoundsComponent
 	],
 	exports: [AnsynComponent]
 })

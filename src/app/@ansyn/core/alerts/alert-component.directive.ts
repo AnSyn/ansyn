@@ -17,6 +17,9 @@ export class AlertComponentDirective implements OnDestroy {
 
 	@Input('ansynAlertComponent')
 	set ansynAlertComponent({ component, mapId, overlay }: IAlertComponentSettings) {
+		if (this.componentRef) {
+			this.componentRef.destroy();
+		}
 		const factory = this.componentFactoryResolver.resolveComponentFactory<IAlertComponent>(component);
 		this.componentRef = this.viewContainerRef.createComponent<IAlertComponent>(factory);
 		this.componentRef.instance.mapId = mapId;

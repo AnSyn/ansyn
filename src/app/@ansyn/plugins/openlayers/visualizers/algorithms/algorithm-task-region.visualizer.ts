@@ -6,7 +6,7 @@ import { FeatureCollection, GeometryObject } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/draw';
-import { CaseRegionState, getPointByGeometry, SetToastMessageAction } from '@ansyn/core';
+import { getPointByGeometry } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
@@ -35,7 +35,6 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 		zIndex: 100
 	});
 
-	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
 	region$ = this.store$.select(selectAlgorithmTaskRegion);
 
 	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
@@ -44,17 +43,6 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 	);
 
 	drawIndicator$ = this.store$.select(selectAlgorithmTaskDrawIndicator);
-
-	// @AutoSubscription
-	// toggleOpacity$ = this.drawIndicator$.pipe(
-	// 	tap((drawIndicator) => {
-	// 		if (!drawIndicator) {
-	// 			this.vector.setOpacity(0);
-	// 		} else {
-	// 			this.vector.setOpacity(1);
-	// 		}
-	// 	})
-	// );
 
 	@AutoSubscription
 	interactionChanges$: Observable<any> = combineLatest(this.isActiveMap$, this.drawIndicator$).pipe(
@@ -86,14 +74,7 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
-					this.store$.dispatch(new SetAlgorithmTaskRegion(region));
-				}
-				else {
-					this.store$.dispatch(new SetToastMessageAction({
-						toastText: this.selfIntersectMessage
-					}));
-				}
+				this.store$.dispatch(new SetAlgorithmTaskRegion(region));
 			})
 		).subscribe();
 	}
@@ -134,8 +115,8 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 		return this._iconSrc;
 	}
 
-	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
-		const coordinates = getPointByGeometry(<GeoJSON.GeometryObject>region).coordinates;
+	drawRegionOnMap(region: GeometryObject): Observable<boolean> {
+		const coordinates = getPointByGeometry(region).coordinates;
 		const id = 'algorithmTaskRegion';
 		const featureJson = turf.point(coordinates);
 		const entities = [{ id, featureJson }];

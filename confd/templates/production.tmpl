@@ -374,7 +374,8 @@
     "translation": {
     	"default": {
 		 	"Sentinel-2A": "Sentinel 2A",
-		 	"alg_1": "secret name"
+		 	"alg_1": "secret name 1",
+		 	"alg_2": "secret name 2"
 	   	}
     },
     "needToUseLayerExtent": false
@@ -1063,7 +1064,14 @@
 	"alg_1" : {
 		"maxOverlays": 20,
 		"timeEstimationPerOverlayInMinutes": 10,
-		"sensorNames": [ "Landsat8L1G", "Sentinel2L1C" ]
+		"sensorNames": [ "Landsat8L1G", "Sentinel2L1C" ],
+		"regionLengthInMeters": 200
+	},
+	"alg_2" : {
+		"maxOverlays": 2,
+		"timeEstimationPerOverlayInMinutes": 20,
+		"sensorNames": [ "Landsat8L1G" ],
+		"regionLengthInMeters": 100
 	}
   }
 }

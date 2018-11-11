@@ -1,6 +1,3 @@
-import { SetAlgorithmTaskDrawIndicator } from './algorithms/actions/algorithms.actions';
-import { AlgorithmsService } from './algorithms/services/algorithms.service';
-
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';

@@ -76,7 +76,7 @@
 		</div>
 	</div>
 
-	<div>Note: this algorithm is only available for 20 overlays</div>
+	<div [class.invisible]="!algName">Note: this algorithm is only available for {{currentAlgorithm?.maxOverlays}} overlays</div>
 
 	<div class="big-font wide-underline margin"></div>
 

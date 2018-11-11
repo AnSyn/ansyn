@@ -80,7 +80,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		));
 
 	constructor(
-		protected configService: AlgorithmsConfigService,
+		public configService: AlgorithmsConfigService,
 		protected algorithmsService: AlgorithmsService,
 		public translate: TranslateService,
 		protected store$: Store<any>
@@ -88,7 +88,6 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		console.log(this.algorithms);
 		this.algNames = Object.keys(this.algorithms);
 	}
 

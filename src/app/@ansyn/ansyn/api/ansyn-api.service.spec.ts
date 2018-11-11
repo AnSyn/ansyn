@@ -1,7 +1,7 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { GoToAction, ProjectionConverterService } from '@ansyn/menu-items';
+import { GoToAction, ProjectionConverterService, CasesService } from '@ansyn/menu-items';
 import { ANSYN_ID, AnsynApi } from './ansyn-api.service';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
@@ -22,6 +22,10 @@ describe('apiService', () => {
 				AnsynApi,
 				{
 					provide: ProjectionConverterService,
+					useValue: {}
+				},
+				{
+					provide: CasesService,
 					useValue: {}
 				},
 				{

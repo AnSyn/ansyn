@@ -1,4 +1,3 @@
-import { InjectionToken } from '@angular/core';
 import { ICoordinatesSystem } from '@ansyn/core';
 
 export interface IToolsConfig {

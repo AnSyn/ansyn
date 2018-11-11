@@ -44,7 +44,7 @@ export class MapFacadeService {
 		const communicator = this.imageryCommunicatorService.provide(id);
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
-			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
+			communicator.positionChanged.subscribe((position) => this.positionChanged({ id: communicator.id, position })),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this))
 		);
 		this.subscribers[id] = communicatorSubscribers;

@@ -1,0 +1,13 @@
+<input [(ngModel)]="value"
+	   [id]="id"
+	   [required]="required"
+	   [name]="name"
+	   #input
+	   [autocomplete]="autocomplete"
+	   (blur)="onBlur()">
+
+<span></span>
+
+<label [for]="id">
+	{{label}}
+</label>

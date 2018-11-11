@@ -2,6 +2,7 @@ import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ICaseMapState, toDegrees } from '@ansyn/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -87,7 +88,7 @@ export class ImageryRotationComponent {
 				this.setRotation(overlay.azimuth);
 			}
 		} else {
-			this.setRotation(this.virtualNorth);
+			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));
 		}
 	}
 

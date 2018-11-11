@@ -26,6 +26,7 @@ export {
 	ContextMenuTriggerAction,
 	ShadowMouseProducer,
 	ActiveMapChangedAction,
+	PointToRealNorthAction,
 	MapActionTypes
 } from './actions/map.actions';
 export { MapFacadeService } from './services/map-facade.service';

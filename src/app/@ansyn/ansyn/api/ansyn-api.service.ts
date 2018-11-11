@@ -53,6 +53,10 @@ export class AnsynApi {
 				this.activeAnnotationLayer = activeAnnotationLayer;
 			})
 		);
+<<<<<<< HEAD
+=======
+		activeAnnotationLayer;
+>>>>>>> 8271c6c49fcfbc27c9a0ccea61ec74c56e6c42f0
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),

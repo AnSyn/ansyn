@@ -163,7 +163,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			firstStyle.text = new Text({
 				font: styleSettings.label.font,
 				offsetX: styleSettings.label.offsetX,
-				offsetY: styleSettings.label.offsetY,
+				offsetY: <any>styleSettings.label.offsetY,
 				overflow: styleSettings.label.overflow,
 				text: <any>styleSettings.label.text,
 				fill,

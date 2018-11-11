@@ -11,7 +11,8 @@ export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
 @ImageryMapSource({
 	sourceType: OpenLayerIDAHOSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	forOverlay: true
 })
 export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 
@@ -51,7 +52,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 			.catch((excpetion) => {
 			});
 
-		return Promise.all([getImagePromise, getAssociationPromise]).then(() => {
+		let layerPromise = Promise.all([getImagePromise, getAssociationPromise]).then(() => {
 			let imageUrl = metaData.data.overlay.baseImageUrl;
 			let bands = this.getColorChannel(metaData.data.overlay, imageData);
 			imageUrl += bands;
@@ -64,6 +65,8 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 			let layer = this.createOrGetFromCache(metaData);
 			return Promise.resolve(layer[0]);
 		});
+		layerPromise = this.addFootprintToLayerPromise(layerPromise, metaData);
+		return layerPromise;
 	}
 
 	getColorChannel(overlay: IOverlay, imageData: any): string {

@@ -4,6 +4,7 @@ import { BooleanFilterContainerComponent } from './boolean-filter-container.comp
 import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
 import { AnsynCheckboxComponent } from '@ansyn/core';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
+import { FormsModule } from '@angular/forms';
 
 describe('BooleanFilterContainerComponent', () => {
 	let component: BooleanFilterContainerComponent;
@@ -11,6 +12,7 @@ describe('BooleanFilterContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
+			imports: [FormsModule],
 			declarations: [BooleanFilterContainerComponent, FilterCounterComponent, AnsynCheckboxComponent]
 		})
 			.compileComponents();

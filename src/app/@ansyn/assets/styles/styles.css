@@ -20,6 +20,7 @@ circle.drop.selected {
 
 button {
 	cursor: pointer;
+	font: unset;
 }
 
 button[disabled] {

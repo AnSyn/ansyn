@@ -3,6 +3,7 @@ import { HelpComponent } from './help.component';
 import { By } from '@angular/platform-browser';
 import { AnsynCheckboxComponent, MockComponent } from '@ansyn/core';
 import { HelpLocalStorageService } from '../services/help.local-storage.service';
+import { FormsModule } from '@angular/forms';
 
 describe('HelpComponent', () => {
 	let component: HelpComponent;
@@ -13,6 +14,7 @@ describe('HelpComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
+			imports: [FormsModule],
 			declarations: [HelpComponent,
 				AnsynCheckboxComponent,
 				mockCarousel,
@@ -45,7 +47,7 @@ describe('HelpComponent', () => {
 		it('should invoke a call to the store', () => {
 			let checkboxElement = fixture.debugElement.query(By.directive(AnsynCheckboxComponent));
 			spyOn(component.helpLocalStorageService, 'setHelpLocalStorageData');
-			checkboxElement.triggerEventHandler('checkedChange', true);
+			checkboxElement.triggerEventHandler('ngModelChange', true);
 			expect(component.helpLocalStorageService.setHelpLocalStorageData).toHaveBeenCalledWith({ dontShowHelpOnStartup: true });
 		});
 	});

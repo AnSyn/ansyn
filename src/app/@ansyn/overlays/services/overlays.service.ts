@@ -1,4 +1,4 @@
-import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
+import { IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
@@ -13,6 +13,7 @@ import {
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
+import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/internal/operators';
 
@@ -24,7 +25,9 @@ export interface IOverlayByIdMetaData {
 }
 
 // @dynamic
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class OverlaysService {
 
 	/**
@@ -75,7 +78,7 @@ export class OverlaysService {
 	}
 
 	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
-				protected _overlaySourceProvider: BaseOverlaySourceProvider,
+				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
 				protected store$: Store<any>) {
 	}
 

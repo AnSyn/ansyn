@@ -9,6 +9,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
+	MultipleOverlaysSourceProvider,
 	OverlayReducer,
 	OverlaysConfig,
 	overlaysFeatureKey,
@@ -65,7 +66,6 @@ describe('StatusBarAppEffects', () => {
 				provideMockActions(() => actions),
 				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },
 				ImageryCommunicatorService,
-				OverlaysService,
 				HttpBackend,
 				{
 					provide: OverlaysConfig,
@@ -73,7 +73,7 @@ describe('StatusBarAppEffects', () => {
 						'limit': 500
 					}
 				},
-				{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
 			]
 		}).compileComponents();
 	}));

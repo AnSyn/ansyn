@@ -30,6 +30,7 @@ export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 export class AnsynApi {
 	activeMapId;
 	mapsList;
+	activeAnnotationLayer;
 
 	@AutoSubscription
 	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
@@ -48,12 +49,10 @@ export class AnsynApi {
 			select(selectActiveAnnotationLayer),
 			withLatestFrom(this.store.select(selectLayersEntities)),
 			map(([activeAnnotationLayerId, entities]) => entities[activeAnnotationLayerId]),
-			tap((activeAnnotationLayer)=> {
+			tap((activeAnnotationLayer) => {
 				this.activeAnnotationLayer = activeAnnotationLayer;
 			})
 		);
-
-	 activeAnnotationLayer;
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
@@ -126,7 +125,6 @@ export class AnsynApi {
 
 	
 	init(): void {
-		window['api'] = this;
 	}
 
 	destroy(): void {

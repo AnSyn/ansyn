@@ -29,7 +29,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { COMPONENT_MODE } from './app-providers/component-mode';
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
-import { ANSYN_ID, AnsynApi } from './api/ansyn-api.service';
+import { ANSYN_ID } from './api/ansyn-api.service';
 import { CallbackComponent } from './components/callback/callback.component';
 
 @NgModule({
@@ -65,10 +65,6 @@ import { CallbackComponent } from './components/callback/callback.component';
 			provide: COMPONENT_MODE,
 			useValue: false
 		},
-		{
-			provide: ANSYN_ID,
-			useValue: 'ANSYN_ID'
-		},
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
@@ -98,8 +94,4 @@ export class AnsynModule {
 			]
 		}
 	}
-  
-	constructor(protected ansynApi: AnsynApi) {
-	  }
-
 }

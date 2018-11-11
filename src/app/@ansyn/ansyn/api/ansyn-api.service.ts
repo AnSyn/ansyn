@@ -48,12 +48,11 @@ export class AnsynApi {
 			select(selectActiveAnnotationLayer),
 			withLatestFrom(this.store.select(selectLayersEntities)),
 			map(([activeAnnotationLayerId, entities]) => entities[activeAnnotationLayerId]),
-			tap((activeAnnotationLayer)=> {
+			tap((activeAnnotationLayer) => {
 				this.activeAnnotationLayer = activeAnnotationLayer;
 			})
 		);
-
-	 activeAnnotationLayer;
+		activeAnnotationLayer;
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),

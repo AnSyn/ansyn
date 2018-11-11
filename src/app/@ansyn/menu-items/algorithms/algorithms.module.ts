@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { MenuModule } from '@ansyn/menu';
+import { MapFacadeModule } from '@ansyn/map-facade';
 import { CommonModule } from '@angular/common';
 import { AlgorithmsComponent } from './components/algorithms/algorithms.component';
 import { CoreModule } from '@ansyn/core';
@@ -16,6 +18,8 @@ import { algorithmsFeatureKey, AlgorithmsReducer } from './reducers/algorithms.r
 @NgModule({
 	imports: [
 		CoreModule,
+		MapFacadeModule,
+		MenuModule,
 		CommonModule,
 		FormsModule,
 		StoreModule.forFeature(algorithmsFeatureKey, AlgorithmsReducer)

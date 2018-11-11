@@ -12,12 +12,12 @@ import {
 	AlgorithmTaskWhichOverlays,
 	AlgorithmTask
 } from '../../models/algorithms.model';
-import { MapFacadeService, mapStateSelector } from '../../../../map-facade/public_api';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { SetAlgorithmTaskDrawIndicator } from '../../actions/algorithms.actions';
 import { selectAlgorithmTaskRegion } from '../../reducers/algorithms.reducer';
-import { ToggleIsPinnedAction } from '../../../../menu/actions/menu.actions';
 import { AlgorithmsService } from '../../services/algorithms.service';
+import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { ToggleIsPinnedAction } from '@ansyn/menu';
 
 @Component({
 	selector: 'ansyn-tasks-form',

@@ -126,7 +126,6 @@ export class AnsynApi {
 
 	
 	init(): void {
-		window['api'] = this;
 	}
 
 	destroy(): void {

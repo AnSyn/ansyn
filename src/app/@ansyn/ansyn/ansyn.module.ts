@@ -65,10 +65,6 @@ import { CallbackComponent } from './components/callback/callback.component';
 			provide: COMPONENT_MODE,
 			useValue: false
 		},
-		{
-			provide: ANSYN_ID,
-			useValue: 'ANSYN_ID'
-		},
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
@@ -98,8 +94,4 @@ export class AnsynModule {
 			]
 		}
 	}
-  
-	constructor(protected ansynApi: AnsynApi) {
-	  }
-
 }

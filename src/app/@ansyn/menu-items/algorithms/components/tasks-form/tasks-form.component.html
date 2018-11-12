@@ -76,7 +76,8 @@
 		</div>
 	</div>
 
-	<div [class.invisible]="!algName">Note: this algorithm is only available for {{currentAlgorithm?.maxOverlays}} overlays</div>
+	<div [class.invisible]="!algName">Note: this algorithm is only available for {{algorithmConfig?.maxOverlays}}
+		overlays</div>
 
 	<div class="big-font wide-underline margin"></div>
 
@@ -84,7 +85,7 @@
 
 	<div class="run-bar margin">
 		<button ansynButton [disabled]="f.invalid || hasError() || !task.region">Run Task</button>
-		<div *ngIf="currentAlgorithm">Time Estimation: {{timeEstimation}}m</div>
+		<div *ngIf="algorithmConfig">Time Estimation: {{timeEstimation}}m</div>
 	</div>
 
 	<div *ngIf="hasError()" class="errors">{{errorMsg}}</div>

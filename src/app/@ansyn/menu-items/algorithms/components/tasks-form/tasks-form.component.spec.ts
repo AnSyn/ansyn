@@ -84,12 +84,12 @@ describe('TasksFormComponent', () => {
 		it('should check minimum no. of overlays', () => {
 			overlays.pop();
 			component.checkForErrors();
-			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays is less than 2`);
+			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays 1 should be at least 2`);
 		});
 		it('should check maximum no. of overlays', () => {
 			overlays.push(new Overlay({}));
 			component.checkForErrors();
-			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays is more than 2`);
+			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays 3 should be at most 2`);
 		});
 		it('should check existence of master overlay', () => {
 			component.task.masterOverlay = null;

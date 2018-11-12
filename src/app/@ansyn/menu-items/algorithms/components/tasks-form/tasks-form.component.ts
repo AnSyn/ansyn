@@ -41,18 +41,26 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		return this.configService.config;
 	}
 
-	get currentAlgorithm(): IAlgorithmConfig {
+	get algorithmConfig(): IAlgorithmConfig {
 		return this.algorithms[this.algName];
 	}
 
 	get timeEstimation() {
-		return this.currentAlgorithm.timeEstimationPerOverlayInMinutes * this.task.overlays.length;
+		return this.algorithmConfig.timeEstimationPerOverlayInMinutes * this.task.overlays.length;
 	}
 
 	@AutoSubscription
-	getOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
-		tap((favoriteOverlays) => {
-				this.task.overlays = favoriteOverlays;
+	getOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
+		map ((overlays: IOverlay[]) => {
+			const result = this.algName
+				? overlays.filter((overlay: IOverlay) => {
+					return this.algorithmConfig.sensorNames.includes(overlay.sensorName)
+				})
+				: overlays;
+			return result;
+		}),
+		tap((overlays: IOverlay[]) => {
+				this.task.overlays = overlays;
 				this.checkForErrors();
 			}
 		));
@@ -93,10 +101,10 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	checkForErrors() {
 		let message = '';
-		if (this.task.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
-			message = `The number of selected overlays is less than ${this.MIN_NUM_OF_OVERLAYS}`;
-		} else if (this.currentAlgorithm && this.task.overlays.length > this.currentAlgorithm.maxOverlays) {
-			message = `The number of selected overlays is more than ${this.currentAlgorithm.maxOverlays}`;
+		if (this.algorithmConfig && this.task.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
+			message = `The number of selected overlays ${this.task.overlays.length} should be at least ${this.MIN_NUM_OF_OVERLAYS}`;
+		} else if (this.algorithmConfig && this.task.overlays.length > this.algorithmConfig.maxOverlays) {
+			message = `The number of selected overlays ${this.task.overlays.length} should be at most ${this.algorithmConfig.maxOverlays}`;
 		} else if (!this.task.masterOverlay) {
 			message = 'No master overlay selected'
 		}

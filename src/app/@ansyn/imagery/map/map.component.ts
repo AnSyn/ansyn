@@ -12,13 +12,14 @@ import { BaseImageryMap } from '../model/base-imagery-map';
 })
 export class MapComponent implements OnInit, OnDestroy {
 	@ViewChild('mapElement') protected mapElement: ElementRef;
+	@ViewChild('mapElementShadow') protected mapElementShadow: ElementRef;
 
 	constructor(protected map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 
 	createMap(layers: any, position?: ICaseMapPosition): Observable<BaseImageryMap> {
 		return this.map
-			.initMap(this.mapElement.nativeElement, layers, position)
+			.initMap(this.mapElement.nativeElement, this.mapElementShadow.nativeElement, layers, position)
 			.pipe(
 				filter(success => success),
 				map(() => this.map),

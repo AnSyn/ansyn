@@ -9,7 +9,7 @@ import {
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
 import { Observable, empty } from 'rxjs';
-import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter, UpdateLayer, ILayer, CasesService, selectLayersEntities, selectActiveAnnotationLayer } from '@ansyn/menu-items';
+import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter, UpdateLayer, ILayer, selectLayersEntities, selectActiveAnnotationLayer } from '@ansyn/menu-items';
 import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
@@ -53,6 +53,7 @@ export class AnsynApi {
 				this.activeAnnotationLayer = activeAnnotationLayer;
 			})
 		);
+
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
 		map(({ payload }: ShadowMouseProducer) => {
@@ -71,7 +72,6 @@ export class AnsynApi {
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
 				protected moduleRef: NgModuleRef<any>,
-				protected casesService: CasesService,
 				@Inject(ANSYN_ID) public id: string) {
 		this.init();
 	}

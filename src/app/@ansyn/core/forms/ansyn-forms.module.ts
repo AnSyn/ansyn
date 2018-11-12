@@ -9,6 +9,7 @@ import { AnsynRadioComponent } from './ansyn-radio/ansyn-radio.component';
 import { ComboBoxOptionComponent } from './combo-box-option/combo-box-option.component';
 import { ComboBoxComponent } from './combo-box/combo-box.component';
 import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.component';
+import { FileInputComponent } from './file-input/file-input.component';
 
 @NgModule({
 	imports: [
@@ -23,7 +24,8 @@ import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.
 		AnsynRadioComponent,
 		ComboBoxComponent,
 		ComboBoxTriggerComponent,
-		ComboBoxOptionComponent
+		ComboBoxOptionComponent,
+		FileInputComponent
 	],
 	exports: [
 		AnsynCheckboxComponent,
@@ -33,7 +35,8 @@ import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.
 		AnsynRadioComponent,
 		ComboBoxComponent,
 		ComboBoxTriggerComponent,
-		ComboBoxOptionComponent
+		ComboBoxOptionComponent,
+		FileInputComponent
 	]
 })
 export class AnsynFormsModule {

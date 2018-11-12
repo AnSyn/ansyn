@@ -12,6 +12,7 @@ export class EnumFilterContainerComponent {
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
 
 	onInputClicked(key: string) {
+		this.metadata.updateMetadata(key);
 		this.onMetadataChange.emit(this.metadata);
 	}
 

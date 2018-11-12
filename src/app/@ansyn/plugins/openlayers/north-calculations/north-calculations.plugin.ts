@@ -26,7 +26,10 @@ import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ans
 import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
-import { catchError, filter, map, mergeMap, retry, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, mergeMap, retry, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+
+import OLMap from 'ol/map';
+import View from 'ol/view';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -38,6 +41,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	protected maximumNumberOfRetries = 0.1;
 	protected thresholdDegrees = 0.1;
+
+	shadowMapObject: OLMap;
+	shadowMapObjectView: View;
 
 	@AutoSubscription
 	hoveredOverlayPreview$: Observable<any> = this.store$.select(selectHoveredOverlay).pipe(
@@ -78,7 +84,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			if (orientation === 'Align North' && !forceFirstDisplay) {
 				return this.setActualNorth();
 			}
-			return this.getVirtualNorth().pipe(take(1)).pipe(
+			return this.getVirtualNorth(this.iMap.mapObject).pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {
 					this.communicator.setVirtualNorth(virtualNorth);
 					if (!forceFirstDisplay && orientation === 'Imagery Perspective') {
@@ -103,13 +109,62 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		})
 	);
 
+	// @AutoSubscription
+	// positionChangedCalcNorthApproximately$ = () => this.communicator.positionChanged.pipe(
+	// 	debounceTime(50),
+	// 	switchMap((position: ICaseMapPosition) => {
+	// 		const view = this.communicator.ActiveMap.mapObject.getView();
+	// 		const projection = view.getProjection();
+	// 		if (projection.getUnits() === 'pixels' && position) {
+	// 			return this.getVirtualNorth(this.iMap.mapObject, projection.getCode(), 'EPSG:4326').pipe(take(1));
+	// 		}
+	// 		return of(0);
+	// 	}),
+	// 	tap((virtualNorth: number) => {
+	// 		this.communicator.setVirtualNorth(virtualNorth);
+	// 	})
+	// );
+
 	@AutoSubscription
-	positionChangedCalcNorthApproximately$ = () => this.communicator.positionChanged.pipe(
-		mergeMap((position: ICaseMapPosition) => {
-			const view = this.communicator.ActiveMap.mapObject.getView();
+	positionChangedCalcNorthAccurately$ = () => this.communicator.positionChanged.pipe(
+		debounceTime(50),
+		switchMap((position: ICaseMapPosition) => {
+			const view = this.iMap.mapObject.getView();
 			const projection = view.getProjection();
 			if (projection.getUnits() === 'pixels' && position) {
-				return this.getVirtualNorth(projection.getCode(), 'EPSG:4326').pipe(take(1));
+				if (!position.projectedState) {
+					return of(0);
+				}
+
+				if (!this.shadowMapObject) {
+					this.createShadowMap();
+					this.resetShadowMapView();
+				}
+				const { center, zoom, rotation } = position.projectedState;
+				this.shadowMapObjectView.setCenter(center);
+				this.shadowMapObjectView.setZoom(zoom);
+				this.shadowMapObjectView.setRotation(rotation);
+
+				return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
+					map((virtualNorth: number) => {
+						const shRotation = this.shadowMapObjectView.getRotation();
+
+						let currentRotationDegrees = toDegrees(shRotation);
+						if (currentRotationDegrees < 0) {
+							currentRotationDegrees = 360 + currentRotationDegrees;
+						}
+						currentRotationDegrees = currentRotationDegrees % 360;
+						let northDeg = toDegrees(virtualNorth);
+						if (northDeg < 0) {
+							northDeg = 360 + northDeg;
+						}
+						northDeg = northDeg % 360;
+						if (this.thresholdDegrees > Math.abs(currentRotationDegrees - northDeg)) {
+							return 0;
+						}
+						return (shRotation - virtualNorth) % (Math.PI * 2);
+					})
+				)
 			}
 			return of(0);
 		}),
@@ -126,7 +181,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	setActualNorth(): Observable<any> {
-		return this.pointNorth().pipe(take(1)).pipe(
+		return this.pointNorth(this.iMap.mapObject).pipe(take(1)).pipe(
 			tap((virtualNorth: number) => {
 				this.communicator.setVirtualNorth(virtualNorth);
 				this.communicator.setRotation(virtualNorth);
@@ -134,9 +189,10 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	pointNorth(): Observable<any> {
-		this.communicator.updateSize();
-		return this.getCorrectedNorth().pipe(
+	pointNorth(mapObject: OLMap): Observable<any> {
+		mapObject.updateSize();
+		mapObject.renderSync();
+		return this.getCorrectedNorth(mapObject).pipe(
 			catchError(reason => {
 				const error = `setCorrectedNorth failed ${reason}`;
 				this.loggerService.warn(error);
@@ -145,22 +201,22 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	getCorrectedNorth(): Observable<any> {
-		return this.getProjectedCenters().pipe(
+	getCorrectedNorth(mapObject: OLMap): Observable<any> {
+		return this.getProjectedCenters(mapObject).pipe(
 			map((projectedCenters: Point[]): any => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithoffset = projectedCenters[1].coordinates;
 				const northOffsetRad = Math.atan2((projectedCenterViewWithoffset[0] - projectedCenterView[0]), (projectedCenterViewWithoffset[1] - projectedCenterView[1]));
 
 				const northOffsetDeg = toDegrees(northOffsetRad);
-				const view = (<BaseImageryMap>this.iMap).mapObject.getView();
+				const view = mapObject.getView();
 				const actualNorth = northOffsetRad + view.getRotation();
 				return { northOffsetRad, northOffsetDeg, actualNorth };
 			}),
 			mergeMap((northData) => {
-				const view = this.iMap.mapObject.getView();
+				const view = mapObject.getView();
 				view.setRotation(northData.actualNorth);
-				this.iMap.mapObject.renderSync();
+				mapObject.renderSync();
 				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
 					return throwError({result: northData.actualNorth });
 				}
@@ -172,7 +228,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	getPreviewNorth(sourceProjection: string, destProjection: string) {
-		return this.getProjectedCenters(sourceProjection, destProjection).pipe(
+		const mapObject = this.iMap.mapObject;
+		return this.getProjectedCenters(mapObject, sourceProjection, destProjection).pipe(
 			map((projectedCenters: Point[]): number => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
@@ -182,8 +239,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	getVirtualNorth(sourceProjection?: string, destProjection?: string) {
-		return this.getProjectedCenters(sourceProjection, destProjection).pipe(
+	getVirtualNorth(mapObject: OLMap, sourceProjection?: string, destProjection?: string) {
+		return this.getProjectedCenters(mapObject, sourceProjection, destProjection).pipe(
 			map((projectedCenters: Point[]): number => {
 				const projectedCenterView = projectedCenters[0].coordinates;
 				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
@@ -219,9 +276,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		}));
 	}
 
-	getProjectedCenters(sourceProjection?: string, destProjection?: string): Observable<Point[]> {
+	getProjectedCenters(mapObject: OLMap, sourceProjection?: string, destProjection?: string): Observable<Point[]> {
 		return Observable.create((observer: Observer<any>) => {
-			const mapObject = this.iMap.mapObject;
 			const size = mapObject.getSize();
 			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 			if (!areCoordinatesNumeric(olCenterView)) {
@@ -234,5 +290,30 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
 			.pipe(switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, sourceProjection, destProjection)));
+	}
+
+	onResetView(): Observable<boolean> {
+		if (!this.shadowMapObject) {
+			this.createShadowMap();
+		}
+		this.resetShadowMapView();
+		return of(true);
+	};
+
+	createShadowMap() {
+		const renderer = 'canvas';
+		this.shadowMapObject = new OLMap({
+			target: (<any>this.iMap).shadowElement,
+			renderer,
+			controls: []
+		});
+	}
+
+	resetShadowMapView() {
+		const mainLayer = this.iMap.getMainLayer();
+		this.shadowMapObjectView = new View({
+			projection: mainLayer.getSource().getProjection()
+		});
+		this.shadowMapObject.setView(this.shadowMapObjectView);
 	}
 }

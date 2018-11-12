@@ -26,7 +26,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract toggleGroup(groupName: string, newState: boolean);
 
-	abstract initMap(element: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
+	abstract initMap(element: HTMLElement, shadowElement: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
 
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)

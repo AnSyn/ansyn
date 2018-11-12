@@ -310,6 +310,10 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	resetShadowMapView() {
+		const layers = this.shadowMapObject.getLayers()
+		layers.forEach((layer) => {
+			this.shadowMapObject.removeLayer(layer);
+		});
 		const mainLayer = this.iMap.getMainLayer();
 		this.shadowMapObjectView = new View({
 			projection: mainLayer.getSource().getProjection()

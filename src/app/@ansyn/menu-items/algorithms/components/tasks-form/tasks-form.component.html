@@ -15,7 +15,7 @@
 
 	<ansyn-combo-box
 		[(ngModel)]="algName"
-		(ngModelChange)="checkForErrors()"
+		(ngModelChange)="onAlgorithmChange()"
 		required
 		name="algorithm"
 		[color]="'transparent'"

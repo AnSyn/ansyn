@@ -10,11 +10,13 @@ export const algorithmsAdapter: EntityAdapter<IAlgorithm> = createEntityAdapter<
 
 export interface IAlgorithmState extends EntityState<IAlgorithm> {
 	drawIndicator: boolean;
+	regionLengthInMeters: number;
 	region: GeometryObject;
 }
 
 export const initialAlgorithmsState: IAlgorithmState = algorithmsAdapter.getInitialState({
 	drawIndicator: false,
+	regionLengthInMeters: 1000,
 	region: null
 });
 
@@ -26,6 +28,10 @@ export function AlgorithmsReducer(state: IAlgorithmState = initialAlgorithmsStat
 
 		case AlgorithmsActionTypes.SET_DRAW_INDICATOR: {
 			return { ...state, drawIndicator: action.payload };
+		}
+
+		case AlgorithmsActionTypes.SET_REGION_LENGTH: {
+			return { ...state, regionLengthInMeters: action.payload };
 		}
 
 		case AlgorithmsActionTypes.SET_REGION: {
@@ -44,4 +50,5 @@ export const selectAlgorithms: MemoizedSelector<any, any> = createSelector(algor
 export const selectAlgorithmsEntities: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, <(state: any) => Dictionary<any>>selectEntities);
 
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, (algorithmsState: IAlgorithmState) => algorithmsState.drawIndicator);
+export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, (algorithmsState: IAlgorithmState) => algorithmsState.regionLengthInMeters);
 export const selectAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, (algorithmsState: IAlgorithmState) => algorithmsState.region);

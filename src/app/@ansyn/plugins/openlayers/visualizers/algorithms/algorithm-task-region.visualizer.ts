@@ -1,4 +1,3 @@
-import * as turf from '@turf/turf';
 import { EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
@@ -6,7 +5,7 @@ import { FeatureCollection, GeometryObject } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/draw';
-import { getPointByGeometry } from '@ansyn/core';
+import { getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
@@ -20,20 +19,30 @@ import { combineLatest } from 'rxjs/index';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
+import Stroke from 'ol/style/stroke';
 import Feature from 'ol/feature';
+import { selectAlgorithmTaskRegionLength } from '../../../../menu-items/algorithms/reducers/algorithms.reducer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })
 export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
-	_iconSrc: Style = new Style({
+	iconStyle: Style = new Style({
 		image: new Icon({
 			scale: 1,
 			src: 'assets/pinpoint-indicator.svg'
 		}),
 		zIndex: 100
 	});
+
+	rectStyle: Style = new Style({
+		stroke: new Stroke({
+			color: 'rgba(255,255,255,1)',
+			width: 3
+		})
+	});
+
 
 	region$ = this.store$.select(selectAlgorithmTaskRegion);
 
@@ -43,6 +52,15 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 	);
 
 	drawIndicator$ = this.store$.select(selectAlgorithmTaskDrawIndicator);
+
+	regionLengthInMeter: number;
+
+	@AutoSubscription
+	regionLengthInMeter$ = this.store$.select(selectAlgorithmTaskRegionLength).pipe(
+		tap((length: number) => {
+			this.regionLengthInMeter = length;
+		})
+	);
 
 	@AutoSubscription
 	interactionChanges$: Observable<any> = combineLatest(this.isActiveMap$, this.drawIndicator$).pipe(
@@ -83,7 +101,7 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 		const drawInteractionHandler = new Draw({
 			type: 'Point',
 			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
-			style: this.featureStyle.bind(this)
+			style: this.iconStyle
 		});
 
 		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
@@ -111,14 +129,14 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 		super.onDispose();
 	}
 
-	featureStyle(feature: Feature, resolution) {
-		return this._iconSrc;
+	featureStyle(feature: Feature, state) {
+		return this.rectStyle;
 	}
 
-	drawRegionOnMap(region: GeometryObject): Observable<boolean> {
-		const coordinates = getPointByGeometry(region).coordinates;
+	drawRegionOnMap(point: GeometryObject): Observable<boolean> {
+		const coordinates = getPointByGeometry(point).coordinates;
+		const featureJson = getPolygonByPointAndRadius(coordinates, this.regionLengthInMeter / 2000);
 		const id = 'algorithmTaskRegion';
-		const featureJson = turf.point(coordinates);
 		const entities = [{ id, featureJson }];
 		return this.setEntities(entities);
 	}

@@ -13,7 +13,7 @@ import {
 	IAlgorithmConfig
 } from '../../models/algorithms.model';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { SetAlgorithmTaskDrawIndicator } from '../../actions/algorithms.actions';
+import { SetAlgorithmTaskDrawIndicator, SetAlgorithmTaskRegionLength } from '../../actions/algorithms.actions';
 import { selectAlgorithmTaskRegion } from '../../reducers/algorithms.reducer';
 import { AlgorithmsService } from '../../services/algorithms.service';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
@@ -51,7 +51,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	getOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
-		map ((overlays: IOverlay[]) => {
+		map((overlays: IOverlay[]) => {
 			const result = this.algName
 				? overlays.filter((overlay: IOverlay) => {
 					return this.algorithmConfig.sensorNames.includes(overlay.sensorName)
@@ -97,6 +97,11 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.algNames = Object.keys(this.algorithms);
+	}
+
+	onAlgorithmChange() {
+		this.store$.dispatch(new SetAlgorithmTaskRegionLength(this.algorithmConfig.regionLengthInMeters));
+		this.checkForErrors();
 	}
 
 	checkForErrors() {

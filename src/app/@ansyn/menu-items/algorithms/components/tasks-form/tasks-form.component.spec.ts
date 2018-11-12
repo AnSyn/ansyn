@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
-import { MockComponent, Overlay } from '@ansyn/core';
+import { AnsynFormsModule, Overlay } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AlgorithmsConfigService } from '../../services/algorithms-config.service';
 import { EffectsModule } from '@ngrx/effects';
@@ -13,48 +13,14 @@ describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
 	let fixture: ComponentFixture<TasksFormComponent>;
 
-	const mockComboBoxOptionComponent = MockComponent({
-		selector: 'ansyn-combo-box-option',
-		inputs: ['value'],
-		outputs: []
-	});
-
-	const mockComboBoxComponent = MockComponent({
-		selector: 'ansyn-combo-box',
-		inputs: ['options', 'renderFunction', 'comboBoxToolTipDescription', 'ngModel', 'color', 'placeholder'],
-		outputs: ['ngModelChange']
-	});
-
-	const mockComboTrigger = MockComponent({
-		selector: 'button[ansynComboBoxTrigger]',
-		inputs: ['isActive', 'render', 'ngModel'],
-		outputs: ['ngModelChange']
-	});
-
-	const mockRadioBtn = MockComponent({
-		selector: 'ansyn-radio',
-		inputs: ['ngModel', 'value'],
-		outputs: ['ngModelChange']
-	});
-
-	const mockInput = MockComponent({
-		selector: 'ansyn-input',
-		inputs: ['ngModel', 'value', 'required', 'white'],
-		outputs: ['ngModelChange']
-	});
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
-				TasksFormComponent,
-				mockComboBoxComponent,
-				mockComboBoxOptionComponent,
-				mockComboTrigger,
-				mockRadioBtn,
-				mockInput
+				TasksFormComponent
 			],
 			imports: [
 				FormsModule,
+				AnsynFormsModule,
 				TranslateModule.forRoot(),
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
@@ -89,14 +55,17 @@ describe('TasksFormComponent', () => {
 		let overlays: Overlay[];
 		beforeEach(() => {
 			spyOn(component, 'showError');
-			overlays = ['a', 'b'].map((id) => new Overlay({id: id}));
+			overlays = ['a', 'b'].map((id) => new Overlay({ id: id }));
 			component.MIN_NUM_OF_OVERLAYS = 2;
 			component.configService.config = {
-				maxOverlays: 3,
-				timeEstimationPerOverlayInMinutes: 10,
-				regionLengthInMeters: 100,
-				sensorNames: []
+				alg_1: {
+					maxOverlays: 2,
+					timeEstimationPerOverlayInMinutes: 10,
+					regionLengthInMeters: 100,
+					sensorNames: []
+				}
 			};
+			component.algName = 'alg_1';
 			component.task = {
 				id: '21',
 				name: '21',
@@ -112,10 +81,20 @@ describe('TasksFormComponent', () => {
 			component.checkForErrors();
 			expect(component.showError).toHaveBeenCalledWith('');
 		});
-		// it('should check minimum no. of overlays', () => {
-		// 	overlays.pop();
-		// 	component.checkForErrors();
-		// 	expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays is less than ${component.MIN_NUM_OF_OVERLAYS}`);
-		// });
+		it('should check minimum no. of overlays', () => {
+			overlays.pop();
+			component.checkForErrors();
+			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays is less than 2`);
+		});
+		it('should check maximum no. of overlays', () => {
+			overlays.push(new Overlay({}));
+			component.checkForErrors();
+			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays is more than 2`);
+		});
+		it('should check existence of master overlay', () => {
+			component.task.masterOverlay = null;
+			component.checkForErrors();
+			expect(component.showError).toHaveBeenCalledWith('No master overlay selected');
+		});
 	});
 });

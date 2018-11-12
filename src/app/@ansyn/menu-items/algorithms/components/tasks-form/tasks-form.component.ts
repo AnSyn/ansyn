@@ -7,10 +7,10 @@ import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
 import {
+	AlgorithmTask,
 	AlgorithmTaskStatus,
-	IAlgorithmsConfig,
 	AlgorithmTaskWhichOverlays,
-	AlgorithmTask
+	IAlgorithmConfig
 } from '../../models/algorithms.model';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { SetAlgorithmTaskDrawIndicator } from '../../actions/algorithms.actions';
@@ -41,7 +41,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		return this.configService.config;
 	}
 
-	get currentAlgorithm(): IAlgorithmsConfig {
+	get currentAlgorithm(): IAlgorithmConfig {
 		return this.algorithms[this.algName];
 	}
 

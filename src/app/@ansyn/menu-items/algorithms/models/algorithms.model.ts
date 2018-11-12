@@ -3,11 +3,15 @@ import { GeometryObject } from 'geojson';
 
 export const AlgorithmsConfig = 'algorithmsConfig';
 
-export interface IAlgorithmsConfig {
+export interface IAlgorithmConfig {
 	maxOverlays: number,
 	timeEstimationPerOverlayInMinutes: number,
 	regionLengthInMeters: number,
 	sensorNames: string[]
+}
+
+export interface IAlgorithmsConfig {
+	[algName: string]: IAlgorithmConfig
 }
 
 export type AlgorithmTaskWhichOverlays = 'case_overlays' | 'favorite_overlays' | 'displayed_overlays';

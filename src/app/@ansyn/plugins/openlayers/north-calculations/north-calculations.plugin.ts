@@ -146,7 +146,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				this.shadowMapObjectView.setRotation(rotation);
 
 				return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
-					map((virtualNorth: number) => {
+					map((calculatedNorthAngleAfterPointingNorth: number) => {
 						const shRotation = this.shadowMapObjectView.getRotation();
 
 						let currentRotationDegrees = toDegrees(shRotation);
@@ -154,7 +154,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 							currentRotationDegrees = 360 + currentRotationDegrees;
 						}
 						currentRotationDegrees = currentRotationDegrees % 360;
-						let northDeg = toDegrees(virtualNorth);
+						let northDeg = toDegrees(calculatedNorthAngleAfterPointingNorth);
 						if (northDeg < 0) {
 							northDeg = 360 + northDeg;
 						}
@@ -162,7 +162,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 						if (this.thresholdDegrees > Math.abs(currentRotationDegrees - northDeg)) {
 							return 0;
 						}
-						return (shRotation - virtualNorth) % (Math.PI * 2);
+						return (shRotation - calculatedNorthAngleAfterPointingNorth) % (Math.PI * 2);
 					})
 				)
 			}
@@ -314,6 +314,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		this.shadowMapObjectView = new View({
 			projection: mainLayer.getSource().getProjection()
 		});
+		this.shadowMapObject.addLayer(mainLayer);
 		this.shadowMapObject.setView(this.shadowMapObjectView);
 	}
 }

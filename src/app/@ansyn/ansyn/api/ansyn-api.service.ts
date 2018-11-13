@@ -17,6 +17,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection } from 'geojson';
 import { window } from 'd3';
 import { featureCollection } from '@turf/turf';
+import { cloneDeep } from 'lodash';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 
@@ -92,7 +93,7 @@ export class AnsynApi {
 	}
 	
 	setAnnotations(featureCollection: FeatureCollection<any>): void {
-		this.store.dispatch(new UpdateLayer(<ILayer>{ ...this.activeAnnotationLayer, data: featureCollection }));
+		this.store.dispatch(new UpdateLayer(<ILayer>{ ...this.activeAnnotationLayer, data: cloneDeep(featureCollection) }));
 	}
 
 	deleteAllAnnotations(): void {

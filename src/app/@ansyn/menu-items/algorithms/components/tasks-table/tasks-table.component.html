@@ -1,3 +1,87 @@
-<p>
-  tasks-table works!
-</p>
+<div class="tasks-table" *ngIf="ids$ | async as ids; else noTasks">
+
+
+	<div class="tasks-table-head">
+		<div class="tasks-table-head-row">
+			<div class="tasks-table-head-row-data">
+				<div class="tasks-table-head-col">
+					Name
+				</div>
+				<div class="tasks-table-head-col">
+					Auto Save
+				</div>
+				<div class="tasks-table-head-col">
+					Owner
+				</div>
+				<div class="tasks-table-head-col">
+					Last Modified
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="tasks-table-body" (infiniteScroll)="loadTasks()" *ngIf="entities$ | async as entities" #tbodyElement>
+
+		<div class="tasks-table-body-row"
+			 *ngFor="let id of ids"
+			 (click)="selectTask(id)"
+			 [class.active]="(modalTaskId$ | async) === id"
+			 [class.selected]="selectedTaskId === id"
+			 (mouseenter)="onMouseEnterTaskRow(taskMenu, taskRow, tbodyElement)"
+			 (mouseleave)="onMouseLeaveTaskRow(taskRow)"
+			 [@leaveAnim]
+			 #taskRow>
+
+			<hr>
+
+			<div class="tasks-table-body-row-data">
+				<hr>
+
+				<div class="tasks-table-task-name-col">
+					{{entities[id].name}}
+				</div>
+
+				<ng-template #notSelected>
+					<div class="tasks-table-task-name-col">
+						{{ entities[id].autoSave ? 'ON' : 'OFF' }}
+					</div>
+				</ng-template>
+
+				<div class="tasks-table-body-col">
+					{{entities[id].owner}}
+				</div>
+
+				<div class="tasks-table-body-col">
+					{{formatTime(entities[id].lastModified)}}
+				</div>
+
+				<!--menu-->
+				<div class="task-menu-container">
+					<div class="task-menu" (click)="taskMenuClick($event, taskRow)" #taskMenu>
+						<button (click)="removeTask(id)">
+							<i class="icon-delete"></i>
+						</button>
+						<button (click)="shareTask(id)">
+							<i class="icon-share"></i>
+						</button>
+						<button (click)="editTask(id)">
+							<i class="icon-edit"></i>
+						</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<ng-template #noTasks>
+
+	<p class="no-tasks">
+		No tasks
+	</p>
+
+</ng-template>

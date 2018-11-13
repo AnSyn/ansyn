@@ -1,24 +1,31 @@
 import { IAlgorithmState } from './algorithms.reducer';
 import { AlgorithmsActions, AlgorithmsActionTypes } from '../actions/algorithms.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
-import { IAlgorithm } from '../models/algorithms.model';
+import { AlgorithmTask } from '../models/algorithms.model';
 import { GeometryObject } from 'geojson';
 
-export const algorithmsAdapter: EntityAdapter<IAlgorithm> = createEntityAdapter<IAlgorithm>();
+// export const algorithmsAdapter: EntityAdapter<IAlgorithmState> = createEntityAdapter<IAlgorithmState>();
 
-export interface IAlgorithmState extends EntityState<IAlgorithm> {
+export interface ITaskModal {
+	show: boolean,
+	id?: string
+}
+
+export interface IAlgorithmState {
 	drawIndicator: boolean;
 	regionLengthInMeters: number;
 	region: GeometryObject;
+	selectedTask: AlgorithmTask;
+	modal: ITaskModal;
 }
 
-export const initialAlgorithmsState: IAlgorithmState = algorithmsAdapter.getInitialState({
+export const initialAlgorithmsState: IAlgorithmState = {
 	drawIndicator: false,
 	regionLengthInMeters: 1000,
-	region: null
-});
+	region: null,
+	selectedTask: null,
+	modal: { show: false }
+};
 
 export const algorithmsFeatureKey = 'algorithms';
 export const algorithmsStateSelector: MemoizedSelector<any, IAlgorithmState> = createFeatureSelector<IAlgorithmState>(algorithmsFeatureKey);
@@ -44,11 +51,8 @@ export function AlgorithmsReducer(state: IAlgorithmState = initialAlgorithmsStat
 
 }
 
-export const { selectAll, selectEntities }: EntitySelectors<IAlgorithm, IAlgorithmState> = algorithmsAdapter.getSelectors();
 export const algorithmsStateOrInitial: MemoizedSelector<any, any> = createSelector(algorithmsStateSelector, (algorithmsState: IAlgorithmState) => algorithmsState || initialAlgorithmsState);
-export const selectAlgorithms: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, selectAll);
-export const selectAlgorithmsEntities: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, <(state: any) => Dictionary<any>>selectEntities);
-
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, (algorithmsState: IAlgorithmState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, (algorithmsState: IAlgorithmState) => algorithmsState.regionLengthInMeters);
 export const selectAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, (algorithmsState: IAlgorithmState) => algorithmsState.region);
+export const selectAlgorithmsModal: MemoizedSelector<any, any> = createSelector(algorithmsStateOrInitial, (algorithmsState: IAlgorithmState) => algorithmsState.modal);

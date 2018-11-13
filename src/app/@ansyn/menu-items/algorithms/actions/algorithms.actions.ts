@@ -1,10 +1,17 @@
 import { Action } from '@ngrx/store';
 import { GeometryObject } from 'geojson';
+import { AlgorithmTask } from '../models/algorithms.model';
 
 export enum AlgorithmsActionTypes {
 	SET_DRAW_INDICATOR = '[Algorithms] Set draw indicator',
 	SET_REGION_LENGTH = '[Algorithms] Set region length',
-	SET_REGION = '[Algorithms] Set region'
+	SET_REGION = '[Algorithms] Set region',
+
+	LOAD_TASKS = '[Algorithms] Load tasks',
+	DELETE_TASK = '[Algorithms] Delete task',
+	OPEN_MODAL = '[Algorithms] OPEN_MODAL',
+	CLOSE_MODAL = '[Algorithms] CLOSE_MODAL',
+	ADD_TASKS = '[Algorithms] ADD_CASES'
 }
 
 export type AlgorithmsActions =
@@ -30,5 +37,40 @@ export class SetAlgorithmTaskRegion implements Action {
 	type = AlgorithmsActionTypes.SET_REGION;
 
 	constructor(public payload: GeometryObject) {
+	}
+}
+
+export class LoadAlgorithmTasksAction implements Action {
+	type = AlgorithmsActionTypes.LOAD_TASKS;
+
+	constructor(public payload?: AlgorithmTask[]) {
+	}
+}
+
+export class AddAlgorithmTasksAction implements Action {
+	type = AlgorithmsActionTypes.ADD_TASKS;
+
+	constructor(public payload: AlgorithmTask[]) {
+	}
+}
+
+export class DeleteAlgorithmTaskAction implements Action {
+	type = AlgorithmsActionTypes.DELETE_TASK;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class OpenModalAction implements Action {
+	type = AlgorithmsActionTypes.OPEN_MODAL;
+
+	constructor(public payload: { component: any, taskId?: string }) {
+	}
+}
+
+export class CloseModalAction implements Action {
+	type = AlgorithmsActionTypes.CLOSE_MODAL;
+
+	constructor(public payload?: any) {
 	}
 }

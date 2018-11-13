@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { AnsynFormsModule, Overlay } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AlgorithmsConfigService } from '../../services/algorithms-config.service';
-import { EffectsModule } from '@ngrx/effects';
 import { AlgorithmsService } from '../../services/algorithms.service';
+import { EffectsModule } from '@ngrx/effects';
+import { AlgorithmsRemoteService } from '../../services/algorithms-remote.service';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -27,13 +27,13 @@ describe('TasksFormComponent', () => {
 			],
 			providers: [
 				{
-					provide: AlgorithmsConfigService,
+					provide: AlgorithmsService,
 					useValue: {
 						config: {}
 					}
 				},
 				{
-					provide: AlgorithmsService,
+					provide: AlgorithmsRemoteService,
 					useValue: {}
 				}
 			]

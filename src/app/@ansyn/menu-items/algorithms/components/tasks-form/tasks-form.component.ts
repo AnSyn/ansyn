@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlgorithmsConfigService } from '../../services/algorithms-config.service';
+import { AlgorithmsService } from '../../services/algorithms.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/index';
 import { select, Store } from '@ngrx/store';
@@ -15,7 +15,7 @@ import {
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { SetAlgorithmTaskDrawIndicator, SetAlgorithmTaskRegionLength } from '../../actions/algorithms.actions';
 import { selectAlgorithmTaskRegion } from '../../reducers/algorithms.reducer';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { AlgorithmsRemoteService } from '../../services/algorithms-remote.service';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 
@@ -46,7 +46,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	get timeEstimation(): number {
-		return this.algorithmConfig.timeEstimationPerOverlayInMinutes * this.task.overlays.length;
+		return this.algorithmConfig.timeEstimationPerOverlayInMinutes * this.task.state.overlays.length;
 	}
 
 	@AutoSubscription
@@ -60,7 +60,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			return result;
 		}),
 		tap((overlays: IOverlay[]) => {
-				this.task.overlays = overlays;
+				this.task.state.overlays = overlays;
 				this.checkForErrors();
 			}
 		));
@@ -74,7 +74,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		map((map: ICaseMapState) => map.data.overlay),
 		distinctUntilChanged(),
 		tap((overlay: IOverlay) => {
-			this.task.masterOverlay = overlay;
+			this.task.state.masterOverlay = overlay;
 			this.checkForErrors();
 		})
 	);
@@ -82,14 +82,14 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	getRegion$: Observable<any[]> = this.store$.select(selectAlgorithmTaskRegion).pipe(
 		tap((region) => {
-				this.task.region = region;
+				this.task.state.region = region;
 				this.checkForErrors();
 			}
 		));
 
 	constructor(
-		public configService: AlgorithmsConfigService,
-		protected algorithmsService: AlgorithmsService,
+		public configService: AlgorithmsService,
+		protected algorithmsService: AlgorithmsRemoteService,
 		public translate: TranslateService,
 		protected store$: Store<any>
 	) {
@@ -106,11 +106,11 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	checkForErrors() {
 		let message = '';
-		if (this.algorithmConfig && this.task.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
-			message = `The number of selected overlays ${this.task.overlays.length} should be at least ${this.MIN_NUM_OF_OVERLAYS}`;
-		} else if (this.algorithmConfig && this.task.overlays.length > this.algorithmConfig.maxOverlays) {
-			message = `The number of selected overlays ${this.task.overlays.length} should be at most ${this.algorithmConfig.maxOverlays}`;
-		} else if (!this.task.masterOverlay) {
+		if (this.algorithmConfig && this.task.state.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
+			message = `The number of selected overlays ${this.task.state.overlays.length} should be at least ${this.MIN_NUM_OF_OVERLAYS}`;
+		} else if (this.algorithmConfig && this.task.state.overlays.length > this.algorithmConfig.maxOverlays) {
+			message = `The number of selected overlays ${this.task.state.overlays.length} should be at most ${this.algorithmConfig.maxOverlays}`;
+		} else if (!this.task.state.masterOverlay) {
 			message = 'No master overlay selected'
 		}
 		this.showError(message);

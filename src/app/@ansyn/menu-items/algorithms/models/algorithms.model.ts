@@ -11,7 +11,11 @@ export interface IAlgorithmConfig {
 }
 
 export interface IAlgorithmsConfig {
-	[algName: string]: IAlgorithmConfig
+	schema: string,
+	paginationLimit: number,
+	algorithms: {
+		[algName: string]: IAlgorithmConfig
+	}
 }
 
 export type AlgorithmTaskWhichOverlays = 'case_overlays' | 'favorite_overlays' | 'displayed_overlays';
@@ -22,10 +26,20 @@ export interface IAlgorithm extends IEntity {
 	name: string;
 }
 
-export class AlgorithmTask {
+export class AlgorithmTaskPreview {
 	id: string;
 	name: string;
+	type: string;
+	status: AlgorithmTaskStatus;
+	runTime: Date;
+}
+
+export interface IAlgorithmsTaskState {
 	overlays: IOverlay[];
 	masterOverlay: IOverlay;
 	region: GeometryObject;
+}
+
+export class AlgorithmTask extends AlgorithmTaskPreview {
+	state: IAlgorithmsTaskState
 }

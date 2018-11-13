@@ -11,9 +11,11 @@ import { TasksFormPageComponent } from './components/tasks-form-page/tasks-form-
 import { TasksFormPageHeaderComponent } from './components/tasks-form-page-header/tasks-form-page-header.component';
 import { TasksFormComponent } from './components/tasks-form/tasks-form.component';
 import { FormsModule } from '@angular/forms';
-import { AlgorithmsConfigService } from './services/algorithms-config.service';
+import { AlgorithmsService } from './services/algorithms.service';
 import { StoreModule } from '@ngrx/store';
 import { algorithmsFeatureKey, AlgorithmsReducer } from './reducers/algorithms.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AlgorithmsEffects } from './effects/algorithms.effects';
 
 @NgModule({
 	imports: [
@@ -22,12 +24,13 @@ import { algorithmsFeatureKey, AlgorithmsReducer } from './reducers/algorithms.r
 		MenuModule,
 		CommonModule,
 		FormsModule,
-		StoreModule.forFeature(algorithmsFeatureKey, AlgorithmsReducer)
+		StoreModule.forFeature(algorithmsFeatureKey, AlgorithmsReducer),
+		EffectsModule.forFeature([AlgorithmsEffects]),
 	],
 	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent],
 	entryComponents: [AlgorithmsComponent],
 	exports: [AlgorithmsComponent],
-	providers: [AlgorithmsConfigService]
+	providers: [AlgorithmsService]
 })
 export class AlgorithmsModule {
 

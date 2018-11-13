@@ -1061,18 +1061,22 @@
   },
   "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
   "algorithmsConfig": {
-	"alg_1" : {
-		"maxOverlays": 20,
-		"timeEstimationPerOverlayInMinutes": 10,
-		"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
-		"regionLengthInMeters": 200
+    "schema": "tasks",
+    "paginationLimit": 16,
+    "algorithms": {
+		"alg_1" : {
+			"maxOverlays": 20,
+			"timeEstimationPerOverlayInMinutes": 10,
+			"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
+			"regionLengthInMeters": 200
+		},
+		"alg_2" : {
+			"maxOverlays": 2,
+			"timeEstimationPerOverlayInMinutes": 20,
+			"sensorNames": [ "Sentinel-2A" ],
+			"regionLengthInMeters": 100
+		}
 	},
-	"alg_2" : {
-		"maxOverlays": 2,
-		"timeEstimationPerOverlayInMinutes": 20,
-		"sensorNames": [ "Sentinel-2A" ],
-		"regionLengthInMeters": 100
-	}
   },
   "MENU_ITEMS_CONFIG": []
 }

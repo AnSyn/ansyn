@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AlgorithmsService } from './algorithms.service';
+import { AlgorithmsRemoteService } from './algorithms-remote.service';
 import { AlgorithmTask } from '../models/algorithms.model';
 
 @Injectable()
-export class AlgorithmsDefaultService implements AlgorithmsService {
+export class AlgorithmsRemoteDefaultService implements AlgorithmsRemoteService {
 
 	constructor() {
 	}

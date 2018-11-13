@@ -113,9 +113,9 @@ export {
 	SetAlgorithmTaskRegion
 } from './algorithms/actions/algorithms.actions';
 export {
-	AlgorithmsService
-} from './algorithms/services/algorithms.service';
+	AlgorithmsRemoteService
+} from './algorithms/services/algorithms-remote.service';
 export {
-	AlgorithmsDefaultService
-} from './algorithms/services/algorithms-default.service';
+	AlgorithmsRemoteDefaultService
+} from './algorithms/services/algorithms-remote-default.service';
 

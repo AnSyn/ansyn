@@ -10,7 +10,7 @@ import {
 	AlgorithmTask,
 	AlgorithmTaskStatus,
 	AlgorithmTaskWhichOverlays,
-	IAlgorithmConfig
+	IAlgorithmConfig, IAlgorithmsConfig
 } from '../../models/algorithms.model';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { SetAlgorithmTaskDrawIndicator, SetAlgorithmTaskRegionLength } from '../../actions/algorithms.actions';
@@ -37,7 +37,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	errorMsg = '';
 	MIN_NUM_OF_OVERLAYS = 2;
 
-	get algorithms() {
+	get algorithms(): IAlgorithmsConfig {
 		return this.configService.config;
 	}
 
@@ -45,7 +45,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		return this.algorithms[this.algName];
 	}
 
-	get timeEstimation() {
+	get timeEstimation(): number {
 		return this.algorithmConfig.timeEstimationPerOverlayInMinutes * this.task.overlays.length;
 	}
 

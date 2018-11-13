@@ -11,7 +11,7 @@ import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
 import {
 	selectAlgorithmTaskDrawIndicator,
-	selectAlgorithmTaskRegion,
+	selectAlgorithmTaskRegion, selectAlgorithmTaskRegionLength,
 	SetAlgorithmTaskDrawIndicator,
 	SetAlgorithmTaskRegion
 } from '@ansyn/menu-items';
@@ -21,7 +21,6 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Feature from 'ol/feature';
-import { selectAlgorithmTaskRegionLength } from '../../../../menu-items/algorithms/reducers/algorithms.reducer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

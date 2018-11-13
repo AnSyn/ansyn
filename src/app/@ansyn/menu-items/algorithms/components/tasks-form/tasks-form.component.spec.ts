@@ -77,7 +77,6 @@ describe('TasksFormComponent', () => {
 			}
 		});
 		it('should set empty message by default', () => {
-			console.log('hehe');
 			component.checkForErrors();
 			expect(component.showError).toHaveBeenCalledWith('');
 		});

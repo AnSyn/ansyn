@@ -105,6 +105,7 @@ export { UpdateFilterAction } from './filters/actions/filters.actions';
 export { IEnumFiled } from './filters/models/metadata/enum-filter-metadata';
 export {
 	selectAlgorithmTaskRegion,
+	selectAlgorithmTaskRegionLength,
 	selectAlgorithmTaskDrawIndicator
 } from './algorithms/reducers/algorithms.reducer';
 export {

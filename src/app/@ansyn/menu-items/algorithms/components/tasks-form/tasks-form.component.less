@@ -1,0 +1,85 @@
+@color-half-white: rgba(255,255,255,0.7);
+@color-weak-white: rgba(255,255,255,0.4);
+
+:host {
+	.small-font;
+}
+
+.margin {
+	margin-bottom: 20px;
+}
+
+.small-font {
+	font-size: 13px;
+	color: @color-half-white;
+}
+
+.big-font {
+	font-size: 14px;
+	color: white;
+}
+
+.small-padding-left {
+	padding-left: 6px;
+}
+
+.wide-underline {
+	width: 100%;
+	min-height: 1em;
+	border-bottom: 1px solid @color-weak-white;
+}
+
+.invisible {
+	visibility: hidden;
+}
+
+/deep/ ansyn-input#ansyn-task-name {
+	label {
+		.small-padding-left;
+		.small-font;
+	}
+	input {
+		.small-padding-left;
+		.big-font;
+	}
+}
+
+.pin {
+	display: inline-block;
+	margin-left: 20px;
+	opacity: 1;
+	color: red;
+	font-size: 20px;
+	&:before {
+		content: '\1f589';
+	}
+	&:hover {
+		transform: translateX(2px);
+	}
+	&:active {
+		color: black;
+	}
+	&.done {
+		color: green;
+	}
+}
+
+.two-columns-table > div {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 10px;
+
+	& > :first-child {
+		width: 60%;
+	}
+}
+
+.run-bar {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.errors {
+	color: red;
+}

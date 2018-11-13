@@ -16,6 +16,7 @@
 		"wellknown": "0.5.0",
 		"@ansyn/menu": "0.2.82.9",
 		"@ansyn/context": "0.2.82.9",
+		"@ansyn/map-facade": "0.2.82.9",
 		"@ngrx/entity": "^6.0.1",
 		"@ngx-translate/core": "^10.0.2",
 		"angular2-uuid": "1.1.1",

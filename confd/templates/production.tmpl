@@ -373,7 +373,9 @@
     },
     "translation": {
     	"default": {
-		 	"Sentinel-2A": "Sentinel 2A"
+		 	"Sentinel-2A": "Sentinel 2A",
+		 	"alg_1": "name 1",
+		 	"alg_2": "name 2"
 	   	}
     },
     "needToUseLayerExtent": false
@@ -1058,5 +1060,19 @@
       "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
   },
   "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
+  "algorithmsConfig": {
+	"alg_1" : {
+		"maxOverlays": 20,
+		"timeEstimationPerOverlayInMinutes": 10,
+		"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
+		"regionLengthInMeters": 200
+	},
+	"alg_2" : {
+		"maxOverlays": 2,
+		"timeEstimationPerOverlayInMinutes": 20,
+		"sensorNames": [ "Sentinel-2A" ],
+		"regionLengthInMeters": 100
+	}
+  },
   "MENU_ITEMS_CONFIG": []
 }

@@ -21,6 +21,7 @@ export class AnsynRadioComponent implements OnInit, ControlValueAccessor {
 	private _model: any = '';
 	private onTouchedCallback: () => void = noop;
 	private onChangeCallback: (_: any) => void = noop;
+	disabled: boolean;
 
 	constructor() {
 	}
@@ -48,6 +49,7 @@ export class AnsynRadioComponent implements OnInit, ControlValueAccessor {
 	}
 
 	setDisabledState(isDisabled: boolean): void {
+		this.disabled = isDisabled;
 	}
 
 	writeValue(value: any) {

@@ -12,6 +12,7 @@
     "wellknown",
     "@ansyn/menu",
     "@ansyn/context",
+    "@ansyn/map-facade",
     "@ngrx/entity",
     "@ngx-translate/core",
     "angular2-uuid",

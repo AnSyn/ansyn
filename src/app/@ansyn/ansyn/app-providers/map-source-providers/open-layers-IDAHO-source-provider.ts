@@ -24,47 +24,48 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
-		if (metaData.data.overlay.imageUrl) {
-			let layer = this.createOrGetFromCache(metaData);
-			return Promise.resolve(layer[0]);
-		}
+		let layerPromise;
 
 		if (metaData.data.overlay.channel === 1) {
 			const bands = this.getBandsSection(metaData.data.overlay, '0');
 			metaData.data.overlay.imageUrl = metaData.data.overlay.baseImageUrl + bands;
-			let layer = this.createOrGetFromCache(metaData);
-			return Promise.resolve(layer[0]);
 		}
 
-		const token = (<any>metaData.data.overlay).token;
-		let imageData, associationData;
-		const getImagePromise = this.getImageData(metaData.data.overlay, token, 'image')
-			.then((data) => {
-				imageData = data;
-			})
-			.catch((excpetion) => {
-			});
-
-		const getAssociationPromise = this.getImageData(metaData.data.overlay, token, 'associations')
-			.then((data) => {
-				associationData = data;
-			})
-			.catch((excpetion) => {
-			});
-
-		let layerPromise = Promise.all([getImagePromise, getAssociationPromise]).then(() => {
-			let imageUrl = metaData.data.overlay.baseImageUrl;
-			let bands = this.getColorChannel(metaData.data.overlay, imageData);
-			imageUrl += bands;
-
-			if (associationData) {
-				const panned = this.getPannedSection(metaData.data.overlay, associationData);
-				imageUrl += panned;
-			}
-			metaData.data.overlay.imageUrl = imageUrl;
+		if (metaData.data.overlay.imageUrl) {
 			let layer = this.createOrGetFromCache(metaData);
-			return Promise.resolve(layer[0]);
-		});
+			layerPromise = Promise.resolve(layer[0]);
+		} else {
+			const token = (<any>metaData.data.overlay).token;
+			let imageData, associationData;
+			const getImagePromise = this.getImageData(metaData.data.overlay, token, 'image')
+				.then((data) => {
+					imageData = data;
+				})
+				.catch((excpetion) => {
+				});
+
+			const getAssociationPromise = this.getImageData(metaData.data.overlay, token, 'associations')
+				.then((data) => {
+					associationData = data;
+				})
+				.catch((excpetion) => {
+				});
+
+			layerPromise = Promise.all([getImagePromise, getAssociationPromise]).then(() => {
+				let imageUrl = metaData.data.overlay.baseImageUrl;
+				let bands = this.getColorChannel(metaData.data.overlay, imageData);
+				imageUrl += bands;
+
+				if (associationData) {
+					const panned = this.getPannedSection(metaData.data.overlay, associationData);
+					imageUrl += panned;
+				}
+				metaData.data.overlay.imageUrl = imageUrl;
+				let layer = this.createOrGetFromCache(metaData);
+				return Promise.resolve(layer[0]);
+			});
+		}
+
 		layerPromise = this.addFootprintToLayerPromise(layerPromise, metaData);
 		return layerPromise;
 	}

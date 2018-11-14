@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
 	templateUrl: './uploads.component.html',
 	styleUrls: ['./uploads.component.less']
 })
-export class UploadsComponent implements OnInit {
+export class UploadsComponent {
 	readonly sensorNames = this.config.sensorNames;
 	readonly sensorTypes = this.config.sensorTypes;
 	readonly rulesLink = this.config.rulesLink;
@@ -55,6 +55,4 @@ export class UploadsComponent implements OnInit {
 			.subscribe();
 	}
 
-	ngOnInit() {
-	}
 }

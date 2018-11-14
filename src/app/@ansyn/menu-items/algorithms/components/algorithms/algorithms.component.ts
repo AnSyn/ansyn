@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-algorithms',
 	templateUrl: './algorithms.component.html',
 	styleUrls: ['./algorithms.component.less']
 })
-export class AlgorithmsComponent implements OnInit {
+export class AlgorithmsComponent {
+	page = 'table';
 
 	constructor() {
 	}
 
-	ngOnInit() {
+	gotoPage(page: string): void {
+		this.page = page;
 	}
 
 }

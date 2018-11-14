@@ -13,7 +13,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
 
-	initMap(element: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = {};
 		return of(false);
 	}

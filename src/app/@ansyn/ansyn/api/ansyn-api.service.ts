@@ -8,12 +8,16 @@ import {
 	selectMapsList,
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
-import { Observable } from 'rxjs';
-import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter } from '@ansyn/menu-items';
+import { Observable, empty } from 'rxjs';
+import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter, UpdateLayer, ILayer, selectLayersEntities, selectActiveAnnotationLayer } from '@ansyn/menu-items';
 import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
-import { map, tap } from 'rxjs/internal/operators';
+import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { FeatureCollection } from 'geojson';
+import { window } from 'd3';
+import { featureCollection } from '@turf/turf';
+import { cloneDeep } from 'lodash';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 
@@ -27,6 +31,7 @@ export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 export class AnsynApi {
 	activeMapId;
 	mapsList;
+	activeAnnotationLayer;
 
 	@AutoSubscription
 	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
@@ -38,6 +43,17 @@ export class AnsynApi {
 		select(selectMapsList),
 		tap((mapsList) => this.mapsList = mapsList)
 	);
+	
+	@AutoSubscription
+	activeAnnotationLayer$: Observable<ILayer> = this.store
+		.pipe(
+			select(selectActiveAnnotationLayer),
+			withLatestFrom(this.store.select(selectLayersEntities)),
+			map(([activeAnnotationLayerId, entities]) => entities[activeAnnotationLayerId]),
+			tap((activeAnnotationLayer) => {
+				this.activeAnnotationLayer = activeAnnotationLayer;
+			})
+		);
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
@@ -74,6 +90,14 @@ export class AnsynApi {
 
 	displayOverLay(overlay: IOverlay): void {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
+	}
+	
+	setAnnotations(featureCollection: FeatureCollection<any>): void {
+		this.store.dispatch(new UpdateLayer(<ILayer>{ ...this.activeAnnotationLayer, data: cloneDeep(featureCollection) }));
+	}
+
+	deleteAllAnnotations(): void {
+		this.setAnnotations(<FeatureCollection>(featureCollection([])));
 	}
 
 	setOverlays(overlays: IOverlay[]): void {

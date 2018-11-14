@@ -15,7 +15,7 @@ export { Filters, IFiltersState } from './filters/reducer/filters.reducer';
 export { IFilter } from './filters/models/IFilter';
 export { ILayer } from './layers-manager/models/layers.model';
 export { SetAutoImageProcessing, ShowOverlaysFootprintAction } from './tools/actions/tools.actions';
-export { AlgorithmsComponent } from './algorithms/algorithms/algorithms.component';
+export { AlgorithmsComponent } from './algorithms/components/algorithms/algorithms.component';
 export {
 	DisableImageProcessing,
 	EnableImageProcessing,
@@ -105,3 +105,19 @@ export { AddCaseAction } from './cases/actions/cases.actions';
 export { QueryParamsHelper } from './cases/services/helpers/cases.service.query-params-helper';
 export { UpdateFilterAction } from './filters/actions/filters.actions';
 export { IEnumFiled } from './filters/models/metadata/enum-filter-metadata';
+export {
+	selectAlgorithmTaskRegion,
+	selectAlgorithmTaskRegionLength,
+	selectAlgorithmTaskDrawIndicator
+} from './algorithms/reducers/algorithms.reducer';
+export {
+	SetAlgorithmTaskDrawIndicator,
+	SetAlgorithmTaskRegion
+} from './algorithms/actions/algorithms.actions';
+export {
+	AlgorithmsService
+} from './algorithms/services/algorithms.service';
+export {
+	AlgorithmsDefaultService
+} from './algorithms/services/algorithms-default.service';
+

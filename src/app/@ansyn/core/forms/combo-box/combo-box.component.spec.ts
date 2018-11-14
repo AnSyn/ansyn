@@ -62,10 +62,17 @@ describe('ComboBoxComponent', () => {
 		});
 	});
 
-	it('selectOption should get index, set the index on selected and change "visibility" of optionsContainer to "hidden".', () => {
+	it('selectOption should set option value, and invoke onChangeCallback', () => {
 		spyOn(component, 'onChangeCallback');
 		component.selectOption('20');
-		expect(component.optionsContainer.nativeElement.style.visibility).toEqual('hidden');
+		expect(component.selected).toEqual('20');
 		expect(component.onChangeCallback).toHaveBeenCalledWith('20');
 	});
+
+	it('close should change "visibility" of optionsContainer to "hidden".', () => {
+		component.close();
+		expect(component.optionsVisible).toBeFalsy();
+		expect(component.optionsContainer.nativeElement.style.visibility).toEqual('hidden');
+	});
+
 });

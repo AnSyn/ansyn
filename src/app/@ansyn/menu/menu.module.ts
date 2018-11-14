@@ -2,7 +2,9 @@ import { ANALYZE_FOR_ENTRY_COMPONENTS, Inject, InjectionToken, ModuleWithProvide
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from './menu/menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IMenuItem, MENU_ITEMS_CONFIG } from './models/menu-item.model';
+import { MenuConfig } from './models/menuConfig';
+import { IMenuConfig } from './models/menu-config.model';
+import { IMenuItem } from './models/menu-item.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { InitializeMenuItemsAction } from './actions/menu.actions';
 import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
@@ -39,12 +41,12 @@ export class MenuModule {
 	}
 
 	constructor(protected store: Store<any>, @Inject(MENU_ITEMS) menuItems: IMenuItem[],
-				@Inject(MENU_ITEMS_CONFIG) public configMenuItems: string[]) {
+				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 
 		// if empty put all
-		if (configMenuItems && configMenuItems.length > 0) {
+		if (menuConfig.menuItems && menuConfig.menuItems.length > 0) {
 			menuItems = menuItems.filter((menuItem: IMenuItem) => {
-				return configMenuItems.includes(menuItem.name);
+				return menuConfig.menuItems.includes(menuItem.name);
 			});
 		}
 

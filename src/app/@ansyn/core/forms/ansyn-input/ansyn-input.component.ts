@@ -43,8 +43,7 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 
 	@ViewChild('input') input: ElementRef;
 
-	constructor(@Attribute('select') public selectattr: boolean) {
-		console.log(selectattr);
+	constructor(@Attribute('select') public selectAttr: boolean) {
 	}
 
 	onBlur() {
@@ -52,7 +51,7 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	}
 
 	ngOnInit(): void {
-		if (this.selectattr !== null) {
+		if (this.selectAttr !== null) {
 			setTimeout(() => {
 				this.input.nativeElement.select();
 			}, 200)

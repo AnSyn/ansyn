@@ -56,7 +56,7 @@ export class UploadsComponent implements OnInit {
 			.post(this.config.apiUrl, body)
 			.pipe(
 				tap(() => this.store.dispatch(new SetToastMessageAction({ toastText: 'Success to upload file' }))),
-				catchError(() => this.errorHandlerService.httpErrorHandle('Failed to upload file'))
+				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to upload file'))
 			)
 			.subscribe();
 	}

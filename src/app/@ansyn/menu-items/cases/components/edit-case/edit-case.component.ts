@@ -1,11 +1,11 @@
-import { Component, HostBinding, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { AnsynInputComponent, ICase, ICasePreview, IContext } from '@ansyn/core';
+import { ICase, ICasePreview, IContext } from '@ansyn/core';
 import { CasesService } from '../../services/cases.service';
 import { selectContextsArray } from '@ansyn/context';
 import { map } from 'rxjs/operators';
@@ -51,13 +51,6 @@ export class EditCaseComponent implements OnInit {
 	contextsList: IContext[];
 	caseModel: ICase;
 	editMode = false;
-
-	@ViewChild('nameInput') nameInput: AnsynInputComponent;
-
-	@HostListener('@modalContent.done')
-	selectText() {
-		this.nameInput.select();
-	}
 
 	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
 	}

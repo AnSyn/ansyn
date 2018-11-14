@@ -1,7 +1,8 @@
-import { Component, ElementRef, forwardRef, HostBinding, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { UUID } from 'angular2-uuid';
 import { noop } from 'rxjs';
+import { Attribute } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-input',
@@ -15,7 +16,7 @@ import { noop } from 'rxjs';
 		}
 	]
 })
-export class AnsynInputComponent implements ControlValueAccessor {
+export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	@Input() label: string;
 	@Input() required = true;
 	@Input() name;
@@ -24,6 +25,7 @@ export class AnsynInputComponent implements ControlValueAccessor {
 
 	@Input()
 	@HostBinding('class.white') white: boolean;
+	@Attribute('select') public selectAttr: '' | null;
 
 	private innerValue: any = '';
 	private onTouchedCallback: () => void = noop;
@@ -46,6 +48,14 @@ export class AnsynInputComponent implements ControlValueAccessor {
 		this.onTouchedCallback();
 	}
 
+	ngOnInit(): void {
+		if (this.selectAttr !== null) {
+			setTimeout(() => {
+				this.input.nativeElement.select();
+			}, 200)
+		}
+	}
+
 	writeValue(value: any) {
 		if (value !== this.innerValue) {
 			this.innerValue = value;
@@ -58,11 +68,5 @@ export class AnsynInputComponent implements ControlValueAccessor {
 
 	registerOnTouched(fn: any) {
 		this.onTouchedCallback = fn;
-	}
-
-	select() {
-		if (this.input) {
-			this.input.nativeElement.select();
-		}
 	}
 }

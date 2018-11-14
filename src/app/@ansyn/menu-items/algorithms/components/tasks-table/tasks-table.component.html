@@ -8,13 +8,13 @@
 					Name
 				</div>
 				<div class="tasks-table-head-col">
-					Auto Save
+					Type
 				</div>
 				<div class="tasks-table-head-col">
-					Owner
+					Status
 				</div>
 				<div class="tasks-table-head-col">
-					Last Modified
+					Run time
 				</div>
 			</div>
 
@@ -42,18 +42,16 @@
 					{{entities[id].name}}
 				</div>
 
-				<ng-template #notSelected>
-					<div class="tasks-table-task-name-col">
-						{{ entities[id].autoSave ? 'ON' : 'OFF' }}
-					</div>
-				</ng-template>
-
-				<div class="tasks-table-body-col">
-					{{entities[id].owner}}
+				<div class="tasks-table-task-name-col">
+					{{ entities[id].type }}
 				</div>
 
 				<div class="tasks-table-body-col">
-					{{formatTime(entities[id].lastModified)}}
+					{{entities[id].status}}
+				</div>
+
+				<div class="tasks-table-body-col">
+					{{formatTime(entities[id].runTime)}}
 				</div>
 
 				<!--menu-->
@@ -61,12 +59,6 @@
 					<div class="task-menu" (click)="taskMenuClick($event, taskRow)" #taskMenu>
 						<button (click)="removeTask(id)">
 							<i class="icon-delete"></i>
-						</button>
-						<button (click)="shareTask(id)">
-							<i class="icon-share"></i>
-						</button>
-						<button (click)="editTask(id)">
-							<i class="icon-edit"></i>
 						</button>
 					</div>
 				</div>

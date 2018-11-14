@@ -4,7 +4,7 @@ import {
 	AlgorithmTask,
 	AlgorithmTaskPreview,
 	IAlgorithmsConfig,
-	IAlgorithmsTaskState
+	AlgorithmsTaskState
 } from '../models/algorithms.model';
 import { Observable } from 'rxjs/index';
 import { catchError, map } from 'rxjs/operators';
@@ -44,6 +44,7 @@ export class AlgorithmsService {
 	getPreview(taskValue: AlgorithmTask): AlgorithmTaskPreview {
 		const taskPreview: AlgorithmTaskPreview = {
 			id: taskValue.id,
+			creationTime: taskValue.creationTime,
 			name: taskValue.name,
 			type: taskValue.type,
 			runTime: taskValue.runTime,
@@ -53,7 +54,7 @@ export class AlgorithmsService {
 		return taskPreview;
 	}
 
-	pluckIdSourceType(state: IAlgorithmsTaskState): IAlgorithmsTaskState {
+	pluckIdSourceType(state: AlgorithmsTaskState): AlgorithmsTaskState {
 		const dilutedState: any = cloneDeep(state);
 		if (dilutedState) {
 			if (Array.isArray(dilutedState.favoriteOverlays)) {
@@ -83,7 +84,7 @@ export class AlgorithmsService {
 		return dilutedState;
 	}
 
-	convertToStoredEntity(taskValue: AlgorithmTask): IStoredEntity<AlgorithmTaskPreview, IAlgorithmsTaskState> {
+	convertToStoredEntity(taskValue: AlgorithmTask): IStoredEntity<AlgorithmTaskPreview, AlgorithmsTaskState> {
 		return {
 			preview: this.getPreview(taskValue),
 			data: this.pluckIdSourceType(taskValue.state)
@@ -94,6 +95,7 @@ export class AlgorithmsService {
 		const currentTime = new Date();
 		const uuid = UUID.UUID();
 		selectedTask.id = uuid;
+		selectedTask.creationTime = currentTime;
 		selectedTask.runTime = currentTime;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedTask))
 			.pipe<any>(

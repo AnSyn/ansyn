@@ -33,7 +33,7 @@
 
 	<div class=" small-padding-left margin">
 		<span>Pin Location</span>
-		<span class="pin" [class.done]="task.region" (click)="startDrawMode()"></span>
+		<span class="pin" [class.done]="task.state.region" (click)="startDrawMode()"></span>
 	</div>
 
 	<div class="big-font wide-underline margin"></div>
@@ -84,7 +84,7 @@
 	<div class="margin">The results will be available for download when the task is completed</div>
 
 	<div class="run-bar margin">
-		<button ansynButton [disabled]="f.invalid || hasError() || !task.region">Run Task</button>
+		<button ansynButton [disabled]="f.invalid || hasError() || !task.state.region">Run Task</button>
 		<div *ngIf="algorithmConfig">Time Estimation: {{timeEstimation}}m</div>
 	</div>
 

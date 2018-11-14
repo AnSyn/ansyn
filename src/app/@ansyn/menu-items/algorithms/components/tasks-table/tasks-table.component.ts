@@ -5,10 +5,17 @@ import { LoadAlgorithmTasksAction, OpenModalAction } from '../../actions/algorit
 import { getTimeFormat } from '@ansyn/core';
 import { AlgorithmsEffects } from '../../effects/algorithms.effects';
 import { Observable } from 'rxjs';
-import { algorithmsStateSelector, IAlgorithmState, ITaskModal } from '../../reducers/algorithms.reducer';
+import {
+	algorithmsStateSelector,
+	IAlgorithmState,
+	ITaskModal, selectTaskEntities,
+	selectTasksIds
+} from '../../reducers/algorithms.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/internal/operators';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { AlgorithmTaskPreview } from '../../models/algorithms.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -31,6 +38,9 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 
 	taskState$: Observable<IAlgorithmState> = this.store$.select(algorithmsStateSelector);
+
+	ids$: Observable<string[] | number[]> = this.store$.select(selectTasksIds);
+	entities$: Observable<Dictionary<AlgorithmTaskPreview>> = this.store$.select(selectTaskEntities);
 
 	modalTaskId$: Observable<string> = this.taskState$.pipe(
 		pluck<IAlgorithmState, ITaskModal>('modal'),

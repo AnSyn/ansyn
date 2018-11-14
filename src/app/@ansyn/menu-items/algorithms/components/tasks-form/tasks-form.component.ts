@@ -10,10 +10,14 @@ import {
 	AlgorithmTask,
 	AlgorithmTaskStatus,
 	AlgorithmTaskWhichOverlays,
-	IAlgorithmConfig, IAlgorithmsConfig
+	IAlgorithmConfig
 } from '../../models/algorithms.model';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { SetAlgorithmTaskDrawIndicator, SetAlgorithmTaskRegionLength } from '../../actions/algorithms.actions';
+import {
+	AddAlgorithmTaskAction,
+	SetAlgorithmTaskDrawIndicator,
+	SetAlgorithmTaskRegionLength
+} from '../../actions/algorithms.actions';
 import { selectAlgorithmTaskRegion } from '../../reducers/algorithms.reducer';
 import { AlgorithmsRemoteService } from '../../services/algorithms-remote.service';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
@@ -37,8 +41,8 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	errorMsg = '';
 	MIN_NUM_OF_OVERLAYS = 2;
 
-	get algorithms(): IAlgorithmsConfig {
-		return this.configService.config;
+	get algorithms(): { [alg: string]: IAlgorithmConfig } {
+		return this.configService.config.algorithms;
 	}
 
 	get algorithmConfig(): IAlgorithmConfig {
@@ -99,6 +103,9 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		this.algNames = Object.keys(this.algorithms);
 	}
 
+	ngOnDestroy(): void {
+	}
+
 	onAlgorithmChange() {
 		this.store$.dispatch(new SetAlgorithmTaskRegionLength(this.algorithmConfig.regionLengthInMeters));
 		this.checkForErrors();
@@ -126,9 +133,8 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	onSubmit() {
 		this.algorithmsService.runTask(this.task);
-	}
-
-	ngOnDestroy(): void {
+		this.task.runTime = new Date();
+		this.store$.dispatch(new AddAlgorithmTaskAction(this.task));
 	}
 
 	startDrawMode() {

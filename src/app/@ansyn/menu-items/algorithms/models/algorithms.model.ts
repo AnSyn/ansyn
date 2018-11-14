@@ -22,24 +22,21 @@ export type AlgorithmTaskWhichOverlays = 'case_overlays' | 'favorite_overlays' |
 
 export type AlgorithmTaskStatus = 'New' | 'Sent';
 
-export interface IAlgorithm extends IEntity {
-	name: string;
-}
-
-export class AlgorithmTaskPreview {
+export class AlgorithmTaskPreview implements IEntity{
 	id: string;
+	creationTime: Date;
 	name: string;
 	type: string;
 	status: AlgorithmTaskStatus;
 	runTime: Date;
 }
 
-export interface IAlgorithmsTaskState {
+export class AlgorithmsTaskState {
 	overlays: IOverlay[];
 	masterOverlay: IOverlay;
 	region: GeometryObject;
 }
 
 export class AlgorithmTask extends AlgorithmTaskPreview {
-	state: IAlgorithmsTaskState
+	state: AlgorithmsTaskState = new AlgorithmsTaskState();
 }

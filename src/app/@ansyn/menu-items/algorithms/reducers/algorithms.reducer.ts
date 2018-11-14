@@ -5,8 +5,10 @@ import { AlgorithmTask, AlgorithmTaskPreview } from '../models/algorithms.model'
 import { GeometryObject } from 'geojson';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { UUID } from 'angular2-uuid';
 
-export const algorithmsAdapter: EntityAdapter<AlgorithmTaskPreview> = createEntityAdapter<AlgorithmTaskPreview>();
+export const algorithmsAdapter: EntityAdapter<AlgorithmTaskPreview> = createEntityAdapter<AlgorithmTaskPreview>(
+	{ sortComparer: (ob1: AlgorithmTaskPreview, ob2: AlgorithmTaskPreview): number => +ob2.creationTime - +ob1.creationTime });
 
 export interface ITaskModal {
 	show: boolean,
@@ -48,7 +50,10 @@ export function AlgorithmsReducer(state: IAlgorithmState = initialAlgorithmsStat
 		}
 
 		case AlgorithmsActionTypes.ADD_TASK:
-			return algorithmsAdapter.addOne(action.payload, state);
+			let task: AlgorithmTask = action.payload;
+			task.id = UUID.UUID();
+			task.creationTime = new Date();
+			return algorithmsAdapter.addOne(task, state);
 
 		case AlgorithmsActionTypes.DELETE_TASK:
 			return algorithmsAdapter.removeOne(action.payload, state);

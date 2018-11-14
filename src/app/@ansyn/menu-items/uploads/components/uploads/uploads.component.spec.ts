@@ -44,4 +44,12 @@ describe('UploadsComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+
+	it('submitCustomSensorName should set sensorName value and close', () => {
+		component.submitCustomSensorName('test');
+		expect(component.sensorName).toEqual('test');
+		expect(component.other).toBeTruthy();
+		expect(component.modal).toBeFalsy();
+	});
+
 });

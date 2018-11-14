@@ -5,33 +5,23 @@ import { catchError, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
 
-export interface IUploadFileRequestBody {
-	files: File[]
-}
-
-export enum SharingOptions {
-	public = 'Public',
-	private = 'Private'
-}
-
 @Component({
 	selector: 'ansyn-uploads',
 	templateUrl: './uploads.component.html',
 	styleUrls: ['./uploads.component.less']
 })
 export class UploadsComponent implements OnInit {
-	readonly sensorNames = [...this.config.sensorNames];
+	readonly sensorNames = this.config.sensorNames;
 	readonly sensorTypes = this.config.sensorTypes;
-	readonly sharingOptions = Object.values(SharingOptions);
 	modal = false;
-	sharing = SharingOptions.public;
+	sharing = 'public';
 	title = '';
 	licence: boolean;
 	sensorType = this.config.defaultSensorType;
 	sensorName = '';
 	fileInputValue: string;
 	files: FileList;
-	customSensorName = '';
+	other: string;
 
 	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig,
 				protected httpClient: HttpClient,
@@ -40,7 +30,10 @@ export class UploadsComponent implements OnInit {
 	}
 
 	submitCustomSensorName(text: string) {
-		this.sensorName = text;
+		if (text) {
+			this.other = text;
+			this.sensorName = text;
+		}
 		this.modal = false;
 	}
 

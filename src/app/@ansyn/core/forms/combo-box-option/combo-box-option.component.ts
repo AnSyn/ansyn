@@ -13,7 +13,11 @@ export class ComboBoxOptionComponent {
 	@Input() disabled: boolean;
 
 	@HostListener('click') onClick() {
-		this._parent.selectOption(this.value);
+		if (this.value) {
+			this._parent.selectOption(this.value);
+		} else {
+			this._parent.optionsVisible = false;
+		}
 	}
 
 	get selected() {

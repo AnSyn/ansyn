@@ -30,12 +30,12 @@
 				placeholder="*Sensor name"
 				[(ngModel)]="sensorName">
 
-				<ansyn-combo-box-option *ngFor="let sensorName of sensorNames" [value]="sensorName">
-					{{ sensorName }}
+				<ansyn-combo-box-option *ngFor="let sensor of sensorNames" (click)="other = false" [value]="sensor">
+					{{ sensor }}
 				</ansyn-combo-box-option>
 
 				<ansyn-combo-box-option (click)="modal = true">
-					<i class="icon-edit"></i> Custom
+					<i class="icon-edit"></i> {{ other || 'Other' }}
 				</ansyn-combo-box-option>
 			</ansyn-combo-box>
 		</div>

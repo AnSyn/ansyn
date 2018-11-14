@@ -6,11 +6,11 @@
 			required
 			select
 			name="name"
-			label="Name">
+			label="Sensor name">
 		</ansyn-input>
 
 		<div class="bottom-btns">
-			<button type="button" (click)="show = false">Cancel</button>
+			<button type="button" (click)="close()">Cancel</button>
 			<button [disabled]="!sensorNameInput.value">OK</button>
 		</div>
 	</form>

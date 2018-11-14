@@ -6,10 +6,13 @@ import { Component, EventEmitter, Output } from '@angular/core';
 	styleUrls: ['./edit-sensor-name.component.less']
 })
 export class EditSensorNameComponent {
-	@Output() onSubmit = new EventEmitter<string>();
+	@Output() onSubmit = new EventEmitter<string | void>();
 
 	submit(value) {
 		this.onSubmit.emit(value);
 	}
 
+	close() {
+		this.onSubmit.emit()
+	}
 }

@@ -1,5 +1,5 @@
 import {
-	AlgorithmsComponent,
+	TasksComponent,
 	CasesComponent,
 	FiltersCollectionComponent,
 	HelpComponent,
@@ -52,7 +52,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		},
 		{
 			name: 'Algorithms',
-			component: AlgorithmsComponent,
+			component: TasksComponent,
 			iconClass: 'icon-main-algorithms'
 		},
 		{

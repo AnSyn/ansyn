@@ -2,33 +2,33 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { TasksTableComponent } from './tasks-table.component';
 import { DeleteTaskComponent } from '../delete-task/delete-task.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { algorithmsFeatureKey, AlgorithmsReducer, IAlgorithmState } from '../../reducers/algorithms.reducer';
-import { AlgorithmsModule } from '../../algorithms.module';
-import { LoadAlgorithmTasksAction, OpenModalAction } from '../../actions/algorithms.actions';
+import { tasksFeatureKey, TasksReducer, ITasksState } from '../../reducers/tasks.reducer';
+import { TasksModule } from '../../tasks.module';
+import { LoadTasksAction, OpenModalAction } from '../../actions/tasks.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { TasksService } from '../../services/tasks.service';
 
 describe('TasksTableComponent', () => {
 	let component: TasksTableComponent;
 	let fixture: ComponentFixture<TasksTableComponent>;
-	let store: Store<IAlgorithmState>;
+	let store: Store<ITasksState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				AlgorithmsModule,
+				TasksModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ [algorithmsFeatureKey]: AlgorithmsReducer }),
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer }),
 				RouterTestingModule
 			],
 			providers: [
 				DataLayersService,
-				{ provide: AlgorithmsService, useValue: { schema: null } },
+				{ provide: TasksService, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: layersConfig, useValue: {} }
@@ -37,7 +37,7 @@ describe('TasksTableComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<IAlgorithmState>) => {
+	beforeEach(inject([Store], (_store: Store<ITasksState>) => {
 		spyOn(_store, 'dispatch');
 		fixture = TestBed.createComponent(TasksTableComponent);
 		component = fixture.componentInstance;
@@ -51,7 +51,7 @@ describe('TasksTableComponent', () => {
 
 	it('loadTasks should call tasksService.loadTasks()', () => {
 		component.loadTasks();
-		expect(store.dispatch).toHaveBeenCalledWith(new LoadAlgorithmTasksAction());
+		expect(store.dispatch).toHaveBeenCalledWith(new LoadTasksAction());
 	});
 
 	it('onTasksAdded should change tbodyElement scrollTop to 0( only if tbodyElement is not undefined )', () => {

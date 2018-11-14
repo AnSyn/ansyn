@@ -2,36 +2,36 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { EMPTY, Observable } from 'rxjs';
-import { IAlgorithmState, selectTaskTotal } from '../reducers/algorithms.reducer';
+import { ITasksState, selectTaskTotal } from '../reducers/tasks.reducer';
 import { ErrorHandlerService } from '@ansyn/core';
 import { catchError, map, share, switchMap, withLatestFrom } from 'rxjs/operators';
-import { AlgorithmsService } from '../services/algorithms.service';
+import { TasksService } from '../services/tasks.service';
 import {
-	AddAlgorithmTaskAction,
-	AddAlgorithmTasksAction,
+	AddTaskAction,
+	AddTasksAction,
 	AlgorithmsActionTypes,
-	SelectAlgorithmTaskAction
-} from '../actions/algorithms.actions';
+	SelectTaskAction
+} from '../actions/tasks.actions';
 
 @Injectable()
-export class AlgorithmsEffects {
+export class TasksEffects {
 
 	@Effect()
-	loadTasks$: Observable<AddAlgorithmTasksAction | {}> = this.actions$.pipe(
+	loadTasks$: Observable<AddTasksAction | {}> = this.actions$.pipe(
 		ofType(AlgorithmsActionTypes.LOAD_TASKS),
 		withLatestFrom(this.store.select(selectTaskTotal), (action, total) => total),
 		switchMap((total: number) => {
 			return this.tasksService.loadTasks(total).pipe(
-				map(tasks => new AddAlgorithmTasksAction(tasks)),
+				map(tasks => new AddTasksAction(tasks)),
 				catchError(() => EMPTY)
 			);
 		}),
 		share());
 
 	@Effect()
-	onAddTask$: Observable<SelectAlgorithmTaskAction> = this.actions$.pipe(
-		ofType<AddAlgorithmTaskAction>(AlgorithmsActionTypes.ADD_TASK),
-		map((action: AddAlgorithmTaskAction) => new SelectAlgorithmTaskAction(action.payload)),
+	onAddTask$: Observable<SelectTaskAction> = this.actions$.pipe(
+		ofType<AddTaskAction>(AlgorithmsActionTypes.ADD_TASK),
+		map((action: AddTaskAction) => new SelectTaskAction(action.payload)),
 		share());
 
 	@Effect({ dispatch: false })
@@ -44,8 +44,8 @@ export class AlgorithmsEffects {
 
 	constructor(
 		protected actions$: Actions,
-		protected tasksService: AlgorithmsService,
-		protected store: Store<IAlgorithmState>,
+		protected tasksService: TasksService,
+		protected store: Store<ITasksState>,
 		protected errorHandlerService: ErrorHandlerService
 	) {
 	}

@@ -7,7 +7,7 @@ import { AnsynPluginsModule } from '@ansyn/plugins';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
 import {
-	AlgorithmsModule,
+	TasksModule,
 	CasesModule,
 	FiltersModule,
 	HelpModule,
@@ -42,7 +42,7 @@ import { UploadsModule } from '@ansyn/menu-items';
 		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,
-		AlgorithmsModule,
+		TasksModule,
 		SettingsModule,
 		OverlaysModule,
 		FormsModule,

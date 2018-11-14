@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CommonModule } from '@angular/common';
-import { AlgorithmsComponent } from './components/algorithms/algorithms.component';
+import { TasksComponent } from './components/tasks/tasks.component';
 import { CoreModule } from '@ansyn/core';
 import { TasksTableComponent } from './components/tasks-table/tasks-table.component';
 import { TasksTablePageComponent } from './components/tasks-table-page/tasks-table-page.component';
@@ -11,11 +11,12 @@ import { TasksFormPageComponent } from './components/tasks-form-page/tasks-form-
 import { TasksFormPageHeaderComponent } from './components/tasks-form-page-header/tasks-form-page-header.component';
 import { TasksFormComponent } from './components/tasks-form/tasks-form.component';
 import { FormsModule } from '@angular/forms';
-import { AlgorithmsService } from './services/algorithms.service';
+import { TasksService } from './services/tasks.service';
 import { StoreModule } from '@ngrx/store';
-import { algorithmsFeatureKey, AlgorithmsReducer } from './reducers/algorithms.reducer';
+import { tasksFeatureKey, TasksReducer } from './reducers/tasks.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { AlgorithmsEffects } from './effects/algorithms.effects';
+import { TasksEffects } from './effects/tasks.effects';
+import { TasksModalContainerComponent } from './components/tasks-modal-container/tasks-modal-container.component';
 
 @NgModule({
 	imports: [
@@ -24,14 +25,15 @@ import { AlgorithmsEffects } from './effects/algorithms.effects';
 		MenuModule,
 		CommonModule,
 		FormsModule,
-		StoreModule.forFeature(algorithmsFeatureKey, AlgorithmsReducer),
-		EffectsModule.forFeature([AlgorithmsEffects]),
+		StoreModule.forFeature(tasksFeatureKey, TasksReducer),
+		EffectsModule.forFeature([TasksEffects]),
 	],
-	declarations: [AlgorithmsComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent, TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent],
-	entryComponents: [AlgorithmsComponent],
-	exports: [AlgorithmsComponent],
-	providers: [AlgorithmsService]
+	declarations: [TasksComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent,
+		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, TasksModalContainerComponent],
+	entryComponents: [TasksComponent],
+	exports: [TasksComponent],
+	providers: [TasksService]
 })
-export class AlgorithmsModule {
+export class TasksModule {
 
 }

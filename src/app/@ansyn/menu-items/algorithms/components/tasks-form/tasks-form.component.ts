@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { TasksService } from '../../services/tasks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/index';
 import { select, Store } from '@ngrx/store';
@@ -11,15 +11,15 @@ import {
 	AlgorithmTaskStatus,
 	AlgorithmTaskWhichOverlays,
 	IAlgorithmConfig
-} from '../../models/algorithms.model';
+} from '../../models/tasks.model';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import {
-	AddAlgorithmTaskAction,
-	SetAlgorithmTaskDrawIndicator,
-	SetAlgorithmTaskRegionLength
-} from '../../actions/algorithms.actions';
-import { selectAlgorithmTaskRegion } from '../../reducers/algorithms.reducer';
-import { AlgorithmsRemoteService } from '../../services/algorithms-remote.service';
+	AddTaskAction,
+	SetTaskDrawIndicator,
+	SetTaskRegionLength
+} from '../../actions/tasks.actions';
+import { selectAlgorithmTaskRegion } from '../../reducers/tasks.reducer';
+import { TasksRemoteService } from '../../services/tasks-remote.service';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 
@@ -92,8 +92,8 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		));
 
 	constructor(
-		public configService: AlgorithmsService,
-		protected algorithmsService: AlgorithmsRemoteService,
+		public configService: TasksService,
+		protected algorithmsService: TasksRemoteService,
 		public translate: TranslateService,
 		protected store$: Store<any>
 	) {
@@ -107,7 +107,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	onAlgorithmChange() {
-		this.store$.dispatch(new SetAlgorithmTaskRegionLength(this.algorithmConfig.regionLengthInMeters));
+		this.store$.dispatch(new SetTaskRegionLength(this.algorithmConfig.regionLengthInMeters));
 		this.checkForErrors();
 	}
 
@@ -132,14 +132,16 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		this.algorithmsService.runTask(this.task);
+		this.task.type = this.algName;
 		this.task.runTime = new Date();
-		this.store$.dispatch(new AddAlgorithmTaskAction(this.task));
+		this.task.status = 'Sent';
+		this.algorithmsService.runTask(this.task);
+		this.store$.dispatch(new AddTaskAction(this.task));
 	}
 
 	startDrawMode() {
 		this.store$.dispatch(new ToggleIsPinnedAction(true));
-		this.store$.dispatch(new SetAlgorithmTaskDrawIndicator(true));
+		this.store$.dispatch(new SetTaskDrawIndicator(true));
 	}
 
 }

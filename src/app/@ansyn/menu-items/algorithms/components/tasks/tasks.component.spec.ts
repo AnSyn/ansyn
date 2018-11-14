@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlgorithmsComponent } from './algorithms.component';
+import { TasksComponent } from './tasks.component';
 import { MockComponent } from '@ansyn/core';
 
-describe('AlgorithmsComponent', () => {
-	let component: AlgorithmsComponent;
-	let fixture: ComponentFixture<AlgorithmsComponent>;
+describe('TasksComponent', () => {
+	let component: TasksComponent;
+	let fixture: ComponentFixture<TasksComponent>;
 
 	const mockTablePage = MockComponent({ selector: 'ansyn-tasks-table-page' });
 	const mockFormPage = MockComponent({ selector: 'ansyn-tasks-form-page' });
@@ -13,7 +13,7 @@ describe('AlgorithmsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
-				AlgorithmsComponent,
+				TasksComponent,
 				mockTablePage,
 				mockFormPage
 			]
@@ -22,7 +22,7 @@ describe('AlgorithmsComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(AlgorithmsComponent);
+		fixture = TestBed.createComponent(TasksComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

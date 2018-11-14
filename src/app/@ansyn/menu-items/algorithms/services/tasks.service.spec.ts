@@ -1,12 +1,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 
-import { AlgorithmsService } from './algorithms.service';
+import { TasksService } from './tasks.service';
 
-describe('AlgorithmsService', () => {
+describe('TasksService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
-				AlgorithmsService,
+				TasksService,
 				{
 					provide: 'algorithmsConfig',
 					useValue: {}
@@ -15,7 +15,7 @@ describe('AlgorithmsService', () => {
 		});
 	});
 
-	it('should be created', inject([AlgorithmsService], (service: AlgorithmsService) => {
+	it('should be created', inject([TasksService], (service: TasksService) => {
 		expect(service).toBeTruthy();
 	}));
 });

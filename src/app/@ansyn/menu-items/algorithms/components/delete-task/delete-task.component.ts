@@ -1,13 +1,13 @@
 import { Component, EventEmitter, HostBinding, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IAlgorithmState, selectAlgorithmsModal } from '../../reducers/algorithms.reducer';
-import { CloseModalAction, DeleteAlgorithmTaskAction } from '../../actions/algorithms.actions';
+import { ITasksState, selectAlgorithmsModal } from '../../reducers/tasks.reducer';
+import { CloseModalAction, DeleteTaskAction } from '../../actions/tasks.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { TasksService } from '../../services/tasks.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
-import { AlgorithmTaskPreview } from '../../models/algorithms.model';
+import { AlgorithmTaskPreview } from '../../models/tasks.model';
 
 const animationsDuring = '0.2s';
 
@@ -42,7 +42,7 @@ export class DeleteTaskComponent implements OnInit {
 
 	@Output() submitTask = new EventEmitter();
 
-	constructor(protected store: Store<IAlgorithmState>, protected tasksService: AlgorithmsService) {
+	constructor(protected store: Store<ITasksState>, protected tasksService: TasksService) {
 	}
 
 	ngOnInit() {
@@ -56,7 +56,7 @@ export class DeleteTaskComponent implements OnInit {
 	onSubmitRemove() {
 		(<Observable<any>>this.tasksService.removeTask(this.activeTask.id))
 			.pipe(
-				tap(() => this.store.dispatch(new DeleteAlgorithmTaskAction(this.activeTask.id))),
+				tap(() => this.store.dispatch(new DeleteTaskAction(this.activeTask.id))),
 				catchError(() => of(false)),
 				tap(() => this.close())
 			)

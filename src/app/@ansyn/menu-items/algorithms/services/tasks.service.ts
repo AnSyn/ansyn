@@ -5,7 +5,7 @@ import {
 	AlgorithmTaskPreview,
 	IAlgorithmsConfig,
 	AlgorithmsTaskState
-} from '../models/algorithms.model';
+} from '../models/tasks.model';
 import { Observable } from 'rxjs/index';
 import { catchError, map } from 'rxjs/operators';
 import {
@@ -17,7 +17,7 @@ import { UUID } from 'angular2-uuid';
 import { cloneDeep } from 'lodash';
 
 @Injectable()
-export class AlgorithmsService {
+export class TasksService {
 
 	constructor(
 		@Inject(AlgorithmsConfig) public config: IAlgorithmsConfig,

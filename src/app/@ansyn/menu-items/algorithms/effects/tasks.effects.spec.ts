@@ -1,8 +1,8 @@
-import { AlgorithmsEffects } from './algorithms.effects';
+import { TasksEffects } from './tasks.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { AlgorithmsService } from '../services/algorithms.service';
+import { TasksService } from '../services/tasks.service';
 import { Store, StoreModule } from '@ngrx/store';
-import { algorithmsFeatureKey, AlgorithmsReducer } from '../reducers/algorithms.reducer';
+import { tasksFeatureKey, TasksReducer } from '../reducers/tasks.reducer';
 import { Observable, of, throwError } from 'rxjs';
 import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -12,12 +12,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
-import { AlgorithmTask } from '../models/algorithms.model';
-import { AddAlgorithmTasksAction, LoadAlgorithmTasksAction } from '../actions/algorithms.actions';
+import { AlgorithmTask } from '../models/tasks.model';
+import { AddTasksAction, LoadTasksAction } from '../actions/tasks.actions';
 
-describe('AlgorithmsEffects', () => {
-	let tasksEffects: AlgorithmsEffects;
-	let tasksService: AlgorithmsService;
+describe('TasksEffects', () => {
+	let tasksEffects: TasksEffects;
+	let tasksService: TasksService;
 	let loggerService: LoggerService;
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
@@ -52,13 +52,13 @@ describe('AlgorithmsEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ [algorithmsFeatureKey]: AlgorithmsReducer }),
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer }),
 				RouterTestingModule
 			],
 			providers: [
-				AlgorithmsEffects,
+				TasksEffects,
 				StorageService,
-				AlgorithmsService,
+				TasksService,
 				DataLayersService,
 				{ provide: layersConfig, useValue: {} },
 				{
@@ -91,7 +91,7 @@ describe('AlgorithmsEffects', () => {
 		loggerService = _loggerService;
 	}));
 
-	beforeEach(inject([AlgorithmsEffects, AlgorithmsService], (_tasksEffects: AlgorithmsEffects, _tasksService: AlgorithmsService) => {
+	beforeEach(inject([TasksEffects, TasksService], (_tasksEffects: TasksEffects, _tasksService: TasksService) => {
 		tasksEffects = _tasksEffects;
 		tasksService = _tasksService;
 	}));
@@ -106,8 +106,8 @@ describe('AlgorithmsEffects', () => {
 			id: 'loadedTask2'
 		}, { ...taskMock, id: 'loadedTask1' }];
 		spyOn(tasksService, 'loadTasks').and.callFake(() => of(loadedTasks));
-		actions = hot('--a--', { a: new LoadAlgorithmTasksAction() });
-		const expectedResults = cold('--b--', { b: new AddAlgorithmTasksAction(loadedTasks) });
+		actions = hot('--a--', { a: new LoadTasksAction() });
+		const expectedResults = cold('--b--', { b: new AddTasksAction(loadedTasks) });
 		expect(tasksEffects.loadTasks$).toBeObservable(expectedResults);
 	});
 

@@ -24,7 +24,7 @@ import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
 
-describe('AlgorithmsEffects', () => {
+describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
 	let loggerService: LoggerService;

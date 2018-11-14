@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import {
-	AlgorithmsRemoteDefaultService,
-	AlgorithmsRemoteService,
+	TasksRemoteDefaultService,
+	TasksRemoteService,
 	BooleanFilterMetadata,
 	EnumFilterMetadata,
 	FilterMetadata,
@@ -53,7 +53,7 @@ import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-pro
 
 		{ provide: ProjectionService, useClass: OpenLayersProjectionService },
 
-		{ provide: AlgorithmsRemoteService, useClass: AlgorithmsRemoteDefaultService }
+		{ provide: TasksRemoteService, useClass: TasksRemoteDefaultService }
 	]
 })
 export class AppProvidersModule {

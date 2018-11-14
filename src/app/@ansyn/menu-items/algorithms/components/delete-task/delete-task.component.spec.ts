@@ -1,23 +1,23 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { DeleteTaskComponent } from './delete-task.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { algorithmsFeatureKey, AlgorithmsReducer, IAlgorithmState } from '../../reducers/algorithms.reducer';
-import { AlgorithmsModule } from '../../algorithms.module';
-import { CloseModalAction, DeleteAlgorithmTaskAction } from '../../actions/algorithms.actions';
+import { tasksFeatureKey, TasksReducer, ITasksState } from '../../reducers/tasks.reducer';
+import { TasksModule } from '../../tasks.module';
+import { CloseModalAction, DeleteTaskAction } from '../../actions/tasks.actions';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreConfig, LoggerConfig } from '@ansyn/core';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { TasksService } from '../../services/tasks.service';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 
 describe('DeleteTaskComponent', () => {
 	let component: DeleteTaskComponent;
 	let fixture: ComponentFixture<DeleteTaskComponent>;
-	let tasksService: AlgorithmsService;
+	let tasksService: TasksService;
 
-	const fakeIAlgorithmState: IAlgorithmState = {
+	const fakeIAlgorithmState: ITasksState = {
 		entities: {
 			'fakeId1': { id: 'fakeId1', name: 'fakeName1' },
 			'fakeId2': { id: 'fakeId2', name: 'fakeName2' }
@@ -30,15 +30,15 @@ describe('DeleteTaskComponent', () => {
 		}
 	} as any;
 
-	let store: Store<IAlgorithmState>;
+	let store: Store<ITasksState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				AlgorithmsModule,
+				TasksModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ [algorithmsFeatureKey]: AlgorithmsReducer }),
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer }),
 				RouterTestingModule
 			],
 			providers: [
@@ -50,7 +50,7 @@ describe('DeleteTaskComponent', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store, AlgorithmsService], (_store: Store<IAlgorithmState>, _tasksService: AlgorithmsService) => {
+	beforeEach(inject([Store, TasksService], (_store: Store<ITasksState>, _tasksService: TasksService) => {
 		spyOn(_store, 'dispatch');
 		spyOn(_store, 'select').and.callFake(() => of(fakeIAlgorithmState));
 
@@ -74,7 +74,7 @@ describe('DeleteTaskComponent', () => {
 		spyOn(tasksService, 'removeTask').and.returnValue(of(component.activeTask));
 		spyOn(component, 'close');
 		component.onSubmitRemove();
-		expect(store.dispatch).toHaveBeenCalledWith(new DeleteAlgorithmTaskAction(component.activeTask.id));
+		expect(store.dispatch).toHaveBeenCalledWith(new DeleteTaskAction(component.activeTask.id));
 		expect(component.close).toHaveBeenCalled();
 
 	});

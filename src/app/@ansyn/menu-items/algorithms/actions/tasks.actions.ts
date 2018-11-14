@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { GeometryObject } from 'geojson';
-import { AlgorithmTask } from '../models/algorithms.model';
+import { AlgorithmTask } from '../models/tasks.model';
 
 export enum AlgorithmsActionTypes {
 	SET_DRAW_INDICATOR = '[Algorithms] Set draw indicator',
@@ -16,54 +16,54 @@ export enum AlgorithmsActionTypes {
 	SELECT_TASK = '[Algorithms] SELECT_TASK'
 }
 
-export type AlgorithmsActions =
-	SetAlgorithmTaskDrawIndicator
-	| SetAlgorithmTaskRegion
+export type TasksActions =
+	SetTaskDrawIndicator
+	| SetTaskRegion
 	;
 
-export class SetAlgorithmTaskDrawIndicator implements Action {
+export class SetTaskDrawIndicator implements Action {
 	type = AlgorithmsActionTypes.SET_DRAW_INDICATOR;
 
 	constructor(public payload: boolean) {
 	}
 }
 
-export class SetAlgorithmTaskRegionLength implements Action {
+export class SetTaskRegionLength implements Action {
 	type = AlgorithmsActionTypes.SET_REGION_LENGTH;
 
 	constructor(public payload: number) {
 	}
 }
 
-export class SetAlgorithmTaskRegion implements Action {
+export class SetTaskRegion implements Action {
 	type = AlgorithmsActionTypes.SET_REGION;
 
 	constructor(public payload: GeometryObject) {
 	}
 }
 
-export class LoadAlgorithmTasksAction implements Action {
+export class LoadTasksAction implements Action {
 	type = AlgorithmsActionTypes.LOAD_TASKS;
 
 	constructor(public payload?: AlgorithmTask[]) {
 	}
 }
 
-export class AddAlgorithmTasksAction implements Action {
+export class AddTasksAction implements Action {
 	type = AlgorithmsActionTypes.ADD_TASKS;
 
 	constructor(public payload: AlgorithmTask[]) {
 	}
 }
 
-export class AddAlgorithmTaskAction implements Action {
+export class AddTaskAction implements Action {
 	type = AlgorithmsActionTypes.ADD_TASK;
 
 	constructor(public payload: AlgorithmTask) {
 	}
 }
 
-export class DeleteAlgorithmTaskAction implements Action {
+export class DeleteTaskAction implements Action {
 	type = AlgorithmsActionTypes.DELETE_TASK;
 
 	constructor(public payload: string) {
@@ -84,7 +84,7 @@ export class CloseModalAction implements Action {
 	}
 }
 
-export class SelectAlgorithmTaskAction implements Action {
+export class SelectTaskAction implements Action {
 	type = AlgorithmsActionTypes.SELECT_TASK;
 
 	constructor(public payload: AlgorithmTask) {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { filter, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { fromEvent, Observable } from 'rxjs';
+import { filter, takeWhile, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-modal',
@@ -10,7 +10,7 @@ import { filter, takeUntil, takeWhile, tap } from 'rxjs/operators';
 export class AnsynModalComponent {
 	protected _show: boolean;
 
-	escPressed$ = fromEvent(window, 'keydown').pipe(
+	escPressed$: Observable<any> = fromEvent(window, 'keydown').pipe(
 		takeWhile(() => this.show),
 		filter(($event: KeyboardEvent) => $event.keyCode === 27),
 		tap(() => this.show = false));

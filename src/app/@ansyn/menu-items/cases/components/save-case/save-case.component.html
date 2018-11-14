@@ -5,8 +5,8 @@
 
 	<form #f="ngForm" class="save-case-form" (ngSubmit)="onSubmitCase()">
 		<ansyn-input
-			#nameInput
 			[(ngModel)]="caseName"
+			select
 			name="name"
 			[required]="true"
 			label="Name">

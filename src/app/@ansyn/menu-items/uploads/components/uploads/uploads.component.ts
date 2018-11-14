@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
 
@@ -20,10 +20,10 @@ export enum SharingOptions {
 	styleUrls: ['./uploads.component.less']
 })
 export class UploadsComponent implements OnInit {
-	readonly sensorNames = [...this.config.sensorNames, 'Custom'];
+	readonly sensorNames = [...this.config.sensorNames];
 	readonly sensorTypes = this.config.sensorTypes;
 	readonly sharingOptions = Object.values(SharingOptions);
-
+	modal = false;
 	sharing = SharingOptions.public;
 	title = '';
 	licence: boolean;
@@ -31,7 +31,7 @@ export class UploadsComponent implements OnInit {
 	sensorName = '';
 	fileInputValue: string;
 	files: FileList;
-	errorMessage: string;
+	customSensorName = '';
 
 	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig,
 				protected httpClient: HttpClient,
@@ -39,13 +39,21 @@ export class UploadsComponent implements OnInit {
 				protected errorHandlerService: ErrorHandlerService) {
 	}
 
-	uploadFile() {
-		const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+	submitCustomSensorName(text: string) {
+		this.sensorName = text;
+		this.modal = false;
+	}
+
+	onSubmit() {
 		const body = new FormData();
-		body.append('files', this.files.item(0));
+		body.append('title', this.title);
+		body.append('sensorType', this.sensorType);
+		body.append('sensorName', this.sensorName);
+		body.append('sharing', this.sharing);
+		Array.from(this.files).forEach((file) => body.append('uploads', file));
 
 		this.httpClient
-			.post(this.config.apiUrl, body, { headers })
+			.post(this.config.apiUrl, body)
 			.pipe(
 				tap(() => this.store.dispatch(new SetToastMessageAction({ toastText: 'Success to upload file' }))),
 				catchError(() => this.errorHandlerService.httpErrorHandle('Failed to upload file'))

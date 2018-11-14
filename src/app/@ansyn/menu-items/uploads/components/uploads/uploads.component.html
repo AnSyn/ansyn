@@ -1,14 +1,14 @@
 <div>
-	<form #f="ngForm">
+	<form class="upload-form" #f="ngForm" (ngSubmit)="onSubmit()">
 
 		<div class="form-field">
 			<ansyn-input label="Title"
 						 [white]="true"
+						 select
 						 name="title"
 						 [(ngModel)]="title">
 			</ansyn-input>
 		</div>
-
 		<div class="form-field sensor-type">
 			<div class="title">*Sensor type</div>
 			<div class="sensor-types">
@@ -34,6 +34,9 @@
 					{{ sensorName }}
 				</ansyn-combo-box-option>
 
+				<ansyn-combo-box-option (click)="modal = true">
+					<i class="icon-edit"></i> Custom
+				</ansyn-combo-box-option>
 			</ansyn-combo-box>
 		</div>
 
@@ -45,13 +48,9 @@
 				placeholder="*Sharing Options"
 				[(ngModel)]="sharing">
 
-				<ansyn-combo-box-option value="Public" *ngFor="let share of sharingOptions">
+				<ansyn-combo-box-option value="Public" *ngFor="let share of sharingOptions" [disabled]="share === 'Private'">
 					{{share}}
 				</ansyn-combo-box-option>
-
-				<!--<ansyn-combo-box-option value="Private" [disabled]="true">-->
-					<!--Private-->
-				<!--</ansyn-combo-box-option>-->
 
 			</ansyn-combo-box>
 		</div>
@@ -77,7 +76,11 @@
 			</ansyn-checkbox>
 		</div>
 
-		<button ansynButton type="submit" [disabled]="f.invalid">Submit</button>
+		<button ansynButton type="submit" [disabled]="!f.valid">Submit</button>
 
 	</form>
 </div>
+
+<ansyn-modal [(show)]="modal">
+	<ansyn-edit-sensor-name *ngIf="modal" (onSubmit)="submitCustomSensorName($event)"></ansyn-edit-sensor-name>
+</ansyn-modal>

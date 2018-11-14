@@ -48,8 +48,12 @@
 				placeholder="*Sharing Options"
 				[(ngModel)]="sharing">
 
-				<ansyn-combo-box-option value="Public" *ngFor="let share of sharingOptions" [disabled]="share === 'Private'">
-					{{share}}
+				<ansyn-combo-box-option value="public">
+					Public
+				</ansyn-combo-box-option>
+
+				<ansyn-combo-box-option value="private" [disabled]="true">
+					Private
 				</ansyn-combo-box-option>
 
 			</ansyn-combo-box>

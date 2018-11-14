@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditSensorNameComponent } from './edit-sensor-name.component';
+import { FormsModule } from '@angular/forms';
+import { AnsynInputComponent } from '@ansyn/core';
 
 describe('EditSensorNameComponent', () => {
 	let component: EditSensorNameComponent;
@@ -8,7 +9,8 @@ describe('EditSensorNameComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [EditSensorNameComponent]
+			imports: [FormsModule],
+			declarations: [EditSensorNameComponent, AnsynInputComponent]
 		})
 			.compileComponents();
 	}));

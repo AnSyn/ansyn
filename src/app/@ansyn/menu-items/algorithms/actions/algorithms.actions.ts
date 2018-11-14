@@ -11,7 +11,9 @@ export enum AlgorithmsActionTypes {
 	DELETE_TASK = '[Algorithms] Delete task',
 	OPEN_MODAL = '[Algorithms] OPEN_MODAL',
 	CLOSE_MODAL = '[Algorithms] CLOSE_MODAL',
-	ADD_TASKS = '[Algorithms] ADD_CASES'
+	ADD_TASKS = '[Algorithms] ADD_TASKS',
+	ADD_TASK = '[Algorithms] ADD_TASK',
+	SELECT_TASK = '[Algorithms] SELECT_TASK'
 }
 
 export type AlgorithmsActions =
@@ -54,6 +56,13 @@ export class AddAlgorithmTasksAction implements Action {
 	}
 }
 
+export class AddAlgorithmTaskAction implements Action {
+	type = AlgorithmsActionTypes.ADD_TASK;
+
+	constructor(public payload: AlgorithmTask) {
+	}
+}
+
 export class DeleteAlgorithmTaskAction implements Action {
 	type = AlgorithmsActionTypes.DELETE_TASK;
 
@@ -72,5 +81,12 @@ export class CloseModalAction implements Action {
 	type = AlgorithmsActionTypes.CLOSE_MODAL;
 
 	constructor(public payload?: any) {
+	}
+}
+
+export class SelectAlgorithmTaskAction implements Action {
+	type = AlgorithmsActionTypes.SELECT_TASK;
+
+	constructor(public payload: AlgorithmTask) {
 	}
 }

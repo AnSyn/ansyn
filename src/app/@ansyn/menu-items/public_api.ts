@@ -1,3 +1,4 @@
+export { EditSensorNameComponent } from './uploads/components/edit-sensor-name/edit-sensor-name.component';
 export { UploadsComponent } from './uploads/components/uploads/uploads.component';
 export { UploadsModule } from './uploads/uploads.module';
 export { IFiltersConfig } from './filters/models/filters-config';

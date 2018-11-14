@@ -15,9 +15,8 @@ export class ComboBoxOptionComponent {
 	@HostListener('click') onClick() {
 		if (this.value) {
 			this._parent.selectOption(this.value);
-		} else {
-			this._parent.optionsVisible = false;
 		}
+		this._parent.close();
 	}
 
 	get selected() {

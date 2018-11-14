@@ -3,7 +3,7 @@ import {
 	FiltersCollectionComponent,
 	HelpComponent,
 	LayersManagerComponent,
-	ToolsComponent
+	ToolsComponent, UploadsComponent
 } from '@ansyn/menu-items';
 import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
@@ -46,6 +46,11 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Tools',
 			component: ToolsComponent,
 			iconClass: 'icon-main-tools'
+		},
+		{
+			name: 'Uploads',
+			component: UploadsComponent,
+			iconClass: 'icon-layer-export'
 		},
 		{
 			name: 'Help',

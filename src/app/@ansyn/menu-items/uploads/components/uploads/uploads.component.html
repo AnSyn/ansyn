@@ -35,7 +35,7 @@
 				</ansyn-combo-box-option>
 
 				<ansyn-combo-box-option (click)="modal = true">
-					<i class="icon-edit"></i> {{ other || 'Other' }}
+					<i class="icon-edit"></i> {{ other ? sensorName : 'Other' }}
 				</ansyn-combo-box-option>
 			</ansyn-combo-box>
 		</div>
@@ -76,7 +76,7 @@
 				name="licence"
 				required
 				[(ngModel)]="licence">
-				<span class="licence">I agree to this <a [href]="config.rulesLink" target="_blank">rules</a></span>
+				<span class="licence">I agree to the <a [href]="rulesLink" target="_blank">rules</a></span>
 			</ansyn-checkbox>
 		</div>
 

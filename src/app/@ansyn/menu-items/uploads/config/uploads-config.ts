@@ -4,7 +4,7 @@ export interface IUploadsConfig {
 	apiUrl: string;
 	sensorTypes: string[];
 	defaultSensorType: string;
-	sharingOptions: string[];
+	defaultSharing: string;
 	sensorNames: string[];
 	rulesLink: string;
 }

@@ -25,6 +25,7 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 
 	@Input()
 	@HostBinding('class.white') white: boolean;
+	@Attribute('select') public selectAttr: '' | null;
 
 	private innerValue: any = '';
 	private onTouchedCallback: () => void = noop;
@@ -42,9 +43,6 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	}
 
 	@ViewChild('input') input: ElementRef;
-
-	constructor(@Attribute('select') public selectAttr: boolean) {
-	}
 
 	onBlur() {
 		this.onTouchedCallback();

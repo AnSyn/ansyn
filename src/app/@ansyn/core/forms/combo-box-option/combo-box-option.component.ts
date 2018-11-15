@@ -20,7 +20,9 @@ export class ComboBoxOptionComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	selectedChanged$ = this._parent.injector.get(NgControl).valueChanges.pipe(tap(selected => {
-		if (selected === this.value) {
+
+		if (selected && selected === this.value) {
+			console.log(this.el.nativeElement.outerHTML);
 			this._parent.renderSelected = this.el.nativeElement.outerHTML;
 		}
 	}));

@@ -34,7 +34,7 @@
 					{{ sensor }}
 				</ansyn-combo-box-option>
 
-				<ansyn-combo-box-option (click)="modal = true">
+				<ansyn-combo-box-option [value]="other && sensorName ? sensorName : ''" (click)="modal = true">
 					<i class="icon-edit"></i> {{ other ? sensorName : 'Other' }}
 				</ansyn-combo-box-option>
 			</ansyn-combo-box>
@@ -52,7 +52,7 @@
 					Public
 				</ansyn-combo-box-option>
 
-				<ansyn-combo-box-option value="private" [disabled]="true">
+				<ansyn-combo-box-option value="private" >
 					Private
 				</ansyn-combo-box-option>
 

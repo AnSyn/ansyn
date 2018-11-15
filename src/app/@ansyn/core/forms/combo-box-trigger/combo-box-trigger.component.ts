@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input } from '@angular/core';
 
 @Component({
 	selector: 'button[ansynComboBoxTrigger]',
@@ -9,7 +9,6 @@ export class ComboBoxTriggerComponent {
 	@Input() icon: string;
 	@HostBinding('class.active')
 	@Input() isActive: boolean;
-	@Input() render;
 
 	constructor(public optionsTrigger: ElementRef) {
 	}

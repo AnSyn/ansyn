@@ -23,7 +23,6 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	@Input() icon: string;
 	disabled: boolean;
 	selected: any;
-	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
 	@Input() comboBoxToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
@@ -62,10 +61,6 @@ export class ComboBoxComponent implements ControlValueAccessor {
 
 	close() {
 		this.optionsVisible = false;
-	}
-
-	render(selected) {
-		return this.renderSelected;
 	}
 
 	registerOnChange(fn: any): void {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat, IOverlay } from '@ansyn/core';
@@ -27,21 +27,25 @@ import { Actions, ofType } from '@ngrx/effects';
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('img') img: ElementRef;
 
-	public mouseMove$: Observable<any> = fromEvent(window, 'mousemove').pipe(
-		tap(($event: any) => {
-			const excludeElements = [this.el.nativeElement, this.hoveredElement];
-			if (!$event.path.some((elem) => excludeElements.includes(elem))) {
-				this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
-			}
-		}),
-		takeWhile(() => this.isHoveringOverDrop)
-	);
+	public mouseMove$: Observable<any> = fromEvent(window, 'mousemove')
+		.pipe(
+			takeWhile(() => this.isHoveringOverDrop && this.eventFromTarget),
+			tap(($event: any) => {
+				if (!this.isEventFromTarget($event)) {
+					this.store$.dispatch(new SetMarkUp({
+						classToSet: MarkUpClass.hover,
+						dataToSet: { overlaysIds: [] }
+					}));
+				}
+			})
+		);
 
 	public sensorName: string;
 	public formattedTime: string;
 	public overlayId: string;
 	public loadingImage = false;
 	public rotation = 0;
+	public eventFromTarget = false;
 	protected topElement = this.el.nativeElement.parentElement;
 
 	get hoveredElement(): Element {
@@ -79,6 +83,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		protected translate: TranslateService) {
 	}
 
+	isEventFromTarget($event) {
+		const excludeElements = [this.el.nativeElement, this.hoveredElement];
+		return $event.path.some((elem) => excludeElements.includes(elem));
+	}
+
 	ngOnInit() {
 	}
 
@@ -86,6 +95,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	onHoveredOverlay(overlay: IOverlay) {
+		if (event && event.type !== 'mouseover') {
+			this.eventFromTarget = this.isEventFromTarget(event);
+			console.log(this.eventFromTarget);
+		}
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;

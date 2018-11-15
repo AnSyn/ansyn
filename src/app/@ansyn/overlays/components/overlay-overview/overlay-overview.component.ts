@@ -29,9 +29,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	public mouseMove$: Observable<any> = fromEvent(window, 'mousemove')
 		.pipe(
-			takeWhile(() => this.isHoveringOverDrop && this.eventFromTarget),
+			takeWhile(() => this.isHoveringOverDrop && this.mouseEventFromDropOrCurrent),
 			tap(($event: any) => {
-				if (!this.isEventFromTarget($event)) {
+				if (!this.isMouseEventFromDropOrCurrent($event)) {
 					this.store$.dispatch(new SetMarkUp({
 						classToSet: MarkUpClass.hover,
 						dataToSet: { overlaysIds: [] }
@@ -45,7 +45,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public overlayId: string;
 	public loadingImage = false;
 	public rotation = 0;
-	public eventFromTarget = false;
+	public mouseEventFromDropOrCurrent = false;
 	protected topElement = this.el.nativeElement.parentElement;
 
 	get dropElement(): Element {
@@ -73,7 +73,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
-		tap(() => this.eventFromTarget = window.event && window.event.type === 'mouseover' && this.isEventFromTarget(event)),
+		tap(() => this.mouseEventFromDropOrCurrent = window.event && window.event.type === 'mouseover' && this.isMouseEventFromDropOrCurrent(window.event)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
@@ -84,7 +84,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		protected translate: TranslateService) {
 	}
 
-	isEventFromTarget($event) {
+	isMouseEventFromDropOrCurrent($event) {
 		const excludeElements = [this.el.nativeElement, this.dropElement];
 		return $event.path.some((elem) => excludeElements.includes(elem));
 	}

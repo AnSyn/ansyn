@@ -20,7 +20,6 @@ export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	regionLengthInMeters: number;
 	region: GeometryObject;
 	selectedTask: AlgorithmTask;
-	modal: ITaskModal;
 }
 
 export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITasksState>{
@@ -28,7 +27,6 @@ export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITas
 	regionLengthInMeters: 1000,
 	region: null,
 	selectedTask: null,
-	modal: { show: false }
 });
 
 export const tasksFeatureKey = 'tasks';
@@ -61,12 +59,6 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 		case AlgorithmsActionTypes.ADD_TASKS:
 			return tasksAdapter.addMany(action.payload, state);
 
-		case AlgorithmsActionTypes.OPEN_MODAL:
-			return { ...state, modal: { id: action.payload.taskId, show: true } };
-
-		case AlgorithmsActionTypes.CLOSE_MODAL:
-			return { ...state, modal: { id: null, show: false } };
-
 		default:
 			return state;
 	}
@@ -81,4 +73,3 @@ export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>create
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.regionLengthInMeters);
 export const selectAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.region);
-export const selectAlgorithmsModal: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.modal);

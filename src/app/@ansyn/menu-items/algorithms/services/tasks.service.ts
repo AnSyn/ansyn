@@ -31,6 +31,7 @@ export class TasksService {
 	parseTaskPreview(taskPreview: AlgorithmTaskPreview): AlgorithmTaskPreview {
 		return {
 			...taskPreview,
+			creationTime: new Date(taskPreview.creationTime),
 			runTime: new Date(taskPreview.runTime)
 		};
 	}

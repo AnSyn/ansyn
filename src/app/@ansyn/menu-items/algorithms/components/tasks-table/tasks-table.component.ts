@@ -4,16 +4,10 @@ import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
 import { getTimeFormat } from '@ansyn/core';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
-import {
-	ITaskModal,
-	ITasksState,
-	selectTaskEntities,
-	selectTasksIds,
-	tasksStateSelector
-} from '../../reducers/tasks.reducer';
+import { ITasksState, selectTaskEntities, selectTasksIds, tasksStateSelector } from '../../reducers/tasks.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, map, pluck, tap } from 'rxjs/internal/operators';
+import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AlgorithmTaskPreview } from '../../models/tasks.model';
 
@@ -46,12 +40,6 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 
 	ids$: Observable<string[] | number[]> = this.store$.select(selectTasksIds);
 	entities$: Observable<Dictionary<AlgorithmTaskPreview>> = this.store$.select(selectTaskEntities);
-
-	modalTaskId$: Observable<string> = this.taskState$.pipe(
-		pluck<ITasksState, ITaskModal>('modal'),
-		distinctUntilChanged(),
-		pluck<ITaskModal, string>('id')
-	);
 
 	@AutoSubscription
 	selectedTaskId$: Observable<string> = this.taskState$.pipe(

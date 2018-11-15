@@ -26,7 +26,7 @@
 		<div class="tasks-table-body-row"
 			 *ngFor="let id of ids"
 			 (click)="selectTask(id)"
-			 [class.active]="(modalTaskId$ | async) === id"
+			 [class.active]="false"
 			 [class.selected]="selectedTaskId === id"
 			 (mouseenter)="onMouseEnterTaskRow(taskMenu, taskRow, tbodyElement)"
 			 (mouseleave)="onMouseLeaveTaskRow(taskRow)"

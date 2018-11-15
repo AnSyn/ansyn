@@ -9,8 +9,6 @@ export enum AlgorithmsActionTypes {
 
 	LOAD_TASKS = '[Algorithms] Load tasks',
 	DELETE_TASK = '[Algorithms] Delete task',
-	OPEN_MODAL = '[Algorithms] OPEN_MODAL',
-	CLOSE_MODAL = '[Algorithms] CLOSE_MODAL',
 	ADD_TASKS = '[Algorithms] ADD_TASKS',
 	ADD_TASK = '[Algorithms] ADD_TASK',
 	RUN_TASK = '[Algorithms] RUN_TASK',
@@ -75,20 +73,6 @@ export class DeleteTaskAction implements Action {
 	type = AlgorithmsActionTypes.DELETE_TASK;
 
 	constructor(public payload: string) {
-	}
-}
-
-export class OpenModalAction implements Action {
-	type = AlgorithmsActionTypes.OPEN_MODAL;
-
-	constructor(public payload: { component: any, taskId?: string }) {
-	}
-}
-
-export class CloseModalAction implements Action {
-	type = AlgorithmsActionTypes.CLOSE_MODAL;
-
-	constructor(public payload?: any) {
 	}
 }
 

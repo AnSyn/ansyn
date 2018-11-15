@@ -8,7 +8,7 @@ import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
 import { createStore, IStoreFixture, LoggerService } from '@ansyn/core';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
-import { BaseOverlaySourceProvider } from '../../models/base-overlay-source-provider.model';
+import { MultipleOverlaysSourceProvider } from '../../services/multiple-source-provider';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
@@ -120,7 +120,7 @@ describe('TimelineComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [OverlaysService, OverlaysEffects, Actions, BaseOverlaySourceProvider, {
+			providers: [OverlaysService, OverlaysEffects, Actions, { provide: MultipleOverlaysSourceProvider, useValue: {} }, {
 				provide: OverlaysConfig,
 				useValue: {}
 			},

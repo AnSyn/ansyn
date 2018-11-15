@@ -1,0 +1,14 @@
+<ng-container [ngSwitch]="page">
+
+	<ansyn-tasks-table-page
+		*ngSwitchCase="'table'"
+		(goto)="gotoPage($event)"
+	></ansyn-tasks-table-page>
+
+	<ansyn-tasks-form-page
+		*ngSwitchCase="'form'"
+		(goto)="gotoPage($event)"
+	></ansyn-tasks-form-page>
+
+</ng-container>
+

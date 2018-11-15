@@ -32,8 +32,13 @@ export class OpenLayersProjectionService extends ProjectionService {
 		return of(point);
 	}
 
-	projectApproximatelyFromProjection(point: Point, projection: string): Observable<Point> {
-		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
+	projectApproximatelyFromProjection(point: Point, sourceProjection: string, destProjection: string): Observable<Point> {
+		if (sourceProjection === destProjection) {
+			return of(point);
+		}
+		// there is no direct proj transform from 2 pixel's projections
+		point.coordinates = proj.transform(<[number, number]>point.coordinates, sourceProjection, 'EPSG:4326');
+		point.coordinates = proj.transform(<[number, number]>point.coordinates, 'EPSG:4326', destProjection);
 		return of(point);
 	}
 

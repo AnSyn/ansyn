@@ -1,0 +1,13 @@
+<div>
+	<input type="checkbox"
+		   [id]="id"
+		   [(ngModel)]="value"
+		   [disabled]="disabled"/>
+	<label [for]="id"></label>
+</div>
+
+<div class="ansyn-checkbox-text">
+	<label [for]="id">
+		<ng-content></ng-content>
+	</label>
+</div>

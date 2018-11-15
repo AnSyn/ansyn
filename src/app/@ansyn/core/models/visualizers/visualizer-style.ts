@@ -1,3 +1,5 @@
+export type FeatureField<T> = T | ((feature: any) => T);
+
 export interface IStroke {
 	stroke?: string | any;
 	'stroke-width'?: number | any;
@@ -13,8 +15,8 @@ export interface ILabel extends IStroke {
 	font?: string,
 	fill?: string;
 	offsetX?: number;
-	offsetY?: number;
-	text?: (feature: any) => string | string;
+	offsetY?: FeatureField<number>;
+	text?: FeatureField<string>;
 	overflow?: boolean;
 }
 

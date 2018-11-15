@@ -21,6 +21,8 @@ import { OpenLayersDisabledMap } from './openlayers/open-layers-map/openlayers-d
 import { OpenlayersGeoJsonLayersVisualizer } from './openlayers/layers/openlayers-geoJson-layers.visualizer';
 import { PolygonSearchVisualizer } from './openlayers/visualizers/region/polygon-search.visualizer';
 import { MouseShadowVisualizer } from './openlayers/visualizers/tools/mouse-shadow.visualizer';
+import { AlertsPlugin } from './openlayers/alerts/alerts.plugin';
+import { AlgorithmTaskRegionVisualizer } from './openlayers/visualizers/algorithms/algorithm-task-region.visualizer';
 
 @NgModule({
 	imports: [
@@ -33,6 +35,7 @@ import { MouseShadowVisualizer } from './openlayers/visualizers/tools/mouse-shad
 				MonitorPlugin,
 				ContextMenuPlugin,
 				OpenlayersOsmLayersPlugin,
+				AlertsPlugin,
 				// Visualizers
 				ContextEntityVisualizer,
 				FootprintHeatmapVisualizer,
@@ -44,7 +47,8 @@ import { MouseShadowVisualizer } from './openlayers/visualizers/tools/mouse-shad
 				PinPointVisualizer,
 				MouseShadowVisualizer,
 				PolygonSearchVisualizer,
-				OpenlayersGeoJsonLayersVisualizer
+				OpenlayersGeoJsonLayersVisualizer,
+				AlgorithmTaskRegionVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
 			mapSourceProviders: []

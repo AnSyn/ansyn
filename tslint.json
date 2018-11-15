@@ -109,7 +109,7 @@
 			"camelCase"
 		],
 		"component-selector": [
-			true,
+			false,
 			"element",
 			"ansyn",
 			"kebab-case"

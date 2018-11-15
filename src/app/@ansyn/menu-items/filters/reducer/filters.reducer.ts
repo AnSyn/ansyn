@@ -1,5 +1,11 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { CaseEnumFilterMetadata, ICaseBooleanFilterMetadata, ICaseFacetsState, ICaseFilter } from '@ansyn/core';
+import {
+	CaseEnumFilterMetadata,
+	ICaseBooleanFilterMetadata,
+	ICaseFacetsState,
+	ICaseFilter,
+	ICaseSliderFilterMetadata
+} from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
@@ -8,7 +14,7 @@ import { FiltersService } from '../services/filters.service';
 export type Filters = Map<IFilter, FilterMetadata>;
 
 export interface IFiltersState {
-	filters: Filters;
+	filters: Map<IFilter, FilterMetadata>;
 	isLoading: boolean;
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
@@ -45,7 +51,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			const clonedFilters = new Map(state.filters);
 
 			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
-			const facets = { ...state.facets, filters: <ICaseFilter<ICaseBooleanFilterMetadata | CaseEnumFilterMetadata>[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
+			const facets = { ...state.facets, filters: <ICaseFilter<ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata>[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
 			return { ...state, filters: clonedFilters, facets };
 		}
 

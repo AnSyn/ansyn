@@ -1,0 +1,90 @@
+<div>
+	<form class="upload-form" #f="ngForm" (ngSubmit)="onSubmit()">
+
+		<div class="form-field">
+			<ansyn-input label="Title"
+						 [white]="true"
+						 select
+						 name="title"
+						 [(ngModel)]="title">
+			</ansyn-input>
+		</div>
+		<div class="form-field sensor-type">
+			<div class="title">*Sensor type</div>
+			<div class="sensor-types">
+				<ansyn-radio *ngFor="let value of sensorTypes"
+							 [ngModelOptions]="{standalone: true}"
+							 [value]="value"
+							 required
+							 [(ngModel)]="sensorType">
+					{{value}}
+				</ansyn-radio>
+			</div>
+		</div>
+
+		<div class="form-field">
+			<ansyn-combo-box
+				required
+				name="sensorName"
+				color="transparent"
+				placeholder="*Sensor name"
+				[(ngModel)]="sensorName">
+
+				<ansyn-combo-box-option *ngFor="let sensor of sensorNames" (click)="other = false" [value]="sensor">
+					{{ sensor }}
+				</ansyn-combo-box-option>
+
+				<ansyn-combo-box-option [value]="other && sensorName ? sensorName : ''" (click)="modal = true">
+					<i class="icon-edit"></i> {{ other ? sensorName : 'Other' }}
+				</ansyn-combo-box-option>
+			</ansyn-combo-box>
+		</div>
+
+		<div class="form-field">
+			<ansyn-combo-box
+				required
+				name="sharing"
+				color="transparent"
+				placeholder="*Sharing Options"
+				[(ngModel)]="sharing">
+
+				<ansyn-combo-box-option value="public">
+					Public
+				</ansyn-combo-box-option>
+
+				<ansyn-combo-box-option value="private" disabled>
+					Private
+				</ansyn-combo-box-option>
+
+			</ansyn-combo-box>
+		</div>
+
+		<div class="form-field fileinput">
+			<ansyn-file-input
+				required
+				accept="image/jpeg"
+				[multiple]="true"
+				name="files"
+				placeholder="*Choose file"
+				[(ngModel)]="fileInputValue"
+				(change)="files = $event.target.files">
+			</ansyn-file-input>
+		</div>
+
+		<div class="form-field">
+			<ansyn-checkbox
+				name="licence"
+				required
+				[(ngModel)]="licence">
+				<span class="licence">I agree to the <a [href]="rulesLink" target="_blank">rules</a></span>
+			</ansyn-checkbox>
+		</div>
+
+		<button ansynButton type="submit" [disabled]="!f.valid">Submit</button>
+
+	</form>
+</div>
+
+<ansyn-modal [(show)]="modal">
+	<ansyn-edit-sensor-name *ngIf="modal" (onSubmit)="submitCustomSensorName($event)"></ansyn-edit-sensor-name>
+</ansyn-modal>

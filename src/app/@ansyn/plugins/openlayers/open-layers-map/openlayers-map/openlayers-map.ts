@@ -44,7 +44,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
-
+	public shadowElement = null;
 
 	constructor(public projectionService: ProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
@@ -82,7 +82,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+		this.shadowElement = shadowElement;
 		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),

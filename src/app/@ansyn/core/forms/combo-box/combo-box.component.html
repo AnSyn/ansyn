@@ -1,0 +1,20 @@
+<div class="combo-container" [ngClass]="[direction, color]">
+	<button ansynComboBoxTrigger
+			type="button"
+			[disabled]="disabled"
+			[isActive]="optionsVisible"
+			[attr.tooltip-value]="comboBoxToolTipDescription || null"
+			tooltip-class="top"
+			[icon]="icon"
+			(click)="toggleShow()">
+		<div class="render" [innerHTML]="renderSelected"></div>
+		<div class="placeholder" *ngIf="placeholder" [class.float]="selected || optionsVisible"> {{ placeholder }}</div>
+	</button>
+
+	<div class="options-container"
+		 *ngIf="!disabled"
+		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
+		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
+		<ng-content></ng-content>
+	</div>
+</div>

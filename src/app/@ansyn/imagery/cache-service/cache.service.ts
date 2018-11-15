@@ -23,26 +23,17 @@ export class CacheService {
 			});
 	}
 
-	getLayerFromCache(metaData: ICaseMapState): any[] {
-		const cacheId = this.createLayerId(metaData);
+	getLayerFromCache(cacheId: string): any[] {
 		const layers = this.cachedLayesrMap.get(cacheId);
 		return layers && !this.isDisplayedLayer(layers, cacheId) ? [...layers] : [];
 	}
 
-	addLayerToCache(caseMapState: ICaseMapState, layers: any[]) {
+	addLayerToCache(cacheId: string, layers: any[]) {
 		if (this.cachedLayesrMap.size >= this.cacheSize) {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
 		}
-		const cacheId = this.createLayerId(caseMapState);
 		layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set('cacheId', cacheId));
 		this.cachedLayesrMap.set(cacheId, [...layers]);
-	}
-
-	createLayerId(caseMapState: ICaseMapState): string {
-		if (caseMapState.data.overlay) {
-			return `${caseMapState.worldView.mapType}/${JSON.stringify(caseMapState.data.overlay)}`;
-		}
-		return `${caseMapState.worldView.mapType}/${caseMapState.worldView.sourceType}`;
 	}
 }

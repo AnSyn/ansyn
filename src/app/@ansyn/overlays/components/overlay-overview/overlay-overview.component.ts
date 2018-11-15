@@ -73,6 +73,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
+		tap(() => {
+			if (event && event.type !== 'mouseover') {
+				this.isEventFromTarget = this.isEventFromTarget(event);
+			}
+		}),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
@@ -95,10 +100,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	onHoveredOverlay(overlay: IOverlay) {
-		if (event && event.type !== 'mouseover') {
-			this.eventFromTarget = this.isEventFromTarget(event);
-			console.log(this.eventFromTarget);
-		}
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat, IOverlay } from '@ansyn/core';
@@ -48,7 +48,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public eventFromTarget = false;
 	protected topElement = this.el.nativeElement.parentElement;
 
-	get hoveredElement(): Element {
+	get dropElement(): Element {
 		return this.topElement.querySelector(`#dropId-${this.overlayId}`);
 	}
 
@@ -73,11 +73,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
-		tap(() => {
-			if (event && event.type !== 'mouseover') {
-				this.isEventFromTarget = this.isEventFromTarget(event);
-			}
-		}),
+		tap(() => this.eventFromTarget = window.event && window.event.type === 'mouseover' && this.isEventFromTarget(event)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
@@ -89,7 +85,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	isEventFromTarget($event) {
-		const excludeElements = [this.el.nativeElement, this.hoveredElement];
+		const excludeElements = [this.el.nativeElement, this.dropElement];
 		return $event.path.some((elem) => excludeElements.includes(elem));
 	}
 
@@ -103,7 +99,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
-			const hoveredElement: Element = this.hoveredElement;
+			const hoveredElement: Element = this.dropElement;
 			if (!hoveredElement) {
 				return;
 			}

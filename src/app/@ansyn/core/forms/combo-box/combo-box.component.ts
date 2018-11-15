@@ -49,17 +49,19 @@ export class ComboBoxComponent implements ControlValueAccessor {
 
 	onBlurOptionsContainer($event: FocusEvent) {
 		if ($event.relatedTarget !== (this.optionsTrigger && this.optionsTrigger.nativeElement)) {
-			this.optionsVisible = false;
+			this.close();
 		}
 	}
 
 	selectOption(selected) {
-		this.optionsVisible = false;
-
 		if (selected !== this.selected) {
 			this.selected = selected;
 			this.onChangeCallback(selected);
 		}
+	}
+
+	close() {
+		this.optionsVisible = false;
 	}
 
 	render(selected) {

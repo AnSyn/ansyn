@@ -1,8 +1,9 @@
 :host {
 	display: block;
+	/* temporary */
 	position: relative;
 	z-index: 1;
-	&.disabled {
+	&[disabled] {
 		opacity: .6;
 		pointer-events: none;
 	}

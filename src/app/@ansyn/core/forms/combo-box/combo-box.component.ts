@@ -1,6 +1,6 @@
-import { Component, ElementRef, forwardRef, Injector, Input, Optional, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, Injector, Input, ViewChild } from '@angular/core';
 import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger.component';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 
 @Component({
@@ -36,6 +36,7 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	get optionsTrigger(): ElementRef {
 		return this.trigger && this.trigger.optionsTrigger;
 	}
+
 	constructor(public injector: Injector) {
 	}
 

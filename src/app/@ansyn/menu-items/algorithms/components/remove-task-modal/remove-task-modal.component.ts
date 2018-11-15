@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-remove-task-modal',
@@ -6,6 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 	styleUrls: ['./remove-task-modal.component.less']
 })
 export class RemoveTaskModalComponent {
+	@Input() message = "Confirm?";
 	@Output() onSubmit = new EventEmitter<boolean>();
 
 	onCancel() {

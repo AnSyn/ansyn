@@ -25,6 +25,7 @@ const animations: any[] = [
 
 interface IModalData {
 	id: string,
+	name: string,
 	show: boolean
 }
 
@@ -107,9 +108,10 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 		return getTimeFormat(timeToFormat);
 	}
 
-	showModal(id) {
+	showModal(id, name = '??') {
 		this.modal = {
 			id: id,
+			name: name,
 			show: true
 		}
 	}

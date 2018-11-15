@@ -9,7 +9,7 @@ import { TasksService } from '../services/tasks.service';
 import {
 	AddTaskAction,
 	AddTasksAction,
-	AlgorithmsActionTypes,
+	AlgorithmsActionTypes, DeleteTaskAction,
 	RunTaskAction,
 	SelectTaskAction
 } from '../actions/tasks.actions';
@@ -53,6 +53,13 @@ export class TasksEffects {
 		map((task: AlgorithmTask) => {
 			return new SelectTaskAction(task)
 		})
+	);
+
+	@Effect()
+	onDeleteTask$: Observable<SelectTaskAction> = this.actions$.pipe(
+		ofType<DeleteTaskAction>(AlgorithmsActionTypes.DELETE_TASK),
+		switchMap((action: DeleteTaskAction) => this.tasksService.removeTask(action.payload)),
+		map(() => new SelectTaskAction(null))
 	);
 
 	constructor(

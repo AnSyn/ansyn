@@ -57,7 +57,7 @@
 				<!--menu-->
 				<div class="task-menu-container">
 					<div class="task-menu" (click)="taskMenuClick($event, taskRow)" #taskMenu>
-						<button (click)="showModal(id)">
+						<button (click)="showModal(id, entities[id].name)">
 							<i class="icon-delete"></i>
 						</button>
 					</div>
@@ -79,5 +79,8 @@
 </ng-template>
 
 <ansyn-modal [show]="modal?.show">
-	<ansyn-remove-task-modal *ngIf="modal?.show" (onSubmit)="onModalResult($event)"></ansyn-remove-task-modal>
+	<ansyn-remove-task-modal *ngIf="modal?.show"
+							 [message]="'Delete task ' + modal?.name + '?'"
+							 (onSubmit)="onModalResult($event)"
+	></ansyn-remove-task-modal>
 </ansyn-modal>

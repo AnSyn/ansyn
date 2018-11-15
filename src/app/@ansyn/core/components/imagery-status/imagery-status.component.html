@@ -20,6 +20,7 @@
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()"
 			tooltip-value="Show/ Hide layers"
+			[disabled]="noGeoRegistration"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i [class.icon-main-data-layers]="layerFlag"
 		   [class.icon-layers-hide]="!layerFlag"></i>
@@ -36,6 +37,7 @@
 	<button *ngIf="overlay" class="small-icon-button set-preset"
 			[class.active2]="isPreset"
 			(click)="togglePreset()"
+			[disabled]="noGeoRegistration"
 			[attr.tooltip-value]="presetsButtonText"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon icon-presets"></i>

@@ -18,10 +18,20 @@ import {
 	toRadians
 } from '@ansyn/core';
 import { ITBOverlaySourceConfig, TBOverlaySourceConfig, TBOverlay } from './tb.model';
+import { Polygon } from 'geojson';
 
 export const TBOverlaySourceType = 'TB';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
+
+export interface ITBRequestBody {
+	worldName: string;
+	geometry: Polygon | any;
+	dates: {
+		start: string,
+		end: string
+	};
+}
 
 @Injectable()
 export class TBSourceProvider extends BaseOverlaySourceProvider {
@@ -33,45 +43,46 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
-		@Inject(TBOverlaySourceConfig)
-		protected tbOverlaysSourceConfig: ITBOverlaySourceConfig) {
+		@Inject(TBOverlaySourceConfig) protected config: ITBOverlaySourceConfig) {
 		super(loggerService);
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
 
-		const helper = new JwtHelperService();
-		const token = localStorage.getItem('id_token');
-
-		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
-		}
-		let bbox;
-
-		if (fetchParams.region.type === 'Point') {
-			bbox = bboxFromGeoJson(getPolygonByPointAndRadius((<any>fetchParams.region).coordinates).geometry as GeoJSON.Polygon);
-		} else {
-			bbox = bboxFromGeoJson(fetchParams.region as GeoJSON.Polygon);
-		}
-		// if limit not provided by config - set default value
-		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
-		let baseUrl = this.tbOverlaysSourceConfig.baseUrl;
-		// let headers = new HttpHeaders( );
-		// add 1 to limit - so we'll know if provider have more then X overlays
-		const params = {
-			world: 'dafna-remote-sofi',
-			geoShape: fetchParams.region,
-			fromDate: fetchParams.timeRange.start.toISOString(),
-			toDate: fetchParams.timeRange.end.toISOString()
+		// const helper = new JwtHelperService();
+		// const token = localStorage.getItem('id_token');
+		//
+		// if (fetchParams.region.type === 'MultiPolygon') {
+		// 	fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+		// }
+		// let bbox;
+		//
+		// if (fetchParams.region.type === 'Point') {
+		// 	bbox = bboxFromGeoJson(getPolygonByPointAndRadius((<any>fetchParams.region).coordinates).geometry as GeoJSON.Polygon);
+		// } else {
+		// 	bbox = bboxFromGeoJson(fetchParams.region as GeoJSON.Polygon);
+		// }
+		// // if limit not provided by config - set default value
+		// fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
+		// let baseUrl = this.tbOverlaysSourceConfig.baseUrl;
+		// // let headers = new HttpHeaders( );
+		// // add 1 to limit - so we'll know if provider have more then X overlays
+		// const params = {
+		// 	world: 'public',
+		// 	geoShape: fetchParams.region,
+		// 	fromDate: fetchParams.timeRange.start.toISOString(),
+		// 	toDate: fetchParams.timeRange.end.toISOString()
+		// };
+		const body: ITBRequestBody = {
+			worldName: 'public',
+			dates: {
+				start: fetchParams.timeRange.start.toISOString(),
+				end: fetchParams.timeRange.end.toISOString()
+			},
+			geometry: fetchParams.region
 		};
 
-		const httpOptions = {
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + token
-			}
-		};
-		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
+		return this.http.post<any>(this.config.baseUrl, body).pipe(
 			map(data => this.extractData(data)),
 			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,

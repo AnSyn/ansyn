@@ -23,6 +23,7 @@ import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
 import { OpenLayerTBSourceProvider } from './map-source-providers/open-layers-TB-source-provider';
+import { TBSourceProvider } from './overlay-source-providers/tb/tb-source-provider';
 
 @NgModule({
 	imports: [
@@ -47,6 +48,7 @@ import { OpenLayerTBSourceProvider } from './map-source-providers/open-layers-TB
 		{ provide: MultipleOverlaysSource, useClass: PlanetSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: OpenAerialSourceProvider, multi: true },
 		{ provide: MultipleOverlaysSource, useClass: IdahoSourceProvider, multi: true },
+		{ provide: MultipleOverlaysSource, useClass: TBSourceProvider, multi: true },
 
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },

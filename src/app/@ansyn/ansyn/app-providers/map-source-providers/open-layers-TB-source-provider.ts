@@ -15,20 +15,20 @@ export const OpenLayerTBSourceProviderSourceType = 'TB';
 export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider {
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
-		let layer = [ 
+		let layer = [
 			new ImageLayer({
-			  source: new Static({
-				attributions: '© <a href="http://xkcd.com/license.html">xkcd</a>',
-				url: 'https://imgs.xkcd.com/comics/online_communities.png',
-				projection: new Projection({
-					code: 'xkcd-image',
-					units: 'pixels',
-					extent: [0, 0, 1024, 968]
-				  }),
-				imageExtent: [0, 0, 1024, 968]
-			  })
+				source: new Static({
+					attributions: '© <a href="http://xkcd.com/license.html">xkcd</a>',
+					url: 'https://imgs.xkcd.com/comics/online_communities.png',
+					projection: new Projection({
+						code: 'xkcd-image',
+						units: 'pixels',
+						extent: [0, 0, 1024, 968]
+					}),
+					imageExtent: [0, 0, 1024, 968]
+				})
 			})
-		  ]
+		];
 		return Promise.resolve(layer[0]);
 	}
 }

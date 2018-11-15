@@ -1,15 +1,15 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DeleteTaskComponent } from '../delete-task/delete-task.component';
 import { Store } from '@ngrx/store';
-import { LoadTasksAction, OpenModalAction } from '../../actions/tasks.actions';
+import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
 import { getTimeFormat } from '@ansyn/core';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
 import {
-	tasksStateSelector,
+	ITaskModal,
 	ITasksState,
-	ITaskModal, selectTaskEntities,
-	selectTasksIds
+	selectTaskEntities,
+	selectTasksIds,
+	tasksStateSelector
 } from '../../reducers/tasks.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -23,6 +23,10 @@ const animations: any[] = [
 	])
 ];
 
+interface IModalData {
+	id: string,
+	show: boolean
+}
 
 @Component({
 	selector: 'ansyn-tasks-table',
@@ -56,6 +60,8 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	);
 
 	selectedTaskId: string;
+
+	modal: IModalData;
 
 	constructor(protected store$: Store<ITasksState>, protected tasksEffects: TasksEffects) {
 		this.tasksEffects.onAddTask$.subscribe(this.onTasksAdded.bind(this));
@@ -94,10 +100,6 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 		$event.stopPropagation();
 	}
 
-	removeTask(taskId: string): void {
-		this.store$.dispatch(new OpenModalAction({ component: DeleteTaskComponent, taskId }));
-	}
-
 	selectTask(taskId: string): void {
 	}
 
@@ -105,4 +107,25 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 		return getTimeFormat(timeToFormat);
 	}
 
+	showModal(id) {
+		this.modal = {
+			id: id,
+			show: true
+		}
+	}
+
+	hideModal() {
+		this.modal.show = false;
+	}
+
+	onModalResult(value: boolean) {
+		if (value) {
+			this.removeTask(this.modal.id)
+		}
+		this.hideModal();
+	}
+
+	removeTask(id) {
+		this.store$.dispatch(new DeleteTaskAction(id));
+	}
 }

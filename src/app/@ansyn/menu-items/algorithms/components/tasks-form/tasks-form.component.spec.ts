@@ -57,22 +57,31 @@ describe('TasksFormComponent', () => {
 			spyOn(component, 'showError');
 			overlays = ['a', 'b'].map((id) => new Overlay({ id: id }));
 			component.MIN_NUM_OF_OVERLAYS = 2;
-			component.configService.config = {
-				alg_1: {
-					maxOverlays: 2,
-					timeEstimationPerOverlayInMinutes: 10,
-					regionLengthInMeters: 100,
-					sensorNames: []
+			component.tasksService.config = {
+				schema: '',
+				paginationLimit: 1,
+				algorithms: {
+					alg_1: {
+						maxOverlays: 2,
+						timeEstimationPerOverlayInMinutes: 10,
+						regionLengthInMeters: 100,
+						sensorNames: []
+					}
 				}
 			};
-			component.algName = 'alg_1';
 			component.task = {
 				id: '21',
+				creationTime: null,
+				runTime: null,
 				name: '21',
-				overlays: overlays,
-				masterOverlay: overlays[0],
-				region: {
-					type: 'Point'
+				type: 'alg_1',
+				status: 'Sent',
+				state: {
+					overlays: overlays,
+					masterOverlay: overlays[0],
+					region: {
+						type: 'Point'
+					}
 				}
 			}
 		});
@@ -91,7 +100,7 @@ describe('TasksFormComponent', () => {
 			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays 3 should be at most 2`);
 		});
 		it('should check existence of master overlay', () => {
-			component.task.masterOverlay = null;
+			component.task.state.masterOverlay = null;
 			component.checkForErrors();
 			expect(component.showError).toHaveBeenCalledWith('No master overlay selected');
 		});

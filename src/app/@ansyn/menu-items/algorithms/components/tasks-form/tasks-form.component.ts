@@ -13,11 +13,7 @@ import {
 	IAlgorithmConfig
 } from '../../models/tasks.model';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import {
-	AddTaskAction,
-	SetTaskDrawIndicator,
-	SetTaskRegionLength
-} from '../../actions/tasks.actions';
+import { RunTaskAction, SetTaskDrawIndicator, SetTaskRegionLength } from '../../actions/tasks.actions';
 import { selectAlgorithmTaskRegion } from '../../reducers/tasks.reducer';
 import { TasksRemoteService } from '../../services/tasks-remote.service';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
@@ -35,18 +31,17 @@ import { ToggleIsPinnedAction } from '@ansyn/menu';
 export class TasksFormComponent implements OnInit, OnDestroy {
 	task: AlgorithmTask = new AlgorithmTask();
 	taskStatus: AlgorithmTaskStatus = 'New';
-	algName: string;
 	whichOverlays: AlgorithmTaskWhichOverlays = 'favorite_overlays';
 	algNames: string[] = [];
 	errorMsg = '';
 	MIN_NUM_OF_OVERLAYS = 2;
 
 	get algorithms(): { [alg: string]: IAlgorithmConfig } {
-		return this.configService.config.algorithms;
+		return this.tasksService.config.algorithms;
 	}
 
 	get algorithmConfig(): IAlgorithmConfig {
-		return this.algorithms[this.algName];
+		return this.algorithms[this.task.type];
 	}
 
 	get timeEstimation(): number {
@@ -56,7 +51,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	getOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		map((overlays: IOverlay[]) => {
-			const result = this.algName
+			const result = this.task.type
 				? overlays.filter((overlay: IOverlay) => {
 					return this.algorithmConfig.sensorNames.includes(overlay.sensorName)
 				})
@@ -92,8 +87,8 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		));
 
 	constructor(
-		public configService: TasksService,
-		protected algorithmsService: TasksRemoteService,
+		public tasksService: TasksService,
+		protected tasksRemoteService: TasksRemoteService,
 		public translate: TranslateService,
 		protected store$: Store<any>
 	) {
@@ -132,11 +127,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		this.task.type = this.algName;
-		this.task.runTime = new Date();
-		this.task.status = 'Sent';
-		this.algorithmsService.runTask(this.task);
-		this.store$.dispatch(new AddTaskAction(this.task));
+		this.store$.dispatch(new RunTaskAction(this.task));
 	}
 
 	startDrawMode() {

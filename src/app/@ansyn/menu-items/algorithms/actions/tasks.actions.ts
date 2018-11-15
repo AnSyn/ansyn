@@ -13,6 +13,7 @@ export enum AlgorithmsActionTypes {
 	CLOSE_MODAL = '[Algorithms] CLOSE_MODAL',
 	ADD_TASKS = '[Algorithms] ADD_TASKS',
 	ADD_TASK = '[Algorithms] ADD_TASK',
+	RUN_TASK = '[Algorithms] RUN_TASK',
 	SELECT_TASK = '[Algorithms] SELECT_TASK'
 }
 
@@ -58,6 +59,13 @@ export class AddTasksAction implements Action {
 
 export class AddTaskAction implements Action {
 	type = AlgorithmsActionTypes.ADD_TASK;
+
+	constructor(public payload: AlgorithmTask) {
+	}
+}
+
+export class RunTaskAction implements Action {
+	type = AlgorithmsActionTypes.RUN_TASK;
 
 	constructor(public payload: AlgorithmTask) {
 	}

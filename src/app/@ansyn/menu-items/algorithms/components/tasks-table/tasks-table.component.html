@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="tasks-table-task-name-col">
-					{{ entities[id].type }}
+					{{ entities[id].type | translate}}
 				</div>
 
 				<div class="tasks-table-body-col">
@@ -57,7 +57,7 @@
 				<!--menu-->
 				<div class="task-menu-container">
 					<div class="task-menu" (click)="taskMenuClick($event, taskRow)" #taskMenu>
-						<button (click)="removeTask(id)">
+						<button (click)="showModal(id)">
 							<i class="icon-delete"></i>
 						</button>
 					</div>
@@ -77,3 +77,7 @@
 	</p>
 
 </ng-template>
+
+<ansyn-modal [show]="modal?.show">
+	<ansyn-remove-task-modal *ngIf="modal?.show" (onSubmit)="onModalResult($event)"></ansyn-remove-task-modal>
+</ansyn-modal>

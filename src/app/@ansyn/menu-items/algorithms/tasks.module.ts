@@ -16,7 +16,7 @@ import { StoreModule } from '@ngrx/store';
 import { tasksFeatureKey, TasksReducer } from './reducers/tasks.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TasksEffects } from './effects/tasks.effects';
-import { TasksModalContainerComponent } from './components/tasks-modal-container/tasks-modal-container.component';
+import { RemoveTaskModalComponent } from './components/remove-task-modal/remove-task-modal.component';
 
 @NgModule({
 	imports: [
@@ -29,7 +29,7 @@ import { TasksModalContainerComponent } from './components/tasks-modal-container
 		EffectsModule.forFeature([TasksEffects]),
 	],
 	declarations: [TasksComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent,
-		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, TasksModalContainerComponent],
+		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, RemoveTaskModalComponent],
 	entryComponents: [TasksComponent],
 	exports: [TasksComponent],
 	providers: [TasksService]

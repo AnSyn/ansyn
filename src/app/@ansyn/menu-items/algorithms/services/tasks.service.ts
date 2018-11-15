@@ -1,20 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import {
 	AlgorithmsConfig,
+	AlgorithmsTaskState,
 	AlgorithmTask,
 	AlgorithmTaskPreview,
-	IAlgorithmsConfig,
-	AlgorithmsTaskState
+	IAlgorithmsConfig
 } from '../models/tasks.model';
 import { Observable } from 'rxjs/index';
 import { catchError, map } from 'rxjs/operators';
-import {
-	ErrorHandlerService,
-	IStoredEntity,
-	StorageService
-} from '@ansyn/core';
-import { UUID } from 'angular2-uuid';
-import { cloneDeep } from 'lodash';
+import { ErrorHandlerService, IStoredEntity, StorageService } from '@ansyn/core';
 
 @Injectable()
 export class TasksService {
@@ -41,7 +35,7 @@ export class TasksService {
 		};
 	}
 
-	getPreview(taskValue: AlgorithmTask): AlgorithmTaskPreview {
+	getEntityPreview(taskValue: AlgorithmTask): AlgorithmTaskPreview {
 		const taskPreview: AlgorithmTaskPreview = {
 			id: taskValue.id,
 			creationTime: taskValue.creationTime,
@@ -54,49 +48,20 @@ export class TasksService {
 		return taskPreview;
 	}
 
-	pluckIdSourceType(state: AlgorithmsTaskState): AlgorithmsTaskState {
-		const dilutedState: any = cloneDeep(state);
-		if (dilutedState) {
-			if (Array.isArray(dilutedState.favoriteOverlays)) {
-				dilutedState.favoriteOverlays = dilutedState.favoriteOverlays.map(overlay => ({
-					id: overlay.id,
-					sourceType: overlay.sourceType
-				}));
-			}
-			if (Array.isArray(dilutedState.presetOverlays)) {
-				dilutedState.presetOverlays = dilutedState.presetOverlays.map(overlay => ({
-					id: overlay.id,
-					sourceType: overlay.sourceType
-				}));
-			}
-
-			if (Array.isArray(dilutedState.maps.data)) {
-				dilutedState.maps.data.forEach((mapData: any) => {
-					if (Boolean(mapData.data.overlay)) {
-						mapData.data.overlay = {
-							id: mapData.data.overlay.id,
-							sourceType: mapData.data.overlay.sourceType
-						};
-					}
-				});
-			}
+	getEntityData(state: AlgorithmsTaskState): Partial<AlgorithmsTaskState> {
+		return {
+			region: state.region
 		}
-		return dilutedState;
 	}
 
-	convertToStoredEntity(taskValue: AlgorithmTask): IStoredEntity<AlgorithmTaskPreview, AlgorithmsTaskState> {
+	convertToStoredEntity(task: AlgorithmTask): IStoredEntity<AlgorithmTaskPreview, Partial<AlgorithmsTaskState>> {
 		return {
-			preview: this.getPreview(taskValue),
-			data: this.pluckIdSourceType(taskValue.state)
+			preview: this.getEntityPreview(task),
+			data: this.getEntityData(task.state)
 		};
 	}
 
 	createTask(selectedTask: AlgorithmTask): Observable<AlgorithmTask> {
-		const currentTime = new Date();
-		const uuid = UUID.UUID();
-		selectedTask.id = uuid;
-		selectedTask.creationTime = currentTime;
-		selectedTask.runTime = currentTime;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedTask))
 			.pipe<any>(
 				map(_ => selectedTask),

@@ -1,16 +1,16 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { TasksTableComponent } from './tasks-table.component';
-import { DeleteTaskComponent } from '../delete-task/delete-task.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { tasksFeatureKey, TasksReducer, ITasksState } from '../../reducers/tasks.reducer';
+import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 import { TasksModule } from '../../tasks.module';
-import { LoadTasksAction, OpenModalAction } from '../../actions/tasks.actions';
+import { LoadTasksAction } from '../../actions/tasks.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { TasksService } from '../../services/tasks.service';
+import { DeleteCaseAction } from '../../../cases/actions/cases.actions';
 
 describe('TasksTableComponent', () => {
 	let component: TasksTableComponent;
@@ -100,10 +100,7 @@ describe('TasksTableComponent', () => {
 	it('removeTask should open modal with DeleteTaskComponent', () => {
 		let selectedTaskId = 'fakeSelectedTaskId';
 		component.removeTask(selectedTaskId);
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
-			component: DeleteTaskComponent,
-			taskId: selectedTaskId
-		}));
+		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction(selectedTaskId));
 	});
 
 });

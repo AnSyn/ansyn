@@ -10,8 +10,12 @@ import {
 	AddTaskAction,
 	AddTasksAction,
 	AlgorithmsActionTypes,
+	RunTaskAction,
 	SelectTaskAction
 } from '../actions/tasks.actions';
+import { AlgorithmTask } from '../models/tasks.model';
+import { tap } from 'rxjs/internal/operators';
+import { TasksRemoteService } from '../services/tasks-remote.service';
 
 @Injectable()
 export class TasksEffects {
@@ -29,22 +33,32 @@ export class TasksEffects {
 		share());
 
 	@Effect()
+	onRunTask$: Observable<AddTaskAction> = this.actions$.pipe(
+		ofType<RunTaskAction>(AlgorithmsActionTypes.RUN_TASK),
+		tap((action: RunTaskAction) => {
+				this.tasksRemoteService.runTask(action.payload);
+		}),
+		map((action: RunTaskAction) => {
+			const task: AlgorithmTask = action.payload;
+			task.runTime = new Date();
+			task.status = 'Sent';
+			return new AddTaskAction(task);
+		})
+	);
+
+	@Effect()
 	onAddTask$: Observable<SelectTaskAction> = this.actions$.pipe(
 		ofType<AddTaskAction>(AlgorithmsActionTypes.ADD_TASK),
-		map((action: AddTaskAction) => new SelectTaskAction(action.payload)),
-		share());
-
-	@Effect({ dispatch: false })
-	openModal$: Observable<any> = this.actions$
-		.ofType(AlgorithmsActionTypes.OPEN_MODAL);
-
-	@Effect({ dispatch: false })
-	closeModal$: Observable<any> = this.actions$
-		.ofType(AlgorithmsActionTypes.CLOSE_MODAL);
+		switchMap((action: AddTaskAction) => this.tasksService.createTask(action.payload)),
+		map((task: AlgorithmTask) => {
+			return new SelectTaskAction(task)
+		})
+	);
 
 	constructor(
 		protected actions$: Actions,
 		protected tasksService: TasksService,
+		protected tasksRemoteService: TasksRemoteService,
 		protected store: Store<ITasksState>,
 		protected errorHandlerService: ErrorHandlerService
 	) {

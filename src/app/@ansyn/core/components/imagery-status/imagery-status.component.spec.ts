@@ -63,6 +63,8 @@ describe('ImageryStatusComponent', () => {
 	});
 
 	it('check click on togglePreset', () => {
+		spyOnProperty(component, 'noGeoRegistration', 'get').and.returnValue(false);
+		fixture.detectChanges();
 		spyOn(component, 'togglePreset');
 		fixture.nativeElement.querySelector('.set-preset').click();
 		expect(component.togglePreset).toHaveBeenCalled();

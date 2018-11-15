@@ -44,7 +44,7 @@ export class MenuModule {
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 
 		// if empty put all
-		if (menuConfig.menuItems && menuConfig.menuItems.length > 0) {
+		if (Array.isArray(menuConfig.menuItems)) {
 			menuItems = menuItems.filter((menuItem: IMenuItem) => {
 				return menuConfig.menuItems.includes(menuItem.name);
 			});

@@ -7,13 +7,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class RemoveTaskModalComponent {
 	@Input() message = "Confirm?";
-	@Output() onSubmit = new EventEmitter<boolean>();
+	@Output() submit = new EventEmitter<boolean>();
 
-	onCancel() {
-		this.onSubmit.emit(false)
-	}
-
-	onOk() {
-		this.onSubmit.emit(true)
+	onSubmit(answer = false) {
+		this.submit.emit(answer)
 	}
 }

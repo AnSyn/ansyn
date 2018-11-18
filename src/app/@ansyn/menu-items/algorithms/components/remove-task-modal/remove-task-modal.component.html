@@ -1,10 +1,10 @@
 <div class="remove-task-modal">
 	<form #f="ngForm"
-		  (ngSubmit)="onCancel()">
+		  (ngSubmit)="onSubmit(false)">
 		{{message}}
 		<div class="bottom-btns">
-			<button type="button" (click)="onCancel()">Cancel</button>
-			<button type="button" (click)="onOk()">OK</button>
+			<button type="button" (click)="onSubmit(false)">Cancel</button>
+			<button type="button" (click)="onSubmit(true)">OK</button>
 		</div>
 	</form>
 </div>

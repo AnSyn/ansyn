@@ -15,7 +15,6 @@ import {
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { RunTaskAction, SetTaskDrawIndicator, SetTaskRegionLength } from '../../actions/tasks.actions';
 import { selectAlgorithmTaskRegion } from '../../reducers/tasks.reducer';
-import { TasksRemoteService } from '../../services/tasks-remote.service';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 
@@ -88,7 +87,6 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public tasksService: TasksService,
-		protected tasksRemoteService: TasksRemoteService,
 		public translate: TranslateService,
 		protected store$: Store<any>
 	) {

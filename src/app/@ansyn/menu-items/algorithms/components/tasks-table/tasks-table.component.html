@@ -81,6 +81,6 @@
 <ansyn-modal [show]="modal?.show">
 	<ansyn-remove-task-modal *ngIf="modal?.show"
 							 [message]="'Delete task ' + modal?.name + '?'"
-							 (onSubmit)="onModalResult($event)"
+							 (submit)="onModalResult($event)"
 	></ansyn-remove-task-modal>
 </ansyn-modal>

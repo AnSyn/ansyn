@@ -25,9 +25,9 @@ describe('RemoveTaskModalComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('submit should emit input value', () => {
-		spyOn(component.onSubmit, 'emit');
-		component.submit('test');
-		expect(component.onSubmit.emit).toHaveBeenCalledWith('test');
+	it('onSubmit should emit value', () => {
+		spyOn(component.submit, 'emit');
+		component.onSubmit(true);
+		expect(component.submit.emit).toHaveBeenCalledWith(true);
 	});
 });

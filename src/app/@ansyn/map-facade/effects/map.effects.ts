@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '../reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId } from '../reducers/map.reducer';
 import {
 	BackToWorldSuccess,
 	BackToWorldView,
@@ -19,6 +19,7 @@ import {
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import {
+	ActiveImageryMouseEnter, ActiveImageryMouseLeave,
 	ActiveMapChangedAction,
 	AnnotationSelectAction,
 	ContextMenuTriggerAction,
@@ -242,6 +243,22 @@ export class MapEffects {
 	imageryRemoved$ = this.communicatorsService
 		.instanceRemoved.pipe(
 			map((payload) => new ImageryRemovedAction(payload)));
+
+	@Effect()
+	activeMapEnter$ = this.actions$.pipe(
+		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER),
+		withLatestFrom(this.store$.select(selectActiveMapId)),
+		filter(([id, activeMapId]: [string, string]) => id === activeMapId),
+		map(() =>  new ActiveImageryMouseEnter())
+	);
+
+	@Effect()
+	activeMapLeave$ = this.actions$.pipe(
+		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
+		withLatestFrom(this.store$.select(selectActiveMapId)),
+		filter(([id, activeMapId]: [string, string]) => id === activeMapId),
+		map(() =>  new ActiveImageryMouseLeave())
+	);
 
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,

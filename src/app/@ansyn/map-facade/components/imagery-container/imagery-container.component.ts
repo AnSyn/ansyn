@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ActiveImageryMouseEnter, ActiveImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
+import { ImageryMouseEnter, ImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
 import { AnnotationInteraction, ICaseMapState, IOverlay } from '@ansyn/core';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
@@ -41,14 +41,10 @@ export class ImageryContainerComponent {
 	}
 
 	mouseLeave() {
-		if (this.active) {
-			this.store.dispatch(new ActiveImageryMouseLeave());
-		}
+		this.store.dispatch(new ImageryMouseLeave(this.mapState.id));
 	}
 
 	mouseEnter() {
-		if (this.active) {
-			this.store.dispatch(new ActiveImageryMouseEnter());
-		}
+		this.store.dispatch(new ImageryMouseEnter(this.mapState.id));
 	}
 }

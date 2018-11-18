@@ -5,6 +5,6 @@ export const getProviders = (conf): any[] => Object.entries(conf).map(([key, val
 	useValue: value
 }));
 
-export const fetchConfigProviders = (configPath) => fetch(configPath)
+export const fetchConfigProviders = (configPath = 'assets/config/app.config.json') => fetch(configPath)
 	.then(response => response.json())
 	.then(getProviders);

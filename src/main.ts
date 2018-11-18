@@ -8,4 +8,4 @@ if (configuration.production) {
 	enableProdMode();
 }
 
-fetchConfigProviders(configuration.configPath).then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));
+fetchConfigProviders().then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));

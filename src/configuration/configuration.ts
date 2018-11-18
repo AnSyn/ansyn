@@ -1,4 +1,3 @@
 export const configuration = {
-	production: false,
-	configPath: 'assets/config/app.config.json'
+	production: false
 };

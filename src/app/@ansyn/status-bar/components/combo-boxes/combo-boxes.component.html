@@ -9,8 +9,8 @@
 			icon="icon-status-bar-input-data"
 			[isActive]="dataInputFilterExpand"
 			[attr.tooltip-value]="toolTips.dataInputFilter"
-			tooltip-class="top"
-			[render]="dataInputFiltersTitle">
+			tooltip-class="top">
+			{{ dataInputFiltersTitle }}
 		</button>
 
 		<ansyn-tree-view [@fade]
@@ -123,7 +123,6 @@
 			direction="top"
 			name="layout"
 			[comboBoxToolTipDescription]="toolTips.screenNumber"
-			[renderFunction]="layoutRender.bind(this)"
 			[ngModel]="layout"
 			toolTipField="mapsCount"
 			(ngModelChange)="layoutSelectChange($event)">

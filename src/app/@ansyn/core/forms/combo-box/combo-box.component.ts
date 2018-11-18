@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, Injector, Input, ViewChild } from '@angular/core';
 import { ComboBoxTriggerComponent } from '../combo-box-trigger/combo-box-trigger.component';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
@@ -23,7 +23,6 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	@Input() icon: string;
 	disabled: boolean;
 	selected: any;
-	@Input() renderFunction: Function;
 	@Input() toolTipField: string;
 	@Input() comboBoxToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
@@ -32,9 +31,13 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	@Input() placeholder: string;
 	@Input() required: boolean;
 	optionsVisible = false;
+	renderSelected = '';
 
 	get optionsTrigger(): ElementRef {
 		return this.trigger && this.trigger.optionsTrigger;
+	}
+
+	constructor(public injector: Injector) {
 	}
 
 	toggleShow() {
@@ -46,24 +49,19 @@ export class ComboBoxComponent implements ControlValueAccessor {
 
 	onBlurOptionsContainer($event: FocusEvent) {
 		if ($event.relatedTarget !== (this.optionsTrigger && this.optionsTrigger.nativeElement)) {
-			this.optionsVisible = false;
+			this.close();
 		}
 	}
 
 	selectOption(selected) {
-		this.optionsVisible = false;
-
 		if (selected !== this.selected) {
 			this.selected = selected;
 			this.onChangeCallback(selected);
 		}
 	}
 
-	render(selected) {
-		if (this.renderFunction) {
-			return this.renderFunction(selected);
-		}
-		return selected;
+	close() {
+		this.optionsVisible = false;
 	}
 
 	registerOnChange(fn: any): void {

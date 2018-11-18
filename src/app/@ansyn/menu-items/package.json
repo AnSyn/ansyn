@@ -1,12 +1,20 @@
 {
 	"name": "@ansyn/menu-items",
+<<<<<<< HEAD
 	"version": "0.2.85",
+=======
+	"version": "0.2.83",
+>>>>>>> c50ae2539388c91ba6f9ea515b7bb7cc6d11d6c4
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3"
 	},
 	"dependencies": {
+<<<<<<< HEAD
 		"@ansyn/core": "0.2.85",
+=======
+		"@ansyn/core": "0.2.83",
+>>>>>>> c50ae2539388c91ba6f9ea515b7bb7cc6d11d6c4
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^6.0.1",
 		"@ngrx/effects": "^6.0.1",
@@ -14,9 +22,15 @@
 		"lodash": "4.17.5",
 		"moment": "^2.21.0",
 		"wellknown": "0.5.0",
+<<<<<<< HEAD
 		"@ansyn/menu": "0.2.85",
 		"@ansyn/context": "0.2.85",
 		"@ansyn/map-facade": "0.2.85",
+=======
+		"@ansyn/menu": "0.2.83",
+		"@ansyn/context": "0.2.83",
+		"@ansyn/map-facade": "0.2.83",
+>>>>>>> c50ae2539388c91ba6f9ea515b7bb7cc6d11d6c4
 		"@ngrx/entity": "^6.0.1",
 		"@ngx-translate/core": "^10.0.2",
 		"angular2-uuid": "1.1.1",

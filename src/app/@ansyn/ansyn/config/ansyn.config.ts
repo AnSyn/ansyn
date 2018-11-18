@@ -5,7 +5,8 @@ import {
 	HelpComponent,
 	LayersManagerComponent,
 	SettingsComponent,
-	ToolsComponent
+	ToolsComponent,
+	UploadsComponent
 } from '@ansyn/menu-items';
 import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
@@ -58,6 +59,11 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Settings',
 			component: SettingsComponent,
 			iconClass: 'icon-main-settings'
+		},
+		{
+			name: 'Uploads',
+			component: UploadsComponent,
+			iconClass: 'icon-layer-export'
 		},
 		{
 			name: 'Help',

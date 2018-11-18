@@ -1,12 +1,13 @@
 <div class="combo-container" [ngClass]="[direction, color]">
 	<button ansynComboBoxTrigger
+			type="button"
 			[disabled]="disabled"
 			[isActive]="optionsVisible"
 			[attr.tooltip-value]="comboBoxToolTipDescription || null"
 			tooltip-class="top"
-			[render]="render(selected)"
 			[icon]="icon"
 			(click)="toggleShow()">
+		<div class="render" [innerHTML]="renderSelected"></div>
 		<div class="placeholder" *ngIf="placeholder" [class.float]="selected || optionsVisible"> {{ placeholder }}</div>
 	</button>
 

@@ -1,10 +1,15 @@
 {
 	"name": "@ansyn/ansyn",
+<<<<<<< HEAD
 	"version": "0.2.85",
+=======
+	"version": "0.2.83",
+>>>>>>> c50ae2539388c91ba6f9ea515b7bb7cc6d11d6c4
 	"peerDependencies": {
 		"rxjs-compat": "^6.2.1",
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3",
+<<<<<<< HEAD
 		"@ansyn/assets": "0.2.85"
 	},
 	"dependencies": {
@@ -17,6 +22,20 @@
 		"@ansyn/overlays": "0.2.85",
 		"@ansyn/plugins": "0.2.85",
 		"@ansyn/status-bar": "0.2.85",
+=======
+		"@ansyn/assets": "0.2.83"
+	},
+	"dependencies": {
+		"@ansyn/context": "0.2.83",
+		"@ansyn/core": "0.2.83",
+		"@ansyn/imagery": "0.2.83",
+		"@ansyn/map-facade": "0.2.83",
+		"@ansyn/menu": "0.2.83",
+		"@ansyn/menu-items": "0.2.83",
+		"@ansyn/overlays": "0.2.83",
+		"@ansyn/plugins": "0.2.83",
+		"@ansyn/status-bar": "0.2.83",
+>>>>>>> c50ae2539388c91ba6f9ea515b7bb7cc6d11d6c4
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^6.0.1",
 		"@ngrx/effects": "^6.0.1",

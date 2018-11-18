@@ -22,7 +22,7 @@ describe('ComboBoxesComponent', () => {
 
 	const mockComboBoxComponent = MockComponent({
 		selector: 'ansyn-combo-box',
-		inputs: ['options', 'renderFunction', 'comboBoxToolTipDescription', 'ngModel'],
+		inputs: ['options', 'comboBoxToolTipDescription', 'ngModel'],
 		outputs: ['ngModelChange']
 	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });

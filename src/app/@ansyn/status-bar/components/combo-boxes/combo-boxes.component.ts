@@ -154,10 +154,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		this.toggleTimelineStartEndSearch();
 	}
 
-	layoutRender(layout: LayoutKey) {
-		return `<i class="icon-screen-${this.layouts.indexOf(layout) + 1}" ></i>`;
-	}
-
 	layoutSelectChange(layout: LayoutKey): void {
 		this.store.dispatch(new SetLayoutAction(layout));
 	}

@@ -3,14 +3,16 @@ import { TasksTableComponent } from './tasks-table.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 import { TasksModule } from '../../tasks.module';
-import { LoadTasksAction } from '../../actions/tasks.actions';
+import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreConfig, LoggerConfig } from '@ansyn/core';
-import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { TasksService } from '../../services/tasks.service';
-import { DeleteCaseAction } from '../../../cases/actions/cases.actions';
+import { mapFacadeConfig } from '@ansyn/map-facade';
+import { TasksRemoteService } from '../../services/tasks-remote.service';
+import { MENU_ITEMS } from '../../../../menu/menu.module';
+import { MenuConfig } from '@ansyn/menu';
 
 describe('TasksTableComponent', () => {
 	let component: TasksTableComponent;
@@ -27,11 +29,13 @@ describe('TasksTableComponent', () => {
 				RouterTestingModule
 			],
 			providers: [
-				DataLayersService,
 				{ provide: TasksService, useValue: { schema: null } },
+				{ provide: TasksRemoteService, useValue: {} },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {} }
+				{ provide: mapFacadeConfig, useValue: {} },
+				{ provide: MENU_ITEMS, useValue: {} },
+				{ provide: MenuConfig, useValue: {} },
 			]
 		})
 			.compileComponents();
@@ -97,10 +101,10 @@ describe('TasksTableComponent', () => {
 		expect(taskRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
 	});
 
-	it('removeTask should open modal with DeleteTaskComponent', () => {
+	it('removeTask should dispatch DeleteTaskAction', () => {
 		let selectedTaskId = 'fakeSelectedTaskId';
 		component.removeTask(selectedTaskId);
-		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction(selectedTaskId));
+		expect(store.dispatch).toHaveBeenCalledWith(new DeleteTaskAction(selectedTaskId));
 	});
 
 });

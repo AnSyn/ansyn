@@ -11,7 +11,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
-import { AlgorithmTask } from '../models/tasks.model';
+import { AlgorithmsConfig, AlgorithmTask } from '../models/tasks.model';
 import {
 	AddTaskAction,
 	AddTasksAction,
@@ -19,6 +19,7 @@ import {
 	LoadTasksAction,
 	SelectTaskAction
 } from '../actions/tasks.actions';
+import { TasksRemoteService } from '../services/tasks-remote.service';
 
 describe('TasksEffects', () => {
 	let tasksEffects: TasksEffects;
@@ -72,7 +73,9 @@ describe('TasksEffects', () => {
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
-				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
+				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } },
+				{ provide: AlgorithmsConfig, useValue: {} },
+				{ provide: TasksRemoteService, useValue: {} }
 			]
 		}).compileComponents();
 	}));
@@ -125,9 +128,9 @@ describe('TasksEffects', () => {
 
 	});
 
-	it('onDeleteTask$ should call DeleteTaskBackendAction. when deleted task equal to selected task LoadDefaultTaskAction should have been called too', () => {
-
-		let deletedTask: AlgorithmTask = {
+	it('onDeleteTask$ should call removeTask. also return SelectTaskAction', () => {
+		spyOn(tasksService, 'removeTask').and.returnValue(of({}));
+		let taskToDelete: AlgorithmTask = {
 			id: 'newTaskId',
 			name: 'newTaskName',
 			state: null,
@@ -136,11 +139,9 @@ describe('TasksEffects', () => {
 			status: 'Sent',
 			runTime: new Date()
 		};
-		store.dispatch(new AddTaskAction(deletedTask));
-		store.dispatch(new SelectTaskAction(deletedTask));
-		// store.dispatch(new OpenModalAction({ component: '', taskId: deletedTask.id }));
-		actions = hot('--a--', { a: new DeleteTaskAction('') });
-		const expectedResults = cold('--(a)--', {
+		store.dispatch(new AddTaskAction(taskToDelete));
+		actions = hot('--a--', { a: new DeleteTaskAction('newTaskId') });
+		const expectedResults = cold('--a--', {
 			a: new SelectTaskAction(null)
 		});
 		expect(tasksEffects.onDeleteTask$).toBeObservable(expectedResults);

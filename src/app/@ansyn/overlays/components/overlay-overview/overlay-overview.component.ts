@@ -27,7 +27,7 @@ import { Actions, ofType } from '@ngrx/effects';
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('img') img: ElementRef;
 
-	public mouseMove$: Observable<any> = fromEvent(this.el.nativeElement, 'mouseleave')
+	public mouseLeave$: Observable<any> = fromEvent(this.el.nativeElement, 'mouseleave')
 		.pipe(
 			takeWhile(() => this.isHoveringOverDrop),
 			tap(() => {
@@ -115,7 +115,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	showOverview() {
 		this.isHoveringOverDrop = true;
-		this.mouseMove$.subscribe();
+		this.mouseLeave$.subscribe();
 	}
 
 	hideOverview() {

@@ -27,24 +27,28 @@ import { Actions, ofType } from '@ngrx/effects';
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@ViewChild('img') img: ElementRef;
 
-	public mouseMove$: Observable<any> = fromEvent(window, 'mousemove').pipe(
-		tap(($event: any) => {
-			const excludeElements = [this.el.nativeElement, this.hoveredElement];
-			if (!$event.path.some((elem) => excludeElements.includes(elem))) {
-				this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
-			}
-		}),
-		takeWhile(() => this.isHoveringOverDrop)
-	);
+	public mouseMove$: Observable<any> = fromEvent(window, 'mousemove')
+		.pipe(
+			takeWhile(() => this.isHoveringOverDrop && this.mouseEventFromDropOrCurrent),
+			tap(($event: any) => {
+				if (!this.isMouseEventFromDropOrCurrent($event)) {
+					this.store$.dispatch(new SetMarkUp({
+						classToSet: MarkUpClass.hover,
+						dataToSet: { overlaysIds: [] }
+					}));
+				}
+			})
+		);
 
 	public sensorName: string;
 	public formattedTime: string;
 	public overlayId: string;
 	public loadingImage = false;
 	public rotation = 0;
+	public mouseEventFromDropOrCurrent = false;
 	protected topElement = this.el.nativeElement.parentElement;
 
-	get hoveredElement(): Element {
+	get dropElement(): Element {
 		return this.topElement.querySelector(`#dropId-${this.overlayId}`);
 	}
 
@@ -69,6 +73,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
+		tap(() => this.mouseEventFromDropOrCurrent = window.event && window.event.type === 'mouseover' && this.isMouseEventFromDropOrCurrent(window.event)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
@@ -77,6 +82,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		public actions$: Actions,
 		protected el: ElementRef,
 		protected translate: TranslateService) {
+	}
+
+	isMouseEventFromDropOrCurrent($event) {
+		const excludeElements = [this.el.nativeElement, this.dropElement];
+		return $event.path.some((elem) => excludeElements.includes(elem));
 	}
 
 	ngOnInit() {
@@ -89,7 +99,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
-			const hoveredElement: Element = this.hoveredElement;
+			const hoveredElement: Element = this.dropElement;
 			if (!hoveredElement) {
 				return;
 			}

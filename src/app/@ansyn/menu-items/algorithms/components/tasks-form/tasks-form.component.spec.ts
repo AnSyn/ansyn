@@ -3,11 +3,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
-import { AnsynFormsModule, Overlay } from '@ansyn/core';
+import { AnsynFormsModule, coreFeatureKey, CoreReducer, Overlay } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TasksService } from '../../services/tasks.service';
 import { EffectsModule } from '@ngrx/effects';
 import { TasksRemoteService } from '../../services/tasks-remote.service';
+import { tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -22,14 +23,16 @@ describe('TasksFormComponent', () => {
 				FormsModule,
 				AnsynFormsModule,
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer, [coreFeatureKey]: CoreReducer }),
 				EffectsModule.forRoot([])
 			],
 			providers: [
 				{
 					provide: TasksService,
 					useValue: {
-						config: {}
+						config: {
+							algorithms: {}
+						}
 					}
 				},
 				{

@@ -58,7 +58,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			return result;
 		}),
 		tap((overlays: IOverlay[]) => {
-				this.task.state.overlays = overlays;
+				this.task.state.overlays = overlays || [];
 				this.checkForErrors();
 			}
 		));

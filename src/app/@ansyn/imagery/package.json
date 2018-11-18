@@ -1,27 +1,16 @@
 {
 	"name": "@ansyn/imagery",
-<<<<<<< HEAD
 	"version": "0.2.85",
-=======
-	"version": "0.2.83",
->>>>>>> c50ae2539388c91ba6f9ea515b7bb7cc6d11d6c4
 	"keywords": [],
 	"author": "ansyn",
 	"license": "MIT",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3",
-<<<<<<< HEAD
 		"@ansyn/core": "0.2.85"
 	},
 	"dependencies": {
 		"@ansyn/core": "0.2.85",
-=======
-		"@ansyn/core": "0.2.83"
-	},
-	"dependencies": {
-		"@ansyn/core": "0.2.83",
->>>>>>> c50ae2539388c91ba6f9ea515b7bb7cc6d11d6c4
 		"auto-subscriptions": "^1.0.3"
 	}
 }

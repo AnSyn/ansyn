@@ -7,7 +7,8 @@ import {
 	ICaseMapPosition,
 	IOverlay,
 	LoggerService,
-	toDegrees
+	toDegrees,
+	toRadians
 } from '@ansyn/core';
 import { forkJoin, Observable, Observer, of, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
@@ -148,21 +149,12 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
 					map((calculatedNorthAngleAfterPointingNorth: number) => {
 						const shRotation = this.shadowMapObjectView.getRotation();
-
 						let currentRotationDegrees = toDegrees(shRotation);
 						if (currentRotationDegrees < 0) {
 							currentRotationDegrees = 360 + currentRotationDegrees;
 						}
 						currentRotationDegrees = currentRotationDegrees % 360;
-						let northDeg = toDegrees(calculatedNorthAngleAfterPointingNorth);
-						if (northDeg < 0) {
-							northDeg = 360 + northDeg;
-						}
-						northDeg = northDeg % 360;
-						if (this.thresholdDegrees > Math.abs(currentRotationDegrees - northDeg)) {
-							return 0;
-						}
-						return (shRotation - calculatedNorthAngleAfterPointingNorth) % (Math.PI * 2);
+						return toRadians(currentRotationDegrees);
 					})
 				)
 			}

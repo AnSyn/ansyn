@@ -61,7 +61,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		};
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(
-			map(data => this.extractData(data)),
+			map((overlays: Array<ITBOverlay>) => overlays.map((element) => this.parseData(element))),
 			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
@@ -88,20 +88,10 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		return EMPTY;
 	}
 
-	private extractData(overlays: Array<ITBOverlay>): IOverlay[] {
-		if (!overlays) {
-			return [];
-		}
-		if (!Array.isArray(overlays)) {
-			overlays = [overlays];
-		}
-		return overlays.map((element) => this.parseData(element));
-	}
-
 	protected parseData(tbOverlay: ITBOverlay): IOverlay {
 		return new Overlay({
 			id: tbOverlay._id,
-			name: tbOverlay.name,
+			name: tbOverlay.inputData.ansyn.title,
 			footprint: geojsonPolygonToMultiPolygon(tbOverlay.geoData.footprint.geometry),
 			sensorType: tbOverlay.inputData.sensor.type,
 			sensorName: tbOverlay.inputData.sensor.name,

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs/index';
+import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
 import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
 import {
 	ErrorHandlerService,
@@ -18,8 +18,6 @@ import { ITBOverlay, ITBOverlaySourceConfig, TBOverlaySourceConfig } from './tb.
 import { Polygon } from 'geojson';
 
 export const TBOverlaySourceType = 'TB';
-
-const DEFAULT_OVERLAYS_LIMIT = 500;
 
 export interface ITBRequestBody {
 	worldName: string;
@@ -45,7 +43,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
-		console.log('fetching  tb');
 		let geometry;
 
 		if (fetchParams.region.type === 'Point') {
@@ -78,10 +75,9 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
-		// return this.http.get<any>(`${this.config.baseUrl}/${id}`).pipe(tap(() => {
-		//
-		// })
-		return EMPTY;
+		return this.http.get<ITBOverlay>(`${this.config.baseUrl}/${id}`).pipe(
+			map((tbLayer) => this.parseData(tbLayer))
+		);
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {

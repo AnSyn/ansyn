@@ -9,12 +9,13 @@ import { TasksService } from '../services/tasks.service';
 import {
 	AddTaskAction,
 	AddTasksAction,
-	AlgorithmsActionTypes, DeleteTaskAction,
+	AlgorithmsActionTypes,
+	DeleteTaskAction,
 	RunTaskAction,
 	SelectTaskAction
 } from '../actions/tasks.actions';
 import { AlgorithmTask } from '../models/tasks.model';
-import { tap } from 'rxjs/internal/operators';
+import { mergeMap } from 'rxjs/internal/operators';
 import { TasksRemoteService } from '../services/tasks-remote.service';
 
 @Injectable()
@@ -35,15 +36,18 @@ export class TasksEffects {
 	@Effect()
 	onRunTask$: Observable<AddTaskAction> = this.actions$.pipe(
 		ofType<RunTaskAction>(AlgorithmsActionTypes.RUN_TASK),
-		tap((action: RunTaskAction) => {
-				this.tasksRemoteService.runTask(action.payload);
-		}),
+		mergeMap((action: RunTaskAction) => (
+			this.tasksRemoteService.runTask(action.payload).pipe(
+				map(() => action)
+			)
+		)),
 		map((action: RunTaskAction) => {
-			const task: AlgorithmTask = action.payload;
-			task.runTime = new Date();
-			task.status = 'Sent';
-			return new AddTaskAction(task);
-		})
+				const task: AlgorithmTask = action.payload;
+				task.runTime = new Date();
+				task.status = 'Sent';
+				return new AddTaskAction(task);
+			}
+		)
 	);
 
 	@Effect()

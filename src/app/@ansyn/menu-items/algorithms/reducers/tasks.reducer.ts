@@ -10,11 +10,6 @@ import { UUID } from 'angular2-uuid';
 export const tasksAdapter: EntityAdapter<AlgorithmTaskPreview> = createEntityAdapter<AlgorithmTaskPreview>(
 	{ sortComparer: (ob1: AlgorithmTaskPreview, ob2: AlgorithmTaskPreview): number => +ob2.creationTime - +ob1.creationTime });
 
-export interface ITaskModal {
-	show: boolean,
-	id?: string
-}
-
 export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	drawIndicator: boolean;
 	regionLengthInMeters: number;
@@ -47,6 +42,10 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 			return { ...state, region: action.payload };
 		}
 
+		case AlgorithmsActionTypes.SELECT_TASK: {
+			return { ...state, selectedTask: action.payload };
+		}
+
 		case AlgorithmsActionTypes.ADD_TASK:
 			let task: AlgorithmTask = action.payload;
 			task.id = UUID.UUID();
@@ -73,3 +72,4 @@ export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>create
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.regionLengthInMeters);
 export const selectAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.region);
+export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTask);

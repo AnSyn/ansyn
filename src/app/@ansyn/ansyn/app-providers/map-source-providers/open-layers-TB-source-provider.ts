@@ -2,16 +2,35 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { ICaseMapState } from '@ansyn/core';
+import Projection from 'ol/proj/projection';
+import Static from 'ol/source/imagestatic';
+import ImageLayer from 'ol/layer/image';
 
 export const OpenLayerTBSourceProviderSourceType = 'TB';
 
 @ImageryMapSource({
 	sourceType: OpenLayerTBSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	forOverlay: true
 })
 export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider {
-
 	createAsync(metaData: ICaseMapState): Promise<any> {
-		return Promise.resolve(null);
+		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.ExifImageWidth, metaData.data.overlay.tag.imageData.ExifImageHeight];
+
+		const source = new Static({
+			url: metaData.data.overlay.imageUrl,
+			crossOrigin: 'anonymous',
+			projection: new Projection({
+				code: 'tb-image',
+				units: 'pixels',
+				extent
+			}),
+			imageExtent: extent
+		});
+		const imageLayer = new ImageLayer({
+			source,
+			extent
+		});
+		return Promise.resolve(imageLayer);
 	}
 }

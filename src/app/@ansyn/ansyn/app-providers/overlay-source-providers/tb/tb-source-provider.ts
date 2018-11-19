@@ -96,13 +96,13 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			sensorType: tbOverlay.inputData.sensor.type,
 			sensorName: tbOverlay.inputData.sensor.name,
 			bestResolution: 1,
-			imageUrl: tbOverlay.imageUrl,
-			thumbnailUrl: tbOverlay.imageUrl,
-			date: new Date(tbOverlay.fileData.lastModified),
-			photoTime: new Date(tbOverlay.fileData.lastModified).toISOString(),
+			imageUrl: tbOverlay.displayUrl,
+			thumbnailUrl: tbOverlay.displayUrl,
+			date: new Date(tbOverlay.createdDate),
+			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: false,
 			tag: tbOverlay
 		});
 	}

@@ -102,10 +102,10 @@ describe('OverlayOverviewComponent', () => {
 	});
 
 	it('showPreview should change value of isHoveringOverDrop to true, and call mouseMove$.subscribe ', () => {
-		spyOn(component.mouseMove$, 'subscribe');
+		spyOn(component.mouseLeave$, 'subscribe');
 		component.showOverview();
 		expect(component.isHoveringOverDrop).toBeTruthy();
-		expect(component.mouseMove$.subscribe).toHaveBeenCalled();
+		expect(component.mouseLeave$.subscribe).toHaveBeenCalled();
 	});
 
 	it('hidePreview should change value of isHoveringOverDrop to false', () => {

@@ -61,7 +61,10 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		};
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(
-			map((overlays: Array<ITBOverlay>) => overlays.map((element) => this.parseData(element))),
+			map((overlays: Array<ITBOverlay>) => overlays
+				.filter((o: ITBOverlay) => o.fileType === 'image')
+				.map((element) => this.parseData(element))
+			),
 			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id

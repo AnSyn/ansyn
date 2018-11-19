@@ -18,6 +18,7 @@ import {
 	selectDropMarkup,
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
+	SetMarkUp,
 	SetSpecialObjectsActionStore
 } from '@ansyn/overlays';
 import { Action, Store } from '@ngrx/store';
@@ -41,6 +42,7 @@ import {
 } from '@ansyn/core';
 import {
 	IMapState,
+	MapActionTypes,
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
@@ -247,6 +249,12 @@ export class OverlaysAppEffects {
 			} as IOverlaySpecialObject));
 			return new SetSpecialObjectsActionStore(specialObjects);
 		})
+	);
+
+	@Effect()
+	activeMapLeave$ = this.actions$.pipe(
+		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
+		map(() =>  new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] }}))
 	);
 
 	getSourceProvider(sType) {

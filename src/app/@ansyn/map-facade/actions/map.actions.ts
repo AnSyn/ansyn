@@ -33,6 +33,8 @@ export const MapActionTypes = {
 		SET_PROGRESS_BAR: 'SET_PROGRESS_BAR'
 	},
 	TRIGGER: {
+		IMAGERY_MOUSE_ENTER: 'IMAGERY_MOUSE_ENTER',
+		IMAGERY_MOUSE_LEAVE: 'IMAGERY_MOUSE_LEAVE',
 		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
@@ -239,5 +241,17 @@ export class ShadowMouseProducer implements Action {
 
 	constructor(public payload: { point: { coordinates: Array<number>, type: string }, outsideSource?: boolean }) {
 
+	}
+}
+
+export class ImageryMouseEnter implements Action {
+	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER;
+	constructor(public payload: string) {
+	}
+}
+
+export class ImageryMouseLeave implements Action {
+	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE;
+	constructor(public payload: string) {
 	}
 }

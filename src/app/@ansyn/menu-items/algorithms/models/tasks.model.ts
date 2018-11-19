@@ -40,3 +40,11 @@ export class AlgorithmsTaskState {
 export class AlgorithmTask extends AlgorithmTaskPreview {
 	state: AlgorithmsTaskState = new AlgorithmsTaskState();
 }
+
+
+export interface ITaskModalData {
+	id: string,
+	name: string,
+	show: boolean
+}
+

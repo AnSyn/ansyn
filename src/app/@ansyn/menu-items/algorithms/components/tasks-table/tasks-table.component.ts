@@ -9,19 +9,13 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { AlgorithmTaskPreview } from '../../models/tasks.model';
+import { AlgorithmTaskPreview, ITaskModalData } from '../../models/tasks.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
 		transition(':leave', [style({ height: '57px' }), animate('0.2s', style({ height: '0' }))])
 	])
 ];
-
-interface IModalData {
-	id: string,
-	name: string,
-	show: boolean
-}
 
 @Component({
 	selector: 'ansyn-tasks-table',
@@ -50,7 +44,7 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 
 	selectedTaskId: string;
 
-	modal: IModalData;
+	modal: ITaskModalData;
 
 	constructor(protected store$: Store<ITasksState>, protected tasksEffects: TasksEffects) {
 		this.tasksEffects.onAddTask$.subscribe(this.onTasksAdded.bind(this));

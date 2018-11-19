@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,7 @@ import { tasksFeatureKey, TasksReducer } from './reducers/tasks.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TasksEffects } from './effects/tasks.effects';
 import { RemoveTaskModalComponent } from './components/remove-task-modal/remove-task-modal.component';
+import { TasksRemoteService } from './services/tasks-remote.service';
 
 @NgModule({
 	imports: [
@@ -35,5 +36,12 @@ import { RemoveTaskModalComponent } from './components/remove-task-modal/remove-
 	providers: [TasksService]
 })
 export class TasksModule {
-
+	static provideRemote(value: { new(...args): TasksRemoteService }): ModuleWithProviders {
+		return {
+			ngModule: TasksModule,
+			providers: [
+				{ provide: TasksRemoteService, useClass: value }
+			]
+		}
+	}
 }

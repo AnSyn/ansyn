@@ -13,7 +13,7 @@ import {
 	HelpModule,
 	LayersManagerModule,
 	SettingsModule,
-	ToolsModule
+	ToolsModule, TasksRemoteDefaultService
 } from '@ansyn/menu-items';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
@@ -42,7 +42,7 @@ import { UploadsModule } from '@ansyn/menu-items';
 		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,
-		TasksModule,
+		TasksModule.provideRemote(TasksRemoteDefaultService),
 		SettingsModule,
 		OverlaysModule,
 		FormsModule,

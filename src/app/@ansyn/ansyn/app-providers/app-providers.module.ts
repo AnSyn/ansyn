@@ -1,13 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import {
-	TasksRemoteDefaultService,
-	TasksRemoteService,
-	BooleanFilterMetadata,
-	EnumFilterMetadata,
-	FilterMetadata,
-	SliderFilterMetadata
-} from '@ansyn/menu-items';
+import { BooleanFilterMetadata, EnumFilterMetadata, FilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items';
 import { ImageryModule, ProjectionService } from '@ansyn/imagery';
 import { OpenLayersProjectionService } from '@ansyn/plugins';
 import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
@@ -52,8 +45,6 @@ import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-pro
 		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
 
 		{ provide: ProjectionService, useClass: OpenLayersProjectionService },
-
-		{ provide: TasksRemoteService, useClass: TasksRemoteDefaultService }
 	]
 })
 export class AppProvidersModule {

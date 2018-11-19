@@ -11,9 +11,7 @@ export interface ITBOverlay {
 	displayUrl: string;
 	name: string;
 	fileName: string;
-	filePath: string;
 	fileType: 'image';
-	format: 'JPEG';
 	createdDate: number
 	geoData: {
 		footprint: Feature<Polygon>,

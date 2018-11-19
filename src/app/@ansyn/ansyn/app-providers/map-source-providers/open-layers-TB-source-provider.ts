@@ -1,4 +1,4 @@
-import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/plugins';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { ICaseMapState } from '@ansyn/core';
@@ -18,11 +18,10 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider {
 		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.ExifImageWidth, metaData.data.overlay.tag.imageData.ExifImageHeight];
 
 		const source = new Static({
-			attributions: '© <a href="http://xkcd.com/license.html">xkcd</a>',
 			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'anonymous',
 			projection: new Projection({
-				code: 'xkcd-image',
+				code: 'tb-image',
 				units: 'pixels',
 				extent
 			}),

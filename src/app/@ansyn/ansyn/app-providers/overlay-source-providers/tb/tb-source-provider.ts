@@ -100,7 +100,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			sensorName: tbOverlay.inputData.sensor.name,
 			bestResolution: 1,
 			imageUrl: tbOverlay.displayUrl,
-			thumbnailUrl: tbOverlay.displayUrl,
+			thumbnailUrl: tbOverlay.thumbnailUrl || tbOverlay.displayUrl,
 			date: new Date(tbOverlay.createdDate),
 			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: toRadians(180),

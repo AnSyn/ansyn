@@ -9,6 +9,7 @@ export interface ITBOverlaySourceConfig {
 export interface ITBOverlay {
 	_id: string,
 	displayUrl: string;
+	thumbnailUrl: string;
 	name: string;
 	fileName: string;
 	fileType: 'image';
@@ -33,6 +34,6 @@ export interface ITBOverlay {
 		ansyn: {
 			title: string;
 		};
-		fileName: string;
+		name: string;
 	};
 }

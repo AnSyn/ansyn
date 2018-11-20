@@ -20,11 +20,11 @@ export class TasksService {
 	) {
 	}
 
-	loadTasks(tasksOffset: number = 0): Observable<any> {
+	loadTasks(tasksOffset: number = 0): Observable<any[]> {
 		return this.storageService.getPage<AlgorithmTaskPreview>(this.config.schema, tasksOffset, this.config.paginationLimit)
 			.pipe(
 				map(previews => previews.map(preview => this.parseTaskPreview(preview))),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load tasks'))
+				catchError(err => this.errorHandlerService.httpErrorHandle<any[]>(err, 'Failed to load tasks from storage', []))
 			);
 	}
 
@@ -66,13 +66,13 @@ export class TasksService {
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedTask))
 			.pipe<any>(
 				map(_ => selectedTask),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create task'))
+				catchError(err => this.errorHandlerService.httpErrorHandle<AlgorithmTask>(err, 'Failed to create task in storage', null))
 			);
 	}
 
 	removeTask(selectedTaskId: string): Observable<any> {
 		return this.storageService.delete(this.config.schema, selectedTaskId).pipe(
-			catchError(err => this.errorHandlerService.httpErrorHandle(err, `Task cannot be deleted`))
+			catchError(err => this.errorHandlerService.httpErrorHandle(err, `Task cannot be deleted from storage`, null))
 		);
 	}
 

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ITasksState, selectTaskTotal } from '../reducers/tasks.reducer';
 import { ErrorHandlerService } from '@ansyn/core';
-import { catchError, map, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { TasksService } from '../services/tasks.service';
 import {
 	AddTaskAction,
@@ -27,8 +27,7 @@ export class TasksEffects {
 		withLatestFrom(this.store.select(selectTaskTotal), (action, total) => total),
 		switchMap((total: number) => {
 			return this.tasksService.loadTasks(total).pipe(
-				map(tasks => new AddTasksAction(tasks)),
-				catchError(() => EMPTY)
+				map(tasks => new AddTasksAction(tasks))
 			);
 		}),
 		share());

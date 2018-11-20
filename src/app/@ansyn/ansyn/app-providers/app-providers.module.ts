@@ -1,13 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import {
-	AlgorithmsDefaultService,
-	AlgorithmsService,
-	BooleanFilterMetadata,
-	EnumFilterMetadata,
-	FilterMetadata,
-	SliderFilterMetadata
-} from '@ansyn/menu-items';
+import { BooleanFilterMetadata, EnumFilterMetadata, FilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items';
 import { ImageryModule, ProjectionService } from '@ansyn/imagery';
 import { OpenLayersProjectionService } from '@ansyn/plugins';
 import { OpenLayerTileWMSSourceProvider } from './map-source-providers/open-layers-TileWMS-source-provider';
@@ -56,8 +49,6 @@ import { TBSourceProvider } from './overlay-source-providers/tb/tb-source-provid
 		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
 
 		{ provide: ProjectionService, useClass: OpenLayersProjectionService },
-
-		{ provide: AlgorithmsService, useClass: AlgorithmsDefaultService }
 	]
 })
 export class AppProvidersModule {

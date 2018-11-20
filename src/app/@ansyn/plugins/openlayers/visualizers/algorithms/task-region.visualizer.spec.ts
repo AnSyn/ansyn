@@ -2,15 +2,15 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
-import { AlgorithmTaskRegionVisualizer } from './algorithm-task-region.visualizer';
+import { TaskRegionVisualizer } from './task-region.visualizer';
 
-describe('AlgorithmTaskRegionVisualizer', () => {
-	let algorithmTaskRegionVisualizer: AlgorithmTaskRegionVisualizer;
+describe('TaskRegionVisualizer', () => {
+	let algorithmTaskRegionVisualizer: TaskRegionVisualizer;
 	let store: Store<any>;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [AlgorithmTaskRegionVisualizer, { provide: ProjectionService, useValue: {} }],
+			providers: [TaskRegionVisualizer, { provide: ProjectionService, useValue: {} }],
 			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([])]
 		});
 	});
@@ -19,7 +19,7 @@ describe('AlgorithmTaskRegionVisualizer', () => {
 		store = _store;
 	}));
 
-	beforeEach(inject([AlgorithmTaskRegionVisualizer], (_algorithmTaskRegionVisualizer: AlgorithmTaskRegionVisualizer) => {
+	beforeEach(inject([TaskRegionVisualizer], (_algorithmTaskRegionVisualizer: TaskRegionVisualizer) => {
 		algorithmTaskRegionVisualizer = _algorithmTaskRegionVisualizer;
 	}));
 

@@ -11,21 +11,40 @@ export interface IAlgorithmConfig {
 }
 
 export interface IAlgorithmsConfig {
-	[algName: string]: IAlgorithmConfig
+	schema: string,
+	paginationLimit: number,
+	algorithms: {
+		[algName: string]: IAlgorithmConfig
+	}
 }
 
 export type AlgorithmTaskWhichOverlays = 'case_overlays' | 'favorite_overlays' | 'displayed_overlays';
 
 export type AlgorithmTaskStatus = 'New' | 'Sent';
 
-export interface IAlgorithm extends IEntity {
+export class AlgorithmTaskPreview implements IEntity{
+	id: string;
+	creationTime: Date;
 	name: string;
+	type: string;
+	status: AlgorithmTaskStatus;
+	runTime: Date;
 }
 
-export class AlgorithmTask {
-	id: string;
-	name: string;
+export class AlgorithmsTaskState {
 	overlays: IOverlay[];
 	masterOverlay: IOverlay;
 	region: GeometryObject;
 }
+
+export class AlgorithmTask extends AlgorithmTaskPreview {
+	state: AlgorithmsTaskState = new AlgorithmsTaskState();
+}
+
+
+export interface ITaskModalData {
+	id: string,
+	name: string,
+	show: boolean
+}
+

@@ -1,7 +1,5 @@
 import { Action } from '@ngrx/store';
 
-export type SettingsActions = any;
-
 export enum SettingsActionsTypes {
 	SET_ANAGLYPH_STATE = '[Settings] Set Anaglyph State'
 }
@@ -13,3 +11,5 @@ export class SetAnaglyphStateAction implements Action {
 	}
 
 }
+
+export type SettingsActions = SetAnaglyphStateAction;

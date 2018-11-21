@@ -1,7 +1,7 @@
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
-import { ICaseMapState, IOverlay } from '@ansyn/core';
+import { ErrorHandlerService, ICaseMapState, IOverlay } from '@ansyn/core';
 import Projection from 'ol/proj/projection';
 import Static from 'ol/source/imagestatic';
 import ImageLayer from 'ol/layer/image';
@@ -25,6 +25,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		protected cacheService: CacheService,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
+		protected errorHandlerService: ErrorHandlerService,
 		protected http: HttpClient) {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
@@ -53,9 +54,9 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		if (overlay.thumbnailUrl) {
 			return of(overlay.thumbnailUrl)
 		}
-		return this.http.get<string>(`${this.config.baseUrl}/${overlay.id}/thumbnail`).pipe(
+		return this.http.get<string>(`${this.config.baseUrl}/${overlay.id}/thumbnassssscil`).pipe(
 			tap((thumbnailUrl) => overlay.thumbnailUrl = thumbnailUrl),
-			catchError(() => of(null))
+			catchError((err) => this.errorHandlerService.httpErrorHandle(err, null, null))
 		);
 	}
 }

@@ -41,10 +41,13 @@ export class AlgorithmTask extends AlgorithmTaskPreview {
 	state: AlgorithmsTaskState = new AlgorithmsTaskState();
 }
 
-
 export interface ITaskModalData {
 	id: string,
 	name: string,
 	show: boolean
 }
 
+export enum TasksPageToShow {
+	TASKS_TABLE,
+	TASK_FORM
+}

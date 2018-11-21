@@ -9,7 +9,7 @@ import { TasksService } from '../services/tasks.service';
 import {
 	AddTaskAction,
 	AddTasksAction,
-	AlgorithmsActionTypes,
+	TasksActionTypes,
 	DeleteTaskAction,
 	RunTaskAction,
 	SelectTaskAction
@@ -23,7 +23,7 @@ export class TasksEffects {
 
 	@Effect()
 	loadTasks$: Observable<AddTasksAction | {}> = this.actions$.pipe(
-		ofType(AlgorithmsActionTypes.LOAD_TASKS),
+		ofType(TasksActionTypes.LOAD_TASKS),
 		withLatestFrom(this.store.select(selectTaskTotal), (action, total) => total),
 		switchMap((total: number) => {
 			return this.tasksService.loadTasks(total).pipe(
@@ -34,7 +34,7 @@ export class TasksEffects {
 
 	@Effect()
 	onRunTask$: Observable<AddTaskAction> = this.actions$.pipe(
-		ofType<RunTaskAction>(AlgorithmsActionTypes.RUN_TASK),
+		ofType<RunTaskAction>(TasksActionTypes.RUN_TASK),
 		mergeMap((action: RunTaskAction) => (
 			this.tasksRemoteService.runTask(action.payload).pipe(
 				map(() => action)
@@ -51,7 +51,7 @@ export class TasksEffects {
 
 	@Effect()
 	onAddTask$: Observable<SelectTaskAction> = this.actions$.pipe(
-		ofType<AddTaskAction>(AlgorithmsActionTypes.ADD_TASK),
+		ofType<AddTaskAction>(TasksActionTypes.ADD_TASK),
 		switchMap((action: AddTaskAction) => this.tasksService.createTask(action.payload)),
 		map((task: AlgorithmTask) => {
 			return new SelectTaskAction(task.id)
@@ -60,7 +60,7 @@ export class TasksEffects {
 
 	@Effect()
 	onDeleteTask$: Observable<SelectTaskAction> = this.actions$.pipe(
-		ofType<DeleteTaskAction>(AlgorithmsActionTypes.DELETE_TASK),
+		ofType<DeleteTaskAction>(TasksActionTypes.DELETE_TASK),
 		switchMap((action: DeleteTaskAction) => this.tasksService.removeTask(action.payload)),
 		map(() => new SelectTaskAction(null))
 	);

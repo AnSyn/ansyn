@@ -1,7 +1,7 @@
 import { ITasksState } from './tasks.reducer';
-import { TasksActions, AlgorithmsActionTypes } from '../actions/tasks.actions';
+import { TasksActions, TasksActionTypes } from '../actions/tasks.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { AlgorithmTask, AlgorithmTaskPreview } from '../models/tasks.model';
+import { AlgorithmTask, AlgorithmTaskPreview, TasksPageToShow } from '../models/tasks.model';
 import { GeometryObject } from 'geojson';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -15,6 +15,7 @@ export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	regionLengthInMeters: number;
 	region: GeometryObject;
 	selectedTaskId: string;
+	pageToShow: TasksPageToShow;
 }
 
 export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITasksState>{
@@ -22,6 +23,7 @@ export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITas
 	regionLengthInMeters: 1000,
 	region: null,
 	selectedTaskId: null,
+	pageToShow: TasksPageToShow.TASKS_TABLE
 });
 
 export const tasksFeatureKey = 'tasks';
@@ -30,32 +32,36 @@ export const tasksStateSelector: MemoizedSelector<any, ITasksState> = createFeat
 export function TasksReducer(state: ITasksState = initialTasksState, action: TasksActions | any): ITasksState {
 	switch (action.type) {
 
-		case AlgorithmsActionTypes.SET_DRAW_INDICATOR: {
+		case TasksActionTypes.SET_DRAW_INDICATOR: {
 			return { ...state, drawIndicator: action.payload };
 		}
 
-		case AlgorithmsActionTypes.SET_REGION_LENGTH: {
+		case TasksActionTypes.SET_REGION_LENGTH: {
 			return { ...state, regionLengthInMeters: action.payload };
 		}
 
-		case AlgorithmsActionTypes.SET_REGION: {
+		case TasksActionTypes.SET_REGION: {
 			return { ...state, region: action.payload };
 		}
 
-		case AlgorithmsActionTypes.SELECT_TASK: {
+		case TasksActionTypes.SELECT_TASK: {
 			return { ...state, selectedTaskId: action.payload };
 		}
 
-		case AlgorithmsActionTypes.ADD_TASK:
+		case TasksActionTypes.SET_PAGE_TO_SHOW: {
+			return { ...state, pageToShow: action.payload };
+		}
+
+		case TasksActionTypes.ADD_TASK:
 			let task: AlgorithmTask = action.payload;
 			task.id = UUID.UUID();
 			task.creationTime = new Date();
 			return tasksAdapter.addOne(task, state);
 
-		case AlgorithmsActionTypes.DELETE_TASK:
+		case TasksActionTypes.DELETE_TASK:
 			return tasksAdapter.removeOne(action.payload, state);
 
-		case AlgorithmsActionTypes.ADD_TASKS:
+		case TasksActionTypes.ADD_TASKS:
 			return tasksAdapter.addMany(action.payload, state);
 
 		default:
@@ -72,6 +78,7 @@ export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>create
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.regionLengthInMeters);
 export const selectAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.region);
+export const selectAlgorithmTasksPageToShow: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.pageToShow);
 export const selectAlgorithmTasksSelectedTaskId: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTaskId);
 export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => {
 	return !algorithmsState.selectedTaskId ?

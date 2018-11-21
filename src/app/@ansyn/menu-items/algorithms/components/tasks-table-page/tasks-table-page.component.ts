@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-tasks-table-page',
@@ -6,7 +6,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 	styleUrls: ['./tasks-table-page.component.less']
 })
 export class TasksTablePageComponent {
-	@Output() goto = new EventEmitter<string>();
 
 	constructor() {
 	}

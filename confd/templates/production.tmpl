@@ -146,6 +146,9 @@
 	}
   },
   "mapSourceProvidersConfig": {
+    "TB": {
+    	"baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
+    },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
     	"styles": [ "AerialWithLabels" ]
@@ -1058,9 +1061,6 @@
     "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
     "tilesUrl": "https://tiles.planet.com/data/v1/",
     "delayMultiple": 300
-  },
-  "tbOverlaysSourceConfig": {
-    "baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
   },
   "auth0Config": {
       "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},

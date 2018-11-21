@@ -14,10 +14,14 @@ export class ErrorHandlerService {
 	public httpErrorHandle<T = any>(error: any, toastMessage?: any, returnValue?: T): Observable<T> {
 		let errMsg = error.message ? error.message : error.toString();
 		this.loggerService.error(errMsg);
-		this.store.dispatch(new SetToastMessageAction({
-			toastText: toastMessage || 'Connection Problem',
-			showWarningIcon: true
-		}));
+
+		if (toastMessage !== null) {
+			this.store.dispatch(new SetToastMessageAction({
+				toastText: toastMessage || 'Connection Problem',
+				showWarningIcon: true
+			}));
+		}
+
 		if (typeof returnValue === 'undefined') {
 			return throwError(errMsg);
 		} else {

@@ -5,7 +5,7 @@ import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported = ['mapType1'];
@@ -41,6 +41,10 @@ describe('ImageryComponent', () => {
 				{ provide: CacheService, useValue: null },
 				{ provide: PLUGINS_COLLECTIONS, useValue: [] },
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
+				{
+					provide: MAP_SOURCE_PROVIDERS_CONFIG,
+					useValue: {}
+				},
 				{ provide: IMAGERY_MAPS, useValue: [] },
 				ImageryCommunicatorService]
 		}).compileComponents();

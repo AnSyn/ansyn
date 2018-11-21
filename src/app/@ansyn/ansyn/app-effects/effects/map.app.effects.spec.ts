@@ -61,6 +61,7 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported = ['mapType1'];
@@ -218,6 +219,10 @@ describe('MapAppEffects', () => {
 						updateCase: () => null,
 						getOverlaysMarkup: () => null
 					}
+				},
+				{
+					provide: MAP_SOURCE_PROVIDERS_CONFIG,
+					useValue: {}
 				}
 			]
 

@@ -1,21 +1,13 @@
-import { BaseMapSourceProvider, CacheService, IBaseMapSourceProviderConstructor, ImageryCommunicatorService } from '@ansyn/imagery';
-import { Inject } from '@angular/core';
+import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '@ansyn/imagery';
 import { ProjectableRaster } from '@ansyn/plugins';
 import Layer from 'ol/layer/layer';
-import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers-config';
 import ImageLayer from 'ol/layer/image';
 import TileLayer from 'ol/layer/tile';
 import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
 import proj from 'ol/proj';
 import XYZ from 'ol/source/xyz';
 
-export abstract class OpenLayersMapSourceProvider extends BaseMapSourceProvider {
-	constructor(protected cacheService: CacheService,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected config: IMapSourceProvidersConfig) {
-		super(cacheService, imageryCommunicatorService);
-	}
-
+export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
 	create(metaData: ICaseMapState): any[] {
 		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
 		const extent = this.getExtent(metaData.data.overlay.footprint);
@@ -80,7 +72,7 @@ export abstract class OpenLayersMapSourceProvider extends BaseMapSourceProvider 
 			return layerPromise.then((layer) => {
 				layer.set('footprint', metaData.data.overlay.footprint);
 				return layer;
-			})
+			});
 		}
 		return layerPromise;
 	}

@@ -128,3 +128,7 @@ export { ICaseMapPosition } from './models/case-map-position.model';
 export { DisplayedOverlay } from './models/context.model';
 export { getProviders } from './models/fetch-config-providers';
 export { CaseEnumFilterMetadata } from './models/case.model';
+export {
+	IMapSourceProvidersConfig,
+	MAP_SOURCE_PROVIDERS_CONFIG
+} from './models/map-source-providers-config';

@@ -79,6 +79,6 @@ export class DeleteTaskAction implements Action {
 export class SelectTaskAction implements Action {
 	type = AlgorithmsActionTypes.SELECT_TASK;
 
-	constructor(public payload: AlgorithmTask) {
+	constructor(public payload: string) {
 	}
 }

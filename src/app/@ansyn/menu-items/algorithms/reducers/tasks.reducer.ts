@@ -14,14 +14,14 @@ export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	drawIndicator: boolean;
 	regionLengthInMeters: number;
 	region: GeometryObject;
-	selectedTask: AlgorithmTask;
+	selectedTaskId: string;
 }
 
 export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITasksState>{
 	drawIndicator: false,
 	regionLengthInMeters: 1000,
 	region: null,
-	selectedTask: null,
+	selectedTaskId: null,
 });
 
 export const tasksFeatureKey = 'tasks';
@@ -43,7 +43,7 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 		}
 
 		case AlgorithmsActionTypes.SELECT_TASK: {
-			return { ...state, selectedTask: action.payload };
+			return { ...state, selectedTaskId: action.payload };
 		}
 
 		case AlgorithmsActionTypes.ADD_TASK:
@@ -72,4 +72,9 @@ export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>create
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.regionLengthInMeters);
 export const selectAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.region);
-export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTask);
+export const selectAlgorithmTasksSelectedTaskId: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTaskId);
+export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => {
+	return !algorithmsState.selectedTaskId ?
+	null :
+	selectEntities(algorithmsState)[algorithmsState.selectedTaskId]
+});

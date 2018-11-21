@@ -1,20 +1,20 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
+import { DeleteTaskAction, LoadTasksAction, SelectTaskAction } from '../../actions/tasks.actions';
 import { getTimeFormat } from '@ansyn/core';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
 import {
 	ITasksState,
-	selectAlgorithmTasksSelectedTask,
+	selectAlgorithmTasksSelectedTaskId,
 	selectTaskEntities,
 	selectTasksIds
 } from '../../reducers/tasks.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { map, tap } from 'rxjs/internal/operators';
+import { tap } from 'rxjs/internal/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { AlgorithmTask, AlgorithmTaskPreview, ITaskModalData } from '../../models/tasks.model';
+import { AlgorithmTaskPreview, ITaskModalData } from '../../models/tasks.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -39,8 +39,7 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	entities$: Observable<Dictionary<AlgorithmTaskPreview>> = this.store$.select(selectTaskEntities);
 
 	@AutoSubscription
-	selectedTaskId$: Observable<string> = this.store$.select(selectAlgorithmTasksSelectedTask).pipe(
-		map((task: AlgorithmTask) => task ? task.id : null),
+	selectedTaskId$: Observable<string> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
 		tap((selectedTaskId) => this.selectedTaskId = selectedTaskId)
 	);
 
@@ -86,6 +85,7 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	}
 
 	selectTask(taskId: string): void {
+		this.store$.dispatch(new SelectTaskAction(taskId));
 	}
 
 	formatTime(timeToFormat: Date): string {

@@ -54,7 +54,7 @@ export class TasksEffects {
 		ofType<AddTaskAction>(AlgorithmsActionTypes.ADD_TASK),
 		switchMap((action: AddTaskAction) => this.tasksService.createTask(action.payload)),
 		map((task: AlgorithmTask) => {
-			return new SelectTaskAction(task)
+			return new SelectTaskAction(task.id)
 		})
 	);
 

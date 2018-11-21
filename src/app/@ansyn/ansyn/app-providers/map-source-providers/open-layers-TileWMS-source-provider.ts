@@ -13,7 +13,7 @@ export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 })
 export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider {
 	create(metaData: ICaseMapState): any[] {
-		const config = this.config[OpenLayerTileWMSSourceProviderSourceType];
+		const { config } = this.config;
 		const layers = config.layers.join(',');
 
 		const source = new TileWMS(<any>{

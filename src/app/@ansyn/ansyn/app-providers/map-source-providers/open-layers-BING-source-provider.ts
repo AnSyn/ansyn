@@ -17,9 +17,9 @@ export const OpenLayerBingSourceProviderSourceType = 'BING';
 	sourceType: OpenLayerBingSourceProviderSourceType,
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
-export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider {
+export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider<IBingMapsConfig> {
 	create(metaData: ICaseMapState): any[] {
-		const config = this.config[OpenLayerBingSourceProviderSourceType];
+		const { config } = this;
 		const source = new BingMaps({
 			key: config.key,
 			imagerySet: config.styles[0],

@@ -20,9 +20,9 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 	sourceType: OpenLayerESRI_4326SourceProviderSourceType,
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
-export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider {
+export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider<IESRI4326Config> {
 	create(metaData: ICaseMapState): any[] {
-		const config = this.config[OpenLayerESRI_4326SourceProviderSourceType];
+		const { config } = this;
 		const source = new XYZ({
 			attributions: config.attributions,
 			maxZoom: config.maxZoom,

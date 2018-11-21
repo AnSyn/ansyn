@@ -9,7 +9,8 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG, OpenLayersMapSourceProvider } from '@ansyn/ansyn';
+import { OpenLayersMapSourceProvider } from '@ansyn/ansyn';
+import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,
@@ -20,9 +21,9 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 
 	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected config: IMapSourceProvidersConfig,
+				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
 				protected httpClient: HttpClient) {
-		super(cacheService, imageryCommunicatorService, config);
+		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
 	public create(metaData: ICaseMapState): any[] {

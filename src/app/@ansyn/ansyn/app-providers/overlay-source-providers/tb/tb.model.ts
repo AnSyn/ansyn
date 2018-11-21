@@ -1,8 +1,6 @@
 import { Feature, Polygon } from 'geojson';
 
-export const TBOverlaySourceConfig = 'tbOverlaysSourceConfig';
-
-export interface ITBOverlaySourceConfig {
+export interface ITBConfig {
 	baseUrl: string;
 }
 

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
+import { isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-uploads',
@@ -11,15 +12,17 @@ import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
 	styleUrls: ['./uploads.component.less']
 })
 export class UploadsComponent {
+	loading = false;
 	readonly sensorNames = this.config.sensorNames;
 	readonly sensorTypes = this.config.sensorTypes;
 	readonly rulesLink = this.config.rulesLink;
 	modal = false;
-	sharing = this.config.defaultSharing;
-	title = '';
+
+	sharing: string;
+	title: string;
 	licence: boolean;
-	sensorType = this.config.defaultSensorType;
-	sensorName = '';
+	sensorType: string;
+	sensorName: string;
 	fileInputValue: string;
 	files: FileList;
 	other: boolean;
@@ -28,6 +31,20 @@ export class UploadsComponent {
 				protected httpClient: HttpClient,
 				protected store: Store<any>,
 				protected errorHandlerService: ErrorHandlerService) {
+		this.resetForm();
+	}
+
+	disabledReset() {
+		const { sharing, title, licence, sensorType, sensorName, fileInputValue, other } = this;
+		return isEqual({
+			sharing: this.config.defaultSharing,
+			title: '',
+			licence: false,
+			sensorType: this.config.defaultSensorType,
+			sensorName: '',
+			fileInputValue: '',
+			other: false
+		}, { sharing, title, licence, sensorType, sensorName, fileInputValue, other });
 	}
 
 	submitCustomSensorName(text: string) {
@@ -39,6 +56,8 @@ export class UploadsComponent {
 	}
 
 	onSubmit() {
+		this.resetForm();
+		this.loading = true;
 		const formData = new FormData();
 		formData.append('title', this.title);
 		formData.append('sensorType', this.sensorType);
@@ -50,9 +69,20 @@ export class UploadsComponent {
 			.post(this.config.apiUrl, formData)
 			.pipe(
 				tap(() => this.store.dispatch(new SetToastMessageAction({ toastText: 'Success to upload file' }))),
-				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to upload file'))
+				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to upload file', null)),
+				tap(() => { this.loading = false; })
 			)
 			.subscribe();
+	}
+
+	resetForm() {
+		this.sharing = this.config.defaultSharing;
+		this.title = '';
+		this.licence = false;
+		this.sensorType = this.config.defaultSensorType;
+		this.sensorName = '';
+		this.fileInputValue = '';
+		this.other = false;
 	}
 
 }

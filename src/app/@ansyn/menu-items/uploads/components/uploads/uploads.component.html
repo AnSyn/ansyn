@@ -80,7 +80,8 @@
 			</ansyn-checkbox>
 		</div>
 
-		<button ansynButton type="submit" [disabled]="!f.valid">Submit</button>
+		<button ansynButton class="reset" type="button" [disabled]="disabledReset()" (click)="resetForm()" >Reset</button>
+		<button ansynButton type="submit" [disabled]="!f.valid || loading">Submit</button>
 
 	</form>
 </div>
@@ -88,3 +89,5 @@
 <ansyn-modal [(show)]="modal">
 	<ansyn-edit-sensor-name *ngIf="modal" (onSubmit)="submitCustomSensorName($event)"></ansyn-edit-sensor-name>
 </ansyn-modal>
+
+<ansyn-loader [show]="loading" loaderText="Upload files"></ansyn-loader>

@@ -146,6 +146,9 @@
 	}
   },
   "mapSourceProvidersConfig": {
+    "TB": {
+    	"baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
+    },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
     	"styles": [ "AerialWithLabels" ]
@@ -1059,9 +1062,6 @@
     "tilesUrl": "https://tiles.planet.com/data/v1/",
     "delayMultiple": 300
   },
-  "tbOverlaysSourceConfig": {
-    "baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
-  },
   "auth0Config": {
       "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},
       "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",
@@ -1073,17 +1073,21 @@
   },
   "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
   "algorithmsConfig": {
-	"alg_1" : {
-		"maxOverlays": 20,
-		"timeEstimationPerOverlayInMinutes": 10,
-		"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
-		"regionLengthInMeters": 200
-	},
-	"alg_2" : {
-		"maxOverlays": 2,
-		"timeEstimationPerOverlayInMinutes": 20,
-		"sensorNames": [ "Sentinel-2A" ],
-		"regionLengthInMeters": 100
+    "schema": "tasks",
+    "paginationLimit": 16,
+    "algorithms": {
+		"alg_1" : {
+			"maxOverlays": 20,
+			"timeEstimationPerOverlayInMinutes": 10,
+			"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
+			"regionLengthInMeters": 200
+		},
+		"alg_2" : {
+			"maxOverlays": 2,
+			"timeEstimationPerOverlayInMinutes": 20,
+			"sensorNames": [ "Sentinel-2A" ],
+			"regionLengthInMeters": 100
+		}
 	}
   },
   "uploadsConfig": {

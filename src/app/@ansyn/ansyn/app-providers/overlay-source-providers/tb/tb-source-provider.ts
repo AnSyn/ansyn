@@ -6,15 +6,15 @@ import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansy
 import {
 	ErrorHandlerService,
 	geojsonPolygonToMultiPolygon,
-	getPolygonByPointAndRadius,
+	getPolygonByPointAndRadius, IMapSourceProvidersConfig,
 	IOverlay,
 	limitArray,
-	LoggerService,
+	LoggerService, MAP_SOURCE_PROVIDERS_CONFIG,
 	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { ITBOverlay, ITBOverlaySourceConfig, TBOverlaySourceConfig } from './tb.model';
+import { ITBOverlay, ITBConfig } from './tb.model';
 import { Polygon } from 'geojson';
 
 export const TBOverlaySourceType = 'TB';
@@ -30,15 +30,17 @@ export interface ITBRequestBody {
 
 @Injectable()
 export class TBSourceProvider extends BaseOverlaySourceProvider {
+	readonly sourceType = TBOverlaySourceType;
 
-	sourceType = TBOverlaySourceType;
-
+	get config(): ITBConfig {
+		return this.mapSourceProvidersConfig[this.sourceType];
+	}
 
 	constructor(
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
-		@Inject(TBOverlaySourceConfig) protected config: ITBOverlaySourceConfig) {
+		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
 		super(loggerService);
 	}
 
@@ -100,7 +102,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			sensorName: tbOverlay.inputData.sensor.name,
 			bestResolution: 1,
 			imageUrl: tbOverlay.displayUrl,
-			thumbnailUrl: tbOverlay.thumbnailUrl || tbOverlay.displayUrl,
 			date: new Date(tbOverlay.createdDate),
 			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: toRadians(180),

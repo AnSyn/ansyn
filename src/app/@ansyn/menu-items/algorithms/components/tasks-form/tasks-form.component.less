@@ -1,12 +1,13 @@
 @color-half-white: rgba(255,255,255,0.7);
 @color-weak-white: rgba(255,255,255,0.4);
+@vertical-margin: 20px;
 
 :host {
 	.small-font;
 }
 
 .margin {
-	margin-bottom: 20px;
+	margin-bottom: @vertical-margin;
 }
 
 .small-font {
@@ -42,6 +43,11 @@
 		.small-padding-left;
 		.big-font;
 	}
+}
+
+ansyn-combo-box {
+	/* compensate for the hoisted placeholder */
+	padding-top: @vertical-margin;
 }
 
 .pin {

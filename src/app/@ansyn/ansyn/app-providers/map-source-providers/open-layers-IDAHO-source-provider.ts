@@ -4,7 +4,7 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
-import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from './map-source-providers-config';
+import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
@@ -19,8 +19,8 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 	constructor(protected httpClient: HttpClient,
 				protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected config: IMapSourceProvidersConfig) {
-		super(cacheService, imageryCommunicatorService, config);
+				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
+		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {

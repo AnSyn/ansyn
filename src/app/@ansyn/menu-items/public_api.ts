@@ -19,7 +19,7 @@ export { Filters, IFiltersState } from './filters/reducer/filters.reducer';
 export { IFilter } from './filters/models/IFilter';
 export { ILayer } from './layers-manager/models/layers.model';
 export { SetAutoImageProcessing, ShowOverlaysFootprintAction } from './tools/actions/tools.actions';
-export { AlgorithmsComponent } from './algorithms/components/algorithms/algorithms.component';
+export { TasksComponent } from './algorithms/components/tasks/tasks.component';
 export {
 	DisableImageProcessing,
 	EnableImageProcessing,
@@ -89,7 +89,7 @@ export { FiltersCollectionComponent } from './filters/components/filters-collect
 export { CasesComponent } from './cases/components/cases/cases.component';
 export { IToolsConfig, toolsConfig, IImageProcParam } from './tools/models/tools-config';
 export { CasesModule } from './cases/cases.module';
-export { AlgorithmsModule } from './algorithms/algorithms.module';
+export { TasksModule } from './algorithms/tasks.module';
 export { FiltersModule } from './filters/filters.module';
 export { HelpModule } from './help/help.module';
 export { LayersManagerModule } from './layers-manager/layers-manager.module';
@@ -113,15 +113,15 @@ export {
 	selectAlgorithmTaskRegion,
 	selectAlgorithmTaskRegionLength,
 	selectAlgorithmTaskDrawIndicator
-} from './algorithms/reducers/algorithms.reducer';
+} from './algorithms/reducers/tasks.reducer';
 export {
-	SetAlgorithmTaskDrawIndicator,
-	SetAlgorithmTaskRegion
-} from './algorithms/actions/algorithms.actions';
+	SetTaskDrawIndicator,
+	SetTaskRegion
+} from './algorithms/actions/tasks.actions';
 export {
-	AlgorithmsService
-} from './algorithms/services/algorithms.service';
+	TasksRemoteService
+} from './algorithms/services/tasks-remote.service';
 export {
-	AlgorithmsDefaultService
-} from './algorithms/services/algorithms-default.service';
+	TasksRemoteDefaultService
+} from './algorithms/services/tasks-remote-default.service';
 

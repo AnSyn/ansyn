@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-algorithms',
-	templateUrl: './algorithms.component.html',
-	styleUrls: ['./algorithms.component.less']
+	templateUrl: './tasks.component.html',
+	styleUrls: ['./tasks.component.less']
 })
-export class AlgorithmsComponent {
+export class TasksComponent {
 	page = 'table';
 
 	constructor() {

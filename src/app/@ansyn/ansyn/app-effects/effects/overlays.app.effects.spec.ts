@@ -39,7 +39,7 @@ import {
 	coreInitialState,
 	coreStateSelector,
 	DisplayedOverlay,
-	ICase,
+	ICase, MAP_SOURCE_PROVIDERS_CONFIG,
 	SetLayoutAction,
 	SetLayoutSuccessAction
 } from '@ansyn/core';
@@ -178,6 +178,10 @@ describe('OverlaysAppEffects', () => {
 			],
 			providers: [
 				OverlaysAppEffects,
+				{
+					provide: MAP_SOURCE_PROVIDERS_CONFIG,
+					useValue: {}
+				},
 				provideMockActions(() => actions),
 				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{

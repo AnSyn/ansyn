@@ -5,16 +5,11 @@ import { Observable } from 'rxjs/index';
 import { select, Store } from '@ngrx/store';
 import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/internal/operators';
-import {
-	AlgorithmTask,
-	AlgorithmTaskStatus,
-	AlgorithmTaskWhichOverlays,
-	IAlgorithmConfig
-} from '../../models/tasks.model';
+import { mergeMap, tap } from 'rxjs/internal/operators';
+import { AlgorithmTask, AlgorithmTaskWhichOverlays, IAlgorithmConfig } from '../../models/tasks.model';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { RunTaskAction, SetTaskDrawIndicator, SetTaskRegionLength } from '../../actions/tasks.actions';
-import { selectAlgorithmTaskRegion } from '../../reducers/tasks.reducer';
+import { selectAlgorithmTaskRegion, selectAlgorithmTasksSelectedTaskId } from '../../reducers/tasks.reducer';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 
@@ -29,7 +24,6 @@ import { ToggleIsPinnedAction } from '@ansyn/menu';
 })
 export class TasksFormComponent implements OnInit, OnDestroy {
 	task: AlgorithmTask = new AlgorithmTask();
-	taskStatus: AlgorithmTaskStatus = 'New';
 	whichOverlays: AlgorithmTaskWhichOverlays = 'favorite_overlays';
 	algNames: string[] = [];
 	errorMsg = '';
@@ -46,6 +40,21 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	get timeEstimation(): number {
 		return this.algorithmConfig.timeEstimationPerOverlayInMinutes * this.task.state.overlays.length;
 	}
+
+	get viewOnly(): boolean {
+		return this.task.status !== 'New';
+	}
+
+	@AutoSubscription
+	selectedTask$ = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
+		filter((taskId: string) => Boolean(taskId)),
+		mergeMap((taskId: string) => this.tasksService.loadTask(taskId)),
+		tap((task: AlgorithmTask) => {
+			if (task) {
+				this.task = task;
+			}
+		})
+	);
 
 	@AutoSubscription
 	getOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -105,6 +114,9 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	checkForErrors() {
+		if (this.viewOnly) {
+			return;
+		}
 		let message = '';
 		if (this.algorithmConfig && this.task.state.overlays.length < this.MIN_NUM_OF_OVERLAYS) {
 			message = `The number of selected overlays ${this.task.state.overlays.length} should be at least ${this.MIN_NUM_OF_OVERLAYS}`;

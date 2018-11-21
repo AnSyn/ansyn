@@ -26,8 +26,8 @@ export class AlgorithmTaskPreview implements IEntity{
 	id: string;
 	creationTime: Date;
 	name: string;
-	type: string;
-	status: AlgorithmTaskStatus;
+	type: string ;
+	status: AlgorithmTaskStatus = 'New';
 	runTime: Date;
 }
 

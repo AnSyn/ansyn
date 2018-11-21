@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { DeleteTaskAction, LoadTasksAction, SelectTaskAction } from '../../actions/tasks.actions';
+import { DeleteTaskAction, LoadTasksAction, SelectTaskAction, SetTasksPageToShow } from '../../actions/tasks.actions';
 import { getTimeFormat } from '@ansyn/core';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { AlgorithmTaskPreview, ITaskModalData } from '../../models/tasks.model';
+import { AlgorithmTaskPreview, ITaskModalData, TasksPageToShow } from '../../models/tasks.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -86,6 +86,7 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 
 	selectTask(taskId: string): void {
 		this.store$.dispatch(new SelectTaskAction(taskId));
+		this.store$.dispatch(new SetTasksPageToShow(TasksPageToShow.TASK_FORM));
 	}
 
 	formatTime(timeToFormat: Date): string {

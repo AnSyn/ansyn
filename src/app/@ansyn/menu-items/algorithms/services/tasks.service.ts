@@ -51,7 +51,8 @@ export class TasksService {
 
 	getEntityData(state: AlgorithmsTaskState): Partial<AlgorithmsTaskState> {
 		return {
-			region: state.region
+			region: state.region,
+			overlays: []
 		}
 	}
 
@@ -74,6 +75,23 @@ export class TasksService {
 		return this.storageService.delete(this.config.schema, selectedTaskId).pipe(
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, `Task cannot be deleted from storage`, null))
 		);
+	}
+
+	loadTask(selectedTaskId: string): Observable<AlgorithmTask> {
+		return this.storageService.get<AlgorithmTaskPreview, AlgorithmsTaskState>(this.config.schema, selectedTaskId)
+			.pipe(
+				map(storedEntity =>
+					this.parseTask(<AlgorithmTask>{ ...storedEntity.preview, state: storedEntity.data }))
+			).pipe(
+				catchError(err => this.errorHandlerService.httpErrorHandle<AlgorithmTask>(err, 'Error loading task from storage', null)));
+	}
+
+	parseTask(taskValue: AlgorithmTask): AlgorithmTask {
+		return {
+			...taskValue,
+			creationTime: new Date(taskValue.creationTime),
+			runTime: new Date(taskValue.runTime)
+		};
 	}
 
 }

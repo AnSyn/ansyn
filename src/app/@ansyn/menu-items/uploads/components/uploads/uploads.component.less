@@ -1,5 +1,11 @@
 @import "core/less/common";
 
+ansyn-loader {
+	justify-content: flex-start;
+	background: rgba(0, 0, 0, 0.6);
+	padding-top: 220px;
+}
+
 :host {
 	font-size: 13px;
 	font-weight: 300;
@@ -11,9 +17,12 @@
 		position: relative;
 		div.form-field {
 			margin: 30px 0;
+			/deep/ ansyn-input input {
+				font-size: 13px;
+			}
 		}
 
-		button[type='submit'] {
+		button[ansynButton] {
 			width: 100px;
 			height: 30px;
 		}

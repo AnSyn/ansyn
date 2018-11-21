@@ -6,37 +6,32 @@ export interface ITBConfig {
 
 export interface ITBOverlay {
 	_id: string,
-	imageUrl: string;
+	displayUrl: string;
+	thumbnailUrl: string;
 	name: string;
 	fileName: string;
-	filePath: string;
 	fileType: 'image';
-	format: 'JPEG';
+	createdDate: number
 	geoData: {
 		footprint: Feature<Polygon>,
 		centerPoint: [number, number],
 		bbox: [number, number, number, number]
 	};
-	fileData: {
-		lastModified: number
-	},
 	imageData: {
 		Make: string,
 		Model: string,
+		ExifImageHeight: number;
+		ExifImageWidth: number;
 	},
 	inputData: {
 		sensor: {
-			type: string,
-			name: string,
-			maker: string
-		},
+			type: string;
+			name: string;
+			maker: string;
+		};
 		ansyn: {
-			title: string
-		},
-		fileName: string,
-		affiliation: string,
-		GSD: number,
-		flightAltitude: 41.567,
-		cloudCoveragePercentage: 0
+			title: string;
+		};
+		name: string;
 	};
 }

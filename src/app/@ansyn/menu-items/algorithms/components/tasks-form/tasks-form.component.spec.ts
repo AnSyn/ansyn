@@ -3,11 +3,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
-import { AnsynFormsModule, Overlay } from '@ansyn/core';
+import { AnsynFormsModule, coreFeatureKey, CoreReducer, Overlay } from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AlgorithmsConfigService } from '../../services/algorithms-config.service';
+import { TasksService } from '../../services/tasks.service';
 import { EffectsModule } from '@ngrx/effects';
-import { AlgorithmsService } from '../../services/algorithms.service';
+import { TasksRemoteService } from '../../services/tasks-remote.service';
+import { tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -22,18 +23,20 @@ describe('TasksFormComponent', () => {
 				FormsModule,
 				AnsynFormsModule,
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer, [coreFeatureKey]: CoreReducer }),
 				EffectsModule.forRoot([])
 			],
 			providers: [
 				{
-					provide: AlgorithmsConfigService,
+					provide: TasksService,
 					useValue: {
-						config: {}
+						config: {
+							algorithms: {}
+						}
 					}
 				},
 				{
-					provide: AlgorithmsService,
+					provide: TasksRemoteService,
 					useValue: {}
 				}
 			]
@@ -57,22 +60,31 @@ describe('TasksFormComponent', () => {
 			spyOn(component, 'showError');
 			overlays = ['a', 'b'].map((id) => new Overlay({ id: id }));
 			component.MIN_NUM_OF_OVERLAYS = 2;
-			component.configService.config = {
-				alg_1: {
-					maxOverlays: 2,
-					timeEstimationPerOverlayInMinutes: 10,
-					regionLengthInMeters: 100,
-					sensorNames: []
+			component.tasksService.config = {
+				schema: '',
+				paginationLimit: 1,
+				algorithms: {
+					alg_1: {
+						maxOverlays: 2,
+						timeEstimationPerOverlayInMinutes: 10,
+						regionLengthInMeters: 100,
+						sensorNames: []
+					}
 				}
 			};
-			component.algName = 'alg_1';
 			component.task = {
 				id: '21',
+				creationTime: null,
+				runTime: null,
 				name: '21',
-				overlays: overlays,
-				masterOverlay: overlays[0],
-				region: {
-					type: 'Point'
+				type: 'alg_1',
+				status: 'Sent',
+				state: {
+					overlays: overlays,
+					masterOverlay: overlays[0],
+					region: {
+						type: 'Point'
+					}
 				}
 			}
 		});
@@ -91,7 +103,7 @@ describe('TasksFormComponent', () => {
 			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays 3 should be at most 2`);
 		});
 		it('should check existence of master overlay', () => {
-			component.task.masterOverlay = null;
+			component.task.state.masterOverlay = null;
 			component.checkForErrors();
 			expect(component.showError).toHaveBeenCalledWith('No master overlay selected');
 		});

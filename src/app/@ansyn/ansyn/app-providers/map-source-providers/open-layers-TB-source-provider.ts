@@ -2,6 +2,9 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { ICaseMapState } from '@ansyn/core';
+import Projection from 'ol/proj/projection';
+import Static from 'ol/source/imagestatic';
+import ImageLayer from 'ol/layer/image';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
@@ -27,7 +30,23 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
-		return Promise.resolve(null);
+		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.ExifImageWidth, metaData.data.overlay.tag.imageData.ExifImageHeight];
+
+		const source = new Static({
+			url: metaData.data.overlay.imageUrl,
+			crossOrigin: 'anonymous',
+			projection: new Projection({
+				code: 'tb-image',
+				units: 'pixels',
+				extent
+			}),
+			imageExtent: extent
+		});
+		const imageLayer = new ImageLayer({
+			source,
+			extent
+		});
+		return Promise.resolve(imageLayer);
 	}
 
 	getThumbnailUrl(overlay, position): Observable<string> {

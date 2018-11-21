@@ -12,6 +12,7 @@ import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
+import { ProjectableRaster } from '../open-layers-map/models/projectable-raster';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -98,11 +99,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	setCustomMainLayer(layer) {
 		if (!isEqual(this.getMainLayer(), layer)) {
-			const imageLayerWasExists = this.getExistingRasterLayer();
-
-			if (imageLayerWasExists) {
-				this.removeImageLayer();
-			}
+			this.removeImageLayer();
 		}
 		this.customMainLayer = layer;
 	}
@@ -156,7 +153,13 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	getExistingRasterLayer(): ImageLayer {
 		const layers = this.communicator.ActiveMap.getLayers();
-		const imageLayer = layers.find((layer) => layer instanceof ImageLayer);
+		const imageLayer = layers.find((layer) => {
+			if (layer instanceof ImageLayer) {
+				const source = layer.getSource();
+				return source instanceof ProjectableRaster;
+			}
+			return false;
+		});
 		return imageLayer;
 	}
 

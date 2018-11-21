@@ -951,9 +951,6 @@
       ],
       "blacklist": []
     },
-    "TB": {
-    	"inActive": {{ getv "/ansyn/overlay/tb/inactive" "true" }}
-    },
     "OPEN_AERIAL": {
     	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
 		"whitelist": [
@@ -1076,17 +1073,21 @@
   },
   "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
   "algorithmsConfig": {
-	"alg_1" : {
-		"maxOverlays": 20,
-		"timeEstimationPerOverlayInMinutes": 10,
-		"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
-		"regionLengthInMeters": 200
-	},
-	"alg_2" : {
-		"maxOverlays": 2,
-		"timeEstimationPerOverlayInMinutes": 20,
-		"sensorNames": [ "Sentinel-2A" ],
-		"regionLengthInMeters": 100
+    "schema": "tasks",
+    "paginationLimit": 16,
+    "algorithms": {
+		"alg_1" : {
+			"maxOverlays": 20,
+			"timeEstimationPerOverlayInMinutes": 10,
+			"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
+			"regionLengthInMeters": 200
+		},
+		"alg_2" : {
+			"maxOverlays": 2,
+			"timeEstimationPerOverlayInMinutes": 20,
+			"sensorNames": [ "Sentinel-2A" ],
+			"regionLengthInMeters": 100
+		}
 	}
   },
   "uploadsConfig": {

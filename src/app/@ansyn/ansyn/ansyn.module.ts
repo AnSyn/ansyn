@@ -7,13 +7,13 @@ import { AnsynPluginsModule } from '@ansyn/plugins';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
 import {
-	AlgorithmsModule,
+	TasksModule,
 	CasesModule,
 	FiltersModule,
 	HelpModule,
 	LayersManagerModule,
 	SettingsModule,
-	ToolsModule
+	ToolsModule, TasksRemoteDefaultService
 } from '@ansyn/menu-items';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
@@ -42,7 +42,7 @@ import { UploadsModule } from '@ansyn/menu-items';
 		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,
-		AlgorithmsModule,
+		TasksModule.provideRemote(TasksRemoteDefaultService),
 		SettingsModule,
 		OverlaysModule,
 		FormsModule,

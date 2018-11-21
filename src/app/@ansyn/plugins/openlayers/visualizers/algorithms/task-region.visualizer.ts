@@ -12,8 +12,8 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import {
 	selectAlgorithmTaskDrawIndicator,
 	selectAlgorithmTaskRegion, selectAlgorithmTaskRegionLength,
-	SetAlgorithmTaskDrawIndicator,
-	SetAlgorithmTaskRegion
+	SetTaskDrawIndicator,
+	SetTaskRegion
 } from '@ansyn/menu-items';
 import { combineLatest } from 'rxjs/index';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
@@ -26,7 +26,7 @@ import Feature from 'ol/feature';
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, ProjectionService]
 })
-export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
+export class TaskRegionVisualizer extends EntitiesVisualizer {
 	iconStyle: Style = new Style({
 		image: new Icon({
 			scale: 1,
@@ -83,7 +83,7 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new SetAlgorithmTaskDrawIndicator(false));
+		this.store$.dispatch(new SetTaskDrawIndicator(false));
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap).pipe(
@@ -91,7 +91,7 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				this.store$.dispatch(new SetAlgorithmTaskRegion(region));
+				this.store$.dispatch(new SetTaskRegion(region));
 			})
 		).subscribe();
 	}
@@ -113,7 +113,7 @@ export class AlgorithmTaskRegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new SetAlgorithmTaskDrawIndicator(false));
+		this.store$.dispatch(new SetTaskDrawIndicator(false));
 	}
 
 	interactionChanges([isActiveMap, drawIndicator]: [boolean, boolean]): void {

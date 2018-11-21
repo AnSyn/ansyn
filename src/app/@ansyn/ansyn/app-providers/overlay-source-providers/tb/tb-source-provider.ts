@@ -63,7 +63,10 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		};
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(
-			map((overlays: Array<ITBOverlay>) => overlays.map((element) => this.parseData(element))),
+			map((overlays: Array<ITBOverlay>) => overlays
+				.filter((o: ITBOverlay) => o.fileType === 'image')
+				.map((element) => this.parseData(element))
+			),
 			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
@@ -98,13 +101,13 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			sensorType: tbOverlay.inputData.sensor.type,
 			sensorName: tbOverlay.inputData.sensor.name,
 			bestResolution: 1,
-			imageUrl: tbOverlay.imageUrl,
-			thumbnailUrl: tbOverlay.imageUrl,
-			date: new Date(tbOverlay.fileData.lastModified),
-			photoTime: new Date(tbOverlay.fileData.lastModified).toISOString(),
+			imageUrl: tbOverlay.displayUrl,
+			thumbnailUrl: tbOverlay.thumbnailUrl || tbOverlay.displayUrl,
+			date: new Date(tbOverlay.createdDate),
+			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: false,
 			tag: tbOverlay
 		});
 	}

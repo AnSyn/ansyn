@@ -50,9 +50,8 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 	}
 
 	getThumbnailUrl(overlay, position): Observable<string> {
-		console.log('getThumbnailUrl? TB');
-		return this.http.get<string>(`${this.config.baseUrl}/layers/${overlay.id}/thumbnail`).pipe(
-			catchError(() => of(''))
+		return this.http.get<string>(`${this.config.baseUrl}/${overlay.id}/thumbnail`).pipe(
+			catchError(() => of(null))
 		);
 	}
 }

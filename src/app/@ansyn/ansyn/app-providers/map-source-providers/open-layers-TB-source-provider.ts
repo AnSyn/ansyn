@@ -1,7 +1,7 @@
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState, IOverlay } from '@ansyn/core';
 import Projection from 'ol/proj/projection';
 import Static from 'ol/source/imagestatic';
 import ImageLayer from 'ol/layer/image';
@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { ITBConfig } from '../overlay-source-providers/tb/tb.model';
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 export const OpenLayerTBSourceProviderSourceType = 'TB';
 
@@ -49,8 +49,12 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		return Promise.resolve(imageLayer);
 	}
 
-	getThumbnailUrl(overlay, position): Observable<string> {
+	getThumbnailUrl(overlay: IOverlay, position): Observable<string> {
+		if (overlay.thumbnailUrl) {
+			return of(overlay.thumbnailUrl)
+		}
 		return this.http.get<string>(`${this.config.baseUrl}/${overlay.id}/thumbnail`).pipe(
+			tap((thumbnailUrl) => overlay.thumbnailUrl = thumbnailUrl),
 			catchError(() => of(null))
 		);
 	}

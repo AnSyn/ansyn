@@ -1,3 +1,6 @@
-<p>
-	settings works!
-</p>
+<div class="collection">
+	<ansyn-slider-checkbox [checked]="isAnaglyphEnabled$ | async"
+						   (checkedChange)="enableAnaglyph($event.target.checked)">
+		Ask for anaglyph (if available )
+	</ansyn-slider-checkbox>
+</div>

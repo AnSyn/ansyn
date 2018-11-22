@@ -1,11 +1,11 @@
 import { Action } from '@ngrx/store';
 import { GeometryObject } from 'geojson';
 import { AlgorithmTask, TasksPageToShow } from '../models/tasks.model';
+import { IOverlay } from '@ansyn/core';
 
 export enum TasksActionTypes {
 	SET_DRAW_INDICATOR = '[Algorithms] Set draw indicator',
 	SET_REGION_LENGTH = '[Algorithms] Set region length',
-	SET_REGION = '[Algorithms] Set region',
 
 	LOAD_TASKS = '[Algorithms] Load tasks',
 	DELETE_TASK = '[Algorithms] Delete task',
@@ -14,12 +14,19 @@ export enum TasksActionTypes {
 	RUN_TASK = '[Algorithms] RUN_TASK',
 	SELECT_TASK = '[Algorithms] SELECT_TASK',
 
-	SET_PAGE_TO_SHOW = '[Algorithms] SET_PAGE_TO_SHOW'
+	SET_PAGE_TO_SHOW = '[Algorithms] SET_PAGE_TO_SHOW',
+
+	SET_CURRENT_TASK = '[Algorithms] SET_CURRENT_TASK',
+	SET_CURRENT_TASK_NAME = '[Algorithms] SET_CURRENT_TASK_NAME',
+	SET_CURRENT_TASK_ALGORITHM_NAME = '[Algorithms] SET_CURRENT_TASK_ALGORITHM_NAME',
+	SET_CURRENT_TASK_REGION = '[Algorithms] Set region',
+	SET_CURRENT_TASK_OVERLAYS = '[Algorithms] SET_CURRENT_TASK_OVERLAYS',
+	SET_CURRENT_TASK_MASTER_OVERLAY = '[Algorithms] SET_CURRENT_TASK_MASTER_OVERLAY'
 }
 
 export type TasksActions =
 	SetTaskDrawIndicator
-	| SetTaskRegion
+	| SetCurrentTaskRegion
 	;
 
 export class SetTaskDrawIndicator implements Action {
@@ -33,13 +40,6 @@ export class SetTaskRegionLength implements Action {
 	type = TasksActionTypes.SET_REGION_LENGTH;
 
 	constructor(public payload: number) {
-	}
-}
-
-export class SetTaskRegion implements Action {
-	type = TasksActionTypes.SET_REGION;
-
-	constructor(public payload: GeometryObject) {
 	}
 }
 
@@ -67,7 +67,7 @@ export class AddTaskAction implements Action {
 export class RunTaskAction implements Action {
 	type = TasksActionTypes.RUN_TASK;
 
-	constructor(public payload: AlgorithmTask) {
+	constructor() {
 	}
 }
 
@@ -89,5 +89,47 @@ export class SetTasksPageToShow implements Action {
 	type = TasksActionTypes.SET_PAGE_TO_SHOW;
 
 	constructor(public payload: TasksPageToShow) {
+	}
+}
+
+export class SetCurrentTask implements Action {
+	type = TasksActionTypes.SET_CURRENT_TASK;
+
+	constructor(public payload: AlgorithmTask) {
+	}
+}
+
+export class SetCurrentTaskName implements Action {
+	type = TasksActionTypes.SET_CURRENT_TASK_NAME;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class SetCurrentTaskMasterOverlay implements Action {
+	type = TasksActionTypes.SET_CURRENT_TASK_MASTER_OVERLAY;
+
+	constructor(public payload: IOverlay) {
+	}
+}
+
+export class SetCurrentTaskOverlays implements Action {
+	type = TasksActionTypes.SET_CURRENT_TASK_OVERLAYS;
+
+	constructor(public payload: IOverlay[]) {
+	}
+}
+
+export class SetCurrentTaskRegion implements Action {
+	type = TasksActionTypes.SET_CURRENT_TASK_REGION;
+
+	constructor(public payload: GeometryObject) {
+	}
+}
+
+export class SetCurrentTaskAlgorithmName implements Action {
+	type = TasksActionTypes.SET_CURRENT_TASK_ALGORITHM_NAME;
+
+	constructor(public payload: string) {
 	}
 }

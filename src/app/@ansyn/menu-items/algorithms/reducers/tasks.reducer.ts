@@ -2,7 +2,6 @@ import { ITasksState } from './tasks.reducer';
 import { TasksActions, TasksActionTypes } from '../actions/tasks.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AlgorithmTask, AlgorithmTaskPreview, TasksPageToShow } from '../models/tasks.model';
-import { GeometryObject } from 'geojson';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { UUID } from 'angular2-uuid';
@@ -13,17 +12,17 @@ export const tasksAdapter: EntityAdapter<AlgorithmTaskPreview> = createEntityAda
 export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	drawIndicator: boolean;
 	regionLengthInMeters: number;
-	region: GeometryObject;
 	selectedTaskId: string;
+	currentTask: AlgorithmTask;
 	pageToShow: TasksPageToShow;
 }
 
 export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITasksState>{
 	drawIndicator: false,
 	regionLengthInMeters: 1000,
-	region: null,
 	selectedTaskId: null,
-	pageToShow: TasksPageToShow.TASKS_TABLE
+	pageToShow: TasksPageToShow.TASKS_TABLE,
+	currentTask: new AlgorithmTask()
 });
 
 export const tasksFeatureKey = 'tasks';
@@ -40,16 +39,46 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 			return { ...state, regionLengthInMeters: action.payload };
 		}
 
-		case TasksActionTypes.SET_REGION: {
-			return { ...state, region: action.payload };
-		}
-
 		case TasksActionTypes.SELECT_TASK: {
 			return { ...state, selectedTaskId: action.payload };
 		}
 
 		case TasksActionTypes.SET_PAGE_TO_SHOW: {
 			return { ...state, pageToShow: action.payload };
+		}
+
+		case TasksActionTypes.SET_CURRENT_TASK: {
+			return { ...state, currentTask: action.payload };
+		}
+
+		case TasksActionTypes.SET_CURRENT_TASK_ALGORITHM_NAME: {
+			return { ...state, currentTask: { ...state.currentTask, algorithmName: action.payload } };
+		}
+
+		case TasksActionTypes.SET_CURRENT_TASK_NAME: {
+			return { ...state, currentTask: { ...state.currentTask, name: action.payload } };
+		}
+
+		case TasksActionTypes.SET_CURRENT_TASK_REGION: {
+			return {
+				...state,
+				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, region: action.payload } }
+			};
+		}
+
+		case TasksActionTypes.SET_CURRENT_TASK_OVERLAYS: {
+			return {
+				...state,
+				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, overlays: action.payload } }
+			};
+		}
+
+		case TasksActionTypes.SET_CURRENT_TASK_MASTER_OVERLAY: {
+			return {
+				...state,
+				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, masterOverlay: action.payload }
+				}
+			};
 		}
 
 		case TasksActionTypes.ADD_TASK:
@@ -77,11 +106,19 @@ export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>create
 
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.regionLengthInMeters);
-export const selectAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.region);
 export const selectAlgorithmTasksPageToShow: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.pageToShow);
 export const selectAlgorithmTasksSelectedTaskId: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTaskId);
 export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => {
 	return !algorithmsState.selectedTaskId ?
-	null :
-	selectEntities(algorithmsState)[algorithmsState.selectedTaskId]
+		null :
+		selectEntities(algorithmsState)[algorithmsState.selectedTaskId]
 });
+
+export const selectCurrentAlgorithmTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask);
+export const selectCurrentAlgorithmTaskStatus: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.status);
+export const selectCurrentAlgorithmTaskName: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.name);
+export const selectCurrentAlgorithmTaskAlgorithmName: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.algorithmName);
+export const selectCurrentAlgorithmTaskOverlays: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.state && algorithmsState.currentTask.state.overlays || []);
+export const selectCurrentAlgorithmTaskMasterOverlay: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.state && algorithmsState.currentTask.state.masterOverlay);
+export const selectCurrentAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.state && algorithmsState.currentTask.state.region);
+

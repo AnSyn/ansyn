@@ -135,7 +135,7 @@ describe('TasksEffects', () => {
 			name: 'newTaskName',
 			state: null,
 			creationTime: new Date(),
-			type: 'ttt',
+			algorithmName: 'ttt',
 			status: 'Sent',
 			runTime: new Date()
 		};

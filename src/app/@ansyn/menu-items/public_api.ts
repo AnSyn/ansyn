@@ -109,13 +109,13 @@ export { QueryParamsHelper } from './cases/services/helpers/cases.service.query-
 export { UpdateFilterAction } from './filters/actions/filters.actions';
 export { IEnumFiled } from './filters/models/metadata/enum-filter-metadata';
 export {
-	selectAlgorithmTaskRegion,
+	selectCurrentAlgorithmTaskRegion,
 	selectAlgorithmTaskRegionLength,
 	selectAlgorithmTaskDrawIndicator
 } from './algorithms/reducers/tasks.reducer';
 export {
 	SetTaskDrawIndicator,
-	SetTaskRegion
+	SetCurrentTaskRegion
 } from './algorithms/actions/tasks.actions';
 export {
 	TasksRemoteService

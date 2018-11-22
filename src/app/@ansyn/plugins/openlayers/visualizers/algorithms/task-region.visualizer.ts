@@ -11,9 +11,9 @@ import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
 import {
 	selectAlgorithmTaskDrawIndicator,
-	selectAlgorithmTaskRegion, selectAlgorithmTaskRegionLength,
+	selectCurrentAlgorithmTaskRegion, selectAlgorithmTaskRegionLength,
 	SetTaskDrawIndicator,
-	SetTaskRegion
+	SetCurrentTaskRegion
 } from '@ansyn/menu-items';
 import { combineLatest } from 'rxjs/index';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
@@ -43,7 +43,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	});
 
 
-	region$ = this.store$.select(selectAlgorithmTaskRegion);
+	region$ = this.store$.select(selectCurrentAlgorithmTaskRegion);
 
 	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
 		map((activeMapId: string): boolean => activeMapId === this.mapId),
@@ -91,7 +91,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				this.store$.dispatch(new SetTaskRegion(region));
+				this.store$.dispatch(new SetCurrentTaskRegion(region));
 			})
 		).subscribe();
 	}

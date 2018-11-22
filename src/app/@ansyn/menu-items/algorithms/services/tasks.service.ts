@@ -41,7 +41,7 @@ export class TasksService {
 			id: taskValue.id,
 			creationTime: taskValue.creationTime,
 			name: taskValue.name,
-			type: taskValue.type,
+			algorithmName: taskValue.algorithmName,
 			runTime: taskValue.runTime,
 			status: taskValue.status
 		};

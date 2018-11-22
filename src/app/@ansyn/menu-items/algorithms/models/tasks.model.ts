@@ -26,13 +26,13 @@ export class AlgorithmTaskPreview implements IEntity{
 	id: string;
 	creationTime: Date;
 	name: string;
-	type: string ;
+	algorithmName: string ;
 	status: AlgorithmTaskStatus = 'New';
 	runTime: Date;
 }
 
 export class AlgorithmsTaskState {
-	overlays: IOverlay[];
+	overlays: IOverlay[] = [];
 	masterOverlay: IOverlay;
 	region: GeometryObject;
 }

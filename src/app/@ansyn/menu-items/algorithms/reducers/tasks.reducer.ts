@@ -11,7 +11,6 @@ export const tasksAdapter: EntityAdapter<AlgorithmTaskPreview> = createEntityAda
 
 export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	drawIndicator: boolean;
-	regionLengthInMeters: number;
 	selectedTaskId: string;
 	currentTask: AlgorithmTask;
 	pageToShow: TasksPageToShow;
@@ -19,7 +18,6 @@ export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 
 export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITasksState>{
 	drawIndicator: false,
-	regionLengthInMeters: 1000,
 	selectedTaskId: null,
 	pageToShow: TasksPageToShow.TASKS_TABLE,
 	currentTask: new AlgorithmTask()
@@ -33,10 +31,6 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 
 		case TasksActionTypes.SET_DRAW_INDICATOR: {
 			return { ...state, drawIndicator: action.payload };
-		}
-
-		case TasksActionTypes.SET_REGION_LENGTH: {
-			return { ...state, regionLengthInMeters: action.payload };
 		}
 
 		case TasksActionTypes.SELECT_TASK: {
@@ -105,7 +99,6 @@ export const selectTaskEntities = <MemoizedSelector<ITasksState, Dictionary<Algo
 export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>createSelector(tasksStateSelector, selectIds);
 
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
-export const selectAlgorithmTaskRegionLength: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.regionLengthInMeters);
 export const selectAlgorithmTasksPageToShow: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.pageToShow);
 export const selectAlgorithmTasksSelectedTaskId: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTaskId);
 export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => {

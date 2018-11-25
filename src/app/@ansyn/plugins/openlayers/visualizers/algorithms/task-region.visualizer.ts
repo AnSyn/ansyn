@@ -11,9 +11,9 @@ import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
 import {
 	selectAlgorithmTaskDrawIndicator,
-	selectCurrentAlgorithmTaskRegion, selectAlgorithmTaskRegionLength,
+	selectCurrentAlgorithmTaskRegion,
 	SetTaskDrawIndicator,
-	SetCurrentTaskRegion
+	SetCurrentTaskRegion, TasksService, selectCurrentAlgorithmTaskAlgorithmName
 } from '@ansyn/menu-items';
 import { combineLatest } from 'rxjs/index';
 import { OpenLayersMap } from '../../open-layers-map/openlayers-map/openlayers-map';
@@ -24,7 +24,7 @@ import Feature from 'ol/feature';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, ProjectionService]
+	deps: [Store, Actions, ProjectionService, TasksService]
 })
 export class TaskRegionVisualizer extends EntitiesVisualizer {
 	iconStyle: Style = new Style({
@@ -53,10 +53,15 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	drawIndicator$ = this.store$.select(selectAlgorithmTaskDrawIndicator);
 
 	regionLengthInMeter: number;
+	DEFAULT_REGION_LENGTH_IN_METERS = 1000;
 
 	@AutoSubscription
-	regionLengthInMeter$ = this.store$.select(selectAlgorithmTaskRegionLength).pipe(
-		tap((length: number) => {
+	regionLengthInMeter$ = this.store$.select(selectCurrentAlgorithmTaskAlgorithmName).pipe(
+		tap((algName: string) => {
+			let length = this.DEFAULT_REGION_LENGTH_IN_METERS;
+			if (algName) {
+				length = this.tasksService.config.algorithms[algName].regionLengthInMeters;
+			}
 			this.regionLengthInMeter = length;
 		})
 	);
@@ -70,7 +75,12 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	drawChanges$ = combineLatest(this.region$, this.drawIndicator$).pipe(
 		mergeMap(this.drawChanges.bind(this)));
 
-	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService) {
+	constructor(
+		public store$: Store<any>,
+		public actions$: Actions,
+		public projectionService: ProjectionService,
+		public tasksService: TasksService
+	) {
 		super();
 	}
 

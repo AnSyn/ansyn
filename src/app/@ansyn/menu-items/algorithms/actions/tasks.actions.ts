@@ -5,7 +5,6 @@ import { IOverlay } from '@ansyn/core';
 
 export enum TasksActionTypes {
 	SET_DRAW_INDICATOR = '[Algorithms] Set draw indicator',
-	SET_REGION_LENGTH = '[Algorithms] Set region length',
 
 	LOAD_TASKS = '[Algorithms] Load tasks',
 	DELETE_TASK = '[Algorithms] Delete task',
@@ -33,13 +32,6 @@ export class SetTaskDrawIndicator implements Action {
 	type = TasksActionTypes.SET_DRAW_INDICATOR;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-export class SetTaskRegionLength implements Action {
-	type = TasksActionTypes.SET_REGION_LENGTH;
-
-	constructor(public payload: number) {
 	}
 }
 

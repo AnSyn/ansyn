@@ -20,8 +20,7 @@ import {
 	SetCurrentTaskMasterOverlay,
 	SetCurrentTaskName,
 	SetCurrentTaskOverlays,
-	SetTaskDrawIndicator,
-	SetTaskRegionLength
+	SetTaskDrawIndicator
 } from '../../actions/tasks.actions';
 import {
 	selectAlgorithmTasksSelectedTaskId,
@@ -215,7 +214,6 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	onAlgorithmNameChange() {
 		this.store$.dispatch(new SetCurrentTaskAlgorithmName(this.algName));
-		this.store$.dispatch(new SetTaskRegionLength(this.algorithms[this.algName].regionLengthInMeters));
 	}
 
 }

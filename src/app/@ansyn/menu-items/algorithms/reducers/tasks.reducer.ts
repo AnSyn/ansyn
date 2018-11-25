@@ -20,7 +20,7 @@ export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITas
 	drawIndicator: false,
 	selectedTaskId: null,
 	pageToShow: TasksPageToShow.TASKS_TABLE,
-	currentTask: new AlgorithmTask()
+	currentTask: null
 });
 
 export const tasksFeatureKey = 'tasks';

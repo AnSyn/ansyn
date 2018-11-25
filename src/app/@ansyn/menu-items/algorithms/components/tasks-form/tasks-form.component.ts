@@ -189,6 +189,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		this.store$.dispatch(new SetCurrentTask(null));
 	}
 
 	showError(msg: string) {

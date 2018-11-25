@@ -150,9 +150,19 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		map(MapFacadeService.activeMap),
 		filter(Boolean),
 		map((map: ICaseMapState) => map.data.overlay),
+		mergeMap((overlay: IOverlay) => combineLatest(
+			of(overlay),
+			this.store$.select(selectCurrentAlgorithmTaskOverlays)
+			)),
 		distinctUntilChanged(),
-		tap((overlay: IOverlay) => {
-			this.store$.dispatch(new SetCurrentTaskMasterOverlay(overlay));
+		map(([activeOverlay, overlays]: [IOverlay, IOverlay[]]) => {
+			if (!activeOverlay || overlays.find(({ id }) => id === activeOverlay.id)) {
+				this.store$.dispatch(new SetCurrentTaskMasterOverlay(activeOverlay));
+				return activeOverlay;
+			} else {
+				this.showError('The active overlay is not one of the chosen overlays for the task');
+				return null;
+			}
 		})
 	);
 

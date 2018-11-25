@@ -218,7 +218,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				fill: `white`,
 				'fill-opacity': AnnotationsVisualizer.fillAlpha,
 				'marker-size': MarkerSize.medium,
-				'marker-color': `white`,
+				'marker-color': `#ffffff`,
 				label: {
 					overflow: true,
 					font: '27px Calibri,sans-serif',

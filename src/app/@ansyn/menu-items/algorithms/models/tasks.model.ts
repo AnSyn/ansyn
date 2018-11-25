@@ -1,5 +1,6 @@
 import { IEntity, IOverlay } from '@ansyn/core';
 import { GeometryObject } from 'geojson';
+import { IDilutedOverlay } from '../../../core/models/overlay.model';
 
 export const AlgorithmsConfig = 'algorithmsConfig';
 
@@ -34,6 +35,12 @@ export class AlgorithmTaskPreview implements IEntity{
 export class AlgorithmsTaskState {
 	overlays: IOverlay[] = [];
 	masterOverlay: IOverlay;
+	region: GeometryObject;
+}
+
+export class DilutedAlgorithmsTaskState {
+	overlays: IDilutedOverlay[] = [];
+	masterOverlay: IDilutedOverlay;
 	region: GeometryObject;
 }
 

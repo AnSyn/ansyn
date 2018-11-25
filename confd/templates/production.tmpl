@@ -549,17 +549,42 @@
     "PLANET": {
 	  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
       "whitelist": [
-        {
-          "name": "USA",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": [ "Landsat8L1G", "Sentinel2L1C" ],
-		  "coverage": [[[[-126.73828125000001,48.195387408333374],[-51.32812500000002,47.9605023889151],[-80.24414062500001,24.166802085303246],[-125.94726562500003,30.41078179084589],[-126.73828125000001,48.195387408333374]]]]
-        },
+		  {
+			"name": "Entire Earth",
+			"dates": [
+			  {
+				"start": null,
+				"end": null
+			  }
+			],
+			"sensorNames": [ "Landsat8L1G", "Sentinel2L1C" ],
+			"coverage": [
+			  [
+				[
+				  [
+					-180,
+					-90
+				  ],
+				  [
+					-180,
+					90
+				  ],
+				  [
+					180,
+					90
+				  ],
+				  [
+					180,
+					-90
+				  ],
+				  [
+					-180,
+					-90
+				  ]
+				]
+			  ]
+			]
+		  },
         {
           "name": "California",
           "dates": [

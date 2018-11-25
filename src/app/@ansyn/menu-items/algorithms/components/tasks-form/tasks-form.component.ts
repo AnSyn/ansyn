@@ -5,7 +5,7 @@ import { combineLatest, Observable, of } from 'rxjs/index';
 import { Store } from '@ngrx/store';
 import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { mergeMap, tap } from 'rxjs/internal/operators';
+import { mergeMap, switchMap, tap } from 'rxjs/internal/operators';
 import {
 	AlgorithmTask,
 	AlgorithmTaskStatus,
@@ -97,7 +97,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	selectedTask$: Observable<AlgorithmTask> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
-		mergeMap((taskId: string) => {
+		switchMap((taskId: string) => {
 			if (taskId) {
 				return this.tasksService.loadTask(taskId);
 			} else {

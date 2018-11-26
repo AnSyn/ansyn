@@ -50,6 +50,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	taskName: string;
 	algName: string;
 	algNames: string[] = [];
+	loading = false;
 	errorMsg = '';
 	MIN_NUM_OF_OVERLAYS = 2;
 
@@ -98,6 +99,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	selectedTask$: Observable<AlgorithmTask> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
 		switchMap((taskId: string) => {
 			if (taskId) {
+				this.loading = true;
 				return this.tasksService.loadTask(taskId);
 			} else {
 				return of(null);
@@ -108,6 +110,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	initCurrentTask$ = this.selectedTask$.pipe(
 		tap((selectedTask: AlgorithmTask) => {
+			this.loading = false;
 			let task: AlgorithmTask;
 			if (selectedTask) {
 				task = selectedTask;

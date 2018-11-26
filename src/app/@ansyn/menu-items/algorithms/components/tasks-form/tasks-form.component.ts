@@ -95,7 +95,6 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		map(([overlays, config]: [IOverlay[], IAlgorithmConfig]) => config.timeEstimationPerOverlayInMinutes * overlays.length)
 	);
 
-	@AutoSubscription
 	selectedTask$: Observable<AlgorithmTask> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
 		switchMap((taskId: string) => {
 			if (taskId) {

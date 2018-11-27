@@ -49,7 +49,10 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 
 	modal: ITaskModalData;
 
-	constructor(protected store$: Store<ITasksState>, protected tasksEffects: TasksEffects) {
+	constructor(
+		protected store$: Store<ITasksState>,
+		protected tasksEffects: TasksEffects
+	) {
 		this.tasksEffects.onAddTask$.subscribe(this.onTasksAdded.bind(this));
 	}
 

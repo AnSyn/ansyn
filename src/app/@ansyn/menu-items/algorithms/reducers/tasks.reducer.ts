@@ -14,13 +14,15 @@ export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	selectedTaskId: string;
 	currentTask: AlgorithmTask;
 	pageToShow: TasksPageToShow;
+	loading: boolean;
 }
 
 export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITasksState>{
 	drawIndicator: false,
 	selectedTaskId: null,
 	pageToShow: TasksPageToShow.TASKS_TABLE,
-	currentTask: null
+	currentTask: null,
+	loading: false
 });
 
 export const tasksFeatureKey = 'tasks';
@@ -39,6 +41,10 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 
 		case TasksActionTypes.SET_PAGE_TO_SHOW: {
 			return { ...state, pageToShow: action.payload };
+		}
+
+		case TasksActionTypes.SET_LOADING_FLAG: {
+			return { ...state, loading: action.payload };
 		}
 
 		case TasksActionTypes.SET_CURRENT_TASK: {
@@ -100,6 +106,7 @@ export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>create
 
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTasksPageToShow: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.pageToShow);
+export const selectAlgorithmTasksLoadingFlag: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.loading);
 export const selectAlgorithmTasksSelectedTaskId: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTaskId);
 export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => {
 	return !algorithmsState.selectedTaskId ?

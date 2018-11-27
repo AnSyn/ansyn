@@ -7,7 +7,7 @@ export enum TasksActionTypes {
 	SET_DRAW_INDICATOR = '[Algorithms] Set draw indicator',
 
 	LOAD_TASKS = '[Algorithms] Load tasks',
-	SET_LOADING_TASKS_FLAG = '[Algorithms] Set loading tasks flag',
+	SET_LOADING_FLAG = '[Algorithms] Set loading tasks flag',
 
 	DELETE_TASK = '[Algorithms] Delete task',
 	ADD_TASKS = '[Algorithms] ADD_TASKS',
@@ -44,8 +44,8 @@ export class LoadTasksAction implements Action {
 	}
 }
 
-export class SetLoadingTasksFlagAction implements Action {
-	type = TasksActionTypes.SET_LOADING_TASKS_FLAG;
+export class SetTasksLoadingFlagAction implements Action {
+	type = TasksActionTypes.SET_LOADING_FLAG;
 
 	constructor(public payload: boolean) {
 	}

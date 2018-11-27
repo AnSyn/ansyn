@@ -11,11 +11,12 @@ import {
 	AddTasksAction,
 	DeleteTaskAction,
 	RunTaskAction,
-	SelectTaskAction,
+	SelectTaskAction, SetTasksLoadingFlagAction,
 	TasksActionTypes
 } from '../actions/tasks.actions';
 import { AlgorithmTask } from '../models/tasks.model';
 import { TasksRemoteService } from '../services/tasks-remote.service';
+import { tap } from 'rxjs/internal/operators';
 
 @Injectable()
 export class TasksEffects {
@@ -24,8 +25,14 @@ export class TasksEffects {
 	loadTasks$: Observable<AddTasksAction | {}> = this.actions$.pipe(
 		ofType(TasksActionTypes.LOAD_TASKS),
 		withLatestFrom(this.store.select(selectTaskTotal), (action, total) => total),
+		tap(() => {
+			this.store.dispatch(new SetTasksLoadingFlagAction(true))
+		}),
 		switchMap((total: number) => {
 			return this.tasksService.loadTasks(total).pipe(
+				tap(() => {
+					this.store.dispatch(new SetTasksLoadingFlagAction(false))
+				}),
 				map(tasks => new AddTasksAction(tasks))
 			);
 		}),

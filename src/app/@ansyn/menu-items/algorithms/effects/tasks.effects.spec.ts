@@ -64,7 +64,14 @@ describe('TasksEffects', () => {
 			providers: [
 				TasksEffects,
 				StorageService,
-				TasksService,
+				{
+					provide: TasksService,
+					useValue: {
+						loadTasks: () => {},
+						createTask: () => {},
+						removeTask: () => {}
+					}
+				},
 				DataLayersService,
 				{ provide: layersConfig, useValue: {} },
 				{
@@ -123,7 +130,7 @@ describe('TasksEffects', () => {
 		let newTaskPayload: AlgorithmTask = { ...taskMock, id: 'newTaskId', name: 'newTaskName' };
 		spyOn(tasksService, 'createTask').and.callFake(() => of(newTaskPayload));
 		actions = hot('--a--', { a: new AddTaskAction(newTaskPayload) });
-		const expectedResults = cold('--a--', { a: new SelectTaskAction(newTaskPayload) });
+		const expectedResults = cold('--a--', { a: new SelectTaskAction('newTaskId') });
 		expect(tasksEffects.onAddTask$).toBeObservable(expectedResults);
 
 	});

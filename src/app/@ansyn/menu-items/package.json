@@ -17,6 +17,7 @@
 		"@ansyn/menu": "0.2.85",
 		"@ansyn/context": "0.2.85",
 		"@ansyn/map-facade": "0.2.85",
+		"@ansyn/overlays": "0.2.85",
 		"@ngrx/entity": "^6.0.1",
 		"@ngx-translate/core": "^10.0.2",
 		"angular2-uuid": "1.1.1",

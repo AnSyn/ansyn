@@ -16,6 +16,9 @@
       ],
       "@ansyn/map-facade": [
         "src/app/@ansyn/map-facade/public_api"
+      ],
+      "@ansyn/overlays": [
+        "src/app/@ansyn/overlays/public_api"
       ]
     }
   }

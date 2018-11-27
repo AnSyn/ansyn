@@ -11,7 +11,7 @@ import { combineLatest, Observable, of } from 'rxjs/index';
 import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService, IOverlay, IStoredEntity, StorageService } from '@ansyn/core';
 import { switchMap } from 'rxjs/internal/operators';
-import { IOverlayByIdMetaData, OverlaysService } from '../../../overlays/services/overlays.service';
+import { IOverlayByIdMetaData, OverlaysService } from '@ansyn/overlays';
 
 @Injectable()
 export class TasksService {

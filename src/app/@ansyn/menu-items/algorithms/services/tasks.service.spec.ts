@@ -2,6 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { TasksService } from './tasks.service';
 import { ErrorHandlerService, StorageService } from '@ansyn/core';
+import { OverlaysService } from '@ansyn/overlays';
 
 describe('TasksService', () => {
 	beforeEach(() => {
@@ -10,6 +11,7 @@ describe('TasksService', () => {
 				TasksService,
 				{ provide: 'algorithmsConfig', useValue: {}},
 				{ provide: StorageService, useValue: {}},
+				{ provide: OverlaysService, useValue: {}},
 				{ provide: ErrorHandlerService, useValue: {}}
 			]
 		});

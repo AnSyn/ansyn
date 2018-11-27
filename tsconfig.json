@@ -21,7 +21,7 @@
       "@ansyn/plugins": [
         "src/app/@ansyn/plugins/public_api"
       ],
-      "@ansyn/overlays": [
+      "@ansyn/c": [
         "src/app/@ansyn/overlays/public_api"
       ],
       "@ansyn/context": [

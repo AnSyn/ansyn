@@ -16,6 +16,9 @@
       ],
       "@ansyn/map-facade": [
         "dist/ansyn/map-facade"
+      ],
+      "@ansyn/overlays": [
+        "dist/ansyn/overlays"
       ]
     },
     "outDir": "../../../out-tsc/lib",

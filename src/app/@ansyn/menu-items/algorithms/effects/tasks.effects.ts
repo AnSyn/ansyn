@@ -4,55 +4,61 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { ITasksState, selectCurrentAlgorithmTask, selectTaskTotal } from '../reducers/tasks.reducer';
 import { ErrorHandlerService } from '@ansyn/core';
-import { map, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { TasksService } from '../services/tasks.service';
 import {
 	AddTaskAction,
 	AddTasksAction,
 	DeleteTaskAction,
+	LoadTasksFinishedAction,
 	RunTaskAction,
-	SelectTaskAction, SetTasksLoadingFlagAction,
+	RunTaskFinishedAction,
+	SelectTaskAction,
 	TasksActionTypes
 } from '../actions/tasks.actions';
 import { AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import { TasksRemoteService } from '../services/tasks-remote.service';
-import { tap } from 'rxjs/internal/operators';
 
 @Injectable()
 export class TasksEffects {
 
 	@Effect()
-	loadTasks$: Observable<AddTasksAction | {}> = this.actions$.pipe(
+	loadTasks$: Observable<LoadTasksFinishedAction> = this.actions$.pipe(
 		ofType(TasksActionTypes.LOAD_TASKS),
 		withLatestFrom(this.store.select(selectTaskTotal), (action, total) => total),
-		tap(() => {
-			this.store.dispatch(new SetTasksLoadingFlagAction(true))
-		}),
 		switchMap((total: number) => {
 			return this.tasksService.loadTasks(total).pipe(
-				tap(() => {
-					this.store.dispatch(new SetTasksLoadingFlagAction(false))
-				}),
-				map(tasks => new AddTasksAction(tasks))
+				map(tasks => new LoadTasksFinishedAction(tasks))
 			);
-		}),
-		share());
+		})
+	);
 
 	@Effect()
-	onRunTask$: Observable<AddTaskAction> = this.actions$.pipe(
+	onLoadTasksFinished$: Observable<AddTasksAction> = this.actions$.pipe(
+		ofType(TasksActionTypes.LOAD_TASKS_FINISHED),
+		map(({ payload }: LoadTasksFinishedAction) => new AddTasksAction(payload))
+	);
+
+	@Effect()
+	onRunTask$: Observable<RunTaskFinishedAction> = this.actions$.pipe(
 		ofType<RunTaskAction>(TasksActionTypes.RUN_TASK),
 		withLatestFrom(this.store.select(selectCurrentAlgorithmTask)),
 		switchMap(([action, task]: [TasksActionTypes, AlgorithmTask]) => (
 			this.tasksRemoteService.runTask(task).pipe(
-				map(() => task)
+				map(() => new RunTaskFinishedAction(task))
 			)
-		)),
+		))
+	);
+
+	@Effect()
+	onRunTaskFinished$: Observable<AddTaskAction> = this.actions$.pipe(
+		ofType<RunTaskFinishedAction>(TasksActionTypes.RUN_TASK_FINISHED),
+		map(({ payload }: RunTaskFinishedAction) => payload),
 		map((task: AlgorithmTask) => {
-				task.runTime = new Date();
-				task.status = AlgorithmTaskStatus.SENT;
-				return new AddTaskAction(task);
-			}
-		)
+			task.runTime = new Date();
+			task.status = AlgorithmTaskStatus.SENT;
+			return new AddTaskAction(task);
+		})
 	);
 
 	@Effect()

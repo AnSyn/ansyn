@@ -16,7 +16,7 @@ import {
 	AddTaskAction,
 	AddTasksAction,
 	DeleteTaskAction,
-	LoadTasksAction,
+	LoadTasksAction, LoadTasksFinishedAction,
 	SelectTaskAction
 } from '../actions/tasks.actions';
 import { TasksRemoteService } from '../services/tasks-remote.service';
@@ -115,15 +115,25 @@ describe('TasksEffects', () => {
 		expect(tasksEffects).toBeDefined();
 	});
 
-	it('loadTasks$ should call tasksService.loadTasks with task lastId from state, and return LoadTasksSuccessAction', () => {
+	it('loadTasks$ should call tasksService.loadTasks with task lastId from state, and return LoadTasksFinishedAction', () => {
 		let loadedTasks: AlgorithmTask[] = [{ ...taskMock, id: 'loadedTask1' }, {
 			...taskMock,
 			id: 'loadedTask2'
 		}, { ...taskMock, id: 'loadedTask1' }];
 		spyOn(tasksService, 'loadTasks').and.callFake(() => of(loadedTasks));
 		actions = hot('--a--', { a: new LoadTasksAction() });
-		const expectedResults = cold('--b--', { b: new AddTasksAction(loadedTasks) });
+		const expectedResults = cold('--b--', { b: new LoadTasksFinishedAction(loadedTasks) });
 		expect(tasksEffects.loadTasks$).toBeObservable(expectedResults);
+	});
+
+	it('onLoadTasksFinished$ should return AddTasksAction', () => {
+		let loadedTasks: AlgorithmTask[] = [{ ...taskMock, id: 'loadedTask1' }, {
+			...taskMock,
+			id: 'loadedTask2'
+		}, { ...taskMock, id: 'loadedTask1' }];
+		actions = hot('--a--', { a: new LoadTasksFinishedAction(loadedTasks) });
+		const expectedResults = cold('--b--', { b: new AddTasksAction(loadedTasks) });
+		expect(tasksEffects.onLoadTasksFinished$).toBeObservable(expectedResults);
 	});
 
 	it('onAddTask$ should call tasksService.createTask with action.payload(new task), and return AddTaskSuccessAction', () => {

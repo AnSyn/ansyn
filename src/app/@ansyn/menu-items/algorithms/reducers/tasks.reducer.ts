@@ -1,7 +1,7 @@
 import { ITasksState } from './tasks.reducer';
 import { TasksActions, TasksActionTypes } from '../actions/tasks.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { AlgorithmTask, AlgorithmTaskPreview, TasksPageToShow } from '../models/tasks.model';
+import { AlgorithmsTaskState, AlgorithmTask, AlgorithmTaskPreview, TasksPageToShow } from '../models/tasks.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { UUID } from 'angular2-uuid';
@@ -43,8 +43,12 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 			return { ...state, pageToShow: action.payload };
 		}
 
-		case TasksActionTypes.SET_LOADING_FLAG: {
-			return { ...state, loading: action.payload };
+		case TasksActionTypes.LOAD_TASKS: {
+			return { ...state, loading: true };
+		}
+
+		case TasksActionTypes.LOAD_TASKS_FINISHED: {
+			return { ...state, loading: false };
 		}
 
 		case TasksActionTypes.SET_CURRENT_TASK: {
@@ -115,10 +119,11 @@ export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = crea
 });
 
 export const selectCurrentAlgorithmTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask);
-export const selectCurrentAlgorithmTaskStatus: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.status);
-export const selectCurrentAlgorithmTaskName: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.name);
-export const selectCurrentAlgorithmTaskAlgorithmName: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.algorithmName);
-export const selectCurrentAlgorithmTaskOverlays: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.state && algorithmsState.currentTask.state.overlays || []);
-export const selectCurrentAlgorithmTaskMasterOverlay: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.state && algorithmsState.currentTask.state.masterOverlay);
-export const selectCurrentAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.currentTask && algorithmsState.currentTask.state && algorithmsState.currentTask.state.region);
+export const selectCurrentAlgorithmTaskStatus: MemoizedSelector<any, any> = createSelector(selectCurrentAlgorithmTask, (currentTask: AlgorithmTask) => currentTask && currentTask.status);
+export const selectCurrentAlgorithmTaskName: MemoizedSelector<any, any> = createSelector(selectCurrentAlgorithmTask, (currentTask: AlgorithmTask) => currentTask && currentTask.name);
+export const selectCurrentAlgorithmTaskAlgorithmName: MemoizedSelector<any, any> = createSelector(selectCurrentAlgorithmTask, (currentTask: AlgorithmTask) => currentTask && currentTask.algorithmName);
+export const selectCurrentAlgorithmTaskState: MemoizedSelector<any, any> = createSelector(selectCurrentAlgorithmTask, (currentTask: AlgorithmTask) => currentTask && currentTask.state);
+export const selectCurrentAlgorithmTaskOverlays: MemoizedSelector<any, any> = createSelector(selectCurrentAlgorithmTaskState, (taskState: AlgorithmsTaskState) => taskState && taskState.overlays || []);
+export const selectCurrentAlgorithmTaskMasterOverlay: MemoizedSelector<any, any> = createSelector(selectCurrentAlgorithmTaskState, (taskState: AlgorithmsTaskState) => taskState && taskState.masterOverlay);
+export const selectCurrentAlgorithmTaskRegion: MemoizedSelector<any, any> = createSelector(selectCurrentAlgorithmTaskState, (taskState: AlgorithmsTaskState) => taskState && taskState.region);
 

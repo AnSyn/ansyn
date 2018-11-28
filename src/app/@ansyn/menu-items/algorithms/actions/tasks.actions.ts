@@ -7,12 +7,14 @@ export enum TasksActionTypes {
 	SET_DRAW_INDICATOR = '[Algorithms] Set draw indicator',
 
 	LOAD_TASKS = '[Algorithms] Load tasks',
-	SET_LOADING_FLAG = '[Algorithms] Set loading tasks flag',
+	LOAD_TASKS_FINISHED = '[Algorithms] Load tasks finished',
+
+	RUN_TASK = '[Algorithms] RUN_TASK',
+	RUN_TASK_FINISHED = '[Algorithms] RUN_TASK_FINISHED',
 
 	DELETE_TASK = '[Algorithms] Delete task',
 	ADD_TASKS = '[Algorithms] ADD_TASKS',
 	ADD_TASK = '[Algorithms] ADD_TASK',
-	RUN_TASK = '[Algorithms] RUN_TASK',
 	SELECT_TASK = '[Algorithms] SELECT_TASK',
 
 	SET_PAGE_TO_SHOW = '[Algorithms] SET_PAGE_TO_SHOW',
@@ -44,10 +46,10 @@ export class LoadTasksAction implements Action {
 	}
 }
 
-export class SetTasksLoadingFlagAction implements Action {
-	type = TasksActionTypes.SET_LOADING_FLAG;
+export class LoadTasksFinishedAction implements Action {
+	type = TasksActionTypes.LOAD_TASKS_FINISHED;
 
-	constructor(public payload: boolean) {
+	constructor(public payload: AlgorithmTask[]) {
 	}
 }
 
@@ -69,6 +71,13 @@ export class RunTaskAction implements Action {
 	type = TasksActionTypes.RUN_TASK;
 
 	constructor() {
+	}
+}
+
+export class RunTaskFinishedAction implements Action {
+	type = TasksActionTypes.RUN_TASK_FINISHED;
+
+	constructor(public payload: AlgorithmTask) {
 	}
 }
 

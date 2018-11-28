@@ -20,14 +20,17 @@ export interface IAlgorithmsConfig {
 
 export type AlgorithmTaskWhichOverlays = 'case_overlays' | 'favorite_overlays' | 'displayed_overlays';
 
-export type AlgorithmTaskStatus = 'New' | 'Sent';
+export enum AlgorithmTaskStatus {
+	NEW = 'New',
+	SENT = 'Sent'
+}
 
 export class AlgorithmTaskPreview implements IEntity{
 	id: string;
 	creationTime: Date;
 	name: string;
 	algorithmName: string ;
-	status: AlgorithmTaskStatus = 'New';
+	status: AlgorithmTaskStatus = AlgorithmTaskStatus.NEW;
 	runTime: Date;
 }
 

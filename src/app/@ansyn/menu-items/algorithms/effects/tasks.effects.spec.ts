@@ -11,7 +11,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
-import { AlgorithmsConfig, AlgorithmTask } from '../models/tasks.model';
+import { AlgorithmsConfig, AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import {
 	AddTaskAction,
 	AddTasksAction,
@@ -143,7 +143,7 @@ describe('TasksEffects', () => {
 			state: null,
 			creationTime: new Date(),
 			algorithmName: 'ttt',
-			status: 'Sent',
+			status: AlgorithmTaskStatus.SENT,
 			runTime: new Date()
 		};
 		store.dispatch(new AddTaskAction(taskToDelete));

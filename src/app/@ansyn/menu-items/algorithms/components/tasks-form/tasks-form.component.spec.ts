@@ -16,7 +16,7 @@ import { TasksService } from '../../services/tasks.service';
 import { EffectsModule } from '@ngrx/effects';
 import { TasksRemoteService } from '../../services/tasks-remote.service';
 import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
-import { AlgorithmTask } from '../../models/tasks.model';
+import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
 
 describe('TasksFormComponent', () => {
@@ -92,7 +92,7 @@ describe('TasksFormComponent', () => {
 				runTime: null,
 				name: '21',
 				algorithmName: 'alg_1',
-				status: 'New',
+				status: AlgorithmTaskStatus.NEW,
 				state: {
 					overlays: [],
 					masterOverlay: overlays[0],

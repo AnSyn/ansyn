@@ -14,7 +14,7 @@ import {
 	SelectTaskAction, SetTasksLoadingFlagAction,
 	TasksActionTypes
 } from '../actions/tasks.actions';
-import { AlgorithmTask } from '../models/tasks.model';
+import { AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import { TasksRemoteService } from '../services/tasks-remote.service';
 import { tap } from 'rxjs/internal/operators';
 
@@ -49,7 +49,7 @@ export class TasksEffects {
 		)),
 		map((task: AlgorithmTask) => {
 				task.runTime = new Date();
-				task.status = 'Sent';
+				task.status = AlgorithmTaskStatus.SENT;
 				return new AddTaskAction(task);
 			}
 		)

@@ -5,14 +5,14 @@ import { combineLatest, Observable, of } from 'rxjs/index';
 import { Store } from '@ngrx/store';
 import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { mergeMap, switchMap, tap } from 'rxjs/internal/operators';
+import { switchMap, tap } from 'rxjs/internal/operators';
 import {
 	AlgorithmTask,
 	AlgorithmTaskStatus,
 	AlgorithmTaskWhichOverlays,
 	IAlgorithmConfig
 } from '../../models/tasks.model';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import {
 	RunTaskAction,
 	SetCurrentTask,
@@ -31,7 +31,7 @@ import {
 	selectCurrentAlgorithmTaskRegion,
 	selectCurrentAlgorithmTaskStatus
 } from '../../reducers/tasks.reducer';
-import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 
 @Component({
@@ -145,19 +145,18 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	getMasterOverlayForNewTask$: Observable<IOverlay> = this.isNewTask$.pipe(
-		filter(Boolean),
-		mergeMap(() => this.store$.select(mapStateSelector)),
-		filter(Boolean),
-		map(MapFacadeService.activeMap),
-		filter(Boolean),
-		map((map: ICaseMapState) => map.data.overlay),
-		mergeMap((overlay: IOverlay) => combineLatest(
-			of(overlay),
-			this.store$.select(selectCurrentAlgorithmTaskOverlays)
-			)),
-		distinctUntilChanged(),
-		map(([activeOverlay, overlays]: [IOverlay, IOverlay[]]) => {
+	getMasterOverlayForNewTask$: Observable<any> = combineLatest(
+		this.isNewTask$,
+		this.store$.select(selectActiveMapId),
+		this.store$.select(selectMapsList),
+		this.store$.select(selectCurrentAlgorithmTaskOverlays)
+	).pipe(
+		filter(([isNew, activeMapId, mapsList, overlays]: [boolean, string, ICaseMapState[], IOverlay[]]) => isNew),
+		map(([isNew, activeMapId, mapsList, overlays]: [boolean, string, ICaseMapState[], IOverlay[]]) => {
+			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
+			return [activeMap.data.overlay, overlays]
+		}),
+		tap(([activeOverlay, overlays]: [IOverlay, IOverlay[]]) => {
 			if (!activeOverlay || overlays.find(({ id }) => id === activeOverlay.id)) {
 				this.store$.dispatch(new SetCurrentTaskMasterOverlay(activeOverlay));
 				return activeOverlay;

@@ -15,6 +15,7 @@ export interface ITasksState extends EntityState<AlgorithmTaskPreview> {
 	currentTask: AlgorithmTask;
 	pageToShow: TasksPageToShow;
 	loading: boolean;
+	loaded: boolean;
 }
 
 export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITasksState>{
@@ -22,7 +23,8 @@ export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITas
 	selectedTaskId: null,
 	pageToShow: TasksPageToShow.TASKS_TABLE,
 	currentTask: null,
-	loading: false
+	loading: false,
+	loaded: false
 });
 
 export const tasksFeatureKey = 'tasks';
@@ -44,11 +46,11 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 		}
 
 		case TasksActionTypes.LOAD_TASKS: {
-			return { ...state, loading: true };
+			return { ...state, loading: !state.loaded };
 		}
 
 		case TasksActionTypes.LOAD_TASKS_FINISHED: {
-			return { ...state, loading: false };
+			return { ...state, loading: false, loaded: true };
 		}
 
 		case TasksActionTypes.SET_CURRENT_TASK: {
@@ -114,7 +116,8 @@ export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>create
 
 export const selectAlgorithmTaskDrawIndicator: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.drawIndicator);
 export const selectAlgorithmTasksPageToShow: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.pageToShow);
-export const selectAlgorithmTasksLoadingFlag: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.loading);
+export const selectAlgorithmTasksAreLoading: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.loading);
+export const selectAlgorithmTasksAreLoaded: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.loaded);
 export const selectAlgorithmTasksSelectedTaskId: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => algorithmsState.selectedTaskId);
 export const selectAlgorithmTasksSelectedTask: MemoizedSelector<any, any> = createSelector(tasksStateSelector, (algorithmsState: ITasksState) => {
 	return !algorithmsState.selectedTaskId ?

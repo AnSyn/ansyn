@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
-import { ITasksState, selectCurrentAlgorithmTask, selectTaskTotal } from '../reducers/tasks.reducer';
+import {
+	ITasksState,
+	selectAlgorithmTasksAreLoaded,
+	selectCurrentAlgorithmTask,
+	selectTaskTotal
+} from '../reducers/tasks.reducer';
 import { ErrorHandlerService } from '@ansyn/core';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { TasksService } from '../services/tasks.service';
@@ -18,6 +23,7 @@ import {
 } from '../actions/tasks.actions';
 import { AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import { TasksRemoteService } from '../services/tasks-remote.service';
+import { filter } from 'rxjs/internal/operators';
 
 @Injectable()
 export class TasksEffects {
@@ -25,7 +31,9 @@ export class TasksEffects {
 	@Effect()
 	loadTasks$: Observable<LoadTasksFinishedAction> = this.actions$.pipe(
 		ofType(TasksActionTypes.LOAD_TASKS),
-		withLatestFrom(this.store.select(selectTaskTotal), (action, total) => total),
+		withLatestFrom(this.store.select(selectAlgorithmTasksAreLoaded), (action, loaded) => loaded),
+		filter(loaded => !loaded),
+		withLatestFrom(this.store.select(selectTaskTotal), (loaded, total) => total),
 		switchMap((total: number) => {
 			return this.tasksService.loadTasks(total).pipe(
 				map(tasks => new LoadTasksFinishedAction(tasks))

@@ -13,7 +13,7 @@ import {
 	LoadTasksFinishedAction,
 	RunTaskAction,
 	RunTaskFinishedAction,
-	SelectTaskAction,
+	SelectTaskAction, SetCurrentTaskStatus,
 	TasksActionTypes
 } from '../actions/tasks.actions';
 import { AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
@@ -51,13 +51,14 @@ export class TasksEffects {
 	);
 
 	@Effect()
-	onRunTaskFinished$: Observable<AddTaskAction> = this.actions$.pipe(
+	onRunTaskFinished$: Observable<any> = this.actions$.pipe(
 		ofType<RunTaskFinishedAction>(TasksActionTypes.RUN_TASK_FINISHED),
 		map(({ payload }: RunTaskFinishedAction) => payload),
-		map((task: AlgorithmTask) => {
-			task.runTime = new Date();
-			task.status = AlgorithmTaskStatus.SENT;
-			return new AddTaskAction(task);
+		switchMap((task: AlgorithmTask) => {
+			return [
+				new SetCurrentTaskStatus(AlgorithmTaskStatus.SENT),
+				new AddTaskAction({ ...task, status: AlgorithmTaskStatus.SENT, runTime: new Date() })
+			];
 		})
 	);
 

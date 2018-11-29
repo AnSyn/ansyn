@@ -63,6 +63,10 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 			return { ...state, currentTask: { ...state.currentTask, name: action.payload } };
 		}
 
+		case TasksActionTypes.SET_CURRENT_TASK_STATUS: {
+			return { ...state, currentTask: { ...state.currentTask, status: action.payload } };
+		}
+
 		case TasksActionTypes.SET_CURRENT_TASK_REGION: {
 			return {
 				...state,

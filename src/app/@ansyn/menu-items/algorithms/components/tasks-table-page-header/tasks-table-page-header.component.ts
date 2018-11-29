@@ -1,4 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ITasksState } from '../../reducers/tasks.reducer';
+import { Store } from '@ngrx/store';
+import { SelectTaskAction, SetTasksPageToShow } from '../../actions/tasks.actions';
+import { TasksPageToShow } from '../../models/tasks.model';
 
 @Component({
 	selector: 'ansyn-tasks-table-page-header',
@@ -6,12 +10,16 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 	styleUrls: ['./tasks-table-page-header.component.less']
 })
 export class TasksTablePageHeaderComponent implements OnInit {
-	@Output() goto = new EventEmitter<string>();
 
-	constructor() {
+	constructor(protected store$: Store<ITasksState>) {
 	}
 
 	ngOnInit() {
+	}
+
+	onNewTask() {
+		this.store$.dispatch(new SelectTaskAction(null));
+		this.store$.dispatch(new SetTasksPageToShow(TasksPageToShow.TASK_FORM));
 	}
 
 }

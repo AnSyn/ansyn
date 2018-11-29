@@ -4,11 +4,14 @@ import {
 	AlgorithmsTaskState,
 	AlgorithmTask,
 	AlgorithmTaskPreview,
+	DilutedAlgorithmsTaskState,
 	IAlgorithmsConfig
 } from '../models/tasks.model';
-import { Observable } from 'rxjs/index';
+import { combineLatest, Observable, of } from 'rxjs/index';
 import { catchError, map } from 'rxjs/operators';
-import { ErrorHandlerService, IStoredEntity, StorageService } from '@ansyn/core';
+import { ErrorHandlerService, IOverlay, IStoredEntity, StorageService } from '@ansyn/core';
+import { switchMap } from 'rxjs/internal/operators';
+import { IOverlayByIdMetaData, OverlaysService } from '@ansyn/overlays';
 
 @Injectable()
 export class TasksService {
@@ -16,7 +19,8 @@ export class TasksService {
 	constructor(
 		@Inject(AlgorithmsConfig) public config: IAlgorithmsConfig,
 		protected storageService: StorageService,
-		public errorHandlerService: ErrorHandlerService
+		public errorHandlerService: ErrorHandlerService,
+		protected overlaysService: OverlaysService
 	) {
 	}
 
@@ -41,7 +45,7 @@ export class TasksService {
 			id: taskValue.id,
 			creationTime: taskValue.creationTime,
 			name: taskValue.name,
-			type: taskValue.type,
+			algorithmName: taskValue.algorithmName,
 			runTime: taskValue.runTime,
 			status: taskValue.status
 		};
@@ -49,13 +53,17 @@ export class TasksService {
 		return taskPreview;
 	}
 
-	getEntityData(state: AlgorithmsTaskState): Partial<AlgorithmsTaskState> {
+
+	getEntityData(state: AlgorithmsTaskState): DilutedAlgorithmsTaskState {
+		const extractDiluted = ({ id, sourceType = '' }) => ({ id, sourceType });
 		return {
-			region: state.region
+			region: state.region,
+			overlays: state.overlays.map(extractDiluted),
+			masterOverlay: extractDiluted(state.masterOverlay)
 		}
 	}
 
-	convertToStoredEntity(task: AlgorithmTask): IStoredEntity<AlgorithmTaskPreview, Partial<AlgorithmsTaskState>> {
+	convertToStoredEntity(task: AlgorithmTask): IStoredEntity<AlgorithmTaskPreview, DilutedAlgorithmsTaskState> {
 		return {
 			preview: this.getEntityPreview(task),
 			data: this.getEntityData(task.state)
@@ -74,6 +82,33 @@ export class TasksService {
 		return this.storageService.delete(this.config.schema, selectedTaskId).pipe(
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, `Task cannot be deleted from storage`, null))
 		);
+	}
+
+	loadTask(selectedTaskId: string): Observable<AlgorithmTask> {
+		return this.storageService.get<AlgorithmTaskPreview, AlgorithmsTaskState>(this.config.schema, selectedTaskId)
+			.pipe(
+				switchMap((storedEntity: IStoredEntity<AlgorithmTaskPreview, DilutedAlgorithmsTaskState>) => combineLatest(
+					of(storedEntity),
+					this.overlaysService.getOverlaysById(<IOverlayByIdMetaData[]>storedEntity.data.overlays)
+				)),
+				map(([storedEntity, overlays]: [IStoredEntity<AlgorithmTaskPreview, DilutedAlgorithmsTaskState>, IOverlay[]]) => {
+					const taskState: AlgorithmsTaskState = {
+						region: storedEntity.data.region,
+						overlays,
+						masterOverlay: overlays.find(({ id }) => id === storedEntity.data.masterOverlay.id)
+					};
+					return this.parseTask(<AlgorithmTask>{ ...storedEntity.preview, state: taskState })
+				}),
+				catchError(err => this.errorHandlerService.httpErrorHandle<AlgorithmTask>(err, 'Error loading task from storage', null))
+			)
+	}
+
+	parseTask(taskValue: AlgorithmTask): AlgorithmTask {
+		return {
+			...taskValue,
+			creationTime: new Date(taskValue.creationTime),
+			runTime: new Date(taskValue.runTime)
+		};
 	}
 
 }

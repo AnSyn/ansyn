@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="tasks-table-body-col">
-					{{ entities[id].type | translate}}
+					{{ entities[id].algorithmName | translate}}
 				</div>
 
 				<div class="tasks-table-body-col">
@@ -84,3 +84,5 @@
 							 (submit)="onModalResult($event)"
 	></ansyn-remove-task-modal>
 </ansyn-modal>
+
+<ansyn-loader id="ansyn-tasks-table-loader" [show]="isLoading$ | async"></ansyn-loader>

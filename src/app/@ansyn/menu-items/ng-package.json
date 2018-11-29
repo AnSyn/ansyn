@@ -13,6 +13,7 @@
     "@ansyn/menu",
     "@ansyn/context",
     "@ansyn/map-facade",
+    "@ansyn/overlays",
     "@ngrx/entity",
     "@ngx-translate/core",
     "angular2-uuid",

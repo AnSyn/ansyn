@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TasksTablePageHeaderComponent } from './tasks-table-page-header.component';
+import { StoreModule } from '@ngrx/store';
+import { tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 
 describe('TasksTablePageHeaderComponent', () => {
 	let component: TasksTablePageHeaderComponent;
@@ -8,7 +10,10 @@ describe('TasksTablePageHeaderComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [TasksTablePageHeaderComponent]
+			declarations: [TasksTablePageHeaderComponent],
+			imports: [
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer }),
+			]
 		})
 			.compileComponents();
 	}));

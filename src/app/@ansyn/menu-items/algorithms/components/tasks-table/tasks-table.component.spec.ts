@@ -2,39 +2,58 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { TasksTableComponent } from './tasks-table.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
-import { TasksModule } from '../../tasks.module';
 import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { CoreConfig, LoggerConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig, MockComponent } from '@ansyn/core';
 import { TasksService } from '../../services/tasks.service';
 import { mapFacadeConfig } from '@ansyn/map-facade';
 import { TasksRemoteService } from '../../services/tasks-remote.service';
-import { MENU_ITEMS } from '../../../../menu/menu.module';
 import { MenuConfig } from '@ansyn/menu';
+import { TranslateModule } from '@ngx-translate/core';
+import { TasksEffects } from '../../effects/tasks.effects';
+import { of } from 'rxjs/index';
 
 describe('TasksTableComponent', () => {
 	let component: TasksTableComponent;
 	let fixture: ComponentFixture<TasksTableComponent>;
 	let store: Store<ITasksState>;
 
+	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show'] });
+	const mockModal = MockComponent({ selector: 'ansyn-modal', inputs: ['show'] });
+	const mockRemove = MockComponent({ selector: 'ansyn-remove-task-modal', inputs: ['message'] });
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
+			declarations: [
+				TasksTableComponent,
+				mockLoader,
+				mockModal,
+				mockRemove
+			],
 			imports: [
 				HttpClientModule,
-				TasksModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer }),
+				TranslateModule.forRoot(),
 				RouterTestingModule
 			],
 			providers: [
-				{ provide: TasksService, useValue: { schema: null } },
+				{
+					provide: TasksService, useValue: {
+						loadTasks: () => {}
+					}
+				},
+				{
+					provide: TasksEffects, useValue: {
+						onAddTask$: of(null)
+					}
+				},
 				{ provide: TasksRemoteService, useValue: {} },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: mapFacadeConfig, useValue: {} },
-				{ provide: MENU_ITEMS, useValue: {} },
 				{ provide: MenuConfig, useValue: {} },
 			]
 		})

@@ -110,14 +110,17 @@ export { QueryParamsHelper } from './cases/services/helpers/cases.service.query-
 export { UpdateFilterAction } from './filters/actions/filters.actions';
 export { IEnumFiled } from './filters/models/metadata/enum-filter-metadata';
 export {
-	selectAlgorithmTaskRegion,
-	selectAlgorithmTaskRegionLength,
-	selectAlgorithmTaskDrawIndicator
+	selectCurrentAlgorithmTaskRegion,
+	selectAlgorithmTaskDrawIndicator,
+	selectCurrentAlgorithmTaskAlgorithmName
 } from './algorithms/reducers/tasks.reducer';
 export {
 	SetTaskDrawIndicator,
-	SetTaskRegion
+	SetCurrentTaskRegion,
 } from './algorithms/actions/tasks.actions';
+export {
+	TasksService
+} from './algorithms/services/tasks.service';
 export {
 	TasksRemoteService
 } from './algorithms/services/tasks-remote.service';

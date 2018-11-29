@@ -11,12 +11,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
-import { AlgorithmsConfig, AlgorithmTask } from '../models/tasks.model';
+import { AlgorithmsConfig, AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import {
 	AddTaskAction,
 	AddTasksAction,
 	DeleteTaskAction,
-	LoadTasksAction,
+	LoadTasksAction, LoadTasksFinishedAction,
 	SelectTaskAction
 } from '../actions/tasks.actions';
 import { TasksRemoteService } from '../services/tasks-remote.service';
@@ -64,7 +64,14 @@ describe('TasksEffects', () => {
 			providers: [
 				TasksEffects,
 				StorageService,
-				TasksService,
+				{
+					provide: TasksService,
+					useValue: {
+						loadTasks: () => {},
+						createTask: () => {},
+						removeTask: () => {}
+					}
+				},
 				DataLayersService,
 				{ provide: layersConfig, useValue: {} },
 				{
@@ -108,22 +115,32 @@ describe('TasksEffects', () => {
 		expect(tasksEffects).toBeDefined();
 	});
 
-	it('loadTasks$ should call tasksService.loadTasks with task lastId from state, and return LoadTasksSuccessAction', () => {
+	it('loadTasks$ should call tasksService.loadTasks with task lastId from state, and return LoadTasksFinishedAction', () => {
 		let loadedTasks: AlgorithmTask[] = [{ ...taskMock, id: 'loadedTask1' }, {
 			...taskMock,
 			id: 'loadedTask2'
 		}, { ...taskMock, id: 'loadedTask1' }];
 		spyOn(tasksService, 'loadTasks').and.callFake(() => of(loadedTasks));
 		actions = hot('--a--', { a: new LoadTasksAction() });
-		const expectedResults = cold('--b--', { b: new AddTasksAction(loadedTasks) });
+		const expectedResults = cold('--b--', { b: new LoadTasksFinishedAction(loadedTasks) });
 		expect(tasksEffects.loadTasks$).toBeObservable(expectedResults);
+	});
+
+	it('onLoadTasksFinished$ should return AddTasksAction', () => {
+		let loadedTasks: AlgorithmTask[] = [{ ...taskMock, id: 'loadedTask1' }, {
+			...taskMock,
+			id: 'loadedTask2'
+		}, { ...taskMock, id: 'loadedTask1' }];
+		actions = hot('--a--', { a: new LoadTasksFinishedAction(loadedTasks) });
+		const expectedResults = cold('--b--', { b: new AddTasksAction(loadedTasks) });
+		expect(tasksEffects.onLoadTasksFinished$).toBeObservable(expectedResults);
 	});
 
 	it('onAddTask$ should call tasksService.createTask with action.payload(new task), and return AddTaskSuccessAction', () => {
 		let newTaskPayload: AlgorithmTask = { ...taskMock, id: 'newTaskId', name: 'newTaskName' };
 		spyOn(tasksService, 'createTask').and.callFake(() => of(newTaskPayload));
 		actions = hot('--a--', { a: new AddTaskAction(newTaskPayload) });
-		const expectedResults = cold('--a--', { a: new SelectTaskAction(newTaskPayload) });
+		const expectedResults = cold('--a--', { a: new SelectTaskAction('newTaskId') });
 		expect(tasksEffects.onAddTask$).toBeObservable(expectedResults);
 
 	});
@@ -135,8 +152,8 @@ describe('TasksEffects', () => {
 			name: 'newTaskName',
 			state: null,
 			creationTime: new Date(),
-			type: 'ttt',
-			status: 'Sent',
+			algorithmName: 'ttt',
+			status: AlgorithmTaskStatus.SENT,
 			runTime: new Date()
 		};
 		store.dispatch(new AddTaskAction(taskToDelete));

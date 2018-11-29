@@ -1,23 +1,36 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
-import { AnsynFormsModule, coreFeatureKey, CoreReducer, Overlay } from '@ansyn/core';
+import { Store, StoreModule } from '@ngrx/store';
+import {
+	AnsynFormsModule,
+	coreFeatureKey,
+	CoreReducer,
+	MockComponent,
+	Overlay,
+	SetFavoriteOverlaysAction
+} from '@ansyn/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TasksService } from '../../services/tasks.service';
 import { EffectsModule } from '@ngrx/effects';
 import { TasksRemoteService } from '../../services/tasks-remote.service';
-import { tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
+import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
+import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
+import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
 	let fixture: ComponentFixture<TasksFormComponent>;
+	let store: Store<ITasksState>;
+
+	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show'] });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
-				TasksFormComponent
+				TasksFormComponent,
+				mockLoader
 			],
 			imports: [
 				FormsModule,
@@ -44,11 +57,12 @@ describe('TasksFormComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(() => {
+	beforeEach(inject([Store], (_store: Store<ITasksState>) => {
 		fixture = TestBed.createComponent(TasksFormComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-	});
+		store = _store;
+	}));
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
@@ -56,9 +70,9 @@ describe('TasksFormComponent', () => {
 
 	describe('checkForErrors()', () => {
 		let overlays: Overlay[];
-		beforeEach(() => {
-			spyOn(component, 'showError');
-			overlays = ['a', 'b'].map((id) => new Overlay({ id: id }));
+		let task: AlgorithmTask;
+		beforeEach(fakeAsync(() => {
+			overlays = ['a', 'b'].map((id) => new Overlay({ id: id, sensorName: 'sensor_12' }));
 			component.MIN_NUM_OF_OVERLAYS = 2;
 			component.tasksService.config = {
 				schema: '',
@@ -68,44 +82,51 @@ describe('TasksFormComponent', () => {
 						maxOverlays: 2,
 						timeEstimationPerOverlayInMinutes: 10,
 						regionLengthInMeters: 100,
-						sensorNames: []
+						sensorNames: ['sensor_12']
 					}
 				}
 			};
-			component.task = {
+			task = {
 				id: '21',
 				creationTime: null,
 				runTime: null,
 				name: '21',
-				type: 'alg_1',
-				status: 'Sent',
+				algorithmName: 'alg_1',
+				status: AlgorithmTaskStatus.NEW,
 				state: {
-					overlays: overlays,
+					overlays: [],
 					masterOverlay: overlays[0],
 					region: {
 						type: 'Point'
 					}
 				}
-			}
-		});
+			};
+			store.dispatch(new SetCurrentTask(task));
+			store.dispatch(new SetCurrentTaskAlgorithmName('alg_1'));
+			store.dispatch(new SetFavoriteOverlaysAction(overlays));
+			tick();
+		}));
 		it('should set empty message by default', () => {
-			component.checkForErrors();
-			expect(component.showError).toHaveBeenCalledWith('');
+			expect(component.errorMsg).toEqual('');
 		});
-		it('should check minimum no. of overlays', () => {
+		it('should check minimum no. of overlays', fakeAsync(() => {
+			overlays = [...overlays];
 			overlays.pop();
-			component.checkForErrors();
-			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays 1 should be at least 2`);
-		});
-		it('should check maximum no. of overlays', () => {
-			overlays.push(new Overlay({}));
-			component.checkForErrors();
-			expect(component.showError).toHaveBeenCalledWith(`The number of selected overlays 3 should be at most 2`);
-		});
-		it('should check existence of master overlay', () => {
-			component.task.state.masterOverlay = null;
-			component.checkForErrors();
-			expect(component.showError).toHaveBeenCalledWith('No master overlay selected');
-		});
+			store.dispatch(new SetFavoriteOverlaysAction(overlays));
+			tick();
+			expect(component.errorMsg).toEqual(`The number of selected overlays 1 should be at least 2`);
+		}));
+		it('should check maximum no. of overlays', fakeAsync(() => {
+			overlays = [...overlays];
+			overlays.push(new Overlay({ id: 'c', sensorName: 'sensor_12' }));
+			store.dispatch(new SetFavoriteOverlaysAction(overlays));
+			tick();
+			expect(component.errorMsg).toEqual(`The number of selected overlays 3 should be at most 2`);
+		}));
+		it('should check existence of master overlay', fakeAsync(() => {
+			store.dispatch(new SetCurrentTaskMasterOverlay(null));
+			tick();
+			expect(component.errorMsg).toEqual('No master overlay selected');
+		}));
 	});
 });

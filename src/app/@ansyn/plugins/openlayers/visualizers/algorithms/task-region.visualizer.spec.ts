@@ -3,6 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { TaskRegionVisualizer } from './task-region.visualizer';
+import { TasksService } from '@ansyn/menu-items';
 
 describe('TaskRegionVisualizer', () => {
 	let algorithmTaskRegionVisualizer: TaskRegionVisualizer;
@@ -10,8 +11,15 @@ describe('TaskRegionVisualizer', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [TaskRegionVisualizer, { provide: ProjectionService, useValue: {} }],
-			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([])]
+			providers: [
+				TaskRegionVisualizer,
+				{ provide: ProjectionService, useValue: {} },
+				{ provide: TasksService, useValue: {} }
+			],
+			imports: [
+				StoreModule.forRoot({}),
+				EffectsModule.forRoot([])
+			]
 		});
 	});
 

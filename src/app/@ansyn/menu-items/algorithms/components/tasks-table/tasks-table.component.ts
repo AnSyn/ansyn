@@ -1,20 +1,20 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
+import { DeleteTaskAction, LoadTasksAction, SelectTaskAction, SetTasksPageToShow } from '../../actions/tasks.actions';
 import { getTimeFormat } from '@ansyn/core';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
 import {
-	ITasksState,
-	selectAlgorithmTasksSelectedTask,
+	ITasksState, selectAlgorithmTasksLoadingFlag,
+	selectAlgorithmTasksSelectedTaskId,
 	selectTaskEntities,
 	selectTasksIds
 } from '../../reducers/tasks.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { map, tap } from 'rxjs/internal/operators';
+import { tap } from 'rxjs/internal/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { AlgorithmTask, AlgorithmTaskPreview, ITaskModalData } from '../../models/tasks.model';
+import { AlgorithmTaskPreview, ITaskModalData, TasksPageToShow } from '../../models/tasks.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -38,9 +38,10 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	ids$: Observable<string[] | number[]> = this.store$.select(selectTasksIds);
 	entities$: Observable<Dictionary<AlgorithmTaskPreview>> = this.store$.select(selectTaskEntities);
 
+	isLoading$: Observable<boolean> = this.store$.select(selectAlgorithmTasksLoadingFlag);
+
 	@AutoSubscription
-	selectedTaskId$: Observable<string> = this.store$.select(selectAlgorithmTasksSelectedTask).pipe(
-		map((task: AlgorithmTask) => task ? task.id : null),
+	selectedTaskId$: Observable<string> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
 		tap((selectedTaskId) => this.selectedTaskId = selectedTaskId)
 	);
 
@@ -48,7 +49,10 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 
 	modal: ITaskModalData;
 
-	constructor(protected store$: Store<ITasksState>, protected tasksEffects: TasksEffects) {
+	constructor(
+		protected store$: Store<ITasksState>,
+		protected tasksEffects: TasksEffects
+	) {
 		this.tasksEffects.onAddTask$.subscribe(this.onTasksAdded.bind(this));
 	}
 
@@ -86,6 +90,8 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	}
 
 	selectTask(taskId: string): void {
+		this.store$.dispatch(new SelectTaskAction(taskId));
+		this.store$.dispatch(new SetTasksPageToShow(TasksPageToShow.TASK_FORM));
 	}
 
 	formatTime(timeToFormat: Date): string {

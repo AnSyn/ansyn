@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TasksComponent } from './tasks.component';
 import { MockComponent } from '@ansyn/core';
+import { StoreModule } from '@ngrx/store';
+import { tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 
 describe('TasksComponent', () => {
 	let component: TasksComponent;
@@ -16,6 +18,9 @@ describe('TasksComponent', () => {
 				TasksComponent,
 				mockTablePage,
 				mockFormPage
+			],
+			imports: [
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer }),
 			]
 		})
 			.compileComponents();

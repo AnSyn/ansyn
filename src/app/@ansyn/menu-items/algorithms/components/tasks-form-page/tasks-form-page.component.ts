@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-tasks-form-page',
@@ -6,7 +6,6 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 	styleUrls: ['./tasks-form-page.component.less']
 })
 export class TasksFormPageComponent implements OnInit {
-	@Output() goto = new EventEmitter<string>();
 
 	constructor() {
 	}

@@ -4,7 +4,8 @@
 	<div class="big-font wide-underline small-padding-left margin">{{taskStatus}}</div>
 
 	<ansyn-input
-		[(ngModel)]="task.name"
+		[(ngModel)]="taskName"
+		(input)="onTaskNameChange()"
 		required
 		[white]="true"
 		name="name"
@@ -14,8 +15,8 @@
 	></ansyn-input>
 
 	<ansyn-combo-box
-		[(ngModel)]="task.type"
-		(ngModelChange)="onAlgorithmChange()"
+		[(ngModel)]="algName"
+		(ngModelChange)="onAlgorithmNameChange()"
 		required
 		name="algorithm"
 		[color]="'transparent'"
@@ -33,7 +34,7 @@
 
 	<div class=" small-padding-left margin">
 		<span>Pin Location</span>
-		<span class="pin" [class.done]="task.state.region" (click)="startDrawMode()"></span>
+		<span class="pin" [class.done]="currentTaskRegion$ | async" (click)="startDrawMode()"></span>
 	</div>
 
 	<div class="big-font wide-underline margin"></div>
@@ -76,7 +77,7 @@
 		</div>
 	</div>
 
-	<div [class.invisible]="!task?.type">Note: this algorithm is only available for {{algorithmConfig?.maxOverlays}}
+	<div [class.invisible]="!algName">Note: this algorithm is only available for {{algName ? algorithms[algName].maxOverlays : '??'}}
 		overlays</div>
 
 	<div class="big-font wide-underline margin"></div>
@@ -84,10 +85,12 @@
 	<div class="margin">The results will be available for download when the task is completed</div>
 
 	<div class="run-bar margin">
-		<button ansynButton [disabled]="f.invalid || hasError() || !task.state.region">Run Task</button>
-		<div *ngIf="algorithmConfig">Time Estimation: {{timeEstimation}}m</div>
+		<button ansynButton [disabled]="f.invalid || hasError() || !(currentTaskRegion$ | async) || !(isNewTask$ | async)">Run Task</button>
+		<div *ngIf="algName">Time Estimation: {{timeEstimation$ | async}}m</div>
 	</div>
 
 	<div *ngIf="hasError()" class="errors">{{errorMsg}}</div>
 
 </form>
+
+<ansyn-loader id="ansyn-task-form-loader" [show]="loading"></ansyn-loader>

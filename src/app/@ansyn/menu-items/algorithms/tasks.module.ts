@@ -18,12 +18,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { TasksEffects } from './effects/tasks.effects';
 import { RemoveTaskModalComponent } from './components/remove-task-modal/remove-task-modal.component';
 import { TasksRemoteService } from './services/tasks-remote.service';
+import { OverlaysModule } from '@ansyn/overlays';
 
 @NgModule({
 	imports: [
 		CoreModule,
 		MapFacadeModule,
 		MenuModule,
+		OverlaysModule,
 		CommonModule,
 		FormsModule,
 		StoreModule.forFeature(tasksFeatureKey, TasksReducer),

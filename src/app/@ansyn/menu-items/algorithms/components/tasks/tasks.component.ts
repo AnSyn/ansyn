@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { ITasksState, selectAlgorithmTasksPageToShow } from '../../reducers/tasks.reducer';
+import { Store } from '@ngrx/store';
+import { TasksPageToShow } from '../../models/tasks.model';
+import { Observable } from 'rxjs/index';
 
 @Component({
 	selector: 'ansyn-algorithms',
@@ -8,11 +12,12 @@ import { Component } from '@angular/core';
 export class TasksComponent {
 	page = 'table';
 
-	constructor() {
+	pageToShow$: Observable<TasksPageToShow> = this.store$.select(selectAlgorithmTasksPageToShow);
+
+	get TasksPageToShow() {
+		return TasksPageToShow;
 	}
 
-	gotoPage(page: string): void {
-		this.page = page;
+	constructor(protected store$: Store<ITasksState>) {
 	}
-
 }

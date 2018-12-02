@@ -31,10 +31,9 @@ export class TasksEffects {
 	@Effect()
 	loadTasks$: Observable<LoadTasksFinishedAction> = this.actions$.pipe(
 		ofType(TasksActionTypes.LOAD_TASKS),
-		withLatestFrom(this.store.select(selectAlgorithmTasksAreLoaded), (action, loaded) => loaded),
-		filter(loaded => !loaded),
-		withLatestFrom(this.store.select(selectTaskTotal), (loaded, total) => total),
-		switchMap((total: number) => {
+		withLatestFrom(this.store.select(selectAlgorithmTasksAreLoaded), this.store.select(selectTaskTotal)),
+		filter(([action, loaded, total]) => !loaded),
+		switchMap(([action, loaded, total]: [LoadTasksFinishedAction, boolean, number]) => {
 			return this.tasksService.loadTasks(total).pipe(
 				map(tasks => new LoadTasksFinishedAction(tasks))
 			);

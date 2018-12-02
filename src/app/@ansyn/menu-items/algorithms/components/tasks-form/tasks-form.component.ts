@@ -5,7 +5,7 @@ import { combineLatest, Observable, of } from 'rxjs/index';
 import { Store } from '@ngrx/store';
 import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { switchMap, tap } from 'rxjs/internal/operators';
+import { switchMap, take, tap } from 'rxjs/internal/operators';
 import {
 	AlgorithmTask,
 	AlgorithmTaskStatus,
@@ -104,7 +104,8 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			} else {
 				return of(null);
 			}
-		})
+		}),
+		take(1) 
 	);
 
 	@AutoSubscription

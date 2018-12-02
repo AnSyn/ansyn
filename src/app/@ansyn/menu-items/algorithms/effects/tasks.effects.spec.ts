@@ -9,14 +9,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
-import { LayerType } from '../../layers-manager/models/layers.model';
 import { AlgorithmsConfig, AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import {
 	AddTaskAction,
 	AddTasksAction,
 	DeleteTaskAction,
-	LoadTasksAction, LoadTasksFinishedAction,
+	LoadTasksAction,
+	LoadTasksFinishedAction,
 	SelectTaskAction
 } from '../actions/tasks.actions';
 import { TasksRemoteService } from '../services/tasks-remote.service';
@@ -25,7 +24,6 @@ describe('TasksEffects', () => {
 	let tasksEffects: TasksEffects;
 	let tasksService: TasksService;
 	let loggerService: LoggerService;
-	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
 
@@ -67,13 +65,14 @@ describe('TasksEffects', () => {
 				{
 					provide: TasksService,
 					useValue: {
-						loadTasks: () => {},
-						createTask: () => {},
-						removeTask: () => {}
+						loadTasks: () => {
+						},
+						createTask: () => {
+						},
+						removeTask: () => {
+						}
 					}
 				},
-				DataLayersService,
-				{ provide: layersConfig, useValue: {} },
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: () => throwError(null) }
@@ -87,29 +86,13 @@ describe('TasksEffects', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
-		store = _store;
-		let selectLayersState =
-			[
-				{ type: LayerType.annotation }
-			];
-
-
-		spyOn(store, 'select').and.callFake(() => of(selectLayersState));
-	}));
-
-	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
-		dataLayersService = _dataLayersService;
-	}));
-
-	beforeEach(inject([LoggerService], (_loggerService: LoggerService) => {
-		loggerService = _loggerService;
-	}));
-
-	beforeEach(inject([TasksEffects, TasksService], (_tasksEffects: TasksEffects, _tasksService: TasksService) => {
-		tasksEffects = _tasksEffects;
-		tasksService = _tasksService;
-	}));
+	beforeEach(inject([Store, LoggerService, TasksEffects, TasksService],
+		(_store: Store<any>, _loggerService: LoggerService, _tasksEffects: TasksEffects, _tasksService: TasksService) => {
+			store = _store;
+			loggerService = _loggerService;
+			tasksEffects = _tasksEffects;
+			tasksService = _tasksService;
+		}));
 
 	it('should be defined', () => {
 		expect(tasksEffects).toBeDefined();

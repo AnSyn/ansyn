@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { GeometryObject } from 'geojson';
-import { AlgorithmTask, TasksPageToShow } from '../models/tasks.model';
+import { AlgorithmTask, AlgorithmTaskStatus, TasksPageToShow } from '../models/tasks.model';
 import { IOverlay } from '@ansyn/core';
 
 export enum TasksActionTypes {
@@ -21,6 +21,7 @@ export enum TasksActionTypes {
 
 	SET_CURRENT_TASK = '[Algorithms] SET_CURRENT_TASK',
 	SET_CURRENT_TASK_NAME = '[Algorithms] SET_CURRENT_TASK_NAME',
+	SET_CURRENT_TASK_STATUS = '[Algorithms] SET_CURRENT_TASK_STATUS',
 	SET_CURRENT_TASK_ALGORITHM_NAME = '[Algorithms] SET_CURRENT_TASK_ALGORITHM_NAME',
 	SET_CURRENT_TASK_REGION = '[Algorithms] Set region',
 	SET_CURRENT_TASK_OVERLAYS = '[Algorithms] SET_CURRENT_TASK_OVERLAYS',
@@ -113,6 +114,13 @@ export class SetCurrentTaskName implements Action {
 	type = TasksActionTypes.SET_CURRENT_TASK_NAME;
 
 	constructor(public payload: string) {
+	}
+}
+
+export class SetCurrentTaskStatus implements Action {
+	type = TasksActionTypes.SET_CURRENT_TASK_STATUS;
+
+	constructor(public payload: AlgorithmTaskStatus) {
 	}
 }
 

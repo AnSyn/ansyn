@@ -2,9 +2,14 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
-import { ITasksState, selectCurrentAlgorithmTask, selectTaskTotal } from '../reducers/tasks.reducer';
+import {
+	ITasksState,
+	selectAlgorithmTasksAreLoaded,
+	selectCurrentAlgorithmTask,
+	selectTaskTotal
+} from '../reducers/tasks.reducer';
 import { ErrorHandlerService } from '@ansyn/core';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { TasksService } from '../services/tasks.service';
 import {
 	AddTaskAction,
@@ -13,11 +18,12 @@ import {
 	LoadTasksFinishedAction,
 	RunTaskAction,
 	RunTaskFinishedAction,
-	SelectTaskAction,
+	SelectTaskAction, SetCurrentTaskStatus,
 	TasksActionTypes
 } from '../actions/tasks.actions';
 import { AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import { TasksRemoteService } from '../services/tasks-remote.service';
+import { filter } from 'rxjs/internal/operators';
 
 @Injectable()
 export class TasksEffects {
@@ -25,8 +31,9 @@ export class TasksEffects {
 	@Effect()
 	loadTasks$: Observable<LoadTasksFinishedAction> = this.actions$.pipe(
 		ofType(TasksActionTypes.LOAD_TASKS),
-		withLatestFrom(this.store.select(selectTaskTotal), (action, total) => total),
-		switchMap((total: number) => {
+		withLatestFrom(this.store.select(selectAlgorithmTasksAreLoaded), this.store.select(selectTaskTotal)),
+		filter(([action, loaded, total]) => !loaded),
+		mergeMap(([action, loaded, total]: [LoadTasksFinishedAction, boolean, number]) => {
 			return this.tasksService.loadTasks(total).pipe(
 				map(tasks => new LoadTasksFinishedAction(tasks))
 			);
@@ -43,7 +50,7 @@ export class TasksEffects {
 	onRunTask$: Observable<RunTaskFinishedAction> = this.actions$.pipe(
 		ofType<RunTaskAction>(TasksActionTypes.RUN_TASK),
 		withLatestFrom(this.store.select(selectCurrentAlgorithmTask)),
-		switchMap(([action, task]: [TasksActionTypes, AlgorithmTask]) => (
+		mergeMap(([action, task]: [TasksActionTypes, AlgorithmTask]) => (
 			this.tasksRemoteService.runTask(task).pipe(
 				map(() => new RunTaskFinishedAction(task))
 			)
@@ -51,20 +58,21 @@ export class TasksEffects {
 	);
 
 	@Effect()
-	onRunTaskFinished$: Observable<AddTaskAction> = this.actions$.pipe(
+	onRunTaskFinished$: Observable<any> = this.actions$.pipe(
 		ofType<RunTaskFinishedAction>(TasksActionTypes.RUN_TASK_FINISHED),
 		map(({ payload }: RunTaskFinishedAction) => payload),
-		map((task: AlgorithmTask) => {
-			task.runTime = new Date();
-			task.status = AlgorithmTaskStatus.SENT;
-			return new AddTaskAction(task);
+		mergeMap((task: AlgorithmTask) => {
+			return [
+				new SetCurrentTaskStatus(AlgorithmTaskStatus.SENT),
+				new AddTaskAction({ ...task, status: AlgorithmTaskStatus.SENT, runTime: new Date() })
+			];
 		})
 	);
 
 	@Effect()
 	onAddTask$: Observable<SelectTaskAction> = this.actions$.pipe(
 		ofType<AddTaskAction>(TasksActionTypes.ADD_TASK),
-		switchMap((action: AddTaskAction) => this.tasksService.createTask(action.payload)),
+		mergeMap((action: AddTaskAction) => this.tasksService.createTask(action.payload)),
 		map((task: AlgorithmTask) => {
 			return new SelectTaskAction(task.id)
 		})
@@ -73,7 +81,7 @@ export class TasksEffects {
 	@Effect()
 	onDeleteTask$: Observable<SelectTaskAction> = this.actions$.pipe(
 		ofType<DeleteTaskAction>(TasksActionTypes.DELETE_TASK),
-		switchMap((action: DeleteTaskAction) => this.tasksService.removeTask(action.payload)),
+		mergeMap((action: DeleteTaskAction) => this.tasksService.removeTask(action.payload)),
 		map(() => new SelectTaskAction(null))
 	);
 

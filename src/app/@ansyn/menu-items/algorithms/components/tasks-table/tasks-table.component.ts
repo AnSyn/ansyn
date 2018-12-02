@@ -5,7 +5,7 @@ import { getTimeFormat } from '@ansyn/core';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
 import {
-	ITasksState, selectAlgorithmTasksLoadingFlag,
+	ITasksState, selectAlgorithmTasksAreLoading,
 	selectAlgorithmTasksSelectedTaskId,
 	selectTaskEntities,
 	selectTasksIds
@@ -38,7 +38,7 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	ids$: Observable<string[] | number[]> = this.store$.select(selectTasksIds);
 	entities$: Observable<Dictionary<AlgorithmTaskPreview>> = this.store$.select(selectTaskEntities);
 
-	isLoading$: Observable<boolean> = this.store$.select(selectAlgorithmTasksLoadingFlag);
+	isLoading$: Observable<boolean> = this.store$.select(selectAlgorithmTasksAreLoading);
 
 	@AutoSubscription
 	selectedTaskId$: Observable<string> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(

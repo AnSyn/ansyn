@@ -27,8 +27,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
-import { IStatusBarConfig } from '../../../../status-bar/models/statusBar-config.model';
-import { StatusBarConfig } from '@ansyn/status-bar';
+import { StatusBarConfig, IStatusBarConfig } from '@ansyn/status-bar';
 
 const moment = momentNs;
 

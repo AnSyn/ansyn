@@ -27,6 +27,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
+import { IStatusBarConfig } from '../../../../status-bar/models/statusBar-config.model';
+import { StatusBarConfig } from '@ansyn/status-bar';
 
 const moment = momentNs;
 
@@ -67,8 +69,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected http: HttpClient,
-				@Inject(PlanetOverlaysSourceConfig)
-				protected planetOverlaysSourceConfig: IPlanetOverlaySourceConfig,
+				@Inject(PlanetOverlaysSourceConfig) protected planetOverlaysSourceConfig: IPlanetOverlaySourceConfig,
+				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
 				protected loggerService: LoggerService) {
 		super(loggerService);
 
@@ -191,15 +193,20 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const _page_size = `${fetchParams.limit + 1}`;
+		let sensors = Array.isArray(fetchParams.sensors) ? fetchParams.sensors : this.planetOverlaysSourceConfig.itemTypes;
 
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
-			planetFilters.forEach((filter) => {
-				filter.config.push(this.buildDataInputFilter(fetchParams.dataInputFilters))
-			});
+			const parsedDataInput = fetchParams.dataInputFilters.map(({ sensorType }) => sensorType).filter(Boolean);
+			if (fetchParams.dataInputFilters.some(({ sensorType }) => sensorType === 'others')) {
+				const allDataInput = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType);
+				sensors = sensors.filter((sens) => parsedDataInput.includes(sens) || !allDataInput.includes(sens));
+			} else {
+				sensors = parsedDataInput;
+			}
 		}
 
 		const { baseUrl } = this.planetOverlaysSourceConfig;
-		const body = this.buildFilters({ config: planetFilters, sensors: fetchParams.sensors, type: 'OrFilter' });
+		const body = this.buildFilters({ config: planetFilters, sensors, type: 'OrFilter' });
 		const options = { headers: this.httpHeaders, params: { _page_size } };
 		return this.http.post(baseUrl, body, options).pipe(
 			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),

@@ -1,3 +1,4 @@
+export { IStatusBarConfig } from './models/statusBar-config.model';
 export { IComboBoxesProperties } from './models/combo-boxes.model';
 export {
 	statusBarFeatureKey,

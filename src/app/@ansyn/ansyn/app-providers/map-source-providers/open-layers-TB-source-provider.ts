@@ -35,7 +35,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 
 		const source = new Static({
 			url: metaData.data.overlay.imageUrl,
-			crossOrigin: 'anonymous',
+			crossOrigin: null,
 			projection: new Projection({
 				code: 'tb-image',
 				units: 'pixels',

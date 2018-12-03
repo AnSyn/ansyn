@@ -42,17 +42,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
 
-	@AutoSubscription
-	toggleOpacity$ = this.geoFilterSearch$.pipe(
-		tap((geoFilterSearch) => {
-			if (geoFilterSearch !== SearchModeEnum.none) {
-				this.vector.setOpacity(0);
-			} else {
-				this.vector.setOpacity(1);
-			}
-		})
-	);
-
 	onSearchMode$ = this.geoFilterSearch$.pipe(
 		map((geoFilterSearch) => geoFilterSearch === this.geoFilter),
 		distinctUntilChanged()
@@ -75,15 +64,15 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$).pipe(
+	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$, this.geoFilterSearch$).pipe(
 		mergeMap(this.drawChanges.bind(this)));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
 	}
 
-	drawChanges([geoFilter, region, geoFilterIndicator]) {
-		if (!geoFilterIndicator) {
+	drawChanges([geoFilter, region, geoFilterIndicator, geoFilterSearch]) {
+		if (!geoFilterIndicator || geoFilterSearch !== SearchModeEnum.none) {
 			this.clearEntities();
 			return EMPTY;
 		}
@@ -95,8 +84,6 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new UpdateGeoFilterStatus());
-
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap).pipe(
 			take(1),
@@ -105,6 +92,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				const region = this.createRegion(geoJsonFeature);
 				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
 					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+					this.store$.dispatch(new UpdateGeoFilterStatus());
 				}
 				else {
 					this.store$.dispatch(new SetToastMessageAction({

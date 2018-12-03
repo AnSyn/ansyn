@@ -13,7 +13,7 @@ export { GoToAction } from './tools/actions/tools.actions';
 export { ILayerState } from './layers-manager/reducers/layers.reducer';
 export { ICasesState } from './cases/reducers/cases.reducer';
 export { IToolsState } from './tools/reducers/tools.reducer';
-export { ISettingsState, selectFlags, settingsStateSelector } from './settings/reducers/settings.reducer';
+export { ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive } from './settings/reducers/settings.reducer';
 export { LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction } from './cases/actions/cases.actions';
 export { Filters, IFiltersState } from './filters/reducer/filters.reducer';
 export { IFilter } from './filters/models/IFilter';

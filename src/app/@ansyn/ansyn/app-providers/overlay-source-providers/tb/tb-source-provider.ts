@@ -97,6 +97,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		return new Overlay({
 			id: tbOverlay._id,
 			name: tbOverlay.inputData.ansyn.title,
+			thumbnailUrl: tbOverlay.imageData.thumbnailUrl,
 			footprint: geojsonPolygonToMultiPolygon(tbOverlay.geoData.footprint.geometry),
 			sensorType: tbOverlay.inputData.sensor.type,
 			sensorName: tbOverlay.inputData.sensor.name,

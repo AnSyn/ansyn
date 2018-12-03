@@ -49,14 +49,4 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		});
 		return Promise.resolve(imageLayer);
 	}
-
-	getThumbnailUrl(overlay: IOverlay, position): Observable<string> {
-		if (overlay.thumbnailUrl) {
-			return of(overlay.thumbnailUrl)
-		}
-		return this.http.get<string>(`${this.config.baseUrl}/${overlay.id}/thumbnail`).pipe(
-			tap((thumbnailUrl) => overlay.thumbnailUrl = thumbnailUrl),
-			catchError((err) => this.errorHandlerService.httpErrorHandle(err, null, null))
-		);
-	}
 }

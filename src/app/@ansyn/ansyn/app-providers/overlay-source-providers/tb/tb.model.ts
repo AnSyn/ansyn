@@ -7,7 +7,6 @@ export interface ITBConfig {
 export interface ITBOverlay {
 	_id: string,
 	displayUrl: string;
-	thumbnailUrl: string;
 	name: string;
 	fileName: string;
 	fileType: 'image';
@@ -22,6 +21,7 @@ export interface ITBOverlay {
 		Model: string,
 		ExifImageHeight: number;
 		ExifImageWidth: number;
+		thumbnailUrl: string;
 	},
 	inputData: {
 		sensor: {

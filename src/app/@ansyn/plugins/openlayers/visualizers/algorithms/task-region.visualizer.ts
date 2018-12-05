@@ -109,7 +109,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	createDrawInteraction() {
 		const drawInteractionHandler = new Draw({
 			type: 'Point',
-			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
+			condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
 			style: this.iconStyle
 		});
 

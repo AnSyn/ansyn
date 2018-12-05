@@ -17,7 +17,7 @@ export class OpenLayersMousePositionControl extends MousePosition {
 		super(opt_options);
 	}
 
-	private positionToPoint(coordinates: ol.Coordinate, cb: (p: Point) => void) {
+	private positionToPoint(coordinates: [number, number], cb: (p: Point) => void) {
 		if (this.approximateProjectionSubscription) {
 			this.approximateProjectionSubscription.unsubscribe();
 		}
@@ -42,7 +42,7 @@ export class OpenLayersMousePositionControl extends MousePosition {
 				this.positionToPoint(coordinate, (projectedPoint) => {
 					const coordinateFormat = (<any>this).getCoordinateFormat();
 					if (coordinateFormat) {
-						html = coordinateFormat(<ol.Coordinate> projectedPoint.coordinates);
+						html = coordinateFormat(<[number, number]> projectedPoint.coordinates);
 					} else {
 						html = projectedPoint.coordinates.toString();
 					}

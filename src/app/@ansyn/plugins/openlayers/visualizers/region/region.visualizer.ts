@@ -106,7 +106,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	createDrawInteraction() {
 		const drawInteractionHandler = new Draw(<any>{
 			type: this.geoFilter,
-			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
+			condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
 			style: this.featureStyle.bind(this)
 		});
 

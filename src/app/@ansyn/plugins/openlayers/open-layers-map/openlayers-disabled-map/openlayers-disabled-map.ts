@@ -83,7 +83,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		});
 	}
 
-	fitToMainLayerExtent(extent: ol.Extent) {
+	fitToMainLayerExtent(extent: [number, number, number, number]) {
 		const view = this.mapObject.getView();
 		view.fit(extent, {
 			size: this.mapObject.getSize(),

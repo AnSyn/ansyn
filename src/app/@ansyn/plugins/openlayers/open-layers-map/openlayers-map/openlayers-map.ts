@@ -90,7 +90,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
-					coordinateFormat: (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString()
+					coordinateFormat: (coords: [number, number]): string => coords.map((num) => +num.toFixed(4)).toString()
 				},
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
@@ -222,7 +222,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
 		return this.projectionService.projectAccuratelyToImage(center, this).pipe(map(projectedCenter => {
-			const olCenter = <ol.Coordinate> projectedCenter.coordinates;
+			const olCenter = <[number, number]> projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {
@@ -386,7 +386,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 
-	flyTo(location: ol.Coordinate) {
+	flyTo(location: [number, number]) {
 		const view = this._mapObject.getView();
 		view.animate({
 			center: location,

@@ -20,7 +20,7 @@ export class ProjectableRaster extends Raster {
 		}
 	}
 
-	setOperation(operation: ol.RasterOperation, opt_lib?: GlobalObject): void {
+	setOperation(operation: any, opt_lib?: GlobalObject): void {
 		this.destroy();
 		super.setOperation(operation, opt_lib);
 	}

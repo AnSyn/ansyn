@@ -258,7 +258,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	projectPoints(coordinates: ol.Coordinate[], sourceProjection: string, destProjection: string): Observable<Point[] | any> {
+	projectPoints(coordinates: [number, number][], sourceProjection: string, destProjection: string): Observable<Point[] | any> {
 		return forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
 			if (sourceProjection && destProjection) {
@@ -281,7 +281,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-			.pipe(switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, sourceProjection, destProjection)));
+			.pipe(switchMap((centers: [number, number][]) => this.projectPoints(centers, sourceProjection, destProjection)));
 	}
 
 	onResetView(): Observable<boolean> {

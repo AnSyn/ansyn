@@ -1,9 +1,9 @@
-import Vector from 'ol/source/vector';
-import Feature from 'ol/feature';
-import Point from 'ol/geom/point';
-import Style from 'ol/style/style';
-import Icon from 'ol/style/icon';
-import VectorLayer from 'ol/layer/vector';
+import Vector from 'ol/source/Vector';
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon';
+import VectorLayer from 'ol/layer/Vector';
 import { ICaseMapPosition } from '@ansyn/core';
 import { Observable, of } from 'rxjs';
 import { BaseImageryMap, BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';

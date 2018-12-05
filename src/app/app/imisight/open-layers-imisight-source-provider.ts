@@ -1,5 +1,5 @@
-import TileLayer from 'ol/layer/tile';
-import TileWMS from 'ol/source/tilewms';
+import TileLayer from 'ol/layer/Tile';
+import TileWMS from 'ol/source/TileWMS';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';

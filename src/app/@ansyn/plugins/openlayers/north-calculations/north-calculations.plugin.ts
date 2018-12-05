@@ -29,8 +29,8 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../open-layers-map/openlayers-map/openlayers-map';
 import { catchError, debounceTime, filter, map, mergeMap, retry, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
-import OLMap from 'ol/map';
-import View from 'ol/view';
+import OLMap from 'ol/Map';
+import View from 'ol/View';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

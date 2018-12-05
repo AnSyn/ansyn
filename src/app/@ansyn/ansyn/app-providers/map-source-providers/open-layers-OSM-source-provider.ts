@@ -1,5 +1,5 @@
-import OSM from 'ol/source/osm';
-import TileLayer from 'ol/layer/tile';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery';

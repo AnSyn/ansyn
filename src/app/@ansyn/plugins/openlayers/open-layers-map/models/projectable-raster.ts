@@ -1,6 +1,6 @@
-import Raster from 'ol/source/raster';
-import Source from 'ol/source/source';
-import Projection from 'ol/proj/projection';
+import Raster from 'ol/source/Raster';
+import Source from 'ol/source/Source';
+import Projection from 'ol/proj/Projection';
 import { get } from 'lodash';
 import { GlobalObject } from 'openlayers';
 

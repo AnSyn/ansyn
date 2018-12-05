@@ -1,6 +1,6 @@
 import { SetToastMessageAction } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import TileSource from 'ol/source/tile';
+import TileSource from 'ol/source/Tile';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { SetProgressBarAction } from '@ansyn/map-facade';
@@ -119,17 +119,17 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	setMonitorEvents() {
 		if (this.source) {
-			this.source.on('tileloadstart', this.tileLoadStart, this);
-			this.source.on('tileloadend', this.tileLoadEnd, this);
-			this.source.on('tileloaderror', this.tileLoadError, this);
+			this.source.on('tileloadstart', this.tileLoadStart.bind(this));
+			this.source.on('tileloadend', this.tileLoadEnd.bind(this));
+			this.source.on('tileloaderror', this.tileLoadError.bind(this));
 		}
 	}
 
 	killMonitorEvents() {
 		if (this.source) {
-			this.source.un('tileloadstart', this.tileLoadStart, this);
-			this.source.un('tileloadend', this.tileLoadEnd, this);
-			this.source.un('tileloaderror', this.tileLoadError, this);
+			this.source.un('tileloadstart', this.tileLoadStart.bind(this));
+			this.source.un('tileloadend', this.tileLoadEnd.bind(this));
+			this.source.un('tileloaderror', this.tileLoadError.bind(this));
 		}
 	}
 

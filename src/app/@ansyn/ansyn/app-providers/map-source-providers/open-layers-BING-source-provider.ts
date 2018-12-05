@@ -1,9 +1,9 @@
-import TileLayer from 'ol/layer/tile';
-import BingMaps from 'ol/source/bingmaps';
+import TileLayer from 'ol/layer/Tile';
+import BingMaps from 'ol/source/BingMaps';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery';
-import proj from 'ol/proj';
+import * as proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export interface IBingMapsConfig {

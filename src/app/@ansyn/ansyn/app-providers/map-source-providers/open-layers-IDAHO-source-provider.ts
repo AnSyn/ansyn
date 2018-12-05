@@ -1,4 +1,4 @@
-import XYZ from 'ol/source/xyz';
+import XYZ from 'ol/source/XYZ';
 import { ICaseMapState, IOverlay } from '@ansyn/core';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';

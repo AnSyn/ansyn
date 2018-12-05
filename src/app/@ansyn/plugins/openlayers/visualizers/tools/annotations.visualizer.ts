@@ -1,18 +1,18 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import Draw from 'ol/interaction/draw';
-import Select from 'ol/interaction/select';
-import Sphere from 'ol/sphere';
-import olCircle from 'ol/geom/circle';
-import olLineString from 'ol/geom/linestring';
-import olMultiLineString from 'ol/geom/multilinestring';
-import olPolygon from 'ol/geom/polygon';
-import olFeature from 'ol/feature';
-import olStyle from 'ol/style/style';
-import olFill from 'ol/style/fill';
-import olText from 'ol/style/text';
-import olStroke from 'ol/style/stroke';
+import Draw from 'ol/interaction/Draw';
+import Select from 'ol/interaction/Select';
+import * as Sphere from 'ol/sphere';
+import olCircle from 'ol/geom/Circle';
+import olLineString from 'ol/geom/LineString';
+import olMultiLineString from 'ol/geom/MultiLineString';
+import olPolygon, { fromCircle } from 'ol/geom/Polygon';
+import olFeature from 'ol/Feature';
+import olStyle from 'ol/style/Style';
+import olFill from 'ol/style/Fill';
+import olText from 'ol/style/Text';
+import olStroke from 'ol/style/Stroke';
 
-import condition from 'ol/events/condition';
+import * as condition from 'ol/events/condition';
 import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import { cloneDeep, uniq } from 'lodash';
 import * as ol from 'openlayers';
@@ -49,7 +49,7 @@ import {
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { filter, map, mergeMap, take, tap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
-import OLGeoJSON from 'ol/format/geojson';
+import OLGeoJSON from 'ol/format/GeoJSON';
 import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
 import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '@ansyn/status-bar';
@@ -387,7 +387,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let cloneGeometry = <any> geometry.clone();
 
 		if (cloneGeometry instanceof olCircle) {
-			cloneGeometry = <any> olPolygon.fromCircle(<any>cloneGeometry);
+			cloneGeometry = <any> fromCircle(<any>cloneGeometry);
 		}
 
 		feature.setGeometry(cloneGeometry);
@@ -457,7 +457,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const [x2, y2] = this.iMap.mapObject.getPixelFromCoordinate(bottomRight);
 		const topRight = this.iMap.mapObject.getCoordinateFromPixel([x2, y1]);
 		const bottomLeft = this.iMap.mapObject.getCoordinateFromPixel([x1, y2]);
-		const geometry = opt_geometry || new olPolygon(null);
+		const geometry = opt_geometry || new olPolygon([]);
 		const boundingBox = [topLeft, topRight, bottomRight, bottomLeft, topLeft];
 		geometry.setCoordinates([boundingBox]);
 		return geometry;

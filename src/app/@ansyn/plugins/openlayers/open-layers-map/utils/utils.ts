@@ -1,5 +1,5 @@
-import olPolygon from 'ol/geom/polygon';
-import olExtent from 'ol/extent';
+import olPolygon, { fromExtent } from 'ol/geom/Polygon';
+import * as olExtent from 'ol/extent';
 import { Point } from 'geojson';
 import { CaseMapExtent } from '@ansyn/core';
 
@@ -26,6 +26,6 @@ export class Utils {
 	}
 
 	static extentToOlPolygon(extent: CaseMapExtent): olPolygon {
-		return olPolygon.fromExtent(extent);
+		return fromExtent(extent);
 	}
 }

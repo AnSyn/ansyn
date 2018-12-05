@@ -1,9 +1,9 @@
-import MousePosition from 'ol/control/mouseposition';
+import MousePosition from 'ol/control/MousePosition';
 import { Point } from 'geojson';
 import { Observable } from 'rxjs';
 import * as turf from '@turf/turf';
 import { Subscription } from 'rxjs';
-import Projection from 'ol/proj/projection';
+import Projection from 'ol/proj/Projection';
 import { areCoordinatesNumeric } from '@ansyn/core';
 
 export class OpenLayersMousePositionControl extends MousePosition {
@@ -36,11 +36,11 @@ export class OpenLayersMousePositionControl extends MousePosition {
 	updateHTML_(pixel) {
 		let html = this.undefinedHTML_;
 		if (pixel && this.mapProjection_) {
-			const map = this.getMap();
+			const map = (<any>this).getMap();
 			const coordinate = map.getCoordinateFromPixel(pixel);
 			if (areCoordinatesNumeric(coordinate)) {
 				this.positionToPoint(coordinate, (projectedPoint) => {
-					const coordinateFormat = this.getCoordinateFormat();
+					const coordinateFormat = (<any>this).getCoordinateFormat();
 					if (coordinateFormat) {
 						html = coordinateFormat(<ol.Coordinate> projectedPoint.coordinates);
 					} else {

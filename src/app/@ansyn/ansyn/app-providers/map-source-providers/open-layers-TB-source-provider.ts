@@ -2,9 +2,9 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { ErrorHandlerService, ICaseMapState, IOverlay } from '@ansyn/core';
-import Projection from 'ol/proj/projection';
-import Static from 'ol/source/imagestatic';
-import ImageLayer from 'ol/layer/image';
+import Projection from 'ol/proj/Projection';
+import Static from 'ol/source/ImageStatic';
+import ImageLayer from 'ol/layer/Image';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
@@ -47,6 +47,10 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 			source,
 			extent
 		});
+		const imageRasterLayer = this.getImageLayer(source, extent);
+		this.removeExtraData(imageRasterLayer);
+		imageLayer.set('imageLayer', imageRasterLayer );
+
 		return Promise.resolve(imageLayer);
 	}
 }

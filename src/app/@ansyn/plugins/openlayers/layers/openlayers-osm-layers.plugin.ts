@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import { ILayer, layerPluginType, selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items';
-import OSM from 'ol/source/osm';
-import TileLayer from 'ol/layer/tile';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
 import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';

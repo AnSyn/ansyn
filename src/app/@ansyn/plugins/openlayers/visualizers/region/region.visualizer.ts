@@ -5,7 +5,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
 import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
 import { ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
-import Draw from 'ol/interaction/draw';
+import Draw from 'ol/interaction/Draw';
 import {
 	CaseGeoFilter,
 	CaseRegionState,

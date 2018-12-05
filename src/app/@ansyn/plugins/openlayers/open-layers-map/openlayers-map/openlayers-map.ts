@@ -82,7 +82,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(id: string, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.shadowElement = shadowElement;
 		this._mapLayers = [];
 		const controls = [
@@ -96,7 +96,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		];
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({
-			target: id,
+			target,
 			renderer,
 			controls,
 			loadTilesWhileInteracting: true,

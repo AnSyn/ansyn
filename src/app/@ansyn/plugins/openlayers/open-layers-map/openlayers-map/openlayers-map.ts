@@ -82,7 +82,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(id: string, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.shadowElement = shadowElement;
 		this._mapLayers = [];
 		const controls = [
@@ -96,14 +96,21 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		];
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({
-			target,
+			target: id,
 			renderer,
 			controls,
 			loadTilesWhileInteracting: true,
 			loadTilesWhileAnimating: true
 		});
 		this.initListeners();
-		return this.resetView(layers[0], position);
+		return this.resetView(layers[0], position).pipe(
+			tap(() => {
+				setTimeout(() => {
+					this._mapObject.renderSync();
+				}, 0)
+			})
+		);
+
 	}
 
 	initListeners() {
@@ -340,7 +347,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public getPosition(): Observable<ICaseMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
-		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
+		const projectedState = { ...(<any>view).getState(), center: (<any>view).getCenter(), projection: { code: projection.getCode() } };
 
 		return this.calculateRotateExtent(this.mapObject).pipe(map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {

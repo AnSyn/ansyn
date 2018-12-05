@@ -15,7 +15,6 @@ import olStroke from 'ol/style/Stroke';
 import * as condition from 'ol/events/condition';
 import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import { cloneDeep, uniq } from 'lodash';
-import * as ol from 'openlayers';
 import {
 	AnnotationInteraction,
 	AnnotationMode,

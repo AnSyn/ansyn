@@ -1,5 +1,4 @@
 import { Observable, of } from 'rxjs';
-import * as ol from 'openlayers';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import Layer from 'ol/layer/Layer';

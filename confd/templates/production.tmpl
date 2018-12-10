@@ -296,12 +296,49 @@
 		  }
 	  },
 	   "TB": {
-		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "true" }},
+		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "false" }},
 		  "treeViewItem": {
 		  "text":"TB",
 		  "value": 1,
-		  "collapsed": true,
-		  "children": []
+			  "collapsed": true,
+			  "children": [
+				{
+				  "text": "UAV",
+				  "value": {
+					"sensorType": "UAV"
+				  }
+				},
+				{
+				  "text": "Satellite",
+				  "value": {
+					"sensorType": "Satellite"
+				  }
+				},
+				{
+				  "text": "Aircraft",
+				  "value": {
+					"sensorType": "Aircraft"
+				  }
+				},
+				{
+				  "text": "Baloon",
+				  "value": {
+					"sensorType": "Baloon"
+				  }
+				},
+				{
+				  "text": "Kite",
+				  "value": {
+					"sensorType": "Kite"
+				  }
+				},
+				{
+				  "text": "Others",
+				  "value": {
+					"sensorType": "others"
+				  }
+				}
+			  ]
 		  }
 	  },
       "PLANET": {
@@ -358,7 +395,7 @@
 				  "value": {
 					"sensorType": "others"
 				  }
-				}
+			  }
             ]
           }
         },

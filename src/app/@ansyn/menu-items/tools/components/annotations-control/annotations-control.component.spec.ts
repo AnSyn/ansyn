@@ -4,7 +4,7 @@ import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
-import { ColorPickerComponent } from '../color-picker/color-picker.component';
+import { ColorPickerComponent } from '../../../../core/forms/color-picker/color-picker.component';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;

@@ -123,20 +123,21 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': strokeWidth }));
 	}
 
-	changeStrokeColor(stroke: string) {
-		this.store.dispatch(new AnnotationSetProperties({ stroke }));
+	activeChange($event) {
+		if ($event.label === 'fill') {
+			this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': $event.event ? this.fillAlpah : 0 }));
+		} else {
+			this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': $event.event ? this.strokeAlpah : 0 }));
+
+		}
 	}
 
-	changeFillColor(fill: string) {
-		this.store.dispatch(new AnnotationSetProperties({ fill, 'marker-color': fill }));
-	}
-
-	changeFillShown(active: boolean) {
-		this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': active ? this.fillAlpah : 0 }));
-	}
-
-	changeStrokeShown(active: boolean) {
-		this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': active ? this.strokeAlpah : 0 }));
+	colorChange($event) {
+		if ($event.label === 'fill') {
+			this.store.dispatch(new AnnotationSetProperties({ fill: $event.event, 'marker-color': $event.event }));
+		} else {
+			this.store.dispatch(new AnnotationSetProperties({ stroke: $event.event }));
+		}
 	}
 
 }

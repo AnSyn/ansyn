@@ -24,6 +24,7 @@ import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { ComboBoxTriggerComponent } from './forms/combo-box-trigger/combo-box-trigger.component';
 import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
+import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 
 @NgModule({
 	imports: [
@@ -51,7 +52,8 @@ import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent
+		AnimatedEllipsisComponent,
+		AnnotationsColorComponent
 	],
 	declarations: [
 		ImageryStatusComponent,
@@ -62,7 +64,8 @@ import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent
+		AnimatedEllipsisComponent,
+		AnnotationsColorComponent
 	]
 })
 

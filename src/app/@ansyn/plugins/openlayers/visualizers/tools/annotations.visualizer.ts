@@ -192,8 +192,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {
 				const oldEntity = this.idToEntity.get(entity.id);
-				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures || oldEntity.originalEntity.label !== entity.label || oldEntity.originalEntity.showLabel !== entity.showLabel ||
-					!isEqual(oldEntity.originalEntity.style , entity.style);
+				if (oldEntity) {
+					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
+					const isShowLabelDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
+					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
+					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
+					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff;
+				}
+				return true;
 			});
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
@@ -206,7 +214,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.filter((id: string) => entities[id] && entities[id].type === LayerType.annotation);
 
 		const features = displayedIds.reduce((array, layerId) => [...array, ...entities[layerId].data.features], []);
-		console.log('feature ' , JSON.stringify(features, null, 4));
+		// console.log('feature ' , JSON.stringify(features, null, 4));
 		return this.showAnnotation(featureCollection(features));
 	}
 

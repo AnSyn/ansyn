@@ -124,14 +124,19 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	selectLineWidth(w: number) {
 		const { featureId } = this.clickMenuProps;
-		const style = this.clickMenuProps.style;
-		style.initial['stroke-width'] = w;
+		const style = {
+			...this.clickMenuProps.style,
+			initial: {
+				...this.clickMenuProps.style.initial,
+				'stroke-width': w
+			}
+		};
+
 		this.store.dispatch(new AnnotationUpdateFeature({
 			featureId,
-			properties: {
-				style: style
-			}
+			properties: { style }
 		}));
+
 		this.clickMenuProps.style = style;
 	}
 
@@ -139,19 +144,22 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	}
 
-	colorChange($event) {
-		console.log(JSON.stringify($event))
+	colorChange($event: { label: 'stroke' | 'fill', event: string }) {
 		const { featureId } = this.clickMenuProps;
-		const style = this.clickMenuProps.style;
-		style.initial['fill'] = $event.event;
+		const style = {
+			...this.clickMenuProps.style,
+			initial: {
+				...this.clickMenuProps.style.initial,
+				[$event.label]: $event.event
+			}
+		};
+
 		this.store.dispatch(new AnnotationUpdateFeature({
 			featureId,
-			properties: {
-				style: style
-			}
+			properties: { style }
 		}));
-		this.clickMenuProps.style = style;
 
+		this.clickMenuProps.style = style;
 	}
 
 	updateLabel() {

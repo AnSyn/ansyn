@@ -106,8 +106,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			}
 		}
 
-		console.log(`TB fetch body queries: ${JSON.stringify(queries)}`);
-
 		const body: ITBRequestBody = {
 			worldName: 'public',
 			geometry,

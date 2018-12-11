@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { OverlayStatusComponent } from './components/overlay-status/overlay-status.component';
@@ -10,6 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';
 import { CoreModule } from '@ansyn/core';
+import { BaseOverlaySourceFactoryProvider, createOverlaysSourceProviders, IOverlaysMetadata } from './models/providers';
 
 @NgModule({
 	imports: [
@@ -29,10 +30,22 @@ import { CoreModule } from '@ansyn/core';
 		OverlaysContainerComponent,
 		TimelineComponent,
 		OverlayOverviewComponent
+	],
+	providers: [
+		BaseOverlaySourceFactoryProvider,
+		createOverlaysSourceProviders([])
 	]
 
 })
 export class OverlaysModule {
+	static provide({ overlaySourceProviders }: IOverlaysMetadata): ModuleWithProviders {
+		return {
+			ngModule: OverlaysModule,
+			providers: [
+				createOverlaysSourceProviders(overlaySourceProviders)
+			]
+		};
+	}
 }
 
 

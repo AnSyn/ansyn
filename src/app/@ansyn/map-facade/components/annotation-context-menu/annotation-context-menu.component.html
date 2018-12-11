@@ -15,10 +15,13 @@
 				class="icon-annotation-label"></i>
 			</button>
 			<p>
-				<button [class.active]="clickMenuProps.showColorPicker" (click)="toggleColorPicker()"><i
-					class="icon-annotation-color"></i></button>
+				<button [class.active]="clickMenuProps.showColorPicker" (click)="toggleColorPicker()">
+					<i class="icon-annotation-color"></i></button>
 				<ansyn-annotations-color
 					[show]="clickMenuProps.showColorPicker"
+					[properties]="clickMenuProps.style.initial"
+					(colorChange)="colorChange($event)"
+					(activeChange)="activeChange($event)"
 				></ansyn-annotations-color>
 			</p>
 			<p>
@@ -26,6 +29,7 @@
 					class="icon-annotation-weight"></i></button>
 				<ansyn-annotations-weight
 					[show]="clickMenuProps.showWeight"
+					[properties]="clickMenuProps.style.initial"
 					(selectLineWidth)="selectLineWidth($event.width)">
 				</ansyn-annotations-weight>
 			</p>

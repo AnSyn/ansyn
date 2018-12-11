@@ -11,7 +11,7 @@ import olStyle from 'ol/style/style';
 import olFill from 'ol/style/fill';
 import olText from 'ol/style/text';
 import olStroke from 'ol/style/stroke';
-
+import { isEqual } from 'lodash'
 import condition from 'ol/events/condition';
 import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
 import { cloneDeep, uniq } from 'lodash';
@@ -48,7 +48,7 @@ import {
 } from '@ansyn/menu-items';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { filter, map, mergeMap, take, tap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/geojson';
 import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
@@ -185,7 +185,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	showAnnotation(annotationsLayer): Observable<any> {
 		const annotationsLayerEntities = this.annotationsLayerToEntities(annotationsLayer);
-
 		this.getEntities()
 			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
 			.forEach(({ id }) => this.removeEntity(id));
@@ -193,19 +192,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {
 				const oldEntity = this.idToEntity.get(entity.id);
-				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures || oldEntity.originalEntity.label !== entity.label || oldEntity.originalEntity.showLabel !== entity.showLabel;
+				return !oldEntity || oldEntity.originalEntity.showMeasures !== entity.showMeasures || oldEntity.originalEntity.label !== entity.label || oldEntity.originalEntity.showLabel !== entity.showLabel ||
+					!isEqual(oldEntity.originalEntity.style , entity.style);
 			});
-
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {
+
 		const displayedIds = uniq(
 			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
 		)
 			.filter((id: string) => entities[id] && entities[id].type === LayerType.annotation);
 
 		const features = displayedIds.reduce((array, layerId) => [...array, ...entities[layerId].data.features], []);
+		console.log('feature ' , JSON.stringify(features, null, 4));
 		return this.showAnnotation(featureCollection(features));
 	}
 
@@ -277,10 +278,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures, label, showLabel } = this.getEntity(selectedFeature);
+		const { id, showMeasures, label, showLabel, style } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
 			label: label,
 			mapId: this.mapId,
+			style: style,
 			featureId: id,
 			boundingRect,
 			interactionType: AnnotationInteraction.click,
@@ -316,7 +318,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		let selectedFeature, boundingRect, id, label, showLabel;
+		let selectedFeature, boundingRect, id, label, showLabel, style;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
@@ -324,11 +326,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id = this.getEntity(selectedFeature).id;
 			label = this.getEntity(selectedFeature).label;
 			showLabel = this.getEntity(selectedFeature).showLabel;
+			style = this.getEntity(selectedFeature).style;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
 			label: label,
 			mapId: this.mapId,
 			featureId: id,
+			style: style,
 			boundingRect,
 			interactionType: AnnotationInteraction.hover,
 			showLabel: showLabel
@@ -384,10 +388,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		this.store$.dispatch(new SetAnnotationMode());
 		const geometry = feature.getGeometry();
-		let cloneGeometry = <any> geometry.clone();
+		let cloneGeometry = <any>geometry.clone();
 
 		if (cloneGeometry instanceof olCircle) {
-			cloneGeometry = <any> olPolygon.fromCircle(<any>cloneGeometry);
+			cloneGeometry = <any>olPolygon.fromCircle(<any>cloneGeometry);
 		}
 
 		feature.setGeometry(cloneGeometry);
@@ -408,7 +412,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
 				tap(([featureCollection, activeAnnotationLayer, overlay]: [FeatureCollection<GeometryObject>, ILayer, IOverlay]) => {
 					const [geoJsonFeature] = featureCollection.features;
-					const data = <FeatureCollection<any>> { ...activeAnnotationLayer.data };
+					const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
 					data.features.push(geoJsonFeature);
 					if (overlay) {
 						geoJsonFeature.properties = {

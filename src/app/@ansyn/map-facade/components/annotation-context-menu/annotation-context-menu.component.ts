@@ -123,14 +123,34 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	selectLineWidth(w: number) {
-		console.log(JSON.stringify(w))
+		const { featureId } = this.clickMenuProps;
+		const style = this.clickMenuProps.style;
+		style.initial['stroke-width'] = w;
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: {
+				style: style
+			}
+		}));
+		this.clickMenuProps.style = style;
 	}
 
-	activeChange($event){
+	activeChange($event) {
 
 	}
 
-	colorChange($event){
+	colorChange($event) {
+		console.log(JSON.stringify($event))
+		const { featureId } = this.clickMenuProps;
+		const style = this.clickMenuProps.style;
+		style.initial['fill'] = $event.event;
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: {
+				style: style
+			}
+		}));
+		this.clickMenuProps.style = style;
 
 	}
 

@@ -9,6 +9,7 @@ export interface IAnnotationsSelectionEventData {
 	label: string
 	featureId: string;
 	mapId: string;
+	style: any;
 	boundingRect: IAnnotationBoundingRect;
 	interactionType?: AnnotationInteraction;
 	showLabel?: boolean;

@@ -295,71 +295,108 @@
 			]
 		  }
 	  },
-	   "TB": {
-		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "true" }},
+	  "TB": {
+		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "false" }},
 		  "treeViewItem": {
-		  "text":"TB",
-		  "value": 1,
-		  "collapsed": true,
-		  "children": []
+			  "text":"TB",
+			  "value": 1,
+				  "collapsed": true,
+				  "children": [
+				  	{
+					  "text": "UAV",
+					  "value": {
+						"sensorType": "UAV"
+					  }
+					},
+					{
+					  "text": "Satellite",
+					  "value": {
+						"sensorType": "Satellite"
+					  }
+					},
+					{
+					  "text": "Aircraft",
+					  "value": {
+						"sensorType": "Aircraft"
+					  }
+					},
+					{
+					  "text": "Baloon",
+					  "value": {
+						"sensorType": "Baloon"
+					  }
+					},
+					{
+					  "text": "Kite",
+					  "value": {
+						"sensorType": "Kite"
+					  }
+					},
+					{
+					  "text": "Others",
+					  "value": {
+						"sensorType": "others"
+					  }
+					}
+				  ]
 		  }
 	  },
       "PLANET": {
         "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
         "treeViewItem": {
-        "text": "Planet",
-        "value": 1,
-            "collapsed": true,
-            "children": [
-              {
-                "text": "REScene",
-                "value": {
-                  "sensorType": "REScene"
-                }
-              },
-              {
-                "text": "PSScene3Band",
-                "value": {
-                  "sensorType": "PSScene3Band"
-                }
-              },
-              {
-                "text": "PSOrthoTile",
-                "value": {
-                  "sensorType": "PSOrthoTile"
-                }
-              },
-              {
-                "text": "REOrthoTile",
-                "value": {
-                  "sensorType": "REOrthoTile"
-                }
-              },
-              {
-                "text": "SkySatScene",
-                "value": {
-                  "sensorType": "SkySatScene"
-                }
-              },
-              {
-                "text": "Landsat8L1G",
-                "value": {
-                  "sensorType": "Landsat8L1G"
-                }
-              },
-              {
-                "text": "Sentinel2L1C",
-                "value": {
-                  "sensorType": "Sentinel2L1C"
-                }
-              },
-			  {
-				  "text": "Others",
-				  "value": {
-					"sensorType": "others"
-				  }
-				}
-            ]
+			"text": "Planet",
+			"value": 1,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "REScene",
+					"value": {
+					  "sensorType": "REScene"
+					}
+				  },
+				  {
+					"text": "PSScene3Band",
+					"value": {
+					  "sensorType": "PSScene3Band"
+					}
+				  },
+				  {
+					"text": "PSOrthoTile",
+					"value": {
+					  "sensorType": "PSOrthoTile"
+					}
+				  },
+				  {
+					"text": "REOrthoTile",
+					"value": {
+					  "sensorType": "REOrthoTile"
+					}
+				  },
+				  {
+					"text": "SkySatScene",
+					"value": {
+					  "sensorType": "SkySatScene"
+					}
+				  },
+				  {
+					"text": "Landsat8L1G",
+					"value": {
+					  "sensorType": "Landsat8L1G"
+					}
+				  },
+				  {
+					"text": "Sentinel2L1C",
+					"value": {
+					  "sensorType": "Sentinel2L1C"
+					}
+				  },
+				  {
+					  "text": "Others",
+					  "value": {
+						"sensorType": "others"
+					  }
+					}
+				]
           }
         },
         "OPEN_AERIAL": {
@@ -367,16 +404,16 @@
           "treeViewItem": {
             "text": "OpenAerial",
             "value": 1,
-            "indeterminate": true,
-            "collapsed": true,
-            "children": [
-              {
-                "text": "UAV",
-                "value": {
-                  "sensorType": "UAV"
-                }
-              }
-            ]
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
           }
         }
       }

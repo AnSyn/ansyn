@@ -6,18 +6,26 @@ import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansy
 import {
 	ErrorHandlerService,
 	geojsonPolygonToMultiPolygon,
-	getPolygonByPointAndRadius, IMapSourceProvidersConfig,
+	getPolygonByPointAndRadius,
+	IMapSourceProvidersConfig,
 	IOverlay,
 	limitArray,
-	LoggerService, MAP_SOURCE_PROVIDERS_CONFIG,
+	LoggerService,
+	MAP_SOURCE_PROVIDERS_CONFIG,
 	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { ITBOverlay, ITBConfig } from './tb.model';
+import { ITBConfig, ITBOverlay } from './tb.model';
 import { Polygon } from 'geojson';
 
 export const TBOverlaySourceType = 'TB';
+
+export interface ITBQuery {
+	field: string;
+	values: string[];
+	isMatch: boolean;
+}
 
 export interface ITBRequestBody {
 	worldName: string;
@@ -26,6 +34,7 @@ export interface ITBRequestBody {
 		start: string,
 		end: string
 	};
+	queries: ITBQuery[];
 }
 
 @Injectable()
@@ -46,6 +55,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
 		let geometry;
+		let queries = [];
 
 		if (fetchParams.region.type === 'Point') {
 			geometry = getPolygonByPointAndRadius((<any>fetchParams.region).coordinates).geometry as GeoJSON.Polygon;
@@ -53,13 +63,57 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			geometry = fetchParams.region;
 		}
 
+		if (fetchParams.dataInputFilters.length !== 0) {
+			let sensorTypeMatch = true;
+			let sensorNameMatch = true;
+			let sensorTypes;
+			let sensorNames;
+
+			if (fetchParams.dataInputFilters[0].sensorType) {
+				sensorTypes = fetchParams.dataInputFilters.map(filter => filter.sensorType);
+				if (sensorTypes.find(sensorType => sensorType === 'others')) {
+					sensorTypeMatch = false;
+					sensorTypes = sensorTypes.filter(sensorType => !(sensorType === 'others'));
+				}
+			} else {
+				sensorTypes = [];
+			}
+
+			if (fetchParams.dataInputFilters[0].sensorName) {
+				sensorNames = fetchParams.dataInputFilters.map(filter => filter.sensorName);
+				if (sensorNames.find(sensorName => sensorName === 'others')) {
+					sensorNameMatch = false;
+					sensorNames = sensorNames.filter(sensorName => !(sensorName === 'others'));
+				}
+			} else {
+				sensorNames = [];
+			}
+
+			if (sensorTypes.length !== 0) {
+				queries.push({
+					field: 'inputData.sensor.type',
+					values: sensorTypes,
+					isMatch: sensorTypeMatch
+				})
+			}
+
+			if (sensorNames.length !== 0) {
+				queries.push({
+					field: 'inputData.sensor.name',
+					values: sensorNames,
+					isMatch: sensorNameMatch
+				})
+			}
+		}
+
 		const body: ITBRequestBody = {
 			worldName: 'public',
+			geometry,
 			dates: {
 				start: fetchParams.timeRange.start.toISOString(),
 				end: fetchParams.timeRange.end.toISOString()
 			},
-			geometry
+			queries
 		};
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(

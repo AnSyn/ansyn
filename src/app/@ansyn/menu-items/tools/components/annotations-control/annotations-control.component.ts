@@ -79,7 +79,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		{ mode: 'Arrow', icon: 'arrow' }
 	];
 
-	public lineWidthList = [1, 2, 3, 4, 5, 6, 7];
+	// public lineWidthList = [1, 2, 3, 4, 5, 6, 7];
 
 	@HostBinding('class.expand')
 	@Input()
@@ -119,8 +119,9 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new SetAnnotationMode(dispatchValue));
 	}
 
-	selectLineWidth(strokeWidth: number) {
-		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': strokeWidth }));
+	selectLineWidth($event) {
+		console.log('width' + $event.width)
+		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': $event.width }));
 	}
 
 	activeChange($event) {

@@ -1,0 +1,24 @@
+import { Component, OnInit } from '@angular/core';
+import { Input } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Output } from '@angular/core';
+
+@Component({
+	selector: 'ansyn-annotations-weight',
+	templateUrl: './annotations-weight.component.html',
+	styleUrls: ['./annotations-weight.component.less']
+})
+export class AnnotationsWeightComponent implements OnInit {
+	@Input() show;
+	@Input() properties = {};
+
+	@Output() selectLineWidth = new EventEmitter();
+	lineWidthList: number[] = [1, 2, 3, 4, 5, 6, 7];
+
+	constructor() {
+	}
+
+	ngOnInit() {
+	}
+
+}

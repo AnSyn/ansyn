@@ -79,6 +79,28 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new AnnotationRemoveFeature(featureId));
 	}
 
+	toggleColorPicker() {
+		const { featureId } = this.clickMenuProps;
+		const showColorPicker = !this.clickMenuProps.showColorPicker;
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { showColorPicker, showWeight: !showColorPicker }
+		}));
+		this.clickMenuProps.showColorPicker = showColorPicker;
+		this.clickMenuProps.showWeight = !showColorPicker;
+	}
+
+	toggleWeight() {
+		const { featureId } = this.clickMenuProps;
+		const showWeight = !this.clickMenuProps.showWeight;
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { showWeight, showColorPicker: !showWeight }
+		}));
+		this.clickMenuProps.showWeight = showWeight;
+		this.clickMenuProps.showColorPicker = !showWeight;
+	}
+
 	toggleMeasures() {
 		const { featureId } = this.clickMenuProps;
 		const showMeasures = !this.clickMenuProps.showMeasures;
@@ -98,6 +120,18 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		}));
 
 		this.clickMenuProps.showLabel = showLabel;
+	}
+
+	selectLineWidth(w: number) {
+		console.log(JSON.stringify(w))
+	}
+
+	activeChange($event){
+
+	}
+
+	colorChange($event){
+
 	}
 
 	updateLabel() {

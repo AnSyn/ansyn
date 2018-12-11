@@ -13,6 +13,8 @@ export interface IAnnotationsSelectionEventData {
 	interactionType?: AnnotationInteraction;
 	showLabel?: boolean;
 	showMeasures?: boolean;
+	showColorPicker?: boolean,
+	showWeight?: boolean
 }
 
 export interface IUpdateFeatureEvent {

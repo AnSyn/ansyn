@@ -14,6 +14,7 @@ import {
 } from '@ansyn/core';
 import { catchError, map } from 'rxjs/operators';
 import { IOverlayByIdMetaData } from '../services/overlays.service';
+import {s} from "@angular/core/src/render3";
 
 export interface IDateRange {
 	start: Date;
@@ -26,6 +27,7 @@ export interface IFetchParams {
 	sensors?: string[];
 	dataInputFilters: IDataInputFilterValue[];
 	timeRange: IDateRange;
+	worldName?: string;
 }
 
 export interface IOverlayFilter {

@@ -21,7 +21,7 @@ import { Polygon } from 'geojson';
 
 export const TBOverlaySourceType = 'TB';
 
-export interface IQuery {
+export interface ITBQuery {
 	field: string;
 	values: string[];
 	isMatch: boolean;
@@ -34,7 +34,7 @@ export interface ITBRequestBody {
 		start: string,
 		end: string
 	};
-	queries: IQuery[];
+	queries: ITBQuery[];
 }
 
 @Injectable()
@@ -109,7 +109,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		console.log(`TB fetch body queries: ${JSON.stringify(queries)}`);
 
 		const body: ITBRequestBody = {
-			worldName: fetchParams.worldName || 'public',
+			worldName: 'public',
 			geometry,
 			dates: {
 				start: fetchParams.timeRange.start.toISOString(),

@@ -32,17 +32,17 @@ import { BaseOverlaySourceFactoryProvider, createOverlaysSourceProviders, IOverl
 		OverlayOverviewComponent
 	],
 	providers: [
-		BaseOverlaySourceFactoryProvider,
-		createOverlaysSourceProviders([])
+		createOverlaysSourceProviders([]),
+		BaseOverlaySourceFactoryProvider
 	]
 
 })
 export class OverlaysModule {
-	static provide({ overlaySourceProviders }: IOverlaysMetadata): ModuleWithProviders {
+	static provide(metadata: IOverlaysMetadata): ModuleWithProviders {
 		return {
 			ngModule: OverlaysModule,
 			providers: [
-				createOverlaysSourceProviders(overlaySourceProviders)
+				createOverlaysSourceProviders(metadata.overlaySourceProviders)
 			]
 		};
 	}

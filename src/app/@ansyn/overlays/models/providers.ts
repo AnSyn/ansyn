@@ -1,4 +1,4 @@
-import { InjectionToken, FactoryProvider } from '@angular/core';
+import { InjectionToken, FactoryProvider, Provider } from '@angular/core';
 import { MultipleOverlaysSource } from '../services/multiple-source-provider';
 
 export interface IOverlaysMetadata {
@@ -15,7 +15,7 @@ export function OveralysSourceProvidersFactory(...providers) {
 	return providers;
 }
 
-export function createOverlaysSourceProviders(providers: any[]) {
+export function createOverlaysSourceProviders(providers: any[]): Provider[] {
 	return [
 		providers,
 		{

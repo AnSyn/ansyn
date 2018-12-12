@@ -11,10 +11,9 @@ import olStyle from 'ol/style/style';
 import olFill from 'ol/style/fill';
 import olText from 'ol/style/text';
 import olStroke from 'ol/style/stroke';
-import { isEqual } from 'lodash'
+import { cloneDeep, uniq } from 'lodash';
 import condition from 'ol/events/condition';
 import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
-import { cloneDeep, uniq } from 'lodash';
 import * as ol from 'openlayers';
 import {
 	AnnotationInteraction,
@@ -199,7 +198,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
 					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
 					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
-					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff;
+					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
+					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
 				}
 				return true;
 			});

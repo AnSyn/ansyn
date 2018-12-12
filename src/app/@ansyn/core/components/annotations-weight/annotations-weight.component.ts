@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Output } from '@angular/core';
-
+export interface IAnnotationWeightProps {
+	'stroke-width': number;
+}
 @Component({
 	selector: 'ansyn-annotations-weight',
 	templateUrl: './annotations-weight.component.html',
@@ -10,7 +12,7 @@ import { Output } from '@angular/core';
 })
 export class AnnotationsWeightComponent implements OnInit {
 	@Input() show;
-	@Input() properties = {};
+	@Input() properties: IAnnotationWeightProps;
 
 	@Output() selectLineWidth = new EventEmitter();
 	lineWidthList: number[] = [1, 2, 3, 4, 5, 6, 7];

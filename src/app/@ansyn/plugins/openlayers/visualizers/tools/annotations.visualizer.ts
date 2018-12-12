@@ -214,7 +214,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.filter((id: string) => entities[id] && entities[id].type === LayerType.annotation);
 
 		const features = displayedIds.reduce((array, layerId) => [...array, ...entities[layerId].data.features], []);
-		// console.log('feature ' , JSON.stringify(features, null, 4));
 		return this.showAnnotation(featureCollection(features));
 	}
 

@@ -79,8 +79,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		{ mode: 'Arrow', icon: 'arrow' }
 	];
 
-	// public lineWidthList = [1, 2, 3, 4, 5, 6, 7];
-
 	@HostBinding('class.expand')
 	@Input()
 	set expand(value) {

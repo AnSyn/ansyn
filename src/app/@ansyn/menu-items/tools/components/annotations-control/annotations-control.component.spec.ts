@@ -4,7 +4,7 @@ import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
-import { ColorPickerComponent } from '../../../../core/forms/color-picker/color-picker.component';
+import { ColorPickerComponent } from '@ansyn/core';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -71,7 +71,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('change stroke color', () => {
 		const strokeColor = 'white';
-		component.changeStrokeColor(strokeColor);
+		component.colorChange({event: strokeColor, label: 'stroke'});
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			'stroke': strokeColor
 		}));
@@ -79,7 +79,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('change fill color', () => {
 		const fill = 'black';
-		component.changeFillColor(fill);
+		component.colorChange({event: fill, label: 'fill'});
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			fill,
 			'marker-color': fill

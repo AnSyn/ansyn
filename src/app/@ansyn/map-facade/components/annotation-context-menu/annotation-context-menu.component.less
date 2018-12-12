@@ -4,7 +4,7 @@
 :host {
 	position: absolute;
 	display: block;
-	width: 100%;
+	width: 0;
 	height: 100%;
 	top: 0;
 	left: 0;
@@ -25,7 +25,8 @@
 			outline-offset: 10px;
 			transform-origin: left top;
 			left: 0;
-			.buttons {
+
+			ul.buttons {
 				position: absolute;
 				pointer-events: all;
 				border: 1px solid white;
@@ -37,7 +38,12 @@
 				right: 0;
 				top: 0;
 				margin-bottom: 0;
+				padding: 2px;
 				transform: translate(calc(~'100% + 15px'), -12px);
+
+				li {
+					list-style-type: none;
+				}
 
 				button {
 					background-color: @application-main-color;
@@ -63,6 +69,44 @@
 						background-color: rgb(41, 127, 155);
 					}
 				}
+
+				li.expanded-selection {
+					position: relative;
+
+					button.expand {
+						background-color: #297f9b;
+					}
+
+					div.list {
+						display: flex;
+						flex-direction: column;
+						position: absolute;
+						top: 35px;
+						left: 0px;
+						overflow: hidden;
+						padding: 0;
+						margin: 0;
+						text-align: center;
+						transition: height 0.3s;
+						background: @application-main-color;
+						.item {
+							cursor: pointer;
+							&:hover, &.selected {
+								background-color: #297f9b;
+							}
+						}
+
+						&.line-width-expand {
+							width: 100%;
+							outline: none;
+						}
+
+						&.color-selection-expand.open {
+							visibility: visible;
+						}
+					}
+				}
+
 				p {
 					margin: 0px;
 				}
@@ -95,6 +139,7 @@
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
+
 			.label-input {
 				font-size: 17px;
 				width: 100%;

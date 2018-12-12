@@ -87,7 +87,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			properties: { showColorPicker, showWeight: !showColorPicker }
 		}));
 		this.clickMenuProps.showColorPicker = showColorPicker;
-		this.clickMenuProps.showWeight = !showColorPicker;
+		this.clickMenuProps.showWeight = showColorPicker ? !showColorPicker : this.clickMenuProps.showWeight;
 	}
 
 	toggleWeight() {
@@ -98,7 +98,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			properties: { showWeight, showColorPicker: !showWeight }
 		}));
 		this.clickMenuProps.showWeight = showWeight;
-		this.clickMenuProps.showColorPicker = !showWeight;
+		this.clickMenuProps.showColorPicker = showWeight ? !showWeight : this.clickMenuProps.showWeight;
 	}
 
 	toggleMeasures() {

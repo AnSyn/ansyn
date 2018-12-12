@@ -8,6 +8,7 @@ export interface IAnnotationBoundingRect {
 export interface IAnnotationsSelectionEventData {
 	label: string
 	featureId: string;
+	type: string,
 	mapId: string;
 	style: any;
 	boundingRect: IAnnotationBoundingRect;

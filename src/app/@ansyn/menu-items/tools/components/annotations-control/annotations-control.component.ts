@@ -120,7 +120,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	selectLineWidth($event) {
-		console.log('width' + $event.width)
 		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': $event.width }));
 	}
 

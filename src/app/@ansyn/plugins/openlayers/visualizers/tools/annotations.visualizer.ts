@@ -293,6 +293,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: style,
 			featureId: id,
 			boundingRect,
+			type: selectedFeature ? selectedFeature.values_.mode : undefined,
 			interactionType: AnnotationInteraction.click,
 			showMeasures,
 			showLabel
@@ -342,6 +343,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			featureId: id,
 			style: style,
 			boundingRect,
+			type: selectedFeature ? selectedFeature.values_.mode : undefined,
 			interactionType: AnnotationInteraction.hover,
 			showLabel: showLabel
 		};

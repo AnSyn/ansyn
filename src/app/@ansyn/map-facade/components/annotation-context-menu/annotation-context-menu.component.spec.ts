@@ -90,6 +90,8 @@ describe('AnnotationContextMenuComponent', () => {
 			featureId: 'featureId',
 			label: 'label',
 			mapId: 'id',
+			type: 'Rectangle',
+			style: {},
 			boundingRect: {
 				top: 100,
 				height: 100,

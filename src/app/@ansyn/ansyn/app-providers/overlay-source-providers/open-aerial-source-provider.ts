@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
+import { Inject } from '@angular/core';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
@@ -27,9 +27,10 @@ export interface IOpenAerialOverlaySourceConfig {
 	baseUrl: string;
 }
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: OpenAerialOverlaySourceType
+})
 export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
-	sourceType = OpenAerialOverlaySourceType;
 
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,

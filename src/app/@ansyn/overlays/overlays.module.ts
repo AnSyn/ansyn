@@ -10,7 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';
 import { CoreModule } from '@ansyn/core';
-import { BaseOverlaySourceFactoryProvider, createOverlaysSourceProviders, IOverlaysMetadata } from './models/providers';
+import { BaseOverlaySourceFactoryProvider, createOverlaysSourceProviders, IOverlaysMetadata } from './models/overlays-source-providers';
 
 @NgModule({
 	imports: [

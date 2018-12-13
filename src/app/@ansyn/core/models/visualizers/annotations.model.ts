@@ -8,11 +8,15 @@ export interface IAnnotationBoundingRect {
 export interface IAnnotationsSelectionEventData {
 	label: string
 	featureId: string;
+	type: string,
 	mapId: string;
+	style: any;
 	boundingRect: IAnnotationBoundingRect;
 	interactionType?: AnnotationInteraction;
 	showLabel?: boolean;
 	showMeasures?: boolean;
+	showColorPicker?: boolean,
+	showWeight?: boolean
 }
 
 export interface IUpdateFeatureEvent {

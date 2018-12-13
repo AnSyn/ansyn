@@ -5,6 +5,8 @@ import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
 import { ColorPickerComponent } from '@ansyn/core';
+import { AnnotationsColorComponent } from '../../../../core/components/annotations-color/annotations-color.component';
+import { AnnotationsWeightComponent } from '../../../../core/components/annotations-weight/annotations-weight.component';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -13,7 +15,7 @@ describe('AnnotationsControlComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnnotationsControlComponent, ColorPickerComponent],
+			declarations: [AnnotationsControlComponent, ColorPickerComponent, AnnotationsColorComponent, AnnotationsWeightComponent],
 			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })]
 		})
 			.compileComponents();
@@ -62,10 +64,10 @@ describe('AnnotationsControlComponent', () => {
 	});
 
 	it('select line width', () => {
-		const strokeWidth = 5;
-		component.selectLineWidth(strokeWidth);
+		const width = 5;
+		component.selectLineWidth({ width });
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
-			'stroke-width': strokeWidth
+			'stroke-width': width
 		}));
 	});
 

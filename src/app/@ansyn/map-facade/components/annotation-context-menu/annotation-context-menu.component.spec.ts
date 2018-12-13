@@ -8,7 +8,13 @@ import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
+import {
+	AnnotationInteraction,
+	AnnotationsColorComponent,
+	ColorPickerComponent,
+	IAnnotationsSelectionEventData
+} from '@ansyn/core';
+import { AnnotationsWeightComponent } from '@ansyn/core';
 
 
 describe('AnnotationContextMenuComponent', () => {
@@ -28,7 +34,10 @@ describe('AnnotationContextMenuComponent', () => {
 				}
 			],
 			declarations: [
-				AnnotationContextMenuComponent
+				AnnotationContextMenuComponent,
+				AnnotationsWeightComponent,
+				AnnotationsColorComponent,
+				ColorPickerComponent
 			],
 			imports: [
 				FormsModule,

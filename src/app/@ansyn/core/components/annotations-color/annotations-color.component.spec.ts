@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AnnotationsColorComponent } from './annotations-color.component';
+import { ColorPickerComponent } from '../../forms/color-picker/color-picker.component';
 
 describe('AnnotationsColorComponent', () => {
 	let component: AnnotationsColorComponent;
@@ -8,7 +8,10 @@ describe('AnnotationsColorComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnnotationsColorComponent]
+			declarations: [
+				AnnotationsColorComponent,
+				ColorPickerComponent
+			]
 		})
 			.compileComponents();
 	}));

@@ -67,10 +67,10 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 		// set the queries according to the Sensor Type and Name
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
-			let sensorTypesInput;
-			let sensorTypesNot;
-			let sensorNamesInput;
-			let sensorNamesNot;
+			let sensorTypesInput = [];
+			let sensorTypesNot = [];
+			let sensorNamesInput = [];
+			let sensorNamesNot = [];
 
 			// set Sensor Types in the filter query
 			if (fetchParams.dataInputFilters[0].sensorType) {
@@ -79,8 +79,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 					const sensorTypesList = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType);
 					sensorTypesNot = sensorTypesList.filter(sensor => !sensorTypesInput.includes(sensor));
 					sensorTypesInput = sensorTypesInput.filter(sensorType => sensorType !== 'others');
-				} else {
-					sensorTypesNot = [];
 				}
 
 				if (sensorTypesInput.length !== 0) {

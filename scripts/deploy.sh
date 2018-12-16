@@ -35,10 +35,4 @@ echo "deployment succeeded";
 cluster=$3
 services=$4
 
-
-while IFS=' ' read -ra ADDR; do
-  for service in "${ADDR[@]}"; do
-    echo "Killing all $service tasks"
-	node scripts/kill-tasks.js $cluster $service
-  done
-done <<< "$services"
+node scripts/kill-tasks.js $cluster $services

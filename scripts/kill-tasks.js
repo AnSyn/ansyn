@@ -4,13 +4,15 @@ if (process.argv.length <= 2) {
     console.log("Usage: " + __filename + " service_name");
     process.exit(-1);
 }
+const cluster = process.argv[2]
+const service = process.argv[3]
 
-exec(`aws --region us-west-2 ecs list-tasks --cluster ansyn-app-cluster --service-name ${process.argv[2]}`, (error, stdout, stderr) => {
+exec(`aws --region us-west-2 ecs list-tasks --cluster ${cluster} --service-name ${service}`, (error, stdout, stderr) => {
 	const tasks = JSON.parse(stdout);
 	const arns = tasks.taskArns;
 	arns.forEach(arn => {
 		const task = arn.split('/')[1];
-		exec('aws --region us-west-2 ecs stop-task --cluster ansyn-app-cluster --task ' + task, (error, stdout, stderr) => {
+		exec(`aws --region us-west-2 ecs stop-task --cluster ${cluster} --task ${task}`, (error, stdout, stderr) => {
 			console.log(stdout);
 			console.log(stderr);
 			if (error !== null) {

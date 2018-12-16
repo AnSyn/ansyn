@@ -32,12 +32,13 @@ docker push "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:$version"
 
 echo "deployment succeeded";
 
-services=$3
+cluster=$3
+services=$4
+
 
 while IFS=' ' read -ra ADDR; do
   for service in "${ADDR[@]}"; do
-	echo $i
     echo "Killing all $service tasks"
-	node scripts/kill-tasks.js $service
+	node scripts/kill-tasks.js $cluster $service
   done
 done <<< "$services"

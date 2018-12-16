@@ -45,12 +45,12 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $SERVICE_DEV $SERVICE2_DEV
+    script: sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $SERVICES_DEV
     skip_cleanup: true
     on:
       branch: master
   - provider: script
-    script: sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $SERVICE_PROD $SERVICE2_PROD
+    script: sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $SERVICES_PROD
     skip_cleanup: true
     on:
       tags: true

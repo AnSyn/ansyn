@@ -18,6 +18,7 @@ import {
 } from '@ansyn/core';
 import { ITBConfig, ITBOverlay } from './tb.model';
 import { Polygon } from 'geojson';
+import { IStatusBarConfig, StatusBarConfig } from "@ansyn/status-bar";
 
 export const TBOverlaySourceType = 'TB';
 
@@ -49,7 +50,8 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
-		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
+		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
+		@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
 		super(loggerService);
 	}
 
@@ -63,49 +65,71 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			geometry = fetchParams.region;
 		}
 
-		if (fetchParams.dataInputFilters.length !== 0) {
-			let sensorTypeMatch = true;
-			let sensorNameMatch = true;
-			let sensorTypes;
-			let sensorNames;
+		// set the queries according to the Sensor Type and Name
+		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
+			let sensorTypesInput;
+			let sensorTypesNot;
+			let sensorNamesInput;
+			let sensorNamesNot;
 
+			// set Sensor Types in the filter query
 			if (fetchParams.dataInputFilters[0].sensorType) {
-				sensorTypes = fetchParams.dataInputFilters.map(filter => filter.sensorType);
-				if (sensorTypes.find(sensorType => sensorType === 'others')) {
-					sensorTypeMatch = false;
-					sensorTypes = sensorTypes.filter(sensorType => !(sensorType === 'others'));
+				sensorTypesInput = fetchParams.dataInputFilters.map(filter => filter.sensorType);
+				if (sensorTypesInput.some(sensorType => sensorType === 'others')) {
+					const sensorTypesList = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType);
+					sensorTypesNot = sensorTypesList.filter(sensor => !sensorTypesInput.includes(sensor));
+					sensorTypesInput = sensorTypesInput.filter(sensorType => sensorType !== 'others');
+				} else {
+					sensorTypesNot = [];
 				}
-			} else {
-				sensorTypes = [];
+
+				if (sensorTypesInput.length !== 0) {
+					queries.push({
+						field: 'inputData.sensor.type',
+						values: sensorTypesInput,
+						isMatch: true
+					});
+				}
+
+				if (sensorTypesNot.length !== 0) {
+					queries.push({
+						field: 'inputData.sensor.type',
+						values: sensorTypesNot,
+						isMatch: false
+					});
+				}
 			}
 
+			// set Sensor Names in the filter query
 			if (fetchParams.dataInputFilters[0].sensorName) {
-				sensorNames = fetchParams.dataInputFilters.map(filter => filter.sensorName);
-				if (sensorNames.find(sensorName => sensorName === 'others')) {
-					sensorNameMatch = false;
-					sensorNames = sensorNames.filter(sensorName => !(sensorName === 'others'));
+				sensorNamesInput = fetchParams.dataInputFilters.map(filter => filter.sensorName);
+				if (sensorNamesInput.some(sensorType => sensorType === 'others')) {
+					const sensorNamesList = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorName);
+					sensorNamesInput = sensorTypesInput.filter(sensorName => sensorName !== 'others');
+					sensorNamesNot = sensorNamesList.filter(sensor => !sensorNamesInput.includes(sensor));
+				} else {
+					sensorTypesNot = [];
 				}
-			} else {
-				sensorNames = [];
-			}
 
-			if (sensorTypes.length !== 0) {
-				queries.push({
-					field: 'inputData.sensor.type',
-					values: sensorTypes,
-					isMatch: sensorTypeMatch
-				})
-			}
+				if (sensorNamesInput.length !== 0) {
+					queries.push({
+						field: 'inputData.sensor.name',
+						values: sensorNamesInput,
+						isMatch: true
+					});
+				}
 
-			if (sensorNames.length !== 0) {
-				queries.push({
-					field: 'inputData.sensor.name',
-					values: sensorNames,
-					isMatch: sensorNameMatch
-				})
+				if (sensorNamesNot.length !== 0) {
+					queries.push({
+						field: 'inputData.sensor.name',
+						values: sensorNamesNot,
+						isMatch: false
+					});
+				}
 			}
 		}
 
+		console.log(`TB fetch queries: ${JSON.stringify(queries)}`);
 		const body: ITBRequestBody = {
 			worldName: 'public',
 			geometry,

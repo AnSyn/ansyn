@@ -64,3 +64,6 @@ confd/confd.exe
 confd/confd
 
 src/ng-ansyn.metadata.json
+
+# base fork confilt
+src/app/drone

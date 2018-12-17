@@ -30,6 +30,11 @@
 	border-bottom: 1px solid @color-weak-white;
 }
 
+.flex-row {
+	display: flex;
+	align-items: center;
+}
+
 .invisible {
 	visibility: hidden;
 }
@@ -51,14 +56,12 @@ ansyn-combo-box {
 }
 
 .pin {
-	display: inline-block;
 	margin-left: 20px;
-	opacity: 1;
+	background-color: transparent;
+	border: none;
+	outline: none;
 	color: red;
-	font-size: 20px;
-	&:before {
-		content: '\1f589';
-	}
+	font-size: 30px;
 	&:hover {
 		transform: translateX(2px);
 	}

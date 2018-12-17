@@ -89,8 +89,6 @@
 
 		<button ansynButton class="reset" type="button" [disabled]="disabledReset()" (click)="resetForm()" >Reset</button>
 		<button ansynButton type="submit" [disabled]="!f.valid || loading">Submit</button>
-
-		<span>valid {{f.valid}}</span>
 	</form>
 </div>
 

@@ -80,9 +80,9 @@ export function mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number
 
 @Injectable()
 export abstract class BaseOverlaySourceProvider {
-	sourceType: string;
+	readonly sourceType: string;
 
-	protected constructor(protected loggerService: LoggerService) {
+	constructor(protected loggerService: LoggerService) {
 	}
 
 	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {

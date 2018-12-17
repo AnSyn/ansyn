@@ -1,12 +1,14 @@
 import { forkJoin, Observable } from 'rxjs';
 import {
 	BaseOverlaySourceProvider,
-	IFetchParams, IOverlayByIdMetaData,
+	IFetchParams,
+	IOverlayByIdMetaData,
 	IOverlayFilter,
 	IStartAndEndDate,
+	OverlaySourceProvider,
 	timeIntersection
 } from '@ansyn/overlays';
-import { Inject, Injectable } from '@angular/core';
+import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	ErrorHandlerService,
@@ -22,12 +24,12 @@ import {
 } from '@ansyn/core';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
-import { StatusBarConfig, IStatusBarConfig } from '@ansyn/status-bar';
+import { IStatusBarConfig, StatusBarConfig } from '@ansyn/status-bar';
 
 const moment = momentNs;
 
@@ -54,9 +56,10 @@ export interface IPlanetFetchParams extends IFetchParams {
 	planetFilters: IPlanetFilter[]
 }
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: PlanetOverlaySourceType
+})
 export class PlanetSourceProvider extends BaseOverlaySourceProvider {
-	sourceType = PlanetOverlaySourceType;
 	readonly httpHeaders: HttpHeaders;
 
 	protected planetDic = {
@@ -72,7 +75,6 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
 				protected loggerService: LoggerService) {
 		super(loggerService);
-
 		this.httpHeaders = new HttpHeaders({
 			Authorization:
 				`basic ${btoa((this.planetOverlaysSourceConfig.apiKey + ':'))}`
@@ -234,7 +236,13 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 
 	getByIds(ids: IOverlayByIdMetaData[]) {
 		const { baseUrl } = this.planetOverlaysSourceConfig;
-		const body = this.buildFilters({ config: [{ type: 'StringInFilter', field_name: 'id', config: ids.map(({ id }) => id) }] });
+		const body = this.buildFilters({
+			config: [{
+				type: 'StringInFilter',
+				field_name: 'id',
+				config: ids.map(({ id }) => id)
+			}]
+		});
 		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, body, { headers: this.httpHeaders }).pipe(
 			map(data => {
 				if (data.features.length < ids.length) {

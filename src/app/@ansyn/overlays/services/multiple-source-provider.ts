@@ -20,6 +20,7 @@ import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
+import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
 
 export interface IFiltersList {
 	name: string,
@@ -41,7 +42,6 @@ export interface IMultipleOverlaysSourceConfig {
 }
 
 export const MultipleOverlaysSourceConfig = 'multipleOverlaysSourceConfig';
-export const MultipleOverlaysSource: InjectionToken<BaseOverlaySourceProvider[]> = new InjectionToken('multiple-overlays-sources');
 
 @Injectable({
 	providedIn: 'root'
@@ -50,7 +50,7 @@ export class MultipleOverlaysSourceProvider {
 	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				@Inject(MultipleOverlaysSource) protected overlaysSources: BaseOverlaySourceProvider[]) {
+				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSource) {
 		this.prepareWhitelist();
 	}
 
@@ -79,7 +79,7 @@ export class MultipleOverlaysSourceProvider {
 
 		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive;
 
-		this.overlaysSources.map(mapProviderConfig).filter(filterWhiteList).forEach(([provider, config]) => {
+		Object.values(this.overlaysSources).map(mapProviderConfig).filter(filterWhiteList).forEach(([provider, config]) => {
 
 			let whiteFilters = [];
 
@@ -144,7 +144,7 @@ export class MultipleOverlaysSourceProvider {
 	}
 
 	public getById(id: string, sourceType: string): Observable<IOverlay> {
-		const overlaysSource = this.overlaysSources.find(s => s.sourceType === sourceType);
+		const overlaysSource = this.overlaysSources[sourceType];
 		if (overlaysSource) {
 			return overlaysSource.getById(id, sourceType);
 		}
@@ -155,7 +155,7 @@ export class MultipleOverlaysSourceProvider {
 		const grouped = groupBy(ids, 'sourceType');
 		const observables = Object.entries(grouped)
 			.map(([sourceType, ids]): Observable<IOverlay[]> => {
-				const overlaysSource = this.overlaysSources.find(s => s.sourceType === sourceType);
+				const overlaysSource = this.overlaysSources[sourceType];
 				if (overlaysSource) {
 					return overlaysSource.getByIds(ids);
 				}

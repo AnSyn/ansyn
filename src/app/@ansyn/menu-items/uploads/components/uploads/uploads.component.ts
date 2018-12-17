@@ -19,13 +19,14 @@ export class UploadsComponent {
 	modal = false;
 
 	sharing: string;
-	title: string;
+	description: string;
 	licence: boolean;
 	sensorType: string;
 	sensorName: string;
 	fileInputValue: string;
 	files: FileList;
 	other: boolean;
+	creditName: string;
 
 	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig,
 				protected httpClient: HttpClient,
@@ -35,16 +36,17 @@ export class UploadsComponent {
 	}
 
 	disabledReset() {
-		const { sharing, title, licence, sensorType, sensorName, fileInputValue, other } = this;
+		const { sharing, description, licence, sensorType, sensorName, fileInputValue, creditName, other } = this;
 		return isEqual({
 			sharing: this.config.defaultSharing,
-			title: '',
+			description: '',
 			licence: false,
 			sensorType: this.config.defaultSensorType,
 			sensorName: '',
 			fileInputValue: '',
+			creditName: '',
 			other: false
-		}, { sharing, title, licence, sensorType, sensorName, fileInputValue, other });
+		}, { sharing, description, licence, sensorType, sensorName, fileInputValue, creditName, other });
 	}
 
 	submitCustomSensorName(text: string) {
@@ -59,7 +61,8 @@ export class UploadsComponent {
 		this.resetForm();
 		this.loading = true;
 		const formData = new FormData();
-		formData.append('title', this.title);
+		formData.append('description', this.description);
+		formData.append('creditName', this.creditName);
 		formData.append('sensorType', this.sensorType);
 		formData.append('sensorName', this.sensorName);
 		formData.append('sharing', this.sharing);
@@ -70,14 +73,16 @@ export class UploadsComponent {
 			.pipe(
 				tap(() => this.store.dispatch(new SetToastMessageAction({ toastText: 'Success to upload file' }))),
 				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to upload file', null)),
-				tap(() => { this.loading = false; })
+				tap(() => {
+					this.loading = false;
+				})
 			)
 			.subscribe();
 	}
 
 	resetForm() {
 		this.sharing = this.config.defaultSharing;
-		this.title = '';
+		this.description = '';
 		this.licence = false;
 		this.sensorType = this.config.defaultSensorType;
 		this.sensorName = '';

@@ -1,12 +1,19 @@
 <div>
 	<form class="upload-form" #f="ngForm" (ngSubmit)="onSubmit()">
-
 		<div class="form-field">
-			<ansyn-input label="Title"
+			<ansyn-input
+				label="Name for credit"
+				[white]="true"
+				name="creditName"
+			[(ngModel)]="creditName">
+			</ansyn-input>
+		</div>
+		<div class="form-field">
+			<ansyn-input label="Description"
 						 [white]="true"
 						 select
-						 name="title"
-						 [(ngModel)]="title">
+						 name="description"
+						 [(ngModel)]="description">
 			</ansyn-input>
 		</div>
 		<div class="form-field sensor-type">
@@ -73,16 +80,17 @@
 
 		<div class="form-field">
 			<ansyn-checkbox
-				name="licence"
 				required
+				name="licence"
 				[(ngModel)]="licence">
 				<span class="licence">I agree to the <a [href]="rulesLink" target="_blank">rules</a></span>
 			</ansyn-checkbox>
 		</div>
 
 		<button ansynButton class="reset" type="button" [disabled]="disabledReset()" (click)="resetForm()" >Reset</button>
-		<button ansynButton type="submit" [disabled]="!f.valid || loading">Submit</button>
+		<button ansynButton type="submit" [disabled]="!f.valid || loading || !licence">Submit</button>
 
+		<span>valid {{f.valid}}</span>
 	</form>
 </div>
 

@@ -6,18 +6,27 @@ import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourc
 import {
 	ErrorHandlerService,
 	geojsonPolygonToMultiPolygon,
-	getPolygonByPointAndRadius, IMapSourceProvidersConfig,
+	getPolygonByPointAndRadius,
+	IMapSourceProvidersConfig,
 	IOverlay,
 	limitArray,
-	LoggerService, MAP_SOURCE_PROVIDERS_CONFIG,
+	LoggerService,
+	MAP_SOURCE_PROVIDERS_CONFIG,
 	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { ITBOverlay, ITBConfig } from './tb.model';
+import { ITBConfig, ITBOverlay } from './tb.model';
 import { Polygon } from 'geojson';
+import { IStatusBarConfig, StatusBarConfig } from "@ansyn/status-bar";
 
 export const TBOverlaySourceType = 'TB';
+
+export interface ITBQuery {
+	field: string;
+	values: string[];
+	isMatch: boolean;
+}
 
 export interface ITBRequestBody {
 	worldName: string;
@@ -26,6 +35,7 @@ export interface ITBRequestBody {
 		start: string,
 		end: string
 	};
+	queries: ITBQuery[];
 }
 
 @OverlaySourceProvider({
@@ -40,12 +50,14 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
-		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
+		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
+		@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
 		super(loggerService);
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
 		let geometry;
+		let queries = [];
 
 		if (fetchParams.region.type === 'Point') {
 			geometry = getPolygonByPointAndRadius((<any>fetchParams.region).coordinates).geometry as GeoJSON.Polygon;
@@ -53,13 +65,37 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			geometry = fetchParams.region;
 		}
 
+		// set the queries according to the Sensor Type and Name
+		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
+			const query = {
+				field: 'inputData.sensor.type',
+				values: [],
+				isMatch: true
+			};
+
+			// set Sensor Types in the filter query
+			if (fetchParams.dataInputFilters[0].sensorType) {
+				const sensorTypesInput = fetchParams.dataInputFilters.map(filter => filter.sensorType);
+				if (sensorTypesInput.some(sensorType => sensorType === 'others')) {
+					const sensorTypesList = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType);
+					query.values = sensorTypesList.filter(sensor => !sensorTypesInput.includes(sensor));
+					query.isMatch = false;
+				} else {
+					query.values = sensorTypesInput;
+					query.isMatch = true;
+				}
+				queries.push(query);
+			}
+		}
+
 		const body: ITBRequestBody = {
 			worldName: 'public',
+			geometry,
 			dates: {
 				start: fetchParams.timeRange.start.toISOString(),
 				end: fetchParams.timeRange.end.toISOString()
 			},
-			geometry
+			queries
 		};
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(

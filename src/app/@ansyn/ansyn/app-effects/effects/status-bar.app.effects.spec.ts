@@ -12,16 +12,17 @@ import {
 	MultipleOverlaysSourceProvider,
 	OverlayReducer,
 	OverlaysConfig,
-	overlaysFeatureKey,
+	overlaysFeatureKey, OverlaySourceProvider,
 	OverlaysService
 } from '@ansyn/overlays';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 
+@OverlaySourceProvider({
+	sourceType: 'Mock'
+})
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	sourceType = 'Mock';
-
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return EMPTY;
 	}

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
-import { Inject, Injectable } from '@angular/core';
+import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
 	ErrorHandlerService,
@@ -14,7 +14,7 @@ import {
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { catchError, map } from 'rxjs/operators';
 
@@ -39,10 +39,10 @@ export interface IIdahoOverlaySourceConfig {
 	overlaysByTimeAndPolygon: string;
 }
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: IdahoOverlaySourceType
+})
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
-	sourceType = IdahoOverlaySourceType;
-
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected httpClient: HttpClient,
 				@Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig,
@@ -86,7 +86,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
 			})
-		)
+		);
 
 	}
 

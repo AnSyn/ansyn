@@ -11,12 +11,10 @@ import { OpenLayerPlanetSourceProvider } from './map-source-providers/open-layer
 import { OpenLayerIDAHOSourceProvider } from './map-source-providers/open-layers-IDAHO-source-provider';
 import { OpenLayerESRI4326SourceProvider } from './map-source-providers/open-layers-ESRI-4326-source-provider';
 import { OpenLayerOpenAerialSourceProvider } from './map-source-providers/open-layers-open-aerial-source-provider';
-import { MultipleOverlaysSource, OverlaysModule } from '@ansyn/overlays';
+import { OverlaysModule } from '@ansyn/overlays';
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
-import { OpenLayerTBSourceProvider } from './map-source-providers/open-layers-TB-source-provider';
-import { TBSourceProvider } from './overlay-source-providers/tb/tb-source-provider';
 
 @NgModule({
 	imports: [
@@ -30,8 +28,7 @@ import { TBSourceProvider } from './overlay-source-providers/tb/tb-source-provid
 				OpenLayerPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
-				OpenLayerOpenAerialSourceProvider,
-				OpenLayerTBSourceProvider
+				OpenLayerOpenAerialSourceProvider
 			],
 			plugins: [],
 			maps: []
@@ -40,13 +37,11 @@ import { TBSourceProvider } from './overlay-source-providers/tb/tb-source-provid
 			overlaySourceProviders: [
 				PlanetSourceProvider,
 				OpenAerialSourceProvider,
-				IdahoSourceProvider,
-				TBSourceProvider
+				IdahoSourceProvider
 			]
 		})
 	],
 	providers: [
-
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },

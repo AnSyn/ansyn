@@ -1,5 +1,3 @@
-import { EntitiesVisualizer } from './openlayers/visualizers/entities-visualizer';
-
 export {
 	DisabledOpenLayersMapName,
 	OpenLayersDisabledMap

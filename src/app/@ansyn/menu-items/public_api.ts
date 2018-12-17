@@ -1,5 +1,3 @@
-import { AlgorithmTask, AlgorithmTaskStatus } from './algorithms/models/tasks.model';
-
 export { IUploadsConfig, UploadsConfig } from './uploads/config/uploads-config';
 
 export { EditSensorNameComponent } from './uploads/components/edit-sensor-name/edit-sensor-name.component';
@@ -134,4 +132,3 @@ export {
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './algorithms/models/tasks.model';
-

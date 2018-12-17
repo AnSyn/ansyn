@@ -1,16 +1,14 @@
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
-import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
-import { ErrorHandlerService, ICaseMapState, IOverlay } from '@ansyn/core';
+import { ErrorHandlerService, ICaseMapState } from '@ansyn/core';
 import Projection from 'ol/proj/projection';
 import Static from 'ol/source/imagestatic';
 import ImageLayer from 'ol/layer/image';
-import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
-import { ITBConfig } from '../overlay-source-providers/tb/tb.model';
+import { ITBConfig } from '../overlay-source-provider/tb.model';
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
-import { catchError, tap } from 'rxjs/operators';
+import { OpenLayersMapSourceProvider } from '@ansyn/ansyn';
 
 export const OpenLayerTBSourceProviderSourceType = 'TB';
 

@@ -1,6 +1,13 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { UUID } from 'angular2-uuid';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+	AbstractControl,
+	ControlValueAccessor,
+	NG_VALIDATORS,
+	NG_VALUE_ACCESSOR,
+	ValidationErrors,
+	Validator, Validators
+} from '@angular/forms';
 import { noop } from 'rxjs';
 
 @Component({
@@ -12,12 +19,19 @@ import { noop } from 'rxjs';
 			provide: NG_VALUE_ACCESSOR,
 			useExisting: forwardRef(() => AnsynCheckboxComponent),
 			multi: true
+		},
+		{
+			provide: NG_VALIDATORS,
+			useExisting: forwardRef(() => AnsynCheckboxComponent),
+			multi: true
 		}
 	]
 })
 
-export class AnsynCheckboxComponent implements ControlValueAccessor {
+export class AnsynCheckboxComponent implements ControlValueAccessor, Validator {
 	@Input() id = UUID.UUID();
+	@Input() required;
+	@Input() name: string;
 	disabled: boolean;
 
 	protected _value;
@@ -51,5 +65,12 @@ export class AnsynCheckboxComponent implements ControlValueAccessor {
 
 	setDisabledState(isDisabled: boolean): void {
 		this.disabled = isDisabled;
+	}
+
+	validate(c: AbstractControl): ValidationErrors | null {
+		if (this.required !== undefined) {
+			return Validators.requiredTrue(<any>this);
+		}
+		return null;
 	}
 }

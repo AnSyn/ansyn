@@ -75,9 +75,9 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 			// set Sensor Types in the filter query
 			if (fetchParams.dataInputFilters[0].sensorType) {
-				const sensorTypesInput = fetchParams.dataInputFilters.map(filter => filter.sensorType);
+				const sensorTypesInput = fetchParams.dataInputFilters.map(filter => filter.sensorType.trim().toLowerCase());
 				if (sensorTypesInput.some(sensorType => sensorType === 'others')) {
-					const sensorTypesList = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType);
+					const sensorTypesList = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType.trim().toLowerCase());
 					query.values = sensorTypesList.filter(sensor => !sensorTypesInput.includes(sensor));
 					query.isMatch = false;
 				} else {

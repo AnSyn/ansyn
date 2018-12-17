@@ -13,11 +13,6 @@ import { BaseFootprintsVisualizer } from './base-footprints-visualizer';
 })
 export class FootprintHeatmapVisualizer extends BaseFootprintsVisualizer {
 
-	geometryToEntity(id, footprint): IVisualizerEntity {
-		const fp = turf.simplify(turf.multiPolygon(footprint.coordinates), { tolerance: 0.01, highQuality: true });
-		return super.geometryToEntity(id, fp.geometry);
-	}
-
 	constructor(public store: Store<any>,
 				public actions$: Actions,
 				public overlaysService: OverlaysService

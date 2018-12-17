@@ -50,7 +50,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	);
 
 	constructor(public store: Store<any>,
-				@Inject(VisualizersConfig) config: IVisualizersConfig,
+				@Inject(VisualizersConfig) protected config: IVisualizersConfig,
 				public overlaysService: OverlaysService
 	) {
 
@@ -73,11 +73,6 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 				'stroke': (feature) => this.getStrokeColor(feature, this.visualizerStyle.colors.display)
 			}
 		});
-	}
-
-	geometryToEntity(id, footprint) {
-		const fp = turf.simplify(turf.multiPolygon(footprint.coordinates), { tolerance: 0.01, highQuality: true });
-		return super.geometryToEntity(id, fp.geometry);
 	}
 
 	protected initLayers() {

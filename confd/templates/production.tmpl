@@ -460,12 +460,16 @@
       }
     },
     "FootprintPolylineVisualizer": {
+      "minSimplifyVertexCountLimit": 100,
       "colors": {
         "active": "#27b2cf",
         "inactive": "#d393e1",
         "display": "#9524ad",
         "favorite": "yellow"
       }
+    },
+    "FootprintHeatmapVisualizer": {
+      "minSimplifyVertexCountLimit": 100
     },
     "exampleFootprintHeatmapVisualizer": {
       "initial": {
@@ -1163,7 +1167,7 @@
       "sensorTypes": [  "Drone Imagery (JPG)", "Drone Map (GeoTIFF)", "Satellite GeoTIFF" ],
       "sensorNames": [ "Phantom 3", "Phantom 4", "Phantom 4 Advanced", "Phantom 4 Pro", "Mavic", "Mavic Pro", "Mavic 2", "Spark", "Inspire" ],
       "defaultSharing": "public",
-      "defaultSensorType": "Drone imagery (JPG)",
+      "defaultSensorType": "Drone Imagery (JPG)",
       "rulesLink": "about:blank"
    }
 }

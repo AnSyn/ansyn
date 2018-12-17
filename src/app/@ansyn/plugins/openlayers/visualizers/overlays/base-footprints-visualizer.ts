@@ -4,7 +4,7 @@ import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade
 import { OverlaysService, selectDrops } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { ICaseMapState, IOverlay, IVisualizerStateStyle } from '@ansyn/core';
+import { ICaseMapState, IOverlay, IVisualizerEntity, IVisualizerStateStyle } from '@ansyn/core';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EMPTY } from 'rxjs/index';
@@ -40,16 +40,17 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 	constructor(public store: Store<any>,
 				public overlaysService: OverlaysService,
 				public overlayDisplayMode: string,
-				public config: Partial<IVisualizerStateStyle>,
+				public fpConfig: Partial<IVisualizerStateStyle>,
 				...superArgs
 	) {
-		super(config, ...superArgs);
+		super(fpConfig, ...superArgs);
 	}
 
-	geometryToEntity(id, footprint) {
-		let { geometry } = footprint;
-		if (this.config.simplifyGeometries ) {
-			geometry = turf.simplify(turf.multiPolygon(footprint.coordinates), { tolerance: 0.01, highQuality: true }).geometry;
+	geometryToEntity(id, geometry): IVisualizerEntity {
+		const numOfPoints = geometry.coordinates[0][0].length;
+
+		if (this.fpConfig.minSimplifyVertexCountLimit < numOfPoints) {
+			geometry = turf.simplify(turf.multiPolygon(geometry.coordinates), { tolerance: 0.01, highQuality: true }).geometry;
 		}
 		return super.geometryToEntity(id, geometry);
 	}

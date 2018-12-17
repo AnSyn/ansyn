@@ -50,7 +50,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	);
 
 	constructor(public store: Store<any>,
-				@Inject(VisualizersConfig) protected config: IVisualizersConfig,
+				@Inject(VisualizersConfig) public config: IVisualizersConfig,
 				public overlaysService: OverlaysService
 	) {
 

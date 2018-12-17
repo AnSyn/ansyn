@@ -147,7 +147,7 @@
   },
   "mapSourceProvidersConfig": {
     "TB": {
-    	"baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
+    	"baseUrl": "http://localhost:10010/v2/api/ansyn/layers"
     },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
@@ -303,33 +303,21 @@
 				  "collapsed": true,
 				  "children": [
 				  	{
-					  "text": "UAV",
+					  "text": "Drone Imagery (JPG)",
 					  "value": {
-						"sensorType": "UAV"
+						"sensorType": "Drone Imagery (JPG)"
 					  }
 					},
 					{
-					  "text": "Satellite",
+					  "text": "Drone Map (GeoTIFF)",
 					  "value": {
-						"sensorType": "Satellite"
+						"sensorType": "Drone Map (GeoTIFF)"
 					  }
 					},
 					{
-					  "text": "Aircraft",
+					  "text": "Satellite GeoTIFF",
 					  "value": {
-						"sensorType": "Aircraft"
-					  }
-					},
-					{
-					  "text": "Baloon",
-					  "value": {
-						"sensorType": "Baloon"
-					  }
-					},
-					{
-					  "text": "Kite",
-					  "value": {
-						"sensorType": "Kite"
+						"sensorType": "Satellite GeoTIFF"
 					  }
 					},
 					{
@@ -1159,11 +1147,11 @@
 	}
   },
   "uploadsConfig": {
-      "apiUrl": "http://tb-server.webiks.com/v1/api/ansyn/upload",
+      "apiUrl": "http://localhost:10010/v1/api/ansyn/upload",
       "sensorTypes": [  "Drone Imagery (JPG)", "Drone Map (GeoTIFF)", "Satellite GeoTIFF" ],
       "sensorNames": [ "Phantom 3", "Phantom 4", "Phantom 4 Advanced", "Phantom 4 Pro", "Mavic", "Mavic Pro", "Mavic 2", "Spark", "Inspire" ],
       "defaultSharing": "public",
-      "defaultSensorType": "Drone imagery (JPG)",
+      "defaultSensorType": "Drone Imagery (JPG)",
       "rulesLink": "about:blank"
    }
 }

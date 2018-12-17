@@ -6,13 +6,13 @@ export interface IOverlaySourceProviderConstructor {
 	new(...args): BaseOverlaySourceProvider;
 }
 
-export const MultipleOverlaysSource: InjectionToken<BaseOverlaySourceProvider[]> = new InjectionToken('multiple-overlays-sources');
+export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSource> = new InjectionToken('multiple-overlays-sources');
 
 export interface IMultipleOverlaysSource {
 	[sourceType: string]: BaseOverlaySourceProvider
 }
 
-export function OverlaySourceProvider({ sourceType }: { sourceType }) {
+export function OverlaySourceProvider({ sourceType }: { sourceType: string }) {
 	return function (constructor: IOverlaySourceProviderConstructor) {
 		Injectable()(constructor);
 		constructor.prototype.sourceType = sourceType;
@@ -20,7 +20,7 @@ export function OverlaySourceProvider({ sourceType }: { sourceType }) {
 }
 
 export interface IOverlaysMetadata {
-	overlaySourceProviders: any[];
+	overlaySourceProviders: IOverlaySourceProviderConstructor[];
 }
 
 export const OVERLAYS_SOURCE_PROVIDERS = new InjectionToken('OVERLAYS_SOURCE_PROVIDERS');

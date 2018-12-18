@@ -5,7 +5,7 @@ import { ImageryModule } from '@ansyn/imagery';
 import { OpenLayersImisightSourceProvider } from './open-layers-imisight-source-provider';
 import { CallbackComponent } from './callback/callback.component';
 import { CoreModule } from '@ansyn/core';
-import { MultipleOverlaysSource } from '@ansyn/overlays';
+import { MultipleOverlaysSource, OverlaysModule } from '@ansyn/overlays';
 
 @NgModule({
 	imports: [
@@ -17,10 +17,10 @@ import { MultipleOverlaysSource } from '@ansyn/overlays';
 			mapSourceProviders: [
 				OpenLayersImisightSourceProvider
 			]
+		}),
+		OverlaysModule.provide({
+			overlaySourceProviders: [ImisightSourceProvider]
 		})
-	],
-	providers: [
-		{ provide: MultipleOverlaysSource, useClass: ImisightSourceProvider, multi: true },
 	],
 	declarations: [CallbackComponent],
 	exports: [CallbackComponent]

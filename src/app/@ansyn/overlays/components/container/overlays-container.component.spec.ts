@@ -10,10 +10,12 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reduce
 import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '../../actions/overlays.actions';
 import { HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../../models//base-overlay-source-provider.model';
+import { OverlaySourceProvider } from '../../models/overlays-source-providers';
 
+@OverlaySourceProvider({
+	sourceType: 'Mock'
+})
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	sourceType = 'Mock';
-
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return EMPTY;
 	}

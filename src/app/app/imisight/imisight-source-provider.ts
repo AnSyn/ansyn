@@ -3,7 +3,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/internal/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
@@ -38,11 +38,10 @@ export interface ImiSightElement {
 	sensorName: string;
 }
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: ImisightOverlaySourceType
+})
 export class ImisightSourceProvider extends BaseOverlaySourceProvider {
-
-	sourceType = ImisightOverlaySourceType;
-
 
 	constructor(
 		public errorHandlerService: ErrorHandlerService,

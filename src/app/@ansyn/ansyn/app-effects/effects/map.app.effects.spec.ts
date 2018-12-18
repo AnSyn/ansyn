@@ -22,6 +22,7 @@ import {
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysInitialState,
+	OverlaySourceProvider,
 	OverlaysService,
 	overlaysStateSelector,
 	RequestOverlayByIDFromBackendAction
@@ -34,7 +35,14 @@ import {
 	statusBarStateSelector
 } from '@ansyn/status-bar';
 import * as extentFromGeojson from '@ansyn/core';
-import { ICase, ICaseMapState, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import {
+	ICase,
+	ICaseMapState,
+	IOverlay,
+	IOverlaysFetchData,
+	LoggerService,
+	MAP_SOURCE_PROVIDERS_CONFIG
+} from '@ansyn/core';
 import {
 	BaseMapSourceProvider,
 	CacheService,
@@ -61,7 +69,6 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported = ['mapType1'];
@@ -83,9 +90,10 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 
 }
 
+@OverlaySourceProvider({
+	sourceType: 'Mock'
+})
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	sourceType = 'Mock';
-
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return EMPTY;
 	}

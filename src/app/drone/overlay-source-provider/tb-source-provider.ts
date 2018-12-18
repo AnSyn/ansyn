@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
 import {
 	ErrorHandlerService,
 	geojsonPolygonToMultiPolygon,
@@ -38,10 +38,10 @@ export interface ITBRequestBody {
 	queries: ITBQuery[];
 }
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: TBOverlaySourceType
+})
 export class TBSourceProvider extends BaseOverlaySourceProvider {
-	readonly sourceType = TBOverlaySourceType;
-
 	get config(): ITBConfig {
 		return this.mapSourceProvidersConfig[this.sourceType];
 	}

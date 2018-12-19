@@ -5,8 +5,7 @@ import {
 	HelpComponent,
 	LayersManagerComponent,
 	SettingsComponent,
-	ToolsComponent,
-	UploadsComponent
+	ToolsComponent
 } from '@ansyn/menu-items';
 import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';

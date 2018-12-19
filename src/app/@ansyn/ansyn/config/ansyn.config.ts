@@ -60,11 +60,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			iconClass: 'icon-main-settings'
 		},
 		{
-			name: 'Uploads',
-			component: UploadsComponent,
-			iconClass: 'icon-layer-export'
-		},
-		{
 			name: 'Help',
 			component: HelpComponent,
 			iconClass: 'icon-help-settings'

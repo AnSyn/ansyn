@@ -1,23 +1,26 @@
+@import "core/less/tooltip";
+
 :host {
-	display: flex;
-	justify-content: flex-end;
+	display: block;
+	position: relative;
+	height: 30px;
 	width: 100%;
 }
 
-.back {
-	display: inline-block;
-	width: 20px;
+button.back {
+	position: absolute;
+	right: 20px;
 	font-size: 20px;
-	margin: -3px 20px 0 0;
+	margin-top: -4px;
 	color: white;
-
-	&:before {
-		content: '\1f850';
-	}
+	background-color: transparent;
+	border: none;
+	outline: none;
+	transition: .2s;
 
 	&:hover {
 		color: yellow;
-		transform: translateX(2px);
+		right: 18px;
 	}
 
 	&:active {

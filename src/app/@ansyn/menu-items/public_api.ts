@@ -128,3 +128,7 @@ export {
 	TasksRemoteDefaultService
 } from './algorithms/services/tasks-remote-default.service';
 
+export {
+	AlgorithmTask,
+	AlgorithmTaskStatus
+} from './algorithms/models/tasks.model';

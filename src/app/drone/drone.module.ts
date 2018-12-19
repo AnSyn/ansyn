@@ -4,8 +4,6 @@ import { ImageryModule } from '@ansyn/imagery';
 import { OpenLayerTBSourceProvider } from './map-source-provider/open-layers-TB-source-provider';
 import { OverlaysModule } from '@ansyn/overlays';
 import { TBSourceProvider } from './overlay-source-provider/tb-source-provider';
-import { MenuModule } from '@ansyn/menu';
-import { droneMenuItems } from './drone-menu-items';
 import { UploadsModule } from './uploads/uploads.module';
 
 @NgModule({
@@ -21,8 +19,7 @@ import { UploadsModule } from './uploads/uploads.module';
 		OverlaysModule.provide({
 			overlaySourceProviders: [TBSourceProvider]
 		}),
-		UploadsModule,
-		MenuModule.provideMenuItems(droneMenuItems)
+		UploadsModule
 	]
 })
 export class DroneModule {

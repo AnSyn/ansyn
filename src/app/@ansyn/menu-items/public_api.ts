@@ -1,8 +1,6 @@
-export { IUploadsConfig, UploadsConfig } from './uploads/config/uploads-config';
+export { IUploadsConfig, UploadsConfig } from '../../drone/uploads/config/uploads-config';
 
-export { EditSensorNameComponent } from './uploads/components/edit-sensor-name/edit-sensor-name.component';
-export { UploadsComponent } from './uploads/components/uploads/uploads.component';
-export { UploadsModule } from './uploads/uploads.module';
+export { EditSensorNameComponent } from '../../drone/uploads/components/edit-sensor-name/edit-sensor-name.component';
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';

@@ -143,7 +143,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
-			isGeoRegistered: false,
+			isGeoRegistered: true,
 			tag: tbOverlay
 		});
 	}

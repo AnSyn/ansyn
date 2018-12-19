@@ -8,7 +8,6 @@ import { IMenuItem } from './models/menu-item.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { InitializeMenuItemsAction } from './actions/menu.actions';
 import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
-import { mergeArrays } from '../core/public_api';
 
 export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 

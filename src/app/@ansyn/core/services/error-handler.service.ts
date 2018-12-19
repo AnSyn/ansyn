@@ -1,13 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SetToastMessageAction } from '../actions/core.actions';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, pipe, throwError, UnaryFunction } from 'rxjs';
 import { LoggerService } from './logger.service';
+import { CoreConfig } from '../models/core.config';
+import { ICoreConfig } from '../models/core.config.model';
+import { catchError, timeout } from 'rxjs/operators';
+
 
 @Injectable()
 export class ErrorHandlerService {
 
-	constructor(protected store: Store<any>, public loggerService: LoggerService) {
+	constructor(protected store: Store<any>, public loggerService: LoggerService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 
 	}
 
@@ -25,8 +29,20 @@ export class ErrorHandlerService {
 		if (typeof returnValue === 'undefined') {
 			return throwError(errMsg);
 		} else {
-			return of(returnValue)
+			return of(returnValue);
 		}
 	}
 
+	public handleTimeoutError(from?: string, time = this.coreConfig.httpTimeout): UnaryFunction<any, any> {
+		return pipe(
+			timeout(time),
+			catchError((err) => {
+				if (err.message === 'Timeout has occured') {
+					const message = `${from} Requested time out after ${time}`;
+					return throwError(message);
+				}
+				return throwError(err);
+			})
+		);
+	}
 }

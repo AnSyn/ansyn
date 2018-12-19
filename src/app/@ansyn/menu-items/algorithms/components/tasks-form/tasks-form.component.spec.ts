@@ -75,6 +75,8 @@ describe('TasksFormComponent', () => {
 			overlays = ['a', 'b'].map((id) => new Overlay({ id: id, sensorName: 'sensor_12' }));
 			component.MIN_NUM_OF_OVERLAYS = 2;
 			component.tasksService.config = {
+				baseUrl: '',
+				urlSuffix: '',
 				schema: '',
 				paginationLimit: 1,
 				algorithms: {

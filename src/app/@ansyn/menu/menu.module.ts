@@ -29,7 +29,8 @@ export class MenuModule {
 			providers: [
 				{
 					provide: MENU_ITEMS,
-					useValue: menuItems
+					useValue: menuItems,
+					multi: true
 				},
 				{
 					provide: ANALYZE_FOR_ENTRY_COMPONENTS,
@@ -40,8 +41,10 @@ export class MenuModule {
 		};
 	}
 
-	constructor(protected store: Store<any>, @Inject(MENU_ITEMS) menuItems: IMenuItem[],
+	constructor(protected store: Store<any>, @Inject(MENU_ITEMS) menuItemsMulti: IMenuItem[][],
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+
+		let menuItems = menuItemsMulti.reduce((prev, next) => [...prev, ...next], []);
 
 		// if empty put all
 		if (Array.isArray(menuConfig.menuItems)) {

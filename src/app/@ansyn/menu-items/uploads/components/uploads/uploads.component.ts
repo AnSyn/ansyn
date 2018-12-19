@@ -2,9 +2,11 @@ import { Component, Inject } from '@angular/core';
 import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
+// import { forkJoin } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
+import { ErrorHandlerService, forkJoinSafe, SetToastMessageAction} from '@ansyn/core';
 import { isEqual } from 'lodash';
+import { forkJoin } from "rxjs/index";
 
 @Component({
 	selector: 'ansyn-uploads',
@@ -60,25 +62,21 @@ export class UploadsComponent {
 	onSubmit() {
 
 		this.loading = true;
-		const formData = new FormData();
-		formData.append('description', this.description);
-		formData.append('creditName', this.creditName);
-		formData.append('sensorType', this.sensorType);
-		formData.append('sensorName', this.sensorName);
-		formData.append('sharing', this.sharing);
-		Array.from(this.files).forEach((file) => formData.append('uploads', file));
 
-		this.httpClient
-			.post(this.config.apiUrl, formData)
-			.pipe(
-				tap(() => this.store.dispatch(new SetToastMessageAction({ toastText: 'Success to upload file' }))),
-				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to upload file', null)),
-				tap(() => {
-					this.loading = false;
-					this.resetForm();
-				})
-			)
-			.subscribe();
+		const uploadRequests = Array.from(this.files).map((file) => {
+			const formData = new FormData();
+			formData.append('description', this.description);
+			formData.append('creditName', this.creditName);
+			formData.append('sensorType', this.sensorType);
+			formData.append('sensorName', this.sensorName);
+			formData.append('sharing', this.sharing);
+			formData.append('uploads', file);
+
+			return this.httpClient
+				.post(this.config.apiUrl, formData)
+		});
+
+		forkJoinSafe(uploadRequests).subscribe(() => this.loading = false);
 	}
 
 	resetForm() {

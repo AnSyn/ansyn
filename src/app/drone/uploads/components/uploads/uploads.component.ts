@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
 import { isEqual } from 'lodash';
+import { UpdateState } from '../../actions/uploads.actions';
 
 @Component({
 	selector: 'ansyn-uploads',
@@ -47,6 +48,10 @@ export class UploadsComponent {
 			creditName: '',
 			other: false
 		}, { sharing, description, licence, sensorType, sensorName, fileInputValue, creditName, other });
+	}
+
+	updateState(keyValue) {
+		this.store.dispatch(new UpdateState(keyValue));
 	}
 
 	submitCustomSensorName(text: string) {

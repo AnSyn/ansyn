@@ -1,14 +1,13 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 import { HttpClient } from '@angular/common/http';
-import { catchError, delay, tap } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { ErrorHandlerService, SetToastMessageAction } from '@ansyn/core';
+import { ErrorHandlerService, FileInputComponent, forkJoinSafe } from '@ansyn/core';
 import { isEqual } from 'lodash';
 import { ResetFormData, UploadFormData } from '../../actions/uploads.actions';
 import { initialUploadsFromData, IUploadsFormData, selectFormData } from '../../reducers/uploads.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { FileInputComponent } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-uploads',
@@ -49,10 +48,10 @@ export class UploadsComponent {
 	}
 
 	disabledReset() {
-		const {files: thisFiles, ...restThisFormData } = this.formData;
-		const {files: initialFiles, ...restInitialFormData } = initialUploadsFromData;
+		const { files: thisFiles, ...restThisFormData } = this.formData;
+		const { files: initialFiles, ...restInitialFormData } = initialUploadsFromData;
 		const emptyFiles = (!thisFiles || !thisFiles.length);
-		return isEqual(restThisFormData , restInitialFormData) && emptyFiles;
+		return isEqual(restThisFormData, restInitialFormData) && emptyFiles;
 	}
 
 	uploadFormData(keyValue) {
@@ -61,34 +60,28 @@ export class UploadsComponent {
 
 	submitCustomSensorName(text: string) {
 		if (text) {
-			console.log(text);
-			this.uploadFormData({ sensorName: text, otherSensorName: true })
+			this.uploadFormData({ sensorName: text, otherSensorName: true });
 		}
 		this.modal = false;
 	}
 
 	onSubmit() {
-
 		this.loading = true;
-		const formData = new FormData();
-		formData.append('description', this.formData.description);
-		formData.append('creditName', this.formData.creditName);
-		formData.append('sensorType', this.formData.sensorType);
-		formData.append('sensorName', this.formData.sensorName);
-		formData.append('sharing', this.formData.sharing);
-		Array.from(this.formData.files).forEach((file) => formData.append('uploads', file));
 
-		this.httpClient
-			.post(this.config.apiUrl, formData)
-			.pipe(
-				tap(() => this.store.dispatch(new SetToastMessageAction({ toastText: 'Success to upload file' }))),
-				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to upload file', null)),
-				tap(() => {
-					this.loading = false;
-					this.resetForm();
-				})
-			)
-			.subscribe();
+		const uploadRequests = Array.from(this.formData.files).map((file) => {
+			const formData = new FormData();
+			formData.append('description', this.formData.description);
+			formData.append('creditName', this.formData.creditName);
+			formData.append('sensorType', this.formData.sensorType);
+			formData.append('sensorName', this.formData.sensorName);
+			formData.append('sharing', this.formData.sharing);
+			formData.append('uploads', file);
+
+			return this.httpClient
+				.post(this.config.apiUrl, formData);
+		});
+
+		forkJoinSafe(uploadRequests).subscribe(() => this.loading = false);
 	}
 
 	resetForm() {

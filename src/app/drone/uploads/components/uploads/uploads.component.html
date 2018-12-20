@@ -4,16 +4,18 @@
 			<ansyn-input
 				label="Name for credit"
 				[white]="true"
+				select
 				name="creditName"
-			[(ngModel)]="creditName">
+				[ngModel]="formData.creditName"
+				(ngModelChange)="uploadFormData({ creditName: $event })">
 			</ansyn-input>
 		</div>
 		<div class="form-field">
 			<ansyn-input label="Description"
 						 [white]="true"
-						 select
 						 name="description"
-						 [(ngModel)]="description">
+						 [ngModel]="formData.description"
+						 (ngModelChange)="uploadFormData({ description: $event })">
 			</ansyn-input>
 		</div>
 		<div class="form-field sensor-type">
@@ -23,7 +25,8 @@
 							 [ngModelOptions]="{standalone: true}"
 							 [value]="value"
 							 required
-							 [(ngModel)]="sensorType">
+							 [ngModel]="formData.sensorType"
+							 (ngModelChange)="uploadFormData({ sensorType: $event })">
 					{{value}}
 				</ansyn-radio>
 			</div>
@@ -35,14 +38,15 @@
 				name="sensorName"
 				color="transparent"
 				placeholder="*Sensor name"
-				[(ngModel)]="sensorName">
+				[ngModel]="formData.sensorName"
+				(ngModelChange)="uploadFormData({ sensorName: $event })">
 
-				<ansyn-combo-box-option *ngFor="let sensor of sensorNames" (click)="other = false" [value]="sensor">
+				<ansyn-combo-box-option *ngFor="let sensor of sensorNames" (click)="uploadFormData({ otherSensorName: false })" [value]="sensor">
 					{{ sensor }}
 				</ansyn-combo-box-option>
 
-				<ansyn-combo-box-option [value]="other && sensorName ? sensorName : ''" (click)="modal = true">
-					<i class="icon-edit"></i> {{ other ? sensorName : 'Other' }}
+				<ansyn-combo-box-option [value]="formData.otherSensorName && formData.sensorName ? formData.sensorName : ''" (click)="modal = true">
+					<i class="icon-edit"></i> {{ formData.otherSensorName ? formData.sensorName : 'Other' }}
 				</ansyn-combo-box-option>
 			</ansyn-combo-box>
 		</div>
@@ -53,7 +57,8 @@
 				name="sharing"
 				color="transparent"
 				placeholder="*Sharing Options"
-				[(ngModel)]="sharing">
+				[ngModel]="formData.sharing"
+				(ngModelChange)="uploadFormData({ sharing: $event })">
 
 				<ansyn-combo-box-option value="public">
 					Public
@@ -68,13 +73,14 @@
 
 		<div class="form-field fileinput">
 			<ansyn-file-input
+				#inputFile
 				required
 				accept="image/jpeg"
 				[multiple]="true"
 				name="files"
 				placeholder="*Choose file"
 				[(ngModel)]="fileInputValue"
-				(change)="files = $event.target.files">
+				(change)="uploadFormData({ files: $event.target.files })">
 			</ansyn-file-input>
 		</div>
 
@@ -82,7 +88,9 @@
 			<ansyn-checkbox
 				required
 				name="licence"
-				[(ngModel)]="licence">
+				[ngModel]="formData.licence"
+				(ngModelChange)="uploadFormData({ licence: $event })"
+			>
 				<span class="licence">I agree to the <a [href]="rulesLink" target="_blank">rules</a></span>
 			</ansyn-checkbox>
 		</div>

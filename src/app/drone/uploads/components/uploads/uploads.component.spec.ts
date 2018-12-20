@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { UploadsComponent } from './uploads.component';
 import { AnsynFormsModule, AnsynModalComponent, ErrorHandlerService, MockComponent } from '@ansyn/core';
@@ -6,8 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { UploadsConfig } from '../../config/uploads-config';
 import { EditSensorNameComponent } from '../edit-sensor-name/edit-sensor-name.component';
 import { HttpClientModule } from '@angular/common/http';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { noop } from 'rxjs';
+import { UploadFormData } from '../../actions/uploads.actions';
 
 describe('UploadsComponent', () => {
 	let component: UploadsComponent;
@@ -17,6 +18,7 @@ describe('UploadsComponent', () => {
 		inputs: ['show'],
 		outputs: ['showChange']
 	});
+	let store: Store<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -45,20 +47,21 @@ describe('UploadsComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(() => {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		fixture = TestBed.createComponent(UploadsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-	});
+		store = _store;
+	}));
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
 
 	it('submitCustomSensorName should set sensorName value and close', () => {
+		spyOn(store, 'dispatch');
 		component.submitCustomSensorName('test');
-		expect(component.sensorName).toEqual('test');
-		expect(component.other).toBeTruthy();
+		expect(store.dispatch).toHaveBeenCalledWith(new UploadFormData({ sensorName: 'test', otherSensorName: true }));
 		expect(component.modal).toBeFalsy();
 	});
 

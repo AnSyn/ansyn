@@ -100,7 +100,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(
 			map((overlays: Array<ITBOverlay>) => overlays
-				.filter((o: ITBOverlay) => o.fileType === 'image')
 				.map((element) => this.parseData(element))
 			),
 			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
@@ -111,8 +110,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 				return this.errorHandlerService.httpErrorHandle(error);
 			})
 		);
-
-
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
@@ -132,18 +129,18 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	protected parseData(tbOverlay: ITBOverlay): IOverlay {
 		return new Overlay({
 			id: tbOverlay._id,
-			name: tbOverlay.inputData.ansyn.title,
-			thumbnailUrl: tbOverlay.imageData.thumbnailUrl,
+			name: tbOverlay.name,
 			footprint: geojsonPolygonToMultiPolygon(tbOverlay.geoData.footprint.geometry),
 			sensorType: tbOverlay.inputData.sensor.type,
 			sensorName: tbOverlay.inputData.sensor.name,
 			bestResolution: 1,
 			imageUrl: tbOverlay.displayUrl,
+			thumbnailUrl: tbOverlay.thumbnailUrl,
 			date: new Date(tbOverlay.createdDate),
 			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: 0,
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: tbOverlay.geoData.isGeoRegistered,
 			tag: tbOverlay
 		});
 	}

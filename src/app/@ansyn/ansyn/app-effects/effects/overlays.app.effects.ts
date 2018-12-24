@@ -60,7 +60,6 @@ import { IContextParams, selectContextEntities, selectContextsParams, SetContext
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get, isEqual } from 'lodash';
-import { current } from 'codelyzer/util/syntaxKind';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -203,7 +202,7 @@ export class OverlaysAppEffects {
 		}
 		return communicator.getPosition().pipe(map((position) => [overlay, position]));
 	});
-	private getOverlayWithNewThumbnail = switchMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
 		if (!overlay) {
 			return [overlay];
 		}

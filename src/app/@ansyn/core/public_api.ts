@@ -4,7 +4,6 @@ export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
 export { mergeArrays } from './utils/merge-arrays';
 export { selectTime } from './reducers/core.reducer';
-export { fetchConfigProviders } from '../ansyn/fetch-config-providers';
 export { IAlertComponent } from './alerts/alerts.model';
 export { ILoggerConfig } from './models/logger-config.model';
 export { AnsynTranslationModule } from './translation/ansyn-translation.module';

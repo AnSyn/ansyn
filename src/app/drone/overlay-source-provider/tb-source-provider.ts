@@ -13,8 +13,7 @@ import {
 	LoggerService,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 	Overlay,
-	sortByDateDesc,
-	toRadians
+	sortByDateDesc
 } from '@ansyn/core';
 import { ITBConfig, ITBOverlay } from './tb.model';
 import { Polygon } from 'geojson';
@@ -100,8 +99,12 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(
 			map((overlays: Array<ITBOverlay>) => overlays
-				.filter((o: ITBOverlay) => o.fileType === 'image')
-				.map((element) => this.parseData(element))
+				.filter((o: ITBOverlay) => o.fileType === 'image' || o.fileType === 'raster')
+				.map((element) => {
+					const parseData = this.parseData(element);
+					console.log(`TBSourceProvider parseData: ${JSON.stringify(parseData)}`);
+					return parseData;
+				})
 			),
 			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
@@ -111,8 +114,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 				return this.errorHandlerService.httpErrorHandle(error);
 			})
 		);
-
-
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
@@ -130,20 +131,24 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(tbOverlay: ITBOverlay): IOverlay {
+		console.log('start parseData...');
+		console.log(`tbOverlay thumbnailUrl: ${JSON.stringify(tbOverlay.thumbnailUrl)}`);
+		console.log(`tbOverlay isGeoRegistered: ${JSON.stringify(tbOverlay.geoData.isGeoRegistered)}`);
+
 		return new Overlay({
 			id: tbOverlay._id,
-			name: tbOverlay.inputData.ansyn.title,
-			thumbnailUrl: tbOverlay.imageData.thumbnailUrl,
+			name: tbOverlay.name,
 			footprint: geojsonPolygonToMultiPolygon(tbOverlay.geoData.footprint.geometry),
 			sensorType: tbOverlay.inputData.sensor.type,
 			sensorName: tbOverlay.inputData.sensor.name,
 			bestResolution: 1,
 			imageUrl: tbOverlay.displayUrl,
+			thumbnailUrl: tbOverlay.thumbnailUrl,
 			date: new Date(tbOverlay.createdDate),
 			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: 0,
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: tbOverlay.geoData.isGeoRegistered,
 			tag: tbOverlay
 		});
 	}

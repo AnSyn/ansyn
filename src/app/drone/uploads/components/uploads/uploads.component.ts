@@ -8,6 +8,8 @@ import { isEqual } from 'lodash';
 import { ResetFormData, UploadFormData } from '../../actions/uploads.actions';
 import { initialUploadsFromData, IUploadsFormData, selectFormData } from '../../reducers/uploads.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { forkJoin, of } from "rxjs/index";
+import { mergeMap } from "rxjs/internal/operators";
 
 @Component({
 	selector: 'ansyn-uploads',

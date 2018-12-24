@@ -18,7 +18,6 @@ import { createTransform, FROMCOORDINATES, FROMPIXEL } from './transforms';
 import TileWMS from "ol/source/tilewms";
 import TileLayer from "ol/layer/tile";
 
-
 export const OpenLayerTBSourceProviderSourceType = 'TB';
 
 @ImageryMapSource({
@@ -37,7 +36,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	createAsync(metaData: ICaseMapState): any {
+	createAsync(metaData: ICaseMapState): Promise<any> {
 		if (metaData.data.overlay.tag.fileType === 'image') {
 			const extent: any = [0, 0, metaData.data.overlay.tag.imageData.ExifImageWidth, metaData.data.overlay.tag.imageData.ExifImageHeight];
 			const boundary = metaData.data.overlay.tag.geoData.footprint.geometry.coordinates[0];
@@ -85,23 +84,22 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 			return this.addFootprintToLayerPromise(Promise.resolve(imageLayer), metaData);
 
 		} else {
-			console.log('start open-layers for GeoTiff...');
-			console.log(`url: ${metaData.data.overlay.imageUrl}`);
-			console.log(`LAYERS: ${metaData.data.overlay.tag.geoserver.resource.name}`);
-			console.log(`projection: ${metaData.data.overlay.tag.data.srs}`);
+			return new Promise(resolve => {
+				console.log('start open-layers for GeoTiff...');
 
-			const source = new TileWMS(<any>{
-				preload: Infinity,
-				url: metaData.data.overlay.imageUrl,
-				params: {
-					'VERSION': '1.1.0',
-					LAYERS: metaData.data.overlay.tag.geoserver.resource.name
-				},
-				projection: metaData.data.overlay.tag.data.srs
+				const source = new TileWMS(<any>{
+					preload: Infinity,
+					url: metaData.data.overlay.imageUrl,
+					params: {
+						'VERSION': '1.1.0',
+						LAYERS: metaData.data.overlay.tag.geoserver.layer.resource.name
+					},
+					projection: metaData.data.overlay.tag.geoserver.data.srs
+				});
+
+				const tiled = new TileLayer({ visible: true, source });
+				return resolve([tiled]);
 			});
-
-			const tiled = new TileLayer({ visible: true, source });
-			return [tiled];
 		}
 	}
 }

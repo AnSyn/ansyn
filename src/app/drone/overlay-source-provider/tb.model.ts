@@ -35,7 +35,7 @@ export interface ITBOverlay {
 		};
 		name: string;
 	},
-	Geoserver: {
+	geoserver: {
 		layer: {
 			resource: {
 				name: string,               // worldname: layername

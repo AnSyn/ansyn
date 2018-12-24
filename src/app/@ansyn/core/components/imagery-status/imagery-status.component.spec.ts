@@ -9,6 +9,7 @@ import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
+import { AnsynFormsModule } from '../../forms/ansyn-forms.module';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -16,7 +17,7 @@ describe('ImageryStatusComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CoreModule, HttpClientModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
+			imports: [CoreModule, AnsynFormsModule, HttpClientModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
 			providers: [
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: ALERTS, useValue: [] },

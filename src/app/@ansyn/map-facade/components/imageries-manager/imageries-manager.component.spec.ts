@@ -40,6 +40,18 @@ const mockAnsynPopoverComponent = MockComponent({
 	inputs: ['text', 'icon', 'popDirection']
 });
 
+const mockAnsynComboBox = MockComponent({
+	selector: 'ansyn-combo-box',
+	inputs: ['ngModel', 'toolTipField', 'comboBoxToolTipDescription', 'direction', 'color', 'icon'],
+	outputs: ['ngModelChange']
+});
+
+const mockComboBoxOptionComponent = MockComponent({
+	selector: 'ansyn-combo-box-option',
+	inputs: ['value'],
+	outputs: []
+});
+
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
 	let fixture: ComponentFixture<ImageriesManagerComponent>;
@@ -64,6 +76,8 @@ describe('ImageriesManagerComponent', () => {
 			],
 			declarations: [
 				ImageriesManagerComponent,
+				mockAnsynComboBox,
+				mockComboBoxOptionComponent,
 				mockAnsynContextMenu,
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,

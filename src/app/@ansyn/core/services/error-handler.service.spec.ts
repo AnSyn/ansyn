@@ -5,6 +5,8 @@ import { LoggerService } from './logger.service';
 import { SetToastMessageAction } from '../actions/core.actions';
 import { catchError } from 'rxjs/internal/operators';
 import { Observable, of } from 'rxjs/index';
+import { CoreConfig } from '../models/core.config';
+import { ICoreConfig } from '../models/core.config.model';
 
 describe('ErrorHandlerService', () => {
 	let service: ErrorHandlerService;
@@ -13,6 +15,10 @@ describe('ErrorHandlerService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
+				{
+					provide: CoreConfig,
+					useValue: <ICoreConfig> { needToUseLayerExtent: false }
+				},
 				ErrorHandlerService,
 				{
 					provide: Store,

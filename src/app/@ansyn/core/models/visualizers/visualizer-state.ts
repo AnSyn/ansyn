@@ -10,7 +10,7 @@ export interface IVisualizerStateStyle {
 	},
 	initial?: IVisualizerStyle;
 	hover?: Partial<IVisualizerStyle>;
-
+	minSimplifyVertexCountLimit?: number;
 	entities?: {
 		[key: string]: Partial<IVisualizerStyle>;
 	};

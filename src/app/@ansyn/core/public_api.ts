@@ -1,3 +1,5 @@
+export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
+export { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
 export { ICaseSliderFilterMetadata } from './models/case.model';
 export { AnsynFormsModule } from './forms/ansyn-forms.module';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
@@ -16,6 +18,7 @@ export { asyncData } from './test/async-observable-helpers';
 export { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 export { ICaseLayersState } from './models/case.model';
 export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+export { ColorPickerComponent } from './forms/color-picker/color-picker.component';
 export { AlertComponentDirective } from './alerts/alert-component.directive';
 export { coreFeatureKey, coreInitialState, CoreReducer } from './reducers/core.reducer';
 export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './models/case.model';

@@ -9,3 +9,6 @@ export { AnsynPluginsModule } from './ansyn-plugins.module';
 export { NorthCalculationsPlugin } from './openlayers/north-calculations/north-calculations.plugin';
 export { ImageProcessingPlugin } from './openlayers/image-processing/image-processing.plugin';
 export { isRasterLayer, removeWorkers } from './openlayers/open-layers-map/shared/openlayers-shared';
+export { EntitiesVisualizer } from './openlayers/visualizers/entities-visualizer';
+
+

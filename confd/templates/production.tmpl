@@ -295,71 +295,96 @@
 			]
 		  }
 	  },
-	   "TB": {
-		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "true" }},
+	  "TB": {
+		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "false" }},
 		  "treeViewItem": {
-		  "text":"TB",
-		  "value": 1,
-		  "collapsed": true,
-		  "children": []
+			  "text":"TB",
+			  "value": 1,
+				  "collapsed": true,
+				  "children": [
+				  	{
+					  "text": "Drone Imagery (JPG)",
+					  "value": {
+						"sensorType": "Drone Imagery (JPG)"
+					  }
+					},
+					{
+					  "text": "Drone Map (GeoTIFF)",
+					  "value": {
+						"sensorType": "Drone Map (GeoTIFF)"
+					  }
+					},
+					{
+					  "text": "Satellite GeoTIFF",
+					  "value": {
+						"sensorType": "Satellite GeoTIFF"
+					  }
+					},
+					{
+					  "text": "Others",
+					  "value": {
+						"sensorType": "others"
+					  }
+					}
+				  ]
 		  }
 	  },
       "PLANET": {
         "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
         "treeViewItem": {
-        "text": "Planet",
-        "value": 1,
-            "collapsed": true,
-            "children": [
-              {
-                "text": "REScene",
-                "value": {
-                  "sensorType": "REScene"
-                }
-              },
-              {
-                "text": "PSScene3Band",
-                "value": {
-                  "sensorType": "PSScene3Band"
-                }
-              },
-              {
-                "text": "PSOrthoTile",
-                "value": {
-                  "sensorType": "PSOrthoTile"
-                }
-              },
-              {
-                "text": "REOrthoTile",
-                "value": {
-                  "sensorType": "REOrthoTile"
-                }
-              },
-              {
-                "text": "SkySatScene",
-                "value": {
-                  "sensorType": "SkySatScene"
-                }
-              },
-              {
-                "text": "Landsat8L1G",
-                "value": {
-                  "sensorType": "Landsat8L1G"
-                }
-              },
-              {
-                "text": "Sentinel2L1C",
-                "value": {
-                  "sensorType": "Sentinel2L1C"
-                }
-              },
-			  {
-				  "text": "Others",
-				  "value": {
-					"sensorType": "others"
-				  }
-				}
-            ]
+			"text": "Planet",
+			"value": 1,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "REScene",
+					"value": {
+					  "sensorType": "REScene"
+					}
+				  },
+				  {
+					"text": "PSScene3Band",
+					"value": {
+					  "sensorType": "PSScene3Band"
+					}
+				  },
+				  {
+					"text": "PSOrthoTile",
+					"value": {
+					  "sensorType": "PSOrthoTile"
+					}
+				  },
+				  {
+					"text": "REOrthoTile",
+					"value": {
+					  "sensorType": "REOrthoTile"
+					}
+				  },
+				  {
+					"text": "SkySatScene",
+					"value": {
+					  "sensorType": "SkySatScene"
+					}
+				  },
+				  {
+					"text": "Landsat8L1G",
+					"value": {
+					  "sensorType": "Landsat8L1G"
+					}
+				  },
+				  {
+					"text": "Sentinel2L1C",
+					"value": {
+					  "sensorType": "Sentinel2L1C"
+					}
+				  },
+				  {
+					  "text": "Others",
+					  "value": {
+						"sensorType": "others"
+					  }
+					}
+				]
           }
         },
         "OPEN_AERIAL": {
@@ -367,16 +392,16 @@
           "treeViewItem": {
             "text": "OpenAerial",
             "value": 1,
-            "indeterminate": true,
-            "collapsed": true,
-            "children": [
-              {
-                "text": "UAV",
-                "value": {
-                  "sensorType": "UAV"
-                }
-              }
-            ]
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
           }
         }
       }
@@ -399,6 +424,7 @@
     "needToUseLayerExtent": false
   },
   "menuConfig": {
+    "menuItems": {{ getv "/ansyn/menu/items" "null" }},
     "path": "assets/logo.svg",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
@@ -407,7 +433,7 @@
     	"active": {{ getv "/ansyn/menu/forkme" "true" }},
     	"image": "assets/icons/forkme.svg",
     	"title": "Fork me on github",
-		"href": "https://github.com/ansyn/ansyn"
+		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     }
   },
   "loginConfig": {
@@ -423,12 +449,16 @@
       }
     },
     "FootprintPolylineVisualizer": {
+      "minSimplifyVertexCountLimit": 100,
       "colors": {
         "active": "#27b2cf",
         "inactive": "#d393e1",
         "display": "#9524ad",
         "favorite": "yellow"
       }
+    },
+    "FootprintHeatmapVisualizer": {
+      "minSimplifyVertexCountLimit": 100
     },
     "exampleFootprintHeatmapVisualizer": {
       "initial": {
@@ -1123,10 +1153,10 @@
   },
   "uploadsConfig": {
       "apiUrl": "http://tb-server.webiks.com/v1/api/ansyn/upload",
-      "sensorTypes": [ "UAV", "Satellite", "Aircraft", "Ballon", "Kite" ],
-      "sensorNames": [],
+      "sensorTypes": [  "Drone Imagery (JPG)", "Drone Map (GeoTIFF)", "Satellite GeoTIFF" ],
+      "sensorNames": [ "Phantom 3", "Phantom 4", "Phantom 4 Advanced", "Phantom 4 Pro", "Mavic", "Mavic Pro", "Mavic 2", "Spark", "Inspire" ],
       "defaultSharing": "public",
-      "defaultSensorType": "UAV",
+      "defaultSensorType": "Drone Imagery (JPG)",
       "rulesLink": "about:blank"
    }
 }

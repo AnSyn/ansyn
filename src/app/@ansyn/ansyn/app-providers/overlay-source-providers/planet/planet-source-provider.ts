@@ -399,7 +399,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			name: element.id,
 			imageUrl: this.appendApiKey(
 				`${this.planetOverlaysSourceConfig.tilesUrl}${element.properties.item_type}/${element.id}/{z}/{x}/{y}.png`),
-			thumbnailUrl: null,  // this.appendApiKey(element._links.thumbnail),
+			thumbnailUrl: this.appendApiKey(element._links.thumbnail),
 			date: new Date(element.properties.acquired),
 			photoTime: element.properties.acquired,
 			azimuth: toRadians(element.properties.view_angle),

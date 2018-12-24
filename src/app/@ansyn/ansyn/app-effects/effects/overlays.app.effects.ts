@@ -226,9 +226,7 @@ export class OverlaysAppEffects {
 			startWith(null),
 			pairwise(),
 			filter(this.onDropMarkupFilter.bind(this)),
-			mergeMap(([prevAction, currentAction]) => {
-				return of(currentAction);
-			}),
+			map(([prevAction, currentAction]) => currentAction),
 			withLatestFrom(this.overlaysService.getAllOverlays$),
 			this.getOverlayFromDropMarkup,
 			withLatestFrom(this.store$.select(selectActiveMapId)),
@@ -268,7 +266,7 @@ export class OverlaysAppEffects {
 	}
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {
-		const isEquel = isEqual(prevAction, currentAction);
+		const isEquel = !isEqual(prevAction, currentAction);
 		return isEquel;
 	}
 

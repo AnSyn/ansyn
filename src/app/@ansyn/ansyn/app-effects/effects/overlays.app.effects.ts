@@ -55,11 +55,12 @@ import {
 	IBaseMapSourceProviderConstructor,
 	ImageryCommunicatorService
 } from '@ansyn/imagery';
-import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, withLatestFrom, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
+import { current } from 'codelyzer/util/syntaxKind';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -202,7 +203,7 @@ export class OverlaysAppEffects {
 		}
 		return communicator.getPosition().pipe(map((position) => [overlay, position]));
 	});
-	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
+	private getOverlayWithNewThumbnail = switchMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
 		if (!overlay) {
 			return [overlay];
 		}
@@ -223,6 +224,12 @@ export class OverlaysAppEffects {
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.pipe(
+			startWith(null),
+			pairwise(),
+			filter(this.onDropMarkupFilter.bind(this)),
+			mergeMap(([prevAction, currentAction]) => {
+				return of(currentAction);
+			}),
 			withLatestFrom(this.overlaysService.getAllOverlays$),
 			this.getOverlayFromDropMarkup,
 			withLatestFrom(this.store$.select(selectActiveMapId)),
@@ -259,6 +266,11 @@ export class OverlaysAppEffects {
 
 	getSourceProvider(sType) {
 		return this.baseSourceProviders.find(({ constructor }) => sType === (<IBaseMapSourceProviderConstructor>constructor).sourceType);
+	}
+
+	onDropMarkupFilter([prevAction, currentAction]): boolean {
+		const isEquel = isEqual(prevAction, currentAction);
+		return isEquel;
 	}
 
 	constructor(public actions$: Actions,

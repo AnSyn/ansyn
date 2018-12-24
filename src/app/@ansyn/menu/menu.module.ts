@@ -8,6 +8,7 @@ import { IMenuItem } from './models/menu-item.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { InitializeMenuItemsAction } from './actions/menu.actions';
 import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
+import { BaseOverlaySourceProvider } from '../overlays/models/base-overlay-source-provider.model';
 
 export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 
@@ -46,11 +47,15 @@ export class MenuModule {
 
 		let menuItems = menuItemsMulti.reduce((prev, next) => [...prev, ...next], []);
 
+		const menuItemsObject = menuItems.reduce((menuItems, menuItem: IMenuItem) => {
+			return { ...menuItems, [menuItem.name]: menuItem };
+		}, {});
+
 		// if empty put all
 		if (Array.isArray(menuConfig.menuItems)) {
-			menuItems = menuItems.filter((menuItem: IMenuItem) => {
-				return menuConfig.menuItems.includes(menuItem.name);
-			});
+			menuItems = menuConfig.menuItems
+				.map((name) => menuItemsObject[name])
+				.filter(Boolean);
 		}
 
 		store.dispatch(new InitializeMenuItemsAction(menuItems));

@@ -99,12 +99,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 		return this.http.post<any>(this.config.baseUrl, body).pipe(
 			map((overlays: Array<ITBOverlay>) => overlays
-				.filter((o: ITBOverlay) => o.fileType === 'image' || o.fileType === 'raster')
-				.map((element) => {
-					const parseData = this.parseData(element);
-					console.log(`TBSourceProvider parseData: ${JSON.stringify(parseData)}`);
-					return parseData;
-				})
+				.map((element) => this.parseData(element))
 			),
 			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
@@ -131,9 +126,6 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(tbOverlay: ITBOverlay): IOverlay {
-		console.log('start parseData...');
-		console.log(`tbOverlay thumbnailUrl: ${JSON.stringify(tbOverlay.thumbnailUrl)}`);
-		console.log(`tbOverlay isGeoRegistered: ${JSON.stringify(tbOverlay.geoData.isGeoRegistered)}`);
 
 		return new Overlay({
 			id: tbOverlay._id,

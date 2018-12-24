@@ -13,8 +13,7 @@ import {
 	LoggerService,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 	Overlay,
-	sortByDateDesc,
-	toRadians
+	sortByDateDesc
 } from '@ansyn/core';
 import { ITBConfig, ITBOverlay } from './tb.model';
 import { Polygon } from 'geojson';
@@ -127,6 +126,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(tbOverlay: ITBOverlay): IOverlay {
+
 		return new Overlay({
 			id: tbOverlay._id,
 			name: tbOverlay.name,

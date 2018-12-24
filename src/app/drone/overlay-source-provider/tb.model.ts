@@ -34,5 +34,15 @@ export interface ITBOverlay {
 			title: string;
 		};
 		name: string;
-	};
+	},
+	geoserver: {
+		layer: {
+			resource: {
+				name: string;	               	// worldname: layername
+			}
+		},
+		data: {
+			srs: string;						// the projection
+		}
+	}
 }

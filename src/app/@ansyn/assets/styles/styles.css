@@ -6,6 +6,8 @@
 @import "~primeng/resources/primeng.min.css";
 @import "~primeng/resources/themes/omega/theme.css";
 @import "~font-awesome/css/font-awesome.min.css";
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+
 
 circle.drop.selected {
 	fill: black;

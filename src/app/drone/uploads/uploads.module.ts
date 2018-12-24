@@ -7,6 +7,10 @@ import { EditSensorNameComponent } from './components/edit-sensor-name/edit-sens
 import { StoreModule } from '@ngrx/store';
 import { uploadsFeatureKey, UploadsReducer } from './reducers/uploads.reducer';
 import { MenuModule } from '@ansyn/menu';
+import { UploadListComponent } from './components/upload-list/upload-list.component';
+import { EffectsModule } from '@ngrx/effects';
+import { UploadFilesEffects } from './effects/upload-files.effects';
+import { UploadFileService } from './services/upload-file.service';
 
 @NgModule({
 	imports: [
@@ -18,10 +22,14 @@ import { MenuModule } from '@ansyn/menu';
 			component: UploadsComponent,
 			iconClass: 'icon-layer-export'
 		}]),
+		EffectsModule.forFeature([UploadFilesEffects]),
 		StoreModule.forFeature(uploadsFeatureKey, UploadsReducer)
 	],
+	providers: [
+		UploadFileService
+	],
 	entryComponents: [UploadsComponent],
-	declarations: [UploadsComponent, EditSensorNameComponent]
+	declarations: [UploadsComponent, EditSensorNameComponent, UploadListComponent]
 })
 export class UploadsModule {
 }

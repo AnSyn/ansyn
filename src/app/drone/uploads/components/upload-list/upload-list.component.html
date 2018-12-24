@@ -1,0 +1,16 @@
+<div class="upload-list" *ngIf="filesList && filesList.length">
+	<div class="title">
+		<h4>Your upload: </h4>
+		<button (click)="clearList()">
+			<h5>clear</h5>
+		</button>
+	</div>
+	<div class='list'>
+		<ng-container *ngFor="let file of filesList">
+			<ansyn-upload-progress-bar
+				[name]="file.request.file.name"
+				[value]="file.percent">
+			</ansyn-upload-progress-bar>
+		</ng-container>
+	</div>
+</div>

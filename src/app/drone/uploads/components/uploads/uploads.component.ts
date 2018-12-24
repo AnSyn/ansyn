@@ -3,9 +3,9 @@ import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 import { HttpClient } from '@angular/common/http';
 import { delay, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { ErrorHandlerService, FileInputComponent, forkJoinSafe } from '@ansyn/core';
+import { ErrorHandlerService, FileInputComponent } from '@ansyn/core';
 import { isEqual } from 'lodash';
-import { ResetFormData, UploadFormData } from '../../actions/uploads.actions';
+import { RequestUploadFiles, ResetFormData, UploadFormData } from '../../actions/uploads.actions';
 import { initialUploadsFromData, IUploadsFormData, selectFormData } from '../../reducers/uploads.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
@@ -42,7 +42,6 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	);
 
 	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig,
-				protected httpClient: HttpClient,
 				protected store: Store<any>,
 				protected errorHandlerService: ErrorHandlerService) {
 	}
@@ -66,23 +65,10 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		this.loading = true;
+		this.store.dispatch(new RequestUploadFiles());
 
-		const uploadRequests = Array.from(this.formData.files).map((file) => {
-			const formData = new FormData();
-			formData.append('description', this.formData.description);
-			formData.append('creditName', this.formData.creditName);
-			formData.append('sensorType', this.formData.sensorType);
-			formData.append('sensorName', this.formData.sensorName);
-			formData.append('sharing', this.formData.sharing);
-			formData.append('uploads', file);
-
-			return this.httpClient
-				.post(this.config.apiUrl, formData);
-		});
-
-		forkJoinSafe(uploadRequests).subscribe(() => this.loading = false);
 	}
+
 
 	resetForm() {
 		this.store.dispatch(new ResetFormData());

@@ -1,0 +1,12 @@
+<div class="upload-progress" *ngIf="name">
+	<h5>{{name}}</h5>
+	<p *ngIf="value > -1;else error">
+	<mat-progress-bar mode="determinate" [value]="value">
+	</mat-progress-bar>
+	<span>{{value}}%</span>
+	</p>
+
+	<ng-template #error>
+		<p class="error">upload error</p>
+	</ng-template>
+</div>

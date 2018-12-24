@@ -98,6 +98,7 @@
 		<button ansynButton class="reset" type="button" [disabled]="disabledReset()" (click)="resetForm()" >Reset</button>
 		<button ansynButton type="submit" [disabled]="!f.valid || loading">Submit</button>
 	</form>
+	<ansyn-upload-list></ansyn-upload-list>
 </div>
 
 <ansyn-modal [(show)]="modal">

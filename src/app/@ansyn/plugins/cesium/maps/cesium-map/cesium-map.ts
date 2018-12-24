@@ -5,7 +5,7 @@ import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
 
 Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');

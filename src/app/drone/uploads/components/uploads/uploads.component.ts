@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
 import { HttpClient } from '@angular/common/http';
 import { delay, tap } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class UploadsComponent {
+export class UploadsComponent implements OnInit, OnDestroy {
 	@ViewChild('inputFile') inputFile: FileInputComponent;
 	loading = false;
 	readonly sensorNames = this.config.sensorNames;
@@ -86,6 +86,12 @@ export class UploadsComponent {
 
 	resetForm() {
 		this.store.dispatch(new ResetFormData());
+	}
+
+	ngOnInit(): void {
+	}
+
+	ngOnDestroy(): void {
 	}
 
 }

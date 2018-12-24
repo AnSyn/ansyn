@@ -13,6 +13,7 @@ keys = [
     "/ansyn/menu/color",
     "/ansyn/menu/mode",
     "/ansyn/menu/forkme",
+    "/ansyn/menu/forkme/url",
     "/ansyn/imagery/mapsource",
     "/ansyn/tools/displayid",
 	"/ansyn/overlay/open/aerial/inactive",

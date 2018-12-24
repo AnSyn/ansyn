@@ -46,11 +46,15 @@ export class MenuModule {
 
 		let menuItems = menuItemsMulti.reduce((prev, next) => [...prev, ...next], []);
 
+		const menuItemsObject = menuItems.reduce((menuItems, menuItem: IMenuItem) => {
+			return { ...menuItems, [menuItem.name]: menuItem };
+		}, {});
+
 		// if empty put all
 		if (Array.isArray(menuConfig.menuItems)) {
-			menuItems = menuItems.filter((menuItem: IMenuItem) => {
-				return menuConfig.menuItems.includes(menuItem.name);
-			});
+			menuItems = menuConfig.menuItems
+				.map((name) => menuItemsObject[name])
+				.filter(Boolean);
 		}
 
 		store.dispatch(new InitializeMenuItemsAction(menuItems));

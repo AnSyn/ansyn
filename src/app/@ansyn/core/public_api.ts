@@ -4,7 +4,7 @@ export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
 export { mergeArrays } from './utils/merge-arrays';
 export { selectTime } from './reducers/core.reducer';
-export { fetchConfigProviders } from './models/fetch-config-providers';
+export { fetchConfigProviders } from '../ansyn/fetch-config-providers';
 export { IAlertComponent } from './alerts/alerts.model';
 export { ILoggerConfig } from './models/logger-config.model';
 export { AnsynTranslationModule } from './translation/ansyn-translation.module';
@@ -126,7 +126,6 @@ export { CaseMapExtent } from './models/case-map-position.model';
 export { ICaseMapState } from './models/case.model';
 export { ICaseMapPosition } from './models/case-map-position.model';
 export { DisplayedOverlay } from './models/context.model';
-export { getProviders } from './models/fetch-config-providers';
 export { CaseEnumFilterMetadata } from './models/case.model';
 export {
 	IMapSourceProvidersConfig,

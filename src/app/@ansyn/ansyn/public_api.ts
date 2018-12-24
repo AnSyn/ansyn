@@ -9,3 +9,4 @@ export { AnsynComponent } from './ansyn/ansyn.component';
 export { AnsynModule } from './ansyn.module';
 export { IAppState } from './app-effects/app.effects.module';
 export { COMPONENT_MODE } from './app-providers/component-mode';
+export { getProviders } from '../ansyn/fetch-config-providers';

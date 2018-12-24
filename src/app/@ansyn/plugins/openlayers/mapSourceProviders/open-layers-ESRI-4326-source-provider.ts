@@ -1,10 +1,11 @@
 import XYZ from 'ol/source/xyz';
 import TileLayer from 'ol/layer/tile';
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery';
 import proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
+import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 
 export interface IESRI4326Config {
 	baseUrl: string;

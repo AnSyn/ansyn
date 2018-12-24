@@ -23,6 +23,11 @@
                 "input": "src/app/@ansyn/assets",
                 "output": "/assets"
               },
+              {
+                "glob": "**/*",
+                "input": "node_modules/cesium/Build/Cesium",
+                "output": "/assets/Cesium"
+              },
               "src/favicon.ico"
             ],
             "styles": [

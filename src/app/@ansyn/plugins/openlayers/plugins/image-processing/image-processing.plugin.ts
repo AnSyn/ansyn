@@ -5,14 +5,14 @@ import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersDisabledMap } from '../../mapSourceProviders/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMap } from '../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
-import { ProjectableRaster } from '../../mapSourceProviders/open-layers-map/models/projectable-raster';
+import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

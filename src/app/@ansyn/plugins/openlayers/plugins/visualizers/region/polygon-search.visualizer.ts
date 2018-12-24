@@ -8,7 +8,7 @@ import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize 
 import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { RegionVisualizer } from './region.visualizer';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

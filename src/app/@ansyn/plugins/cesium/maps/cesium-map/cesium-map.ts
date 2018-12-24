@@ -16,9 +16,19 @@ export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
 
+
 	initMap(element: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
-		this.mapObject = {};
-		return of(false);
+		this.mapObject = new Cesium.Viewer(element, {
+			imageryProvider: layers[0]
+		});
+
+		if (position) {
+			const rec = [...position.extentPolygon.coordinates[0][0], ...position.extentPolygon.coordinates[0][2]];
+			this.mapObject.camera.setView({
+				destination: Cesium.Rectangle.fromDegrees(...rec)
+			});
+		}
+		return of(true);
 	}
 
 	getCenter(): Observable<Point> {
@@ -33,8 +43,13 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
+
 	resetView(layer: any): Observable<boolean> {
-		return throwError(new Error('Method not implemented.'));
+		const layers = this.mapObject.imageryLayers;
+		const baseLayer = layers.get(0);
+		layers.remove(baseLayer);
+		layers.addImageryProvider(layer);
+		return of(true);
 	}
 
 	addLayer(layer: any): void {
@@ -58,7 +73,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	updateSize(): void {
-		throw new Error('Method not implemented.');
+		console.log('Update size cesium')
 	}
 
 	addGeojsonLayer(data: GeoJsonObject) {

@@ -12,7 +12,7 @@ import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 import { IVisualizerEntity } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, filter, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({

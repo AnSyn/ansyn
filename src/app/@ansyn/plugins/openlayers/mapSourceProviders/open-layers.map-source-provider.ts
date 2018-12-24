@@ -1,11 +1,11 @@
 import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '@ansyn/imagery';
-import { ProjectableRaster } from '@ansyn/plugins';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import TileLayer from 'ol/layer/tile';
 import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
 import proj from 'ol/proj';
 import XYZ from 'ol/source/xyz';
+import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-raster';
 
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
 	create(metaData: ICaseMapState): any[] {

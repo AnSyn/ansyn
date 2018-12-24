@@ -19,7 +19,7 @@ import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facad
 import * as turf from '@turf/turf';
 import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({

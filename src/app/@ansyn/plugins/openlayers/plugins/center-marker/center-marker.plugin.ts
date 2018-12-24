@@ -8,7 +8,7 @@ import { ICaseMapPosition } from '@ansyn/core';
 import { Observable, of } from 'rxjs';
 import { BaseImageryMap, BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

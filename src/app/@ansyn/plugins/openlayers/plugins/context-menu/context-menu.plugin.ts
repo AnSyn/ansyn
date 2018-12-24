@@ -10,7 +10,7 @@ import { DisplayOverlayFromStoreAction, overlaysStateSelector } from '@ansyn/ove
 import { areCoordinatesNumeric, IOverlay } from '@ansyn/core';
 import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

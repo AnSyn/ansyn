@@ -4,7 +4,7 @@ import { Actions } from '@ngrx/effects';
 import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
 import { IVisualizerEntity } from '@ansyn/core';
 import * as turf from '@turf/turf';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { BaseFootprintsVisualizer } from './base-footprints-visualizer';
 import { Inject } from '@angular/core';
 

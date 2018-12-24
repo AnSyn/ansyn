@@ -26,7 +26,7 @@ import { BaseImageryMap, BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, P
 import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { catchError, debounceTime, filter, map, mergeMap, retry, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 import OLMap from 'ol/map';

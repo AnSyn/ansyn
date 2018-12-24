@@ -10,7 +10,7 @@ import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
 import { ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { EntitiesVisualizer } from '../visualizers/entities-visualizer';
 
 @ImageryPlugin({

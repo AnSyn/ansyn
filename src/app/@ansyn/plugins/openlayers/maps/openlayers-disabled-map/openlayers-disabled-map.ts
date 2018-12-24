@@ -6,7 +6,7 @@ import Layer from 'ol/layer/layer';
 import { ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
-import * as olShared from '../shared/openlayers-shared';
+import * as olShared from '../open-layers-map/shared/openlayers-shared';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 

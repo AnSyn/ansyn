@@ -21,7 +21,7 @@ import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 import { Store } from '@ngrx/store';
 import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({

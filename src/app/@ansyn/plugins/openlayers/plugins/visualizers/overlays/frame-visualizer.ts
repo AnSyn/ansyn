@@ -7,7 +7,7 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { map, tap } from 'rxjs/operators';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { UUID } from 'angular2-uuid';
 import { feature } from '@turf/turf';
 

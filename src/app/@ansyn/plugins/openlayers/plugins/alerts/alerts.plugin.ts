@@ -1,5 +1,5 @@
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
-import { OpenLayersMap } from '../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { combineLatest, Observable } from 'rxjs';
@@ -9,7 +9,7 @@ import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';
 import { selectDrops } from '@ansyn/overlays';
-import { OpenLayersDisabledMap } from '../../mapSourceProviders/open-layers-map/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

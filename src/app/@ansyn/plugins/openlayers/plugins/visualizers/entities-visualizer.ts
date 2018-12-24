@@ -21,7 +21,7 @@ import { FeatureCollection } from 'geojson';
 import { Observable, of } from 'rxjs';
 import { BaseImageryVisualizer, IBaseImageryVisualizerClass, VisualizerInteractionTypes } from '@ansyn/imagery';
 import ol_color from 'ol/color';
-import { OpenLayersMap } from '../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
 
 export interface IFeatureIdentifier {

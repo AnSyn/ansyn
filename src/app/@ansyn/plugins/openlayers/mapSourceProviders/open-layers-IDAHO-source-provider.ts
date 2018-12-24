@@ -1,11 +1,12 @@
 import XYZ from 'ol/source/xyz';
 import { ICaseMapState, IOverlay } from '@ansyn/core';
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
+import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 

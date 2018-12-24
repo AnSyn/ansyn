@@ -8,7 +8,7 @@ import * as turf from '@turf/turf';
 import { CaseGeoFilter, CaseRegionState, getPointByGeometry } from '@ansyn/core';
 import { Position } from 'geojson';
 import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { RegionVisualizer } from './region.visualizer';
 
 @ImageryVisualizer({

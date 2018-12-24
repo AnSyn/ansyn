@@ -16,7 +16,7 @@ import {
 	SetCurrentTaskRegion, TasksService, selectCurrentAlgorithmTaskAlgorithmName
 } from '@ansyn/menu-items';
 import { combineLatest } from 'rxjs/index';
-import { OpenLayersMap } from '../../../mapSourceProviders/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';

@@ -1,5 +1,4 @@
 export { AnsynApi, ANSYN_ID } from './api/ansyn-api.service';
-export { OpenLayersMapSourceProvider } from '../plugins/openlayers/mapSourceProviders/open-layers.map-source-provider';
 export { MapAppEffects } from './app-effects/effects/map.app.effects';
 export { ContextAppEffects } from './app-effects/effects/context.app.effects';
 export { AppProvidersModule } from './app-providers/app-providers.module';

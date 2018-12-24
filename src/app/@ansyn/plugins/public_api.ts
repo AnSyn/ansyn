@@ -1,3 +1,4 @@
+export { OpenLayersMapSourceProvider } from './openlayers/mapSourceProviders/open-layers.map-source-provider';
 export {
 	DisabledOpenLayersMapName,
 	OpenLayersDisabledMap
@@ -10,5 +11,4 @@ export { NorthCalculationsPlugin } from './openlayers/plugins/north-calculations
 export { ImageProcessingPlugin } from './openlayers/plugins/image-processing/image-processing.plugin';
 export { isRasterLayer, removeWorkers } from './openlayers/maps/open-layers-map/shared/openlayers-shared';
 export { EntitiesVisualizer } from './openlayers/plugins/visualizers/entities-visualizer';
-
 

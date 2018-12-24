@@ -1,3 +1,5 @@
+export { ILayersManagerConfig } from "./layers-manager/models/layers-manager-config";
+
 export { IUploadsConfig, UploadsConfig } from './uploads/config/uploads-config';
 
 export { EditSensorNameComponent } from './uploads/components/edit-sensor-name/edit-sensor-name.component';

@@ -1,3 +1,4 @@
+export { IOverlaysConfig } from "./models/overlays.config";
 export { MultipleOverlaysSourceProvider, MultipleOverlaysSource } from './services/multiple-source-provider';
 export { IOverlayByIdMetaData } from './services/overlays.service';
 export { selectHoveredOverlay } from './reducers/overlays.reducer';

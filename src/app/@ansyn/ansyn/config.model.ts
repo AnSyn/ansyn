@@ -1,13 +1,12 @@
-import { ICasesConfig, IFiltersConfig, IToolsConfig } from "@ansyn/menu-items";
-import { ILayersManagerConfig } from "../menu-items/layers-manager/models/layers-manager-config";
-import { IOverlaysConfig } from "../overlays/models/overlays.config";
+import { ICasesConfig, IFiltersConfig, ILayersManagerConfig, IToolsConfig } from "@ansyn/menu-items";
+import { IOverlaysConfig } from "@ansyn/overlays";
 import { IMapFacadeConfig } from "@ansyn/map-facade";
 import { ICoreConfig, ILoggerConfig, IMapSourceProvidersConfig } from "@ansyn/core";
-import { IContextConfig } from "../context/models/context.config.model";
 import { IStatusBarConfig } from "@ansyn/status-bar";
-import { IMenuConfig } from "../menu/models/menu-config.model";
-import { ILoginConfig } from "../../app/login/models/login.config";
+import { IMenuConfig } from "@ansyn/menu";
+import { IContextConfig } from "@ansyn/context";
 import { IVisualizersConfig } from "@ansyn/imagery";
+import { ILoginConfig } from "../../app/login/models/login.config";
 import { IOpenAerialOverlaySourceConfig } from "./app-providers/overlay-source-providers/open-aerial-source-provider";
 import { IImisightOverlaySourceConfig } from "../../app/imisight/imisight.model";
 import { IPlanetOverlaySourceConfig } from "./app-providers/overlay-source-providers/planet/planet-source-provider";

@@ -1,3 +1,4 @@
+export {IContextConfig} from "./models/context.config.model";
 export { ContextConfig } from './models/context.config';
 export { ContextService } from './services/context.service';
 export {

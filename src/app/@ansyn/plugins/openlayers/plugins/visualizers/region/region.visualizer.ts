@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
 import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
-import { ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
+import { VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/draw';
 import {
 	CaseGeoFilter,
@@ -22,6 +22,7 @@ import {
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -67,7 +68,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$, this.geoFilterSearch$).pipe(
 		mergeMap(this.drawChanges.bind(this)));
 
-	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService, public geoFilter: CaseGeoFilter) {
+	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: OpenLayersProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
 	}
 

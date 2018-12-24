@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade';
-import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
+import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/draw';
 import { getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -21,10 +21,11 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Stroke from 'ol/style/stroke';
 import Feature from 'ol/feature';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, ProjectionService, TasksService]
+	deps: [Store, Actions, OpenLayersProjectionService, TasksService]
 })
 export class TaskRegionVisualizer extends EntitiesVisualizer {
 	iconStyle: Style = new Style({
@@ -78,7 +79,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	constructor(
 		public store$: Store<any>,
 		public actions$: Actions,
-		public projectionService: ProjectionService,
+		public projectionService: OpenLayersProjectionService,
 		public tasksService: TasksService
 	) {
 		super();

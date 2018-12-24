@@ -1,6 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { ContextMenuDisplayAction, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
@@ -9,6 +8,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/index';
 import { SetMapsDataActionStore } from '@ansyn/core';
 import { ContextMenuPlugin } from './context-menu.plugin';
+import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 
 describe('ContextMenuPlugin', () => {
 	let contextMenuPlugin: ContextMenuPlugin;
@@ -20,7 +20,7 @@ describe('ContextMenuPlugin', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				provideMockActions(() => actions),
-				ContextMenuPlugin, { provide: ProjectionService, useValue: {} }],
+				ContextMenuPlugin, { provide: OpenLayersProjectionService, useValue: {} }],
 			imports: [StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer
 			}), EffectsModule.forRoot([])]

@@ -8,16 +8,17 @@ import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/m
 import { Actions } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
-import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
+import { ImageryVisualizer } from '@ansyn/imagery';
 import { IToolsState, toolsFlags, toolsStateSelector } from '@ansyn/menu-items';
 import { IVisualizerEntity } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, filter, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Actions, Store, ProjectionService]
+	deps: [Actions, Store, OpenLayersProjectionService]
 })
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
@@ -68,7 +69,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	);
 
 
-	constructor(protected actions$: Actions, protected store$: Store<any>, protected projectionService: ProjectionService) {
+	constructor(protected actions$: Actions, protected store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
 		super();
 
 		this._iconSrc = new Style({

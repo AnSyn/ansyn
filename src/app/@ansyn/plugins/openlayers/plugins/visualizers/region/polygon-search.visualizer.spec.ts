@@ -1,12 +1,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { UUID } from 'angular2-uuid';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { Feature, Polygon } from 'geojson';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { PolygonSearchVisualizer } from './polygon-search.visualizer';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 describe('PolygonSearchVisualizer', () => {
 	let polygonSearchVisualizer: PolygonSearchVisualizer;
@@ -15,7 +15,7 @@ describe('PolygonSearchVisualizer', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [PolygonSearchVisualizer, { provide: ProjectionService, useValue: {} }],
+			providers: [PolygonSearchVisualizer, { provide: OpenLayersProjectionService, useValue: {} }],
 			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([])]
 		});
 	});

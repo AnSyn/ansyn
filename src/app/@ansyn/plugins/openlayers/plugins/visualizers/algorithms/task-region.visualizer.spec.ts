@@ -1,9 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { TaskRegionVisualizer } from './task-region.visualizer';
 import { TasksService } from '@ansyn/menu-items';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 describe('TaskRegionVisualizer', () => {
 	let algorithmTaskRegionVisualizer: TaskRegionVisualizer;
@@ -13,7 +13,7 @@ describe('TaskRegionVisualizer', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				TaskRegionVisualizer,
-				{ provide: ProjectionService, useValue: {} },
+				{ provide: OpenLayersProjectionService, useValue: {} },
 				{ provide: TasksService, useValue: {} }
 			],
 			imports: [

@@ -5,7 +5,9 @@ import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/geojson';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class OpenLayersProjectionService extends ProjectionService {
 
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();

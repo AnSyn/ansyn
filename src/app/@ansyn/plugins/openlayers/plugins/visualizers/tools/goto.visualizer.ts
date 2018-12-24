@@ -15,16 +15,17 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Feature from 'ol/feature';
 import { Point } from 'geojson';
-import { IMapState, mapStateSelector, selectActiveMapId } from '@ansyn/map-facade';
+import { selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';
-import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
+import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, ProjectionService]
+	deps: [Store, OpenLayersProjectionService]
 })
 export class GoToVisualizer extends EntitiesVisualizer {
 	/* data */
@@ -84,7 +85,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 			});
 	}
 
-	constructor(public store$: Store<any>, protected projectionService: ProjectionService) {
+	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
 		super();
 	}
 

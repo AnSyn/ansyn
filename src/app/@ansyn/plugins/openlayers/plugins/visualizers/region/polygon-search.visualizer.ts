@@ -5,19 +5,20 @@ import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
 import { Position } from 'geojson';
 import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize } from '@ansyn/core';
-import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
+import { ImageryVisualizer } from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, ProjectionService]
+	deps: [Store, Actions, OpenLayersProjectionService]
 })
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	constructor(public store$: Store<any>,
 				public actions$: Actions,
-				public projectionService: ProjectionService) {
+				public projectionService: OpenLayersProjectionService) {
 
 		super(store$, actions$, projectionService, CaseGeoFilter.Polygon);
 

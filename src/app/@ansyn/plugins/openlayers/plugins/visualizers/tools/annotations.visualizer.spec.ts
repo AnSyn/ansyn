@@ -1,10 +1,10 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery';
 import { of } from 'rxjs/index';
 import { toolsConfig } from '@ansyn/menu-items';
 import { featureCollection } from '@turf/turf';
 import { AnnotationsVisualizer } from './annotations.visualizer';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
@@ -12,7 +12,7 @@ describe('AnnotationsVisualizer', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [AnnotationsVisualizer, {
-				provide: ProjectionService,
+				provide: OpenLayersProjectionService,
 				useValue: { projectCollectionAccurately: of(true) }
 			}, { provide: toolsConfig, useValue: { Annotations: { displayId: true } } }],
 			imports: [StoreModule.forRoot({})]

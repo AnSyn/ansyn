@@ -12,7 +12,7 @@ import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '../utils/extent-calculator';
-import { BaseImageryMap, ImageryMap, ProjectionService } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
@@ -20,8 +20,9 @@ import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig,
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { map, mergeMap, take, tap } from 'rxjs/operators';
-import { feature, bboxPolygon, booleanContains } from '@turf/turf';
+import { map, take, tap } from 'rxjs/operators';
+import { feature } from '@turf/turf';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -32,7 +33,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [ProjectionService, CoreConfig]
+	deps: [OpenLayersProjectionService, CoreConfig]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
@@ -46,7 +47,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 	public shadowElement = null;
 
-	constructor(public projectionService: ProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
 

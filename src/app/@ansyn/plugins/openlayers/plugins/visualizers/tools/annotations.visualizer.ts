@@ -13,7 +13,7 @@ import olText from 'ol/style/text';
 import olStroke from 'ol/style/stroke';
 import { cloneDeep, uniq } from 'lodash';
 import condition from 'ol/events/condition';
-import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
+import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
 import * as ol from 'openlayers';
 import {
 	AnnotationInteraction,
@@ -54,11 +54,12 @@ import { UUID } from 'angular2-uuid';
 import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '@ansyn/status-bar';
 import { featureCollection } from '@turf/turf';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 // @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, ProjectionService, toolsConfig],
+	deps: [Store, OpenLayersProjectionService, toolsConfig],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -217,7 +218,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.showAnnotation(featureCollection(features));
 	}
 
-	constructor(public store$: Store<any>, protected projectionService: ProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
+	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
 
 		super(null, {
 			initial: {

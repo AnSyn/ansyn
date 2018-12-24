@@ -3,7 +3,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
 import { inside } from '@turf/turf';
-import { BaseImageryPlugin, ImageryPlugin, ProjectionService } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
 import { DisplayOverlayFromStoreAction, overlaysStateSelector } from '@ansyn/overlays';
@@ -11,10 +11,11 @@ import { areCoordinatesNumeric, IOverlay } from '@ansyn/core';
 import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, ProjectionService]
+	deps: [Store, Actions, OpenLayersProjectionService]
 })
 export class ContextMenuPlugin extends BaseImageryPlugin {
 	isActiveOperators: UnaryFunction<any, any> = pipe(
@@ -43,7 +44,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		return <HTMLElement> this.iMap.mapObject.getViewport();
 	}
 
-	constructor(protected store$: Store<any>, protected actions$: Actions, protected projectionService: ProjectionService) {
+	constructor(protected store$: Store<any>, protected actions$: Actions, protected projectionService: OpenLayersProjectionService) {
 		super();
 	}
 

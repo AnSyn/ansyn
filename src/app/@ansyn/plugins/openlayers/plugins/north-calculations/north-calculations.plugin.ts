@@ -22,7 +22,7 @@ import {
 	selectHoveredOverlay
 } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryMap, BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, ProjectionService } from '@ansyn/imagery';
+import { BaseImageryMap, BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -31,10 +31,11 @@ import { catchError, debounceTime, filter, map, mergeMap, retry, switchMap, take
 
 import OLMap from 'ol/map';
 import View from 'ol/view';
+import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Actions, LoggerService, Store, ProjectionService]
+	deps: [Actions, LoggerService, Store, OpenLayersProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
@@ -168,7 +169,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
 				public store$: Store<any>,
-				protected projectionService: ProjectionService) {
+				protected projectionService: OpenLayersProjectionService) {
 		super();
 	}
 

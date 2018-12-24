@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BooleanFilterMetadata, EnumFilterMetadata, FilterMetadata, SliderFilterMetadata } from '@ansyn/menu-items';
-import { ProjectionService } from '@ansyn/imagery';
-import { OpenLayersProjectionService } from '@ansyn/plugins';
 import { OverlaysModule } from '@ansyn/overlays';
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
@@ -23,9 +21,7 @@ import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-pro
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
-
-		{ provide: ProjectionService, useClass: OpenLayersProjectionService }
+		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true }
 	]
 })
 export class AppProvidersModule {

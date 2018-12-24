@@ -7,13 +7,14 @@ import { Actions } from '@ngrx/effects';
 import * as turf from '@turf/turf';
 import { CaseGeoFilter, CaseRegionState, getPointByGeometry } from '@ansyn/core';
 import { Position } from 'geojson';
-import { ImageryVisualizer, ProjectionService } from '@ansyn/imagery';
+import { ImageryVisualizer} from '@ansyn/imagery';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { RegionVisualizer } from './region.visualizer';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, ProjectionService]
+	deps: [Store, Actions, OpenLayersProjectionService]
 })
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
@@ -24,7 +25,7 @@ export class PinPointVisualizer extends RegionVisualizer {
 		zIndex: 100
 	});
 
-	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: ProjectionService) {
+	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: OpenLayersProjectionService) {
 		super(store$, actions$, projectionService, CaseGeoFilter.PinPoint);
 	}
 

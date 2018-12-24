@@ -1,8 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { ProjectionService } from '@ansyn/imagery';
 import { Actions, EffectsModule } from '@ngrx/effects';
 import { MouseShadowVisualizer } from './mouse-shadow.visualizer';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 describe('mouseShadowVisualizer', () => {
 	let mouseShadowVisualizer: MouseShadowVisualizer;
@@ -15,9 +15,9 @@ describe('mouseShadowVisualizer', () => {
 				{
 					provide: MouseShadowVisualizer,
 					useClass: MouseShadowVisualizer,
-					deps: [Actions, Store, ProjectionService]
+					deps: [Actions, Store, OpenLayersProjectionService]
 				},
-				{ provide: ProjectionService, useValue: {} }
+				{ provide: OpenLayersProjectionService, useValue: {} }
 			],
 			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([])]
 		});

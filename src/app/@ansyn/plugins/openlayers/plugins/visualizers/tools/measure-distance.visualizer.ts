@@ -13,7 +13,7 @@ import VectorSource from 'ol/source/vector';
 import Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/geojson';
 import { UUID } from 'angular2-uuid';
-import { ImageryVisualizer, ProjectionService, VisualizerInteractions } from '@ansyn/imagery';
+import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { combineLatest, Observable } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
@@ -23,10 +23,11 @@ import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } f
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, ProjectionService]
+	deps: [Store, OpenLayersProjectionService]
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
@@ -105,7 +106,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected store$: Store<any>, protected projectionService: ProjectionService) {
+	constructor(protected store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
 		super(null, {
 			initial: {
 				stroke: '#3399CC',

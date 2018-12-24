@@ -1,0 +1,98 @@
+import { GeoJsonObject, Point } from 'geojson';
+import { Observable, of, throwError } from 'rxjs';
+import { ICaseMapPosition } from '@ansyn/core';
+import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
+
+Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');
+Cesium.BingMapsApi.defaultKey = 'AnjT_wAj_juA_MsD8NhcEAVSjCYpV-e50lUypkWm1JPxVu0XyVqabsvD3r2DQpX-';
+
+export const CesiumMapName = 'cesium';
+
+// @dynamic
+@ImageryMap({
+	mapType: CesiumMapName
+})
+export class CesiumMap extends BaseImageryMap<any> {
+	static groupLayers = new Map<string, any>();
+	mapObject: any;
+
+	initMap(element: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+		this.mapObject = {};
+		return of(false);
+	}
+
+	getCenter(): Observable<Point> {
+		return throwError(new Error('Method not implemented.'));
+	}
+
+	setCenter(center: Point, animation: boolean): Observable<boolean> {
+		return throwError(new Error('Method not implemented.'));
+	}
+
+	toggleGroup(groupName: string, newState: boolean) {
+		throw new Error('Method not implemented.');
+	}
+
+	resetView(layer: any): Observable<boolean> {
+		return throwError(new Error('Method not implemented.'));
+	}
+
+	addLayer(layer: any): void {
+		throw new Error('Method not implemented.');
+	}
+
+	removeLayer(layer: any): void {
+		throw new Error('Method not implemented.');
+	}
+
+	setPosition(position: ICaseMapPosition): Observable<boolean> {
+		return throwError(new Error('Method not implemented.'));
+	}
+
+	getPosition(): Observable<ICaseMapPosition> {
+		return throwError(new Error('Method not implemented.'));
+	}
+
+	setRotation(rotation: number): void {
+		throw new Error('Method not implemented.');
+	}
+
+	updateSize(): void {
+		throw new Error('Method not implemented.');
+	}
+
+	addGeojsonLayer(data: GeoJsonObject) {
+		throw new Error('Method not implemented.');
+	}
+
+	setAutoImageProcessing(shouldPerform: boolean): void {
+		throw new Error('Method not implemented.');
+	}
+
+	setManualImageProcessing(processingParams: Object): void {
+		throw new Error('Method not implemented.');
+	}
+
+	setPointerMove(enable: boolean) {
+	}
+
+	getPointerMove() {
+		return new Observable();
+	}
+
+	getLayers(): any[] {
+		return [];
+	}
+
+	addLayerIfNotExist() {
+
+	}
+
+	getRotation(): number {
+		return NaN;
+	}
+
+	dispose() {
+	}
+
+}

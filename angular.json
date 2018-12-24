@@ -26,6 +26,7 @@
               "src/favicon.ico"
             ],
             "styles": [
+              "node_modules/cesium/Build/Cesium/Widgets/widgets.css",
               "src/app/@ansyn/assets/styles/styles.css"
             ],
             "stylePreprocessorOptions": {
@@ -33,7 +34,9 @@
                 "src/app/@ansyn"
               ]
             },
-            "scripts": []
+            "scripts": [
+              "node_modules/cesium/Build/Cesium/Cesium.js"
+            ]
           },
           "configurations": {
             "dev": {
@@ -87,8 +90,11 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [],
+            "scripts": [
+              "node_modules/cesium/Build/Cesium/Cesium.js"
+            ],
             "styles": [
+              "node_modules/cesium/Build/Cesium/Widgets/widgets.css",
               "src/app/@ansyn/assets/styles/styles.css"
             ],
             "stylePreprocessorOptions": {
@@ -101,6 +107,11 @@
                 "glob": "**/*",
                 "input": "src/app/@ansyn/assets",
                 "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/cesium/Build/Cesium",
+                "output": "/assets/Cesium"
               },
               "src/favicon.ico"
             ]
@@ -290,7 +301,9 @@
             "styles": [
               "src/app/@ansyn/assets/styles/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+
+            ]
           },
           "configurations": {
             "dev": {

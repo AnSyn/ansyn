@@ -47,6 +47,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_overlay: IOverlay;
+	selectedMap = 'openLayersMap';
 
 	@HostBinding('class.active') @Input() active: boolean;
 

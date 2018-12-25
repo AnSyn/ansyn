@@ -31,7 +31,6 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "node_modules/cesium/Build/Cesium/Widgets/widgets.css",
               "src/app/@ansyn/assets/styles/styles.css"
             ],
             "stylePreprocessorOptions": {
@@ -99,7 +98,6 @@
               "node_modules/cesium/Build/Cesium/Cesium.js"
             ],
             "styles": [
-              "node_modules/cesium/Build/Cesium/Widgets/widgets.css",
               "src/app/@ansyn/assets/styles/styles.css"
             ],
             "stylePreprocessorOptions": {

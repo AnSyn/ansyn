@@ -24,6 +24,7 @@ import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
 	imports: [
@@ -32,7 +33,8 @@ import { AnnotationsWeightComponent } from './components/annotations-weight/anno
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
 		EffectsModule.forFeature([CoreEffects]),
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader]),
-		AlertsModule
+		AlertsModule,
+		FormsModule
 	],
 	providers: [
 		GenericTypeResolverService,

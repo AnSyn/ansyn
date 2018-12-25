@@ -7,6 +7,7 @@ import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
 import { map, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
+declare const Cesium: any;
 
 Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');
 Cesium.BingMapsApi.defaultKey = 'AnjT_wAj_juA_MsD8NhcEAVSjCYpV-e50lUypkWm1JPxVu0XyVqabsvD3r2DQpX-';

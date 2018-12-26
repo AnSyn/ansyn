@@ -19,7 +19,6 @@ import {
 	PullActiveCenter,
 	SelectCaseAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
@@ -32,7 +31,13 @@ import {
 	ToolsReducer,
 	toolsStateSelector
 } from '@ansyn/menu-items';
-import { BackToWorldView, ClearActiveInteractionsAction, ICase, SetMapsDataActionStore } from '@ansyn/core';
+import {
+	BackToWorldView,
+	ClearActiveInteractionsAction,
+	ICase,
+	SetMapsDataActionStore,
+	UpdateMapAction
+} from '@ansyn/core';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
@@ -88,8 +93,8 @@ describe('ToolsAppEffects', () => {
 	}];
 
 	const imapState: any = {
-		mapsList: [
-			{
+		entities: {
+			'imagery1': {
 				id: 'imagery1',
 				data: {
 					position: { zoom: 1, center: 2 },
@@ -99,7 +104,8 @@ describe('ToolsAppEffects', () => {
 
 				}
 			}
-		],
+		},
+		ids: ['imagery1'],
 		activeMapId: 'imagery1'
 	};
 
@@ -171,7 +177,7 @@ describe('ToolsAppEffects', () => {
 		store = _store;
 		const selectedCase = cases[0];
 		icaseState = cloneDeep({ cases, selectedCase }) as any;
-		imapState.mapsList = selectedCase.state.maps.data;
+		imapState.entities = selectedCase.state.maps.data.reduce((obj, map) => ({ ...obj, [map.id]: map }), {});
 		imapState.activeMapId = selectedCase.state.maps.activeMapId;
 
 		const fakeStore = new Map<any, any>([
@@ -268,11 +274,10 @@ describe('ToolsAppEffects', () => {
 				})
 			});
 
-			const updatedMapList = cloneDeep(imapState.mapsList);
-			updatedMapList[0].data.imageManualProcessArgs = args;
-
+			const imageManualProcessArgs = args;
+			const mapData = imapState.entities['imagery1'];
 			const expectedResults = cold('--(a)--', {
-				a: new SetMapsDataActionStore({ mapsList: updatedMapList })
+				a: new UpdateMapAction({ id: 'imagery1' , changes: { data: { ...mapData.data, imageManualProcessArgs }}})
 			});
 
 			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
@@ -297,23 +302,34 @@ describe('ToolsAppEffects', () => {
 
 	it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, SetMapsDataActionStore and ToggleAutoImageProcessingSuccess accordingly', () => {
 		const activeMap = MapFacadeService.activeMap(imapState);
-		activeMap.data.isAutoImageProcessingActive = true;
+		const isAutoImageProcessingActive = true;
 		actions = hot('--a--', { a: new SetAutoImageProcessing() });
 		const expectedResults = cold('--(ab)--', {
-			a: new SetMapsDataActionStore({ mapsList: [...imapState.mapsList] }),
+			a: new UpdateMapAction({
+				id: activeMap.id,
+				changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
+			}),
 			b: new SetAutoImageProcessingSuccess(false)
 		});
 		expect(toolsAppEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
-		const updatedMapsList = [...imapState.mapsList];
-		const activeMap = MapFacadeService.mapById(updatedMapsList, imapState.activeMapId);
-		activeMap.data.overlayDisplayMode = 'Heatmap';
+		const activeMap = MapFacadeService.activeMap(imapState);
+		const overlayDisplayMode = 'Heatmap';
 
-		actions = hot('--a--', { a: new ShowOverlaysFootprintAction('Heatmap') });
+		actions = hot('--a--', { a: new ShowOverlaysFootprintAction(overlayDisplayMode) });
 
-		const expectedResults = cold('--a--', { a: new SetMapsDataActionStore({ mapsList: updatedMapsList }) });
+		const expectedResults = cold('--a--', {
+			a: new UpdateMapAction({
+				id: activeMap.id, changes: {
+					data: {
+						...activeMap.data,
+						overlayDisplayMode: overlayDisplayMode
+					}
+				}
+			})
+		});
 
 		expect(toolsAppEffects.updateCaseFromTools$).toBeObservable(expectedResults);
 	});

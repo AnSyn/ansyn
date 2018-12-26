@@ -30,9 +30,9 @@ before_script:
 
 script:
   - npm run lint
-  - npm run test:single-run
-  - npm run build:libs
-  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
+  - travis_wait npm run test:single-run
+  - travis_wait npm run build:libs
+  - travis_wait sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
 
 cache:
   directories:
@@ -45,12 +45,12 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $CLUSTER $SERVICES_DEV
+    script: travis_wait sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $CLUSTER $SERVICES_DEV
     skip_cleanup: true
     on:
       branch: master
   - provider: script
-    script: sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $CLUSTER $SERVICES_PROD
+    script: travis_wait sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $CLUSTER $SERVICES_PROD
     skip_cleanup: true
     on:
       tags: true

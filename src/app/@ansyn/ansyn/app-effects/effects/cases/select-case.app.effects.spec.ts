@@ -25,7 +25,7 @@ import {
 	ICaseTimeState,
 	IContextEntity,
 	IOverlay,
-	IOverlaysManualProcessArgs,
+	IOverlaysManualProcessArgs, SetActiveMapId,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
@@ -123,21 +123,22 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmn)--', {
+			const expectedResult = cold('--(abcdefghijklmno)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-				d: new SetMapsDataActionStore({ mapsList: maps.data, activeMapId: maps.activeMapId }),
-				e: new SetFavoriteOverlaysAction(favoriteOverlays),
-				f: new SetPresetOverlaysAction(presetOverlays),
-				g: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-				h: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				i: new UpdateFacetsAction(facets),
-				j: new UpdateSelectedLayersIds([]),
-				k: new SetContextParamsAction({ contextEntities }),
-				l: new SetAutoSave(false),
-				m: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-				n: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
+				d: new SetMapsDataActionStore({ mapsList: maps.data }),
+				e: new SetActiveMapId(maps.activeMapId),
+				f: new SetFavoriteOverlaysAction(favoriteOverlays),
+				g: new SetPresetOverlaysAction(presetOverlays),
+				h: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				j: new UpdateFacetsAction(facets),
+				k: new UpdateSelectedLayersIds([]),
+				l: new SetContextParamsAction({ contextEntities }),
+				m: new SetAutoSave(false),
+				n: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+				o: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

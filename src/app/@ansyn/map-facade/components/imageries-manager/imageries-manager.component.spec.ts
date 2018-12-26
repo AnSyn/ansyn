@@ -10,7 +10,7 @@ import {
 	coreFeatureKey,
 	CoreReducer, ErrorHandlerService,
 	ImageryStatusComponent,
-	MockComponent,
+	MockComponent, SetActiveMapId,
 	SetLayoutAction,
 	SetMapsDataActionStore
 } from '@ansyn/core';
@@ -106,7 +106,9 @@ describe('ImageriesManagerComponent', () => {
 		];
 		const activeMapId = 'imagery1';
 		store.dispatch(new SetLayoutAction('layout2'));
-		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
+		store.dispatch(new SetMapsDataActionStore({ mapsList }));
+		store.dispatch(new SetActiveMapId(activeMapId));
+
 		fixture.detectChanges();
 	});
 

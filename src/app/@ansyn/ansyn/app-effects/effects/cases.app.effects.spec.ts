@@ -13,7 +13,7 @@ import {
 	CoreConfig,
 	ErrorHandlerService,
 	ICase,
-	IOverlay,
+	IOverlay, SetActiveMapId,
 	SetMapsDataActionStore,
 	SetToastMessageAction,
 	StorageService
@@ -158,7 +158,8 @@ describe('CasesAppEffects', () => {
 		const mapsList: any[] = [{ id: 'map1', data: {} }, { id: 'map2', data: {} }];
 		const activeMapId = 'map1';
 		const overlay = <IOverlay> { id: 'tmp' };
-		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
+		store.dispatch(new SetMapsDataActionStore({ mapsList }));
+		store.dispatch(new SetActiveMapId(activeMapId));
 		const action = new DisplayOverlaySuccessAction({ overlay, mapId: 'map1' });
 		actions = hot('--a--', { a: action });
 		const updatedMapsList = [...mapsList];

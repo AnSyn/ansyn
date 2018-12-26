@@ -102,10 +102,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.POSITION_CHANGED: {
 			const { id, position } = action.payload;
 			const entity = state.entities[id];
-			return mapsAdapter.updateOne({
-				id,
-				changes: { data: { ...entity.data, position } }
-			}, state);
+			if (entity) {
+				return mapsAdapter.updateOne({
+					id,
+					changes: { data: { ...entity.data, position } }
+				}, state);
+			}
+			return state;
 		}
 
 		case CoreActionTypes.SET_ACTIVE_MAP_ID: {

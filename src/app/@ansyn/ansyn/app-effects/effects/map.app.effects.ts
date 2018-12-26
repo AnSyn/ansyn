@@ -133,7 +133,7 @@ export class MapAppEffects {
 				const imageManualProcessArgs = action.payload;
 				const overlayId = activeMap.data.overlay.id;
 				return [
-					new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, imageManualProcessArgs } }),
+					new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, imageManualProcessArgs } } }),
 					new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
 				];
 			}));

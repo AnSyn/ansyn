@@ -101,8 +101,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.POSITION_CHANGED: {
 			const { id, position } = action.payload;
-			state.entities[id].data.position = position;
-			return { ...state, entities: { ...state.entities } }
+			const entity = state.entities[id];
+			return mapsAdapter.updateOne({
+				id,
+				changes: { data: { ...entity.data, position } }
+			}, state);
 		}
 
 		case CoreActionTypes.SET_MAPS_DATA:
@@ -149,7 +152,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return state;
 	}
 }
-const { selectAll, selectEntities } = mapsAdapter.getSelectors();
+
+const { selectAll, selectEntities, selectIds } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
+export const selectMapsIds = createSelector(mapStateSelector, selectIds);
 export const selectMaps = createSelector(mapStateSelector, selectEntities);

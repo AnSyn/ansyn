@@ -2,7 +2,14 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { IMapState, mapStateSelector, selectActiveMapId, selectMapsList } from '../../reducers/map.reducer';
+import {
+	IMapState,
+	mapStateSelector,
+	selectActiveMapId,
+	selectMapsList,
+	selectMapsIds,
+	selectMaps
+} from '../../reducers/map.reducer';
 import { ActiveImageryMouseEnter, ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -15,6 +22,7 @@ import {
 	SetMapsDataActionStore
 } from '@ansyn/core';
 import { filter, map, pluck, tap, distinctUntilChanged } from 'rxjs/operators';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 // @dynamic
 @Component({
@@ -29,7 +37,8 @@ export class ImageriesManagerComponent implements OnInit {
 		map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout))
 	);
 	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
-	public mapsList$: Observable<ICaseMapState[]> = this.store.select(selectMapsList);
+	public mapsEntities$: Observable<Dictionary<ICaseMapState>> = this.store.select(selectMaps);
+	public ids$ = this.store.select(selectMapsIds);
 	public renderContextMenu: boolean;
 
 	public showWelcomeNotification$ = this.store.pipe(
@@ -48,7 +57,8 @@ export class ImageriesManagerComponent implements OnInit {
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
-	mapsList: ICaseMapState[];
+	ids: string[] = [];
+	mapsEntities: Dictionary<ICaseMapState>;
 	activeMapId: string;
 
 	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>, @Inject(DOCUMENT) protected document: Document) {
@@ -64,7 +74,7 @@ export class ImageriesManagerComponent implements OnInit {
 	initRenderContextMenu() {
 		setTimeout(() => {
 			this.renderContextMenu = true;
-		}, 1000)
+		}, 1000);
 	}
 
 	initClickOutside() {
@@ -78,7 +88,8 @@ export class ImageriesManagerComponent implements OnInit {
 	initSubscribers() {
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
-		this.mapsList$.subscribe((_mapsList: ICaseMapState[]) => this.mapsList = _mapsList);
+		this.mapsEntities$.subscribe((mapsEntities) => this.mapsEntities = mapsEntities);
+		this.ids$.subscribe((ids: string[]) => this.ids = ids);
 	}
 
 

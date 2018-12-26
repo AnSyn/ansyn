@@ -43,7 +43,7 @@ import {
 	CoreActionTypes,
 	ICaseMapState,
 	ImageManualProcessArgs,
-	SetMapsDataActionStore
+	SetMapsDataActionStore, UpdateMapAction
 } from '@ansyn/core';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
@@ -221,7 +221,9 @@ export class ToolsAppEffects {
 			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
 				const activeMap = MapFacadeService.activeMap(mapState);
 				activeMap.data.overlayDisplayMode = action.payload;
-				return new SetMapsDataActionStore({});
+				return new UpdateMapAction({ id: activeMap.id,  changes: {
+					data: { ...activeMap.data, overlayDisplayMode: action.payload }}
+				});
 			})
 		);
 

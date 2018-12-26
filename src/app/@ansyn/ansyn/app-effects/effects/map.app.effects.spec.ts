@@ -4,7 +4,6 @@ import { MapAppEffects } from './map.app.effects';
 import { EMPTY, Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import {
-	ActiveMapChangedAction,
 	ImageryCreatedAction,
 	IMapState,
 	initialMapState,
@@ -251,7 +250,7 @@ describe('MapAppEffects', () => {
 		toolsState = cloneDeep(toolsInitialState);
 		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: true };
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
-		mapState.mapsList = [...icaseState.selectedCase.state.maps.data];
+		mapState.entities = icaseState.selectedCase.state.maps.data.reduce((obj, map) => ({ ...obj, [map.id]: map }), {});
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
 
 
@@ -426,21 +425,5 @@ describe('MapAppEffects', () => {
 			expect(mapAppEffects.displayOverlayOnNewMapInstance$).toBeObservable(expectedResults);
 		});
 	});
-
-	describe('activeMapGeoRegistrationChanged$', () => {
-		it('After active map is changed should dispatch "SetMapGeoEnabledModeToolsActionStore" geoOpertions state', () => {
-			const testOverlay: IOverlay = { id: 'testOverlayId1', isGeoRegistered: false } as IOverlay;
-			mapState.mapsList = <any> [
-				{ id: 'imagery1', data: { overlay: testOverlay } },
-				{ id: 'imagery2', data: { overlay: testOverlay } }
-			];
-			mapState.activeMapId = 'imagery1';
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
-			const b = new SetMapGeoEnabledModeToolsActionStore(testOverlay.isGeoRegistered);
-			const expectedResults = cold('--b--', { b });
-			expect(mapAppEffects.activeMapGeoRegistrationChanged$).toBeObservable(expectedResults);
-		});
-	});
-
 
 });

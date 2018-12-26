@@ -13,12 +13,11 @@ import {
 	CoreConfig,
 	ErrorHandlerService,
 	ICase,
-	IOverlay, SetActiveMapId,
-	SetMapsDataActionStore,
+	IOverlay,
 	SetToastMessageAction,
-	StorageService
+	StorageService,
 } from '@ansyn/core';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { MapFacadeService, SetMapsDataActionStore, UpdateMapAction, SetActiveMapId, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import {
 	AddCaseAction,
@@ -28,7 +27,7 @@ import {
 	CasesService,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
-	SelectDilutedCaseAction
+	SelectDilutedCaseAction, toolsConfig
 } from '@ansyn/menu-items';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -129,7 +128,44 @@ describe('CasesAppEffects', () => {
 					useValue: {}
 				},
 				provideMockActions(() => actions),
-				{ provide: casesConfig, useValue: { schema: null } }
+				{ provide: casesConfig, useValue: { schema: null } },
+				{
+					provide: toolsConfig, useValue: {
+						ImageProcParams:
+							[
+								{
+									name: 'Sharpness',
+									defaultValue: 0,
+									min: 0,
+									max: 100
+								},
+								{
+									name: 'Contrast',
+									defaultValue: 0,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Brightness',
+									defaultValue: 100,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Gamma',
+									defaultValue: 100,
+									min: 1,
+									max: 200
+								},
+								{
+									name: 'Saturation',
+									defaultValue: 0,
+									min: 1,
+									max: 100
+								}
+							]
+					}
+				}
 			]
 		}).compileComponents();
 	}));
@@ -162,13 +198,15 @@ describe('CasesAppEffects', () => {
 		store.dispatch(new SetActiveMapId(activeMapId));
 		const action = new DisplayOverlaySuccessAction({ overlay, mapId: 'map1' });
 		actions = hot('--a--', { a: action });
-		const updatedMapsList = [...mapsList];
-		updatedMapsList.forEach((map) => {
-			if (map.id === activeMapId) {
-				map.data.overlay = overlay;
-			}
+		const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
+		const expectedResults = cold('--b--', { b: new UpdateMapAction({ id: activeMapId, changes: {
+			data: {
+				...activeMap.data,
+				overlay,
+				isAutoImageProcessingActive: false,
+				imageManualProcessArgs: casesAppEffects.defaultImageManualProcessArgs
+			} }})
 		});
-		const expectedResults = cold('--b--', { b: new SetMapsDataActionStore({ mapsList: updatedMapsList }) });
 		expect(casesAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 	});
 

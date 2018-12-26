@@ -10,34 +10,47 @@ import {
 	OverlaysService
 } from '@ansyn/overlays';
 import {
-	CasesActionTypes,
+	CasesActionTypes, IToolsConfig, IToolsState,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
-	SelectDilutedCaseAction
+	SelectDilutedCaseAction, toolsConfig, toolsStateSelector
 } from '@ansyn/menu-items';
-import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { IDilutedCase, IOverlay, SetMapsDataActionStore, SetToastMessageAction, UpdateMapAction } from '@ansyn/core';
+import { IMapState, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
+import { IDilutedCase, ImageManualProcessArgs, IOverlay, SetToastMessageAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { Inject } from '@angular/core';
 
 @Injectable()
 export class CasesAppEffects {
+	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
+		return this.config.ImageProcParams.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+		}, {});
+	}
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		withLatestFrom(this.store$.select(mapStateSelector)),
-		map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
+		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
+		map(([action, mapState, toolsState]: [DisplayOverlayAction, IMapState, IToolsState]) => {
 			const mapId = action.payload.mapId || mapState.activeMapId;
 			const currentMap = mapState.entities[mapId];
+			const imageManualProcessArgs = (Boolean(toolsState && toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || this.defaultImageManualProcessArgs;
+
 			return new UpdateMapAction({
 				id: mapId,
-				changes: { data: { ...currentMap.data, overlay: action.payload.overlay, isAutoImageProcessingActive: false } }
+				changes: { data: {
+					...currentMap.data,
+						overlay: action.payload.overlay,
+						isAutoImageProcessingActive: false,
+						imageManualProcessArgs
+					} }
 			});
-		}),
+		})
 	);
 
 	@Effect()
@@ -84,6 +97,7 @@ export class CasesAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected overlaysService: OverlaysService,
+				@Inject(toolsConfig) protected config: IToolsConfig,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

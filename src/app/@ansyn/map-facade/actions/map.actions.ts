@@ -9,6 +9,7 @@ import {
 	IPendingOverlay,
 	IUpdateFeatureEvent
 } from '@ansyn/core';
+import { CoreActionTypes } from '../../core/actions/core.actions';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
@@ -48,7 +49,10 @@ export const MapActionTypes = {
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
 	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
-	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER'
+	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER',
+	SET_MAPS_DATA: 'SET_MAPS_DATA',
+	SET_ACTIVE_MAP_ID: 'SET_ACTIVE_MAP_ID',
+	UPDATE_MAP: 'UPDATE_MAP'
 };
 
 export interface IContextMenuShowPayload {
@@ -238,3 +242,25 @@ export class ImageryMouseLeave implements Action {
 	constructor(public payload: string) {
 	}
 }
+
+export class SetMapsDataActionStore implements Action {
+	type = MapActionTypes.SET_MAPS_DATA;
+
+	constructor(public payload: { mapsList: ICaseMapState[] }) {
+	}
+}
+
+export class SetActiveMapId implements Action {
+	type = MapActionTypes.SET_ACTIVE_MAP_ID;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class UpdateMapAction implements Action {
+	type = MapActionTypes.UPDATE_MAP;
+
+	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	}
+}
+

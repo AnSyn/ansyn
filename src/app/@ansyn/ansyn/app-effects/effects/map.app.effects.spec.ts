@@ -68,6 +68,7 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { selectMaps } from '../../../map-facade/reducers/map.reducer';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported = ['mapType1'];
@@ -240,7 +241,7 @@ describe('MapAppEffects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const selectedCase = cases[0];
-		icaseState = { cases, selectedCase } as any;
+		icaseState = { selectedCase } as any;
 
 		statusBarState = cloneDeep(StatusBarInitialState);
 		mapState = cloneDeep(initialMapState);
@@ -258,10 +259,10 @@ describe('MapAppEffects', () => {
 			[casesStateSelector, icaseState],
 			[statusBarStateSelector, statusBarState],
 			[overlaysStateSelector, overlaysState],
-			[mapStateSelector, mapState],
 			[layersStateSelector, layerState],
 			[mapStateSelector, mapState],
-			[toolsStateSelector, toolsState]
+			[toolsStateSelector, toolsState],
+			[selectMaps, mapState.entities]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));

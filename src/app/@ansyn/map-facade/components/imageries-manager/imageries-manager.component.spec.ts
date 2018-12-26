@@ -10,14 +10,14 @@ import {
 	coreFeatureKey,
 	CoreReducer, ErrorHandlerService,
 	ImageryStatusComponent,
-	MockComponent, SetActiveMapId,
-	SetLayoutAction,
-	SetMapsDataActionStore
+	MockComponent,
+	SetLayoutAction
 } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
 import { throwError } from 'rxjs';
 import { mapFacadeConfig } from '../../models/map-facade.config';
+import { SetActiveMapId, SetMapsDataActionStore } from '../../actions/map.actions';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',

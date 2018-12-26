@@ -29,12 +29,11 @@ import {
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	IMapState,
-	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
-	selectMapsList
+	selectMapsList, UpdateMapAction
 } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import {
@@ -42,8 +41,7 @@ import {
 	ClearActiveInteractionsAction,
 	CoreActionTypes,
 	ICaseMapState,
-	ImageManualProcessArgs,
-	SetMapsDataActionStore, UpdateMapAction
+	ImageManualProcessArgs
 } from '@ansyn/core';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
@@ -106,19 +104,6 @@ export class ToolsAppEffects {
 		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
 	);
 
-
-	@Effect()
-	onDisplayOverlaySuccess$: Observable<any> = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		filter((action: DisplayOverlaySuccessAction) => !action.payload.forceFirstDisplay),
-		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
-		map(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
-			const entity = mapState.entities[action.payload.mapId];
-			const imageManualProcessArgs = (Boolean(toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || this.defaultImageManualProcessArgs;
-			return new UpdateMapAction({ id: action.payload.mapId, changes: { data: { ...entity.data, imageManualProcessArgs }} });
-		})
-	);
-
 	@Effect()
 	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
 		filter((map) => Boolean(map.data.overlay)),
@@ -155,7 +140,7 @@ export class ToolsAppEffects {
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
 				new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }}),
-				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
+				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
 			];
 		})
 	)

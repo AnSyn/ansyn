@@ -34,12 +34,10 @@ import {
 import {
 	BackToWorldView,
 	ClearActiveInteractionsAction,
-	ICase,
-	SetMapsDataActionStore,
-	UpdateMapAction
+	ICase
 } from '@ansyn/core';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
@@ -253,35 +251,6 @@ describe('ToolsAppEffects', () => {
 			Gamma: 100,
 			Saturation: 0
 		};
-
-		it('onDisplayOverlaySuccess with id and given args should raise SetMapsDataActionStore with the given args', () => {
-			const overlayId = 'id';
-
-			const args = {
-				Brightness: 1,
-				Contrast: 2,
-				Gamma: 3,
-				Saturation: 4,
-				Sharpness: 5
-			};
-
-			toolsState.overlaysManualProcessArgs = { [overlayId]: args };
-
-			actions = hot('--a--', {
-				a: new DisplayOverlaySuccessAction({
-					overlay: <any> { id: overlayId },
-					mapId: 'imagery1'
-				})
-			});
-
-			const imageManualProcessArgs = args;
-			const mapData = imapState.entities['imagery1'];
-			const expectedResults = cold('--(a)--', {
-				a: new UpdateMapAction({ id: 'imagery1' , changes: { data: { ...mapData.data, imageManualProcessArgs }}})
-			});
-
-			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
-		});
 	});
 
 	describe('backToWorldView', () => {
@@ -300,16 +269,16 @@ describe('ToolsAppEffects', () => {
 		expect(toolsAppEffects.onSelectCase$).toBeObservable(expectedResults);
 	});
 
-	it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, SetMapsDataActionStore and ToggleAutoImageProcessingSuccess accordingly', () => {
+	it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, UpdateMapAction and ToggleAutoImageProcessingSuccess accordingly', () => {
 		const activeMap = MapFacadeService.activeMap(imapState);
-		const isAutoImageProcessingActive = true;
+		const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 		actions = hot('--a--', { a: new SetAutoImageProcessing() });
 		const expectedResults = cold('--(ab)--', {
 			a: new UpdateMapAction({
 				id: activeMap.id,
 				changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
 			}),
-			b: new SetAutoImageProcessingSuccess(false)
+			b: new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
 		});
 		expect(toolsAppEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
 	});

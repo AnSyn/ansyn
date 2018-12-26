@@ -25,11 +25,10 @@ import {
 	ICaseTimeState,
 	IContextEntity,
 	IOverlay,
-	IOverlaysManualProcessArgs, SetActiveMapId,
+	IOverlaysManualProcessArgs,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
@@ -39,6 +38,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetContextParamsAction } from '@ansyn/context';
 import { SelectCaseAppEffects } from './select-case.app.effects';
+import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;

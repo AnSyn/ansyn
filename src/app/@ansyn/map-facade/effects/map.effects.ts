@@ -13,9 +13,8 @@ import {
 	ICaseMapState,
 	selectRegion,
 	SetLayoutSuccessAction,
-	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
-	SetToastMessageAction, UpdateMapAction
+	SetToastMessageAction
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import {
@@ -28,7 +27,7 @@ import {
 	MapActionTypes,
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
-	SynchronizeMapsAction
+	SynchronizeMapsAction, UpdateMapAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';

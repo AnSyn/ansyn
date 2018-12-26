@@ -2,15 +2,13 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
+import { IMapState, selectActiveMapId, selectMaps, selectMapsIds } from '../../reducers/map.reducer';
 import {
-	IMapState,
-	mapStateSelector,
-	selectActiveMapId,
-	selectMapsList,
-	selectMapsIds,
-	selectMaps
-} from '../../reducers/map.reducer';
-import { ActiveImageryMouseEnter, ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
+	ActiveImageryMouseEnter,
+	ClickOutsideMap,
+	SetActiveMapId,
+	UpdateMapSizeAction
+} from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import {
 	coreStateSelector,
@@ -18,10 +16,10 @@ import {
 	ICoreState,
 	IMapsLayout,
 	LayoutKey,
-	layoutOptions, selectLayout,
-	SetActiveMapId
+	layoutOptions,
+	selectLayout
 } from '@ansyn/core';
-import { filter, map, pluck, tap, distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 
 // @dynamic

@@ -8,11 +8,10 @@ import {
 	ICaseMapState,
 	ICoreConfig,
 	IOverlay,
-	isFullOverlay, SetActiveMapId,
+	isFullOverlay,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
@@ -32,6 +31,7 @@ import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { mergeMap } from 'rxjs/operators';
+import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 
 @Injectable()
 export class SelectCaseAppEffects {

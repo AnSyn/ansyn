@@ -95,7 +95,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, ...action.payload };
 		}
 
-		case CoreActionTypes.UPDATE_MAP: {
+		case MapActionTypes.UPDATE_MAP: {
 			return mapsAdapter.updateOne(action.payload, state);
 		}
 
@@ -111,11 +111,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return state;
 		}
 
-		case CoreActionTypes.SET_ACTIVE_MAP_ID: {
+		case MapActionTypes.SET_ACTIVE_MAP_ID: {
 			return { ...state, activeMapId: action.payload };
 		}
 
-		case CoreActionTypes.SET_MAPS_DATA:
+		case MapActionTypes.SET_MAPS_DATA:
 			return mapsAdapter.addAll(action.payload.mapsList, state);
 
 		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:

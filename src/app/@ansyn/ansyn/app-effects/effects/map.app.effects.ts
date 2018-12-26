@@ -6,10 +6,8 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction,
-	IOverlaysState,
 	MarkUpClass,
 	OverlaysActionTypes,
-	overlaysStateSelector,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
 } from '@ansyn/overlays';
@@ -21,7 +19,7 @@ import {
 	mapFacadeConfig,
 	MapFacadeService,
 	mapStateSelector, selectActiveMapId,
-	SetIsLoadingAcion
+	SetIsLoadingAcion, UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	SetManualImageProcessing,
@@ -30,21 +28,16 @@ import {
 	UpdateOverlaysManualProcessArgs
 } from '@ansyn/menu-items';
 import {
-	AddAlertMsg,
-	AlertMsgTypes,
 	BackToWorldView,
 	CoreActionTypes,
 	endTimingLog,
 	extentFromGeojson,
-	getFootprintIntersectionRatioInExtent,
 	ICaseMapState,
 	isFullOverlay,
-	RemoveAlertMsg,
-	SetMapsDataActionStore,
 	SetToastMessageAction,
 	startTimingLog,
 	toastMessages,
-	ToggleMapLayersAction, UpdateMapAction
+	ToggleMapLayersAction
 } from '@ansyn/core';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
 import {
@@ -68,7 +61,8 @@ import {
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
-import { selectMapsList } from '../../../map-facade/reducers/map.reducer';
+import { selectMaps, selectMapsList } from '../../../map-facade/reducers/map.reducer';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 @Injectable()
 export class MapAppEffects {
@@ -142,13 +136,10 @@ export class MapAppEffects {
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.pipe(
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => Boolean(mapsState.entities) && Object.values(mapsState.entities).length > 0),
-			map(([action, mapsState]: [ImageryCreatedAction, IMapState]) => {
-				return Object.values(mapsState.entities)
-					.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
-			}),
-			filter((caseMapState: ICaseMapState) => Boolean(caseMapState)),
+			withLatestFrom(this.store$.select(selectMaps)),
+			filter(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities && Object.values(entities).length > 0),
+			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
+			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
 				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 				return new DisplayOverlayAction({
@@ -274,7 +265,7 @@ export class MapAppEffects {
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
-		const caseMapState = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId);
+		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
 		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);

@@ -18,6 +18,8 @@ import { FeatureCollection } from 'geojson';
 import { window } from 'd3';
 import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
+import { selectMaps } from '../../map-facade/reducers/map.reducer';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 
@@ -31,6 +33,7 @@ export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 export class AnsynApi {
 	activeMapId;
 	mapsList;
+	mapsEntities;
 	activeAnnotationLayer;
 
 	@AutoSubscription
@@ -43,7 +46,13 @@ export class AnsynApi {
 		select(selectMapsList),
 		tap((mapsList) => this.mapsList = mapsList)
 	);
-	
+
+	@AutoSubscription
+	mapsEntities$: Observable<Dictionary<ICaseMapState>> = this.store.pipe(
+		select(selectMaps),
+		tap((mapsEntities) => this.mapsEntities = mapsEntities)
+	);
+
 	@AutoSubscription
 	activeAnnotationLayer$: Observable<ILayer> = this.store
 		.pipe(
@@ -116,7 +125,7 @@ export class AnsynApi {
 	}
 
 	getMapPosition(): ICaseMapPosition {
-		return MapFacadeService.mapById(this.mapsList, this.activeMapId).data.position;
+		return this.mapsEntities[this.activeMapId].data.position;
 	}
 
 	goToPosition(position: Array<number>): void {

@@ -114,7 +114,7 @@ export class ToolsAppEffects {
 		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
 		map(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
 			const imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
-			const updatedMapList = [...mapState.mapsList];
+			const updatedMapList = Object.values(mapState.entities);
 			const mapToUpdate = MapFacadeService.mapById(updatedMapList, action.payload.mapId);
 
 			mapToUpdate.data.imageManualProcessArgs = (Boolean(toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || imageManualProcessArgs;
@@ -158,7 +158,7 @@ export class ToolsAppEffects {
 			const activeMap: ICaseMapState = MapFacadeService.activeMap(mapsState);
 			activeMap.data.isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
-				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),
+				new SetMapsDataActionStore({ mapsList: Object.values(mapsState.entities) }),
 				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
 			];
 		})
@@ -199,6 +199,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = combineLatest(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId)).pipe(
+		filter(([mapsList, activeMapId]) => Boolean(mapsList.length && activeMapId)),
 		mergeMap(([mapsList, activeMapId]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
@@ -218,11 +219,9 @@ export class ToolsAppEffects {
 			ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
-				const mapsList = [...mapState.mapsList];
 				const activeMap = MapFacadeService.activeMap(mapState);
 				activeMap.data.overlayDisplayMode = action.payload;
-				return new SetMapsDataActionStore({ mapsList });
-
+				return new SetMapsDataActionStore({});
 			})
 		);
 

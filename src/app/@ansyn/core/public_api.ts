@@ -1,3 +1,4 @@
+export { UpdateMapAction } from './actions/core.actions';
 export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 export { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
 export { ICaseSliderFilterMetadata } from './models/case.model';

@@ -4,10 +4,12 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
+import { Dictionary } from '@ngrx/entity/src/models';
 
-export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsList?: ICaseMapState[], activeMapId?: string } {
+export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: ICaseMapState[] = [];
-	const activeMap: ICaseMapState = oldMapsList.find(({ id }) => oldActiveMapId === id);
+	const activeMap: ICaseMapState = oldEntities[oldActiveMapId];
+	const oldMapsList = Object.values(oldEntities);
 
 	range(layout.mapsCount).forEach((index) => {
 		if (oldMapsList[index]) {
@@ -23,22 +25,19 @@ export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsL
 		}
 	});
 
-	const mapsListChange = { mapsList };
-
 	/* activeMapId */
 	const notExist = !mapsList.some(({ id }) => id === oldActiveMapId);
 	if (notExist) {
 		mapsList[mapsList.length - 1] = activeMap;
 	}
 
-	return { ...mapsListChange };
+	return mapsList;
 }
 
 export const mapsAdapter: EntityAdapter<ICaseMapState> = createEntityAdapter<ICaseMapState>();
 
 export interface IMapState extends EntityState<ICaseMapState> {
 	activeMapId: string;
-	mapsList: ICaseMapState[];
 	isLoadingMaps: Map<string, string>,
 	isHiddenMaps: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened
@@ -48,7 +47,6 @@ export interface IMapState extends EntityState<ICaseMapState> {
 
 export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	activeMapId: null,
-	mapsList: [],
 	isLoadingMaps: new Map<string, string>(),
 	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
@@ -77,7 +75,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.VIEW.SET_IS_LOADING: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
 			const { mapId, show, text } = action.payload;
-			const exist = state.mapsList.some(({ id }) => id === mapId);
+			const exist = state.entities[mapId];
 			if (show && exist) {
 				isLoadingMaps.set(mapId, text);
 			} else {
@@ -97,8 +95,23 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, ...action.payload };
 		}
 
+		case CoreActionTypes.UPDATE_MAP: {
+			return mapsAdapter.updateOne(action.payload, state);
+		}
+
+		case MapActionTypes.POSITION_CHANGED: {
+			const { id, position } = action.payload;
+			state.entities[id].data.position = position;
+			return { ...state, entities: { ...state.entities } }
+		}
+
 		case CoreActionTypes.SET_MAPS_DATA:
-			return { ...state, ...action.payload };
+			const activeMapId = action.payload.activeMapId || state.activeMapId;
+			const updatedState = { ...state, activeMapId };
+			if (Array.isArray(action.payload.mapsList)) {
+				return mapsAdapter.addAll(action.payload.mapsList, updatedState);
+			}
+			return updatedState;
 
 		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:
 			const currentCount = state.pendingMapsCount;
@@ -114,21 +127,21 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, pendingOverlays };
 
 		case CoreActionTypes.TOGGLE_MAP_LAYERS: {
-			const mapsList = [...state.mapsList];
-			const toggledMap = mapsList.find(map => map.id === action.payload.mapId);
+			const entities = { ...state.entities };
+			const toggledMap = entities[action.payload.mapId];
 			if (toggledMap) {
 				toggledMap.flags.displayLayers = !toggledMap.flags.displayLayers;
 			}
 
-			return { ...state, mapsList };
+			return { ...state, entities };
 		}
 
 		case CoreActionTypes.SET_LAYOUT:
 			const layout = layoutOptions.get(action.payload);
-			if (layout.mapsCount !== state.mapsList.length && state.mapsList.length) {
-				const pendingMapsCount = Math.abs(layout.mapsCount - state.mapsList.length);
-				const mapsDataChanges = setMapsDataChanges(state.mapsList, state.activeMapId, layout);
-				return { ...state, pendingMapsCount, ...mapsDataChanges };
+			if (layout.mapsCount !== Object.values(state.entities).length && Object.values(state.entities).length) {
+				const pendingMapsCount = Math.abs(layout.mapsCount - Object.values(state.entities).length);
+				const mapsList = setMapsDataChanges(state.entities, state.activeMapId, layout);
+				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount });
 			}
 			return state;
 
@@ -136,6 +149,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return state;
 	}
 }
-
+const { selectAll, selectEntities } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
-export const selectMapsList = createSelector(mapStateSelector, (map: IMapState) => map.mapsList);
+export const selectMapsList = createSelector(mapStateSelector, selectAll);
+export const selectMaps = createSelector(mapStateSelector, selectEntities);

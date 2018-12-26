@@ -27,11 +27,11 @@ export class MapFacadeService {
 	}
 
 	static activeMap(mapState: IMapState): ICaseMapState {
-		return MapFacadeService.mapById(mapState.mapsList, mapState.activeMapId);
+		return mapState.entities[mapState.activeMapId];
 	}
 
 	static mapById(mapsList: ICaseMapState[], mapId: string): ICaseMapState {
-		return mapsList.find(function ({ id }: ICaseMapState) {
+		return mapsList.find(({ id }: ICaseMapState) => {
 			return id === mapId;
 		});
 	}

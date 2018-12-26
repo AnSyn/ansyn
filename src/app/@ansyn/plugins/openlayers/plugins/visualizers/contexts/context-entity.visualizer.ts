@@ -14,7 +14,7 @@ import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { selectContextEntities } from '@ansyn/context';
-import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { IMapState, MapFacadeService, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer } from '../entities-visualizer';
@@ -38,8 +38,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	@AutoSubscription
 	referenceDate$ = this.store$
 		.pipe(
-			select(mapStateSelector),
-			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
+			select(selectMapsList),
+			map((mapsList: ICaseMapState[]) => MapFacadeService.mapById(mapsList, this.mapId)),
 			filter(Boolean),
 			map((map: ICaseMapState) => map.data.overlay && map.data.overlay.date),
 			distinctUntilChanged(),

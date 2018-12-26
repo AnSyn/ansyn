@@ -31,7 +31,7 @@ export class CasesAppEffects {
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
-			const updatedMapsList = [...mapState.mapsList];
+			const updatedMapsList = Object.values(mapState.entities);
 			const mapId = action.payload.mapId || mapState.activeMapId;
 
 			updatedMapsList.forEach((map) => {

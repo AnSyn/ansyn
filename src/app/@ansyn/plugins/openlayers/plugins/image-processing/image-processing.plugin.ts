@@ -2,7 +2,7 @@ import { combineLatest, Observable, of } from 'rxjs';
 import ImageLayer from 'ol/layer/image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
-import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { IMapState, MapFacadeService, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
@@ -13,6 +13,7 @@ import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
+import { selectMaps } from '../../../../map-facade/reducers/map.reducer';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -24,8 +25,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	private imageLayer: ImageLayer;
 	customMainLayer = null;
 
-	currentMap$ = this.store$.select(mapStateSelector).pipe(
-		map((mapState: IMapState) => MapFacadeService.mapById(mapState.mapsList, this.mapId)),
+	currentMap$ = this.store$.select(selectMaps).pipe(
+		map((mapsEntities) => mapsEntities[this.mapId]),
 		filter(Boolean)
 	);
 

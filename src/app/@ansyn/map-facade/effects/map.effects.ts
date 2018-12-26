@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector, selectActiveMapId } from '../reducers/map.reducer';
+import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	BackToWorldSuccess,
 	BackToWorldView,
@@ -15,7 +15,7 @@ import {
 	SetLayoutSuccessAction,
 	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
-	SetToastMessageAction
+	SetToastMessageAction, UpdateMapAction
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import {
@@ -36,6 +36,7 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 @Injectable()
 export class MapEffects {
@@ -114,29 +115,16 @@ export class MapEffects {
 	);
 
 	@Effect()
-	positionChanged$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.POSITION_CHANGED),
-		withLatestFrom(this.store$.select(mapStateSelector), (action: PositionChangedAction, state: IMapState): any => {
-			return [action, MapFacadeService.mapById(state.mapsList, action.payload.id), state.mapsList];
-		}),
-		filter(([action, selectedMap, mapsList]) => Boolean(selectedMap) && action.payload.mapInstance === selectedMap),
-		map(([action, selectedMap, mapsList]) => {
-			selectedMap.data.position = action.payload.position;
-			return new SetMapsDataActionStore({ mapsList: [...mapsList] });
-		})
-	);
-
-	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [BackToWorldView, IMapState]) => {
 				const mapId = action.payload.mapId;
-				const selectedMap = MapFacadeService.mapById(mapState.mapsList, mapId);
+				const selectedMap = MapFacadeService.mapById(Object.values(mapState.entities), mapId);
 				const communicator = this.communicatorsService.provide(mapId);
 				const { position } = selectedMap.data;
-				return [action.payload, mapState.mapsList, communicator, position];
+				return [action.payload, Object.values(mapState.entities), communicator, position];
 			}),
 			filter(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, mapsList, communicator, position]: [{ mapId: string }, ICaseMapState[], CommunicatorEntity, ICaseMapPosition]) => {
@@ -165,7 +153,7 @@ export class MapEffects {
 	newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
 		ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([{ payload }, { mapsList }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(mapsList, payload.id).data.position),
+		filter(([{ payload }, { entities }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
 		switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const communicator = this.communicatorsService.provide(payload.id);
@@ -174,7 +162,7 @@ export class MapEffects {
 		mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
-			const updatedMapsList = [...mapState.mapsList];
+			const updatedMapsList = Object.values(mapState.entities);
 			updatedMapsList.forEach((map: ICaseMapState) => {
 				if (map.id === payload.id) {
 					map.data.position = activeMap.data.position;
@@ -201,12 +189,12 @@ export class MapEffects {
 		switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
 			const mapId = action.payload.mapId;
 			if (!mapPosition) {
-				const map: ICaseMapState = MapFacadeService.mapById(mapState.mapsList, mapId);
+				const map: ICaseMapState = mapState.entities[mapId];
 				mapPosition = map.data.position;
 			}
 
 			const setPositionObservables = [];
-			mapState.mapsList.forEach((mapItem: ICaseMapState) => {
+			Object.values(mapState.entities).forEach((mapItem: ICaseMapState) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
 					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));

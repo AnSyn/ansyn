@@ -130,7 +130,7 @@ export class MapAppEffects {
 			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
 			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
 			mergeMap(([activeMap, action, mapState]: [ICaseMapState, SetManualImageProcessing, IMapState]) => {
-				const updatedMapList = [...mapState.mapsList];
+				const updatedMapList = Object.values(mapState.entities);
 				activeMap.data.imageManualProcessArgs = action.payload;
 				const overlayId = activeMap.data.overlay.id;
 				return [
@@ -144,9 +144,9 @@ export class MapAppEffects {
 		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => Boolean(mapsState.mapsList) && mapsState.mapsList.length > 0),
+			filter(([action, mapsState]: [ImageryCreatedAction, IMapState]) => Boolean(mapsState.entities) && Object.values(mapsState.entities).length > 0),
 			map(([action, mapsState]: [ImageryCreatedAction, IMapState]) => {
-				return mapsState.mapsList
+				return Object.values(mapsState.entities)
 					.find((mapData) => mapData.data.overlay && mapData.id === action.payload.id);
 			}),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState)),
@@ -192,11 +192,11 @@ export class MapAppEffects {
 	markupOnMapsDataChanges$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.mapsList && mapState.mapsList.length)),
-			map(([action, { mapsList, activeMapId }]: [Action, IMapState]) => {
+			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.entities && Object.values(mapState.entities).length)),
+			map(([action, { entities, activeMapId }]: [Action, IMapState]) => {
 					const actives = [];
 					const displayed = [];
-					mapsList.forEach((map: ICaseMapState) => {
+					Object.values(entities).forEach((map: ICaseMapState) => {
 						if (Boolean(map.data.overlay)) {
 							if (map.id === activeMapId) {
 								actives.push(map.data.overlay.id);
@@ -242,7 +242,7 @@ export class MapAppEffects {
 	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState.activeMapId && mapState.mapsList.length)),
+			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
 			map(([action, mapState]: [Action, IMapState]) => {
 				const activeMapState = MapFacadeService.activeMap(mapState);
 				const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
@@ -275,7 +275,7 @@ export class MapAppEffects {
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
-		const caseMapState = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId);
+		const caseMapState = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId);
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
 		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
@@ -353,7 +353,7 @@ export class MapAppEffects {
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const isFull = isFullOverlay(payload.overlay);
 		const { overlay } = payload;
-		const mapData = MapFacadeService.mapById(mapState.mapsList, payload.mapId || mapState.activeMapId).data;
+		const mapData = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId).data;
 		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
 		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
 	}

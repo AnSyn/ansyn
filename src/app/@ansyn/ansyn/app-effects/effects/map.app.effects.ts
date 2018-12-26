@@ -44,7 +44,7 @@ import {
 	SetToastMessageAction,
 	startTimingLog,
 	toastMessages,
-	ToggleMapLayersAction
+	ToggleMapLayersAction, UpdateMapAction
 } from '@ansyn/core';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
 import {
@@ -129,12 +129,11 @@ export class MapAppEffects {
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
 			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
-			mergeMap(([activeMap, action, mapState]: [ICaseMapState, SetManualImageProcessing, IMapState]) => {
-				const updatedMapList = Object.values(mapState.entities);
-				activeMap.data.imageManualProcessArgs = action.payload;
+			mergeMap(([activeMap, action]: [ICaseMapState, SetManualImageProcessing, IMapState]) => {
+				const imageManualProcessArgs = action.payload;
 				const overlayId = activeMap.data.overlay.id;
 				return [
-					new SetMapsDataActionStore({ mapsList: updatedMapList }),
+					new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, imageManualProcessArgs } }),
 					new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
 				];
 			}));

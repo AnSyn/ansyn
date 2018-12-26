@@ -6,7 +6,7 @@ import { cold, hot } from 'jasmine-marbles';
 import { DisplayOverlayFromStoreAction } from '@ansyn/overlays';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/index';
-import { SetMapsDataActionStore } from '@ansyn/core';
+import { SetActiveMapId } from '@ansyn/core';
 import { ContextMenuPlugin } from './context-menu.plugin';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 
@@ -30,7 +30,7 @@ describe('ContextMenuPlugin', () => {
 	beforeEach(inject([Store, ContextMenuPlugin], (_store: Store<any>, _contextMenuPlugin: ContextMenuPlugin) => {
 		store = _store;
 		contextMenuPlugin = _contextMenuPlugin;
-		store.dispatch(new SetMapsDataActionStore({ activeMapId }));
+		store.dispatch(new SetActiveMapId(activeMapId));
 		spyOnProperty(contextMenuPlugin, 'mapId', 'get').and.returnValue(activeMapId);
 	}));
 

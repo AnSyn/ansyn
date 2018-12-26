@@ -16,7 +16,7 @@ import {
 	SelectDilutedCaseAction
 } from '@ansyn/menu-items';
 import { IMapState, mapStateSelector } from '@ansyn/map-facade';
-import { IDilutedCase, IOverlay, SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/core';
+import { IDilutedCase, IOverlay, SetMapsDataActionStore, SetToastMessageAction, UpdateMapAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
@@ -31,18 +31,13 @@ export class CasesAppEffects {
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		map(([action, mapState]: [DisplayOverlayAction, IMapState]) => {
-			const updatedMapsList = Object.values(mapState.entities);
 			const mapId = action.payload.mapId || mapState.activeMapId;
-
-			updatedMapsList.forEach((map) => {
-				if (mapId === map.id) {
-					map.data.overlay = action.payload.overlay;
-					map.data.isAutoImageProcessingActive = false;
-				}
+			const currentMap = mapState.entities[mapId];
+			return new UpdateMapAction({
+				id: mapId,
+				changes: { data: { ...currentMap.data, overlay: action.payload.overlay, isAutoImageProcessingActive: false } }
 			});
-			return new SetMapsDataActionStore({ mapsList: updatedMapsList });
 		}),
-		share()
 	);
 
 	@Effect()

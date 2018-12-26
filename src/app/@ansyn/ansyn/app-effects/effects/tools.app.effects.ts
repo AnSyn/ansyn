@@ -113,13 +113,9 @@ export class ToolsAppEffects {
 		filter((action: DisplayOverlaySuccessAction) => !action.payload.forceFirstDisplay),
 		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
 		map(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
-			const imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
-			const updatedMapList = Object.values(mapState.entities);
-			const mapToUpdate = MapFacadeService.mapById(updatedMapList, action.payload.mapId);
-
-			mapToUpdate.data.imageManualProcessArgs = (Boolean(toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || imageManualProcessArgs;
-
-			return new SetMapsDataActionStore({ mapsList: updatedMapList });
+			const entity = mapState.entities[action.payload.mapId];
+			const imageManualProcessArgs = (Boolean(toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || this.defaultImageManualProcessArgs;
+			return new UpdateMapAction({ id: action.payload.mapId, changes: { data: { ...entity.data, imageManualProcessArgs }} });
 		})
 	);
 
@@ -156,9 +152,9 @@ export class ToolsAppEffects {
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
 			const activeMap: ICaseMapState = MapFacadeService.activeMap(mapsState);
-			activeMap.data.isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
+			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
-				new SetMapsDataActionStore({ mapsList: Object.values(mapsState.entities) }),
+				new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }}),
 				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
 			];
 		})

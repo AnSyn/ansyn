@@ -19,7 +19,7 @@ import {
 	IMapsLayout,
 	LayoutKey,
 	layoutOptions, selectLayout,
-	SetMapsDataActionStore
+	SetActiveMapId
 } from '@ansyn/core';
 import { filter, map, pluck, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -123,7 +123,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 	changeActiveImagery(value) {
 		if (this.activeMapId !== value) {
-			this.store.dispatch(new SetMapsDataActionStore({ activeMapId: value }));
+			this.store.dispatch(new SetActiveMapId(value));
 			this.store.dispatch(new ActiveImageryMouseEnter());
 		}
 	}

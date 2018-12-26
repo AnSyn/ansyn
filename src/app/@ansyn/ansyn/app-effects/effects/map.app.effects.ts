@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable, of, pipe, from } from 'rxjs';
+import { EMPTY, Observable, of, pipe, from, combineLatest } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -20,7 +20,7 @@ import {
 	MapActionTypes,
 	mapFacadeConfig,
 	MapFacadeService,
-	mapStateSelector,
+	mapStateSelector, selectActiveMapId,
 	SetIsLoadingAcion
 } from '@ansyn/map-facade';
 import {
@@ -68,6 +68,7 @@ import {
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
+import { selectMapsList } from '../../../map-facade/reducers/map.reducer';
 
 @Injectable()
 export class MapAppEffects {
@@ -188,8 +189,7 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	markupOnMapsDataChanges$ = this.actions$
-		.ofType<Action>(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED, MapActionTypes.TRIGGER.MAPS_LIST_CHANGED)
+	markupOnMapsDataChanges$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.mapsList && mapState.mapsList.length)),
@@ -239,10 +239,10 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	activeMapGeoRegistrationChanged$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.TRIGGER.MAPS_LIST_CHANGED, MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED)
+	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
+			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState.activeMapId && mapState.mapsList.length)),
 			map(([action, mapState]: [Action, IMapState]) => {
 				const activeMapState = MapFacadeService.activeMap(mapState);
 				const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);

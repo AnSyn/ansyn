@@ -34,7 +34,7 @@ import {
 } from '@ansyn/menu-items';
 import { BackToWorldView, ClearActiveInteractionsAction, ICase, SetMapsDataActionStore } from '@ansyn/core';
 import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { ActiveMapChangedAction, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
@@ -276,16 +276,6 @@ describe('ToolsAppEffects', () => {
 			});
 
 			expect(toolsAppEffects.onDisplayOverlaySuccess$).toBeObservable(expectedResults);
-		});
-	});
-
-	describe('@Effect onActiveMapChangesSetOverlaysFootprintMode$', () => {
-		it('should trigger SetActiveOverlaysFootprintModeAction', () => {
-			imapState.activeMap = imapState.mapsList[0];
-			imapState.activeMap.data.overlayDisplayMode = <any> 'whatever';
-			actions = hot('--a--', { a: new ActiveMapChangedAction('') });
-			const expectedResults = cold('--b--', { b: new SetActiveOverlaysFootprintModeAction(<any>'whatever') });
-			expect(toolsAppEffects.onActiveMapChangesSetOverlaysFootprintMode$).toBeObservable(expectedResults);
 		});
 	});
 

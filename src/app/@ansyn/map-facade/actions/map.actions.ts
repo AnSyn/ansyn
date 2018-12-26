@@ -37,8 +37,6 @@ export const MapActionTypes = {
 		IMAGERY_MOUSE_LEAVE: 'IMAGERY_MOUSE_LEAVE',
 		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
-		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
-		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_SELECT: 'ANNOTATION_SELECT',
@@ -65,14 +63,6 @@ export class SetProgressBarAction implements Action {
 	type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
 	constructor(public payload: { mapId: string, progress: number }) {
-	}
-}
-
-
-export class ActiveMapChangedAction implements Action {
-	type = MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED;
-
-	constructor(public payload: string) {
 	}
 }
 
@@ -150,13 +140,6 @@ export class PinLocationModeTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_LOCATION_MODE;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-export class MapsListChangedAction implements Action {
-	type = MapActionTypes.TRIGGER.MAPS_LIST_CHANGED;
-
-	constructor(public payload: ICaseMapState[]) {
 	}
 }
 

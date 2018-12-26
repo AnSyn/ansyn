@@ -1,6 +1,7 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
 import { CoreActionTypes, ICaseMapState, IPendingOverlay, layoutOptions } from '@ansyn/core';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 
@@ -33,7 +34,9 @@ export function setMapsDataChanges(oldMapsList, oldActiveMapId, layout): { mapsL
 	return { ...mapsListChange };
 }
 
-export interface IMapState {
+export const mapsAdapter: EntityAdapter<ICaseMapState> = createEntityAdapter<ICaseMapState>();
+
+export interface IMapState extends EntityState<ICaseMapState> {
 	activeMapId: string;
 	mapsList: ICaseMapState[];
 	isLoadingMaps: Map<string, string>,
@@ -43,16 +46,17 @@ export interface IMapState {
 }
 
 
-export const initialMapState: IMapState = {
+export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	activeMapId: null,
 	mapsList: [],
 	isLoadingMaps: new Map<string, string>(),
 	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
-};
+});
 
 export const mapFeatureKey = 'map';
+
 
 export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureSelector<IMapState>(mapFeatureKey);
 

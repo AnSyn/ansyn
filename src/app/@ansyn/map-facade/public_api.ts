@@ -25,7 +25,6 @@ export {
 	ContextMenuShowAction,
 	ContextMenuTriggerAction,
 	ShadowMouseProducer,
-	ActiveMapChangedAction,
 	PointToRealNorthAction,
 	MapActionTypes
 } from './actions/map.actions';

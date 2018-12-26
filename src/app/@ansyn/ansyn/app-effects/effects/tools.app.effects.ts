@@ -87,9 +87,9 @@ export class ToolsAppEffects {
 	);
 
 	@Effect()
-	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED),
-		withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
+	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
+		filter(Boolean),
+		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
 		mergeMap((activeMap: ICaseMapState) => {
 			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 			if (!Boolean(activeMap.data.overlay)) {

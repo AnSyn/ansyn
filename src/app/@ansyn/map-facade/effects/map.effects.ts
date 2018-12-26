@@ -20,14 +20,12 @@ import {
 import * as turf from '@turf/turf';
 import {
 	ActiveImageryMouseEnter, ActiveImageryMouseLeave,
-	ActiveMapChangedAction,
 	AnnotationSelectAction,
 	ContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
 	MapActionTypes,
-	MapsListChangedAction,
 	PinLocationModeTriggerAction,
 	PositionChangedAction,
 	SynchronizeMapsAction
@@ -156,22 +154,6 @@ export class MapEffects {
 					.pipe(map(() => new BackToWorldSuccess(payload)));
 			})
 		);
-
-	@Effect()
-	onMapsDataActiveMapIdChanged$: Observable<ActiveMapChangedAction> = this.actions$.pipe(
-		ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA),
-		map(({ payload }) => payload),
-		filter(({ activeMapId }) => Boolean(activeMapId)),
-		map(({ activeMapId }) => new ActiveMapChangedAction(activeMapId))
-	);
-
-	@Effect()
-	onMapsData1MapsListChanged$: Observable<MapsListChangedAction> = this.actions$.pipe(
-		ofType<SetMapsDataActionStore>(CoreActionTypes.SET_MAPS_DATA),
-		map(({ payload }) => payload),
-		filter(({ mapsList }) => Boolean(mapsList)),
-		map(({ mapsList }) => new MapsListChangedAction(mapsList))
-	);
 
 	@Effect({ dispatch: false })
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(

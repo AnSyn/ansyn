@@ -1,6 +1,17 @@
 div.upload-list {
 	height: 400px;
 	overflow: hidden;
+	margin-left: 50px;
+	margin-right: 50px;
+
+	div.clear{
+		float: right;
+		font-size: 12px;
+		font-style: normal;
+		color: rgba(255, 255, 255, 0.75);
+		margin-right: 7px;
+		cursor: pointer;
+	}
 
 	.title {
 		display: flex;
@@ -9,16 +20,43 @@ div.upload-list {
 		margin: 5px;
 		paddign: 5px;
 
-		button {
-			background-color: transparent;
-			border: none;
-			margin: 5px;
-			color: white;
-		}
 	}
 
 	.list {
 		height: 300px;
 		overflow: auto;
+
+
+		&::-webkit-scrollbar {
+			width: 7px;
+		}
+
+		&::-webkit-scrollbar-corner {
+			background-color: transparent;
+		}
+
+		&::-webkit-scrollbar-button {
+			width: 0;
+			height: 0;
+			display: none;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			-webkit-box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.05), inset 1px 1px 0 rgba(0, 0, 0, 0.05);
+			border: 4px solid transparent;
+			background-clip: padding-box;
+			border-radius: 2px;
+			background: white -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+		}
+	}
+
+	::ng-deep .mat-progress-bar-fill::after {
+		background-color: #fff;
+	}
+
+	::ng-deep .mat-progress-bar-buffer {
+		background: #97d6e2;
 	}
 }
+
+

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatProgressBarModule } from '@angular/material';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
@@ -26,7 +25,6 @@ import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
-import { UploadProgressBarComponent } from './components/upload-progress-bar/upload-progress-bar.component';
 
 @NgModule({
 	imports: [
@@ -36,8 +34,7 @@ import { UploadProgressBarComponent } from './components/upload-progress-bar/upl
 		EffectsModule.forFeature([CoreEffects]),
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader]),
 		AlertsModule,
-		BrowserAnimationsModule,
-		MatProgressBarModule
+		BrowserAnimationsModule
 	],
 	providers: [
 		GenericTypeResolverService,
@@ -58,8 +55,7 @@ import { UploadProgressBarComponent } from './components/upload-progress-bar/upl
 		ClickOutsideDirective,
 		AnimatedEllipsisComponent,
 		AnnotationsColorComponent,
-		AnnotationsWeightComponent,
-		UploadProgressBarComponent
+		AnnotationsWeightComponent
 	],
 	declarations: [
 		ImageryStatusComponent,
@@ -72,8 +68,7 @@ import { UploadProgressBarComponent } from './components/upload-progress-bar/upl
 		ClickOutsideDirective,
 		AnimatedEllipsisComponent,
 		AnnotationsColorComponent,
-		AnnotationsWeightComponent,
-		UploadProgressBarComponent,
+		AnnotationsWeightComponent
 
 	]
 })

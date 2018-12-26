@@ -1,5 +1,4 @@
 export { FileInputComponent } from './forms/file-input/file-input.component';
-export { UploadProgressBarComponent } from './components/upload-progress-bar/upload-progress-bar.component';
 export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 export { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
 export { ICaseSliderFilterMetadata } from './models/case.model';

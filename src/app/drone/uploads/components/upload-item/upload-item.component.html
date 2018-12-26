@@ -1,0 +1,13 @@
+<div class="upload">
+<p class='name' [class.finish]="value === 100">
+	<span [title]="name">{{cutName(name)}}</span>
+</p>
+<p *ngIf="value > -1; else error" class="progress">
+	<mat-progress-bar mode="determinate" [value]="value">
+	</mat-progress-bar>
+	<span>{{value}}%</span>
+</p>
+<ng-template #error>
+	<span class="error">Upload file failed.</span>
+</ng-template>
+</div>

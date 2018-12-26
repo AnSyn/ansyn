@@ -1,13 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { UploadsComponent } from './uploads.component';
-import {
-	AnsynFormsModule,
-	AnsynModalComponent,
-	ErrorHandlerService,
-	MockComponent,
-	UploadProgressBarComponent
-} from '@ansyn/core';
+import { AnsynFormsModule, AnsynModalComponent, ErrorHandlerService, MockComponent } from '@ansyn/core';
 import { FormsModule } from '@angular/forms';
 import { UploadsConfig } from '../../config/uploads-config';
 import { EditSensorNameComponent } from '../edit-sensor-name/edit-sensor-name.component';
@@ -17,6 +11,7 @@ import { noop } from 'rxjs';
 import { UploadFormData } from '../../actions/uploads.actions';
 import { UploadListComponent } from '../upload-list/upload-list.component';
 import { MatProgressBar } from '@angular/material';
+import { UploadItemComponent } from '../upload-item/upload-item.component';
 
 describe('UploadsComponent', () => {
 	let component: UploadsComponent;
@@ -37,7 +32,7 @@ describe('UploadsComponent', () => {
 				AnsynModalComponent,
 				EditSensorNameComponent,
 				UploadListComponent,
-				UploadProgressBarComponent,
+				UploadItemComponent,
 				MatProgressBar
 			],
 			providers: [
@@ -53,7 +48,7 @@ describe('UploadsComponent', () => {
 						sensorNames: []
 					}
 				}
-	]
+			]
 		})
 			.compileComponents();
 	}));

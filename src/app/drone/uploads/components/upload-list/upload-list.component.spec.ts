@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UploadListComponent } from './upload-list.component';
-import { UploadProgressBarComponent } from '@ansyn/core';
 import { MatProgressBar } from '@angular/material';
 import { StoreModule } from '@ngrx/store';
+import { UploadItemComponent } from '../upload-item/upload-item.component';
 
 describe('UploadListComponent', () => {
 	let component: UploadListComponent;
@@ -12,7 +12,7 @@ describe('UploadListComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({})],
-			declarations: [UploadListComponent, UploadProgressBarComponent, MatProgressBar]
+			declarations: [UploadListComponent, UploadItemComponent, MatProgressBar]
 		})
 			.compileComponents();
 	}));

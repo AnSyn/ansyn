@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UploadProgressBarComponent } from './upload-progress-bar.component';
+import { UploadItemComponent } from './upload-item.component';
 import { MatProgressBar } from '@angular/material';
 
-describe('UploadProgressBarComponent', () => {
-	let component: UploadProgressBarComponent;
-	let fixture: ComponentFixture<UploadProgressBarComponent>;
+describe('UploadItemComponent', () => {
+	let component: UploadItemComponent;
+	let fixture: ComponentFixture<UploadItemComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [UploadProgressBarComponent, MatProgressBar]
+			declarations: [UploadItemComponent, MatProgressBar]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(UploadProgressBarComponent);
+		fixture = TestBed.createComponent(UploadItemComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

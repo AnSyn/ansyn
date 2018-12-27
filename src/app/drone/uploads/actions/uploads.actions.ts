@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IUploadItem, IUploadsFormData } from '../reducers/uploads.reducer';
+import { IOverlay } from '@ansyn/core';
 
 export enum UploadsActionTypes {
 	addRequestToFileList = '[Uploads] add request to file list',
@@ -8,7 +9,8 @@ export enum UploadsActionTypes {
 	requestUploadFiles = '[Uploads] request upload files',
 	requestUploadFileSuccess = '[Uploads] request upload file success',
 	resetFormData = '[Uploads] reset form data',
-	clearUploadList = '[Uploads] clear upload list'
+	clearUploadList = '[Uploads] clear upload list',
+	moveToUploadOverlay = '[Uploads] move to upload overlay'
 }
 
 export type UploadsActions =
@@ -18,7 +20,8 @@ export type UploadsActions =
 	| RequestUploadFileSuccess
 	| UpdateUploadFilePercent
 	| ClearUploadList
-	| AddRequestToFileList;
+	| AddRequestToFileList
+	| MoveToUploadOverlay;
 
 export class UploadFormData implements Action {
 	readonly type = UploadsActionTypes.uploadFormData;
@@ -43,6 +46,13 @@ export class RequestUploadFileSuccess implements Action {
 	readonly type = UploadsActionTypes.requestUploadFileSuccess;
 
 	constructor(public payload: { index: number, body: any }) {
+	}
+}
+
+export class MoveToUploadOverlay implements Action {
+	readonly type = UploadsActionTypes.moveToUploadOverlay;
+
+	constructor(public payload: { overlay: IOverlay, mapId: string }) {
 	}
 }
 

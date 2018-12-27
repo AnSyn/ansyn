@@ -125,7 +125,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		return EMPTY;
 	}
 
-	protected parseData(tbOverlay: ITBOverlay): IOverlay {
+	public parseData(tbOverlay: ITBOverlay): IOverlay {
 
 		return new Overlay({
 			id: tbOverlay._id,

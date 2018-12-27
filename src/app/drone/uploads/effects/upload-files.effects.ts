@@ -11,14 +11,17 @@ import {
 } from '../reducers/uploads.reducer';
 import {
 	AddRequestToFileList,
+	MoveToUploadOverlay,
 	RequestUploadFiles,
 	RequestUploadFileSuccess,
 	UpdateUploadFilePercent,
 	UploadsActionTypes
 } from '../actions/uploads.actions';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { concatMap, map, tap, withLatestFrom } from 'rxjs/operators';
 import { UploadFileService } from '../services/upload-file.service';
 import { HttpEventType } from '@angular/common/http';
+import { ToggleFavoriteAction } from '@ansyn/core';
+import { DisplayOverlayAction } from '@ansyn/overlays';
 
 @Injectable()
 export class UploadFilesEffects {
@@ -31,7 +34,6 @@ export class UploadFilesEffects {
 				return [uploadList.length, formData];
 			}),
 			map(([uploadListLength, formData]: [number, IUploadsFormData]) => {
-				// const files = action.payload
 				const { files, ...request } = formData;
 				const newFiles: IUploadItem[] = Array.from(files).map((file, index) => {
 					const r = { ...request, file };
@@ -60,6 +62,17 @@ export class UploadFilesEffects {
 					);
 				});
 			})
+		);
+
+	@Effect()
+	moveToUploadOverlay: Observable<any> = this.actions$
+		.ofType<MoveToUploadOverlay>(UploadsActionTypes.moveToUploadOverlay)
+		.pipe(
+			map((action => action.payload)),
+			concatMap(({ overlay, mapId }) => [
+				new ToggleFavoriteAction({ value: true, id: overlay.id, overlay }),
+				new DisplayOverlayAction({ overlay, mapId })
+			])
 		);
 
 	constructor(protected actions$: Actions,

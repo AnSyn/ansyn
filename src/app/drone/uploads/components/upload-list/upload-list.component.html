@@ -10,6 +10,7 @@
 			<ansyn-upload-item
 				[name]="file.request.file.name"
 				[value]="file.percent"
+				(moveToUpload)="moveToUpload(file.response)"
 			></ansyn-upload-item>
 		</ng-container>
 	</div>

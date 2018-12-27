@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-upload-item',
@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class UploadItemComponent implements OnInit {
 	@Input() name: string;
 	@Input() value: number;
+	@Output() moveToUpload = new EventEmitter();
 
 	constructor() {
 	}

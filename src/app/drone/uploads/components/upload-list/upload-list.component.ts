@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IUploadItem, selectUploadList } from '../../reducers/uploads.reducer';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-
-import { delay, tap } from 'rxjs/operators';
-import { ClearUploadList } from '../../actions/uploads.actions';
+import { delay, take, tap } from 'rxjs/operators';
+import { ClearUploadList, MoveToUploadOverlay } from '../../actions/uploads.actions';
+import { TBOverlaySourceType, TBSourceProvider } from '../../../overlay-source-provider/tb-source-provider';
+import { selectActiveMapId } from '@ansyn/map-facade';
+import { IMultipleOverlaysSource, MultipleOverlaysSource } from '@ansyn/overlays';
 
 @Component({
 	selector: 'ansyn-upload-list',
@@ -26,7 +28,8 @@ export class UploadListComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(private store: Store<any>) {
+	constructor(private store: Store<any>,
+				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSource) {
 	}
 
 	ngOnInit() {
@@ -40,4 +43,12 @@ export class UploadListComponent implements OnInit, OnDestroy {
 	}
 
 
+	moveToUpload($event: any): void {
+		if ($event) {
+			this.store.select(selectActiveMapId).pipe(take(1)).subscribe(mapId => {
+				const overlay = (this.overlaysSources[TBOverlaySourceType] as TBSourceProvider).parseData($event['0']);
+				this.store.dispatch(new MoveToUploadOverlay({ overlay, mapId }));
+			});
+		}
+	}
 }

@@ -12,6 +12,14 @@ import { UploadFormData } from '../../actions/uploads.actions';
 import { UploadListComponent } from '../upload-list/upload-list.component';
 import { MatProgressBar } from '@angular/material';
 import { UploadItemComponent } from '../upload-item/upload-item.component';
+import { MultipleOverlaysSource } from '@ansyn/overlays';
+import { TBOverlaySourceType } from '../../../overlay-source-provider/tb-source-provider';
+
+const FakeMultipleOverlaysSource = {
+	[TBOverlaySourceType]: {
+		parseData: () => ({ id: 'fakeOverlay' })
+	}
+};
 
 describe('UploadsComponent', () => {
 	let component: UploadsComponent;
@@ -47,6 +55,10 @@ describe('UploadsComponent', () => {
 						sensorTypes: [],
 						sensorNames: []
 					}
+				},
+				{
+					provide: MultipleOverlaysSource,
+					useValue: FakeMultipleOverlaysSource
 				}
 			]
 		})

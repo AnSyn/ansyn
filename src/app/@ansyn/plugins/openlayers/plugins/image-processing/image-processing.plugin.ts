@@ -12,7 +12,7 @@ import { IImageProcParam, IToolsConfig, toolsConfig } from '@ansyn/menu-items';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
-import { selectMaps } from '../../../../map-facade/reducers/map.reducer';
+import { selectMaps } from '@ansyn/map-facade';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

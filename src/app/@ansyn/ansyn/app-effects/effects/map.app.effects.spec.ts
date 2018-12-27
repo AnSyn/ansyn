@@ -61,14 +61,13 @@ import {
 	initialLayersState,
 	IToolsState,
 	layersStateSelector,
-	SetMapGeoEnabledModeToolsActionStore,
 	toolsInitialState,
 	toolsStateSelector
 } from '@ansyn/menu-items';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { selectMaps } from '../../../map-facade/reducers/map.reducer';
+import { selectMaps } from '@ansyn/map-facade';
 
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	public supported = ['mapType1'];

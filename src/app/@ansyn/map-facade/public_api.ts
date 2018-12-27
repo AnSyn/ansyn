@@ -1,3 +1,4 @@
+export { selectMaps } from './reducers/map.reducer';
 export {
 	initialMapState,
 	mapFeatureKey,

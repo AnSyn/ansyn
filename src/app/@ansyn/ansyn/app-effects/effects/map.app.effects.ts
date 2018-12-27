@@ -302,7 +302,7 @@ export class MapAppEffects {
 			const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 			if (newActiveMapName) {
-				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, layer));
+				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));
 			}
 			return observable.pipe(map(() => layer));
 		});

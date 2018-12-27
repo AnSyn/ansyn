@@ -12,7 +12,7 @@ import {
 import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
-	BackToWorldView,
+	BackToWorldView, ChangeImageryMap,
 	SetRemovedOverlaysIdAction,
 	SetToastMessageAction,
 	ToggleFavoriteAction,
@@ -252,7 +252,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetRemovedOverlaysIdAction({ id: this.overlay.id, value: !this.isRemoved }));
 	}
 
-	changeActiveMap(activeMap: string) {
-
+	changeActiveMap(mapType: string) {
+		this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
 	}
 }

@@ -12,7 +12,8 @@ import {
 	selectRemovedOverlays,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
-	SetRemovedOverlayIdsCount
+	SetRemovedOverlayIdsCount,
+	ChangeImageryMap
 } from '@ansyn/core';
 import {
 	DisplayOverlayAction,
@@ -26,6 +27,7 @@ import { CasesActionTypes } from '@ansyn/menu-items';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { ChangeImageryMap as MapFacadeChangeImageryMap } from '@ansyn/map-facade';
 
 @Injectable()
 export class CoreAppEffects {
@@ -111,6 +113,12 @@ export class CoreAppEffects {
 			const removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
 			return new SetRemovedOverlayIdsCount(removedOverlaysCount);
 		})
+	);
+
+	@Effect()
+	changeImageryMap$ = this.actions$.pipe(
+		ofType<ChangeImageryMap>(CoreActionTypes.CHANGE_IMAGERY_MAP),
+		map(({ payload }) => new MapFacadeChangeImageryMap(payload))
 	);
 
 	constructor(protected actions$: Actions,

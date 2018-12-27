@@ -17,7 +17,8 @@ export const CesiumMapName = 'cesium';
 // @dynamic
 @ImageryMap({
 	mapType: CesiumMapName,
-	deps: [CesiumProjectionService, CoreConfig]
+	deps: [CesiumProjectionService, CoreConfig],
+	defaultMapSource: 'BING_CESIUM'
 })
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();

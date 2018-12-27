@@ -46,8 +46,7 @@ export class ImageryComponentManager {
 				resolve();
 			}
 
-
-			this.createMapSourceForMapType((<IBaseImageryMapConstructor>this._activeMap.constructor).mapType).then((layers) => {
+			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType).then((layers) => {
 				this.resetView(layers[0], position).subscribe(() => {
 					if (layers.length > 0) {
 						for (let i = 1; i < layers.length; i++) {
@@ -74,10 +73,9 @@ export class ImageryComponentManager {
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}
 
-	private createMapSourceForMapType(mapType: string): Promise<any> {
+	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<any> {
 		const sourceProvider = this.getMapSourceProvider({
-			mapType,
-			sourceType: this.mapSettings.worldView.sourceType
+			mapType, sourceType
 		});
 		return sourceProvider.createAsync(this.mapSettings);
 	}
@@ -92,7 +90,7 @@ export class ImageryComponentManager {
 			});
 	}
 
-	private buildCurrentComponent(activeMapName: string, oldMapName: string, position?: ICaseMapPosition, layer?: any): Promise<any> {
+	private buildCurrentComponent(activeMapName: string, oldMapName: string, position: ICaseMapPosition, sourceType?: string, layer?: any): Promise<any> {
 		const imapClass = this.iMapConstructors.find((imap: IBaseImageryMapConstructor) => imap.mapType === activeMapName);
 		const factory = this.componentFactoryResolver.resolveComponentFactory<MapComponent>(MapComponent);
 		const providers = [
@@ -106,7 +104,7 @@ export class ImageryComponentManager {
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;
-		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(imapClass.mapType);
+		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(imapClass.mapType, sourceType || imapClass.defaultMapSource);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
 				.pipe(
@@ -136,7 +134,7 @@ export class ImageryComponentManager {
 		}
 	}
 
-	public setActiveMap(activeMapName: string, position?: ICaseMapPosition, layer?: any): Promise<any> {
+	public setActiveMap(activeMapName: string, position: ICaseMapPosition, sourceType?, layer?: any): Promise<any> {
 
 		if (this.activeMapName !== activeMapName) {
 			const oldMapName = this.activeMapName;
@@ -145,7 +143,7 @@ export class ImageryComponentManager {
 			if (this._mapComponentRef) {
 				this.destroyCurrentComponent();
 			}
-			return this.buildCurrentComponent(activeMapName, oldMapName, position, layer);
+			return this.buildCurrentComponent(activeMapName, oldMapName, position, sourceType, layer);
 		}
 		return Promise.resolve();
 	}

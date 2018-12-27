@@ -52,7 +52,9 @@ export const MapActionTypes = {
 	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER',
 	SET_MAPS_DATA: 'SET_MAPS_DATA',
 	SET_ACTIVE_MAP_ID: 'SET_ACTIVE_MAP_ID',
-	UPDATE_MAP: 'UPDATE_MAP'
+	UPDATE_MAP: 'UPDATE_MAP',
+	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
+	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS'
 };
 
 export interface IContextMenuShowPayload {
@@ -261,6 +263,21 @@ export class UpdateMapAction implements Action {
 	type = MapActionTypes.UPDATE_MAP;
 
 	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	}
+}
+
+
+export class ChangeImageryMap implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+export class ChangeImageryMapSuccess implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
 	}
 }
 

@@ -18,16 +18,19 @@ import {
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import {
-	ActiveImageryMouseEnter, ActiveImageryMouseLeave,
+	ActiveImageryMouseEnter,
+	ActiveImageryMouseLeave,
 	AnnotationSelectAction,
+	ChangeImageryMap,
+	ChangeImageryMapSuccess,
 	ContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
-	PositionChangedAction,
-	SynchronizeMapsAction, UpdateMapAction
+	SynchronizeMapsAction,
+	UpdateMapAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -128,7 +131,10 @@ export class MapEffects {
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => {
 				const disabledMap = communicator.mapType === 'disabledOpenLayersMap';
-				this.store$.dispatch(new UpdateMapAction({ id: communicator.id, changes: { data:  {...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }}));
+				this.store$.dispatch(new UpdateMapAction({
+					id: communicator.id,
+					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
+				}));
 				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
 					.pipe(map(() => new BackToWorldSuccess(payload)));
 			})
@@ -154,7 +160,10 @@ export class MapEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
 			const updatedMap = mapState.entities[payload.id];
-			actions.push(new UpdateMapAction({ id: payload.id, changes: { data: { ...updatedMap.data, position: activeMap.data.position }} }));
+			actions.push(new UpdateMapAction({
+				id: payload.id,
+				changes: { data: { ...updatedMap.data, position: activeMap.data.position } }
+			}));
 			if (mapState.pendingMapsCount > 0) {
 				actions.push(new DecreasePendingMapsCountAction());
 			}
@@ -205,7 +214,7 @@ export class MapEffects {
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
 		filter(([id, activeMapId]: [string, string]) => id === activeMapId),
-		map(() =>  new ActiveImageryMouseEnter())
+		map(() => new ActiveImageryMouseEnter())
 	);
 
 	@Effect()
@@ -213,7 +222,19 @@ export class MapEffects {
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
 		filter(([id, activeMapId]: [string, string]) => id === activeMapId),
-		map(() =>  new ActiveImageryMouseLeave())
+		map(() => new ActiveImageryMouseLeave())
+	);
+
+	@Effect()
+	changeImageryMap$ = this.actions$.pipe(
+		ofType<ChangeImageryMap>(MapActionTypes.CHANGE_IMAGERY_MAP),
+		withLatestFrom(this.store$.select(selectMaps)),
+		mergeMap(([{ payload: { id, mapType, sourceType } }, mapsEntities]) => {
+			const communicator = this.communicatorsService.provide(id);
+			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
+				map(() => new ChangeImageryMapSuccess({ id, mapType, sourceType }))
+			);
+		})
 	);
 
 	constructor(protected actions$: Actions,

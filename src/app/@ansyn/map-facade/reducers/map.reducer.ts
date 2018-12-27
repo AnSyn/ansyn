@@ -150,6 +150,15 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}
 			return state;
 
+		case MapActionTypes.CHANGE_IMAGERY_MAP: {
+			const { id, mapType, sourceType } = action.payload;
+			const worldView = { mapType, sourceType };
+			return mapsAdapter.updateOne({
+				id,
+				changes: { worldView }
+			}, state);
+		}
+
 		default:
 			return state;
 	}

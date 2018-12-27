@@ -3,7 +3,7 @@ import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ans
 import {
 	ErrorHandlerService,
 	ICaseMapState,
-	IMapSourceProvidersConfig,
+	IMapSourceProvidersConfig, IOverlay,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/core';
 import Projection from 'ol/proj/projection';
@@ -98,4 +98,9 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		}
 		return this.addFootprintToLayerPromise(Promise.resolve(layer), metaData);
 	}
+
+	getThumbnailName(overlay: IOverlay): string {
+		return overlay.name;
+	}
+
 }

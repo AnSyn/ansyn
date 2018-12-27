@@ -211,8 +211,8 @@ export class OverlaysAppEffects {
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
-		return (<any>sourceProvider).getThumbnailUrl(overlay, position).pipe(
-			map(thumbnailUrl => ({ ...overlay, thumbnailUrl })),
+		return sourceProvider.getThumbnailUrl(overlay, position).pipe(
+			map(thumbnailUrl => ({ ...overlay, thumbnailUrl, thumbnailName: sourceProvider.getThumbnailName(overlay) })),
 			catchError(() => {
 				return of(overlay);
 			})
@@ -257,7 +257,7 @@ export class OverlaysAppEffects {
 		map(() =>  new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] }}))
 	);
 
-	getSourceProvider(sType) {
+	getSourceProvider(sType): BaseMapSourceProvider {
 		return this.baseSourceProviders.find(({ constructor }) => sType === (<IBaseMapSourceProviderConstructor>constructor).sourceType);
 	}
 

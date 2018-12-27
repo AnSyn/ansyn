@@ -132,13 +132,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, pendingOverlays };
 
 		case CoreActionTypes.TOGGLE_MAP_LAYERS: {
-			const entities = { ...state.entities };
-			const toggledMap = entities[action.payload.mapId];
-			if (toggledMap) {
-				toggledMap.flags.displayLayers = !toggledMap.flags.displayLayers;
-			}
-
-			return { ...state, entities };
+			const { mapId: id } = action.payload;
+			const entity = state.entities[id];
+			const flags = { ...entity.flags, displayLayers: !entity.flags.displayLayers };
+			return mapsAdapter.updateOne({ id: action.payload.mapId, changes: { flags } }, state);
 		}
 
 		case CoreActionTypes.SET_LAYOUT:

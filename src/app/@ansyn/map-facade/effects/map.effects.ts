@@ -29,6 +29,7 @@ import {
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
+	PositionChangedAction,
 	SynchronizeMapsAction,
 	UpdateMapAction
 } from '../actions/map.actions';

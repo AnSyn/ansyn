@@ -244,6 +244,21 @@ export class ImageryMouseLeave implements Action {
 	}
 }
 
+export class ChangeImageryMap implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+export class ChangeImageryMapSuccess implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.SET_MAPS_DATA;
 
@@ -262,21 +277,6 @@ export class UpdateMapAction implements Action {
 	type = MapActionTypes.UPDATE_MAP;
 
 	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
-	}
-}
-
-
-export class ChangeImageryMap implements Action {
-	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP;
-
-	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
-	}
-}
-
-export class ChangeImageryMapSuccess implements Action {
-	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
-
-	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
 	}
 }
 

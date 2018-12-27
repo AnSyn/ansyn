@@ -2,11 +2,18 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { AnnotationRemoveFeature, AnnotationSelectAction, AnnotationUpdateFeature } from '../../actions/map.actions';
+import {
+	AnnotationRemoveFeature,
+	AnnotationSelectAction,
+	AnnotationUpdateFeature,
+	MapActionTypes
+} from '../../actions/map.actions';
 import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Actions } from '@ngrx/effects';
+import { ofType } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -23,7 +30,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	@Input() mapId;
 
 	@AutoSubscription
-	positionChanged$: Observable<any> = this.mapEffect.positionChanged$.pipe(
+	positionChanged$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.POSITION_CHANGED),
 		tap(() => this.clickMenuProps = null)
 	);
 
@@ -60,7 +68,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.close();
 	}
 
-	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
+	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public actions$: Actions, public host: ElementRef) {
 	}
 
 	ngOnInit() {

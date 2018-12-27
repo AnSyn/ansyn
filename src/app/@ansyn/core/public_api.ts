@@ -55,7 +55,7 @@ export { ICase, ICasePreview, IDilutedCase } from './models/case.model';
 export {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
-	SetMapsDataActionStore, SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
+	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from './actions/core.actions';
 export { ICoreState } from './reducers/core.reducer';

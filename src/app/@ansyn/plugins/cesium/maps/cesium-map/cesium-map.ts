@@ -169,7 +169,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		this.removeAllLayers();
 
 		if (this.mapObject) {
-			this.mapObject.camera.removeEventListener(this._moveEndListener);
+			this.mapObject.camera.moveEnd.removeEventListener(this._moveEndListener);
 		}
 	}
 

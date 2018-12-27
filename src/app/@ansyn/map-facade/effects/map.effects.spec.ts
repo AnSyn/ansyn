@@ -108,7 +108,7 @@ describe('MapEffects', () => {
 				}
 			};
 			const fakeMap: ICaseMapState = <any> { id: 'imagery2' };
-			mapState.mapsList = [fakeMap];
+			mapState.entities = { [fakeMap.id]: fakeMap };
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPosition').and.callFake(() => of(true));
 			spyOn(mapEffects, 'setPosition').and.callFake(() => of(true));

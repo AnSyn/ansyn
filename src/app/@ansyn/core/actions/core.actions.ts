@@ -30,7 +30,6 @@ export const CoreActionTypes = {
 	SET_REMOVED_OVERLAY_ID: 'SET_REMOVED_OVERLAY_ID',
 	RESET_REMOVED_OVERLAY_IDS: 'RESET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAYS_VISIBILITY: 'SET_REMOVED_OVERLAYS_VISIBILITY',
-	SET_MAPS_DATA: 'SET_MAPS_DATA',
 	SET_REMOVED_OVERLAY_IDS_COUNT: 'SET_REMOVED_OVERLAY_IDS_COUNT'
 };
 
@@ -222,14 +221,6 @@ export class SetAutoSave implements Action {
 	readonly type = CoreActionTypes.SET_AUTO_SAVE;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-
-export class SetMapsDataActionStore implements Action {
-	type = CoreActionTypes.SET_MAPS_DATA;
-
-	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
 	}
 }
 

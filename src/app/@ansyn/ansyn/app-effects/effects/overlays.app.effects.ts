@@ -27,7 +27,7 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	DisplayedOverlay,
-	ICaseMapPosition,
+	ICaseMapPosition, ICaseMapState,
 	IContextEntity,
 	IOverlay,
 	IOverlaySpecialObject,
@@ -112,8 +112,8 @@ export class OverlaysAppEffects {
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE),
 		filter((action: DisplayMultipleOverlaysFromStoreAction) => action.payload.length > 0),
-		withLatestFrom(this.store$.select(mapStateSelector)),
-		mergeMap(([action, { mapsList }]: [DisplayMultipleOverlaysFromStoreAction, IMapState]): any => {
+		withLatestFrom(this.store$.select(selectMapsList)),
+		mergeMap(([action, mapsList]: [DisplayMultipleOverlaysFromStoreAction, ICaseMapState[]]): any => {
 			const validPendingOverlays = action.payload;
 			/* theoretical situation */
 			if (validPendingOverlays.length <= mapsList.length) {
@@ -140,7 +140,7 @@ export class OverlaysAppEffects {
 		mergeMap(([action, mapState]: [SetLayoutSuccessAction, IMapState]) => {
 			return mapState.pendingOverlays.map((pendingOverlay: any, index: number) => {
 				const { overlay, extent } = pendingOverlay;
-				const mapId = mapState.mapsList[index].id;
+				const mapId = Object.values(mapState.entities)[index].id;
 				return new DisplayOverlayAction({ overlay, mapId, extent });
 			});
 		})

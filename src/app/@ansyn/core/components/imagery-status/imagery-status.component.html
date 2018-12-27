@@ -9,9 +9,8 @@
 	</button>
 
 	<ansyn-combo-box
-		*ngIf="false"
 		class="combo-box-width"
-		direction="bottom"
+		[direction]="mapsAmount > 1 ? 'bottom' : 'top'"
 		name="mapSource"
 		(ngModelChange)="changeActiveMap($event)"
 		[(ngModel)]="selectedMap">

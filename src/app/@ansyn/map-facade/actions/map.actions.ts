@@ -9,7 +9,6 @@ import {
 	IPendingOverlay,
 	IUpdateFeatureEvent
 } from '@ansyn/core';
-import { CoreActionTypes } from '../../core/actions/core.actions';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',

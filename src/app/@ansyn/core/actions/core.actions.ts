@@ -2,7 +2,6 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
-import { ICaseMapState } from '../models/case.model';
 
 export enum CoreActionTypes {
 	TOGGLE_MAP_LAYERS = '[Core] TOGGLE_MAP_LAYERS',
@@ -224,17 +223,15 @@ export class SetAutoSave implements Action {
 	}
 }
 
-
-export class SetMapsDataActionStore implements Action {
-	type = CoreActionTypes.SET_MAPS_DATA;
-
-	constructor(public payload: { mapsList?: ICaseMapState[], activeMapId?: string }) {
-	}
-}
-
 export class SetRemovedOverlayIdsCount implements Action {
 	readonly type = CoreActionTypes.SET_REMOVED_OVERLAY_IDS_COUNT;
 
 	constructor(public payload: number) {
+	}
+}
+export class ChangeImageryMap implements Action {
+	readonly type = CoreActionTypes.CHANGE_IMAGERY_MAP;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
 	}
 }

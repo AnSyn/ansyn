@@ -12,12 +12,13 @@ import {
 import { IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
-	BackToWorldView, ChangeImageryMap,
+	BackToWorldView,
 	SetRemovedOverlaysIdAction,
 	SetToastMessageAction,
 	ToggleFavoriteAction,
 	ToggleMapLayersAction,
-	TogglePresetOverlayAction
+	TogglePresetOverlayAction,
+	ChangeImageryMap
 } from '../../actions/core.actions';
 import {
 	AlertMsg,

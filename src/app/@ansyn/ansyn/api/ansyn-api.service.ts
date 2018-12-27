@@ -18,7 +18,7 @@ import { FeatureCollection } from 'geojson';
 import { window } from 'd3';
 import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
-import { selectMaps } from '../../map-facade/reducers/map.reducer';
+import { selectMaps } from '@ansyn/map-facade';
 import { Dictionary } from '@ngrx/entity/src/models';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');

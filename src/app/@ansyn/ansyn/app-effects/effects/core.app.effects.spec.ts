@@ -83,26 +83,26 @@ describe('CoreAppEffects', () => {
 
 			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
 		});
-		// it('if presetOverlays[n] overlay currently displays, should display presetOverlays[n+1]', () => {
-		// 	mapsState.mapsList[0].data.overlay = coreState.presetOverlays[0];
-		// 	actions = hot('--a--', { a: new GoNextPresetOverlay() });
-		//
-		// 	const expectedResult = cold('--b--', {
-		// 		b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[1], mapId: 'map_1' })
-		// 	});
-		//
-		// 	expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
-		// });
-		// it('if presetOverlays[last] overlay currently displays, should display presetOverlays[0]', () => {
-		// 	mapsState.mapsList[0].data.overlay = coreState.presetOverlays[2];
-		// 	actions = hot('--a--', { a: new GoNextPresetOverlay() });
-		//
-		// 	const expectedResult = cold('--b--', {
-		// 		b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[0], mapId: 'map_1' })
-		// 	});
-		//
-		// 	expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
-		// });
+		it('if presetOverlays[n] overlay currently displays, should display presetOverlays[n+1]', () => {
+			mapsState.entities['map_1'].data.overlay = coreState.presetOverlays[0];
+			actions = hot('--a--', { a: new GoNextPresetOverlay() });
+
+			const expectedResult = cold('--b--', {
+				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[1], mapId: 'map_1' })
+			});
+
+			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
+		});
+		it('if presetOverlays[last] overlay currently displays, should display presetOverlays[0]', () => {
+			mapsState.entities['map_1'].data.overlay = coreState.presetOverlays[2];
+			actions = hot('--a--', { a: new GoNextPresetOverlay() });
+
+			const expectedResult = cold('--b--', {
+				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[0], mapId: 'map_1' })
+			});
+
+			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
+		});
 	});
 
 })

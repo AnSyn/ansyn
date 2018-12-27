@@ -61,7 +61,7 @@ import {
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
-import { selectMaps, selectMapsList } from '../../../map-facade/reducers/map.reducer';
+import { selectMaps, selectMapsList } from '@ansyn/map-facade';
 import { Dictionary } from '@ngrx/entity/src/models';
 
 @Injectable()

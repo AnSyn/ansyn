@@ -271,7 +271,7 @@ export class MapAppEffects {
 		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType, mapType: caseMapState.worldView.mapType });
 
 		if (!sourceLoader) {
 			return of(new SetToastMessageAction({

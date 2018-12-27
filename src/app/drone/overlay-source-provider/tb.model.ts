@@ -34,6 +34,7 @@ export interface ITBOverlay {
 			title: string;
 		};
 		name: string;
+		cloudCoveragePercentage: number
 	},
 	geoserver: {
 		layer: {

@@ -133,6 +133,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			footprint: geojsonPolygonToMultiPolygon(tbOverlay.geoData.footprint.geometry),
 			sensorType: tbOverlay.inputData.sensor.type,
 			sensorName: tbOverlay.inputData.sensor.name,
+			cloudCoverage: tbOverlay.inputData.cloudCoveragePercentage / 100,
 			bestResolution: 1,
 			imageUrl: tbOverlay.displayUrl,
 			thumbnailUrl: tbOverlay.thumbnailUrl,

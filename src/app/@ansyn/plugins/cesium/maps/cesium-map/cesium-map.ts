@@ -12,12 +12,13 @@ declare const Cesium: any;
 Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');
 Cesium.BingMapsApi.defaultKey = 'AnjT_wAj_juA_MsD8NhcEAVSjCYpV-e50lUypkWm1JPxVu0XyVqabsvD3r2DQpX-';
 
-export const CesiumMapName = 'cesium';
+export const CesiumMapName = 'CesiumMap';
 
 // @dynamic
 @ImageryMap({
 	mapType: CesiumMapName,
-	deps: [CesiumProjectionService, CoreConfig]
+	deps: [CesiumProjectionService, CoreConfig],
+	defaultMapSource: 'BING_CESIUM'
 })
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();

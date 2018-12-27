@@ -17,7 +17,8 @@ import {
 	SetToastMessageAction,
 	ToggleFavoriteAction,
 	ToggleMapLayersAction,
-	TogglePresetOverlayAction
+	TogglePresetOverlayAction,
+	ChangeImageryMap
 } from '../../actions/core.actions';
 import {
 	AlertMsg,
@@ -252,7 +253,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetRemovedOverlaysIdAction({ id: this.overlay.id, value: !this.isRemoved }));
 	}
 
-	changeActiveMap(activeMap: string) {
-
+	changeActiveMap(mapType: string) {
+		this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
 	}
 }

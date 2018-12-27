@@ -30,6 +30,8 @@ export {
 	MapActionTypes,
 	SetActiveMapId,
 	SetMapsDataActionStore,
+	ChangeImageryMap,
+	ChangeImageryMapSuccess,
 	UpdateMapAction
 } from './actions/map.actions';
 export { MapFacadeService } from './services/map-facade.service';

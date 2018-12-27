@@ -6,6 +6,7 @@ import { GeoJsonObject, Point } from 'geojson';
 export interface IImageryMapMetaData {
 	deps?: any[];
 	mapType?: string;
+	defaultMapSource?: string;
 }
 
 export interface IBaseImageryMapConstructor extends IImageryMapMetaData {

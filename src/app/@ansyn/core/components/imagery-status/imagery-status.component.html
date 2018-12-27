@@ -12,14 +12,14 @@
 		class="combo-box-width"
 		direction="bottom"
 		name="mapSource"
-		(ngModelChange)="changeActiveMap(selectedMap)"
+		(ngModelChange)="changeActiveMap($event)"
 		[(ngModel)]="selectedMap">
 
 		<ansyn-combo-box-option value="openLayersMap">
 			Openlayers
 		</ansyn-combo-box-option>
 
-		<ansyn-combo-box-option value="Cesium">
+		<ansyn-combo-box-option value="CesiumMap">
 			Cesium
 		</ansyn-combo-box-option>
 	</ansyn-combo-box>

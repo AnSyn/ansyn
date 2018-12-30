@@ -73,6 +73,10 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		return of(overlay.thumbnailUrl);
 	}
 
+	getThumbnailName(overlay): string {
+		return overlay.sensorName;
+	}
+
 	removeExtraData(layer: any) {
 	}
 }

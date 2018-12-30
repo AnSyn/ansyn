@@ -48,7 +48,7 @@ import {
 	CommunicatorEntity,
 	IMAGERY_CONFIG,
 	IMAGERY_MAPS,
-	ImageryCommunicatorService,
+	ImageryCommunicatorService, ImageryMapSource,
 	VisualizersConfig
 } from '@ansyn/imagery';
 import {
@@ -68,11 +68,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { selectMaps } from '@ansyn/map-facade';
+import { CesiumMap } from '../../../plugins/cesium/maps/cesium-map/cesium-map';
+import { CesiumBingSourceProviderSourceType } from '../../../plugins/cesium/mapSourceProviders/cesium-BING-source-provider';
 
+@ImageryMapSource({
+	sourceType: 'sourceType1',
+	supported: [<any> 'mapType1']
+})
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	public supported = ['mapType1'];
-	sourceType = 'sourceType1';
-
 	create(metaData: any): any {
 		return true;
 	}

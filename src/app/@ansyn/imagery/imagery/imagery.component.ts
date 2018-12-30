@@ -20,7 +20,7 @@ export class ImageryComponent implements OnInit {
 		this.communicator.mapSettings = value;
 	};
 
-	constructor(protected communicator: CommunicatorEntity) {
+	constructor(public communicator: CommunicatorEntity) {
 	}
 
 	ngOnInit() {

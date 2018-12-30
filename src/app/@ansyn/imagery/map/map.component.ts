@@ -14,7 +14,7 @@ export class MapComponent implements OnInit, OnDestroy {
 	@ViewChild('mapElement') protected mapElement: ElementRef;
 	@ViewChild('mapElementShadow') protected mapElementShadow: ElementRef;
 
-	constructor(protected map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+	constructor(public map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 
 	createMap(layers: any, position?: ICaseMapPosition): Observable<BaseImageryMap> {

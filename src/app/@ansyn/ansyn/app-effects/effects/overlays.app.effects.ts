@@ -27,7 +27,7 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	DisplayedOverlay,
-	ICaseMapPosition,
+	ICaseMapPosition, ICaseMapState,
 	IContextEntity,
 	IOverlay,
 	IOverlaySpecialObject,
@@ -55,11 +55,11 @@ import {
 	IBaseMapSourceProviderConstructor,
 	ImageryCommunicatorService
 } from '@ansyn/imagery';
-import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, withLatestFrom, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -112,8 +112,8 @@ export class OverlaysAppEffects {
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE),
 		filter((action: DisplayMultipleOverlaysFromStoreAction) => action.payload.length > 0),
-		withLatestFrom(this.store$.select(mapStateSelector)),
-		mergeMap(([action, { mapsList }]: [DisplayMultipleOverlaysFromStoreAction, IMapState]): any => {
+		withLatestFrom(this.store$.select(selectMapsList)),
+		mergeMap(([action, mapsList]: [DisplayMultipleOverlaysFromStoreAction, ICaseMapState[]]): any => {
 			const validPendingOverlays = action.payload;
 			/* theoretical situation */
 			if (validPendingOverlays.length <= mapsList.length) {
@@ -140,7 +140,7 @@ export class OverlaysAppEffects {
 		mergeMap(([action, mapState]: [SetLayoutSuccessAction, IMapState]) => {
 			return mapState.pendingOverlays.map((pendingOverlay: any, index: number) => {
 				const { overlay, extent } = pendingOverlay;
-				const mapId = mapState.mapsList[index].id;
+				const mapId = Object.values(mapState.entities)[index].id;
 				return new DisplayOverlayAction({ overlay, mapId, extent });
 			});
 		})
@@ -202,7 +202,7 @@ export class OverlaysAppEffects {
 		}
 		return communicator.getPosition().pipe(map((position) => [overlay, position]));
 	});
-	private getOverlayWithNewThumbnail = mergeMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
 		if (!overlay) {
 			return [overlay];
 		}
@@ -223,6 +223,10 @@ export class OverlaysAppEffects {
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.pipe(
+			startWith(null),
+			pairwise(),
+			filter(this.onDropMarkupFilter.bind(this)),
+			map(([prevAction, currentAction]) => currentAction),
 			withLatestFrom(this.overlaysService.getAllOverlays$),
 			this.getOverlayFromDropMarkup,
 			withLatestFrom(this.store$.select(selectActiveMapId)),
@@ -258,7 +262,12 @@ export class OverlaysAppEffects {
 	);
 
 	getSourceProvider(sType): BaseMapSourceProvider {
-		return this.baseSourceProviders.find(({ constructor }) => sType === (<IBaseMapSourceProviderConstructor>constructor).sourceType);
+		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
+	}
+
+	onDropMarkupFilter([prevAction, currentAction]): boolean {
+		const isEquel = !isEqual(prevAction, currentAction);
+		return isEquel;
 	}
 
 	constructor(public actions$: Actions,

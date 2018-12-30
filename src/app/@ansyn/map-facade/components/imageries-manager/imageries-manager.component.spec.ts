@@ -11,13 +11,13 @@ import {
 	CoreReducer, ErrorHandlerService,
 	ImageryStatusComponent,
 	MockComponent,
-	SetLayoutAction,
-	SetMapsDataActionStore
+	SetLayoutAction
 } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
 import { throwError } from 'rxjs';
 import { mapFacadeConfig } from '../../models/map-facade.config';
+import { SetActiveMapId, SetMapsDataActionStore } from '../../actions/map.actions';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -38,6 +38,18 @@ const mockAnsynWelcomeNotification = MockComponent({
 const mockAnsynPopoverComponent = MockComponent({
 	selector: 'ansyn-popover',
 	inputs: ['text', 'icon', 'popDirection']
+});
+
+const mockAnsynComboBox = MockComponent({
+	selector: 'ansyn-combo-box',
+	inputs: ['ngModel', 'toolTipField', 'comboBoxToolTipDescription', 'direction', 'color', 'icon'],
+	outputs: ['ngModelChange']
+});
+
+const mockComboBoxOptionComponent = MockComponent({
+	selector: 'ansyn-combo-box-option',
+	inputs: ['value'],
+	outputs: []
 });
 
 describe('ImageriesManagerComponent', () => {
@@ -64,6 +76,8 @@ describe('ImageriesManagerComponent', () => {
 			],
 			declarations: [
 				ImageriesManagerComponent,
+				mockAnsynComboBox,
+				mockComboBoxOptionComponent,
 				mockAnsynContextMenu,
 				mockAnsynImageryContainer,
 				mockAnnotationContextMenu,
@@ -92,7 +106,9 @@ describe('ImageriesManagerComponent', () => {
 		];
 		const activeMapId = 'imagery1';
 		store.dispatch(new SetLayoutAction('layout2'));
-		store.dispatch(new SetMapsDataActionStore({ mapsList, activeMapId }));
+		store.dispatch(new SetMapsDataActionStore({ mapsList }));
+		store.dispatch(new SetActiveMapId(activeMapId));
+
 		fixture.detectChanges();
 	});
 

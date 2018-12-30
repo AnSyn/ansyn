@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Point, Position } from 'geojson';
-import { IImageryChanged, IMapInstanceChanged } from '@ansyn/imagery';
+import { IMapInstanceChanged } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
@@ -37,8 +37,6 @@ export const MapActionTypes = {
 		IMAGERY_MOUSE_LEAVE: 'IMAGERY_MOUSE_LEAVE',
 		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
-		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
-		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_SELECT: 'ANNOTATION_SELECT',
@@ -50,7 +48,12 @@ export const MapActionTypes = {
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
 	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
-	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER'
+	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER',
+	SET_MAPS_DATA: 'SET_MAPS_DATA',
+	SET_ACTIVE_MAP_ID: 'SET_ACTIVE_MAP_ID',
+	UPDATE_MAP: 'UPDATE_MAP',
+	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
+	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS'
 };
 
 export interface IContextMenuShowPayload {
@@ -65,14 +68,6 @@ export class SetProgressBarAction implements Action {
 	type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
 	constructor(public payload: { mapId: string, progress: number }) {
-	}
-}
-
-
-export class ActiveMapChangedAction implements Action {
-	type = MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED;
-
-	constructor(public payload: string) {
 	}
 }
 
@@ -100,14 +95,14 @@ export class UpdateMapSizeAction implements Action {
 export class ImageryCreatedAction implements Action {
 	type = MapActionTypes.IMAGERY_CREATED;
 
-	constructor(public payload: IImageryChanged) {
+	constructor(public payload: { id: string }) {
 	}
 }
 
 export class ImageryRemovedAction implements Action {
 	type = MapActionTypes.IMAGERY_REMOVED;
 
-	constructor(public payload: IImageryChanged) {
+	constructor(public payload: { id: string }) {
 	}
 }
 
@@ -150,13 +145,6 @@ export class PinLocationModeTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_LOCATION_MODE;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-export class MapsListChangedAction implements Action {
-	type = MapActionTypes.TRIGGER.MAPS_LIST_CHANGED;
-
-	constructor(public payload: ICaseMapState[]) {
 	}
 }
 
@@ -255,3 +243,40 @@ export class ImageryMouseLeave implements Action {
 	constructor(public payload: string) {
 	}
 }
+
+export class ChangeImageryMap implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+export class ChangeImageryMapSuccess implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+
+export class SetMapsDataActionStore implements Action {
+	type = MapActionTypes.SET_MAPS_DATA;
+
+	constructor(public payload: { mapsList: ICaseMapState[] }) {
+	}
+}
+
+export class SetActiveMapId implements Action {
+	type = MapActionTypes.SET_ACTIVE_MAP_ID;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class UpdateMapAction implements Action {
+	type = MapActionTypes.UPDATE_MAP;
+
+	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	}
+}
+

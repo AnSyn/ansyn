@@ -17,7 +17,8 @@ import {
 	SetToastMessageAction,
 	ToggleFavoriteAction,
 	ToggleMapLayersAction,
-	TogglePresetOverlayAction
+	TogglePresetOverlayAction,
+	ChangeImageryMap
 } from '../../actions/core.actions';
 import {
 	AlertMsg,
@@ -47,6 +48,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_overlay: IOverlay;
+	selectedMap = 'openLayersMap';
 
 	@HostBinding('class.active') @Input() active: boolean;
 
@@ -249,5 +251,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	removeOverlay() {
 		this.store$.dispatch(new SetRemovedOverlaysIdAction({ id: this.overlay.id, value: !this.isRemoved }));
+	}
+
+	changeActiveMap(mapType: string) {
+		this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
 	}
 }

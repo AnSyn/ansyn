@@ -1,3 +1,4 @@
+export { selectMaps } from './reducers/map.reducer';
 export {
 	initialMapState,
 	mapFeatureKey,
@@ -25,9 +26,13 @@ export {
 	ContextMenuShowAction,
 	ContextMenuTriggerAction,
 	ShadowMouseProducer,
-	ActiveMapChangedAction,
 	PointToRealNorthAction,
-	MapActionTypes
+	MapActionTypes,
+	SetActiveMapId,
+	SetMapsDataActionStore,
+	ChangeImageryMap,
+	ChangeImageryMapSuccess,
+	UpdateMapAction
 } from './actions/map.actions';
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';

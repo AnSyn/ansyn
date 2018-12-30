@@ -1,3 +1,4 @@
+export { ILayersManagerConfig } from "./layers-manager/models/layers-manager-config";
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';

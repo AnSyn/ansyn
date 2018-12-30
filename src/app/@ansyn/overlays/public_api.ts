@@ -1,4 +1,6 @@
+export { IMultipleOverlaysSourceConfig } from "./services/multiple-source-provider";
 export { IMultipleOverlaysSource, MultipleOverlaysSource } from './models/overlays-source-providers';
+export { IOverlaysConfig } from "./models/overlays.config";
 export { OverlaySourceProvider } from './models/overlays-source-providers';
 export { MultipleOverlaysSourceProvider } from './services/multiple-source-provider';
 export { IOverlayByIdMetaData } from './services/overlays.service';

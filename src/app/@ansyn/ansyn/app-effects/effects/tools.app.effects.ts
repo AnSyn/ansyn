@@ -29,12 +29,11 @@ import {
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	IMapState,
-	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
-	selectMapsList
+	selectMapsList, UpdateMapAction
 } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
 import {
@@ -42,8 +41,7 @@ import {
 	ClearActiveInteractionsAction,
 	CoreActionTypes,
 	ICaseMapState,
-	ImageManualProcessArgs,
-	SetMapsDataActionStore
+	ImageManualProcessArgs
 } from '@ansyn/core';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
@@ -87,9 +85,9 @@ export class ToolsAppEffects {
 	);
 
 	@Effect()
-	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED),
-		withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
+	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
+		filter(Boolean),
+		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
 		mergeMap((activeMap: ICaseMapState) => {
 			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 			if (!Boolean(activeMap.data.overlay)) {
@@ -104,23 +102,6 @@ export class ToolsAppEffects {
 	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
 		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
 		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
-	);
-
-
-	@Effect()
-	onDisplayOverlaySuccess$: Observable<any> = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		filter((action: DisplayOverlaySuccessAction) => !action.payload.forceFirstDisplay),
-		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
-		map(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
-			const imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
-			const updatedMapList = [...mapState.mapsList];
-			const mapToUpdate = MapFacadeService.mapById(updatedMapList, action.payload.mapId);
-
-			mapToUpdate.data.imageManualProcessArgs = (Boolean(toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || imageManualProcessArgs;
-
-			return new SetMapsDataActionStore({ mapsList: updatedMapList });
-		})
 	);
 
 	@Effect()
@@ -156,10 +137,10 @@ export class ToolsAppEffects {
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
 			const activeMap: ICaseMapState = MapFacadeService.activeMap(mapsState);
-			activeMap.data.isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
+			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
-				new SetMapsDataActionStore({ mapsList: [...mapsState.mapsList] }),
-				new SetAutoImageProcessingSuccess(activeMap.data.isAutoImageProcessingActive)
+				new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }}),
+				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
 			];
 		})
 	)
@@ -199,6 +180,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = combineLatest(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId)).pipe(
+		filter(([mapsList, activeMapId]) => Boolean(mapsList.length && activeMapId)),
 		mergeMap(([mapsList, activeMapId]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
@@ -218,11 +200,11 @@ export class ToolsAppEffects {
 			ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
-				const mapsList = [...mapState.mapsList];
 				const activeMap = MapFacadeService.activeMap(mapState);
 				activeMap.data.overlayDisplayMode = action.payload;
-				return new SetMapsDataActionStore({ mapsList });
-
+				return new UpdateMapAction({ id: activeMap.id,  changes: {
+					data: { ...activeMap.data, overlayDisplayMode: action.payload }}
+				});
 			})
 		);
 

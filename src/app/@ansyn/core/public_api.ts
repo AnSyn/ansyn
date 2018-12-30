@@ -1,3 +1,4 @@
+export { ChangeImageryMap } from './actions/core.actions';
 export { FileInputComponent } from './forms/file-input/file-input.component';
 export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 export { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
@@ -7,7 +8,6 @@ export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
 export { mergeArrays } from './utils/merge-arrays';
 export { selectTime } from './reducers/core.reducer';
-export { fetchConfigProviders } from './models/fetch-config-providers';
 export { IAlertComponent } from './alerts/alerts.model';
 export { ILoggerConfig } from './models/logger-config.model';
 export { AnsynTranslationModule } from './translation/ansyn-translation.module';
@@ -57,7 +57,7 @@ export { ICase, ICasePreview, IDilutedCase } from './models/case.model';
 export {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
-	SetMapsDataActionStore, SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
+	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from './actions/core.actions';
 export { ICoreState } from './reducers/core.reducer';
@@ -130,7 +130,6 @@ export { CaseMapExtent } from './models/case-map-position.model';
 export { ICaseMapState } from './models/case.model';
 export { ICaseMapPosition } from './models/case-map-position.model';
 export { DisplayedOverlay } from './models/context.model';
-export { getProviders } from './models/fetch-config-providers';
 export { CaseEnumFilterMetadata } from './models/case.model';
 export {
 	IMapSourceProvidersConfig,

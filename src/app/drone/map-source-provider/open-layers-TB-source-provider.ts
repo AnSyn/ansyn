@@ -1,9 +1,10 @@
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
+import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import {
 	ErrorHandlerService,
 	ICaseMapState,
-	IMapSourceProvidersConfig, IOverlay,
+	IMapSourceProvidersConfig,
+	IOverlay,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/core';
 import Projection from 'ol/proj/projection';
@@ -13,11 +14,9 @@ import proj from 'ol/proj';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { ITBConfig } from '../overlay-source-provider/tb.model';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn';
 import { createTransform, FROMCOORDINATES, FROMPIXEL } from './transforms';
-import TileWMS from "ol/source/tilewms";
-import TileLayer from "ol/layer/tile";
-import { Observable, of } from "rxjs/index";
+import TileWMS from 'ol/source/tilewms';
+import TileLayer from 'ol/layer/tile';
 
 export const OpenLayerTBSourceProviderSourceType = 'TB';
 

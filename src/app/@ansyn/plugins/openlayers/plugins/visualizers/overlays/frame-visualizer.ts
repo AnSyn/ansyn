@@ -58,12 +58,14 @@ export class FrameVisualizer extends EntitiesVisualizer {
 
 	onResetView(): Observable<any> {
 		this.clearEntities();
-		this.initLayers();
-		const footprint = this.iMap.getMainLayer().get('footprint');
-		if (footprint) {
-			const featureJson = feature(footprint);
-			const entityToDraw = { id: UUID.UUID(), featureJson };
-			return this.setEntities([entityToDraw]);
+		if (!this.communicator.notGeoRegistred) {
+			this.initLayers();
+			const footprint = this.iMap.getMainLayer().get('footprint');
+			if (footprint) {
+				const featureJson = feature(footprint);
+				const entityToDraw = { id: UUID.UUID(), featureJson };
+				return this.setEntities([entityToDraw]);
+			}
 		}
 		return of(true);
 	}

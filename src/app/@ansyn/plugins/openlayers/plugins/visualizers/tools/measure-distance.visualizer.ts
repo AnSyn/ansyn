@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/core';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
-import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, pluck, tap, filter } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 @ImageryVisualizer({
@@ -30,6 +30,8 @@ import { OpenLayersProjectionService } from '../../../projection/open-layers-pro
 	deps: [Store, OpenLayersProjectionService]
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
+	isActiveMap: boolean;
+	isMeasureToolActive: boolean;
 
 	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId).pipe(
 		map((activeMapId) => activeMapId === this.mapId),
@@ -45,12 +47,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	@AutoSubscription
 	onChanges$ = combineLatest(this.isActiveMap$, this.isMeasureToolActive$).pipe(
 		tap(([isActiveMap, isMeasureToolActive]) => {
-			if (isActiveMap && isMeasureToolActive) {
-				this.createInteraction();
-			} else {
-				this.clearInteractionAndEntities();
-			}
-		}));
+			this.isActiveMap = isActiveMap;
+			this.isMeasureToolActive = isMeasureToolActive;
+		}),
+		tap(this.onChanges.bind(this))
+	);
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -92,6 +93,14 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
 	}
 
+	onChanges() {
+		if (this.isActiveMap && this.isMeasureToolActive) {
+			this.createInteraction();
+		} else {
+			this.clearInteractionAndEntities();
+		}
+	}
+
 	getSinglePointLengthTextStyle(): Text {
 		return new Text({
 			font: '14px Calibri,sans-serif',
@@ -123,10 +132,13 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	onResetView(): Observable<boolean> {
 		return super.onResetView()
-			.pipe(tap(() => {
-				if (this.drawInteractionHandler) {
-					this.createInteraction();
-				}
+			.pipe(
+				tap(() => {
+					if (this.communicator.notGeoRegistred) {
+						this.removeDrawInteraction();
+					} else {
+						this.onChanges();
+					}
 			}));
 	}
 

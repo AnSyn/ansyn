@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { ExtentCalculator } from '../utils/extent-calculator';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig } from '@ansyn/core';
@@ -41,12 +41,22 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
 	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
-
-	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
 	public shadowElement = null;
+
+	private _moveEndListener: () => void = () => {
+		if (this.notGeoRegistred) {
+			console.log('this.notGeoRegistred!!!!!!!!!!!!!!');
+			return EMPTY;
+		}
+		this.getPosition().pipe(take(1)).subscribe(position => {
+			if (position) {
+				this.positionChanged.emit(position);
+			}
+		});
+	};
 
 	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
@@ -108,18 +118,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	initListeners() {
-		this._moveEndListener = () => {
-			if (this.notGeoRegistred) {
-				return this.positionChanged.emit(null);
-			}
-			this.getPosition().pipe(take(1)).subscribe(position => {
-				if (position) {
-					this.positionChanged.emit(position);
-				}
-			});
-		};
-
 		this._mapObject.on('moveend', this._moveEndListener);
+	}
+
+	disposeListeners(): void {
+		this._mapObject.un('moveend', this._moveEndListener);
 	}
 
 	createView(layer): View {
@@ -129,9 +132,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, notGeoRegistred?: boolean): Observable<boolean> {
-		if (notGeoRegistred) {
-			this.disposeListeners();
-		} else {
+		this.disposeListeners();
+		if (!notGeoRegistred) {
 			this.initListeners();
 		}
 		this.notGeoRegistred = notGeoRegistred;
@@ -411,10 +413,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			})
 		});
 		this.mapObject.addLayer(layer);
-	}
-
-	disposeListeners(): void {
-		this._mapObject.un('moveend', this._moveEndListener);
 	}
 
 	// BaseImageryMap End

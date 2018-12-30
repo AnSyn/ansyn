@@ -1,69 +1,29 @@
-import { BaseMapSourceProvider } from '../model/base-map-source-provider';
-import {
-	Component,
-	ComponentFactoryResolver,
-	ComponentRef,
-	Inject,
-	Injector,
-	Input,
-	OnDestroy,
-	OnInit,
-	ViewChild,
-	ViewContainerRef
-} from '@angular/core';
-import { ImageryComponentManager } from './manager/imagery.component.manager';
-import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ICaseMapState } from '@ansyn/core';
-import { IBaseImageryMapConstructor } from '../model/base-imagery-map';
-import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
+import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 
 @Component({
 	selector: 'ansyn-imagery-view',
 	templateUrl: './imagery.component.html',
-	styleUrls: ['./imagery.component.less']
+	styleUrls: ['./imagery.component.less'],
+	providers: [CommunicatorEntity]
 })
 
-export class ImageryComponent implements OnInit, OnDestroy {
+export class ImageryComponent implements OnInit {
+	@ViewChild('mapComponentElem', { read: ViewContainerRef })
+	set mapComponentElem(value: ViewContainerRef) {
+		this.communicator.mapComponentElem = value
+	}
 
-	@ViewChild('mapComponentElem', { read: ViewContainerRef }) mapComponentElem: ViewContainerRef;
-	@Input() public mapComponentSettings: ICaseMapState;
+	@Input()
+	set settings(value: ICaseMapState) {
+		this.communicator.mapSettings = value;
+	};
 
-	private _mapComponentRef: ComponentRef<any>;
-	private _manager: ImageryComponentManager;
+	constructor(public communicator: CommunicatorEntity) {
+	}
 
 	ngOnInit() {
-		if (!this.mapComponentSettings) {
-			console.error('mapComponentSettings is Needed!');
-			return;
-		}
-
-		this._manager = new ImageryComponentManager(
-			this.injector,
-			this.iMapConstructors,
-			this.componentFactoryResolver,
-			this.imageryCommunicatorService,
-			this.mapComponentElem,
-			this._mapComponentRef,
-			this.baseSourceProviders,
-			this.mapComponentSettings
-		);
-
-		this._manager.setActiveMap(this.mapComponentSettings.worldView.mapType, this.mapComponentSettings.data.position, this.mapComponentSettings.worldView.sourceType).then(() => {
-			this.imageryCommunicatorService.createCommunicator(this._manager);
-		});
-	}
-
-	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected componentFactoryResolver: ComponentFactoryResolver,
-				@Inject(IMAGERY_MAPS) protected iMapConstructors: IBaseImageryMapConstructor[],
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[],
-				protected injector: Injector) {
-	}
-
-	ngOnDestroy() {
-		if (this._manager) {
-			this.imageryCommunicatorService.remove(this._manager.id);
-			this._manager.dispose();
-		}
+		this.communicator.ngOnInit();
 	}
 }

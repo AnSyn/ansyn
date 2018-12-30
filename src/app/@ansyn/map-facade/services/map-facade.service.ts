@@ -7,7 +7,9 @@ import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery'
 import { Observable } from 'rxjs';
 
 // @dynamic
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class MapFacadeService {
 	subscribers: { [key: string]: any[] } = {};
 

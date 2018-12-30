@@ -48,7 +48,7 @@ import {
 	CommunicatorEntity,
 	IMAGERY_CONFIG,
 	IMAGERY_MAPS,
-	ImageryCommunicatorService,
+	ImageryCommunicatorService, ImageryMapSource,
 	VisualizersConfig
 } from '@ansyn/imagery';
 import {
@@ -69,10 +69,11 @@ import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { selectMaps } from '@ansyn/map-facade';
 
+@ImageryMapSource({
+	sourceType: 'sourceType1',
+	supported: [<any> 'mapType1']
+})
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	public supported = ['mapType1'];
-	sourceType = 'sourceType1';
-
 	create(metaData: any): any {
 		return true;
 	}
@@ -195,7 +196,7 @@ describe('MapAppEffects', () => {
 					provide: mapFacadeConfig,
 					useValue: {}
 				},
-				{ provide: IMAGERY_MAPS, useValue: [] },
+				{ provide: IMAGERY_MAPS, useValue: {} },
 				{
 					provide: IMAGERY_CONFIG, useValue: {
 						'geoMapsInitialMapSource': [{

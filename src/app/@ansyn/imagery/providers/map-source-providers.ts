@@ -4,12 +4,20 @@ import {
 	IMAGERY_MAP_SOURCE_PROVIDERS
 } from '../model/base-map-source-provider';
 import { FactoryProvider, Provider } from '@angular/core';
-
+export interface ImageryMapSources {
+	[mapType: string]: { [sourceType: string]: BaseMapSourceProvider }
+}
 /**
  * @description Factory for Merge an array of arrays to single array ( BaseMapSourceProvider[] )
  */
 export function BaseMapSourceProviderFactory(mapSourceProviders) {
-	return mapSourceProviders.reduce((a, mapSourceProvider) => [...a, ...mapSourceProvider], []);
+	return mapSourceProviders.reduce((a, mapSourceProvider) => [...a, ...mapSourceProvider], [])
+		.reduce((obj, item) => {
+			item.supported.forEach((support) => {
+				obj[support.prototype.mapType] = { ...obj[support.prototype.mapType], [item.sourceType]: item };
+			});
+			return { ...obj }
+	}, {});
 }
 
 /**

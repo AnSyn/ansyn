@@ -1,3 +1,4 @@
+export { ImageryMapSources } from './providers/map-source-providers';
 export { IMapInstanceChanged } from './communicator-service/communicator.entity';
 export { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 export { VisualizerInteractions } from './model/base-imagery-visualizer';

@@ -117,7 +117,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
 				.pipe(
-					tap((map) => this.onMapCreated(map, mapType, this._activeMap.mapType))
+					tap((map) => this.onMapCreated(map, mapType, this.activeMapName))
 				)
 				.toPromise();
 		});

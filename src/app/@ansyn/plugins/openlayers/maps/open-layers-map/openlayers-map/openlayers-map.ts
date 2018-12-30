@@ -47,10 +47,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public shadowElement = null;
 
 	private _moveEndListener: () => void = () => {
-		if (this.notGeoRegistred) {
-			console.log('this.notGeoRegistred!!!!!!!!!!!!!!');
-			return EMPTY;
-		}
 		this.getPosition().pipe(take(1)).subscribe(position => {
 			if (position) {
 				this.positionChanged.emit(position);

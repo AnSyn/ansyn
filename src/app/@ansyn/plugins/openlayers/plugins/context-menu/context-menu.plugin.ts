@@ -25,7 +25,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onContextMenuDisplayAction$ = (): Observable<any> => this.actions$
+	onContextMenuDisplayAction$: Observable<any> = this.actions$
 		.pipe(
 			ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY),
 			map(({ payload }) => payload),

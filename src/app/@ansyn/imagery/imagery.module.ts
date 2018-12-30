@@ -1,9 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imagery/imagery.component';
-import { ImageryCommunicatorService } from './communicator-service/communicator.service';
 import { IImageryConfig, initialImageryConfig } from './model/iimagery-config';
-import { CacheService } from './cache-service/cache.service';
 import { createImageryMapsCollection, ImageryMapsProvider } from './providers/imagery-map-collection';
 import { MapComponent } from './map/map.component';
 import { IBaseImageryMapConstructor } from './model/base-imagery-map';
@@ -12,6 +10,10 @@ import { createConfig } from './providers/config';
 import { createPluginsCollection } from './providers/plugins-collection';
 import { IBaseImageryPluginConstructor } from './model/base-imagery-plugin';
 import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
+import { StoreModule } from '@ngrx/store';
+import { imageryFeatureKey, ImageryReducer } from './reducers/imagery.reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { ImageryEffects } from './effects/imagery.effects';
 
 export interface ImageryMetaData {
 	maps: IBaseImageryMapConstructor[],
@@ -21,12 +23,14 @@ export interface ImageryMetaData {
 
 // @dynamic
 @NgModule({
-	imports: [CommonModule],
+	imports: [
+		CommonModule,
+		StoreModule.forFeature(imageryFeatureKey, ImageryReducer),
+		EffectsModule.forFeature([ImageryEffects])
+	],
 	declarations: [ImageryComponent, MapComponent],
 	entryComponents: [MapComponent],
 	providers: [
-		ImageryCommunicatorService,
-		CacheService,
 		createConfig(initialImageryConfig),
 		createPluginsCollection([]),
 		createImageryMapsCollection([]),

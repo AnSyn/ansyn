@@ -19,7 +19,7 @@ import {
 } from '@ansyn/core';
 import { FeatureCollection } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryVisualizer, IBaseImageryVisualizerClass, VisualizerInteractionTypes } from '@ansyn/imagery';
+import { BaseImageryVisualizer, VisualizerInteractionTypes } from '@ansyn/imagery';
 import ol_color from 'ol/color';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
@@ -89,7 +89,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	toggleVisibility() {
-		if (!(<IBaseImageryVisualizerClass>this.constructor).isHideable) {
+		if (!this.isHideable) {
 			return;
 		}
 

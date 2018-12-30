@@ -21,19 +21,14 @@ import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
 	AnnotationSelectAction,
-	ChangeImageryMap,
-	ChangeImageryMapSuccess,
 	ContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
-	ImageryCreatedAction,
-	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
-	PositionChangedAction,
 	SynchronizeMapsAction,
 	UpdateMapAction
 } from '../actions/map.actions';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryActionType, ImageryCommunicatorService, ChangeImageryMapSuccess } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { Position } from 'geojson';
@@ -83,19 +78,6 @@ export class MapEffects {
 	);
 
 	@Effect({ dispatch: false })
-	onCommunicatorChange$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED),
-		withLatestFrom(this.store$.select(mapStateSelector)),
-		tap(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction, IMapState]) => {
-			if (action instanceof ImageryCreatedAction) {
-				this.mapFacadeService.initEmitters(action.payload.id);
-			} else {
-				this.mapFacadeService.removeEmitters(action.payload.id);
-			}
-		})
-	);
-
-	@Effect({ dispatch: false })
 	onContextMenuShow$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.CONTEXT_MENU.SHOW),
 		share()
@@ -103,7 +85,7 @@ export class MapEffects {
 
 	@Effect()
 	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_REMOVED),
+		ofType(ImageryActionType.removeImagery),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		filter(([action, mapState]) => mapState.pendingMapsCount > 0),
 		map(() => new DecreasePendingMapsCountAction())
@@ -131,12 +113,11 @@ export class MapEffects {
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => {
-				const disabledMap = communicator.mapType === 'disabledOpenLayersMap';
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
 				}));
-				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
+				return fromPromise(communicator.loadInitialMapSource(position))
 					.pipe(map(() => new BackToWorldSuccess(payload)));
 			})
 		);
@@ -147,32 +128,32 @@ export class MapEffects {
 		map(({ payload }) => payload)
 	);
 
-	@Effect()
-	newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
-		ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED),
-		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([{ payload }, { entities }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
-		switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
-			const activeMap = MapFacadeService.activeMap(mapState);
-			const communicator = this.communicatorsService.provide(payload.id);
-			return communicator.setPosition(activeMap.data.position).pipe(map(() => [{ payload }, mapState]));
-		}),
-		mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
-			const activeMap = MapFacadeService.activeMap(mapState);
-			const actions = [];
-			const updatedMap = mapState.entities[payload.id];
-			actions.push(new UpdateMapAction({
-				id: payload.id,
-				changes: { data: { ...updatedMap.data, position: activeMap.data.position } }
-			}));
-			if (mapState.pendingMapsCount > 0) {
-				actions.push(new DecreasePendingMapsCountAction());
-			}
-			return actions;
-		})
-	);
-
-
+	// @Effect()
+	// newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
+	// 	ofType<CreateImagery>(ImageryActionType.createImagery),
+	// 	withLatestFrom(this.store$.select(mapStateSelector)),
+	// 	filter(([{ payload }, { entities }]: [CreateImagery, IMapState]) => !MapFacadeService.mapById(Object.values(entities), payload.settings.id).data.position),
+	// 	switchMap(([{ payload }, mapState]: [CreateImagery, IMapState]) => {
+	// 		const activeMap = MapFacadeService.activeMap(mapState);
+	// 		const communicator = this.communicatorsService.provide(payload.settings.id);
+	// 		return communicator.setPosition(activeMap.data.position).pipe(map(() => [{ payload }, mapState]));
+	// 	}),
+	// 	mergeMap(([{ payload }, mapState]: [CreateImagery, IMapState]) => {
+	// 		const activeMap = MapFacadeService.activeMap(mapState);
+	// 		const actions = [];
+	// 		const updatedMap = mapState.entities[payload.settings.id];
+	// 		actions.push(new UpdateMapAction({
+	// 			id: payload.settings.id,
+	// 			changes: { data: { ...updatedMap.data, position: activeMap.data.position } }
+	// 		}));
+	// 		if (mapState.pendingMapsCount > 0) {
+	// 			actions.push(new DecreasePendingMapsCountAction());
+	// 		}
+	// 		return actions;
+	// 	})
+	// );
+	//
+	//
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
@@ -202,15 +183,6 @@ export class MapEffects {
 	);
 
 	@Effect()
-	imageryCreated$ = this.communicatorsService
-		.instanceCreated.pipe(map((payload) => new ImageryCreatedAction(payload)));
-
-	@Effect()
-	imageryRemoved$ = this.communicatorsService
-		.instanceRemoved.pipe(
-			map((payload) => new ImageryRemovedAction(payload)));
-
-	@Effect()
 	activeMapEnter$ = this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
@@ -226,20 +198,7 @@ export class MapEffects {
 		map(() => new ActiveImageryMouseLeave())
 	);
 
-	@Effect()
-	changeImageryMap$ = this.actions$.pipe(
-		ofType<ChangeImageryMap>(MapActionTypes.CHANGE_IMAGERY_MAP),
-		withLatestFrom(this.store$.select(selectMaps)),
-		mergeMap(([{ payload: { id, mapType, sourceType } }, mapsEntities]) => {
-			const communicator = this.communicatorsService.provide(id);
-			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
-				map(() => new ChangeImageryMapSuccess({ id, mapType, sourceType }))
-			);
-		})
-	);
-
 	constructor(protected actions$: Actions,
-				protected mapFacadeService: MapFacadeService,
 				protected communicatorsService: ImageryCommunicatorService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				protected store$: Store<any>) {

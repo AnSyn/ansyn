@@ -1,21 +1,22 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CommunicatorEntity } from './communicator.entity';
-import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
-
-export interface IImageryChanged {
-	id: string;
-}
+import { Store } from '@ngrx/store';
+import { ImageryState } from '../reducers/imagery.reducers';
+import { CreateImagery, RemoveImagery } from '../actions/imagery.actions';
 
 export interface ICommunicators {
-	[id: string]: CommunicatorEntity;
+	[id: string]: CommunicatorEntity | any;
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class ImageryCommunicatorService {
 
 	public communicators: ICommunicators = {};
-	public instanceCreated = new EventEmitter<IImageryChanged>();
-	public instanceRemoved = new EventEmitter<IImageryChanged>();
+
+	constructor(protected store$: Store<ImageryState>) {
+	}
 
 	public provide(id: string): CommunicatorEntity {
 
@@ -29,13 +30,13 @@ export class ImageryCommunicatorService {
 		return Object.values(this.communicators) as CommunicatorEntity[];
 	}
 
-	public createCommunicator(componentManager: ImageryComponentManager): void {
-		if (this.communicators[componentManager.id]) {
-			throw new Error(`'Can't create communicator ${componentManager.id}, already exists!'`);
+	public createCommunicator(communicatorEntity: CommunicatorEntity): void {
+		if (this.communicators[communicatorEntity.id]) {
+			throw new Error(`'Can't create communicator ${communicatorEntity.id}, already exists!'`);
 		}
 
-		this.communicators[componentManager.id] = new CommunicatorEntity(componentManager);
-		this.instanceCreated.emit({ id: componentManager.id });
+		this.communicators[communicatorEntity.id] = communicatorEntity;
+		this.store$.dispatch(new CreateImagery({ settings: communicatorEntity.mapSettings }));
 	}
 
 	public remove(id: string) {
@@ -45,6 +46,6 @@ export class ImageryCommunicatorService {
 		this.communicators[id].dispose();
 		this.communicators[id] = null;
 		delete (this.communicators[id]);
-		this.instanceRemoved.emit({ id });
+		this.store$.dispatch(new RemoveImagery({ id }));
 	}
 }

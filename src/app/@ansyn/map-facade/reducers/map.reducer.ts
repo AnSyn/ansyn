@@ -5,6 +5,7 @@ import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { ImageryActionType } from '@ansyn/imagery';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: ICaseMapState[] = [];
@@ -62,7 +63,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 	switch (action.type) {
 
-		case MapActionTypes.IMAGERY_REMOVED: {
+		case ImageryActionType.removeImagery: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
 			isLoadingMaps.delete(action.payload.id);
 
@@ -99,7 +100,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return mapsAdapter.updateOne(action.payload, state);
 		}
 
-		case MapActionTypes.POSITION_CHANGED: {
+		case ImageryActionType.POSITION_CHANGED: {
 			const { id, position } = action.payload;
 			const entity = state.entities[id];
 			if (entity) {

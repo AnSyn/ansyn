@@ -47,7 +47,6 @@ import {
 	CacheService,
 	CommunicatorEntity,
 	IMAGERY_CONFIG,
-	IMAGERY_MAPS,
 	ImageryCommunicatorService,
 	VisualizersConfig
 } from '@ansyn/imagery';
@@ -195,7 +194,6 @@ describe('MapAppEffects', () => {
 					provide: mapFacadeConfig,
 					useValue: {}
 				},
-				{ provide: IMAGERY_MAPS, useValue: [] },
 				{
 					provide: IMAGERY_CONFIG, useValue: {
 						'geoMapsInitialMapSource': [{

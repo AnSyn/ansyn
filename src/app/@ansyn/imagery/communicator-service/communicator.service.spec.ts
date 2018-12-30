@@ -1,26 +1,24 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
-import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
 import { ICaseMapPosition } from '@ansyn/core';
+import { CommunicatorEntity } from './communicator.entity';
 
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
-	const componentManager1: ImageryComponentManager = <any>{
+	const componentManager1: CommunicatorEntity = <any>{
 		id: '1',
 		positionChanged: new EventEmitter<{ id: string, position: ICaseMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
-		mapInstanceChanged: new EventEmitter<IMapInstanceChanged>(),
 		plugins: []
 	};
 
-	const componentManager2: ImageryComponentManager = <any>{
+	const componentManager2: CommunicatorEntity = <any>{
 		id: '2',
 		positionChanged: new EventEmitter<{ id: string, position: ICaseMapPosition }>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
-		mapInstanceChanged: new EventEmitter<IMapInstanceChanged>(),
 		plugins: []
 	};
 

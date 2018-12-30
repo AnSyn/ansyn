@@ -27,7 +27,7 @@ import { CasesActionTypes } from '@ansyn/menu-items';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { ChangeImageryMap as MapFacadeChangeImageryMap } from '@ansyn/map-facade';
+import { ChangeImageryMap as ImageryChangeImageryMap } from '@ansyn/imagery';
 
 @Injectable()
 export class CoreAppEffects {
@@ -118,7 +118,7 @@ export class CoreAppEffects {
 	@Effect()
 	changeImageryMap$ = this.actions$.pipe(
 		ofType<ChangeImageryMap>(CoreActionTypes.CHANGE_IMAGERY_MAP),
-		map(({ payload }) => new MapFacadeChangeImageryMap(payload))
+		map(({ payload }) => new ImageryChangeImageryMap(payload))
 	);
 
 	constructor(protected actions$: Actions,

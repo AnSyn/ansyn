@@ -383,8 +383,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setRotation(rotation);
 	}
 
-	public getRotation(view: View = this.mapObject.getView()): number {
-		return view.getRotation();
+	public getRotation(view: View = this.mapObject && this.mapObject.getView()): number {
+		return view ? view.getRotation() : 0;
 	}
 
 

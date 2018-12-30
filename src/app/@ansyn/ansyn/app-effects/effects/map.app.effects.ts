@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable, of, pipe, from, combineLatest } from 'rxjs';
+import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -12,14 +12,16 @@ import {
 	SetMarkUp
 } from '@ansyn/overlays';
 import {
-	ImageryCreatedAction,
 	IMapFacadeConfig,
 	IMapState,
-	MapActionTypes,
 	mapFacadeConfig,
 	MapFacadeService,
-	mapStateSelector, selectActiveMapId,
-	SetIsLoadingAcion, UpdateMapAction
+	mapStateSelector,
+	selectActiveMapId,
+	selectMaps,
+	selectMapsList,
+	SetIsLoadingAcion,
+	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	SetManualImageProcessing,
@@ -39,12 +41,10 @@ import {
 	toastMessages,
 	ToggleMapLayersAction
 } from '@ansyn/core';
-import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
 import {
-	BaseMapSourceProvider,
+	BaseMapSourceProvider, ChangeImageryMapSuccess,
 	CommunicatorEntity,
-	IBaseImageryMapConstructor,
-	IMAGERY_MAPS,
+	ImageryActionType,
 	ImageryCommunicatorService
 } from '@ansyn/imagery';
 import {
@@ -61,9 +61,7 @@ import {
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
-import { selectMaps, selectMapsList } from '@ansyn/map-facade';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { CesiumMapName } from '../../../plugins/cesium/maps/cesium-map/cesium-map';
 
 @Injectable()
 export class MapAppEffects {
@@ -128,18 +126,21 @@ export class MapAppEffects {
 				const imageManualProcessArgs = action.payload;
 				const overlayId = activeMap.data.overlay.id;
 				return [
-					new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, imageManualProcessArgs } } }),
+					new UpdateMapAction({
+						id: activeMap.id,
+						changes: { data: { ...activeMap.data, imageManualProcessArgs } }
+					}),
 					new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
 				];
 			}));
 
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED)
+		.ofType<ChangeImageryMapSuccess>(ImageryActionType.changeImageryMapSuccess)
 		.pipe(
 			withLatestFrom(this.store$.select(selectMaps)),
-			filter(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities && Object.values(entities).length > 0),
-			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
+			filter(([action, entities]: [ChangeImageryMapSuccess, Dictionary<ICaseMapState>]) => entities && Object.values(entities).length > 0),
+			map(([action, entities]: [ChangeImageryMapSuccess, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
 				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
@@ -272,7 +273,10 @@ export class MapAppEffects {
 		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType, mapType: caseMapState.worldView.mapType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
+			sourceType,
+			mapType: caseMapState.worldView.mapType
+		});
 
 		if (!sourceLoader) {
 			return of(new SetToastMessageAction({
@@ -298,13 +302,13 @@ export class MapAppEffects {
 		/* -2- */
 		const changeActiveMap = mergeMap((layer) => {
 			let observable = of(true);
-			const moveToGeoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
-			const moveToNotGeoRegisteredMap = !overlay.isGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
-			const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
-
-			if (newActiveMapName) {
-				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));
-			}
+			// const moveToGeoRegisteredMap = overlay.isGeoRegistered && communicator.mapType === DisabledOpenLayersMapName;
+			// const moveToNotGeoRegisteredMap = !overlay.isGeoRegistered && (communicator.mapType === OpenlayersMapName || communicator.mapType === CesiumMapName);
+			// const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
+			//
+			// if (newActiveMapName) {
+			// 	observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));
+			// }
 			return observable.pipe(map(() => layer));
 		});
 
@@ -356,7 +360,6 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_MAPS) protected iMapConstructors: IBaseImageryMapConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

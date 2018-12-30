@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
 import { Point, Position } from 'geojson';
-import { IImageryChanged, IMapInstanceChanged } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
@@ -12,10 +11,7 @@ import {
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
-	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
-	IMAGERY_CREATED: 'IMAGERY_CREATED',
-	IMAGERY_REMOVED: 'IMAGERY_REMOVED',
 	SYNCHRONIZE_MAPS: 'SYNCHRONIZE_MAPS',
 	SET_MAP_AUTO_IMAGE_PROCESSING: 'SET_MAP_AUTO_IMAGE_PROCESSING',
 	SET_MAP_MANUAL_IMAGE_PROCESSING: 'SET_MAP_MANUAL_IMAGE_PROCESSING',
@@ -26,7 +22,6 @@ export const MapActionTypes = {
 	VISUALIZERS: {
 		HOVER_FEATURE: 'HOVER_FEATURE'
 	},
-	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	VIEW: {
 		SET_IS_LOADING: 'SET_IS_LOADING',
 		SET_IS_VISIBLE: 'SET_IS_VISIBLE',
@@ -78,38 +73,10 @@ export class PointToRealNorthAction implements Action {
 	}
 }
 
-export class PositionChangedAction implements Action {
-	type = MapActionTypes.POSITION_CHANGED;
-
-	constructor(public payload: { id: string, position: ICaseMapPosition, mapInstance: ICaseMapState }) {
-	}
-}
-
 export class UpdateMapSizeAction implements Action {
 	type = MapActionTypes.UPDATE_MAP_SIZE;
 
 	constructor() {
-	}
-}
-
-export class ImageryCreatedAction implements Action {
-	type = MapActionTypes.IMAGERY_CREATED;
-
-	constructor(public payload: IImageryChanged) {
-	}
-}
-
-export class ImageryRemovedAction implements Action {
-	type = MapActionTypes.IMAGERY_REMOVED;
-
-	constructor(public payload: IImageryChanged) {
-	}
-}
-
-export class MapInstanceChangedAction implements Action {
-	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
-
-	constructor(public payload: IMapInstanceChanged) {
 	}
 }
 
@@ -243,21 +210,6 @@ export class ImageryMouseLeave implements Action {
 	constructor(public payload: string) {
 	}
 }
-
-export class ChangeImageryMap implements Action {
-	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP;
-
-	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
-	}
-}
-
-export class ChangeImageryMapSuccess implements Action {
-	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
-
-	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
-	}
-}
-
 
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.SET_MAPS_DATA;

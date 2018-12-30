@@ -1,6 +1,6 @@
+export { ChangeImageryMapSuccess } from './actions/imagery.actions';
+export { ImageryActionType, ChangeImageryMap } from './actions/imagery.actions';
 export { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
-export { IImageryChanged } from './communicator-service/communicator.service';
-export { IMapInstanceChanged } from './imagery/manager/imagery.component.manager';
 export { VisualizerInteractions } from './model/base-imagery-visualizer';
 export { IBaseImageryMapConstructor } from './model/base-imagery-map';
 export {

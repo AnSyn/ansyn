@@ -14,6 +14,7 @@ import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { ofType } from '@ngrx/effects';
+import { ImageryActionType } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -31,7 +32,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	positionChanged$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.POSITION_CHANGED),
+		ofType(ImageryActionType.POSITION_CHANGED),
 		tap(() => this.clickMenuProps = null)
 	);
 

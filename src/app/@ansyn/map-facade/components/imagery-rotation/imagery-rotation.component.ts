@@ -60,7 +60,7 @@ export class ImageryRotationComponent {
 	}
 
 	get rotationAngle() {
-		return ((this.communicator && this.communicator.getRotation()) || 0) - this.virtualNorth;
+		return ((this.communicator && this.communicator.ActiveMap && this.communicator.getRotation()) || 0) - this.virtualNorth;
 	}
 
 	constructor(protected elementRef: ElementRef,
@@ -78,7 +78,7 @@ export class ImageryRotationComponent {
 	}
 
 	protected setRotation(radians: number) {
-		this.communicator.setRotation(radians);
+		this.communicator.ActiveMap.setRotation(radians);
 	}
 
 	toggleNorth() {

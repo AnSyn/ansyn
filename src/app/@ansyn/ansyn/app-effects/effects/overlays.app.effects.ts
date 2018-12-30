@@ -262,7 +262,7 @@ export class OverlaysAppEffects {
 	);
 
 	getSourceProvider(sType) {
-		return this.baseSourceProviders.find(({ constructor }) => sType === (<IBaseMapSourceProviderConstructor>constructor).sourceType);
+		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
 	}
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {

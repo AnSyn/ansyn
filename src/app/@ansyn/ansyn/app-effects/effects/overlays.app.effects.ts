@@ -1,6 +1,6 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
@@ -211,6 +211,9 @@ export class OverlaysAppEffects {
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
 		const sourceProvider = this.getSourceProvider(overlay.sourceType);
+		if (!sourceProvider) {
+			return EMPTY;
+		}
 		return (<any>sourceProvider).getThumbnailUrl(overlay, position).pipe(
 			map(thumbnailUrl => ({ ...overlay, thumbnailUrl })),
 			catchError(() => {

@@ -265,82 +265,31 @@ export class MapAppEffects {
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
-		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
-		const mapData = caseMapState.data;
-		const prevOverlay = mapData.overlay;
-		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
+		const caseMapState = mapState.entities[mapId];
+		const prevOverlay = caseMapState.data.overlay;
 		const communicator = this.imageryCommunicatorService.provide(mapId);
-		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType,
-			mapType: caseMapState.worldView.mapType
-		});
-
-		if (!sourceLoader) {
-			return of(new SetToastMessageAction({
-				toastText: 'No source loader for ' + overlay.sourceType,
-				showWarningIcon: true
-			}));
-		}
-
-		const sourceProviderMetaData = { ...caseMapState, data: { ...mapData, overlay } };
-		this.setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData);
-
-
-		/* -1- */
-		const isActiveMapAlive = mergeMap((layer) => {
-			const checkCommunicator = this.imageryCommunicatorService.provide(communicator.id);
-			if (!checkCommunicator || !checkCommunicator.ActiveMap) {
-				sourceLoader.removeExtraData(layer);
-				return EMPTY;
-			}
-			return of(layer);
-		});
-
-		/* -2- */
-		const changeActiveMap = mergeMap((layer) => {
-			let observable = of(true);
-			const moveToGeoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
-			const moveToNotGeoRegisteredMap = !overlay.isGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
-			const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
-
-			if (newActiveMapName) {
-				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));
-			}
-			return observable.pipe(map(() => layer));
-		});
-
-		/* -3- */
-		const resetView = pipe(
-			mergeMap((layer) => {
-				const extent = isNotIntersect && extentFromGeojson(overlay.footprint);
-				return communicator.resetView(layer, mapData.position, extent);
-			}),
-			map(() => new DisplayOverlaySuccessAction(payload))
-		);
-
-		const onError = catchError((exception) => {
-			console.error(exception);
-			return from([
-				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
-				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
-			]);
-		});
-
-		return fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
-			.pipe(
-				isActiveMapAlive,
-				changeActiveMap,
-				resetView,
-				onError);
+		this.setIsLoadingSpinner(mapId);
+		return communicator.displayOverlay(caseMapState, overlay, this.config.overlayCoverage).pipe(
+			map(() => new DisplayOverlaySuccessAction(payload)),
+			catchError((exception) => {
+				console.error(exception);
+				return from([
+					new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
+					prevOverlay ? new DisplayOverlayAction({
+						mapId,
+						overlay: prevOverlay
+					}) : new BackToWorldView({ mapId })
+				])
+			})
+		)
 	};
 
-	setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData) {
-		if (sourceLoader.existsInCache(sourceProviderMetaData)) {
-			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: false }));
-		} else {
+	setIsLoadingSpinner(mapId) {
+		// if (sourceLoader.existsInCache(sourceProviderMetaData)) {
+		// 	this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: false }));
+		// } else {
 			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: true, text: 'Loading Overlay' }));
-		}
+		// }
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {

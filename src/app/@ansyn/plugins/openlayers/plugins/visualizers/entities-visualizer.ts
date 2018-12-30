@@ -286,7 +286,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	onResetView(): Observable<boolean> {
 		if (this.communicator.notGeoRegistred) {
-			this.clearEntities();
+			this.source.clear(true);
 			return of(true);
 		}
 		const currentEntities: IVisualizerEntity[] = this.getEntities();

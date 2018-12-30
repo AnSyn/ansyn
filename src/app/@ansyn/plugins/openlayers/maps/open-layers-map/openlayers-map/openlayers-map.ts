@@ -130,9 +130,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, notGeoRegistred?: boolean): Observable<boolean> {
 		if (notGeoRegistred) {
-			this.initListeners();
-		} else {
 			this.disposeListeners();
+		} else {
+			this.initListeners();
 		}
 		this.notGeoRegistred = notGeoRegistred;
 		this.isValidPosition = false;

@@ -29,7 +29,6 @@ import {
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
-	PositionChangedAction,
 	SynchronizeMapsAction,
 	UpdateMapAction
 } from '../actions/map.actions';
@@ -131,12 +130,11 @@ export class MapEffects {
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => {
-				const disabledMap = communicator.activeMapName === 'disabledOpenLayersMap';
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
 				}));
-				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
+				return fromPromise(communicator.loadInitialMapSource(position))
 					.pipe(map(() => new BackToWorldSuccess(payload)));
 			})
 		);
@@ -247,7 +245,7 @@ export class MapEffects {
 
 	setPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
 		if (mapItem.data.overlay) {
-			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+			const isNotIntersect = CommunicatorEntity.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
 			if (isNotIntersect) {
 				this.store$.dispatch(new SetToastMessageAction({
 					toastText: 'At least one map couldn\'t be synchronized',

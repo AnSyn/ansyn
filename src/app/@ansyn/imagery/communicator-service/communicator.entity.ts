@@ -12,7 +12,14 @@ import {
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
+import {
+	CaseMapExtent,
+	extentFromGeojson,
+	getFootprintIntersectionRatioInExtent,
+	ICaseMapPosition,
+	ICaseMapState,
+	IOverlay
+} from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
@@ -23,6 +30,7 @@ import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -42,6 +50,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	private _activeMap: BaseImageryMap;
 	private _virtualNorth = 0;
 	public mapInstanceChanged: EventEmitter<IMapInstanceChanged> = new EventEmitter<IMapInstanceChanged>();
+
+
+	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
+		const intersection = getFootprintIntersectionRatioInExtent(extentPolygon, footprint);
+		return intersection < overlayCoverage;
+	}
 
 	@AutoSubscription
 	activeMap$ = () => merge(this.imageryCommunicatorService.instanceCreated, this.mapInstanceChanged)
@@ -227,10 +241,10 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, notGeoRegistred?: boolean): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
-			return this.ActiveMap.resetView(layer, position, extent).pipe(mergeMap(() => this.resetPlugins()));
+			return this.ActiveMap.resetView(layer, position, extent, notGeoRegistred).pipe(mergeMap(() => this.resetPlugins()));
 		}
 
 		return of(true);
@@ -290,6 +304,27 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	destroyPlugins(): void {
 		this.plugins.forEach((plugin) => plugin.dispose());
+	}
+
+	displayOverlay(caseMapState: ICaseMapState, overlay: IOverlay, overlayCoverage: number) {
+		const isNotIntersect = CommunicatorEntity.isNotIntersect(caseMapState.data.position.extentPolygon, overlay.footprint, overlayCoverage);
+		const { sourceType } = overlay;
+		const sourceLoader: BaseMapSourceProvider = this.getMapSourceProvider({
+			sourceType,
+			mapType: this.activeMapName
+		});
+		if (!sourceLoader) {
+			return throwError('No source loader for ' + overlay.sourceType);
+		}
+		const sourceProviderMetaData = { ...caseMapState, data: { ...caseMapState.data, overlay } };
+		return fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
+			.pipe(
+				tap((layer) => sourceLoader.removeExtraData(layer)),
+				mergeMap((layer) => {
+					const extent = (!overlay.isGeoRegistered || isNotIntersect) && extentFromGeojson(overlay.footprint);
+					return this.resetView(layer, caseMapState.data.position, extent, !overlay.isGeoRegistered);
+				})
+			);
 	}
 
 }

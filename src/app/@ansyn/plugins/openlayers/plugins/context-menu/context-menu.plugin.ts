@@ -25,7 +25,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onContextMenuDisplayAction$: Observable<any> = this.actions$
+	onContextMenuDisplayAction$ = (): Observable<any> => this.actions$
 		.pipe(
 			ofType<ContextMenuDisplayAction>(MapActionTypes.CONTEXT_MENU.DISPLAY),
 			map(({ payload }) => payload),
@@ -37,6 +37,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	contextMenuTrigger$ = () => fromEvent(this.containerElem, 'contextmenu')
 		.pipe(
+			filter(() => !this.communicator.notGeoRegistred),
 			tap(this.contextMenuEventListener.bind(this))
 		);
 

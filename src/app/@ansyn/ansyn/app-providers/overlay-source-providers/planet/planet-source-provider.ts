@@ -404,7 +404,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: element.properties.acquired,
 			azimuth: toRadians(element.properties.view_angle),
 			sourceType: this.sourceType,
-			isGeoRegistered: Math.floor(Math.random() * 2) === 1,
+			isGeoRegistered: true,
 			tag: element
 		});
 

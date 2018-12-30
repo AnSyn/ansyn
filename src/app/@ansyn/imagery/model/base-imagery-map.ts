@@ -20,6 +20,7 @@ export abstract class BaseImageryMap<T = any> {
 	static groupLayers = new Map<string, any>();
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
 	public mapObject: T;
+	public notGeoRegistred: boolean;
 
 	abstract getCenter(): Observable<Point>;
 
@@ -34,7 +35,7 @@ export abstract class BaseImageryMap<T = any> {
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean>;
+	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, notGeoRegistred?: boolean): Observable<boolean>;
 
 	abstract addLayer(layer: any): void;
 

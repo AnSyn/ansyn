@@ -16,6 +16,10 @@ export class CommunicatorEntity {
 	public mapInstanceChanged = new EventEmitter<IMapInstanceChanged>();
 	private _virtualNorth = 0;
 
+	public get notGeoRegistred() {
+		return this.ActiveMap && this.ActiveMap.notGeoRegistred;
+	}
+
 	get imageryCommunicatorService(): ImageryCommunicatorService {
 		return this._manager.imageryCommunicatorService;
 	}

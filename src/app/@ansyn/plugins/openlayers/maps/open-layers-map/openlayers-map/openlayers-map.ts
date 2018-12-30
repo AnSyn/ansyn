@@ -104,12 +104,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			loadTilesWhileInteracting: true,
 			loadTilesWhileAnimating: true
 		});
-		this.initListeners();
 		return this.resetView(layers[0], position);
 	}
 
 	initListeners() {
 		this._moveEndListener = () => {
+			if (this.notGeoRegistred) {
+				return this.positionChanged.emit(null);
+			}
 			this.getPosition().pipe(take(1)).subscribe(position => {
 				if (position) {
 					this.positionChanged.emit(position);
@@ -126,7 +128,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, notGeoRegistred?: boolean): Observable<boolean> {
+		if (notGeoRegistred) {
+			this.initListeners();
+		} else {
+			this.disposeListeners();
+		}
+		this.notGeoRegistred = notGeoRegistred;
 		this.isValidPosition = false;
 		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
@@ -405,12 +413,16 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.mapObject.addLayer(layer);
 	}
 
+	disposeListeners(): void {
+		this._mapObject.un('moveend', this._moveEndListener);
+	}
+
 	// BaseImageryMap End
 	public dispose() {
 		this.removeAllLayers();
 
 		if (this._mapObject) {
-			this._mapObject.un('moveend', this._moveEndListener);
+			this.disposeListeners();
 			this._mapObject.setTarget(null);
 		}
 

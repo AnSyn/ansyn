@@ -68,8 +68,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { selectMaps } from '@ansyn/map-facade';
-import { CesiumMap } from '../../../plugins/cesium/maps/cesium-map/cesium-map';
-import { CesiumBingSourceProviderSourceType } from '../../../plugins/cesium/mapSourceProviders/cesium-BING-source-provider';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',

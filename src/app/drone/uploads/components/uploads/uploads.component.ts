@@ -69,6 +69,9 @@ export class UploadsComponent implements OnInit, OnDestroy {
 
 	}
 
+	isMobile(str: string) {
+		return str.includes('Mobile');
+	}
 
 	resetForm() {
 		this.store.dispatch(new ResetFormData());

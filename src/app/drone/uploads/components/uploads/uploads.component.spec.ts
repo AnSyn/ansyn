@@ -83,4 +83,8 @@ describe('UploadsComponent', () => {
 		expect(component.modal).toBeFalsy();
 	});
 
+	it('isMobile should check if "mobile" string includes in input', () => {
+		expect(component.isMobile('blbblbl Mobile blblblbl')).toBeTruthy();
+		expect(component.isMobile('blblblbl blblblbl')).toBeFalsy();
+	})
 });

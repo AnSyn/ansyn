@@ -26,7 +26,7 @@
 							 [value]="value"
 							 required
 							 [ngModel]="formData.sensorType"
-							 (ngModelChange)="uploadFormData({ sensorType: $event })">
+							 (ngModelChange)="uploadFormData({ sensorType: $event, sensorName: isMobile($event) ? '' : formData.sensorName })">
 					{{value}}
 				</ansyn-radio>
 			</div>
@@ -37,6 +37,7 @@
 				required
 				name="sensorName"
 				color="transparent"
+				[disabled]="isMobile(formData?.sensorType)"
 				placeholder="*Sensor name"
 				[ngModel]="formData.sensorName"
 				(ngModelChange)="uploadFormData({ sensorName: $event })">

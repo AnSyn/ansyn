@@ -18,7 +18,8 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 };
 
 
-export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
+export abstract class BaseImageryVisualizer extends BaseImageryPlugin implements IImageryVisualizerMetaData {
+	readonly isHideable?: boolean;
 	type: string;
 	source: any;
 	vector: any;
@@ -77,9 +78,9 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 }
 
 export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
-	isHideable?: boolean;
+	readonly isHideable?: boolean;
 }
 
-export interface IBaseImageryVisualizerClass extends IImageryVisualizerMetaData {
+export interface IBaseImageryVisualizerClass {
 	new(...args): BaseImageryVisualizer;
 }

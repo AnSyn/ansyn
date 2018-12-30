@@ -2,10 +2,16 @@ import { FactoryProvider, InjectionToken, ValueProvider } from '@angular/core';
 import { IBaseImageryMapConstructor } from '../model/base-imagery-map';
 
 export const IMAGERY_MAPS_COLLECTIONS = new InjectionToken<IBaseImageryMapConstructor[][]>('IMAGERY_MAPS_COLLECTIONS');
-export const IMAGERY_MAPS = new InjectionToken<IBaseImageryMapConstructor[]>('IMAGERY_MAPS');
+export const IMAGERY_MAPS = new InjectionToken<ImageryMaps>('IMAGERY_MAPS');
+
+export interface ImageryMaps {
+	[mapType: string]: IBaseImageryMapConstructor;
+}
 
 export function ImageryMapsFactory(imageryIMapCollection: IBaseImageryMapConstructor[][]) {
-	return imageryIMapCollection.reduce((a, b) => [...a, ...b], []);
+	return imageryIMapCollection.reduce((a, b) => [...a, ...b], []).reduce((object, baseImageryMapConstructor: IBaseImageryMapConstructor) => {
+		return { ...object, [baseImageryMapConstructor.prototype.mapType]: baseImageryMapConstructor }
+	}, {});
 }
 
 export function createImageryMapsCollection(imageryMaps: IBaseImageryMapConstructor[]): ValueProvider {

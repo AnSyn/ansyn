@@ -131,7 +131,7 @@ export class MapEffects {
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => {
-				const disabledMap = communicator.mapType === 'disabledOpenLayersMap';
+				const disabledMap = communicator.activeMapName === 'disabledOpenLayersMap';
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }

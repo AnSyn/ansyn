@@ -13,4 +13,3 @@ export { isRasterLayer, removeWorkers } from './openlayers/maps/open-layers-map/
 export { EntitiesVisualizer } from './openlayers/plugins/visualizers/entities-visualizer';
 
 export { CesiumMapName } from './cesium/maps/cesium-map/cesium-map';
-

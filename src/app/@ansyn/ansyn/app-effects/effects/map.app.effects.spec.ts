@@ -195,7 +195,7 @@ describe('MapAppEffects', () => {
 					provide: mapFacadeConfig,
 					useValue: {}
 				},
-				{ provide: IMAGERY_MAPS, useValue: [] },
+				{ provide: IMAGERY_MAPS, useValue: {} },
 				{
 					provide: IMAGERY_CONFIG, useValue: {
 						'geoMapsInitialMapSource': [{

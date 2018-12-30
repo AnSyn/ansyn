@@ -15,6 +15,10 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 
+export interface IOverviewOverlay extends IOverlay {
+	thumbnailName: string;
+}
+
 @Component({
 	selector: 'ansyn-overlay-overview',
 	templateUrl: './overlay-overview.component.html',
@@ -86,7 +90,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay(overlay: IOverlay) {
+	onHoveredOverlay(overlay: IOverviewOverlay) {
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
@@ -98,7 +102,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			this.left = hoveredElementBounds.left - 50;
 			this.top = hoveredElementBounds.top;
 			this.showOverview();
-			this.sensorName = overlay.sensorName;
+			this.sensorName = overlay.thumbnailName;
 			if (fetching) {
 				this.img.nativeElement.removeAttribute('src');
 			} else {

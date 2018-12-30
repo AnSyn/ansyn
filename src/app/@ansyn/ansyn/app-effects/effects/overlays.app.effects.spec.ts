@@ -413,7 +413,7 @@ describe('OverlaysAppEffects', () => {
 
 	describe('setHoveredOverlay$ effect', () => {
 		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
-			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction(overlaysState.overlays.get('first')) });
+			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction({...overlaysState.overlays.get('first'), thumbnailName: undefined}) });
 			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});
 	});

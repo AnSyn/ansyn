@@ -6,8 +6,8 @@ import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 import { ICaseMapState, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
-import { ImageryMapSource } from '../public_api';
 import { StoreModule } from '@ngrx/store';
+import { ImageryMapSource } from '../decorators/map-source-provider';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',

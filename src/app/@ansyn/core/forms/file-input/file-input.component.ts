@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { Input } from '@angular/core';
@@ -17,6 +17,7 @@ import { UUID } from 'angular2-uuid';
 	]
 })
 export class FileInputComponent implements ControlValueAccessor {
+	@ViewChild('input') public input: ElementRef<any>;
 	@Output() change = new EventEmitter<any>();
 	@Input() placeholder = 'Choose file';
 	@Input() accept = '';

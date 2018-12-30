@@ -17,8 +17,12 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 	drawInteractionHandler: 'drawInteractionHandler'
 };
 
+export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
+	readonly isHideable?: boolean;
+}
 
-export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
+export abstract class BaseImageryVisualizer extends BaseImageryPlugin implements IImageryVisualizerMetaData {
+	readonly isHideable?: boolean;
 	type: string;
 	source: any;
 	vector: any;
@@ -76,10 +80,6 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin {
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
 }
 
-export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
-	isHideable?: boolean;
-}
-
-export interface IBaseImageryVisualizerClass extends IImageryVisualizerMetaData {
+export interface IBaseImageryVisualizerClass {
 	new(...args): BaseImageryVisualizer;
 }

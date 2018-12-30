@@ -1,10 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { CommunicatorEntity } from './communicator.entity';
-import { ImageryComponentManager } from '../imagery/manager/imagery.component.manager';
-
-export interface IImageryChanged {
-	id: string;
-}
 
 export interface ICommunicators {
 	[id: string]: CommunicatorEntity;
@@ -14,8 +9,8 @@ export interface ICommunicators {
 export class ImageryCommunicatorService {
 
 	public communicators: ICommunicators = {};
-	public instanceCreated = new EventEmitter<IImageryChanged>();
-	public instanceRemoved = new EventEmitter<IImageryChanged>();
+	public instanceCreated = new EventEmitter<{ id: string }>();
+	public instanceRemoved = new EventEmitter<{ id: string }>();
 
 	public provide(id: string): CommunicatorEntity {
 
@@ -29,20 +24,19 @@ export class ImageryCommunicatorService {
 		return Object.values(this.communicators) as CommunicatorEntity[];
 	}
 
-	public createCommunicator(componentManager: ImageryComponentManager): void {
-		if (this.communicators[componentManager.id]) {
-			throw new Error(`'Can't create communicator ${componentManager.id}, already exists!'`);
+	public createCommunicator(communicatorEntity: CommunicatorEntity): void {
+		if (this.communicators[communicatorEntity.id]) {
+			throw new Error(`'Can't create communicator ${communicatorEntity.id}, already exists!'`);
 		}
 
-		this.communicators[componentManager.id] = new CommunicatorEntity(componentManager);
-		this.instanceCreated.emit({ id: componentManager.id });
+		this.communicators[communicatorEntity.id] = communicatorEntity;
+		this.instanceCreated.emit({ id: communicatorEntity.id });
 	}
 
 	public remove(id: string) {
 		if (!this.communicators[id]) {
 			return;
 		}
-		this.communicators[id].dispose();
 		this.communicators[id] = null;
 		delete (this.communicators[id]);
 		this.instanceRemoved.emit({ id });

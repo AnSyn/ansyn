@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable, of, pipe, from, combineLatest } from 'rxjs';
+import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -18,8 +18,12 @@ import {
 	MapActionTypes,
 	mapFacadeConfig,
 	MapFacadeService,
-	mapStateSelector, selectActiveMapId,
-	SetIsLoadingAcion, UpdateMapAction
+	mapStateSelector,
+	selectActiveMapId,
+	selectMaps,
+	selectMapsList,
+	SetIsLoadingAcion,
+	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	SetManualImageProcessing,
@@ -39,14 +43,8 @@ import {
 	toastMessages,
 	ToggleMapLayersAction
 } from '@ansyn/core';
-import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
-import {
-	BaseMapSourceProvider,
-	CommunicatorEntity,
-	IBaseImageryMapConstructor,
-	IMAGERY_MAPS,
-	ImageryCommunicatorService
-} from '@ansyn/imagery';
+import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
+import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	catchError,
 	debounceTime,
@@ -61,7 +59,6 @@ import {
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
-import { selectMaps, selectMapsList } from '@ansyn/map-facade';
 import { Dictionary } from '@ngrx/entity/src/models';
 
 @Injectable()
@@ -127,7 +124,10 @@ export class MapAppEffects {
 				const imageManualProcessArgs = action.payload;
 				const overlayId = activeMap.data.overlay.id;
 				return [
-					new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, imageManualProcessArgs } } }),
+					new UpdateMapAction({
+						id: activeMap.id,
+						changes: { data: { ...activeMap.data, imageManualProcessArgs } }
+					}),
 					new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
 				];
 			}));
@@ -271,7 +271,10 @@ export class MapAppEffects {
 		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({ sourceType });
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
+			sourceType,
+			mapType: caseMapState.worldView.mapType
+		});
 
 		if (!sourceLoader) {
 			return of(new SetToastMessageAction({
@@ -297,9 +300,9 @@ export class MapAppEffects {
 		/* -2- */
 		const changeActiveMap = mergeMap((layer) => {
 			let observable = of(true);
-			const geoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
-			const notGeoRegisteredMap = !overlay.isGeoRegistered && communicator.activeMapName === OpenlayersMapName;
-			const newActiveMapName = geoRegisteredMap ? OpenlayersMapName : notGeoRegisteredMap ? DisabledOpenLayersMapName : '';
+			const moveToGeoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
+			const moveToNotGeoRegisteredMap = !overlay.isGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
+			const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 			if (newActiveMapName) {
 				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));
@@ -355,7 +358,6 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(IMAGERY_MAPS) protected iMapConstructors: IBaseImageryMapConstructor[],
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

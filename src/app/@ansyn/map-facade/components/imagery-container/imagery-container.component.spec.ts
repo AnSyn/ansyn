@@ -29,7 +29,7 @@ describe('ImageryContainerComponent', () => {
 				ImageryContainerComponent,
 				MockComponent({
 					selector: 'ansyn-imagery-view',
-					inputs: ['mapComponentSettings']
+					inputs: ['settings']
 				}),
 				MockComponent({
 					selector: 'ansyn-imagery-rotation',

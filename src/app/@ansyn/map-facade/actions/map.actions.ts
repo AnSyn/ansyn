@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Point, Position } from 'geojson';
-import { IImageryChanged, IMapInstanceChanged } from '@ansyn/imagery';
+import { IMapInstanceChanged } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
@@ -95,14 +95,14 @@ export class UpdateMapSizeAction implements Action {
 export class ImageryCreatedAction implements Action {
 	type = MapActionTypes.IMAGERY_CREATED;
 
-	constructor(public payload: IImageryChanged) {
+	constructor(public payload: { id: string }) {
 	}
 }
 
 export class ImageryRemovedAction implements Action {
 	type = MapActionTypes.IMAGERY_REMOVED;
 
-	constructor(public payload: IImageryChanged) {
+	constructor(public payload: { id: string }) {
 	}
 }
 

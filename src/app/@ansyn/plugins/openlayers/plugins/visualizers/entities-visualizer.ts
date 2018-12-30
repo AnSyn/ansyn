@@ -89,7 +89,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	toggleVisibility() {
-		if (!(<IBaseImageryVisualizerClass>this.constructor).isHideable) {
+		if (!this.isHideable) {
 			return;
 		}
 

@@ -68,7 +68,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 	}
 
 	addFootprintToLayerPromise(layerPromise: Promise<any>, metaData: ICaseMapState): Promise<any> {
-		if ((this.constructor as IBaseMapSourceProviderConstructor).forOverlay) {
+		if (this.forOverlay) {
 			return layerPromise.then((layer) => {
 				layer.set('footprint', metaData.data.overlay.footprint);
 				return layer;

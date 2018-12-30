@@ -8,12 +8,12 @@ export function BaseImageryPluginProviderFactory(pluginsCollections: Array<Image
 	const providers: StaticClassProvider[] = pluginsCollections
 		.reduce<ImageryCollectionEntity[]>((previousValue, collection) => [...previousValue, ...collection], [])
 		.filter((value: IBaseImageryPluginConstructor) => value.prototype instanceof BaseImageryPlugin)
-		.filter((value: IBaseImageryPluginConstructor) => value.supported.some(ins => map instanceof ins))
+		.filter((value: IBaseImageryPluginConstructor) => value.prototype.supported.some(ins => map instanceof ins))
 		.map<StaticClassProvider>((value: IBaseImageryPluginConstructor) => ({
 			provide: BaseImageryPlugin,
 			useClass: value,
 			multi: true,
-			deps: [...value.deps]
+			deps: [...value.prototype.deps]
 		}));
 
 	if (providers.length === 0) {

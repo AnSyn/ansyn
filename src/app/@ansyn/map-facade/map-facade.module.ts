@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { MapEffects } from './effects/map.effects';
-import { MapFacadeService } from './services/map-facade.service';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
 import { ImageryModule } from '@ansyn/imagery';
 import { CommonModule } from '@angular/common';
@@ -28,7 +27,7 @@ import { GeocoderService } from './services/geocoder.service';
 		CoreModule,
 		FormsModule
 	],
-	providers: [MapFacadeService, GeocoderService],
+	providers: [GeocoderService],
 	declarations: [
 		ImageriesManagerComponent,
 		ImageryRotationComponent,

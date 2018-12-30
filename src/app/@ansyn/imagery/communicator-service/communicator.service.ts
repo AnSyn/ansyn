@@ -5,7 +5,9 @@ export interface ICommunicators {
 	[id: string]: CommunicatorEntity;
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class ImageryCommunicatorService {
 
 	public communicators: ICommunicators = {};

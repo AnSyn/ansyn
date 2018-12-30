@@ -1,9 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryComponent } from './imagery/imagery.component';
-import { ImageryCommunicatorService } from './communicator-service/communicator.service';
 import { IImageryConfig, initialImageryConfig } from './model/iimagery-config';
-import { CacheService } from './cache-service/cache.service';
 import { createImageryMapsCollection, ImageryMapsProvider } from './providers/imagery-map-collection';
 import { MapComponent } from './map/map.component';
 import { IBaseImageryMapConstructor } from './model/base-imagery-map';
@@ -25,8 +23,6 @@ export interface ImageryMetaData {
 	declarations: [ImageryComponent, MapComponent],
 	entryComponents: [MapComponent],
 	providers: [
-		ImageryCommunicatorService,
-		CacheService,
 		createConfig(initialImageryConfig),
 		createPluginsCollection([]),
 		createImageryMapsCollection([]),

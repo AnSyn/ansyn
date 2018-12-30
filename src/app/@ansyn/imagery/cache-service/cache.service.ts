@@ -4,7 +4,9 @@ import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { ICaseMapState } from '@ansyn/core';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class CacheService {
 
 	protected cacheSize = this.config.maxCachedLayers || 100;

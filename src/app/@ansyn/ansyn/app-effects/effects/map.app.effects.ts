@@ -268,7 +268,7 @@ export class MapAppEffects {
 		const caseMapState = mapState.entities[mapId];
 		const prevOverlay = caseMapState.data.overlay;
 		const communicator = this.imageryCommunicatorService.provide(mapId);
-		this.setIsLoadingSpinner(mapId);
+		this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: true, text: 'Loading Overlay' }));
 		return communicator.displayOverlay(caseMapState, overlay, this.config.overlayCoverage).pipe(
 			map(() => new DisplayOverlaySuccessAction(payload)),
 			catchError((exception) => {
@@ -283,14 +283,6 @@ export class MapAppEffects {
 			})
 		)
 	};
-
-	setIsLoadingSpinner(mapId) {
-		// if (sourceLoader.existsInCache(sourceProviderMetaData)) {
-		// 	this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: false }));
-		// } else {
-			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: true, text: 'Loading Overlay' }));
-		// }
-	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const isFull = isFullOverlay(payload.overlay);

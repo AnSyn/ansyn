@@ -21,7 +21,6 @@ import { PolygonSearchVisualizer } from './plugins/visualizers/region/polygon-se
 import { OpenlayersGeoJsonLayersVisualizer } from './plugins/layers/openlayers-geoJson-layers.visualizer';
 import { TaskRegionVisualizer } from './plugins/visualizers/algorithms/task-region.visualizer';
 import { OpenLayersMap } from './maps/open-layers-map/openlayers-map/openlayers-map';
-import { OpenLayersDisabledMap } from './maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayerTileWMSSourceProvider } from './mapSourceProviders/open-layers-TileWMS-source-provider';
 import { OpenLayerMapBoxSourceProvider } from './mapSourceProviders/open-layers-MapBox-source-provider';
 import { OpenLayerOSMSourceProvider } from './mapSourceProviders/open-layers-OSM-source-provider';
@@ -57,7 +56,7 @@ import { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-lay
 				OpenlayersGeoJsonLayersVisualizer,
 				TaskRegionVisualizer
 			],
-			maps: [OpenLayersMap, OpenLayersDisabledMap],
+			maps: [OpenLayersMap],
 			mapSourceProviders: [
 				OpenLayerTileWMSSourceProvider,
 				OpenLayerMapBoxSourceProvider,

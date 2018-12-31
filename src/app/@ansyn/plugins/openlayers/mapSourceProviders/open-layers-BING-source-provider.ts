@@ -5,7 +5,6 @@ import { ImageryMapSource } from '@ansyn/imagery';
 import proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
-import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 
 export interface IBingMapsConfig {
 	key: string;
@@ -16,7 +15,7 @@ export const OpenLayerBingSourceProviderSourceType = 'BING';
 
 @ImageryMapSource({
 	sourceType: OpenLayerBingSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap]
 })
 export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider<IBingMapsConfig> {
 	create(metaData: ICaseMapState): any[] {

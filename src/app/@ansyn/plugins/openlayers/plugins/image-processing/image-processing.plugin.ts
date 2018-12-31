@@ -4,7 +4,6 @@ import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/ima
 import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
@@ -15,7 +14,7 @@ import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable
 import { selectMaps } from '@ansyn/map-facade';
 
 @ImageryPlugin({
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	supported: [OpenLayersMap],
 	deps: [Store, toolsConfig]
 })
 export class ImageProcessingPlugin extends BaseImageryPlugin {

@@ -9,10 +9,9 @@ import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';
 import { selectDrops } from '@ansyn/overlays';
-import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 
 @ImageryPlugin({
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	supported: [OpenLayersMap],
 	deps: [Store]
 })
 export class AlertsPlugin extends BaseImageryPlugin {

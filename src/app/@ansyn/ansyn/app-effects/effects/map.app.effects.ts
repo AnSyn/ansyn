@@ -35,7 +35,6 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	endTimingLog,
-	extentFromGeojson,
 	ICaseMapState,
 	isFullOverlay,
 	SetToastMessageAction,
@@ -43,8 +42,7 @@ import {
 	toastMessages,
 	ToggleMapLayersAction
 } from '@ansyn/core';
-import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
-import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	catchError,
 	debounceTime,

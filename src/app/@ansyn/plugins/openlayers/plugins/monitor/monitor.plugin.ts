@@ -5,12 +5,11 @@ import { Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { SetProgressBarAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
-import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { tap } from 'rxjs/operators';
 
 @ImageryPlugin({
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	supported: [OpenLayersMap],
 	deps: [Store]
 })
 export class MonitorPlugin extends BaseImageryPlugin {

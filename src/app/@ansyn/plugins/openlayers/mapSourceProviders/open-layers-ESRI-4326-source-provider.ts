@@ -5,7 +5,6 @@ import { ImageryMapSource } from '@ansyn/imagery';
 import proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
-import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 
 export interface IESRI4326Config {
 	baseUrl: string;
@@ -19,7 +18,7 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 
 @ImageryMapSource({
 	sourceType: OpenLayerESRI_4326SourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap]
 })
 export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider<IESRI4326Config> {
 	create(metaData: ICaseMapState): any[] {

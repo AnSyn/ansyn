@@ -5,7 +5,7 @@ import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { ImisightOverlaySourceType } from './imisight-source-provider';
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
+import { OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/c
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap]
 })
 export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvider {
 	gatewayUrl = 'https://gw.sat.imisight.net';

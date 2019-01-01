@@ -23,6 +23,7 @@ import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { ImageryMapSources } from '../providers/map-source-providers';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -59,12 +60,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
-		return this.baseSourceProviders
-			.find((baseSourceProvider: BaseMapSourceProvider) => {
-				const source = !sourceType ? true : baseSourceProvider.sourceType === sourceType;
-				const supported = mapType ? baseSourceProvider.supported.some((imageryMapConstructor: IBaseImageryMapConstructor) => imageryMapConstructor.prototype.mapType === mapType) : true;
-				return source && supported;
-			});
+		return this.imageryMapSources[mapType][sourceType];
 	}
 
 	get positionChanged() {
@@ -76,7 +72,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
+				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources) {
 	}
 
 	initPlugins() {

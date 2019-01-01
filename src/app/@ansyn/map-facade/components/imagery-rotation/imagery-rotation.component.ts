@@ -10,7 +10,7 @@ export interface IsGeoRegisteredProperties {
 	tooltipNorth: 'Drag to Change Orientation' | 'Press Alt+Shift and drag to rotate';
 	tooltip: 'Click once to face north, twice for image perspective' | null;
 	compass: 'assets/icons/map/compass.svg' | 'assets/icons/map/compass_disabled.svg';
-	rotatePointer: 'rotationAngle' | 'notGeoRegitredNorthAngle';
+	rotatePointer: 'rotationAngle' | 'notGeoRegisteredNorthAngle';
 }
 
 @Component({
@@ -38,12 +38,12 @@ export class ImageryRotationComponent {
 		tooltipNorth: 'Press Alt+Shift and drag to rotate',
 		tooltip: null,
 		compass: 'assets/icons/map/compass_disabled.svg',
-		rotatePointer: 'notGeoRegitredNorthAngle'
+		rotatePointer: 'notGeoRegisteredNorthAngle'
 	};
 
 	isRotating = false;
 
-	get geoRegiteredProperties(): IsGeoRegisteredProperties {
+	get geoRegisteredProperties(): IsGeoRegisteredProperties {
 		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;
 	}
 
@@ -55,7 +55,7 @@ export class ImageryRotationComponent {
 		return this.communicator ? this.communicator.getVirtualNorth() : 0;
 	}
 
-	get notGeoRegitredNorthAngle() {
+	get notGeoRegisteredNorthAngle() {
 		return 0;
 	}
 

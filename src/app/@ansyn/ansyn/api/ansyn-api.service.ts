@@ -20,7 +20,15 @@ import {
 	ToolsActionsTypes,
 	UpdateLayer
 } from '@ansyn/menu-items';
-import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
+import {
+	ICaseMapPosition,
+	ICaseMapState,
+	ICoordinatesSystem,
+	IOverlay,
+	IOverlaysCriteria,
+	LayoutKey,
+	SetLayoutAction, SetOverlaysCriteriaAction
+} from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -144,11 +152,15 @@ export class AnsynApi {
 	}
 
 	setMapPosition(position: ICaseMapPosition) {
-		this.store.dispatch((new SetMapPositionAction({ id: this.activeMapId, position })));
+		this.store.dispatch(new SetMapPositionAction({ id: this.activeMapId, position }));
 	}
 
 	setMapPositionByRadius(center: Point, radiusInMeters: number) {
-		this.store.dispatch((new SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters })));
+		this.store.dispatch(new SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters }));
+	}
+
+	setOverlaysCriteria(criteria: IOverlaysCriteria) {
+		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 
 	init(): void {

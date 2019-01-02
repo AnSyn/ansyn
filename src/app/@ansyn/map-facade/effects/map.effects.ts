@@ -29,7 +29,7 @@ import {
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
-	PositionChangedAction,
+	SetMapPositionAction,
 	SynchronizeMapsAction,
 	UpdateMapAction
 } from '../actions/map.actions';
@@ -235,6 +235,15 @@ export class MapEffects {
 			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
 				map(() => new ChangeImageryMapSuccess({ id, mapType, sourceType }))
 			);
+		})
+	);
+
+	@Effect({ dispatch: false })
+	setMapPosition$ = this.actions$.pipe(
+		ofType<SetMapPositionAction>(MapActionTypes.SET_MAP_POSITION),
+		tap(({ payload: { id, position } }: SetMapPositionAction) => {
+			const communicator = this.communicatorsService.provide(id);
+			communicator.setPosition(position);
 		})
 	);
 

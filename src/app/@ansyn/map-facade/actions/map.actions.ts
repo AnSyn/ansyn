@@ -53,7 +53,8 @@ export const MapActionTypes = {
 	SET_ACTIVE_MAP_ID: 'SET_ACTIVE_MAP_ID',
 	UPDATE_MAP: 'UPDATE_MAP',
 	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
-	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS'
+	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS',
+	SET_MAP_POSITION: '[Maps] SET_MAP_POSITION'
 };
 
 export interface IContextMenuShowPayload {
@@ -277,6 +278,13 @@ export class UpdateMapAction implements Action {
 	type = MapActionTypes.UPDATE_MAP;
 
 	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	}
+}
+
+export class SetMapPositionAction implements Action {
+	type = MapActionTypes.SET_MAP_POSITION;
+
+	constructor(public payload: { id: string; position: ICaseMapPosition }) {
 	}
 }
 

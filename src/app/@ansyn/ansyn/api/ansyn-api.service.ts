@@ -1,25 +1,27 @@
 import { Inject, Injectable, InjectionToken, NgModuleRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
+import { MapActionTypes, selectActiveMapId, selectMaps, selectMapsList, ShadowMouseProducer } from '@ansyn/map-facade';
+import { Observable } from 'rxjs';
 import {
-	MapActionTypes,
-	MapFacadeService,
-	selectActiveMapId,
-	selectMapsList,
-	ShadowMouseProducer
-} from '@ansyn/map-facade';
-import { Observable, empty } from 'rxjs';
-import { GoToAction, ProjectionConverterService, ToolsActionsTypes, SetActiveCenter, UpdateLayer, ILayer, selectLayersEntities, selectActiveAnnotationLayer } from '@ansyn/menu-items';
+	GoToAction,
+	ILayer,
+	ProjectionConverterService,
+	selectActiveAnnotationLayer,
+	selectLayersEntities,
+	SetActiveCenter,
+	ToolsActionsTypes,
+	UpdateLayer
+} from '@ansyn/menu-items';
 import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection } from 'geojson';
-import { window } from 'd3';
 import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
-import { selectMaps } from '@ansyn/map-facade';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { SetMapPositionAction } from '../../map-facade/actions/map.actions';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 
@@ -70,7 +72,7 @@ export class AnsynApi {
 			return payload.point.coordinates;
 		})
 	);
-	
+
 	getActiveCenter$: Observable<any> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.SET_ACTIVE_CENTER),
 		map(({ payload }: SetActiveCenter) => {
@@ -100,9 +102,12 @@ export class AnsynApi {
 	displayOverLay(overlay: IOverlay): void {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
-	
+
 	setAnnotations(featureCollection: FeatureCollection<any>): void {
-		this.store.dispatch(new UpdateLayer(<ILayer>{ ...this.activeAnnotationLayer, data: cloneDeep(featureCollection) }));
+		this.store.dispatch(new UpdateLayer(<ILayer>{
+			...this.activeAnnotationLayer,
+			data: cloneDeep(featureCollection)
+		}));
 	}
 
 	deleteAllAnnotations(): void {
@@ -132,7 +137,10 @@ export class AnsynApi {
 		this.store.dispatch(new GoToAction(position));
 	}
 
-	
+	setMapPosition(position: ICaseMapPosition) {
+		this.store.dispatch((new SetMapPositionAction({ id: this.activeMapId, position })));
+	}
+
 	init(): void {
 	}
 

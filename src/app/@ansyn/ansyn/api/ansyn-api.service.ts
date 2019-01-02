@@ -1,7 +1,14 @@
 import { Inject, Injectable, InjectionToken, NgModuleRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
-import { MapActionTypes, selectActiveMapId, selectMaps, selectMapsList, ShadowMouseProducer } from '@ansyn/map-facade';
+import {
+	MapActionTypes,
+	selectActiveMapId,
+	selectMaps,
+	selectMapsList,
+	SetMapPositionAction, SetMapPositionByRadiusAction,
+	ShadowMouseProducer
+} from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import {
 	GoToAction,
@@ -17,11 +24,10 @@ import { ICaseMapPosition, ICaseMapState, ICoordinatesSystem, IOverlay, LayoutKe
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Point } from 'geojson';
 import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { SetMapPositionAction } from '../../map-facade/actions/map.actions';
 
 export const ANSYN_ID = new InjectionToken('ANSYN_ID');
 
@@ -139,6 +145,10 @@ export class AnsynApi {
 
 	setMapPosition(position: ICaseMapPosition) {
 		this.store.dispatch((new SetMapPositionAction({ id: this.activeMapId, position })));
+	}
+
+	setMapPositionByRadius(center: Point, radiusInMeters: number) {
+		this.store.dispatch((new SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters })));
 	}
 
 	init(): void {

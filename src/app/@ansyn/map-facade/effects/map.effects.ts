@@ -29,7 +29,7 @@ import {
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
-	SetMapPositionAction,
+	SetMapPositionAction, SetMapPositionByRadiusAction,
 	SynchronizeMapsAction,
 	UpdateMapAction
 } from '../actions/map.actions';
@@ -244,6 +244,15 @@ export class MapEffects {
 		tap(({ payload: { id, position } }: SetMapPositionAction) => {
 			const communicator = this.communicatorsService.provide(id);
 			communicator.setPosition(position);
+		})
+	);
+
+	@Effect({ dispatch: false })
+	setMapPositionByRadius$ = this.actions$.pipe(
+		ofType<SetMapPositionByRadiusAction>(MapActionTypes.SET_MAP_POSITION_BY_RADIUS),
+		tap(({ payload: { id, center, radiusInMeters } }: SetMapPositionByRadiusAction) => {
+			const communicator = this.communicatorsService.provide(id);
+			communicator.setPositionByRadius(center, radiusInMeters);
 		})
 	);
 

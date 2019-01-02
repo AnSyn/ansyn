@@ -54,7 +54,8 @@ export const MapActionTypes = {
 	UPDATE_MAP: 'UPDATE_MAP',
 	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
 	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS',
-	SET_MAP_POSITION: '[Maps] SET_MAP_POSITION'
+	SET_MAP_POSITION: '[Maps] SET_MAP_POSITION',
+	SET_MAP_POSITION_BY_RADIUS: '[Maps] SET_MAP_POSITION_BY_RADIUS'
 };
 
 export interface IContextMenuShowPayload {
@@ -285,6 +286,13 @@ export class SetMapPositionAction implements Action {
 	type = MapActionTypes.SET_MAP_POSITION;
 
 	constructor(public payload: { id: string; position: ICaseMapPosition }) {
+	}
+}
+
+export class SetMapPositionByRadiusAction implements Action {
+	type = MapActionTypes.SET_MAP_POSITION_BY_RADIUS;
+
+	constructor(public payload: { id: string; center: Point; radiusInMeters: number }) {
 	}
 }
 

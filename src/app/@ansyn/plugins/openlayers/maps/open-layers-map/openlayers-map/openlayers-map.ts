@@ -11,17 +11,24 @@ import olFeature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
+import { feature } from '@turf/turf';
 import { ExtentCalculator } from '../utils/extent-calculator';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
-import { Observable, of, EMPTY } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
-import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig } from '@ansyn/core';
+import {
+	areCoordinatesNumeric,
+	CaseMapExtent,
+	CaseMapExtentPolygon,
+	CoreConfig,
+	ICaseMapPosition,
+	ICoreConfig
+} from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
 import { map, take, tap } from 'rxjs/operators';
-import { feature } from '@turf/turf';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 
 export const OpenlayersMapName = 'openLayersMap';
@@ -93,6 +100,18 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.shadowElement = shadowElement;
 		this._mapLayers = [];
+		const renderer = 'canvas';
+		this._mapObject = new OLMap({
+			target,
+			renderer,
+			controls: [],
+			loadTilesWhileInteracting: true,
+			loadTilesWhileAnimating: true
+		});
+		return this.resetView(layers[0], position);
+	}
+
+	addControls(): void {
 		const controls = [
 			new ScaleLine(),
 			new AttributionControl(),
@@ -102,15 +121,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				},
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
-		const renderer = 'canvas';
-		this._mapObject = new OLMap({
-			target,
-			renderer,
-			controls,
-			loadTilesWhileInteracting: true,
-			loadTilesWhileAnimating: true
-		});
-		return this.resetView(layers[0], position);
+		controls.forEach((control) => this.mapObject.addControl(control));
+	}
+
+	removeControls() {
+		console.log('removeControls');
+		this.mapObject.getControls().forEach((control) => this.mapObject.removeControl(control));
 	}
 
 	initListeners() {
@@ -127,12 +143,30 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
+	fitToMainLayerExtent(extent: ol.Extent) {
+		const view = this.mapObject.getView();
+		view.fit(extent, {
+			size: this.mapObject.getSize(),
+			constrainResolution: false
+		});
+	}
+
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, notGeoRegistred?: boolean): Observable<boolean> {
-		this.disposeListeners();
-		if (!notGeoRegistred) {
-			this.initListeners();
-		}
 		this.notGeoRegistred = notGeoRegistred;
+		this.disposeListeners();
+		this.removeControls();
+		if (this.notGeoRegistred) {
+			const view = this.createView(layer);
+			this.setMainLayer(layer);
+			this._mapObject.setView(view);
+			const layerExtent = layer.getExtent();
+			if (layerExtent) {
+				this.fitToMainLayerExtent(layerExtent);
+			}
+			return of(true);
+		}
+		this.addControls();
+		this.initListeners();
 		this.isValidPosition = false;
 		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
@@ -252,7 +286,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public getCenter(): Observable<GeoPoint> {
-		if (!this.isValidPosition) {
+		if (!this.isValidPosition || this.notGeoRegistred) {
 			return of(null);
 		}
 		const view = this._mapObject.getView();
@@ -346,6 +380,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public getPosition(): Observable<ICaseMapPosition> {
+		if (this.notGeoRegistred) {
+			return of(null);
+		}
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };

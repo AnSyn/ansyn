@@ -87,4 +87,8 @@ describe('UploadsComponent', () => {
 		expect(component.isMobile('blbblbl Mobile blblblbl')).toBeTruthy();
 		expect(component.isMobile('blblblbl blblblbl')).toBeFalsy();
 	})
+
+	it('getAcceptFile', () => {
+		expect(component.getAcceptFile()).toBeDefined();
+	})
 });

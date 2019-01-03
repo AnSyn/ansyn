@@ -76,7 +76,7 @@
 			<ansyn-file-input
 				#inputFile
 				required
-				accept="image/jpeg"
+				[accept]="getAcceptFile()"
 				[multiple]="true"
 				name="files"
 				placeholder="*Choose file"

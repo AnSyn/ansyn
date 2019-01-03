@@ -25,7 +25,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	readonly sensorTypes = this.config.sensorTypes;
 	readonly rulesLink = this.config.rulesLink;
 	modal = false;
-	formData: IUploadsFormData = { ...initialUploadsFromData };
+	formData: IUploadsFormData = {...initialUploadsFromData};
 	fileInputValue: string;
 
 	@AutoSubscription
@@ -47,8 +47,8 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	}
 
 	disabledReset() {
-		const { files: thisFiles, ...restThisFormData } = this.formData;
-		const { files: initialFiles, ...restInitialFormData } = initialUploadsFromData;
+		const {files: thisFiles, ...restThisFormData} = this.formData;
+		const {files: initialFiles, ...restInitialFormData} = initialUploadsFromData;
 		const emptyFiles = (!thisFiles || !thisFiles.length);
 		return isEqual(restThisFormData, restInitialFormData) && emptyFiles;
 	}
@@ -59,7 +59,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 
 	submitCustomSensorName(text: string) {
 		if (text) {
-			this.uploadFormData({ sensorName: text, otherSensorName: true });
+			this.uploadFormData({sensorName: text, otherSensorName: true});
 		}
 		this.modal = false;
 	}
@@ -71,6 +71,16 @@ export class UploadsComponent implements OnInit, OnDestroy {
 
 	isMobile(str: string) {
 		return str.includes('Mobile');
+	}
+
+	getAcceptFile() {
+		let sensorTypes = this.formData.sensorType.split(' ');
+		let type = sensorTypes[sensorTypes.length - 1].replace(/[()]/g, '');
+		if (type.toUpperCase().includes('GEOTIFF')) {
+			return '.tif';
+		} else {
+			return '.jpg'
+		}
 	}
 
 	resetForm() {

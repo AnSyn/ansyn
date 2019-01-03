@@ -92,7 +92,11 @@
 				[ngModel]="formData.licence"
 				(ngModelChange)="uploadFormData({ licence: $event })"
 			>
-				<span class="licence">I agree to the <a [href]="rulesLink" target="_blank">rules</a></span>
+				<span class="licence">
+					I agree to submit uploaded imagery with attribution as contributor to /"AnSyn Imagery Network/" under
+					<a [href]="rulesLink" target="_blank">CC-BY 4.0</a>
+				license
+				</span>
 			</ansyn-checkbox>
 		</div>
 

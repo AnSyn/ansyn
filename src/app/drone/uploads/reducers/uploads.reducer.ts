@@ -36,7 +36,7 @@ export const uploadsFeatureKey = 'uploads';
 
 export const initialUploadsFromData: IUploadsFormData = {
 	description: '',
-	sharing: '',
+	sharing: 'public',
 	creditName: '',
 	licence: false,
 	sensorType: '',

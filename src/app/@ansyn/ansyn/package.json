@@ -1,22 +1,22 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "0.2.87",
+	"version": "0.2.88",
 	"peerDependencies": {
 		"rxjs-compat": "^6.2.1",
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3",
-		"@ansyn/assets": "0.2.87"
+		"@ansyn/assets": "0.2.88"
 	},
 	"dependencies": {
-		"@ansyn/context": "0.2.87",
-		"@ansyn/core": "0.2.87",
-		"@ansyn/imagery": "0.2.87",
-		"@ansyn/map-facade": "0.2.87",
-		"@ansyn/menu": "0.2.87",
-		"@ansyn/menu-items": "0.2.87",
-		"@ansyn/overlays": "0.2.87",
-		"@ansyn/plugins": "0.2.87",
-		"@ansyn/status-bar": "0.2.87",
+		"@ansyn/context": "0.2.88",
+		"@ansyn/core": "0.2.88",
+		"@ansyn/imagery": "0.2.88",
+		"@ansyn/map-facade": "0.2.88",
+		"@ansyn/menu": "0.2.88",
+		"@ansyn/menu-items": "0.2.88",
+		"@ansyn/overlays": "0.2.88",
+		"@ansyn/plugins": "0.2.88",
+		"@ansyn/status-bar": "0.2.88",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^6.0.1",
 		"@ngrx/effects": "^6.0.1",
@@ -25,7 +25,8 @@
 		"lodash": "4.17.5",
 		"moment": "^2.21.0",
 		"ol": "4.6.3",
-		"wellknown": "0.5.0"
+		"wellknown": "0.5.0",
+		"@angular/material": "^6.4.1"
 	},
 	"license": "MIT"
 }

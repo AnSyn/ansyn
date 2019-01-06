@@ -5,7 +5,6 @@ export { DataLayersService } from './layers-manager/services/data-layers.service
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
 export { LoadCaseAction } from './cases/actions/cases.actions';
 export { SettingsComponent } from './settings/settings/settings.component';
-export { SandboxComponent } from './sandbox/components/sandbox.component';
 export { GoToAction } from './tools/actions/tools.actions';
 export { ILayerState } from './layers-manager/reducers/layers.reducer';
 export { ICasesState } from './cases/reducers/cases.reducer';
@@ -91,7 +90,6 @@ export { FiltersModule } from './filters/filters.module';
 export { HelpModule } from './help/help.module';
 export { LayersManagerModule } from './layers-manager/layers-manager.module';
 export { SettingsModule } from './settings/settings.module';
-export { SandboxModule } from './sandbox/sandbox.module';
 export { ToolsModule } from './tools/tools.module';
 export { ICasesConfig } from './cases/models/cases-config';
 export { filtersFeatureKey, FiltersReducer } from './filters/reducer/filters.reducer';

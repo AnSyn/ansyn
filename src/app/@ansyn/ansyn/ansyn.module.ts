@@ -13,7 +13,7 @@ import {
 	HelpModule,
 	LayersManagerModule,
 	SettingsModule,
-	ToolsModule, TasksRemoteDefaultService, SandboxModule
+	ToolsModule, TasksRemoteDefaultService
 } from '@ansyn/menu-items';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
@@ -58,7 +58,6 @@ import { ANSYN_ID } from './api/ansyn-id.provider';
 		StatusBarModule,
 		RouterModule,
 		HelpModule,
-		SandboxModule
 	],
 	providers: [
 		{

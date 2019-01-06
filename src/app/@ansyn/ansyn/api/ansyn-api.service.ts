@@ -36,8 +36,7 @@ import { FeatureCollection, Point } from 'geojson';
 import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
 import { Dictionary } from '@ngrx/entity/src/models';
-
-export const ANSYN_ID = new InjectionToken('ANSYN_ID');
+import { ANSYN_ID } from './ansyn-id.provider';
 
 @Injectable({
 	providedIn: 'root'

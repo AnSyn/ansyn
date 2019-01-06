@@ -1,4 +1,5 @@
-export { AnsynApi, ANSYN_ID } from './api/ansyn-api.service';
+export { ANSYN_ID } from './api/ansyn-id.provider';
+export { AnsynApi } from './api/ansyn-api.service';
 export { MapAppEffects } from './app-effects/effects/map.app.effects';
 export { ContextAppEffects } from './app-effects/effects/context.app.effects';
 export { AppProvidersModule } from './app-providers/app-providers.module';

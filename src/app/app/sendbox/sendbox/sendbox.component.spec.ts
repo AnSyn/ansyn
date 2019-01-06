@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SendboxComponent } from './sendbox.component';
+import { AnsynApi } from '@ansyn/ansyn';
 
 describe('SendboxComponent', () => {
 	let component: SendboxComponent;
@@ -8,7 +9,13 @@ describe('SendboxComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [SendboxComponent]
+			declarations: [SendboxComponent],
+			providers: [
+				{
+					provide: AnsynApi,
+					useValue: {}
+				}
+			]
 		})
 			.compileComponents();
 	}));

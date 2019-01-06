@@ -10,6 +10,7 @@ import {
 import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
 import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
+import { SandboxComponent } from '../../menu-items/sandbox/components/sandbox.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -57,6 +58,11 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			name: 'Settings',
 			component: SettingsComponent,
+			iconClass: 'icon-main-settings'
+		},
+		{
+			name: 'Sandbox',
+			component: SandboxComponent,
 			iconClass: 'icon-main-settings'
 		},
 		{

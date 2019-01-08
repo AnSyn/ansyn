@@ -92,7 +92,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	addLayer(layer: Layer): void {
-		throw new Error('Can\'t find implementation');
+		this.mapObject.addLayer(layer);
 	}
 
 	removeMainLayer() {
@@ -116,7 +116,8 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return of(undefined);
 	}
 
-	setRotation(rotation: number): void {
+	public setRotation(rotation: number, view: View = this.mapObject.getView()) {
+		view.setRotation(rotation);
 	}
 
 	updateSize(): void {
@@ -134,7 +135,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	getRotation(): number {
-		return NaN;
+		return this.mapObject.getView().getRotation();
 	}
 
 	dispose() {

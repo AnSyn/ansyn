@@ -1,6 +1,6 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { combineLatest, Observable } from 'rxjs';
-import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { IMapState, MapFacadeService, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { OverlaysService, selectDrops } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
@@ -14,8 +14,8 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 
 	overlayDisplayMode$: Observable<string> = this.store
 		.pipe(
-			select(mapStateSelector),
-			map(({ mapsList }: IMapState) => MapFacadeService.mapById(mapsList, this.mapId)),
+			select(selectMapsList),
+			map((mapsList: ICaseMapState[]) => MapFacadeService.mapById(mapsList, this.mapId)),
 			filter(Boolean),
 			map((map: ICaseMapState) => map.data.overlayDisplayMode),
 			distinctUntilChanged()

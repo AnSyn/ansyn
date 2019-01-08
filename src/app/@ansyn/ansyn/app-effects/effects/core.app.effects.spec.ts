@@ -65,11 +65,13 @@ describe('CoreAppEffects', () => {
 	describe('onNextPresetOverlay$ should return an action which displays the next preset overlay', () => {
 		beforeEach(() => {
 			mapsState.activeMapId = 'map_1';
-			mapsState.mapsList = [{
-				id: 'map_1', data: {
-					position: null
-				}, worldView: { mapType: null, sourceType: null }, flags: null
-			}];
+			mapsState.entities = {
+				'map_1': {
+					id: 'map_1', data: {
+						position: null
+					}, worldView: { mapType: null, sourceType: null }, flags: null
+				}
+			};
 			coreState.presetOverlays = overlays1to3;
 		});
 		it('if no preset overlay currently displays, should display presetOverlays[0]', () => {
@@ -82,7 +84,7 @@ describe('CoreAppEffects', () => {
 			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
 		});
 		it('if presetOverlays[n] overlay currently displays, should display presetOverlays[n+1]', () => {
-			mapsState.mapsList[0].data.overlay = coreState.presetOverlays[0];
+			mapsState.entities['map_1'].data.overlay = coreState.presetOverlays[0];
 			actions = hot('--a--', { a: new GoNextPresetOverlay() });
 
 			const expectedResult = cold('--b--', {
@@ -92,7 +94,7 @@ describe('CoreAppEffects', () => {
 			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
 		});
 		it('if presetOverlays[last] overlay currently displays, should display presetOverlays[0]', () => {
-			mapsState.mapsList[0].data.overlay = coreState.presetOverlays[2];
+			mapsState.entities['map_1'].data.overlay = coreState.presetOverlays[2];
 			actions = hot('--a--', { a: new GoNextPresetOverlay() });
 
 			const expectedResult = cold('--b--', {

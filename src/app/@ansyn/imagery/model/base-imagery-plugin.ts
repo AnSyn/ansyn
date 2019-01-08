@@ -4,15 +4,17 @@ import { Observable, of } from 'rxjs';
 import { BaseImageryMap, IBaseImageryMapConstructor } from './base-imagery-map';
 
 export interface IImageryPluginMetaData {
-	supported?: IBaseImageryMapConstructor[];
-	deps?: any[];
+	readonly supported?: IBaseImageryMapConstructor[];
+	readonly deps?: any[];
 }
 
-export interface IBaseImageryPluginConstructor extends IImageryPluginMetaData {
+export interface IBaseImageryPluginConstructor {
 	new(...args): BaseImageryPlugin;
 }
 
-export class BaseImageryPlugin {
+export class BaseImageryPlugin implements IImageryPluginMetaData {
+	readonly supported?: IBaseImageryMapConstructor[];
+	readonly deps?: any[];
 
 	communicator: CommunicatorEntity;
 	isEnabled: boolean;

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
@@ -34,6 +35,7 @@ import { FormsModule } from '@angular/forms';
 		EffectsModule.forFeature([CoreEffects]),
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader]),
 		AlertsModule,
+		BrowserAnimationsModule,
 		FormsModule
 	],
 	providers: [

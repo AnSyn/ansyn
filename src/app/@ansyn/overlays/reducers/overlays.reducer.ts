@@ -270,7 +270,8 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 			return state;
 
-		case CoreActionTypes.SET_MAPS_DATA:
+		/* Hack: should be on app effects */
+		case 'SET_MAPS_DATA':
 			const { mapsList } = action.payload;
 			if (mapsList) {
 				const { displayOverlayHistory } = state;

@@ -26,7 +26,7 @@
 		"ng-infinitescroll": "1.0.12",
 		"ngx-bootstrap": "^2.0.4",
 		"primeng": "^6.1.4",
-		"proj4": "2.4.3",
+		"proj4": "^2.5.0",
 		"rison": "0.1.1",
 		"togeojson": "^0.16.0",
 		"tokml": "^0.4.0"

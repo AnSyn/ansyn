@@ -12,7 +12,6 @@ import {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
@@ -32,6 +31,7 @@ import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { mergeMap } from 'rxjs/operators';
+import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -77,7 +77,8 @@ export class SelectCaseAppEffects {
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
+			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
+			new SetActiveMapId(activeMapId),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),

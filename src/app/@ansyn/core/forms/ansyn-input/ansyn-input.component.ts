@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostBinding, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { UUID } from 'angular2-uuid';
 import { noop } from 'rxjs';
@@ -22,10 +22,8 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	@Input() name;
 	@Input() autocomplete: 'off' | 'on' = 'off';
 	@Input() id = UUID.UUID();
-
 	@Input()
 	@HostBinding('class.white') white: boolean;
-	@Attribute('select') public selectAttr: '' | null;
 
 	private innerValue: any = '';
 	private onTouchedCallback: () => void = noop;
@@ -43,6 +41,9 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	}
 
 	@ViewChild('input') input: ElementRef;
+
+	constructor(@Attribute('select') public selectAttr: string) {
+	}
 
 	onBlur() {
 		this.onTouchedCallback();

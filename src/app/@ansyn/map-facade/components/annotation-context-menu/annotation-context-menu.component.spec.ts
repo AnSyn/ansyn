@@ -15,20 +15,22 @@ import {
 	IAnnotationsSelectionEventData
 } from '@ansyn/core';
 import { AnnotationsWeightComponent } from '@ansyn/core';
+import { PositionChangedAction } from '../../actions/map.actions';
+import { EventEmitter } from '@angular/core';
 
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
 	let store: Store<IMapState>;
+	let actions: EventEmitter<PositionChangedAction>;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
-				Actions,
+				{ provide: Actions, useValue: new EventEmitter() },
 				{
 					provide: MapEffects, useValue: {
-						positionChanged$: new Subject(),
 						annotationContextMenuTrigger$: new Subject()
 					}
 				}
@@ -46,10 +48,11 @@ describe('AnnotationContextMenuComponent', () => {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store], (_store: Store<IMapState>) => {
+	beforeEach(inject([Store, Actions], (_store: Store<IMapState>, _actions: EventEmitter<any>) => {
 		store = _store;
 		fixture = TestBed.createComponent(AnnotationContextMenuComponent);
 		component = fixture.componentInstance;
+		actions = _actions;
 		fixture.detectChanges();
 	}));
 
@@ -89,7 +92,7 @@ describe('AnnotationContextMenuComponent', () => {
 	});
 
 	it('positionChanged$ should close context menu (by blur)', () => {
-		(<Subject<any>>component.mapEffect.positionChanged$).next();
+		actions.emit(new PositionChangedAction(<any>{ id: '', position: null }));
 		expect(component.clickMenuProps).toBeNull();
 	});
 

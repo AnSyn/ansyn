@@ -49,7 +49,7 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
-	RemovePendingOverlayAction,
+	RemovePendingOverlayAction, selectMapsList,
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
 import {
@@ -147,7 +147,7 @@ describe('OverlaysAppEffects', () => {
 
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
 
-	const mapState = { ...initialMapState, mapsList: [{ 'id': '1' }, { 'id': '2' }] };
+	const mapState = { ...initialMapState, entities: { '1': {'id': '1'}, '2': { 'id': '2' } }, ids: ['1', '2'] };
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
@@ -243,7 +243,8 @@ describe('OverlaysAppEffects', () => {
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, overlaysState.overlays],
 			[contextFeatureSelector, contextState],
-			[selectContextsParams, contextState.params]
+			[selectContextsParams, contextState.params],
+			[selectMapsList, Object.values(mapState.entities)]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -412,7 +413,7 @@ describe('OverlaysAppEffects', () => {
 
 	describe('setHoveredOverlay$ effect', () => {
 		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
-			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction(overlaysState.overlays.get('first')) });
+			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction({...overlaysState.overlays.get('first'), thumbnailName: undefined}) });
 			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});
 	});

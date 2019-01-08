@@ -56,7 +56,7 @@ export class ImageryRotationComponent {
 	}
 
 	get notGeoRegisteredNorthAngle() {
-		return 0;
+		return ((this.communicator && this.communicator.getRotation()) || 0) ;
 	}
 
 	get rotationAngle() {

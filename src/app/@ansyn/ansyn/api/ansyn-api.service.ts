@@ -156,8 +156,14 @@ export class AnsynApi {
 		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
 	}
 
-	setMapPositionByRadius(center: Point, radiusInMeters: number) {
+	setMapPositionByRadius(center: Point, radiusInMeters: number, search: boolean = false) {
 		this.store.dispatch(new SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters }));
+		if (search) {
+			const criteria: IOverlaysCriteria = {
+				region: center
+			};
+			this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+		}
 	}
 
 	setOverlaysCriteria(criteria: IOverlaysCriteria) {

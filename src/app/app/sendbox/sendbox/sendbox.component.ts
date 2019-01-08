@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AnsynApi } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
+import { IOverlaysCriteria } from '@ansyn/core';
 
 @Component({
 	selector: 'ansyn-sendbox',
@@ -15,15 +16,15 @@ export class SendboxComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	setPositionWithRadius() {
+	setPositionByRadius() {
 		let center: Point = {
 			type: 'Point',
 			coordinates: [-117.914, 33.811]
 		};
-		this.ansynApi.setMapPositionByRadius(center, 100);
+		this.ansynApi.setMapPositionByRadius(center, 100, true);
 	}
 
-	setPosition() {
+	setPositionByRect() {
 		let rect: Polygon = {
 			type: 'Polygon',
 			coordinates: [
@@ -37,6 +38,16 @@ export class SendboxComponent implements OnInit {
 			]
 		};
 		this.ansynApi.setMapPositionByRect(rect);
+	}
+
+	setOverlayCriteria() {
+		let criteria: IOverlaysCriteria = {
+			region: {
+				type: 'Point',
+				coordinates: [-118.29, 33.60]
+			}
+		};
+		this.ansynApi.setOverlaysCriteria(criteria);
 	}
 
 }

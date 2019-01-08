@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Point, Position } from 'geojson';
+import { Point, Polygon, Position } from 'geojson';
 import { IMapInstanceChanged } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
@@ -54,7 +54,7 @@ export const MapActionTypes = {
 	UPDATE_MAP: 'UPDATE_MAP',
 	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
 	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS',
-	SET_MAP_POSITION: '[Maps] SET_MAP_POSITION',
+	SET_MAP_POSITION_BY_RECT: '[Maps] SET_MAP_POSITION_BY_RECT',
 	SET_MAP_POSITION_BY_RADIUS: '[Maps] SET_MAP_POSITION_BY_RADIUS'
 };
 
@@ -282,10 +282,10 @@ export class UpdateMapAction implements Action {
 	}
 }
 
-export class SetMapPositionAction implements Action {
-	type = MapActionTypes.SET_MAP_POSITION;
+export class SetMapPositionByRectAction implements Action {
+	type = MapActionTypes.SET_MAP_POSITION_BY_RECT;
 
-	constructor(public payload: { id: string; position: ICaseMapPosition }) {
+	constructor(public payload: { id: string; rect: Polygon }) {
 	}
 }
 

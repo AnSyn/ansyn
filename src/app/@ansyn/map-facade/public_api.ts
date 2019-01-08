@@ -33,7 +33,7 @@ export {
 	ChangeImageryMap,
 	ChangeImageryMapSuccess,
 	UpdateMapAction,
-	SetMapPositionAction,
+	SetMapPositionByRectAction,
 	SetMapPositionByRadiusAction
 } from './actions/map.actions';
 export { MapFacadeService } from './services/map-facade.service';

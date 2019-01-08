@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, NgModuleRef } from '@angular/core';
+import { Inject, Injectable, NgModuleRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import {
@@ -6,7 +6,8 @@ import {
 	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
-	SetMapPositionAction, SetMapPositionByRadiusAction,
+	SetMapPositionByRadiusAction,
+	SetMapPositionByRectAction,
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
@@ -27,12 +28,13 @@ import {
 	IOverlay,
 	IOverlaysCriteria,
 	LayoutKey,
-	SetLayoutAction, SetOverlaysCriteriaAction
+	SetLayoutAction,
+	SetOverlaysCriteriaAction
 } from '@ansyn/core';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { FeatureCollection, Point } from 'geojson';
+import { FeatureCollection, Point, Polygon } from 'geojson';
 import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -102,7 +104,7 @@ export class AnsynApi {
 	}
 
 	removeElement(id): void {
-		const elem: HTMLElement = <any> document.getElementById(id);
+		const elem: HTMLElement = <any>document.getElementById(id);
 		if (elem) {
 			elem.innerHTML = '';
 		}
@@ -150,8 +152,8 @@ export class AnsynApi {
 		this.store.dispatch(new GoToAction(position));
 	}
 
-	setMapPosition(position: ICaseMapPosition) {
-		this.store.dispatch(new SetMapPositionAction({ id: this.activeMapId, position }));
+	setMapPositionByRect(rect: Polygon) {
+		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
 	}
 
 	setMapPositionByRadius(center: Point, radiusInMeters: number) {

@@ -29,7 +29,7 @@ import {
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
-	SetMapPositionAction, SetMapPositionByRadiusAction,
+	SetMapPositionByRectAction, SetMapPositionByRadiusAction,
 	SynchronizeMapsAction,
 	UpdateMapAction
 } from '../actions/map.actions';
@@ -239,11 +239,11 @@ export class MapEffects {
 	);
 
 	@Effect({ dispatch: false })
-	setMapPosition$ = this.actions$.pipe(
-		ofType<SetMapPositionAction>(MapActionTypes.SET_MAP_POSITION),
-		switchMap(({ payload: { id, position } }: SetMapPositionAction) => {
+	setMapPositionByRect$ = this.actions$.pipe(
+		ofType<SetMapPositionByRectAction>(MapActionTypes.SET_MAP_POSITION_BY_RECT),
+		switchMap(({ payload: { id, rect } }: SetMapPositionByRectAction) => {
 			const communicator = this.communicatorsService.provide(id);
-			return communicator.setPosition(position);
+			return communicator.setPositionByRect(rect);
 		})
 	);
 

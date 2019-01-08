@@ -201,6 +201,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap.getPosition();
 	}
 
+	setPositionByRect(rect: Polygon): Observable<boolean> {
+		const position: ICaseMapPosition = {
+			extentPolygon: rect
+		};
+		return this.setPosition(position);
+	}
+
 	setPositionByRadius(center: Point, radiusInMeters: number): Observable<boolean> {
 		const polygon: Feature<Polygon> = getPolygonByPointAndRadius(center.coordinates, radiusInMeters / 1000);
 		const position: ICaseMapPosition = {

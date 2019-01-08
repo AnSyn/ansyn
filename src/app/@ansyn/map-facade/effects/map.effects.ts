@@ -241,18 +241,18 @@ export class MapEffects {
 	@Effect({ dispatch: false })
 	setMapPosition$ = this.actions$.pipe(
 		ofType<SetMapPositionAction>(MapActionTypes.SET_MAP_POSITION),
-		tap(({ payload: { id, position } }: SetMapPositionAction) => {
+		switchMap(({ payload: { id, position } }: SetMapPositionAction) => {
 			const communicator = this.communicatorsService.provide(id);
-			communicator.setPosition(position);
+			return communicator.setPosition(position);
 		})
 	);
 
 	@Effect({ dispatch: false })
 	setMapPositionByRadius$ = this.actions$.pipe(
 		ofType<SetMapPositionByRadiusAction>(MapActionTypes.SET_MAP_POSITION_BY_RADIUS),
-		tap(({ payload: { id, center, radiusInMeters } }: SetMapPositionByRadiusAction) => {
+		switchMap(({ payload: { id, center, radiusInMeters } }: SetMapPositionByRadiusAction) => {
 			const communicator = this.communicatorsService.provide(id);
-			communicator.setPositionByRadius(center, radiusInMeters);
+			return communicator.setPositionByRadius(center, radiusInMeters);
 		})
 	);
 

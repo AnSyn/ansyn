@@ -57,7 +57,7 @@ import { ANSYN_ID } from './api/ansyn-id.provider';
 		ImageryModule,
 		StatusBarModule,
 		RouterModule,
-		HelpModule,
+		HelpModule
 	],
 	providers: [
 		{

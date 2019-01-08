@@ -24,12 +24,13 @@ export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
 	_moveEndListener;
-
+	element: any;
 	constructor(public projectionService: CesiumProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
 
 	initMap(element: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+		this.element = element;
 		this.mapObject = new Cesium.Viewer(element, {
 			imageryProvider: layers[0]
 		});
@@ -65,10 +66,9 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 
 	resetView(layer: any): Observable<boolean> {
-		const layers = this.mapObject.imageryLayers;
-		const baseLayer = layers.get(0);
-		layers.remove(baseLayer);
-		layers.addImageryProvider(layer);
+		const imageryLayers = this.mapObject.imageryLayers;
+		imageryLayers.removeAll(false);
+		imageryLayers.addImageryProvider(layer);
 		return of(true);
 	}
 

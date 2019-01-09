@@ -46,7 +46,7 @@ describe('ImageryCommunicatorService', () => {
 		expect(imageryCommunicatorService.instanceCreated.emit).toHaveBeenCalledWith({ id: '1' });
 	});
 
-	fit('provide Communicator should return expected communicator', () => {
+	it('provide Communicator should return expected communicator', () => {
 
 		imageryCommunicatorService.createCommunicator(componentManager1);
 		imageryCommunicatorService.createCommunicator(componentManager2);

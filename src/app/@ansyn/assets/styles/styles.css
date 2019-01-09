@@ -7,7 +7,7 @@
 @import "~primeng/resources/themes/omega/theme.css";
 @import "~font-awesome/css/font-awesome.min.css";
 @import "~cesium/Build/Cesium/Widgets/widgets.css";
-@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 
 circle.drop.selected {

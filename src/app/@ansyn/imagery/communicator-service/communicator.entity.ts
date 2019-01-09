@@ -10,10 +10,10 @@ import {
 	ViewContainerRef
 } from '@angular/core';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
+import { BaseImageryMap } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
-import { GeoJsonObject, Point } from 'geojson';
+import { CaseMapExtent, getPolygonByPointAndRadius, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
+import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
@@ -199,6 +199,21 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			return throwError(new Error('missing active map'));
 		}
 		return this.ActiveMap.getPosition();
+	}
+
+	setPositionByRect(rect: Polygon): Observable<boolean> {
+		const position: ICaseMapPosition = {
+			extentPolygon: rect
+		};
+		return this.setPosition(position);
+	}
+
+	setPositionByRadius(center: Point, radiusInMeters: number): Observable<boolean> {
+		const polygon: Feature<Polygon> = getPolygonByPointAndRadius(center.coordinates, radiusInMeters / 1000);
+		const position: ICaseMapPosition = {
+			extentPolygon: polygon.geometry
+		};
+		return this.setPosition(position);
 	}
 
 	public setRotation(rotation: number) {

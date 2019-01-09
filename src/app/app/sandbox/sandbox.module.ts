@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SendboxComponent } from './sendbox/sendbox.component';
+import { SandboxComponent } from './components/sandbox.component';
 import { MenuModule } from '@ansyn/menu';
 
 @NgModule({
@@ -8,15 +8,15 @@ import { MenuModule } from '@ansyn/menu';
 		CommonModule,
 		MenuModule.provideMenuItems([
 			{
-				name: 'Sendbox',
-				component: SendboxComponent,
+				name: 'Sandbox',
+				component: SandboxComponent,
 				iconClass: 'icon-main-settings'
 			},
 		])
 	],
-	exports: [SendboxComponent],
-	entryComponents: [SendboxComponent],
-	declarations: [SendboxComponent]
+	exports: [SandboxComponent],
+	entryComponents: [SandboxComponent],
+	declarations: [SandboxComponent]
 })
-export class SendboxModule {
+export class SandboxModule {
 }

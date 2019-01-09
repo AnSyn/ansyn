@@ -1,26 +1,27 @@
 {
 	"name": "@ansyn/plugins",
-	"version": "0.2.85",
+	"version": "0.2.89",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3"
 	},
 	"dependencies": {
-		"@ansyn/core": "0.2.85",
+		"@ansyn/core": "0.2.89",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^6.0.1",
 		"@ngrx/effects": "^6.0.1",
 		"@turf/turf": "5.1.6",
 		"lodash": "4.17.5",
 		"ol": "4.6.3",
-		"@ansyn/status-bar": "0.2.85",
-		"@ansyn/overlays": "0.2.85",
-		"@ansyn/menu-items": "0.2.85",
-		"@ansyn/map-facade": "0.2.85",
-		"@ansyn/imagery": "0.2.85",
-		"@ansyn/context": "0.2.85",
+		"@ansyn/status-bar": "0.2.89",
+		"@ansyn/overlays": "0.2.89",
+		"@ansyn/menu-items": "0.2.89",
+		"@ansyn/map-facade": "0.2.89",
+		"@ansyn/imagery": "0.2.89",
+		"@ansyn/context": "0.2.89",
 		"angular2-uuid": "1.1.1",
-		"auto-subscriptions": "^1.0.3"
+		"auto-subscriptions": "^1.0.3",
+		"cesium": "^1.52.0"
 	},
 	"license": "MIT"
 }

@@ -13,7 +13,7 @@ import { configuration } from '../../configuration/configuration';
 import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
 import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { ImisightModule } from './imisight/imisight.module';
-import { SendboxModule } from './sendbox/sendbox.module';
+import { SandboxModule } from './sandbox/sandbox.module';
 
 @NgModule({
 	imports: [
@@ -26,7 +26,7 @@ import { SendboxModule } from './sendbox/sendbox.module';
 		ImisightModule,
 		AnsynRouterModule,
 		AppRoutingModule,
-		SendboxModule
+		SandboxModule
 	],
 	providers: [
 		{

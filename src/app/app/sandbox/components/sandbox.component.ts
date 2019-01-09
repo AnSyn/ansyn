@@ -4,11 +4,11 @@ import { Point, Polygon } from 'geojson';
 import { IOverlaysCriteria } from '@ansyn/core';
 
 @Component({
-	selector: 'ansyn-sendbox',
-	templateUrl: './sendbox.component.html',
-	styleUrls: ['./sendbox.component.less']
+	selector: 'ansyn-sandbox',
+	templateUrl: './sandbox.component.html',
+	styleUrls: ['./sandbox.component.less']
 })
-export class SendboxComponent implements OnInit {
+export class SandboxComponent implements OnInit {
 
 	constructor(protected ansynApi: AnsynApi) {
 	}

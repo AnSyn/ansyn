@@ -11,7 +11,8 @@ import { cold, hot } from 'jasmine-marbles';
 import {
 	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
-	ImageryRemovedAction, SetMapPositionByRadiusAction,
+	ImageryRemovedAction,
+	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
@@ -137,9 +138,7 @@ describe('MapEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(null);
 			actions = hot('--a--', { a: new SetMapPositionByRectAction({ id: '234', rect: null }) });
 
-			const expectedResults = cold('--b--', {
-				b: null
-			});
+			const expectedResults = cold('-----');
 			expect(mapEffects.setMapPositionByRect$).toBeObservable(expectedResults);
 		});
 	});
@@ -149,7 +148,13 @@ describe('MapEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue({
 				setPositionByRadius: () => of('456')
 			});
-			actions = hot('--a--', { a: new SetMapPositionByRadiusAction({ id: '234', center: null, radiusInMeters: 100 }) });
+			actions = hot('--a--', {
+				a: new SetMapPositionByRadiusAction({
+					id: '234',
+					center: null,
+					radiusInMeters: 100
+				})
+			});
 
 			const expectedResults = cold('--b--', {
 				b: '456'
@@ -158,11 +163,15 @@ describe('MapEffects', () => {
 		});
 		it('setMapPositionByRadius$ should work if there is no communicator', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(null);
-			actions = hot('--a--', { a: new SetMapPositionByRadiusAction({ id: '234', center: null, radiusInMeters: 100 }) });
-
-			const expectedResults = cold('--b--', {
-				b: null
+			actions = hot('--a--', {
+				a: new SetMapPositionByRadiusAction({
+					id: '234',
+					center: null,
+					radiusInMeters: 100
+				})
 			});
+
+			const expectedResults = cold('-----');
 			expect(mapEffects.setMapPositionByRadius$).toBeObservable(expectedResults);
 		});
 	});

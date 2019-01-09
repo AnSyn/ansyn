@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { EMPTY, forkJoin, Observable } from 'rxjs';
+import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
@@ -243,7 +243,8 @@ export class MapEffects {
 		ofType<SetMapPositionByRectAction>(MapActionTypes.SET_MAP_POSITION_BY_RECT),
 		switchMap(({ payload: { id, rect } }: SetMapPositionByRectAction) => {
 			const communicator = this.communicatorsService.provide(id);
-			return communicator.setPositionByRect(rect);
+			const result$ = communicator ? communicator.setPositionByRect(rect) : of(null);
+			return result$;
 		})
 	);
 
@@ -252,7 +253,8 @@ export class MapEffects {
 		ofType<SetMapPositionByRadiusAction>(MapActionTypes.SET_MAP_POSITION_BY_RADIUS),
 		switchMap(({ payload: { id, center, radiusInMeters } }: SetMapPositionByRadiusAction) => {
 			const communicator = this.communicatorsService.provide(id);
-			return communicator.setPositionByRadius(center, radiusInMeters);
+			const result$ = communicator ? communicator.setPositionByRadius(center, radiusInMeters) : of(null);
+			return result$;
 		})
 	);
 

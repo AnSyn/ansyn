@@ -30,6 +30,7 @@ import { OpenLayerPlanetSourceProvider } from './mapSourceProviders/open-layers-
 import { OpenLayerBingSourceProvider } from './mapSourceProviders/open-layers-BING-source-provider';
 import { OpenLayerESRI4326SourceProvider } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';
 import { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-layers-open-aerial-source-provider';
+import { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 
 @NgModule({
 	imports: [
@@ -66,7 +67,8 @@ import { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-lay
 				OpenLayerPlanetSourceProvider,
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
-				OpenLayerOpenAerialSourceProvider
+				OpenLayerOpenAerialSourceProvider,
+				OpenLayersStaticImageSourceProvider
 			]
 		})
 	]

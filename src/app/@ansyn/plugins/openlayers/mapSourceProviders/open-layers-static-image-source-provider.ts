@@ -3,7 +3,6 @@ import {
 	ErrorHandlerService,
 	ICaseMapState,
 	IMapSourceProvidersConfig,
-	IOverlay,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/core';
 import Projection from 'ol/proj/projection';
@@ -34,7 +33,6 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
-		let layer;
 		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.imageWidth, metaData.data.overlay.tag.imageData.imageHeight];
 		const code = `static-image ${metaData.data.overlay.id}`;
 
@@ -51,15 +49,11 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 			projection
 		});
 
-		layer = new ImageLayer({
+		const layer = new ImageLayer({
 			source,
 			extent
 		});
 		return this.addFootprintToLayerPromise(Promise.resolve(layer), metaData);
-	}
-
-	getThumbnailName(overlay: IOverlay): string {
-		return overlay.name;
 	}
 
 }

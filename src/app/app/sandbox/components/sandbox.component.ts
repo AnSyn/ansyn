@@ -108,4 +108,8 @@ export class SandboxComponent implements OnInit {
 		this.ansynApi.setOverlays(overlays);
 	}
 
+	setLayout2maps() {
+		this.ansynApi.changeMapLayout('layout2');
+	}
+
 }

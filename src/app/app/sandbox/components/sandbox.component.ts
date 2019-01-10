@@ -3,6 +3,9 @@ import { AnsynApi } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
 import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
 import { OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/plugins';
+import * as momentNs from 'moment';
+
+const moment = momentNs;
 
 @Component({
 	selector: 'ansyn-sandbox',
@@ -10,6 +13,48 @@ import { OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/plugins';
 	styleUrls: ['./sandbox.component.less']
 })
 export class SandboxComponent implements OnInit {
+	overlay = (id: string, imageUrl: string, imageWidth: number, imageHeight: number): IOverlay => {
+		const days = 10 * Math.random();
+		const date = moment().subtract(days, 'day').toDate();
+		const left = -117.94,
+			top = 33.82,
+			width = 0.05,
+			height = 0.02,
+			right = left + width * Math.random(),
+			bottom = top - height * Math.random();
+		return {
+			name: id,
+			id: id,
+			photoTime: date.toISOString(),
+			date: date,
+			azimuth: 0,
+			isGeoRegistered: false,
+			sourceType: OpenLayersStaticImageSourceProviderSourceType,
+			tag: {
+				imageData: {
+					imageWidth: imageWidth,
+					imageHeight: imageHeight
+				}
+			},
+			footprint: {
+				type: 'MultiPolygon',
+				coordinates: [[[
+					[left, top],
+					[right, top],
+					[right, bottom],
+					[left, bottom],
+					[left, top]
+				]]]
+			},
+			baseImageUrl: '',
+			imageUrl: imageUrl,
+			thumbnailUrl: imageUrl,
+			sensorName: 'mySensorName',
+			sensorType: 'mySensorType',
+			bestResolution: 1,
+			cloudCoverage: 1
+		}
+	};
 
 	constructor(protected ansynApi: AnsynApi) {
 	}
@@ -52,36 +97,15 @@ export class SandboxComponent implements OnInit {
 	}
 
 	displayOverlay() {
-		const date = new Date();
-		const overlay: IOverlay = {
-			name: 'test1',
-			id: 'test1',
-			photoTime: date.toISOString(),
-			date: date,
-			azimuth: 0,
-			isGeoRegistered: false,
-			sourceType: OpenLayersStaticImageSourceProviderSourceType,
-			tag: {
-				imageData: {
-					imageWidth: 1024,
-					imageHeight: 968
-				}
-			},
-			footprint: {
-				type: 'MultiPolygon',
-				coordinates: [[[
-					[-117.93, 33.82],
-					[-117.91, 33.82],
-					[-117.91, 33.80],
-					[-117.93, 33.80],
-					[-117.93, 33.82]
-				]]]
-			},
-			baseImageUrl: '',
-			imageUrl: 'https://imgs.xkcd.com/comics/online_communities.png',
-			thumbnailUrl: 'https://imgs.xkcd.com/comics/online_communities.png'
-		};
-		this.ansynApi.displayOverLay(overlay);
+		this.ansynApi.displayOverLay(this.overlay('111', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968));
+	}
+
+	setOverlays() {
+		const overlays = [
+			this.overlay('111', 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
+			this.overlay('222', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968)
+		];
+		this.ansynApi.setOverlays(overlays);
 	}
 
 }

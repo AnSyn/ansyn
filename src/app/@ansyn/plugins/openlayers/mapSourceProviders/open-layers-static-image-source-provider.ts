@@ -15,10 +15,10 @@ import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
-export const OpenLayerStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
+export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 
 @ImageryMapSource({
-	sourceType: OpenLayerStaticImageSourceProviderSourceType,
+	sourceType: OpenLayersStaticImageSourceProviderSourceType,
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
 	forOverlay: true
 })
@@ -35,7 +35,7 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 
 	createAsync(metaData: ICaseMapState): Promise<any> {
 		let layer;
-		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.ExifImageWidth, metaData.data.overlay.tag.imageData.ExifImageHeight];
+		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.imageWidth, metaData.data.overlay.tag.imageData.imageHeight];
 		const code = `static-image ${metaData.data.overlay.id}`;
 
 		const projection = new Projection({

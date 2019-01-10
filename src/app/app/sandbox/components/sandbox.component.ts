@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AnsynApi } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
-import { IOverlaysCriteria } from '@ansyn/core';
+import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
+import { OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/plugins';
 
 @Component({
 	selector: 'ansyn-sandbox',
@@ -48,6 +49,39 @@ export class SandboxComponent implements OnInit {
 			}
 		};
 		this.ansynApi.setOverlaysCriteria(criteria);
+	}
+
+	displayOverlay() {
+		const date = new Date();
+		const overlay: IOverlay = {
+			name: 'test1',
+			id: 'test1',
+			photoTime: date.toISOString(),
+			date: date,
+			azimuth: 0,
+			isGeoRegistered: false,
+			sourceType: OpenLayersStaticImageSourceProviderSourceType,
+			tag: {
+				imageData: {
+					imageWidth: 1024,
+					imageHeight: 968
+				}
+			},
+			footprint: {
+				type: 'MultiPolygon',
+				coordinates: [[[
+					[-117.93, 33.82],
+					[-117.91, 33.82],
+					[-117.91, 33.80],
+					[-117.93, 33.80],
+					[-117.93, 33.82]
+				]]]
+			},
+			baseImageUrl: '',
+			imageUrl: 'https://imgs.xkcd.com/comics/online_communities.png',
+			thumbnailUrl: 'https://imgs.xkcd.com/comics/online_communities.png'
+		};
+		this.ansynApi.displayOverLay(overlay);
 	}
 
 }

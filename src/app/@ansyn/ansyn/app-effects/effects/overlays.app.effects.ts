@@ -201,7 +201,10 @@ export class OverlaysAppEffects {
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 	);
-	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
+	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => {
+		const result = [overlay, this.imageryCommunicatorService.provide(activeMapId)];
+		return result;
+	});
 	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [IOverlay, CommunicatorEntity]) => {
 		if (!communicator) {
 			return of([overlay, null]);
@@ -231,7 +234,9 @@ export class OverlaysAppEffects {
 			})
 		);
 	});
-	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
+	private getHoveredOverlayAction = map((overlay: IOverlay) => {
+		return new SetHoveredOverlayAction(overlay)
+	});
 
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)

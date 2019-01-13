@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SendboxComponent } from './sendbox.component';
+import { SandboxComponent } from './sandbox.component';
 import { AnsynApi } from '@ansyn/ansyn';
 
-describe('SendboxComponent', () => {
-	let component: SendboxComponent;
-	let fixture: ComponentFixture<SendboxComponent>;
+describe('SandboxComponent', () => {
+	let component: SandboxComponent;
+	let fixture: ComponentFixture<SandboxComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [SendboxComponent],
+			declarations: [SandboxComponent],
 			providers: [
 				{
 					provide: AnsynApi,
@@ -21,7 +21,7 @@ describe('SendboxComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SendboxComponent);
+		fixture = TestBed.createComponent(SandboxComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

@@ -29,7 +29,8 @@ import {
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
-	PositionChangedAction,
+	SetMapPositionByRadiusAction,
+	SetMapPositionByRectAction,
 	SynchronizeMapsAction,
 	UpdateMapAction
 } from '../actions/map.actions';
@@ -238,6 +239,26 @@ export class MapEffects {
 					return new ChangeImageryMapSuccess({ id, worldView });
 				})
 			);
+		})
+	);
+
+	@Effect({ dispatch: false })
+	setMapPositionByRect$ = this.actions$.pipe(
+		ofType<SetMapPositionByRectAction>(MapActionTypes.SET_MAP_POSITION_BY_RECT),
+		switchMap(({ payload: { id, rect } }: SetMapPositionByRectAction) => {
+			const communicator = this.communicatorsService.provide(id);
+			const result$ = communicator ? communicator.setPositionByRect(rect) : EMPTY;
+			return result$;
+		})
+	);
+
+	@Effect({ dispatch: false })
+	setMapPositionByRadius$ = this.actions$.pipe(
+		ofType<SetMapPositionByRadiusAction>(MapActionTypes.SET_MAP_POSITION_BY_RADIUS),
+		switchMap(({ payload: { id, center, radiusInMeters } }: SetMapPositionByRadiusAction) => {
+			const communicator = this.communicatorsService.provide(id);
+			const result$ = communicator ? communicator.setPositionByRadius(center, radiusInMeters) : EMPTY;
+			return result$;
 		})
 	);
 

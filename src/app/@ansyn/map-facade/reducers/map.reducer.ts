@@ -156,6 +156,14 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}, state);
 		}
 
+		case MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS: {
+			const { id, worldView } = action.payload;
+			return mapsAdapter.updateOne({
+				id,
+				changes: { worldView }
+			}, state);
+		}
+
 		default:
 			return state;
 	}

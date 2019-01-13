@@ -1,12 +1,13 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ICaseMapPosition, ICoreConfig } from '@ansyn/core';
+import { CaseMapExtent, ExtentCalculator, CoreConfig, ICaseMapPosition, ICoreConfig, toDegrees } from '@ansyn/core';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
 import { map, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
+import * as turf from '@turf/turf';
 declare const Cesium: any;
 
 Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');
@@ -31,13 +32,9 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	initMap(element: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.element = element;
-		this.mapObject = new Cesium.Viewer(element, {
-			imageryProvider: layers[0]
-		});
-		if (!position) {
-			return of(true);
-		}
-		return this.setPosition(position);
+		this.mapObject = new Cesium.Viewer(element);
+
+		return this.resetView(layers[0], position);
 	}
 
 	initListeners() {
@@ -53,11 +50,39 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	getCenter(): Observable<Point> {
-		return throwError(new Error('Method not implemented.'));
+		const viewer = this.mapObject;
+		const windowPosition = new Cesium.Cartesian2(viewer.container.clientWidth / 2, viewer.container.clientHeight / 2);
+		const pickRay = viewer.scene.camera.getPickRay(windowPosition);
+		const pickPosition = viewer.scene.globe.pick(pickRay, viewer.scene);
+		const pickPositionCartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(pickPosition);
+		const long = toDegrees(pickPositionCartographic.longitude);
+		const lat = toDegrees(pickPositionCartographic.latitude);
+		// TODO: add projection
+		const point: Point = {
+			type: 'Point',
+			coordinates: [long, lat]
+		};
+		return of(point);
 	}
 
 	setCenter(center: Point, animation: boolean): Observable<boolean> {
-		return throwError(new Error('Method not implemented.'));
+		const currentPosition = this.mapObject.camera.positionCartographic;
+
+		const extentFeature = feature(center);
+		const collection: any = featureCollection([extentFeature]);
+		return this.projectionService.projectCollectionAccuratelyToImage(collection, this).pipe(
+			map((geoJsonFeature: any) => {
+				const geoJsonCenter = geoJsonFeature.features[0].geometry.coordinates;
+				// TODO: add animation == false option
+				this.mapObject.camera.flyTo({
+					destination : Cesium.Cartesian3.fromDegrees(geoJsonCenter[0], geoJsonCenter[1], currentPosition.height)
+				});
+				// this.mapObject.camera.setView({
+				// 	destination: Cesium.Rectangle.fromDegrees(...rec)
+				// });
+				return true;
+			})
+		);
 	}
 
 	toggleGroup(groupName: string, newState: boolean) {
@@ -65,11 +90,19 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 
-	resetView(layer: any): Observable<boolean> {
+	resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		const imageryLayers = this.mapObject.imageryLayers;
 		imageryLayers.removeAll(false);
 		imageryLayers.addImageryProvider(layer);
-		return of(true);
+		if (extent) {
+			return this.fitToExtent(extent);
+		}
+		return this.setPosition(position);
+	}
+
+	fitToExtent(extent: CaseMapExtent) {
+		const collection: any = turf.featureCollection([]);
+		return this.internalSetPosition((<any>ExtentCalculator.extentToPolygon(extent)).geometry);
 	}
 
 	addLayer(layer: any): void {
@@ -82,6 +115,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	setPosition(position: ICaseMapPosition): Observable<boolean> {
 		const { extentPolygon } = position;
+		return this.internalSetPosition(extentPolygon);
+	}
+
+	internalSetPosition(extentPolygon: Polygon): Observable<boolean> {
 		const extentFeature = feature(extentPolygon);
 		const collection: any = featureCollection([extentFeature]);
 		return this.projectionService.projectCollectionAccuratelyToImage(collection, this).pipe(

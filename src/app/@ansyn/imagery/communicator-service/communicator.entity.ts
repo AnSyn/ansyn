@@ -10,7 +10,7 @@ import {
 	ViewContainerRef
 } from '@angular/core';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
+import { BaseImageryMap } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
 import { CaseMapExtent, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
@@ -56,7 +56,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	get visualizers(): BaseImageryVisualizer[] {
-		return <any> this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
+		return <any>this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
 	}
 
 	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
@@ -109,6 +109,11 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;
+
+		if (!sourceType) {
+			this.mapSettings.worldView.sourceType = imageryMap.prototype.defaultMapSource;
+		}
+
 		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType || imageryMap.prototype.defaultMapSource);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
@@ -261,6 +266,10 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	private resetPlugins(): Observable<boolean> {
+		if (!this.plugins || this.plugins.length === 0) {
+			return of(true);
+		}
+
 		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}

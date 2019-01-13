@@ -10,6 +10,12 @@ declare const Cesium: any;
 })
 export class CesiumPlanetSourceProvider extends BaseMapSourceProvider {
 
+	createAsync(metaData: ICaseMapState): Promise<any> {
+		let layer = this.createOrGetFromCache(metaData);
+		let layerPromise = Promise.resolve(layer[0]);
+		return layerPromise;
+	}
+
 	protected create(metaData: ICaseMapState): any[] {
 		const xyzTileLayer = new Cesium.UrlTemplateImageryProvider({
 			url : metaData.data.overlay.imageUrl,

@@ -135,3 +135,4 @@ export {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from './models/map-source-providers-config';
+export { ExtentCalculator } from './utils/extent-calculator';

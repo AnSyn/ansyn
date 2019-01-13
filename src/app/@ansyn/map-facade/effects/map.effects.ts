@@ -11,11 +11,11 @@ import {
 	CoreActionTypes,
 	ICaseMapPosition,
 	ICaseMapState,
+	IWorldViewMapState,
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetOverlaysCriteriaAction,
-	SetToastMessageAction,
-	IWorldViewMapState
+	SetToastMessageAction
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import {
@@ -236,10 +236,8 @@ export class MapEffects {
 			const communicator = this.communicatorsService.provide(id);
 			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
 				map(() => {
-					if (!sourceType) {
-						sourceType = communicator.mapSettings.worldView.sourceType;
-					}
-					const worldView: IWorldViewMapState = { mapType, sourceType: sourceType };
+					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
+					const worldView: IWorldViewMapState = { mapType, sourceType };
 					return new ChangeImageryMapSuccess({ id, worldView });
 				})
 			);

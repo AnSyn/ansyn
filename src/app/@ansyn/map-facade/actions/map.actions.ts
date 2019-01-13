@@ -9,6 +9,7 @@ import {
 	IPendingOverlay,
 	IUpdateFeatureEvent
 } from '@ansyn/core';
+import { IWorldViewMapState } from '../../core/models/case.model';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
@@ -256,7 +257,7 @@ export class ChangeImageryMap implements Action {
 export class ChangeImageryMapSuccess implements Action {
 	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
 
-	constructor(public payload: { id: string, worldView: { mapType: string, sourceType?: string }}) {
+	constructor(public payload: { id: string, worldView: IWorldViewMapState}) {
 	}
 }
 

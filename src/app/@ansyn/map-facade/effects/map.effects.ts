@@ -41,6 +41,7 @@ import { Position } from 'geojson';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { IWorldViewMapState } from '../../core/models/case.model';
 
 @Injectable()
 export class MapEffects {
@@ -235,7 +236,10 @@ export class MapEffects {
 			const communicator = this.communicatorsService.provide(id);
 			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
 				map(() => {
-					const worldView = { mapType, sourceType: sourceType || communicator.mapSettings.worldView.sourceType };
+					if (!sourceType) {
+						sourceType = communicator.mapSettings.worldView.sourceType;
+					}
+					const worldView: IWorldViewMapState = { mapType, sourceType: sourceType };
 					return new ChangeImageryMapSuccess({ id, worldView });
 				})
 			);

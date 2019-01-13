@@ -25,13 +25,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
 	_moveEndListener;
-	element: any;
 	constructor(public projectionService: CesiumProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
 
 	initMap(element: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
-		this.element = element;
 		this.mapObject = new Cesium.Viewer(element);
 
 		return this.resetView(layers[0], position);
@@ -101,8 +99,8 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	fitToExtent(extent: CaseMapExtent) {
-		const collection: any = turf.featureCollection([]);
-		return this.internalSetPosition((<any>ExtentCalculator.extentToPolygon(extent)).geometry);
+		const polygon = ExtentCalculator.extentToPolygon(extent);
+		return this.internalSetPosition((<any>polygon.geometry));
 	}
 
 	addLayer(layer: any): void {

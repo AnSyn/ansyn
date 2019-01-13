@@ -22,6 +22,7 @@ import {
 	UpdateLayer
 } from '@ansyn/menu-items';
 import {
+	CoreActionTypes,
 	ICaseMapPosition,
 	ICaseMapState,
 	ICoordinatesSystem,
@@ -49,7 +50,7 @@ import { ANSYN_ID } from './ansyn-id.provider';
 })
 export class AnsynApi {
 	activeMapId;
-	mapsList;
+	mapsList: ICaseMapState[];
 	mapsEntities;
 	activeAnnotationLayer;
 
@@ -88,6 +89,11 @@ export class AnsynApi {
 		})
 	);
 
+	onSetLayoutSuccess$: Observable<any> = this.actions$.pipe(
+		ofType(CoreActionTypes.SET_LAYOUT_SUCCESS),
+		tap(() => console.log(1))
+	);
+
 	getActiveCenter$: Observable<any> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.SET_ACTIVE_CENTER),
 		map(({ payload }: SetActiveCenter) => {
@@ -118,6 +124,13 @@ export class AnsynApi {
 		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
 	}
 
+	displayOverlayOnMap(overlay: IOverlay, mapNo: number): void {
+		if (mapNo > this.mapsList.length - 1) {
+			return
+		}
+		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.mapsList[mapNo].id, forceFirstDisplay: true }));
+	}
+
 	setAnnotations(featureCollection: FeatureCollection<any>): void {
 		this.store.dispatch(new UpdateLayer(<ILayer>{
 			...this.activeAnnotationLayer,
@@ -133,8 +146,9 @@ export class AnsynApi {
 		this.store.dispatch(new LoadOverlaysSuccessAction(overlays, true));
 	}
 
-	changeMapLayout(layout: LayoutKey): void {
+	changeMapLayout(layout: LayoutKey): Observable<any> {
 		this.store.dispatch(new SetLayoutAction(layout));
+		return this.onSetLayoutSuccess$;
 	}
 
 	transfromHelper(position, convertMethodFrom: ICoordinatesSystem, convertMethodTo: ICoordinatesSystem): void {

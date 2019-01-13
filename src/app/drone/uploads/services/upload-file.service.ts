@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { IUploadsConfig, UploadsConfig } from '../config/uploads-config';
-import { IUploadRequest, IUploadItem } from '../reducers/uploads.reducer';
+import { IUploadItem } from '../reducers/uploads.reducer';
 
 @Injectable({
 	providedIn: 'root'

@@ -1,7 +1,6 @@
 import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import {
-	ErrorHandlerService,
 	ICaseMapState,
 	IMapSourceProvidersConfig,
 	IOverlay,
@@ -11,12 +10,12 @@ import Projection from 'ol/proj/projection';
 import Static from 'ol/source/imagestatic';
 import ImageLayer from 'ol/layer/image';
 import proj from 'ol/proj';
-import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { ITBConfig } from '../overlay-source-provider/tb.model';
 import { createTransform, FROMCOORDINATES, FROMPIXEL } from './transforms';
 import TileWMS from 'ol/source/tilewms';
 import TileLayer from 'ol/layer/tile';
+import { noop } from 'rxjs';
 
 export const OpenLayerTBSourceProviderSourceType = 'TB';
 
@@ -26,16 +25,13 @@ export const OpenLayerTBSourceProviderSourceType = 'TB';
 	forOverlay: true
 })
 export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBConfig> {
-
 	constructor(
 		protected cacheService: CacheService,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
-		protected errorHandlerService: ErrorHandlerService,
-		protected http: HttpClient) {
+		) {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
-
 	createAsync(metaData: ICaseMapState): Promise<any> {
 		let layer;
 		if (metaData.data.overlay.tag.fileType === 'image') {
@@ -54,11 +50,10 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 				url: metaData.data.overlay.imageUrl,
 				crossOrigin: null,
 				imageExtent: extent,
-				projection
+				projection,
+				imageLoadFunction: noop
 			});
-
 			proj.addProjection(source.getProjection());
-
 			proj.addCoordinateTransforms(projection, 'EPSG:3857',
 				coords => {
 					return transformer.EPSG3857(FROMPIXEL, ...coords);

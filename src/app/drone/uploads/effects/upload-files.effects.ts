@@ -75,6 +75,7 @@ export class UploadFilesEffects {
 			])
 		);
 
+
 	constructor(protected actions$: Actions,
 				protected store$: Store<IUploadsState>,
 				protected uploadFileService: UploadFileService) {

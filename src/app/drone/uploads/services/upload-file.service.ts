@@ -41,6 +41,10 @@ export class UploadFileService {
 		);
 	}
 
+	cutName(name: string = '') {
+		return name.length < 20 ? name : name.substring(0, 20) + '...';
+	}
+
 }
 
 

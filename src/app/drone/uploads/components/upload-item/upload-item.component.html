@@ -1,7 +1,7 @@
 <div class="upload">
 	<p class='name' [class.finish]="value === 100">
 	<span [title]="name"
-		  (click)="moveToUpload.emit($event)">{{cutName(name)}}</span>
+		  (click)="moveToUpload.emit($event)">{{service.cutName(name)}}</span>
 	</p>
 	<p *ngIf="value > -1; else error" class="progress">
 		<mat-progress-bar mode="determinate" [value]="value">

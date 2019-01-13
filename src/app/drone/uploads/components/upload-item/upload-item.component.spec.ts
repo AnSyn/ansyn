@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UploadItemComponent } from './upload-item.component';
 import { MatProgressBar } from '@angular/material';
+import { UploadFileService } from '../../services/upload-file.service';
 
 describe('UploadItemComponent', () => {
 	let component: UploadItemComponent;
@@ -9,7 +10,15 @@ describe('UploadItemComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [UploadItemComponent, MatProgressBar]
+			declarations: [UploadItemComponent, MatProgressBar],
+			providers: [
+				{
+					provide: UploadFileService,
+					useValue: {
+						cutName: (a) => a
+					}
+				}
+			]
 		})
 			.compileComponents();
 	}));

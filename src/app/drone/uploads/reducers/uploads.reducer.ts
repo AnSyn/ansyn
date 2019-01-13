@@ -87,4 +87,4 @@ export function UploadsReducer(state: IUploadsState = initialUploadsState, actio
 }
 
 export const selectFormData = createSelector(uploadsStateSelector, (state) => state.formData);
-export const selectUploadList = createSelector(uploadsStateSelector, (state) => state.uploadList);
+export const selectUploadList = createSelector(uploadsStateSelector, (state) => state && state.uploadList);

@@ -8,6 +8,7 @@ import { isEqual } from 'lodash';
 import { RequestUploadFiles, ResetFormData, UploadFormData } from '../../actions/uploads.actions';
 import { initialUploadsFromData, IUploadsFormData, selectFormData } from '../../reducers/uploads.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { UploadFileService } from '../../services/upload-file.service';
 
 @Component({
 	selector: 'ansyn-uploads',
@@ -43,6 +44,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 
 	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig,
 				protected store: Store<any>,
+				public service: UploadFileService,
 				protected errorHandlerService: ErrorHandlerService) {
 	}
 

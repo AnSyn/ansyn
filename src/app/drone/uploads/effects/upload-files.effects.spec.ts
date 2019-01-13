@@ -5,6 +5,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { UploadFilesEffects } from './upload-files.effects';
 import { UploadsConfig } from '../config/uploads-config';
 import { HttpClientModule } from '@angular/common/http';
+import { uploadsFeatureKey, UploadsReducer } from '../reducers/uploads.reducer';
 
 describe('uploadFilesEffects', () => {
 	let uploadFilesEffect: UploadFilesEffects;
@@ -14,7 +15,9 @@ describe('uploadFilesEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({
+					[uploadsFeatureKey]: UploadsReducer
+				}),
 				HttpClientModule
 			],
 			providers: [

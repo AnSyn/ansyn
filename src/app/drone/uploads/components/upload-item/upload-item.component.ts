@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UploadFileService } from '../../services/upload-file.service';
 
 @Component({
 	selector: 'ansyn-upload-item',
@@ -10,14 +11,10 @@ export class UploadItemComponent implements OnInit {
 	@Input() value: number;
 	@Output() moveToUpload = new EventEmitter();
 
-	constructor() {
+	constructor(public service: UploadFileService) {
 	}
 
 	ngOnInit() {
 	}
 
-	cutName(name: string = '') {
-		return name.length < 20 ? name : name.substring(0, 20) + '...';
-
-	}
 }

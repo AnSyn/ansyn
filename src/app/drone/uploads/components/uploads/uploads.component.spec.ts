@@ -14,6 +14,7 @@ import { MatProgressBar } from '@angular/material';
 import { UploadItemComponent } from '../upload-item/upload-item.component';
 import { MultipleOverlaysSource } from '@ansyn/overlays';
 import { TBOverlaySourceType } from '../../../overlay-source-provider/tb-source-provider';
+import { UploadFileService } from '../../services/upload-file.service';
 
 const FakeMultipleOverlaysSource = {
 	[TBOverlaySourceType]: {
@@ -47,6 +48,12 @@ describe('UploadsComponent', () => {
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: noop }
+				},
+				{
+					provide: UploadFileService,
+					useValue: {
+						cutName: (a) => a
+					}
 				},
 				{
 					provide: UploadsConfig,

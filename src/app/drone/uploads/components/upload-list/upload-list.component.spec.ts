@@ -1,16 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { UploadListComponent } from './upload-list.component';
 import { MatProgressBar } from '@angular/material';
-import { StoreModule, Store } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { UploadItemComponent } from '../upload-item/upload-item.component';
 import { MultipleOverlaysSource } from '@ansyn/overlays';
-import { inject } from '@angular/core/testing';
-import { mapStateSelector, selectActiveMapId } from '@ansyn/map-facade';
-import { selectSelectedCase } from '@ansyn/menu-items';
-import { selectIsPinned } from '@ansyn/menu';
+import { mapFeatureKey, MapReducer, selectActiveMapId } from '@ansyn/map-facade';
 import { of } from 'rxjs';
-import { ClearUploadList, MoveToUploadOverlay } from '../../actions/uploads.actions';
+import { MoveToUploadOverlay } from '../../actions/uploads.actions';
 import { selectUploadList } from '../../reducers/uploads.reducer';
 import { TBOverlaySourceType } from '../../../overlay-source-provider/tb-source-provider';
 
@@ -27,7 +23,7 @@ describe('UploadListComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({})],
+			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
 			providers: [
 				{
 					provide: MultipleOverlaysSource,

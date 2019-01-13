@@ -30,11 +30,11 @@ export class ExtentCalculator {
 		return (radRotate - theta) % radRotate;
 	}
 
-	static calcCenter(extentPolygon: CaseMapExtentPolygon): ol.Coordinate {
+	static calcCenter(extentPolygon: CaseMapExtentPolygon): [number, number] {
 		const type = 'Feature';
 		const properties = {};
 		const geometry = extentPolygon;
-		return <ol.Coordinate> center(<any> { type, geometry, properties }).geometry.coordinates;
+		return <[number, number]>center(<any> { type, geometry, properties }).geometry.coordinates;
 	}
 
 	static calcResolution(extentPolygon: CaseMapExtentPolygon, mapSize: [number, number], rotation: number) {

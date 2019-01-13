@@ -56,7 +56,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	get visualizers(): BaseImageryVisualizer[] {
-		return <any> this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
+		return <any>this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
 	}
 
 	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
@@ -109,7 +109,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;
-		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType || imageryMap.prototype.defaultMapSource);
+
+		if (!sourceType) {
+			sourceType = imageryMap.prototype.defaultMapSource;
+			this.mapSettings.worldView.sourceType = sourceType;
+		}
+
+		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
 				.pipe(
@@ -276,6 +282,10 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	private resetPlugins(): Observable<boolean> {
+		if (!this.plugins || this.plugins.length === 0) {
+			return of(true);
+		}
+
 		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}

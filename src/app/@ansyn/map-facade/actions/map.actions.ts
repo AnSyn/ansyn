@@ -7,7 +7,8 @@ import {
 	ICaseMapState,
 	IOverlay,
 	IPendingOverlay,
-	IUpdateFeatureEvent
+	IUpdateFeatureEvent,
+	IWorldViewMapState
 } from '@ansyn/core';
 
 export const MapActionTypes = {
@@ -256,7 +257,7 @@ export class ChangeImageryMap implements Action {
 export class ChangeImageryMapSuccess implements Action {
 	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
 
-	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	constructor(public payload: { id: string, worldView: IWorldViewMapState}) {
 	}
 }
 

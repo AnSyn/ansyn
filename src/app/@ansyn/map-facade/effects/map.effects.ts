@@ -11,6 +11,7 @@ import {
 	CoreActionTypes,
 	ICaseMapPosition,
 	ICaseMapState,
+	IWorldViewMapState,
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetOverlaysCriteriaAction,
@@ -234,7 +235,11 @@ export class MapEffects {
 		mergeMap(([{ payload: { id, mapType, sourceType } }, mapsEntities]) => {
 			const communicator = this.communicatorsService.provide(id);
 			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
-				map(() => new ChangeImageryMapSuccess({ id, mapType, sourceType }))
+				map(() => {
+					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
+					const worldView: IWorldViewMapState = { mapType, sourceType };
+					return new ChangeImageryMapSuccess({ id, worldView });
+				})
 			);
 		})
 	);

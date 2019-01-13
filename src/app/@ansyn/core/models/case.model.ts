@@ -123,6 +123,11 @@ export interface ICaseLayersState {
 	activeLayersIds: string[]
 }
 
+export interface IWorldViewMapState {
+	mapType: string;
+	sourceType: string;
+}
+
 export interface IDilutedCaseMapsState {
 	layout: LayoutKey;
 	activeMapId: string;
@@ -150,10 +155,7 @@ export interface ICaseMapData extends IDilutedCaseMapData {
 export interface IDilutedCaseMapState {
 	id: string;
 	data: IDilutedCaseMapData;
-	worldView: {
-		mapType: string;
-		sourceType: string;
-	},
+	worldView: IWorldViewMapState,
 	flags: {
 		displayLayers?: boolean
 	};

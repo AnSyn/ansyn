@@ -7,9 +7,9 @@ import {
 	ICaseMapState,
 	IOverlay,
 	IPendingOverlay,
-	IUpdateFeatureEvent
+	IUpdateFeatureEvent,
+	IWorldViewMapState
 } from '@ansyn/core';
-import { IWorldViewMapState } from '../../core/models/case.model';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',

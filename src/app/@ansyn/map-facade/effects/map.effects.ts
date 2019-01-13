@@ -14,7 +14,8 @@ import {
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetOverlaysCriteriaAction,
-	SetToastMessageAction
+	SetToastMessageAction,
+	IWorldViewMapState
 } from '@ansyn/core';
 import * as turf from '@turf/turf';
 import {
@@ -41,7 +42,6 @@ import { Position } from 'geojson';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { IWorldViewMapState } from '../../core/models/case.model';
 
 @Injectable()
 export class MapEffects {

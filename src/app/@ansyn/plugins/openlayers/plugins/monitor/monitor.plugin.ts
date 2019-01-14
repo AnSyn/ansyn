@@ -161,7 +161,6 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	}
 
 	staticImageLoad = (image: ol.Image, url) => {
-		console.log('static image load');
 		this.http.request<Blob>(new HttpRequest(
 			'GET',
 			url,
@@ -171,7 +170,6 @@ export class MonitorPlugin extends BaseImageryPlugin {
 			}
 			)
 		).subscribe(event => {
-			console.log(JSON.stringify(event));
 			switch (event.type) {
 				case HttpEventType.DownloadProgress:
 				case HttpEventType.UploadProgress: {

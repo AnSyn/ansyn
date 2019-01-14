@@ -1,6 +1,6 @@
 {
   "name": "ansyn-src",
-  "version": "0.2.85",
+  "version": "0.2.89",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -35,8 +35,10 @@
     "@angular/cdk": "^6.4.1",
     "@angular/common": "^6.0.3",
     "@angular/compiler": "^6.0.3",
+    "@angular/cdk": "^6.4.1",
     "@angular/core": "^6.0.3",
     "@angular/forms": "^6.0.3",
+    "@angular/material": "^6.4.1",
     "@angular/http": "^6.0.3",
     "@angular/material": "^6.4.1",
     "@angular/platform-browser": "^6.0.3",
@@ -74,6 +76,7 @@
     "ol": "4.6.3",
     "primeng": "^6.1.4",
     "proj4": "^2.5.0",
+    "gl-matrix": "^2.8.1",
     "rison": "0.1.1",
     "rxjs": "^6.2.1",
     "togeojson": "^0.16.0",

@@ -10,10 +10,10 @@ import {
 	ViewContainerRef
 } from '@angular/core';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { BaseImageryMap, IBaseImageryMapConstructor } from '../model/base-imagery-map';
+import { BaseImageryMap } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
-import { GeoJsonObject, Point } from 'geojson';
+import { CaseMapExtent, getPolygonByPointAndRadius, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
+import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
@@ -23,6 +23,7 @@ import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { ImageryMapSources } from '../providers/map-source-providers';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -55,16 +56,11 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	get visualizers(): BaseImageryVisualizer[] {
-		return <any> this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
+		return <any>this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
 	}
 
 	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
-		return this.baseSourceProviders
-			.find((baseSourceProvider: BaseMapSourceProvider) => {
-				const source = !sourceType ? true : baseSourceProvider.sourceType === sourceType;
-				const supported = mapType ? baseSourceProvider.supported.some((imageryMapConstructor: IBaseImageryMapConstructor) => imageryMapConstructor.prototype.mapType === mapType) : true;
-				return source && supported;
-			});
+		return this.imageryMapSources[mapType][sourceType];
 	}
 
 	get positionChanged() {
@@ -76,7 +72,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(BaseMapSourceProvider) protected baseSourceProviders: BaseMapSourceProvider[]) {
+				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources) {
 	}
 
 	initPlugins() {
@@ -113,7 +109,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const injector = Injector.create({ parent: this.injector, providers });
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;
-		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType || imageryMap.prototype.defaultMapSource);
+
+		if (!sourceType) {
+			sourceType = imageryMap.prototype.defaultMapSource;
+			this.mapSettings.worldView.sourceType = sourceType;
+		}
+
+		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType);
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
 				.pipe(
@@ -205,6 +207,21 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap.getPosition();
 	}
 
+	setPositionByRect(rect: Polygon): Observable<boolean> {
+		const position: ICaseMapPosition = {
+			extentPolygon: rect
+		};
+		return this.setPosition(position);
+	}
+
+	setPositionByRadius(center: Point, radiusInMeters: number): Observable<boolean> {
+		const polygon: Feature<Polygon> = getPolygonByPointAndRadius(center.coordinates, radiusInMeters / 1000);
+		const position: ICaseMapPosition = {
+			extentPolygon: polygon.geometry
+		};
+		return this.setPosition(position);
+	}
+
 	public setRotation(rotation: number) {
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
@@ -265,6 +282,10 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	private resetPlugins(): Observable<boolean> {
+		if (!this.plugins || this.plugins.length === 0) {
+			return of(true);
+		}
+
 		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}

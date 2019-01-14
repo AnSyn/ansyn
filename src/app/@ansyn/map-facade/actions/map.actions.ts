@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Point, Position } from 'geojson';
+import { Point, Polygon, Position } from 'geojson';
 import { IMapInstanceChanged } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
@@ -7,7 +7,8 @@ import {
 	ICaseMapState,
 	IOverlay,
 	IPendingOverlay,
-	IUpdateFeatureEvent
+	IUpdateFeatureEvent,
+	IWorldViewMapState
 } from '@ansyn/core';
 
 export const MapActionTypes = {
@@ -53,7 +54,9 @@ export const MapActionTypes = {
 	SET_ACTIVE_MAP_ID: 'SET_ACTIVE_MAP_ID',
 	UPDATE_MAP: 'UPDATE_MAP',
 	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
-	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS'
+	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS',
+	SET_MAP_POSITION_BY_RECT: '[Maps] SET_MAP_POSITION_BY_RECT',
+	SET_MAP_POSITION_BY_RADIUS: '[Maps] SET_MAP_POSITION_BY_RADIUS'
 };
 
 export interface IContextMenuShowPayload {
@@ -254,7 +257,7 @@ export class ChangeImageryMap implements Action {
 export class ChangeImageryMapSuccess implements Action {
 	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
 
-	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	constructor(public payload: { id: string, worldView: IWorldViewMapState}) {
 	}
 }
 
@@ -277,6 +280,20 @@ export class UpdateMapAction implements Action {
 	type = MapActionTypes.UPDATE_MAP;
 
 	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	}
+}
+
+export class SetMapPositionByRectAction implements Action {
+	type = MapActionTypes.SET_MAP_POSITION_BY_RECT;
+
+	constructor(public payload: { id: string; rect: Polygon }) {
+	}
+}
+
+export class SetMapPositionByRadiusAction implements Action {
+	type = MapActionTypes.SET_MAP_POSITION_BY_RADIUS;
+
+	constructor(public payload: { id: string; center: Point; radiusInMeters: number }) {
 	}
 }
 

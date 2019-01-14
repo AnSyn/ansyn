@@ -16,7 +16,8 @@
     "@ansyn/imagery",
     "@ansyn/context",
     "angular2-uuid",
-    "auto-subscriptions"
+    "auto-subscriptions",
+    "cesium"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

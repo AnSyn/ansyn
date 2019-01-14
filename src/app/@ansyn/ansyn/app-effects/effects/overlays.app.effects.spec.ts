@@ -39,7 +39,8 @@ import {
 	coreInitialState,
 	coreStateSelector,
 	DisplayedOverlay,
-	ICase, MAP_SOURCE_PROVIDERS_CONFIG,
+	ICase,
+	MAP_SOURCE_PROVIDERS_CONFIG,
 	SetLayoutAction,
 	SetLayoutSuccessAction
 } from '@ansyn/core';
@@ -49,7 +50,8 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
-	RemovePendingOverlayAction, selectMapsList,
+	RemovePendingOverlayAction,
+	selectMapsList,
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
 import {
@@ -68,8 +70,12 @@ describe('OverlaysAppEffects', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 
 	let imageryCommunicatorServiceMock = {
-		provide: () => {
-		}
+		provide: () => ({
+			getPosition: () => of({}),
+			getMapSourceProvider: () => ({
+				getThumbnailUrl: () => of('this is a url')
+			})
+		})
 	};
 	const caseItem: ICase = {
 		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
@@ -118,7 +124,7 @@ describe('OverlaysAppEffects', () => {
 		'sourceType': 'FIRST',
 		'thumbnailUrl': 'http://first'
 	};
-	const secondOverlay = <any> {
+	const secondOverlay = <any>{
 		id: 'last',
 		'photoTime': new Date(),
 		'sourceType': 'LAST',
@@ -147,7 +153,7 @@ describe('OverlaysAppEffects', () => {
 
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
 
-	const mapState = { ...initialMapState, entities: { '1': {'id': '1'}, '2': { 'id': '2' } }, ids: ['1', '2'] };
+	const mapState = { ...initialMapState, entities: { '1': { 'id': '1' }, '2': { 'id': '2' } }, ids: ['1', '2'] };
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
@@ -335,9 +341,9 @@ describe('OverlaysAppEffects', () => {
 
 	it(`displayMultipleOverlays$ effect with overlays count larger than map count
 	should call SetPendingOverlaysAction and ChangeLayoutAction`, () => {
-		const ov1 = <any> { overlay: { id: 'one' }, extent: undefined },
-			ov2 = <any> { overlay: { id: 'two' }, extent: undefined },
-			ov3 = <any> { overlay: { id: 'three' }, extent: undefined };
+		const ov1 = <any>{ overlay: { id: 'one' }, extent: undefined },
+			ov2 = <any>{ overlay: { id: 'two' }, extent: undefined },
+			ov3 = <any>{ overlay: { id: 'three' }, extent: undefined };
 		const payload = [ov1, ov2, ov3];
 		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(payload) });
 		const expectedResults = cold('--(bc)--', {
@@ -349,23 +355,23 @@ describe('OverlaysAppEffects', () => {
 
 	it(`displayPendingOverlaysOnChangeLayoutSuccess$ effect with overlays
 	should call DisplayOverlayFromStoreAction`, () => {
-		const ov1 = <any> { id: 'first' }, ov2 = <any> { id: 'first' };
+		const ov1 = <any>{ id: 'first' }, ov2 = <any>{ id: 'first' };
 		mapState['pendingOverlays'] = [{ overlay: ov1 }, { overlay: ov2 }];
 		actions = hot('--a--', { a: new SetLayoutSuccessAction() });
 		const expectedResults = cold('--(bc)--', {
-			b: new DisplayOverlayAction({ overlay: <any> ov1, 'mapId': '1', extent: undefined }),
-			c: new DisplayOverlayAction({ overlay: <any> ov2, 'mapId': '2', extent: undefined })
+			b: new DisplayOverlayAction({ overlay: <any>ov1, 'mapId': '1', extent: undefined }),
+			c: new DisplayOverlayAction({ overlay: <any>ov2, 'mapId': '2', extent: undefined })
 		});
 		expect(overlaysAppEffects.displayPendingOverlaysOnChangeLayoutSuccess$).toBeObservable(expectedResults);
 	});
 
 	it(`removePendingOverlayOnDisplay$ effect with overlay
 	should call RemovePendingOverlayAction with that overlay`, () => {
-		const ov1 = <any> { id: 'first' }, ov2 = <any> { id: 'first' };
+		const ov1 = <any>{ id: 'first' }, ov2 = <any>{ id: 'first' };
 		mapState['pendingOverlays'] = [{ overlay: ov1 }, { overlay: ov2 }];
 		actions = hot('--a--', {
 			a: new DisplayOverlaySuccessAction({
-				overlay: <any> ov1,
+				overlay: <any>ov1,
 				mapId: mapState.activeMapId
 			})
 		});
@@ -387,7 +393,7 @@ describe('OverlaysAppEffects', () => {
 				})
 			});
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any> firstOverlay, mapId: '4444', extent: undefined })
+				b: new DisplayOverlayAction({ overlay: <any>firstOverlay, mapId: '4444', extent: undefined })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -404,7 +410,7 @@ describe('OverlaysAppEffects', () => {
 			});
 
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any> lastOverlay, mapId: 'activeMapId', extent: undefined })
+				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -413,7 +419,9 @@ describe('OverlaysAppEffects', () => {
 
 	describe('setHoveredOverlay$ effect', () => {
 		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
-			const expectedResults = cold('(b|)', { b: new SetHoveredOverlayAction({...overlaysState.overlays.get('first'), thumbnailName: undefined}) });
+			const expectedResults = cold('(b|)', {
+				b: new SetHoveredOverlayAction(overlaysState.overlays.get('first'))
+			});
 			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});
 	});

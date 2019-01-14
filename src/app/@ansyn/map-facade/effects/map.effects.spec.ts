@@ -12,6 +12,8 @@ import {
 	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
 	ImageryRemovedAction,
+	SetMapPositionByRadiusAction,
+	SetMapPositionByRectAction,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { ErrorHandlerService, ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
@@ -32,7 +34,7 @@ describe('MapEffects', () => {
 			],
 			providers: [
 				MapEffects,
-				{ provide: mapFacadeConfig, useValue: { } },
+				{ provide: mapFacadeConfig, useValue: {} },
 				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
 				MapFacadeService,
 				provideMockActions(() => actions),
@@ -107,7 +109,7 @@ describe('MapEffects', () => {
 					return of({});
 				}
 			};
-			const fakeMap: ICaseMapState = <any> { id: 'imagery2' };
+			const fakeMap: ICaseMapState = <any>{ id: 'imagery2' };
 			mapState.entities = { [fakeMap.id]: fakeMap };
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPosition').and.callFake(() => of(true));
@@ -119,5 +121,60 @@ describe('MapEffects', () => {
 			expect(mapEffects.setPosition).toHaveBeenCalled();
 		});
 	});
+
+	describe('setMapPositionByRect$', () => {
+		it('setMapPositionByRect$ should call communicator.setPositionByRect', () => {
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue({
+				setPositionByRect: () => of('345')
+			});
+			actions = hot('--a--', { a: new SetMapPositionByRectAction({ id: '234', rect: null }) });
+
+			const expectedResults = cold('--b--', {
+				b: '345'
+			});
+			expect(mapEffects.setMapPositionByRect$).toBeObservable(expectedResults);
+		});
+		it('setMapPositionByRect$ should work if there is no communicator', () => {
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(null);
+			actions = hot('--a--', { a: new SetMapPositionByRectAction({ id: '234', rect: null }) });
+
+			const expectedResults = cold('-----');
+			expect(mapEffects.setMapPositionByRect$).toBeObservable(expectedResults);
+		});
+	});
+
+	describe('setMapPositionByRadius$', () => {
+		it('setMapPositionByRadius$ should call communicator.setPositionByRect', () => {
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue({
+				setPositionByRadius: () => of('456')
+			});
+			actions = hot('--a--', {
+				a: new SetMapPositionByRadiusAction({
+					id: '234',
+					center: null,
+					radiusInMeters: 100
+				})
+			});
+
+			const expectedResults = cold('--b--', {
+				b: '456'
+			});
+			expect(mapEffects.setMapPositionByRadius$).toBeObservable(expectedResults);
+		});
+		it('setMapPositionByRadius$ should work if there is no communicator', () => {
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(null);
+			actions = hot('--a--', {
+				a: new SetMapPositionByRadiusAction({
+					id: '234',
+					center: null,
+					radiusInMeters: 100
+				})
+			});
+
+			const expectedResults = cold('-----');
+			expect(mapEffects.setMapPositionByRadius$).toBeObservable(expectedResults);
+		});
+	});
+
 });
 

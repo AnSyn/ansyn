@@ -1,5 +1,5 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
@@ -27,7 +27,8 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	DisplayedOverlay,
-	ICaseMapPosition, ICaseMapState,
+	ICaseMapPosition,
+	ICaseMapState,
 	IContextEntity,
 	IOverlay,
 	IOverlaySpecialObject,
@@ -49,13 +50,18 @@ import {
 	selectMapsList,
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
+import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
-	BaseMapSourceProvider,
-	CommunicatorEntity,
-	IBaseMapSourceProviderConstructor,
-	ImageryCommunicatorService
-} from '@ansyn/imagery';
-import { catchError, filter, map, mergeMap, share, withLatestFrom, pairwise, startWith, switchMap } from 'rxjs/operators';
+	catchError,
+	filter,
+	map,
+	mergeMap,
+	pairwise,
+	share,
+	startWith,
+	switchMap,
+	withLatestFrom
+} from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
 import olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
@@ -195,14 +201,17 @@ export class OverlaysAppEffects {
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 	);
-	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => [overlay, this.imageryCommunicatorService.provide(activeMapId)]);
+	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => {
+		const result = [overlay, this.imageryCommunicatorService.provide(activeMapId)];
+		return result;
+	});
 	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [IOverlay, CommunicatorEntity]) => {
 		if (!communicator) {
 			return of([overlay, null]);
 		}
-		return communicator.getPosition().pipe(map((position) => [overlay, position]));
+		return communicator.getPosition().pipe(map((position) => [overlay, position, communicator]));
 	});
-	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ICaseMapPosition]) => {
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position, communicator]: [IOverlay, ICaseMapPosition, CommunicatorEntity]) => {
 		if (!overlay) {
 			return [overlay];
 		}
@@ -210,15 +219,24 @@ export class OverlaysAppEffects {
 			...overlay,
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
-		const sourceProvider = this.getSourceProvider(overlay.sourceType);
+		const sourceProvider = communicator.getMapSourceProvider({
+			mapType: communicator.activeMapName,
+			sourceType: overlay.sourceType
+		});
 		return sourceProvider.getThumbnailUrl(overlay, position).pipe(
-			map(thumbnailUrl => ({ ...overlay, thumbnailUrl, thumbnailName: sourceProvider.getThumbnailName(overlay) })),
+			map(thumbnailUrl => ({
+				...overlay,
+				thumbnailUrl,
+				thumbnailName: sourceProvider.getThumbnailName(overlay)
+			})),
 			catchError(() => {
 				return of(overlay);
 			})
 		);
 	});
-	private getHoveredOverlayAction = map((overlay: IOverlay) => new SetHoveredOverlayAction(overlay));
+	private getHoveredOverlayAction = map((overlay: IOverlay) => {
+		return new SetHoveredOverlayAction(overlay)
+	});
 
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
@@ -258,12 +276,8 @@ export class OverlaysAppEffects {
 	@Effect()
 	activeMapLeave$ = this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
-		map(() =>  new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] }}))
+		map(() => new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }))
 	);
-
-	getSourceProvider(sType): BaseMapSourceProvider {
-		return this.baseSourceProviders.find(({ sourceType }) => sType === sourceType);
-	}
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {
 		const isEquel = !isEqual(prevAction, currentAction);
@@ -273,7 +287,6 @@ export class OverlaysAppEffects {
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
-				@Inject(BaseMapSourceProvider) public baseSourceProviders: BaseMapSourceProvider[],
 				public imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 

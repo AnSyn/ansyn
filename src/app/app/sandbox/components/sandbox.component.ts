@@ -4,7 +4,7 @@ import { Point, Polygon } from 'geojson';
 import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
 import { OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/plugins';
 import * as momentNs from 'moment';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 
 const moment = momentNs;
 
@@ -102,26 +102,15 @@ export class SandboxComponent implements OnInit {
 		this.ansynApi.setOverlaysCriteria(criteria);
 	}
 
-	displayOverlay() {
-		this.ansynApi.displayOverLay(this.overlays[0]);
-	}
-
 	displayOverlaysOnTwoMaps() {
 		this.ansynApi.changeMapLayout('layout2').pipe(
 			tap(() => {
+				this.ansynApi.setOverlays(this.overlays);
 				this.ansynApi.displayOverlayOnMap(this.overlays[0], 0);
 				this.ansynApi.displayOverlayOnMap(this.overlays[1], 1);
-			})
+			}),
+			take(1)
 		).subscribe();
-		// Todo: unsubscribe on destroy
-	}
-
-	setOverlays() {
-		this.ansynApi.setOverlays(this.overlays);
-	}
-
-	setLayout2maps() {
-		this.ansynApi.changeMapLayout('layout2');
 	}
 
 }

@@ -102,6 +102,10 @@ export class SandboxComponent implements OnInit {
 		this.ansynApi.setOverlaysCriteria(criteria);
 	}
 
+	displayOverlay() {
+		this.ansynApi.displayOverLay(this.overlays[0]);
+	}
+
 	displayOverlaysOnTwoMaps() {
 		this.ansynApi.changeMapLayout('layout2').pipe(
 			tap(() => {
@@ -111,6 +115,14 @@ export class SandboxComponent implements OnInit {
 			}),
 			take(1)
 		).subscribe();
+	}
+
+	setOverlays() {
+		this.ansynApi.setOverlays(this.overlays);
+	}
+
+	setLayout2maps() {
+		this.ansynApi.changeMapLayout('layout2');
 	}
 
 }

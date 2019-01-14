@@ -15,8 +15,10 @@ const moment = momentNs;
 })
 export class SandboxComponent implements OnInit {
 	overlays = [
+		this.overlay('000', 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', 576, 1024),
 		this.overlay('111', 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
-		this.overlay('222', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968)
+		this.overlay('222', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968),
+		this.overlay('333', 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', 1600, 1500)
 	];
 
 	overlay(id: string, imageUrl: string, imageWidth: number, imageHeight: number): IOverlay {
@@ -110,8 +112,8 @@ export class SandboxComponent implements OnInit {
 		this.ansynApi.changeMapLayout('layout2').pipe(
 			tap(() => {
 				this.ansynApi.setOverlays(this.overlays);
-				this.ansynApi.displayOverlayOnMap(this.overlays[0], 0);
-				this.ansynApi.displayOverlayOnMap(this.overlays[1], 1);
+				this.ansynApi.displayOverlayOnMap(this.overlays[1], 0);
+				this.ansynApi.displayOverlayOnMap(this.overlays[2], 1);
 			}),
 			take(1)
 		).subscribe();

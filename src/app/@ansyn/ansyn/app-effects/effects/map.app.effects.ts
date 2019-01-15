@@ -79,13 +79,6 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	onDisplayOverlaySwitchMapWithAbort$ = this.onDisplayOverlaySwitchMap$
-		.pipe(
-			filter((data) => this.shouldAbortDisplay(data)),
-			switchMap(this.onDisplayOverlay.bind(this))
-		);
-
-	@Effect()
 	onDisplayOverlaySwitchMapWithDebounce$ = this.onDisplayOverlaySwitchMap$
 		.pipe(
 			debounceTime(this.config.displayDebounceTime),
@@ -239,28 +232,6 @@ export class MapAppEffects {
 				return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
 			})
 		);
-
-	displayedItems = new Map<string, Date>();
-
-	shouldAbortDisplay([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
-		const currentTime = new Date();
-
-		// remove prev layers
-		const mapIdsToDelete = [];
-		this.displayedItems.forEach((value: Date, key: string) => {
-			const isTimePassed = (currentTime.getTime() - (this.displayedItems.get(action.payload.mapId) || currentTime).getTime()) > this.config.displayDebounceTime;
-			if (isTimePassed) {
-				mapIdsToDelete.push(key);
-			}
-		});
-		for (let i = 0; i < mapIdsToDelete.length; i++) {
-			this.displayedItems.delete(mapIdsToDelete[i]);
-		}
-
-		let result = !this.displayedItems.has(action.payload.mapId);
-		this.displayedItems.set(action.payload.mapId, currentTime);
-		return result;
-	}
 
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay } = payload;

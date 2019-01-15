@@ -4,6 +4,7 @@ import { Point, Polygon } from 'geojson';
 import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
 import { OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/plugins';
 import * as momentNs from 'moment';
+import { take, tap } from 'rxjs/operators';
 
 const moment = momentNs;
 
@@ -13,7 +14,14 @@ const moment = momentNs;
 	styleUrls: ['./sandbox.component.less']
 })
 export class SandboxComponent implements OnInit {
-	overlay = (id: string, imageUrl: string, imageWidth: number, imageHeight: number): IOverlay => {
+	overlays = [
+		this.overlay('000', 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', 576, 1024),
+		this.overlay('111', 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
+		this.overlay('222', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968),
+		this.overlay('333', 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', 1600, 1500)
+	];
+
+	overlay(id: string, imageUrl: string, imageWidth: number, imageHeight: number): IOverlay {
 		const days = 10 * Math.random();
 		const date = moment().subtract(days, 'day').toDate();
 		const left = -117.94,
@@ -54,7 +62,7 @@ export class SandboxComponent implements OnInit {
 			bestResolution: 1,
 			cloudCoverage: 1
 		}
-	};
+	}
 
 	constructor(protected ansynApi: AnsynApi) {
 	}
@@ -97,15 +105,22 @@ export class SandboxComponent implements OnInit {
 	}
 
 	displayOverlay() {
-		this.ansynApi.displayOverLay(this.overlay('111', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968));
+		this.ansynApi.displayOverLay(this.overlays[0]);
+	}
+
+	displayOverlaysOnTwoMaps() {
+		this.ansynApi.changeMapLayout('layout2').pipe(
+			tap(() => {
+				this.ansynApi.setOverlays(this.overlays);
+				this.ansynApi.displayOverLay(this.overlays[1], 0);
+				this.ansynApi.displayOverLay(this.overlays[2], 1);
+			}),
+			take(1)
+		).subscribe();
 	}
 
 	setOverlays() {
-		const overlays = [
-			this.overlay('111', 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
-			this.overlay('222', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968)
-		];
-		this.ansynApi.setOverlays(overlays);
+		this.ansynApi.setOverlays(this.overlays);
 	}
 
 	setLayout2maps() {

@@ -76,7 +76,7 @@ export function UploadsReducer(state: IUploadsState = initialUploadsState, actio
 		}
 		case UploadsActionTypes.clearUploadList:
 			const list = [...state.uploadList];
-			const uploadList = list.filter(file => file.response === undefined);
+			const uploadList = list.filter(file => file.percent < 100 && file.percent > -1);
 			return { ...state, uploadList };
 		case UploadsActionTypes.resetFormData:
 			return { ...state, formData: { ...initialUploadsFromData } };

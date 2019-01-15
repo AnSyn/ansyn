@@ -90,8 +90,7 @@ export class AnsynApi {
 	);
 
 	onSetLayoutSuccess$: Observable<any> = this.actions$.pipe(
-		ofType(CoreActionTypes.SET_LAYOUT_SUCCESS),
-		tap(() => console.log(1))
+		ofType(CoreActionTypes.SET_LAYOUT_SUCCESS)
 	);
 
 	getActiveCenter$: Observable<any> = this.actions$.pipe(
@@ -120,15 +119,16 @@ export class AnsynApi {
 		this.store.dispatch(new ShadowMouseProducer({ point: { coordinates, type: 'point' }, outsideSource: true }));
 	}
 
-	displayOverLay(overlay: IOverlay): void {
-		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
-	}
+	// displayOverLay(overlay: IOverlay): void {
+	// 	this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.activeMapId, forceFirstDisplay: true }));
+	// }
 
-	displayOverlayOnMap(overlay: IOverlay, mapNo: number): void {
-		if (mapNo > this.mapsList.length - 1) {
-			return
+	displayOverLay(overlay: IOverlay, mapNumber: number = -1): void {
+		let mapId = this.activeMapId;
+		if (mapNumber >= 0 && mapNumber < this.mapsList.length) {
+			mapId = this.mapsList[mapNumber].id;
 		}
-		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: this.mapsList[mapNo].id, forceFirstDisplay: true }));
+		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: mapId, forceFirstDisplay: true }));
 	}
 
 	setAnnotations(featureCollection: FeatureCollection<any>): void {

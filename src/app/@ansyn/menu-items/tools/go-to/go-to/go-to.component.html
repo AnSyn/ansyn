@@ -15,6 +15,7 @@
 		<ansyn-utm
 			*ngSwitchCase="'utm'"
 			name="to"
+			[notification]="notification"
 			[(ngModel)]="inputs.from"
 			(ngModelChange)="convert($event, from, to, 'to')"
 			(copyToClipBoardHandler)="copyToClipBoard($event)"
@@ -28,6 +29,7 @@
 		<ansyn-utm
 			*ngSwitchCase="'utm'"
 			name="to"
+			[notification]="notification"
 			[(ngModel)]="inputs.to"
 			(ngModelChange)="convert($event, to, from, 'from')"
 			(copyToClipBoardHandler)="copyToClipBoard($event)"

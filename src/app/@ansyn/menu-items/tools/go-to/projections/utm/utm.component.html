@@ -1,4 +1,7 @@
-<label class="goto-projection-title">UTM ED50</label>
+<div class="goto-projection-title">
+	<span>UTM ED50</span>
+	<span *ngIf="notification" class="ed50-notification">{{notification}}</span>
+</div>
 
 <div class="inputs">
 	<ng-template [ngIf]="coordinates">

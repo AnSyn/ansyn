@@ -11,6 +11,7 @@ export interface IToolsConfig {
 	Proj4: {
 		ed50: string;
 		ed50Customized: string;
+		ed50Notification: string;
 	},
 	ImageProcParams: Array<IImageProcParam>
 }

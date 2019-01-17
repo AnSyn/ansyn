@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import {
 	AbstractControl,
 	ControlValueAccessor,
@@ -30,6 +30,7 @@ import { ProjectionConverterService } from '../../../services/projection-convert
 
 export class UtmComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
+	@Input() notification = "";
 
 	coordinates: number[] = [0, 0, 0];
 	validationErr: ValidationErrors = null;

@@ -19,9 +19,7 @@ import { Attribute } from '@angular/core';
 export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	@Input() label: string;
 	@Input() required = true;
-	@Input() name;
 	@Input() autocomplete: 'off' | 'on' = 'off';
-	@Input() id = UUID.UUID();
 	@Input()
 	@HostBinding('class.white') white: boolean;
 

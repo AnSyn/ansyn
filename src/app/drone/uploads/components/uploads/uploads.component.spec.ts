@@ -15,6 +15,7 @@ import { UploadItemComponent } from '../upload-item/upload-item.component';
 import { MultipleOverlaysSource } from '@ansyn/overlays';
 import { TBOverlaySourceType } from '../../../overlay-source-provider/tb-source-provider';
 import { UploadFileService } from '../../services/upload-file.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const FakeMultipleOverlaysSource = {
 	[TBOverlaySourceType]: {
@@ -34,7 +35,7 @@ describe('UploadsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [AnsynFormsModule, FormsModule, HttpClientModule, StoreModule.forRoot({})],
+			imports: [AnsynFormsModule, FormsModule, BrowserAnimationsModule, HttpClientModule, StoreModule.forRoot({})],
 			declarations: [
 				UploadsComponent,
 				AnsynLoaderComponentMock,

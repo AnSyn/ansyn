@@ -18,6 +18,7 @@ import { TasksRemoteService } from '../../services/tasks-remote.service';
 import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -35,6 +36,7 @@ describe('TasksFormComponent', () => {
 			imports: [
 				FormsModule,
 				AnsynFormsModule,
+				BrowserAnimationsModule,
 				TranslateModule.forRoot(),
 				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer, [coreFeatureKey]: CoreReducer }),
 				EffectsModule.forRoot([])

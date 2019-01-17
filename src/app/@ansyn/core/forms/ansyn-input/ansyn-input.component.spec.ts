@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnsynInputComponent } from './ansyn-input.component';
 import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AnsynInputComponent', () => {
 	let component: AnsynInputComponent;
@@ -9,7 +11,7 @@ describe('AnsynInputComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule],
+			imports: [FormsModule, MatInputModule, BrowserAnimationsModule],
 			declarations: [AnsynInputComponent]
 		})
 			.compileComponents();

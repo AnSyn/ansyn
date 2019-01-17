@@ -55,6 +55,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
 		this.mainLayer = layer;
+		this.mainLayer.set('name', 'main');
 		this.mapObject.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {

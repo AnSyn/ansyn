@@ -228,8 +228,8 @@ export class MapAppEffects {
 			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
 			map(([action, mapState]: [Action, IMapState]) => {
 				const activeMapState = MapFacadeService.activeMap(mapState);
-				const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
-				return new SetMapGeoEnabledModeToolsActionStore(isGeoRegistered);
+				const isGeoRegistered = activeMapState && MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
+				return new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered);
 			})
 		);
 

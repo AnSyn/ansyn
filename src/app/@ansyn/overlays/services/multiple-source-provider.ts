@@ -13,7 +13,7 @@ import {
 	IOverlay,
 	IOverlaysFetchData,
 	mergeArrays,
-	mergeLimitedArrays, sortByDateDesc
+	mergeLimitedArrays, MultipleOverlaysSourceConfig, sortByDateDesc
 } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
@@ -40,8 +40,6 @@ export interface IMultipleOverlaysSourceConfig {
 
 	[key: string]: IOverlaysSourceProvider;
 }
-
-export const MultipleOverlaysSourceConfig = 'multipleOverlaysSourceConfig';
 
 @Injectable({
 	providedIn: 'root'

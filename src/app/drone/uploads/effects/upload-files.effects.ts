@@ -14,6 +14,7 @@ import {
 	MoveToUploadOverlay,
 	RequestUploadFiles,
 	RequestUploadFileSuccess,
+	ResetFormData,
 	UpdateUploadFilePercent,
 	UploadsActionTypes
 } from '../actions/uploads.actions';
@@ -44,8 +45,12 @@ export class UploadFilesEffects {
 						index: index + uploadListLength
 					};
 				});
-				return new AddRequestToFileList(newFiles);
-			})
+				return newFiles;
+			}),
+			concatMap((files) => [
+				new AddRequestToFileList(files),
+				new ResetFormData()
+			])
 		);
 
 	@Effect({ dispatch: false })

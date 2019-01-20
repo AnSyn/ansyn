@@ -1,3 +1,10 @@
+export {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig,
+	IDateRange,
+	IFiltersList,
+	IOverlaysSourceProvider
+} from './models/multiple-overlays-source-config';
 export { ChangeImageryMap } from './actions/core.actions';
 export { FileInputComponent } from './forms/file-input/file-input.component';
 export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';

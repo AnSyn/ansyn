@@ -1,15 +1,14 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import {
-	IDataInputFilterValue,
+	IDataInputFilterValue, IOverlaysSourceProvider,
 	selectDataInputFilter,
 	SetOverlaysCriteriaAction,
-	SetToastMessageAction
+	SetToastMessageAction,
+	MultipleOverlaysSourceConfig, IMultipleOverlaysSourceConfig
 } from '@ansyn/core';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
-import { IDataInputItem, IStatusBarConfig } from '../../models/statusBar-config.model';
-import { StatusBarConfig } from '../../models/statusBar.config';
 import { isEqual } from 'lodash';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -50,7 +49,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	private subscribers = [];
 	public dataInputFiltersActive: boolean;
 
-	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				public store: Store<IStatusBarState>,
 				private translate: TranslateService) {
 
@@ -68,10 +67,10 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	get dataFilters(): TreeviewItem[] {
 		this.leavesCount = 0;
-		return Object.entries(this.statusBarConfig.dataInputFiltersConfig)
-			.filter(([providerName, { inActive }]: [string, IDataInputItem]) => !inActive)
-			.map(([providerName, { treeViewItem }]: [string, IDataInputItem]) => {
-					this.visitLeafes(treeViewItem, (leaf) => {
+		return Object.entries(this.multipleOverlaysSourceConfig)
+			.filter(([providerName, { inActive, dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => !inActive && dataInputFiltersConfig)
+			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
+					this.visitLeafes(dataInputFiltersConfig, (leaf) => {
 						this.leavesCount++;
 						leaf.value.providerName = providerName;
 						if (leaf.text) {
@@ -80,7 +79,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 							});
 						}
 					});
-					return treeViewItem;
+					return dataInputFiltersConfig;
 				}
 			);
 	}

@@ -1,10 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
 import {
-	MultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceProvider
 } from './multiple-source-provider';
 
-import { IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { IOverlay, IOverlaysFetchData, LoggerService, MultipleOverlaysSourceConfig } from '@ansyn/core';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';

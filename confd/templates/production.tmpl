@@ -974,7 +974,62 @@
           ]
         }
       ],
-      "blacklist": []
+      "blacklist": [],
+      "dataInputFiltersConfig": {
+		"text": "Planet",
+		"value": 1,
+			"collapsed": true,
+			"children": [
+			  {
+				"text": "REScene",
+				"value": {
+				  "sensorType": "REScene"
+				}
+			  },
+			  {
+				"text": "PSScene3Band",
+				"value": {
+				  "sensorType": "PSScene3Band"
+				}
+			  },
+			  {
+				"text": "PSOrthoTile",
+				"value": {
+				  "sensorType": "PSOrthoTile"
+				}
+			  },
+			  {
+				"text": "REOrthoTile",
+				"value": {
+				  "sensorType": "REOrthoTile"
+				}
+			  },
+			  {
+				"text": "SkySatScene",
+				"value": {
+				  "sensorType": "SkySatScene"
+				}
+			  },
+			  {
+				"text": "Landsat8L1G",
+				"value": {
+				  "sensorType": "Landsat8L1G"
+				}
+			  },
+			  {
+				"text": "Sentinel2L1C",
+				"value": {
+				  "sensorType": "Sentinel2L1C"
+				}
+			  },
+			  {
+				  "text": "Others",
+				  "value": {
+					"sensorType": "others"
+				  }
+				}
+			]
+		}
     },
     "OPEN_AERIAL": {
     	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
@@ -1016,7 +1071,21 @@
 				]
 			}
 		],
-		"blacklist": []
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			"text": "OpenAerial",
+			"value": 1,
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
+		  }
 	},
     "IMISIGHT": {
     	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
@@ -1058,7 +1127,20 @@
 				]
 			}
 		],
-		"blacklist": []
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			  "text":"Imisight",
+			  "value": 1,
+			  "collapsed": true,
+			  "children": [
+				 {
+					"text": "All",
+					"value": {
+					  "sensorType": "All"
+					}
+				  }
+				]
+			  }
 	}
   },
   "idahoOverlaysSourceConfig": {

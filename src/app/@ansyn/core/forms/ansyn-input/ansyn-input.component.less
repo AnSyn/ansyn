@@ -1,94 +1,45 @@
 @import "core/less/common";
 
 :host {
-	display: block;
-	position: relative;
 
 	&.white {
 		@white-inactive: rgba(255, 255, 255, 0.8);
-
-		input {
-			color: white;
-			border-color: @white-inactive;;
-			&:focus {
-				border-color: white;
-			}
-			&:focus ~ label {
+		.mat-form-field {
+			input {
+				caret-color: white;
 				color: white;
 			}
-		}
-		span {
-			&:before, &:after {
-				background: white;
+			/deep/ .mat-form-field-label {
+				color: @white-inactive !important;
+			}
+
+			/deep/ .mat-form-field-underline {
+				background-color: @white-inactive !important;
+			}
+
+			/deep/ .mat-focused .mat-form-field-label {
+				color: white !important;
+			}
+
+			/deep/ .mat-form-field-ripple {
+				background-color: white !important;
 			}
 		}
-		label {
-			font-size: 12px;
-			font-weight: 300;
-			color: @white-inactive;
-		}
 
 	}
+	/deep/ .mat-focused .mat-form-field-label {
+		color: @application-main-color !important;
+	}
 
+	/deep/ .mat-form-field-ripple {
+		background-color: @application-main-color !important;
+	}
 
-	input {
-		font-size: 11px;
-		padding: 10px 0;
-		display: block;
+	mat-form-field {
 		width: 100%;
-		border: none;
-		border-bottom: 1px solid #999;
-		color: #999;
-		background: transparent;
-		font-weight: 300;
-		&:focus {
-			outline: none;
-			border-color: @application-main-color;
-			~ span:before, ~ span:after {
-				width: 50%;
-				height: 2px;
-			}
-		}
-		&:focus ~ label, &[ng-reflect-model]:not([ng-reflect-model=""]) ~ label {
-			top: -10px;
-			font-size: 11px;
-			font-weight: 500;
-		}
-		&:focus ~ label {
-			color: @application-main-color;
-		}
 
-	}
-
-	label {
-		color: #999;
-		font-weight: normal;
-		position: absolute;
-		pointer-events: none;
-		left: 0;
-		top: 11px;
-		transition: 0.2s ease all;
-		font-size: 11px;
-	}
-
-	span {
-		position: relative;
-		display: block;
-		width: 100%;
-		&:before, &:after {
-			content: '';
-			height: 1px;
-			width: 0;
-			bottom: 1px;
-			position: absolute;
-			background: @application-main-color;
-			transition: 0.2s ease all;
-		}
-		&:before {
-			left: 50%;
-		}
-		&:after {
-			right: 50%;
+		input {
+			color: #999;
 		}
 	}
 }

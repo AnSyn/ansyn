@@ -146,9 +146,6 @@
 	}
   },
   "mapSourceProvidersConfig": {
-    "TB": {
-    	"baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
-    },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
     	"styles": [ "AerialWithLabels" ]
@@ -278,7 +275,100 @@
       "reset": "Reset timeline (according to the time filter)",
       "enlarge": "Expand timeline",
       "quickloop": "Next overlay from the quick loop (key: Q)"
-    }
+    },
+    "dataInputFiltersConfig": {
+      "IMISIGHT": {
+        "inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+      	"treeViewItem": {
+		  "text":"Imisight",
+		  "value": 1,
+		  "collapsed": true,
+		  "children": [
+			 {
+				"text": "All",
+				"value": {
+				  "sensorType": "All"
+				}
+			  }
+			]
+		  }
+	  },
+      "PLANET": {
+        "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
+        "treeViewItem": {
+			"text": "Planet",
+			"value": 1,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "REScene",
+					"value": {
+					  "sensorType": "REScene"
+					}
+				  },
+				  {
+					"text": "PSScene3Band",
+					"value": {
+					  "sensorType": "PSScene3Band"
+					}
+				  },
+				  {
+					"text": "PSOrthoTile",
+					"value": {
+					  "sensorType": "PSOrthoTile"
+					}
+				  },
+				  {
+					"text": "REOrthoTile",
+					"value": {
+					  "sensorType": "REOrthoTile"
+					}
+				  },
+				  {
+					"text": "SkySatScene",
+					"value": {
+					  "sensorType": "SkySatScene"
+					}
+				  },
+				  {
+					"text": "Landsat8L1G",
+					"value": {
+					  "sensorType": "Landsat8L1G"
+					}
+				  },
+				  {
+					"text": "Sentinel2L1C",
+					"value": {
+					  "sensorType": "Sentinel2L1C"
+					}
+				  },
+				  {
+					  "text": "Others",
+					  "value": {
+						"sensorType": "others"
+					  }
+					}
+				]
+          }
+        },
+        "OPEN_AERIAL": {
+          "inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
+          "treeViewItem": {
+            "text": "OpenAerial",
+            "value": 1,
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
+          }
+        }
+      }
   },
   "coreConfig": {
 	"welcomeNotification": {
@@ -1106,13 +1196,5 @@
 			"regionLengthInMeters": 100
 		}
 	}
-  },
-  "uploadsConfig": {
-      "apiUrl": "http://tb-server.webiks.com/v1/api/ansyn/upload",
-      "sensorTypes": [  "Drone Imagery (JPG)", "Drone Map (GeoTIFF)", "Satellite GeoTIFF" ],
-      "sensorNames": [ "Phantom 3", "Phantom 4", "Phantom 4 Advanced", "Phantom 4 Pro", "Mavic", "Mavic Pro", "Mavic 2", "Spark", "Inspire" ],
-      "defaultSharing": "public",
-      "defaultSensorType": "Drone Imagery (JPG)",
-      "rulesLink": "about:blank"
-   }
+  }
 }

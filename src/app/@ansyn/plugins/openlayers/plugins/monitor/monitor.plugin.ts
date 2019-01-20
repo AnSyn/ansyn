@@ -3,18 +3,21 @@ import { Store } from '@ngrx/store';
 import TileSource from 'ol/source/tile';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
+import Static from 'ol/source/imagestatic';
 import { SetProgressBarAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { tap } from 'rxjs/operators';
+import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
+import { Image } from 'openlayers';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	deps: [Store]
+	deps: [Store, HttpClient]
 })
 export class MonitorPlugin extends BaseImageryPlugin {
-	source: TileSource;
+	source: TileSource | Static | any;
 
 	isFirstLoad: boolean;
 
@@ -30,7 +33,8 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		one: 'Failed to load a tile'
 	};
 
-	constructor(protected store$: Store<any>) {
+	constructor(protected store$: Store<any>,
+				protected http: HttpClient) {
 		super();
 	}
 
@@ -43,7 +47,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 			.pipe(tap(this.monitorSource.bind(this)));
 	}
 
-	getMainSource(): TileSource {
+	getMainSource(): TileSource | Static | any {
 		const layer = this.communicator.ActiveMap.mapObject.getLayers()
 			.getArray().find(layer => layer.get('name') === 'main');
 
@@ -54,10 +58,12 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		let source = layer.getSource();
 
 		if (source instanceof ProjectableRaster) {
-			return <TileSource> (<ProjectableRaster>source).sources[0];
+			return <TileSource>(<ProjectableRaster>source).sources[0];
 		}
-
-		return <TileSource> source;
+		if (source instanceof Static) {
+			return <Static>source;
+		}
+		return <TileSource>source;
 	}
 
 	monitorSource() {
@@ -110,6 +116,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		this.resetCounterWhenDone();
 	}
 
+
 	initMonitor() {
 		this.source = this.getMainSource();
 		this.isFirstLoad = true;
@@ -119,22 +126,67 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	setMonitorEvents() {
 		if (this.source) {
-			this.source.on('tileloadstart', this.tileLoadStart, this);
-			this.source.on('tileloadend', this.tileLoadEnd, this);
-			this.source.on('tileloaderror', this.tileLoadError, this);
+			switch (this.source.constructor) {
+				case TileSource: {
+					this.source.on('tileloadstart', this.tileLoadStart, this);
+					this.source.on('tileloadend', this.tileLoadEnd, this);
+					this.source.on('tileloaderror', this.tileLoadError, this);
+					break;
+				}
+				case Static: {
+					const image = this.source.image_.image_;
+					const src = this.source.image_.src_;
+					this.staticImageLoad(image, src);
+				}
+			}
 		}
 	}
 
 	killMonitorEvents() {
 		if (this.source) {
-			this.source.un('tileloadstart', this.tileLoadStart, this);
-			this.source.un('tileloadend', this.tileLoadEnd, this);
-			this.source.un('tileloaderror', this.tileLoadError, this);
+			switch (this.source.constructor) {
+				case TileSource: {
+					this.source.un('tileloadstart', this.tileLoadStart, this);
+					this.source.un('tileloadend', this.tileLoadEnd, this);
+					this.source.un('tileloaderror', this.tileLoadError, this);
+					break;
+				}
+			}
 		}
 	}
 
 	dispose() {
 		this.killMonitorEvents();
 		super.dispose();
+	}
+
+	staticImageLoad = (image: ol.Image, url) => {
+		this.http.request<Blob>(new HttpRequest(
+			'GET',
+			url,
+			{
+				reportProgress: true,
+				responseType: 'blob'
+			}
+			)
+		).subscribe(event => {
+			switch (event.type) {
+				case HttpEventType.DownloadProgress:
+				case HttpEventType.UploadProgress: {
+					this.tilesCounter.total = event.total;
+					this.tilesCounter.success = event.loaded;
+					this.resetCounterWhenDone();
+					break;
+				}
+				case HttpEventType.Response: {
+					let reader = new FileReader();
+					reader.readAsDataURL(event.body);
+					reader.onloadend = () => {
+						(<any>image).src =  reader.result;
+					};
+					break;
+				}
+			}
+		})
 	}
 }

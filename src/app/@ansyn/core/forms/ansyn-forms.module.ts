@@ -10,11 +10,13 @@ import { ComboBoxOptionComponent } from './combo-box-option/combo-box-option.com
 import { ComboBoxComponent } from './combo-box/combo-box.component';
 import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.component';
 import { FileInputComponent } from './file-input/file-input.component';
-import { ColorPickerComponent } from "./color-picker/color-picker.component";
+import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { MatInputModule } from '@angular/material';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		MatInputModule,
 		FormsModule
 	],
 	declarations: [

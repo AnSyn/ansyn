@@ -9,53 +9,53 @@
       "autoSave": false,
       "state": {
         "timeFilter": "Start - End",
-        "orientation": "Imagery Perspective",
+        "orientation": "Align North",
         "maps": {
           "layout": "layout1",
           "data": [
             {
               "data": {
                 "position": {
-				  "extentPolygon": {
-					"type": "Polygon",
-					"coordinates": [
-					  [
-						[
-						  30.228881835937493,
-						  33.79284377363183
-						],
-						[
-						  40.28137207031249,
-						  33.79284377363183
-						],
-						[
-						  40.28137207031249,
-						  29.93113480986871
-						],
-						[
-						  30.228881835937493,
-						  29.93113480986871
-						],
-						[
-						  30.228881835937493,
-						  33.79284377363183
-						]
-					  ]
-					]
-				  },
-				  "projectedState": {
-					"center": [
-					  3924635.821280659,
-					  3747762.3000904336
-					],
-					"projection": {
-					  "code": "EPSG:3857"
-					},
-					"resolution": 611.49622628141,
-					"rotation": 0,
-					"zoom": 8
-				  }
-				}
+                  "extentPolygon": {
+                    "type": "Polygon",
+                    "coordinates": [
+                      [
+                        [
+                          -117.94293165339445,
+                          33.82040324951603
+                        ],
+                        [
+                          -117.88739896579649,
+                          33.82040324951603
+                        ],
+                        [
+                          -117.88739896579649,
+                          33.80000526593916
+                        ],
+                        [
+                          -117.94293165339445,
+                          33.80000526593916
+                        ],
+                        [
+                          -117.94293165339445,
+                          33.82040324951603
+                        ]
+                      ]
+                    ]
+                  },
+                  "projectedState": {
+                    "center": [
+                      -13126256.030144267,
+                      4003347.018056854
+                    ],
+                    "projection": {
+                      "code": "EPSG:3857"
+                    },
+                    "resolution": 3.3780713146372543,
+                    "rotation": 0,
+                    "zoom": 15.5
+                  }
+                }
               },
               "flags": {},
               "worldView": {
@@ -74,58 +74,16 @@
         "removedOverlaysIds": [],
         "removedOverlaysVisibility": true,
         "region": {
-		  "type": "Polygon",
-		  "coordinates": [
-			  [
-				  [
-					  35.040894,
-					  33.050112
-				  ],
-				  [
-					  35.738525,
-					  33.128351
-				  ],
-				  [
-					  34.969482,
-					  29.53045
-				  ],
-				  [
-					  34.222412,
-					  31.438037
-				  ],
-				  [
-					  35.040894,
-					  33.050112
-				  ]
-			  ]
-		  ]
-	  },
+          "type": "Point",
+          "coordinates": [
+                -117.9189835710201,
+                33.812091224680195
+          ]
+        },
         "dataInputFilters": {
-		  "fullyChecked": false,
-		  "filters": [
-			{
-			  "sensorType": "Drone Imagery (JPG)",
-			  "providerName": "TB"
-			},
-			{
-			  "sensorType": "Mobile Imagery (JPG)",
-			  "providerName": "TB"
-			},
-			{
-			  "sensorType": "Drone Map (GeoTIFF)",
-			  "providerName": "TB"
-			},
-			{
-			  "sensorType": "Satellite GeoTIFF",
-			  "providerName": "TB"
-			},
-			{
-			  "sensorType": "others",
-			  "providerName": "TB"
-			}
-		  ],
-		  "active": true
-		},
+          "filters": [],
+          "active": false
+        },
         "time": null,
         "facets": {
           "showOnlyFavorites": false,
@@ -134,7 +92,7 @@
               "fieldName": "isGeoRegistered",
               "metadata": {
                 "displayTrue": true,
-                "displayFalse": true
+                "displayFalse": false
               },
               "type": "Boolean"
             }
@@ -188,9 +146,6 @@
 	}
   },
   "mapSourceProvidersConfig": {
-    "TB": {
-    	"baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
-    },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
     	"styles": [ "AerialWithLabels" ]
@@ -336,46 +291,6 @@
 				}
 			  }
 			]
-		  }
-	  },
-	  "TB": {
-		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "false" }},
-		  "treeViewItem": {
-			  "text":"TB",
-			  "value": 1,
-				  "collapsed": true,
-				  "children": [
-				  	{
-					  "text": "Drone Imagery (JPG)",
-					  "value": {
-						"sensorType": "Drone Imagery (JPG)"
-					  }
-					},
-					{
-					  "text": "Mobile Imagery (JPG)",
-					  "value": {
-						"sensorType": "Mobile Imagery (JPG)"
-					  }
-					},
-					{
-					  "text": "Drone Map (GeoTIFF)",
-					  "value": {
-						"sensorType": "Drone Map (GeoTIFF)"
-					  }
-					},
-					{
-					  "text": "Satellite GeoTIFF",
-					  "value": {
-						"sensorType": "Satellite GeoTIFF"
-					  }
-					},
-					{
-					  "text": "Others",
-					  "value": {
-						"sensorType": "others"
-					  }
-					}
-				  ]
 		  }
 	  },
       "PLANET": {
@@ -1059,7 +974,62 @@
           ]
         }
       ],
-      "blacklist": []
+      "blacklist": [],
+      "dataInputFiltersConfig": {
+		"text": "Planet",
+		"value": 1,
+			"collapsed": true,
+			"children": [
+			  {
+				"text": "REScene",
+				"value": {
+				  "sensorType": "REScene"
+				}
+			  },
+			  {
+				"text": "PSScene3Band",
+				"value": {
+				  "sensorType": "PSScene3Band"
+				}
+			  },
+			  {
+				"text": "PSOrthoTile",
+				"value": {
+				  "sensorType": "PSOrthoTile"
+				}
+			  },
+			  {
+				"text": "REOrthoTile",
+				"value": {
+				  "sensorType": "REOrthoTile"
+				}
+			  },
+			  {
+				"text": "SkySatScene",
+				"value": {
+				  "sensorType": "SkySatScene"
+				}
+			  },
+			  {
+				"text": "Landsat8L1G",
+				"value": {
+				  "sensorType": "Landsat8L1G"
+				}
+			  },
+			  {
+				"text": "Sentinel2L1C",
+				"value": {
+				  "sensorType": "Sentinel2L1C"
+				}
+			  },
+			  {
+				  "text": "Others",
+				  "value": {
+					"sensorType": "others"
+				  }
+				}
+			]
+		}
     },
     "OPEN_AERIAL": {
     	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
@@ -1101,7 +1071,21 @@
 				]
 			}
 		],
-		"blacklist": []
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			"text": "OpenAerial",
+			"value": 1,
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
+		  }
 	},
     "IMISIGHT": {
     	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
@@ -1143,7 +1127,20 @@
 				]
 			}
 		],
-		"blacklist": []
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			  "text":"Imisight",
+			  "value": 1,
+			  "collapsed": true,
+			  "children": [
+				 {
+					"text": "All",
+					"value": {
+					  "sensorType": "All"
+					}
+				  }
+				]
+			  }
 	}
   },
   "idahoOverlaysSourceConfig": {
@@ -1199,13 +1196,5 @@
 			"regionLengthInMeters": 100
 		}
 	}
-  },
-  "uploadsConfig": {
-      "apiUrl": "http://tb-server.webiks.com/v1/api/ansyn/upload",
-      "sensorTypes": [  "Drone Imagery (JPG)", "Mobile Imagery (JPG)", "Drone Map (GeoTIFF)", "Satellite GeoTIFF" ],
-      "sensorNames": [ "Phantom 3", "Phantom 4", "Phantom 4 Advanced", "Phantom 4 Pro", "Mavic", "Mavic Pro", "Mavic 2", "Spark", "Inspire" ],
-      "defaultSharing": "Public",
-      "defaultSensorType": "Drone Imagery (JPG)",
-      "rulesLink": "https://creativecommons.org/licenses/by/4.0/"
-   }
+  }
 }

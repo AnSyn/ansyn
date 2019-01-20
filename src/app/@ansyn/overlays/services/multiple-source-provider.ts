@@ -2,18 +2,17 @@ import { forkJoin, from, Observable, throwError } from 'rxjs';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
-	IDateRange,
 	IFetchParams,
 	IOverlayFilter, isFaulty,
 	IStartAndEndDate, mergeErrors, mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
 import {
 	forkJoinSafe,
-	IDataInputFilterValue, ILimitedArray,
+	IDataInputFilterValue, ILimitedArray, IMultipleOverlaysSourceConfig,
 	IOverlay,
-	IOverlaysFetchData,
+	IOverlaysFetchData, IOverlaysSourceProvider,
 	mergeArrays,
-	mergeLimitedArrays, sortByDateDesc
+	mergeLimitedArrays, MultipleOverlaysSourceConfig, sortByDateDesc
 } from '@ansyn/core';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
@@ -21,27 +20,6 @@ import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
 import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
-
-export interface IFiltersList {
-	name: string,
-	dates: IDateRange[]
-	sensorNames: string[],
-	coverage: number[][][][]
-}
-
-export interface IOverlaysSourceProvider {
-	inActive?: boolean,
-	whitelist: IFiltersList[],
-	blacklist: IFiltersList[]
-}
-
-export interface IMultipleOverlaysSourceConfig {
-	defaultProvider: IOverlaysSourceProvider;
-
-	[key: string]: IOverlaysSourceProvider;
-}
-
-export const MultipleOverlaysSourceConfig = 'multipleOverlaysSourceConfig';
 
 @Injectable({
 	providedIn: 'root'

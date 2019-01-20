@@ -10,7 +10,7 @@ export { ChangeOverlayPreviewRotationAction } from './actions/overlays.actions';
 export { selectLoading } from './reducers/overlays.reducer';
 export { LoadOverlaysSuccessAction } from './actions/overlays.actions';
 export { IMarkUpData } from './reducers/overlays.reducer';
-export { IDateRange, IFetchParams, IOverlayFilter } from './models/base-overlay-source-provider.model';
+export { IFetchParams, IOverlayFilter } from './models/base-overlay-source-provider.model';
 export { ExtendMap } from './reducers/extendedMap.class';
 export { IStartAndEndDate } from './models/base-overlay-source-provider.model';
 export { IOverlaysState } from './reducers/overlays.reducer';

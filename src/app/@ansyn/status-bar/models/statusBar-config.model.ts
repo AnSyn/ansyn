@@ -1,4 +1,4 @@
-import { TreeviewItem } from 'ngx-treeview';
+
 
 export interface IToolTipsConfig {
 	orientation?: string,
@@ -17,16 +17,6 @@ export interface IToolTipsConfig {
 	quickloop?: string
 }
 
-export interface IDataInputItem {
-	inActive?: boolean;
-	treeViewItem: TreeviewItem;
-}
-
-export interface IDataInputFiltersConfig {
-	[providerName: string]: IDataInputItem;
-}
-
 export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
-	dataInputFiltersConfig: IDataInputFiltersConfig
 }

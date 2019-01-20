@@ -1,7 +1,7 @@
 import { ICasesConfig, IFiltersConfig, ILayersManagerConfig, IToolsConfig } from "@ansyn/menu-items";
-import { IMultipleOverlaysSourceConfig, IOverlaysConfig } from '@ansyn/overlays';
+import { IOverlaysConfig } from '@ansyn/overlays';
 import { IMapFacadeConfig } from "@ansyn/map-facade";
-import { ICoreConfig, ILoggerConfig, IMapSourceProvidersConfig } from "@ansyn/core";
+import { ICoreConfig, ILoggerConfig, IMapSourceProvidersConfig, IMultipleOverlaysSourceConfig	 } from "@ansyn/core";
 import { IStatusBarConfig } from "@ansyn/status-bar";
 import { IMenuConfig } from "@ansyn/menu";
 import { IContextConfig } from "@ansyn/context";

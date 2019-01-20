@@ -4,7 +4,7 @@ import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import {
 	forkJoinSafe,
-	IDataInputFilterValue,
+	IDataInputFilterValue, IDateRange,
 	ILimitedArray,
 	IOverlay,
 	IOverlaysFetchData,
@@ -14,11 +14,6 @@ import {
 } from '@ansyn/core';
 import { catchError, map } from 'rxjs/operators';
 import { IOverlayByIdMetaData } from '../services/overlays.service';
-
-export interface IDateRange {
-	start: Date;
-	end: Date;
-}
 
 export interface IFetchParams {
 	limit: number;

@@ -14,10 +14,10 @@ import {
 	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
-	IDataInputFilterValue,
+	IDataInputFilterValue, IMultipleOverlaysSourceConfig,
 	IOverlay,
 	limitArray,
-	LoggerService,
+	LoggerService, MultipleOverlaysSourceConfig,
 	Overlay,
 	sortByDateDesc,
 	toRadians
@@ -72,7 +72,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected http: HttpClient,
 				@Inject(PlanetOverlaysSourceConfig) protected planetOverlaysSourceConfig: IPlanetOverlaySourceConfig,
-				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected loggerService: LoggerService) {
 		super(loggerService);
 		this.httpHeaders = new HttpHeaders({
@@ -199,7 +199,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
 			const parsedDataInput = fetchParams.dataInputFilters.map(({ sensorType }) => sensorType).filter(Boolean);
 			if (fetchParams.dataInputFilters.some(({ sensorType }) => sensorType === 'others')) {
-				const allDataInput = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType);
+				const allDataInput = this.multipleOverlaysSourceConfig[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType);
 				sensors = sensors.filter((sens) => parsedDataInput.includes(sens) || !allDataInput.includes(sens));
 			} else {
 				sensors = parsedDataInput;

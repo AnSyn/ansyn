@@ -7,17 +7,16 @@ import {
 	ErrorHandlerService,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
-	IMapSourceProvidersConfig,
+	IMapSourceProvidersConfig, IMultipleOverlaysSourceConfig,
 	IOverlay,
 	limitArray,
 	LoggerService,
-	MAP_SOURCE_PROVIDERS_CONFIG,
+	MAP_SOURCE_PROVIDERS_CONFIG, MultipleOverlaysSourceConfig,
 	Overlay,
 	sortByDateDesc
 } from '@ansyn/core';
 import { ITBConfig, ITBOverlay } from './tb.model';
 import { Polygon } from 'geojson';
-import { IStatusBarConfig, StatusBarConfig } from "@ansyn/status-bar";
 
 export const TBOverlaySourceType = 'TB';
 
@@ -50,7 +49,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
 		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
-		@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
+		@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig) {
 		super(loggerService);
 	}
 
@@ -76,7 +75,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			if (fetchParams.dataInputFilters[0].sensorType) {
 				const sensorTypesInput = fetchParams.dataInputFilters.map(filter => filter.sensorType.trim().toLowerCase());
 				if (sensorTypesInput.some(sensorType => sensorType === 'others')) {
-					const sensorTypesList = this.statusBarConfig.dataInputFiltersConfig[this.sourceType].treeViewItem.children.map(({ value }) => value.sensorType.trim().toLowerCase());
+					const sensorTypesList = this.multipleOverlaysSourceConfig[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType.trim().toLowerCase());
 					query.values = sensorTypesList.filter(sensor => !sensorTypesInput.includes(sensor));
 					query.isMatch = false;
 				} else {

@@ -3,7 +3,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { UploadFilesEffects } from './upload-files.effects';
-import { UploadsConfig } from '../config/uploads-config';
 import { HttpClientModule } from '@angular/common/http';
 import { uploadsFeatureKey, UploadsReducer } from '../reducers/uploads.reducer';
 
@@ -22,7 +21,6 @@ describe('uploadFilesEffects', () => {
 			],
 			providers: [
 				UploadFilesEffects,
-				{ provide: UploadsConfig, useValue: {} },
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();

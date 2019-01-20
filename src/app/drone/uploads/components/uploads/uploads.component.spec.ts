@@ -3,7 +3,6 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { UploadsComponent } from './uploads.component';
 import { AnsynFormsModule, AnsynModalComponent, ErrorHandlerService, MockComponent } from '@ansyn/core';
 import { FormsModule } from '@angular/forms';
-import { UploadsConfig } from '../../config/uploads-config';
 import { EditSensorNameComponent } from '../edit-sensor-name/edit-sensor-name.component';
 import { HttpClientModule } from '@angular/common/http';
 import { Store, StoreModule } from '@ngrx/store';
@@ -54,14 +53,6 @@ describe('UploadsComponent', () => {
 					provide: UploadFileService,
 					useValue: {
 						cutName: (a) => a
-					}
-				},
-				{
-					provide: UploadsConfig,
-					useValue: {
-						defaultSensorType: '',
-						sensorTypes: [],
-						sensorNames: []
 					}
 				},
 				{

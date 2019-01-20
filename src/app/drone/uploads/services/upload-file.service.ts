@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
-import { IUploadsConfig, UploadsConfig } from '../config/uploads-config';
+import { uploadConfig } from '../config/uploads-config';
 import { IUploadItem } from '../reducers/uploads.reducer';
 
 @Injectable({
@@ -8,8 +8,7 @@ import { IUploadItem } from '../reducers/uploads.reducer';
 })
 export class UploadFileService {
 
-	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig,
-				private http: HttpClient) {
+	constructor(private http: HttpClient) {
 	}
 
 	upload(uploadItem: IUploadItem) {
@@ -33,7 +32,7 @@ export class UploadFileService {
 	private createUploadRequest(form: FormData): HttpRequest<any> {
 		return new HttpRequest(
 			'POST',
-			this.config.apiUrl,
+			uploadConfig.apiUrl,
 			form,
 			{
 				reportProgress: true

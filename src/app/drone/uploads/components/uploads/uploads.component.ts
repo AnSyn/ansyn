@@ -1,6 +1,5 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IUploadsConfig, UploadsConfig } from '../../config/uploads-config';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { uploadConfig } from '../../config/uploads-config';
 import { delay, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ErrorHandlerService, FileInputComponent } from '@ansyn/core';
@@ -22,9 +21,9 @@ import { UploadFileService } from '../../services/upload-file.service';
 export class UploadsComponent implements OnInit, OnDestroy {
 	@ViewChild('inputFile') inputFile: FileInputComponent;
 	loading = false;
-	readonly sensorNames = this.config.sensorNames;
-	readonly sensorTypes = this.config.sensorTypes;
-	readonly rulesLink = this.config.rulesLink;
+	readonly sensorNames = uploadConfig.sensorNames;
+	readonly sensorTypes = uploadConfig.sensorTypes;
+	readonly rulesLink = uploadConfig.rulesLink;
 	modal = false;
 	formData: IUploadsFormData = {...initialUploadsFromData};
 	fileInputValue: string;
@@ -42,8 +41,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(@Inject(UploadsConfig) protected config: IUploadsConfig,
-				protected store: Store<any>,
+	constructor(protected store: Store<any>,
 				public service: UploadFileService,
 				protected errorHandlerService: ErrorHandlerService) {
 	}

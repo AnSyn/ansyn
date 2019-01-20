@@ -131,5 +131,87 @@ export const droneConfig: any = {
 		TB: {
 			baseUrl: 'http://tb-server.webiks.com/v2/api/ansyn/layers'
 		}
+	},
+
+	multipleOverlaysSourceConfig: {
+		TB: {
+			inActive: false,
+			whitelist: [
+				{
+					name: "Entire Earth",
+					dates: [
+						{
+							start: null,
+							end: null
+						}
+					],
+					sensorNames: [null],
+					coverage: [
+						[
+							[
+								[
+									-180,
+									-90
+								],
+								[
+									-180,
+									90
+								],
+								[
+									180,
+									90
+								],
+								[
+									180,
+									-90
+								],
+								[
+									-180,
+									-90
+								]
+							]
+						]
+					]
+				}
+			],
+			blacklist: [],
+			dataInputFiltersConfig: {
+				text: 'TB',
+				value: 1,
+				collapsed: true,
+				children: [
+					{
+						text: 'Drone Imagery (JPG)',
+						value: {
+							sensorType: 'Drone Imagery (JPG)'
+						}
+					},
+					{
+						text: 'Mobile Imagery (JPG)',
+						value: {
+							sensorType: 'Mobile Imagery (JPG)'
+						}
+					},
+					{
+						text: 'Drone Map (GeoTIFF)',
+						value: {
+							sensorType: 'Drone Map (GeoTIFF)'
+						}
+					},
+					{
+						text: 'Satellite GeoTIFF',
+						value: {
+							sensorType: 'Satellite GeoTIFF'
+						}
+					},
+					{
+						text: 'Others',
+						value: {
+							sensorType: 'others'
+						}
+					}
+				]
+			}
+		}
 	}
 };

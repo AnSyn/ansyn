@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/core",
-	"version": "0.2.92",
+	"version": "0.2.93",
 	"description": "",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"

@@ -1,12 +1,12 @@
 {
 	"name": "@ansyn/menu-items",
-	"version": "0.2.92",
+	"version": "0.2.93",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3"
 	},
 	"dependencies": {
-		"@ansyn/core": "0.2.92",
+		"@ansyn/core": "0.2.93",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^6.0.1",
 		"@ngrx/effects": "^6.0.1",
@@ -14,10 +14,10 @@
 		"lodash": "4.17.5",
 		"moment": "^2.21.0",
 		"wellknown": "0.5.0",
-		"@ansyn/menu": "0.2.92",
-		"@ansyn/context": "0.2.92",
-		"@ansyn/map-facade": "0.2.92",
-		"@ansyn/overlays": "0.2.92",
+		"@ansyn/menu": "0.2.93",
+		"@ansyn/context": "0.2.93",
+		"@ansyn/map-facade": "0.2.93",
+		"@ansyn/overlays": "0.2.93",
 		"@ngrx/entity": "^6.0.1",
 		"@ngx-translate/core": "^10.0.2",
 		"angular2-uuid": "1.1.1",

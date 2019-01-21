@@ -11,17 +11,27 @@ import olFeature from 'ol/feature';
 import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
+import { feature } from '@turf/turf';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
-import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig, ExtentCalculator } from '@ansyn/core';
+import {
+	areCoordinatesNumeric,
+	CaseMapExtent,
+	CaseMapExtentPolygon,
+	CoreConfig,
+	ExtentCalculator,
+	ICaseMapPosition,
+	ICoreConfig
+} from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { map, take, tap } from 'rxjs/operators';
-import { feature } from '@turf/turf';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { Actions, ofType } from '@ngrx/effects';
+import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -40,6 +50,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
 	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
+	private _backgroundMapObject: OLMap;
 
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
@@ -47,7 +58,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 	public shadowElement = null;
 
-	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig,
+				public actions$: Actions) {
 		super();
 	}
 
@@ -104,6 +116,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			loadTilesWhileAnimating: true
 		});
 		this.initListeners();
+		this._backgroundMapObject = new OLMap({
+			renderer
+		});
 		return this.resetView(layers[0], position);
 	}
 
@@ -126,32 +141,42 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
-		this.isValidPosition = false;
-		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
-		const view = this.createView(layer);
-		this.setMainLayer(layer);
-		this._mapObject.setView(view);
+		this.setMainLayerToBackgroundMap(layer);
+		return this.actions$.pipe(
+			ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
+			tap(({ payload }) => {
+				console.log('progress', payload.progress);
+			}),
+			filter(({ payload }) => (payload.progress === 100)),
+			switchMap(() => {
+				this.isValidPosition = false;
+				const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
+				const view = this.createView(layer);
+				this.setMainLayer(layer);
+				this._mapObject.setView(view);
 
-		// set default values to prevent map Assertion error's
-		view.setCenter([0, 0]);
-		view.setRotation(rotation ? rotation : 0);
-		view.setResolution(1);
+				// set default values to prevent map Assertion error's
+				view.setCenter([0, 0]);
+				view.setRotation(rotation ? rotation : 0);
+				view.setResolution(1);
 
-		if (extent) {
-			this.fitToExtent(extent).subscribe();
-			if (rotation) {
-				this.mapObject.getView().setRotation(rotation);
-			}
-			this.isValidPosition = true;
-		} else if (position) {
-			return this.setPosition(position);
-		}
+				if (extent) {
+					this.fitToExtent(extent).subscribe();
+					if (rotation) {
+						this.mapObject.getView().setRotation(rotation);
+					}
+					this.isValidPosition = true;
+				} else if (position) {
+					return this.setPosition(position);
+				}
 
-		return of(true);
+				return of(true);
+			})
+		);
 	}
 
 	public getLayerById(id: string): Layer {
-		return <Layer> this.mapObject.getLayers().getArray().find(item => item.get('id') === id);
+		return <Layer>this.mapObject.getLayers().getArray().find(item => item.get('id') === id);
 	}
 
 	setGroupLayers() {
@@ -168,6 +193,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
+		this._backgroundMapObject.removeLayer(layer);
+	}
+
+	setMainLayerToBackgroundMap(layer: Layer) {
+		layer.set('name', 'main');
+		layer.set('mainExtent', null);
+		this._backgroundMapObject.addLayer(layer);
 	}
 
 	getMainLayer(): Layer {
@@ -221,9 +253,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this._mapObject;
 	}
 
+	public get backgroundMapObject() {
+		return this._backgroundMapObject;
+	}
+
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
 		return this.projectionService.projectAccuratelyToImage(center, this).pipe(map(projectedCenter => {
-			const olCenter = <ol.Coordinate> projectedCenter.coordinates;
+			const olCenter = <ol.Coordinate>projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {
@@ -253,7 +289,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (!areCoordinatesNumeric(center)) {
 			return of(null);
 		}
-		const point = <GeoPoint> turf.geometry('Point', center);
+		const point = <GeoPoint>turf.geometry('Point', center);
 
 		return this.projectionService.projectAccurately(point, this);
 	}
@@ -304,7 +340,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
 			map((features: olFeature[]) => {
 				const view: View = olmap.getView();
-				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
+				const geoJsonFeature = <any>this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });
 				const geoJsonExtent = geoJsonFeature.features[0].geometry;
 

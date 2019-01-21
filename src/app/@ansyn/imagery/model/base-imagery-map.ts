@@ -24,6 +24,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
 	public mapObject: T;
+	public backgroundMapObject: T;
 
 	abstract getCenter(): Observable<Point>;
 

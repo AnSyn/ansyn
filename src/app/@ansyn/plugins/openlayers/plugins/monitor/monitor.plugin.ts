@@ -10,7 +10,6 @@ import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openla
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { tap } from 'rxjs/operators';
 import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
-import { Image } from 'openlayers';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -48,7 +47,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	}
 
 	getMainSource(): TileSource | Static | any {
-		const layer = this.communicator.ActiveMap.mapObject.getLayers()
+		const layer = this.communicator.ActiveMap.backgroundMapObject.getLayers()
 			.getArray().find(layer => layer.get('name') === 'main');
 
 		if (!layer) {
@@ -182,7 +181,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 					let reader = new FileReader();
 					reader.readAsDataURL(event.body);
 					reader.onloadend = () => {
-						(<any>image).src =  reader.result;
+						(<any>image).src = reader.result;
 					};
 					break;
 				}

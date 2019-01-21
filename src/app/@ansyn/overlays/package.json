@@ -1,12 +1,12 @@
 {
 	"name": "@ansyn/overlays",
-	"version": "0.2.91",
+	"version": "0.2.92",
 	"peerDependencies": {
 		"@angular/common": "^6.0.3",
 		"@angular/core": "^6.0.3"
 	},
 	"dependencies": {
-		"@ansyn/core": "0.2.91",
+		"@ansyn/core": "0.2.92",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^6.0.1",
 		"@ngrx/effects": "^6.0.1",

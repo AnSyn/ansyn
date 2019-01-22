@@ -150,6 +150,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setResolution(1);
 		this._backgroundMapObject.setView(view);
 		this.setMainLayerToBackgroundMap(layer);
+		this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation);
 		// console.log('layer', layer, 'bgmap', this._backgroundMapObject, this._backgroundMapObject.getLayers().getArray());
 
 		return of(true).pipe(
@@ -159,25 +160,25 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		// 		console.log('progress', payload.progress);
 		// 	}),
 		// 	filter(({ payload }) => (payload.progress === 100)),
-			switchMap(() => {
-				this.isValidPosition = false;
-				this.setMainLayer(layer);
-				this._mapObject.setView(view);
-				return this._setMapPositionOrExtent(position, extent, rotation);
-			})
+		// 	switchMap(() => {
+		// 		this.isValidPosition = false;
+		// 		this.setMainLayer(layer);
+		// 		this._mapObject.setView(view);
+		// 		return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
+		// 	})
 		);
 	}
 
 	// Used by resetView()
-	private _setMapPositionOrExtent(position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<any> {
+	private _setMapPositionOrExtent(map: OLMap, position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<any> {
 		if (extent) {
 			this.fitToExtent(extent).subscribe();
 			if (rotation) {
-				this.mapObject.getView().setRotation(rotation);
+				map.getView().setRotation(rotation);
 			}
 			this.isValidPosition = true;
 		} else if (position) {
-			return this.setPosition(position);
+			return this.setPosition(position, map);
 		}
 		return of(true);
 	}
@@ -363,7 +364,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
-	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
+	public setPosition(position: ICaseMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
 		const { extentPolygon, projectedState } = position;
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = projectedState && viewProjection.getCode() === projectedState.projection.code;
@@ -376,7 +377,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of(true);
 		} else {
 			const extentFeature = feature(extentPolygon);
-			return this.fitRotateExtent(this.mapObject, extentFeature);
+			return this.fitRotateExtent(map, extentFeature);
 		}
 	}
 

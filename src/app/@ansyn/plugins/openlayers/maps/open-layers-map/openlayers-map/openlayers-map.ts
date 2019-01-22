@@ -117,6 +117,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 		this.initListeners();
 		this._backgroundMapObject = new OLMap({
+			target: shadowElement, // todo: ?
 			renderer
 		});
 		return this.resetView(layers[0], position);
@@ -141,38 +142,44 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+		const rotation: number = this._mapObject.getView() && this.mapObject.getView().getRotation();
+		const view = this.createView(layer);
+		// set default values to prevent map Assertion error's
+		view.setCenter([0, 0]);
+		view.setRotation(rotation ? rotation : 0);
+		view.setResolution(1);
+		this._backgroundMapObject.setView(view);
 		this.setMainLayerToBackgroundMap(layer);
-		return this.actions$.pipe(
-			ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
-			tap(({ payload }) => {
-				console.log('progress', payload.progress);
-			}),
-			filter(({ payload }) => (payload.progress === 100)),
+		// console.log('layer', layer, 'bgmap', this._backgroundMapObject, this._backgroundMapObject.getLayers().getArray());
+
+		return of(true).pipe(
+		// return this.actions$.pipe(
+		// 	ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
+		// 	tap(({ payload }) => {
+		// 		console.log('progress', payload.progress);
+		// 	}),
+		// 	filter(({ payload }) => (payload.progress === 100)),
 			switchMap(() => {
 				this.isValidPosition = false;
-				const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
-				const view = this.createView(layer);
 				this.setMainLayer(layer);
 				this._mapObject.setView(view);
-
-				// set default values to prevent map Assertion error's
-				view.setCenter([0, 0]);
-				view.setRotation(rotation ? rotation : 0);
-				view.setResolution(1);
-
-				if (extent) {
-					this.fitToExtent(extent).subscribe();
-					if (rotation) {
-						this.mapObject.getView().setRotation(rotation);
-					}
-					this.isValidPosition = true;
-				} else if (position) {
-					return this.setPosition(position);
-				}
-
-				return of(true);
+				return this._setMapPositionOrExtent(position, extent, rotation);
 			})
 		);
+	}
+
+	// Used by resetView()
+	private _setMapPositionOrExtent(position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<any> {
+		if (extent) {
+			this.fitToExtent(extent).subscribe();
+			if (rotation) {
+				this.mapObject.getView().setRotation(rotation);
+			}
+			this.isValidPosition = true;
+		} else if (position) {
+			return this.setPosition(position);
+		}
+		return of(true);
 	}
 
 	public getLayerById(id: string): Layer {
@@ -198,7 +205,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	setMainLayerToBackgroundMap(layer: Layer) {
 		layer.set('name', 'main');
-		layer.set('mainExtent', null);
 		this._backgroundMapObject.addLayer(layer);
 	}
 

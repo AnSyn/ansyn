@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { uploadConfig } from '../../config/uploads-config';
 import { delay, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { ErrorHandlerService, FileInputComponent } from '@ansyn/core';
+import { ErrorHandlerService, FileInputComponent, SetToastMessageAction } from '@ansyn/core';
 import { isEqual } from 'lodash';
 import { RequestUploadFiles, ResetFormData, UploadFormData } from '../../actions/uploads.actions';
 import { initialUploadsFromData, IUploadsFormData, selectFormData } from '../../reducers/uploads.reducer';
@@ -54,7 +54,24 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	}
 
 	uploadFormData(keyValue) {
-		this.store.dispatch(new UploadFormData(keyValue));
+		let valid = true;
+		if (keyValue.hasOwnProperty('files')) {
+			let accept = this.getAcceptFile().split(',');
+			let files = Object.values(keyValue.files);
+			valid = files.every((f: File) => {
+				let name = f.name.toLocaleLowerCase();
+				return accept.some(a => name.endsWith(a.trim()));
+			})
+		}
+		if (!valid) {
+			this.store.dispatch(new SetToastMessageAction({
+				toastText: `accept only ${this.getAcceptFile()} files`,
+				showWarningIcon: true
+			}));
+			this.fileInputValue = '';
+		} else {
+			this.store.dispatch(new UploadFormData(keyValue));
+		}
 	}
 
 	submitCustomSensorName(text: string) {

@@ -150,10 +150,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setResolution(1);
 		this._backgroundMapObject.setView(view);
 		this.setMainLayerToBackgroundMap(layer);
-		this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation);
-		// console.log('layer', layer, 'bgmap', this._backgroundMapObject, this._backgroundMapObject.getLayers().getArray());
-
-		return of(true).pipe(
+		return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation).pipe(
 		// return this.actions$.pipe(
 		// 	ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
 		// 	tap(({ payload }) => {

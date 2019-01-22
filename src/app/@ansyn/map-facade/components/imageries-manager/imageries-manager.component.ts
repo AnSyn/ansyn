@@ -101,7 +101,8 @@ export class ImageriesManagerComponent implements OnInit {
 		});
 	}
 
-	clickMapContainer(value) {
+	clickMapContainer($event: any, value) {
+		$event.target.focus();
 		this.clickTimeout = window.setTimeout(() => {
 			if (!this.preventDbClick) {
 				this.changeActiveImagery(value);

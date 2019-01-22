@@ -42,7 +42,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [OpenLayersProjectionService, CoreConfig],
+	deps: [OpenLayersProjectionService, CoreConfig, Actions],
 	defaultMapSource: 'BING'
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {

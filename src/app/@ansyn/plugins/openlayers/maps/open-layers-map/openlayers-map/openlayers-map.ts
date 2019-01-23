@@ -32,6 +32,7 @@ import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
+import { GlobalObject } from 'openlayers';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -438,7 +439,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public addGeojsonLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
 			source: new Vector({
-				features: new olGeoJSON().readFeatures(data)
+				features: new olGeoJSON().readFeatures(<GlobalObject>data)
 			})
 		});
 		this.mapObject.addLayer(layer);

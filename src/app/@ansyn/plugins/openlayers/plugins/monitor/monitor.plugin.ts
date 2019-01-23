@@ -125,31 +125,24 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	setMonitorEvents() {
 		if (this.source) {
-			switch (this.source.constructor) {
-				case TileSource: {
-					this.source.on('tileloadstart', this.tileLoadStart, this);
-					this.source.on('tileloadend', this.tileLoadEnd, this);
-					this.source.on('tileloaderror', this.tileLoadError, this);
-					break;
-				}
-				case Static: {
-					const image = this.source.image_.image_;
-					const src = this.source.image_.src_;
-					this.staticImageLoad(image, src);
-				}
+			if (this.source instanceof TileSource) {
+				this.source.on('tileloadstart', this.tileLoadStart, this);
+				this.source.on('tileloadend', this.tileLoadEnd, this);
+				this.source.on('tileloaderror', this.tileLoadError, this);
+			} else if (this.source instanceof Static) {
+				const image = this.source.image_.image_;
+				const src = this.source.image_.src_;
+				this.staticImageLoad(image, src);
 			}
 		}
 	}
 
 	killMonitorEvents() {
 		if (this.source) {
-			switch (this.source.constructor) {
-				case TileSource: {
-					this.source.un('tileloadstart', this.tileLoadStart, this);
-					this.source.un('tileloadend', this.tileLoadEnd, this);
-					this.source.un('tileloaderror', this.tileLoadError, this);
-					break;
-				}
+			if (this.source instanceof TileSource) {
+				this.source.un('tileloadstart', this.tileLoadStart, this);
+				this.source.un('tileloadend', this.tileLoadEnd, this);
+				this.source.un('tileloaderror', this.tileLoadError, this);
 			}
 		}
 	}

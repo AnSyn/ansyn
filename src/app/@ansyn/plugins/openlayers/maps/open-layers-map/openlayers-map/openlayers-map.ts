@@ -151,19 +151,22 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setResolution(1);
 		this._backgroundMapObject.setView(view);
 		this.setMainLayerToBackgroundMap(layer);
-		return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation).pipe(
-		// return this.actions$.pipe(
-		// 	ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
-		// 	tap(({ payload }) => {
-		// 		console.log('progress', payload.progress);
-		// 	}),
-		// 	filter(({ payload }) => (payload.progress === 100)),
-		// 	switchMap(() => {
-		// 		this.isValidPosition = false;
-		// 		this.setMainLayer(layer);
-		// 		this._mapObject.setView(view);
-		// 		return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
-		// 	})
+		this._mapObject.setView(view);
+		return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(
+			switchMap(() => {
+				return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation);
+			}),
+			// return this.actions$.pipe(
+			// 	ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
+			// 	tap(({ payload }) => {
+			// 		console.log('progress', payload.progress);
+			// 	}),
+			// 	filter(({ payload }) => (payload.progress === 100)),
+				switchMap(() => {
+					this.isValidPosition = false;
+					// this.setMainLayer(layer);
+					return of(true);
+				})
 		);
 	}
 

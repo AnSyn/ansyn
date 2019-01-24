@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import {
@@ -28,7 +28,7 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
@@ -58,6 +58,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private _mapLayers = [];
 	public isValidPosition;
 	public shadowElement = null;
+	private _progress: number;
+
+	progress$: Observable<any> = this.actions$.pipe(
+		ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
+		tap(({ payload }) => {
+			console.log('progress', payload.progress);
+		}),
+	);
 
 	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig,
 				public actions$: Actions) {
@@ -134,6 +142,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
+		this.progress$.subscribe(); // todo: unsubscribe
 	}
 
 	createView(layer): View {
@@ -152,29 +161,21 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._backgroundMapObject.setView(view);
 		this.setMainLayerToBackgroundMap(layer);
 		this._mapObject.setView(view);
-		return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(
+		return combineLatest(this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)).pipe(
 			switchMap(() => {
 				return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation);
 			}),
-			switchMap(() => {
-				return this.actions$.pipe(
-					ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
-					tap(({ payload }) => {
-						console.log('progress', payload.progress);
-					}),
-				);
-			}),
 			// 	filter(({ payload }) => (payload.progress === 100)),
-				switchMap(() => {
-					this.isValidPosition = false;
-					// this.setMainLayer(layer);
-					return of(true);
-				})
+			switchMap(() => {
+				this.isValidPosition = false;
+				// this.setMainLayer(layer);
+				return of(true);
+			})
 		);
 	}
 
 	// Used by resetView()
-	private _setMapPositionOrExtent(map: OLMap, position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<any> {
+	private _setMapPositionOrExtent(map: OLMap, position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<boolean> {
 		if (extent) {
 			this.fitToExtent(extent).subscribe();
 			if (rotation) {

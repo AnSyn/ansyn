@@ -130,8 +130,8 @@ export class MonitorPlugin extends BaseImageryPlugin {
 				this.source.on('tileloadend', this.tileLoadEnd, this);
 				this.source.on('tileloaderror', this.tileLoadError, this);
 			} else if (this.source instanceof Static) {
-				const image = this.source.image_.image_;
-				const src = this.source.image_.src_;
+				const image = this.source.getProperties().image_.image_; // ?
+				const src = this.source.getProperties().image_.src_; // ?
 				this.staticImageLoad(image, src);
 			}
 		}

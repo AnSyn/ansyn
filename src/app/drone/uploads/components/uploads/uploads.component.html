@@ -42,11 +42,14 @@
 				[ngModel]="formData.sensorName"
 				(ngModelChange)="uploadFormData({ sensorName: $event })">
 
-				<ansyn-combo-box-option *ngFor="let sensor of sensorNames" (click)="uploadFormData({ otherSensorName: false })" [value]="sensor">
+				<ansyn-combo-box-option *ngFor="let sensor of sensorNames"
+										(click)="uploadFormData({ otherSensorName: false })" [value]="sensor">
 					{{ sensor }}
 				</ansyn-combo-box-option>
 
-				<ansyn-combo-box-option [value]="formData.otherSensorName && formData.sensorName ? formData.sensorName : ''" (click)="modal = true">
+				<ansyn-combo-box-option
+					[value]="formData.otherSensorName && formData.sensorName ? formData.sensorName : ''"
+					(click)="modal = true">
 					<i class="icon-edit"></i> {{ formData.otherSensorName ? formData.sensorName : 'Other' }}
 				</ansyn-combo-box-option>
 			</ansyn-combo-box>
@@ -74,8 +77,8 @@
 
 		<div class="form-field" *ngIf="isGeoTiff(formData.sensorType)">
 			<ansyn-geotiff-datetime-picker
-			required
-			(change)="uploadFormData({date: $event.target.value})"></ansyn-geotiff-datetime-picker>
+				required
+				(change)="uploadFormData({date: $event.target.value})"></ansyn-geotiff-datetime-picker>
 		</div>
 
 		<div class="form-field fileinput">

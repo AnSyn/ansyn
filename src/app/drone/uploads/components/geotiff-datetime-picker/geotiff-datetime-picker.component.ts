@@ -38,8 +38,7 @@ export class GeotiffDatetimePickerComponent implements OnInit {
 			maxDate: new Date(),
 			dateFormat: 'Y-m-d H:i',
 			appendTo: this.elementRef.nativeElement,
-			onChange: this.selectedDateChanged.bind(this),
-			plugins: [this.confirmDatePlugin({})]
+			onChange: this.selectedDateChanged.bind(this)
 		});
 
 		this.geoTiffDatetimePickerInstance.setDate(this.geotiffTimeDatePickerValue, false);
@@ -48,24 +47,4 @@ export class GeotiffDatetimePickerComponent implements OnInit {
 	selectedDateChanged(date: Date, dateString: string, instance: any) {
 		this.geotiffTimeDatePickerValue = new Date(date[0]);
 	}
-
-	confirmDatePlugin(pluginConfig: any) {
-		const defaultConfig = {
-			showAlways: false,
-			theme: 'light'
-		};
-
-		const config = Object.assign(defaultConfig, pluginConfig);
-
-		return function (fp) {
-			return {
-				onKeyDown: function onKeyDown(_, __, ___, e) {
-					if (fp.config.enableTime && e.key === 'Tab' && e.target === fp.amPM) {
-						e.preventDefault();
-					}
-				},
-			} as any;
-		};
-	}
-
 }

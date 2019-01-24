@@ -31,6 +31,7 @@ import { OpenLayerBingSourceProvider } from './mapSourceProviders/open-layers-BI
 import { OpenLayerESRI4326SourceProvider } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';
 import { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-layers-open-aerial-source-provider';
 import { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
+import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis-layers.pulgin";
 
 @NgModule({
 	imports: [
@@ -43,6 +44,7 @@ import { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-l
 				MonitorPlugin,
 				ContextMenuPlugin,
 				OpenlayersOsmLayersPlugin,
+				OpenlayersArcgisLayersPulgin,
 				AlertsPlugin,
 				// Visualizers
 				ContextEntityVisualizer,

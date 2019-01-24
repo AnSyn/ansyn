@@ -72,6 +72,12 @@
 			</ansyn-combo-box>
 		</div>
 
+		<div class="form-field" *ngIf="isGeoTiff(formData.sensorType)">
+			<ansyn-geotiff-datetime-picker
+			required
+			(change)="uploadFormData({date: $event.target.value})"></ansyn-geotiff-datetime-picker>
+		</div>
+
 		<div class="form-field fileinput">
 			<ansyn-file-input
 				#inputFile
@@ -93,14 +99,16 @@
 				(ngModelChange)="uploadFormData({ licence: $event })"
 			>
 				<span class="licence">
-					I agree to submit uploaded imagery with attribution as <span [title]="formData.creditName">{{service.cutName(formData.creditName) }}</span> (contributor) to "AnSyn Imagery Network" under
+					I agree to submit uploaded imagery with attribution as <span
+					[title]="formData.creditName">{{service.cutName(formData.creditName) }}</span> (contributor) to "AnSyn Imagery Network" under
 					<a [href]="rulesLink" target="_blank">CC-BY 4.0</a>
 				license
 				</span>
 			</ansyn-checkbox>
 		</div>
 
-		<button ansynButton class="reset" type="button" [disabled]="disabledReset()" (click)="resetForm()" >Reset</button>
+		<button ansynButton class="reset" type="button" [disabled]="disabledReset()" (click)="resetForm()">Reset
+		</button>
 		<button ansynButton type="submit" [disabled]="!f.valid || loading">Submit</button>
 	</form>
 	<ansyn-upload-list></ansyn-upload-list>

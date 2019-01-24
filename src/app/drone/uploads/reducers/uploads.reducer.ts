@@ -7,8 +7,9 @@ export interface IBaseUploadForm {
 	creditName: string;
 	licence: boolean;
 	sensorType: string;
-	sensorName: string,
-	otherSensorName: boolean
+	sensorName: string;
+	otherSensorName: boolean;
+	date?: number;
 }
 
 export interface IUploadsFormData extends IBaseUploadForm {
@@ -17,7 +18,6 @@ export interface IUploadsFormData extends IBaseUploadForm {
 
 export interface IUploadRequest extends IBaseUploadForm {
 	file: File;
-
 }
 
 export interface IUploadItem {

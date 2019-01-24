@@ -25,7 +25,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	readonly sensorTypes = uploadConfig.sensorTypes;
 	readonly rulesLink = uploadConfig.rulesLink;
 	modal = false;
-	formData: IUploadsFormData = {...initialUploadsFromData};
+	formData: IUploadsFormData = { ...initialUploadsFromData };
 	fileInputValue: string;
 
 	@AutoSubscription
@@ -47,8 +47,8 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	}
 
 	disabledReset() {
-		const {files: thisFiles, ...restThisFormData} = this.formData;
-		const {files: initialFiles, ...restInitialFormData} = initialUploadsFromData;
+		const { files: thisFiles, ...restThisFormData } = this.formData;
+		const { files: initialFiles, ...restInitialFormData } = initialUploadsFromData;
 		const emptyFiles = (!thisFiles || !thisFiles.length);
 		return isEqual(restThisFormData, restInitialFormData) && emptyFiles;
 	}
@@ -70,13 +70,16 @@ export class UploadsComponent implements OnInit, OnDestroy {
 			}));
 			this.fileInputValue = '';
 		} else {
+			if (keyValue.date) {
+				keyValue.date = new Date(keyValue.date).getTime();
+			}
 			this.store.dispatch(new UploadFormData(keyValue));
 		}
 	}
 
 	submitCustomSensorName(text: string) {
 		if (text) {
-			this.uploadFormData({sensorName: text, otherSensorName: true});
+			this.uploadFormData({ sensorName: text, otherSensorName: true });
 		}
 		this.modal = false;
 	}
@@ -88,6 +91,10 @@ export class UploadsComponent implements OnInit, OnDestroy {
 
 	isMobile(str: string) {
 		return str.includes('Mobile');
+	}
+
+	isGeoTiff(str: string) {
+		return str.toUpperCase().includes("GEOTIFF");
 	}
 
 	getAcceptFile() {

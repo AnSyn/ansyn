@@ -13,6 +13,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { UploadFilesEffects } from './effects/upload-files.effects';
 import { UploadFileService } from './services/upload-file.service';
 import { UploadItemComponent } from './components/upload-item/upload-item.component';
+import { GeotiffDatetimePickerComponent } from './components/geotiff-datetime-picker/geotiff-datetime-picker.component';
 
 @NgModule({
 	imports: [
@@ -32,7 +33,7 @@ import { UploadItemComponent } from './components/upload-item/upload-item.compon
 		UploadFileService
 	],
 	entryComponents: [UploadsComponent],
-	declarations: [UploadsComponent, EditSensorNameComponent, UploadListComponent, UploadItemComponent]
+	declarations: [UploadsComponent, EditSensorNameComponent, UploadListComponent, UploadItemComponent, GeotiffDatetimePickerComponent]
 })
 export class UploadsModule {
 }

@@ -15,6 +15,7 @@ import { MultipleOverlaysSource } from '@ansyn/overlays';
 import { TBOverlaySourceType } from '../../../overlay-source-provider/tb-source-provider';
 import { UploadFileService } from '../../services/upload-file.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GeotiffDatetimePickerComponent } from "../geotiff-datetime-picker/geotiff-datetime-picker.component";
 
 const FakeMultipleOverlaysSource = {
 	[TBOverlaySourceType]: {
@@ -42,7 +43,8 @@ describe('UploadsComponent', () => {
 				EditSensorNameComponent,
 				UploadListComponent,
 				UploadItemComponent,
-				MatProgressBar
+				MatProgressBar,
+				GeotiffDatetimePickerComponent
 			],
 			providers: [
 				{

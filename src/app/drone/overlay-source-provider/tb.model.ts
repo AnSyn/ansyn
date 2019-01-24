@@ -31,6 +31,7 @@ export interface ITBOverlay {
 			maker: string;
 		};
 		ansyn: {
+			creditName?: string;
 			title: string;
 		};
 		name: string;

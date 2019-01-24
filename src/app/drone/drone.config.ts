@@ -132,7 +132,6 @@ export const droneConfig: any = {
 			baseUrl: 'http://tb-server.webiks.com/v2/api/ansyn/layers'
 		}
 	},
-
 	multipleOverlaysSourceConfig: {
 		TB: {
 			inActive: false,
@@ -213,5 +212,49 @@ export const droneConfig: any = {
 				]
 			}
 		}
+	},
+	filtersConfig: {
+		shortFilterListLength: 8,
+		filters: [
+			{
+				"modelName": "sensorType",
+				"displayName": "Sensor Type",
+				"type": "Enum"
+			},
+			{
+				"modelName": "sensorName",
+				"displayName": "Sensor Name",
+				"type": "Enum"
+			},
+			{
+				"modelName": "sourceType",
+				"displayName": "Source Type",
+				"type": "Enum"
+			},
+			{
+				"modelName": "creditName",
+				"displayName": "Name of credit",
+				"type": "Enum"
+			},
+			{
+				"modelName": "isGeoRegistered",
+				"displayName": "Geo Registration",
+				"type": "Boolean",
+				"customData": {
+					"displayTrueName": "Geo registered",
+					"displayFalseName": "Not Geo registered"
+				}
+			},
+			{
+				"modelName": "bestResolution",
+				"displayName": "Resolution",
+				"type": "Slider"
+			},
+			{
+				"modelName": "cloudCoverage",
+				"displayName": "Cloud Coverage",
+				"type": "Slider"
+			}
+		]
 	}
 };

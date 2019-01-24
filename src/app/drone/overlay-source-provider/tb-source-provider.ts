@@ -141,7 +141,8 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			azimuth: 0,
 			sourceType: this.sourceType,
 			isGeoRegistered: tbOverlay.geoData.isGeoRegistered,
-			tag: tbOverlay
+			tag: tbOverlay,
+			creditName: tbOverlay.inputData.ansyn.creditName
 		});
 	}
 }

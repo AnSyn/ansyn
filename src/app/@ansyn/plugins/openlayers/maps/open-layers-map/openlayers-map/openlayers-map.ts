@@ -28,7 +28,7 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
@@ -58,12 +58,18 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private _mapLayers = [];
 	public isValidPosition;
 	public shadowElement = null;
-	private _progress: number;
+	private loadedLayer: Layer;
 
-	progress$: Observable<any> = this.actions$.pipe(
+	setLoadedLayersToActiveMap$: Observable<any> = this.actions$.pipe(
 		ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
-		tap(({ payload }) => {
+		filter(() => this.backgroundMapObject.getLayers().getLength() > 0),
+		filter(({payload}) => {
 			console.log('progress', payload.progress);
+			return payload.progress === 100;
+		}),
+		tap(({ payload }) => {
+			console.log('setting main layer to active map');
+			this.setMainLayer(this.loadedLayer);
 		}),
 	);
 
@@ -142,7 +148,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
-		this.progress$.subscribe(); // todo: unsubscribe
+		this.setLoadedLayersToActiveMap$.subscribe(); // todo: unsubscribe
 	}
 
 	createView(layer): View {
@@ -164,12 +170,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return combineLatest(this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)).pipe(
 			switchMap(() => {
 				return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation);
-			}),
-			// 	filter(({ payload }) => (payload.progress === 100)),
-			switchMap(() => {
-				this.isValidPosition = false;
-				// this.setMainLayer(layer);
-				return of(true);
 			})
 		);
 	}
@@ -206,12 +206,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
-		this._backgroundMapObject.removeLayer(layer);
 	}
 
 	setMainLayerToBackgroundMap(layer: Layer) {
 		layer.set('name', 'main');
-		this._backgroundMapObject.addLayer(layer);
+		this.loadedLayer = layer;
+		this.backgroundMapObject.getLayers().clear();
+		this.backgroundMapObject.addLayer(layer);
+		console.log('layers', this.backgroundMapObject.getLayers().getLength());
 	}
 
 	getMainLayer(): Layer {

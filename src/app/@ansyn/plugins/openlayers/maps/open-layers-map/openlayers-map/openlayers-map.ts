@@ -158,6 +158,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+		console.log('resetView', 'layer', layer);
 		const rotation: number = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		// set default values to prevent map Assertion error's

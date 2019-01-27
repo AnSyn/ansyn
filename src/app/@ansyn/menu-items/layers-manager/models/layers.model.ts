@@ -8,6 +8,7 @@ export enum LayerType {
 }
 
 export enum layerPluginType {
+	ARCGIS = 'ARCGIS',
 	OSM = 'OSM',
 	geoJson = 'geoJson',
 	Annotations = 'Annotations'
@@ -20,4 +21,5 @@ export interface ILayer extends IEntity {
 	layerPluginType: layerPluginType;
 	data?: any;
 	caseId?: string;
+	extent?: [number, number, number, number];
 }

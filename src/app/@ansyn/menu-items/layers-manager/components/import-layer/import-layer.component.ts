@@ -87,7 +87,10 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	simpleStyleToVisualizer(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			const { id, label, showLabel, showMeasures, mode, ...initial } = feature.properties;
+			let { id, label, showLabel, showMeasures, mode, ...initial } = feature.properties;
+			id = id || UUID.UUID();
+			showLabel = showLabel || false;
+			showMeasures = showMeasures || false;
 			feature.properties = { id, label, showLabel: JSON.parse(showLabel), showMeasures: JSON.parse(showMeasures), mode, style: { initial } };
 		});
 	}

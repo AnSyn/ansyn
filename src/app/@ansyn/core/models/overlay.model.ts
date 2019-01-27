@@ -21,6 +21,7 @@ export interface IOverlay extends IDilutedOverlay {
 	footprint?: any; // @TODO add type geojson multipoligon,
 	sensorType?: string;
 	sensorName?: string;
+	creditName?: string;
 	channel?: number;
 	bestResolution?: number;
 	cloudCoverage?: number;

@@ -1,0 +1,124 @@
+<div>
+	<form class="upload-form" #f="ngForm" (ngSubmit)="onSubmit()">
+		<div class="form-field">
+			<ansyn-input
+				label="Name for credit"
+				[white]="true"
+				select
+				name="creditName"
+				[ngModel]="formData.creditName"
+				(ngModelChange)="uploadFormData({ creditName: $event })">
+			</ansyn-input>
+		</div>
+		<div class="form-field">
+			<ansyn-input label="Description"
+						 [white]="true"
+						 name="description"
+						 [ngModel]="formData.description"
+						 (ngModelChange)="uploadFormData({ description: $event })">
+			</ansyn-input>
+		</div>
+		<div class="form-field sensor-type">
+			<div class="title">*Sensor type</div>
+			<div class="sensor-types">
+				<ansyn-radio *ngFor="let value of sensorTypes"
+							 [ngModelOptions]="{standalone: true}"
+							 [value]="value"
+							 required
+							 [ngModel]="formData.sensorType"
+							 (ngModelChange)="uploadFormData({ sensorType: $event, sensorName: isMobile($event) ? '' : formData.sensorName })">
+					{{value}}
+				</ansyn-radio>
+			</div>
+		</div>
+
+		<div class="form-field">
+			<ansyn-combo-box
+				required
+				name="sensorName"
+				color="transparent"
+				[disabled]="isMobile(formData?.sensorType)"
+				placeholder="*Sensor name"
+				[ngModel]="formData.sensorName"
+				(ngModelChange)="uploadFormData({ sensorName: $event })">
+
+				<ansyn-combo-box-option *ngFor="let sensor of sensorNames"
+										(click)="uploadFormData({ otherSensorName: false })" [value]="sensor">
+					{{ sensor }}
+				</ansyn-combo-box-option>
+
+				<ansyn-combo-box-option
+					[value]="formData.otherSensorName && formData.sensorName ? formData.sensorName : ''"
+					(click)="modal = true">
+					<i class="icon-edit"></i> {{ formData.otherSensorName ? formData.sensorName : 'Other' }}
+				</ansyn-combo-box-option>
+			</ansyn-combo-box>
+		</div>
+
+		<div class="form-field">
+			<ansyn-combo-box
+				required
+				name="sharing"
+				color="transparent"
+				placeholder="*Sharing Options"
+				[ngModel]="formData.sharing"
+				(ngModelChange)="uploadFormData({ sharing: $event })">
+
+				<ansyn-combo-box-option value="public">
+					Public
+				</ansyn-combo-box-option>
+
+				<ansyn-combo-box-option value="private" disabled>
+					Private
+				</ansyn-combo-box-option>
+
+			</ansyn-combo-box>
+		</div>
+
+		<div class="form-field" *ngIf="isGeoTiff(formData.sensorType)">
+			<ansyn-geotiff-datetime-picker
+				required
+				(change)="uploadFormData({date: $event.target.value})"></ansyn-geotiff-datetime-picker>
+		</div>
+
+		<div class="form-field fileinput">
+			<ansyn-file-input
+				#inputFile
+				required
+				[accept]="getAcceptFile()"
+				[multiple]="true"
+				name="files"
+				placeholder="*Choose file"
+				[(ngModel)]="fileInputValue"
+				(change)="uploadFormData({ files: $event.target.files })">
+			</ansyn-file-input>
+		</div>
+
+		<div class="form-field">
+			<ansyn-checkbox
+				required
+				name="licence"
+				[ngModel]="formData.licence"
+				(ngModelChange)="uploadFormData({ licence: $event })"
+			>
+				<span class="licence">
+					I agree to submit uploaded imagery with attribution as <span
+					[title]="formData.creditName">{{service.cutName(formData.creditName) }}</span> (contributor) to "AnSyn Imagery Network" under
+					<a [href]="rulesLink" target="_blank">CC-BY 4.0</a>
+				license
+				</span>
+			</ansyn-checkbox>
+		</div>
+
+		<button ansynButton class="reset" type="button" [disabled]="disabledReset()" (click)="resetForm()">Reset
+		</button>
+		<button ansynButton type="submit" [disabled]="!f.valid || loading">Submit</button>
+	</form>
+	<ansyn-upload-list></ansyn-upload-list>
+</div>
+
+<ansyn-modal [(show)]="modal">
+	<ansyn-edit-sensor-name *ngIf="modal" (onSubmit)="submitCustomSensorName($event)"></ansyn-edit-sensor-name>
+</ansyn-modal>
+
+<ansyn-loader [show]="loading" loaderText="Upload files"></ansyn-loader>

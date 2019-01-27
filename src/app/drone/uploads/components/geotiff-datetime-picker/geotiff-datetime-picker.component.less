@@ -1,0 +1,61 @@
+@import "core/less/common";
+
+.time-row {
+	display: flex;
+	align-items: center;
+	margin: 6px 0;
+
+	span {
+		color: white;
+		margin-right: 10px;
+		width: 75px;
+		display: inline-block;
+		white-space: pre;
+	}
+
+	button {
+		display: none;
+	}
+
+	label.time-row-button {
+		position: relative;
+		width: 155px;
+		height: 22px;
+		padding: 0 10px;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		border: 1px solid white;
+		font-size: 12px;
+		color: white;
+
+		.icon-status-bar-time {
+			pointer-events: none;
+		}
+	}
+
+	input {
+		background: #28b2cf;
+		color: white;
+		width: 100%;
+		border: none;
+		padding: 0 10px;
+		left: 0;
+		box-sizing: border-box;
+		margin: 0;
+		position: absolute;
+		display: inline-block;
+		height: 100%;
+	}
+
+	i {
+		color: white;
+		position: absolute;
+		right: 10px;
+		top: 5px;
+	}
+}
+/deep/ .flatpickr-calendar {
+	left: 20px !important;
+	z-index: 100 !important;
+}

@@ -3,10 +3,9 @@ import { AppAnsynModule } from './app/app/app.module';
 import { fetchConfigProviders } from '@ansyn/ansyn';
 import { enableProdMode } from '@angular/core';
 import { configuration } from './configuration/configuration';
-import { droneConfig } from './app/drone/drone.config';
 
 if (configuration.production) {
 	enableProdMode();
 }
 
-fetchConfigProviders(undefined, droneConfig).then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));
+fetchConfigProviders().then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));

@@ -32,6 +32,7 @@ import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { mergeMap, concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
+import { UUID } from 'angular2-uuid';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -52,7 +53,14 @@ export class SelectCaseAppEffects {
 		// status-bar
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
-		const { data, activeMapId } = state.maps;
+		const { data, activeMapId: currentActiveMapID } = state.maps;
+		data.forEach(map => {
+			let thisMapId = map.id;
+			map.id = UUID.UUID();
+			if (thisMapId === currentActiveMapID) {
+				state.maps.activeMapId = map.id;
+			}
+		});
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities } = state;
 		let { time } = state;
@@ -78,7 +86,7 @@ export class SelectCaseAppEffects {
 			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
-			new SetActiveMapId(activeMapId),
+			new SetActiveMapId(state.maps.activeMapId),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),

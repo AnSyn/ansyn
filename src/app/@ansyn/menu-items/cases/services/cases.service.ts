@@ -164,18 +164,10 @@ export class CasesService {
 	createCase(selectedCase: ICase): Observable<ICase> {
 		const currentTime = new Date();
 		const uuid = UUID.UUID();
-		let currentMapId = selectedCase.state.maps.activeMapId;
 		selectedCase.id = uuid;
 		selectedCase.creationTime = currentTime;
 		selectedCase.lastModified = currentTime;
 		selectedCase.autoSave = true;
-		selectedCase.state.maps.data.forEach(map => {
-			let thisMapId = map.id;
-			map.id = UUID.UUID();
-			if (thisMapId === currentMapId) {
-				selectedCase.state.maps.activeMapId = map.id;
-			}
-		});
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
 			.pipe<any>(
 				map(_ => selectedCase),

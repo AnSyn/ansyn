@@ -54,7 +54,7 @@ export const droneConfig: any = {
 								mapType: 'openLayersMap',
 								sourceType: 'BING'
 							},
-							id: 'af3b94d2-03ff-44e6-9f73-10d386aff493'
+							id: null
 						}
 					]
 				},

@@ -2,7 +2,7 @@ import { SetToastMessageAction } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import TileSource from 'ol/source/tile';
 import { Observable } from 'rxjs';
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryPlugin, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryPlugin } from '@ansyn/imagery';
 import Static from 'ol/source/imagestatic';
 import { SetProgressBarAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
@@ -48,7 +48,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	getMainSource(): TileSource | Static | any {
 		const layer = this.communicator.ActiveMap.backgroundMapObject.getLayers()
-			.getArray().find(layer => layer.get('name') === 'main');
+			.getArray().find(layer => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 
 		if (!layer) {
 			return;

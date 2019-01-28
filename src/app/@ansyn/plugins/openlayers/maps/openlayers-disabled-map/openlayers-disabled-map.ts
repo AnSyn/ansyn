@@ -5,7 +5,7 @@ import View from 'ol/view';
 import Layer from 'ol/layer/layer';
 import { ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
-import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
+import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
@@ -55,7 +55,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
 		this.mainLayer = layer;
-		this.mainLayer.set('name', 'main');
+		this.mainLayer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.mapObject.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {

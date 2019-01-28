@@ -12,7 +12,7 @@ import olPolygon from 'ol/geom/polygon';
 import AttributionControl from 'ol/control/attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
-import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
+import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
@@ -83,7 +83,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	 * @param layer
 	 */
 	public addLayerIfNotExist(layer): Layer {
-		const layerId = layer.get('id');
+		const layerId = layer.get(ImageryLayerProperties.ID);
 		if (!layerId) {
 			return;
 		}
@@ -158,7 +158,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
-		console.log('resetView', 'layer', layer);
+		console.log('resetView', 'layer', layer, layer.get(ImageryLayerProperties.FROM_CACHE));
 		const rotation: number = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		// set default values to prevent map Assertion error's
@@ -190,7 +190,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public getLayerById(id: string): Layer {
-		return <Layer>this.mapObject.getLayers().getArray().find(item => item.get('id') === id);
+		return <Layer>this.mapObject.getLayers().getArray().find(item => item.get(ImageryLayerProperties.ID) === id);
 	}
 
 	setGroupLayers() {
@@ -202,15 +202,15 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	setMainLayer(layer: Layer) {
-		layer.set('name', 'main');
-		layer.set('mainExtent', null);
+		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
+		layer.set(ImageryLayerProperties.MAIN_EXTENT, null);
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
 	}
 
 	setMainLayerToBackgroundMap(layer: Layer) {
-		layer.set('name', 'main');
+		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.loadedLayer = layer;
 		this.backgroundMapObject.getLayers().clear();
 		this.backgroundMapObject.addLayer(layer);
@@ -218,7 +218,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	getMainLayer(): Layer {
-		let mainLayer = this._mapLayers.find((layer: Layer) => layer.get('name') === 'main');
+		let mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 		return mainLayer;
 	}
 
@@ -326,13 +326,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of({ extentPolygon: null, layerExtentPolygon: null });
 		}
 
-		const cachedMainExtent = mainLayer.get('mainExtent');
+		const cachedMainExtent = mainLayer.get(ImageryLayerProperties.MAIN_EXTENT);
 		const mainExtent = mainLayer.getExtent();
 		if (mainExtent && !Boolean(cachedMainExtent)) {
 			const layerExtentPolygon = Utils.extentToOlPolygon(mainExtent);
 			return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates)), new olFeature(layerExtentPolygon)], this).pipe(
 				map((collection: FeatureCollection<GeometryObject>) => {
-					mainLayer.set('mainExtent', collection.features[1].geometry as Polygon);
+					mainLayer.set(ImageryLayerProperties.MAIN_EXTENT, collection.features[1].geometry as Polygon);
 					return {
 						extentPolygon: collection.features[0].geometry as Polygon,
 						layerExtentPolygon: collection.features[1].geometry as Polygon

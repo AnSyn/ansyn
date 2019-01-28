@@ -8,6 +8,7 @@
     "lodash",
     "@ngrx/effects",
     "@ngx-translate/core",
+    "ngx-treeview",
     "angular2-uuid",
     "auto-subscriptions",
     "lodash-decorators"

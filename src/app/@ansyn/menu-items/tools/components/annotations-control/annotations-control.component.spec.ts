@@ -4,7 +4,7 @@ import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
-import { ColorPickerComponent } from '../color-picker/color-picker.component';
+import { AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/core';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -13,7 +13,7 @@ describe('AnnotationsControlComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnnotationsControlComponent, ColorPickerComponent],
+			declarations: [AnnotationsControlComponent, ColorPickerComponent, AnnotationsColorComponent, AnnotationsWeightComponent],
 			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })]
 		})
 			.compileComponents();
@@ -62,16 +62,16 @@ describe('AnnotationsControlComponent', () => {
 	});
 
 	it('select line width', () => {
-		const strokeWidth = 5;
-		component.selectLineWidth(strokeWidth);
+		const width = 5;
+		component.selectLineWidth({ width });
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
-			'stroke-width': strokeWidth
+			'stroke-width': width
 		}));
 	});
 
 	it('change stroke color', () => {
 		const strokeColor = 'white';
-		component.changeStrokeColor(strokeColor);
+		component.colorChange({event: strokeColor, label: 'stroke'});
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			'stroke': strokeColor
 		}));
@@ -79,7 +79,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('change fill color', () => {
 		const fill = 'black';
-		component.changeFillColor(fill);
+		component.colorChange({event: fill, label: 'fill'});
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			fill,
 			'marker-color': fill

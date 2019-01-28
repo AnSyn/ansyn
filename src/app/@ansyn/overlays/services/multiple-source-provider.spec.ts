@@ -1,17 +1,15 @@
 import { inject, TestBed } from '@angular/core/testing';
 import {
-	MultipleOverlaysSource,
-	MultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceProvider
 } from './multiple-source-provider';
 
-import { IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { IOverlay, IOverlaysFetchData, LoggerService, MultipleOverlaysSourceConfig } from '@ansyn/core';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
-import { Injectable } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams } from '@ansyn/overlays';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MultipleOverlaysSource, OverlaySourceProvider } from '../models/overlays-source-providers';
+import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -35,10 +33,10 @@ const emptyOverlays: IOverlaysFetchData = {
 
 const faultySourceType = 'Faulty';
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: 'Truthy'
+})
 class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	sourceType = 'Truthy';
-
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		if (fetchParams.limit <= 0) {
 			return of(emptyOverlays);
@@ -60,10 +58,10 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	}
 }
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: faultySourceType
+})
 class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	sourceType = faultySourceType;
-
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return throwError(new Error('Failed to fetch overlays'));
 	}

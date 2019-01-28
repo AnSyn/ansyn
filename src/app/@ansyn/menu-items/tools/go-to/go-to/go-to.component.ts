@@ -63,6 +63,10 @@ export class GoToComponent implements OnInit {
 		return this.config.GoTo.to;
 	}
 
+	get notification(): string {
+		return this.config.Proj4.ed50Notification;
+	}
+
 	ngOnInit(): void {
 		this.activeCenter$.subscribe((_activeCenter) => {
 			this.activeCenter = _activeCenter;

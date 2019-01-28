@@ -18,6 +18,7 @@ import { TasksRemoteService } from '../../services/tasks-remote.service';
 import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -35,6 +36,7 @@ describe('TasksFormComponent', () => {
 			imports: [
 				FormsModule,
 				AnsynFormsModule,
+				BrowserAnimationsModule,
 				TranslateModule.forRoot(),
 				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer, [coreFeatureKey]: CoreReducer }),
 				EffectsModule.forRoot([])
@@ -75,6 +77,8 @@ describe('TasksFormComponent', () => {
 			overlays = ['a', 'b'].map((id) => new Overlay({ id: id, sensorName: 'sensor_12' }));
 			component.MIN_NUM_OF_OVERLAYS = 2;
 			component.tasksService.config = {
+				baseUrl: '',
+				urlSuffix: '',
 				schema: '',
 				paginationLimit: 1,
 				algorithms: {

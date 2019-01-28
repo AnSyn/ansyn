@@ -19,7 +19,9 @@
     "lodash",
     "moment",
     "ol",
-    "wellknown"
+    "wellknown",
+    "@angular/cdk",
+    "@angular/material"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

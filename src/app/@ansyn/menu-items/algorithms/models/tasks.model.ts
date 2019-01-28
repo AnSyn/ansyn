@@ -11,6 +11,8 @@ export interface IAlgorithmConfig {
 }
 
 export interface IAlgorithmsConfig {
+	baseUrl: string;
+	urlSuffix: string;
 	schema: string,
 	paginationLimit: number,
 	algorithms: {
@@ -25,11 +27,11 @@ export enum AlgorithmTaskStatus {
 	SENT = 'Sent'
 }
 
-export class AlgorithmTaskPreview implements IEntity{
+export class AlgorithmTaskPreview implements IEntity {
 	id: string;
 	creationTime: Date;
 	name: string;
-	algorithmName: string ;
+	algorithmName: string;
 	status: AlgorithmTaskStatus = AlgorithmTaskStatus.NEW;
 	runTime: Date;
 }

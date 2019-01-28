@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/core",
-	"version": "0.2.85",
+	"version": "0.2.93",
 	"description": "",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +19,7 @@
 		"lodash": "4.17.5",
 		"@ngrx/effects": "^6.0.1",
 		"@ngx-translate/core": "^10.0.2",
+		"ngx-treeview": "^2.0.6",
 		"angular2-uuid": "1.1.1",
 		"auto-subscriptions": "^1.0.3",
 		"lodash-decorators": "4.5.0"

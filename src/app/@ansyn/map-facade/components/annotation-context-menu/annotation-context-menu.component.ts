@@ -2,11 +2,18 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { MapEffects } from '../../effects/map.effects';
 import { IMapState } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { AnnotationRemoveFeature, AnnotationSelectAction, AnnotationUpdateFeature } from '../../actions/map.actions';
+import {
+	AnnotationRemoveFeature,
+	AnnotationSelectAction,
+	AnnotationUpdateFeature,
+	MapActionTypes
+} from '../../actions/map.actions';
 import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Actions } from '@ngrx/effects';
+import { ofType } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -23,7 +30,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	@Input() mapId;
 
 	@AutoSubscription
-	positionChanged$: Observable<any> = this.mapEffect.positionChanged$.pipe(
+	positionChanged$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.POSITION_CHANGED),
 		tap(() => this.clickMenuProps = null)
 	);
 
@@ -60,7 +68,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.close();
 	}
 
-	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public host: ElementRef) {
+	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public actions$: Actions, public host: ElementRef) {
 	}
 
 	ngOnInit() {
@@ -77,6 +85,28 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		const { featureId } = this.clickMenuProps;
 		this.close();
 		this.store.dispatch(new AnnotationRemoveFeature(featureId));
+	}
+
+	toggleColorPicker() {
+		const { featureId } = this.clickMenuProps;
+		const showColorPicker = !this.clickMenuProps.showColorPicker;
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { showColorPicker, showWeight: !showColorPicker }
+		}));
+		this.clickMenuProps.showColorPicker = showColorPicker;
+		this.clickMenuProps.showWeight = showColorPicker ? !showColorPicker : this.clickMenuProps.showWeight;
+	}
+
+	toggleWeight() {
+		const { featureId } = this.clickMenuProps;
+		const showWeight = !this.clickMenuProps.showWeight;
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { showWeight, showColorPicker: !showWeight }
+		}));
+		this.clickMenuProps.showWeight = showWeight;
+		this.clickMenuProps.showColorPicker = showWeight ? !showWeight : this.clickMenuProps.showWeight;
 	}
 
 	toggleMeasures() {
@@ -98,6 +128,61 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		}));
 
 		this.clickMenuProps.showLabel = showLabel;
+	}
+
+	selectLineWidth(w: number) {
+		const { featureId } = this.clickMenuProps;
+		const style = {
+			...this.clickMenuProps.style,
+			initial: {
+				...this.clickMenuProps.style.initial,
+				'stroke-width': w
+			}
+		};
+
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { style }
+		}));
+
+		this.clickMenuProps.style = style;
+	}
+
+	activeChange($event: { label: 'stroke' | 'fill', event: string }) {
+		let opacity = { stroke: 1, fill: 0.4 };
+		const { featureId } = this.clickMenuProps;
+		const style = {
+			...this.clickMenuProps.style,
+			initial: {
+				...this.clickMenuProps.style.initial,
+				[`${$event.label}-opacity`]: $event.event ? opacity[$event.label] : 0
+			}
+		};
+
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { style }
+		}));
+
+		this.clickMenuProps.style = style;
+	}
+
+	colorChange($event: { label: 'stroke' | 'fill', event: string }) {
+		const { featureId } = this.clickMenuProps;
+		const style = {
+			...this.clickMenuProps.style,
+			initial: {
+				...this.clickMenuProps.style.initial,
+				[$event.label]: $event.event
+			}
+		};
+
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: { style }
+		}));
+
+		this.clickMenuProps.style = style;
 	}
 
 	updateLabel() {

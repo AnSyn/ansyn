@@ -23,6 +23,11 @@
                 "input": "src/app/@ansyn/assets",
                 "output": "/assets"
               },
+              {
+                "glob": "**/*",
+                "input": "node_modules/cesium/Build/Cesium",
+                "output": "/assets/Cesium"
+              },
               "src/favicon.ico"
             ],
             "styles": [
@@ -33,7 +38,9 @@
                 "src/app/@ansyn"
               ]
             },
-            "scripts": []
+            "scripts": [
+              "node_modules/cesium/Build/Cesium/Cesium.js"
+            ]
           },
           "configurations": {
             "dev": {
@@ -55,10 +62,6 @@
                 {
                   "replace": "src/configuration/configuration.ts",
                   "with": "src/configuration/configuration.prod.ts"
-                },
-                {
-                  "replace": "src/app/@ansyn/ansyn/config/ansyn.config.ts",
-                  "with": "src/app/@ansyn/ansyn/config/ansyn.config.prod.ts"
                 }
               ]
             }
@@ -91,7 +94,9 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [],
+            "scripts": [
+              "node_modules/cesium/Build/Cesium/Cesium.js"
+            ],
             "styles": [
               "src/app/@ansyn/assets/styles/styles.css"
             ],
@@ -105,6 +110,11 @@
                 "glob": "**/*",
                 "input": "src/app/@ansyn/assets",
                 "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/cesium/Build/Cesium",
+                "output": "/assets/Cesium"
               },
               "src/favicon.ico"
             ]
@@ -294,7 +304,9 @@
             "styles": [
               "src/app/@ansyn/assets/styles/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+
+            ]
           },
           "configurations": {
             "dev": {

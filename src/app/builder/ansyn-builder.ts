@@ -4,7 +4,7 @@ import { AnsynApi, AnsynModule, ContextAppEffects } from '@ansyn/ansyn';
 import { ContextService } from '@ansyn/context';
 import { of } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items';
-import { getProviders } from '@ansyn/core';
+import { getProviders } from '@ansyn/ansyn';
 import { CommonModule } from '@angular/common';
 
 export const buildAnsynCustomComponent = (selector) => (

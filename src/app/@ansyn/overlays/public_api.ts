@@ -1,4 +1,7 @@
-export { MultipleOverlaysSourceProvider, MultipleOverlaysSource } from './services/multiple-source-provider';
+export { IMultipleOverlaysSource, MultipleOverlaysSource } from './models/overlays-source-providers';
+export { IOverlaysConfig } from "./models/overlays.config";
+export { OverlaySourceProvider } from './models/overlays-source-providers';
+export { MultipleOverlaysSourceProvider } from './services/multiple-source-provider';
 export { IOverlayByIdMetaData } from './services/overlays.service';
 export { selectHoveredOverlay } from './reducers/overlays.reducer';
 export { timeIntersection } from './models/base-overlay-source-provider.model';
@@ -6,7 +9,7 @@ export { ChangeOverlayPreviewRotationAction } from './actions/overlays.actions';
 export { selectLoading } from './reducers/overlays.reducer';
 export { LoadOverlaysSuccessAction } from './actions/overlays.actions';
 export { IMarkUpData } from './reducers/overlays.reducer';
-export { IDateRange, IFetchParams, IOverlayFilter } from './models/base-overlay-source-provider.model';
+export { IFetchParams, IOverlayFilter } from './models/base-overlay-source-provider.model';
 export { ExtendMap } from './reducers/extendedMap.class';
 export { IStartAndEndDate } from './models/base-overlay-source-provider.model';
 export { IOverlaysState } from './reducers/overlays.reducer';

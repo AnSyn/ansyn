@@ -1,8 +1,4 @@
-export { IUploadsConfig, UploadsConfig } from './uploads/config/uploads-config';
-
-export { EditSensorNameComponent } from './uploads/components/edit-sensor-name/edit-sensor-name.component';
-export { UploadsComponent } from './uploads/components/uploads/uploads.component';
-export { UploadsModule } from './uploads/uploads.module';
+export { ILayersManagerConfig } from "./layers-manager/models/layers-manager-config";
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';
@@ -128,3 +124,7 @@ export {
 	TasksRemoteDefaultService
 } from './algorithms/services/tasks-remote-default.service';
 
+export {
+	AlgorithmTask,
+	AlgorithmTaskStatus
+} from './algorithms/models/tasks.model';

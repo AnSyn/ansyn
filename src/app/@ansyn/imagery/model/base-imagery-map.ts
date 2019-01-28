@@ -6,9 +6,10 @@ import { GeoJsonObject, Point } from 'geojson';
 export interface IImageryMapMetaData {
 	deps?: any[];
 	mapType?: string;
+	defaultMapSource?: string;
 }
 
-export interface IBaseImageryMapConstructor extends IImageryMapMetaData {
+export interface IBaseImageryMapConstructor {
 	groupLayers: Map<string, any>;
 
 	new(...args): BaseImageryMap;
@@ -17,6 +18,10 @@ export interface IBaseImageryMapConstructor extends IImageryMapMetaData {
 // @dynamic
 export abstract class BaseImageryMap<T = any> {
 	static groupLayers = new Map<string, any>();
+	readonly deps?: any[];
+	readonly mapType?: string;
+	readonly defaultMapSource?: string;
+
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
 	public mapObject: T;
 

@@ -2,21 +2,20 @@
 	 #imageriesContainer
 	 [ngClass]="{'pin-location': pinLocationMode}">
 
-	<ng-template [ngIf]="mapsList">
-		<div *ngFor="let mapData of mapsList; count as count"
-			 tabindex="0"
+	<ng-template [ngIf]="ids.length">
+		<div *ngFor="let mapId of ids; count as count"
 			 class="map-container-wrapper"
-			 (click)="clickMapContainer($event, mapData.id)"
+			 (click)="clickMapContainer(mapId)"
 			 (dblclick)="dbclick()">
 			<ansyn-imagery-container class="map"
-									 [mapState]="mapData"
-									 [active]="activeMapId === mapData.id"
+									 [mapState]="mapsEntities[mapId]"
+									 [active]="activeMapId === mapId"
 									 [showStatus]="count > 1"
-									 [mapsAmount]="mapsList.length">
+									 [mapsAmount]="ids.length">
 			</ansyn-imagery-container>
 
 			<div class="active-border"
-				 [class.active]="activeMapId === mapData.id">
+				 [class.active]="activeMapId === mapId">
 			</div>
 
 		</div>

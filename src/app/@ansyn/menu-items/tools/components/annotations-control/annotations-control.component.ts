@@ -79,8 +79,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		{ mode: 'Arrow', icon: 'arrow' }
 	];
 
-	public lineWidthList = [1, 2, 3, 4, 5, 6, 7];
-
 	@HostBinding('class.expand')
 	@Input()
 	set expand(value) {
@@ -119,24 +117,25 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new SetAnnotationMode(dispatchValue));
 	}
 
-	selectLineWidth(strokeWidth: number) {
-		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': strokeWidth }));
+	selectLineWidth($event) {
+		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': $event.width }));
 	}
 
-	changeStrokeColor(stroke: string) {
-		this.store.dispatch(new AnnotationSetProperties({ stroke }));
+	activeChange($event) {
+		if ($event.label === 'fill') {
+			this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': $event.event ? this.fillAlpah : 0 }));
+		} else {
+			this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': $event.event ? this.strokeAlpah : 0 }));
+
+		}
 	}
 
-	changeFillColor(fill: string) {
-		this.store.dispatch(new AnnotationSetProperties({ fill, 'marker-color': fill }));
-	}
-
-	changeFillShown(active: boolean) {
-		this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': active ? this.fillAlpah : 0 }));
-	}
-
-	changeStrokeShown(active: boolean) {
-		this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': active ? this.strokeAlpah : 0 }));
+	colorChange($event) {
+		if ($event.label === 'fill') {
+			this.store.dispatch(new AnnotationSetProperties({ fill: $event.event, 'marker-color': $event.event }));
+		} else {
+			this.store.dispatch(new AnnotationSetProperties({ stroke: $event.event }));
+		}
 	}
 
 }

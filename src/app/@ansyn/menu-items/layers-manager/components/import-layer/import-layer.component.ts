@@ -88,7 +88,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
 			const { id, label, showLabel, showMeasures, mode, ...initial } = feature.properties;
-			feature.properties = { id, label, showLabel: JSON.parse(showLabel), showMeasures: JSON.parse(showMeasures), mode, style: { initial } };
+			feature.properties = { id, label, showLabel: JSON.parse(showLabel ? showLabel : null), showMeasures: JSON.parse(showMeasures ? showMeasures : null), mode, style: { initial } };
 		});
 	}
 

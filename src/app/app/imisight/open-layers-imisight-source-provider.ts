@@ -9,7 +9,7 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/plugins';
 import { ICaseMapState } from '@ansyn/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn';
+import { OpenLayersMapSourceProvider } from '@ansyn/plugins';
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 
 @ImageryMapSource({

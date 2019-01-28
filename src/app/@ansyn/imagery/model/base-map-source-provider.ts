@@ -11,24 +11,23 @@ import {
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
 export interface IImageryMapSourceMetaData {
-	sourceType?: string;
-	supported?: IBaseImageryMapConstructor[];
-	forOverlay?: boolean;
+	readonly sourceType: string;
+	readonly supported?: IBaseImageryMapConstructor[];
+	readonly forOverlay?: boolean;
 }
 
-export interface IBaseMapSourceProviderConstructor extends IImageryMapSourceMetaData {
+export interface IBaseMapSourceProviderConstructor {
 	new(...args): BaseMapSourceProvider
 }
 
 @Injectable()
-export abstract class BaseMapSourceProvider<CONF = any> {
-
-	get imageryMetadata(): IBaseMapSourceProviderConstructor {
-		return this.constructor as IBaseMapSourceProviderConstructor ;
-	}
+export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSourceMetaData {
+	readonly sourceType: string;
+	readonly supported?: IBaseImageryMapConstructor[];
+	readonly forOverlay?: boolean;
 
 	protected get config(): CONF {
-		return this.mapSourceProvidersConfig[this.imageryMetadata.sourceType];
+		return this.mapSourceProvidersConfig[this.sourceType];
 	}
 
 	constructor(protected cacheService: CacheService,
@@ -39,7 +38,7 @@ export abstract class BaseMapSourceProvider<CONF = any> {
 
 
 	generateLayerId(metaData: ICaseMapState): string {
-		if (this.imageryMetadata.forOverlay) {
+		if (this.forOverlay) {
 			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
 		}
 		return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
@@ -72,6 +71,10 @@ export abstract class BaseMapSourceProvider<CONF = any> {
 
 	getThumbnailUrl(overlay, position): Observable<string> {
 		return of(overlay.thumbnailUrl);
+	}
+
+	getThumbnailName(overlay): string {
+		return overlay.sensorName;
 	}
 
 	removeExtraData(layer: any) {

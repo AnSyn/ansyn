@@ -13,6 +13,7 @@ import { configuration } from '../../configuration/configuration';
 import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
 import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { ImisightModule } from './imisight/imisight.module';
+import { SandboxModule } from './sandbox/sandbox.module';
 
 @NgModule({
 	imports: [
@@ -24,7 +25,8 @@ import { ImisightModule } from './imisight/imisight.module';
 		LoginModule,
 		ImisightModule,
 		AnsynRouterModule,
-		AppRoutingModule
+		AppRoutingModule,
+		SandboxModule
 	],
 	providers: [
 		{

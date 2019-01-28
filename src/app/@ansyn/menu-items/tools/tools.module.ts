@@ -7,7 +7,6 @@ import { AnnotationsControlComponent } from './components/annotations-control/an
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
-import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ProjectionConverterService } from './services/projection-converter.service';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
 import { CoreModule } from '@ansyn/core';
@@ -21,7 +20,7 @@ import { CoreModule } from '@ansyn/core';
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer)
 	],
 	providers: [ProjectionConverterService],
-	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, ColorPickerComponent],
+	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
 	entryComponents: [ToolsComponent],
 	exports: [ToolsComponent]
 })
@@ -33,7 +32,7 @@ export class ToolsModule {
 		return {
 			ngModule: ToolsModule,
 			providers: [
-				{ provide: toolsConfig, useValue: config }
+				{provide: toolsConfig, useValue: config}
 			]
 		};
 	}

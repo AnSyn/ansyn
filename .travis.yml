@@ -45,12 +45,12 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sh -x scripts/deploy.sh ansyn/client-chrome.v.44 $TRAVIS_COMMIT ansyn-client-chrome-v44 ansyn-client-messi-service
+    script: sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $CLUSTER $SERVICES_DEV
     skip_cleanup: true
     on:
       branch: master
   - provider: script
-    script: sh -x scripts/deploy.sh ansyn/client $TRAVIS_TAG ansyn-client ansyn-client-messi-service
+    script: sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $CLUSTER $SERVICES_PROD
     skip_cleanup: true
     on:
       tags: true

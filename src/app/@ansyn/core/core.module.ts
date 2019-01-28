@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { StoreModule } from '@ngrx/store';
 import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
@@ -22,8 +23,9 @@ import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
-import { ComboBoxTriggerComponent } from './forms/combo-box-trigger/combo-box-trigger.component';
-import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
+import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
+import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
 	imports: [
@@ -32,7 +34,9 @@ import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 		StoreModule.forFeature(coreFeatureKey, CoreReducer),
 		EffectsModule.forFeature([CoreEffects]),
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader]),
-		AlertsModule
+		AlertsModule,
+		BrowserAnimationsModule,
+		FormsModule
 	],
 	providers: [
 		GenericTypeResolverService,
@@ -51,7 +55,9 @@ import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent
+		AnimatedEllipsisComponent,
+		AnnotationsColorComponent,
+		AnnotationsWeightComponent
 	],
 	declarations: [
 		ImageryStatusComponent,
@@ -62,7 +68,9 @@ import { ComboBoxComponent } from './forms/combo-box/combo-box.component';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
-		AnimatedEllipsisComponent
+		AnimatedEllipsisComponent,
+		AnnotationsColorComponent,
+		AnnotationsWeightComponent
 	]
 })
 

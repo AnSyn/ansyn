@@ -20,10 +20,12 @@ import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { coreInitialState, coreStateSelector, IOverlay, LoggerService } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
+import { OverlaySourceProvider } from '../public_api';
 
+@OverlaySourceProvider({
+	sourceType: 'Mock'
+})
 class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	sourceType = 'Mock';
-
 	public fetch(fetchParams: IFetchParams): any {
 		return EMPTY;
 	}

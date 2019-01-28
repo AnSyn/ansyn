@@ -62,10 +62,10 @@
 				"mapType": "openLayersMap",
 				"sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
               },
-              "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+              "id": null
             }
           ],
-          "activeMapId": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+          "activeMapId": null
         },
         "layers": {
           "activeLayersIds": []
@@ -146,9 +146,6 @@
 	}
   },
   "mapSourceProvidersConfig": {
-    "TB": {
-    	"baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
-    },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
     	"styles": [ "AerialWithLabels" ]
@@ -222,7 +219,8 @@
     },
     "Proj4": {
       "ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
-      "ed50Customized": ""
+      "ed50Customized": "",
+      "ed50Notification": ""
     },
     "ImageProcParams": [
       {
@@ -295,71 +293,62 @@
 			]
 		  }
 	  },
-	   "TB": {
-		  "inActive": {{ getv "/ansyn/overlay/tb/inactive" "true" }},
-		  "treeViewItem": {
-		  "text":"TB",
-		  "value": 1,
-		  "collapsed": true,
-		  "children": []
-		  }
-	  },
       "PLANET": {
         "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
         "treeViewItem": {
-        "text": "Planet",
-        "value": 1,
-            "collapsed": true,
-            "children": [
-              {
-                "text": "REScene",
-                "value": {
-                  "sensorType": "REScene"
-                }
-              },
-              {
-                "text": "PSScene3Band",
-                "value": {
-                  "sensorType": "PSScene3Band"
-                }
-              },
-              {
-                "text": "PSOrthoTile",
-                "value": {
-                  "sensorType": "PSOrthoTile"
-                }
-              },
-              {
-                "text": "REOrthoTile",
-                "value": {
-                  "sensorType": "REOrthoTile"
-                }
-              },
-              {
-                "text": "SkySatScene",
-                "value": {
-                  "sensorType": "SkySatScene"
-                }
-              },
-              {
-                "text": "Landsat8L1G",
-                "value": {
-                  "sensorType": "Landsat8L1G"
-                }
-              },
-              {
-                "text": "Sentinel2L1C",
-                "value": {
-                  "sensorType": "Sentinel2L1C"
-                }
-              },
-			  {
-				  "text": "Others",
-				  "value": {
-					"sensorType": "others"
-				  }
-				}
-            ]
+			"text": "Planet",
+			"value": 1,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "REScene",
+					"value": {
+					  "sensorType": "REScene"
+					}
+				  },
+				  {
+					"text": "PSScene3Band",
+					"value": {
+					  "sensorType": "PSScene3Band"
+					}
+				  },
+				  {
+					"text": "PSOrthoTile",
+					"value": {
+					  "sensorType": "PSOrthoTile"
+					}
+				  },
+				  {
+					"text": "REOrthoTile",
+					"value": {
+					  "sensorType": "REOrthoTile"
+					}
+				  },
+				  {
+					"text": "SkySatScene",
+					"value": {
+					  "sensorType": "SkySatScene"
+					}
+				  },
+				  {
+					"text": "Landsat8L1G",
+					"value": {
+					  "sensorType": "Landsat8L1G"
+					}
+				  },
+				  {
+					"text": "Sentinel2L1C",
+					"value": {
+					  "sensorType": "Sentinel2L1C"
+					}
+				  },
+				  {
+					  "text": "Others",
+					  "value": {
+						"sensorType": "others"
+					  }
+					}
+				]
           }
         },
         "OPEN_AERIAL": {
@@ -367,16 +356,16 @@
           "treeViewItem": {
             "text": "OpenAerial",
             "value": 1,
-            "indeterminate": true,
-            "collapsed": true,
-            "children": [
-              {
-                "text": "UAV",
-                "value": {
-                  "sensorType": "UAV"
-                }
-              }
-            ]
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
           }
         }
       }
@@ -399,6 +388,7 @@
     "needToUseLayerExtent": false
   },
   "menuConfig": {
+    "menuItems": {{ getv "/ansyn/menu/items" "null" }},
     "path": "assets/logo.svg",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
@@ -407,7 +397,7 @@
     	"active": {{ getv "/ansyn/menu/forkme" "true" }},
     	"image": "assets/icons/forkme.svg",
     	"title": "Fork me on github",
-		"href": "https://github.com/ansyn/ansyn"
+		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     }
   },
   "loginConfig": {
@@ -423,12 +413,16 @@
       }
     },
     "FootprintPolylineVisualizer": {
+      "minSimplifyVertexCountLimit": 100,
       "colors": {
         "active": "#27b2cf",
         "inactive": "#d393e1",
         "display": "#9524ad",
         "favorite": "yellow"
       }
+    },
+    "FootprintHeatmapVisualizer": {
+      "minSimplifyVertexCountLimit": 100
     },
     "exampleFootprintHeatmapVisualizer": {
       "initial": {
@@ -980,7 +974,62 @@
           ]
         }
       ],
-      "blacklist": []
+      "blacklist": [],
+      "dataInputFiltersConfig": {
+		"text": "Planet",
+		"value": 1,
+			"collapsed": true,
+			"children": [
+			  {
+				"text": "REScene",
+				"value": {
+				  "sensorType": "REScene"
+				}
+			  },
+			  {
+				"text": "PSScene3Band",
+				"value": {
+				  "sensorType": "PSScene3Band"
+				}
+			  },
+			  {
+				"text": "PSOrthoTile",
+				"value": {
+				  "sensorType": "PSOrthoTile"
+				}
+			  },
+			  {
+				"text": "REOrthoTile",
+				"value": {
+				  "sensorType": "REOrthoTile"
+				}
+			  },
+			  {
+				"text": "SkySatScene",
+				"value": {
+				  "sensorType": "SkySatScene"
+				}
+			  },
+			  {
+				"text": "Landsat8L1G",
+				"value": {
+				  "sensorType": "Landsat8L1G"
+				}
+			  },
+			  {
+				"text": "Sentinel2L1C",
+				"value": {
+				  "sensorType": "Sentinel2L1C"
+				}
+			  },
+			  {
+				  "text": "Others",
+				  "value": {
+					"sensorType": "others"
+				  }
+				}
+			]
+		}
     },
     "OPEN_AERIAL": {
     	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
@@ -1022,7 +1071,21 @@
 				]
 			}
 		],
-		"blacklist": []
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			"text": "OpenAerial",
+			"value": 1,
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
+		  }
 	},
     "IMISIGHT": {
     	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
@@ -1064,7 +1127,20 @@
 				]
 			}
 		],
-		"blacklist": []
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			  "text":"Imisight",
+			  "value": 1,
+			  "collapsed": true,
+			  "children": [
+				 {
+					"text": "All",
+					"value": {
+					  "sensorType": "All"
+					}
+				  }
+				]
+			  }
 	}
   },
   "idahoOverlaysSourceConfig": {
@@ -1120,13 +1196,5 @@
 			"regionLengthInMeters": 100
 		}
 	}
-  },
-  "uploadsConfig": {
-      "apiUrl": "http://tb-server.webiks.com/v1/api/ansyn/upload",
-      "sensorTypes": [ "UAV", "Satellite", "Aircraft", "Ballon", "Kite" ],
-      "sensorNames": [],
-      "defaultSharing": "public",
-      "defaultSensorType": "UAV",
-      "rulesLink": "about:blank"
-   }
+  }
 }

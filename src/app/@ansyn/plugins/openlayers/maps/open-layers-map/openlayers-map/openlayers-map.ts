@@ -106,7 +106,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			loadTilesWhileAnimating: true
 		});
 		this.initListeners();
-		return this.resetView(layers[0], position)
+		return this.resetView(layers[0], position);
 	}
 
 	initListeners() {

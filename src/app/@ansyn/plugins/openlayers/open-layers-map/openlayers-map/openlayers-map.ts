@@ -41,6 +41,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private _mapObject: OLMap;
 
 	private _moveEndListener: () => void;
+	private _pointerDownListener: (args) => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
@@ -102,6 +103,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			loadTilesWhileInteracting: true,
 			loadTilesWhileAnimating: true
 		});
+		const element = this._mapObject.getTargetElement();
+		// todo: need to think on better looking code
+		element.firstElementChild.firstElementChild.setAttribute("tabIndex", "0");
 		this.initListeners();
 		return this.resetView(layers[0], position).pipe(
 			tap(() => {
@@ -122,7 +126,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			});
 		};
 
+		this._pointerDownListener = (args) => {
+			// ol 5 bug
+			args.originalEvent.srcElement.focus();
+		};
+
 		this._mapObject.on('moveend', this._moveEndListener);
+		this._mapObject.on('pointerdown', this._pointerDownListener, this);
 	}
 
 	createView(layer): View {
@@ -416,6 +426,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		if (this._mapObject) {
 			this._mapObject.un('moveend', this._moveEndListener);
+			this._mapObject.un('pointerdown', this._pointerDownListener);
+
 			this._mapObject.setTarget(null);
 		}
 

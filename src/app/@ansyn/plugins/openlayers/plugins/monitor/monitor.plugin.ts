@@ -85,16 +85,16 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		this.store$.dispatch(new SetProgressBarAction({ progress: progress * 100, mapId: this.mapId }));
 	};
 
-	tileLoadStart() {
+	tileLoadStart = () => {
 		this.tilesCounter.total++;
-	}
+	};
 
-	tileLoadEnd() {
+	tileLoadEnd = () => {
 		this.tilesCounter.success++;
 		this.resetCounterWhenDone();
-	}
+	};
 
-	tileLoadError() {
+	tileLoadError = () => {
 		this.tilesCounter.error++;
 
 		let message;
@@ -127,9 +127,9 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		if (this.source) {
 			switch (this.source.constructor) {
 				case TileSource: {
-					this.source.on('tileloadstart', this.tileLoadStart.bind(this));
-					this.source.on('tileloadend', this.tileLoadEnd.bind(this));
-					this.source.on('tileloaderror', this.tileLoadError.bind(this));
+					this.source.on('tileloadstart', this.tileLoadStart);
+					this.source.on('tileloadend', this.tileLoadEnd);
+					this.source.on('tileloaderror', this.tileLoadError);
 					break;
 				}
 				case Static: {
@@ -145,9 +145,9 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		if (this.source) {
 			switch (this.source.constructor) {
 				case TileSource: {
-					this.source.un('tileloadstart', this.tileLoadStart.bind(this));
-					this.source.un('tileloadend', this.tileLoadEnd.bind(this));
-					this.source.un('tileloaderror', this.tileLoadError.bind(this));
+					this.source.un('tileloadstart', this.tileLoadStart);
+					this.source.un('tileloadend', this.tileLoadEnd);
+					this.source.un('tileloaderror', this.tileLoadError);
 					break;
 				}
 			}

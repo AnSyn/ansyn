@@ -32,7 +32,8 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		) {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
-	createAsync(metaData: ICaseMapState): Promise<any> {
+
+	public create(metaData: ICaseMapState): any {
 		let layer;
 		if (metaData.data.overlay.tag.fileType === 'image') {
 			const extent: any = [0, 0, metaData.data.overlay.tag.imageData.ExifImageWidth, metaData.data.overlay.tag.imageData.ExifImageHeight];
@@ -77,21 +78,30 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 				source,
 				extent
 			});
-		} else {
-			const source = new TileWMS(<any>{
-				preload: Infinity,
-				url: metaData.data.overlay.imageUrl,
-				params: {
-					'VERSION': '1.1.0',
-					LAYERS: metaData.data.overlay.tag.geoserver.layer.resource.name
-				},
-				projection: metaData.data.overlay.tag.geoserver.data.srs
-			});
-
-			layer = new TileLayer({ visible: true, source });
 		}
-		return this.addFootprintToLayerPromise(Promise.resolve(layer), metaData);
+		else
+			{
+				const source = new TileWMS(<any>{
+					preload: Infinity,
+					url: metaData.data.overlay.imageUrl,
+					params: {
+						'VERSION': '1.1.0',
+						LAYERS: metaData.data.overlay.tag.geoserver.layer.resource.name
+					},
+					projection: metaData.data.overlay.tag.geoserver.data.srs
+				});
+				layer = new TileLayer({ visible: true, source });
+			}
+		return [layer];
+		}
+
+
+	createAsync(metaData: ICaseMapState): Promise<any> {
+		let layers = this.createOrGetFromCache(metaData);
+		return this.addFootprintToLayerPromise(Promise.resolve(layers[0]), metaData);
 	}
+
+
 
 	getThumbnailName(overlay: IOverlay): string {
 		return overlay.name;

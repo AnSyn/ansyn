@@ -166,7 +166,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setRotation(rotation ? rotation : 0);
 		view.setResolution(1);
 		this._backgroundMapObject.setView(view);
-		this.setMainLayerToBackgroundMap(layer);
+		const setMainLayer = layer.get(ImageryLayerProperties.FROM_CACHE) ? this.setMainLayer.bind(this) : this.setMainLayerToBackgroundMap.bind(this);
+		setMainLayer(layer);
 		this._mapObject.setView(view);
 		return combineLatest(this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)).pipe(
 			switchMap(() => {

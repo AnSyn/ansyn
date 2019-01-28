@@ -3,14 +3,13 @@ import { Store } from '@ngrx/store';
 import TileSource from 'ol/source/Tile';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
-import Static from 'ol/source/imagestatic';
+import Static from 'ol/source/ImageStatic';
 import { SetProgressBarAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { tap } from 'rxjs/operators';
 import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
-import { Image } from 'openlayers';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -160,7 +159,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		super.dispose();
 	}
 
-	staticImageLoad = (image: ol.Image, url) => {
+	staticImageLoad = (image: any, url) => {
 		this.http.request<Blob>(new HttpRequest(
 			'GET',
 			url,

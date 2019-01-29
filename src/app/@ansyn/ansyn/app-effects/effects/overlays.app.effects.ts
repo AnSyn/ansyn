@@ -63,7 +63,7 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
-import olExtent from 'ol/extent';
+import * as olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 import { get, isEqual } from 'lodash';
 

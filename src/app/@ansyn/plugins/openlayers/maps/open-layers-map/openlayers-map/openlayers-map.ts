@@ -1,15 +1,15 @@
-import OLMap from 'ol/map';
-import View from 'ol/view';
-import ScaleLine from 'ol/control/scaleline';
-import Group from 'ol/layer/group';
-import olGeoJSON from 'ol/format/geojson';
-import OLGeoJSON from 'ol/format/geojson';
-import Vector from 'ol/source/vector';
-import Layer from 'ol/layer/layer';
-import VectorLayer from 'ol/layer/vector';
-import olFeature from 'ol/feature';
-import olPolygon from 'ol/geom/polygon';
-import AttributionControl from 'ol/control/attribution';
+import OLMap from 'ol/Map';
+import View from 'ol/View';
+import ScaleLine from 'ol/control/ScaleLine';
+import Group from 'ol/layer/Group';
+import olGeoJSON from 'ol/format/GeoJSON';
+import OLGeoJSON from 'ol/format/GeoJSON';
+import Vector from 'ol/source/Vector';
+import Layer from 'ol/layer/Layer';
+import VectorLayer from 'ol/layer/Vector';
+import olFeature from 'ol/Feature';
+import olPolygon from 'ol/geom/Polygon';
+import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
 import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
@@ -73,6 +73,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}),
 	);
 
+	private _pointerDownListener: (args) => void = () => {
+		(<any>document.activeElement).blur()
+	};
+
 	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig,
 				public actions$: Actions) {
 		super();
@@ -118,7 +122,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
-					coordinateFormat: (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString()
+					coordinateFormat: (coords: [number, number]): string => coords.map((num) => +num.toFixed(4)).toString()
 				},
 				(point) => this.projectionService.projectApproximately(point, this))
 		];
@@ -132,7 +136,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 		this.initListeners();
 		this._backgroundMapObject = new OLMap({
-			target: shadowElement, // todo: ?
+			target: shadowElement,
 			renderer
 		});
 		return this.resetView(layers[0], position);
@@ -148,6 +152,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		};
 
 		this._mapObject.on('moveend', this._moveEndListener);
+		this._mapObject.on('pointerdown', this._pointerDownListener);
 		this.setLoadedLayersToActiveMap$.subscribe(); // todo: unsubscribe
 	}
 
@@ -187,6 +192,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		} else if (position) {
 			return this.setPosition(position, map);
 		}
+
 		return of(true);
 	}
 
@@ -275,7 +281,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
 		return this.projectionService.projectAccuratelyToImage(center, this).pipe(map(projectedCenter => {
-			const olCenter = <ol.Coordinate>projectedCenter.coordinates;
+			const olCenter = <[number, number]> projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {
@@ -305,7 +311,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (!areCoordinatesNumeric(center)) {
 			return of(null);
 		}
-		const point = <GeoPoint>turf.geometry('Point', center);
+		const point = <GeoPoint> turf.geometry('Point', center);
 
 		return this.projectionService.projectAccurately(point, this);
 	}
@@ -356,7 +362,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
 			map((features: olFeature[]) => {
 				const view: View = olmap.getView();
-				const geoJsonFeature = <any>this.olGeoJSON.writeFeaturesObject(features,
+				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });
 				const geoJsonExtent = geoJsonFeature.features[0].geometry;
 
@@ -393,7 +399,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public getPosition(): Observable<ICaseMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
-		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
+		const projectedState = { ...(<any>view).getState(), center: (<any>view).getCenter(), projection: { code: projection.getCode() } };
 
 		return this.calculateRotateExtent(this.mapObject).pipe(map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {
@@ -439,7 +445,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 
-	flyTo(location: ol.Coordinate) {
+	flyTo(location: [number, number]) {
 		const view = this._mapObject.getView();
 		view.animate({
 			center: location,
@@ -450,7 +456,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public addGeojsonLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
 			source: new Vector({
-				features: new olGeoJSON().readFeatures(<GlobalObject>data)
+				features: new olGeoJSON().readFeatures(data)
 			})
 		});
 		this.mapObject.addLayer(layer);
@@ -462,6 +468,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		if (this._mapObject) {
 			this._mapObject.un('moveend', this._moveEndListener);
+			this._mapObject.un('pointerdown', this._pointerDownListener);
 			this._mapObject.setTarget(null);
 		}
 

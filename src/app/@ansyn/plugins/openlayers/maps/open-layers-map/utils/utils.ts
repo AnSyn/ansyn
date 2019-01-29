@@ -1,16 +1,16 @@
-import olPolygon from 'ol/geom/polygon';
-import olExtent from 'ol/extent';
+import olPolygon, { fromExtent } from 'ol/geom/Polygon';
+import * as olExtent from 'ol/extent';
 import { Point } from 'geojson';
 import { CaseMapExtent } from '@ansyn/core';
 
 // @dynamic
 export class Utils {
-	static BoundingBoxToOLExtent(bbox: Point[]): ol.Extent | any {
-		const coordinates = <ol.Coordinate[]> bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
+	static BoundingBoxToOLExtent(bbox: Point[]): [number, number, number, number] | any {
+		const coordinates = <[number, number][]> bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
 		return olExtent.boundingExtent(coordinates);
 	}
 
-	static OLExtentToBoundingBox(extent: ol.Extent): Point[] {
+	static OLExtentToBoundingBox(extent: [number, number, number, number]): Point[] {
 		const topLeft = olExtent.getTopLeft(extent);
 		const bottomRight = olExtent.getBottomRight(extent);
 
@@ -26,6 +26,6 @@ export class Utils {
 	}
 
 	static extentToOlPolygon(extent: CaseMapExtent): olPolygon {
-		return olPolygon.fromExtent(extent);
+		return fromExtent(extent);
 	}
 }

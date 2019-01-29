@@ -1,9 +1,9 @@
 import { SetToastMessageAction } from '@ansyn/core';
 import { Store } from '@ngrx/store';
-import TileSource from 'ol/source/tile';
+import TileSource from 'ol/source/Tile';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryPlugin } from '@ansyn/imagery';
-import Static from 'ol/source/imagestatic';
+import Static from 'ol/source/ImageStatic';
 import { SetProgressBarAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
@@ -86,16 +86,16 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		this.store$.dispatch(new SetProgressBarAction({ progress: progress * 100, mapId: this.mapId }));
 	};
 
-	tileLoadStart() {
+	tileLoadStart = () => {
 		this.tilesCounter.total++;
-	}
+	};
 
-	tileLoadEnd() {
+	tileLoadEnd = () => {
 		this.tilesCounter.success++;
 		this.resetCounterWhenDone();
-	}
+	};
 
-	tileLoadError() {
+	tileLoadError = () => {
 		this.tilesCounter.error++;
 
 		let message;
@@ -127,13 +127,15 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	setMonitorEvents() {
 		if (this.source) {
 			if (this.source instanceof TileSource) {
-				this.source.on('tileloadstart', this.tileLoadStart, this);
-				this.source.on('tileloadend', this.tileLoadEnd, this);
-				this.source.on('tileloaderror', this.tileLoadError, this);
+				this.source.on('tileloadstart', this.tileLoadStart);
+				this.source.on('tileloadend', this.tileLoadEnd);
+				this.source.on('tileloaderror', this.tileLoadError);
 			} else if (this.source instanceof Static) {
-				const image = (<any>this.source).image_.image_; // ?
-				const src = (<any>this.source).image_.src_; // ?
+				const image = this.source.image_.image_;
+				const src = this.source.image_.src_;
 				this.staticImageLoad(image, src);
+			} else {
+				console.warn(`'${this.source} is not supported by monitor plugin'`);
 			}
 		}
 	}
@@ -141,9 +143,9 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	killMonitorEvents() {
 		if (this.source) {
 			if (this.source instanceof TileSource) {
-				this.source.un('tileloadstart', this.tileLoadStart, this);
-				this.source.un('tileloadend', this.tileLoadEnd, this);
-				this.source.un('tileloaderror', this.tileLoadError, this);
+				this.source.un('tileloadstart', this.tileLoadStart);
+				this.source.un('tileloadend', this.tileLoadEnd);
+				this.source.un('tileloaderror', this.tileLoadError);
 			}
 		}
 	}
@@ -153,7 +155,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		super.dispose();
 	}
 
-	staticImageLoad = (image: ol.Image, url) => {
+	staticImageLoad = (image: any, url) => {
 		this.http.request<Blob>(new HttpRequest(
 			'GET',
 			url,
@@ -180,6 +182,6 @@ export class MonitorPlugin extends BaseImageryPlugin {
 					break;
 				}
 			}
-		})
-	}
+		});
+	};
 }

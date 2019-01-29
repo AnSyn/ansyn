@@ -11,9 +11,9 @@ import {
 } from '@ansyn/menu-items';
 import { combineLatest, Observable, of } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import Icon from 'ol/style/icon';
-import Style from 'ol/style/style';
-import Feature from 'ol/feature';
+import Icon from 'ol/style/Icon';
+import Style from 'ol/style/Style';
+import Feature from 'ol/Feature';
 import { Point } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';

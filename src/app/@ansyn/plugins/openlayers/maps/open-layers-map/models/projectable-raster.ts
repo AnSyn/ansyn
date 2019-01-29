@@ -1,8 +1,7 @@
-import Raster from 'ol/source/raster';
-import Source from 'ol/source/source';
-import Projection from 'ol/proj/projection';
+import Raster from 'ol/source/Raster';
+import Source from 'ol/source/Source';
+import Projection from 'ol/proj/Projection';
 import { get } from 'lodash';
-import { GlobalObject } from 'openlayers';
 
 export class ProjectableRaster extends Raster {
 	sources: Source[];
@@ -20,7 +19,7 @@ export class ProjectableRaster extends Raster {
 		}
 	}
 
-	setOperation(operation: ol.RasterOperation, opt_lib?: GlobalObject): void {
+	setOperation(operation: any, opt_lib?: any): void {
 		this.destroy();
 		super.setOperation(operation, opt_lib);
 	}

@@ -20,6 +20,7 @@
     "moment",
     "ol",
     "wellknown",
+    "@angular/cdk",
     "@angular/material"
   ],
   "lib": {

@@ -1,7 +1,7 @@
 import { BaseMapSourceProvider, ImageryLayerProperties } from '@ansyn/imagery';
-import Layer from 'ol/layer/layer';
-import ImageLayer from 'ol/layer/image';
-import TileLayer from 'ol/layer/tile';
+import Layer from 'ol/layer/Layer';
+import ImageLayer from 'ol/layer/Image';
+import TileLayer from 'ol/layer/Tile';
 import { extentFromGeojson, ICaseMapState } from '@ansyn/core';
 import * as proj from 'ol/proj';
 import XYZ from 'ol/source/XYZ';

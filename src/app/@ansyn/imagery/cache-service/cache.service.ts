@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@angular/core';
 import { IImageryConfig } from '../model/iimagery-config';
 import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { cloneDeep as cloneDeepLodash } from 'lodash';
 import { ImageryLayerProperties } from '../model/imagery-layer.model';
 
 @Injectable()
@@ -35,10 +34,6 @@ export class CacheService {
 			this.cachedLayesrMap.delete(key.value);
 		}
 		layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set(ImageryLayerProperties.CACHE_ID, cacheId));
-		// Cloning the layers, in order to set a flag only in the cached layers
-		const clonedLayers = cloneDeepLodash(layers);
-		clonedLayers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set(ImageryLayerProperties.FROM_CACHE, true));
-		//
-		this.cachedLayesrMap.set(cacheId, clonedLayers);
+		this.cachedLayesrMap.set(cacheId, [...layers]);
 	}
 }

@@ -7,6 +7,7 @@ import { ICaseMapState, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 import {
 	IMapSourceProvidersConfig
 } from '@ansyn/core';
+import { ImageryLayerProperties } from './imagery-layer.model';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
@@ -48,6 +49,11 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		const cacheId = this.generateLayerId(metaData);
 		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
 		if (cacheLayers.length) {
+			cacheLayers.forEach((layer) => {
+				if (layer.set) {
+					layer.set(ImageryLayerProperties.FROM_CACHE, true);
+				}
+			});
 			return cacheLayers;
 		}
 

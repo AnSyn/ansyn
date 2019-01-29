@@ -58,8 +58,8 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
-import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class MapAppEffects {
@@ -175,8 +175,8 @@ export class MapAppEffects {
 	markupOnMapsDataChanges$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState && mapState.entities && Object.values(mapState.entities).length)),
-			map(([action, { entities, activeMapId }]: [Action, IMapState]) => {
+			filter(([action, mapState]) => Boolean(mapState && mapState.entities && Object.values(mapState.entities).length)),
+			map(([action, { entities, activeMapId }]) => {
 					const actives = [];
 					const displayed = [];
 					Object.values(entities).forEach((map: ICaseMapState) => {
@@ -225,8 +225,8 @@ export class MapAppEffects {
 	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapState]: [Action, IMapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
-			map(([action, mapState]: [Action, IMapState]) => {
+			filter(([action, mapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
+			map(([action, mapState]) => {
 				const activeMapState = MapFacadeService.activeMap(mapState);
 				const isGeoRegistered = activeMapState && MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
 				return new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered);

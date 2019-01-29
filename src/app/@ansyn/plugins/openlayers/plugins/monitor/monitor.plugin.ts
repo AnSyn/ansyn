@@ -125,33 +125,26 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	setMonitorEvents() {
 		if (this.source) {
-			switch (this.source.constructor) {
-				case Static: {
-					const image = this.source.image_.image_;
-					const src = this.source.image_.src_;
-					this.staticImageLoad(image, src);
-					break;
-				}
-				default: {
-					this.source.on('tileloadstart', this.tileLoadStart);
-					this.source.on('tileloadend', this.tileLoadEnd);
-					this.source.on('tileloaderror', this.tileLoadError);
-				}
+			if (this.source instanceof TileSource) {
+				this.source.on('tileloadstart', this.tileLoadStart);
+				this.source.on('tileloadend', this.tileLoadEnd);
+				this.source.on('tileloaderror', this.tileLoadError);
+			} else if (this.source instanceof Static) {
+				const image = this.source.image_.image_;
+				const src = this.source.image_.src_;
+				this.staticImageLoad(image, src);
+			} else {
+				console.warn(`'${this.source} is not supported by monitor plugin'`);
 			}
 		}
 	}
 
 	killMonitorEvents() {
 		if (this.source) {
-			switch (this.source.constructor) {
-				case Static: {
-					break;
-				}
-				default: {
-					this.source.un('tileloadstart', this.tileLoadStart);
-					this.source.un('tileloadend', this.tileLoadEnd);
-					this.source.un('tileloaderror', this.tileLoadError);
-				}
+			if (this.source instanceof TileSource) {
+				this.source.un('tileloadstart', this.tileLoadStart);
+				this.source.un('tileloadend', this.tileLoadEnd);
+				this.source.un('tileloaderror', this.tileLoadError);
 			}
 		}
 	}

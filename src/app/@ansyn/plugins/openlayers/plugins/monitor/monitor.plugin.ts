@@ -47,7 +47,8 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	}
 
 	getMainSource(): TileSource | Static | any {
-		const layer = this.communicator.ActiveMap.backgroundMapObject.getLayers()
+		const mapObject = this.communicator.ActiveMap.backgroundMapObject || this.communicator.ActiveMap.mapObject;
+		const layer = mapObject.getLayers()
 			.getArray().find(layer => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 
 		if (!layer) {
@@ -57,12 +58,12 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		let source = layer.getSource();
 
 		if (source instanceof ProjectableRaster) {
-			return <TileSource>(<ProjectableRaster>source).sources[0];
+			return (<ProjectableRaster>source).sources[0];
 		}
 		if (source instanceof Static) {
 			return <Static>source;
 		}
-		return <TileSource>source;
+		return source;
 	}
 
 	monitorSource() {
@@ -130,8 +131,8 @@ export class MonitorPlugin extends BaseImageryPlugin {
 				this.source.on('tileloadend', this.tileLoadEnd, this);
 				this.source.on('tileloaderror', this.tileLoadError, this);
 			} else if (this.source instanceof Static) {
-				const image = this.source.getProperties().image_.image_; // ?
-				const src = this.source.getProperties().image_.src_; // ?
+				const image = (<any>this.source).image_.image_; // ?
+				const src = (<any>this.source).image_.src_; // ?
 				this.staticImageLoad(image, src);
 			}
 		}

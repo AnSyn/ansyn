@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, ImageryLayerProperties, IBaseMapSourceProviderConstructor } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryLayerProperties } from '@ansyn/imagery';
 import Layer from 'ol/layer/layer';
 import ImageLayer from 'ol/layer/image';
 import TileLayer from 'ol/layer/tile';

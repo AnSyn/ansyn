@@ -32,7 +32,6 @@ import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
-import { GlobalObject } from 'openlayers';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -225,7 +224,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	getMainLayer(): Layer {
-		let mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
+		const mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 		return mainLayer;
 	}
 

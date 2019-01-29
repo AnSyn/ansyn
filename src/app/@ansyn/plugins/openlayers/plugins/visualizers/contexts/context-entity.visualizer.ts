@@ -1,5 +1,5 @@
-import olPoint from 'ol/geom/point';
-import olPolygon from 'ol/geom/polygon';
+import olPoint from 'ol/geom/Point';
+import olPolygon from 'ol/geom/Polygon';
 import {
 	getPointByGeometry,
 	getTimeDiff,
@@ -8,7 +8,7 @@ import {
 	IContextEntity,
 	IVisualizerEntity
 } from '@ansyn/core';
-import GeoJSON from 'ol/format/geojson';
+import GeoJSON from 'ol/format/GeoJSON';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';

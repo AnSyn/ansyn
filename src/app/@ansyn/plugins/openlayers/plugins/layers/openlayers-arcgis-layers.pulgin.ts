@@ -1,10 +1,10 @@
 import { Store } from '@ngrx/store';
 import { ILayer, layerPluginType } from '@ansyn/menu-items';
-import TileXYZ from 'ol/source/xyz';
-import TileLayer from 'ol/layer/tile';
+import XYZ from 'ol/source/XYZ';
+import TileLayer from 'ol/layer/Tile';
 import { ImageryPlugin } from '@ansyn/imagery';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
-import proj from 'ol/proj'
+import * as proj from 'ol/proj';
 import { OpenlayersBaseLayersPlugins } from "./openlayers-base-layers.plugins";
 
 @ImageryPlugin({
@@ -25,7 +25,7 @@ export class OpenlayersArcgisLayersPulgin extends OpenlayersBaseLayersPlugins {
 		const vector = new TileLayer({
 			zIndex: 100,
 			extent,
-			source: new TileXYZ({
+			source: new XYZ({
 				attributions: [
 					layer.name
 				],

@@ -1,5 +1,5 @@
 import { combineLatest, Observable, of } from 'rxjs';
-import ImageLayer from 'ol/layer/image';
+import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
 import { Store } from '@ngrx/store';
@@ -119,10 +119,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		} else {
 			this._imageProcessing.processImage(null);
 		}
-	}
-
-	public isImageLayerAndImageProcessing(): boolean {
-		return Boolean(this.imageLayer && this._imageProcessing);
 	}
 
 	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) {

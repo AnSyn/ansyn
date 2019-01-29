@@ -5,7 +5,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
 import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
 import { VisualizerInteractions } from '@ansyn/imagery';
-import Draw from 'ol/interaction/draw';
+import Draw from 'ol/interaction/Draw';
 import {
 	CaseGeoFilter,
 	CaseRegionState,
@@ -107,7 +107,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	createDrawInteraction() {
 		const drawInteractionHandler = new Draw(<any>{
 			type: this.geoFilter,
-			condition: (event: ol.MapBrowserEvent) => (<MouseEvent>event.originalEvent).which === 1,
+			condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
 			style: this.featureStyle.bind(this)
 		});
 

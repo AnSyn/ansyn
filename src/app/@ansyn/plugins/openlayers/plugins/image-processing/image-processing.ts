@@ -18,7 +18,7 @@ interface IProcessOperation {
 // design based on : https://openlayers.org/en/latest/examples/raster.html
 export class OpenLayersImageProcessing {
 	private _libs: Object;
-	private _raster: ProjectableRaster;
+	private _raster: ProjectableRaster | any;
 
 	constructor(layerSource?: ProjectableRaster) {
 		this.initializeOperations();

@@ -1,4 +1,4 @@
-import Layer from 'ol/layer/layer';
+import Layer from 'ol/layer/Layer';
 import { ProjectableRaster } from '../models/projectable-raster';
 
 export function isRasterLayer(layer): boolean {

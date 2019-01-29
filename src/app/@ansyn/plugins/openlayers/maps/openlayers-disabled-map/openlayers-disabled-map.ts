@@ -1,8 +1,7 @@
 import { Observable, of } from 'rxjs';
-import * as ol from 'openlayers';
-import Map from 'ol/map';
-import View from 'ol/view';
-import Layer from 'ol/layer/layer';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import Layer from 'ol/layer/Layer';
 import { ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
@@ -84,7 +83,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		});
 	}
 
-	fitToMainLayerExtent(extent: ol.Extent) {
+	fitToMainLayerExtent(extent: [number, number, number, number]) {
 		const view = this.mapObject.getView();
 		view.fit(extent, {
 			size: this.mapObject.getSize(),

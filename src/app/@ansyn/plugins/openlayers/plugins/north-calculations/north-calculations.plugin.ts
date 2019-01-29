@@ -29,8 +29,8 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { catchError, debounceTime, filter, map, mergeMap, retry, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
-import OLMap from 'ol/map';
-import View from 'ol/view';
+import OLMap from 'ol/Map';
+import View from 'ol/View';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 
 @ImageryPlugin({
@@ -259,7 +259,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	projectPoints(coordinates: ol.Coordinate[], sourceProjection: string, destProjection: string): Observable<Point[] | any> {
+	projectPoints(coordinates: [number, number][], sourceProjection: string, destProjection: string): Observable<Point[] | any> {
 		return forkJoin(coordinates.map((coordinate) => {
 			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
 			if (sourceProjection && destProjection) {
@@ -282,7 +282,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-			.pipe(switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, sourceProjection, destProjection)));
+			.pipe(switchMap((centers: [number, number][]) => this.projectPoints(centers, sourceProjection, destProjection)));
 	}
 
 	onResetView(): Observable<boolean> {

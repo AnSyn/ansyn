@@ -1,7 +1,7 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import olFeature from 'ol/feature';
-import Icon from 'ol/style/icon';
-import Style from 'ol/style/style';
+import olFeature from 'ol/Feature';
+import Icon from 'ol/style/Icon';
+import Style from 'ol/style/Style';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
 import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/map-facade';

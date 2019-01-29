@@ -57,12 +57,12 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		let source = layer.getSource();
 
 		if (source instanceof ProjectableRaster) {
-			return <TileSource>(<ProjectableRaster>source).sources[0];
+			return (<ProjectableRaster>source).sources[0];
 		}
 		if (source instanceof Static) {
 			return <Static>source;
 		}
-		return <TileSource>source;
+		return source;
 	}
 
 	monitorSource() {
@@ -126,16 +126,16 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	setMonitorEvents() {
 		if (this.source) {
 			switch (this.source.constructor) {
-				case TileSource: {
-					this.source.on('tileloadstart', this.tileLoadStart);
-					this.source.on('tileloadend', this.tileLoadEnd);
-					this.source.on('tileloaderror', this.tileLoadError);
-					break;
-				}
 				case Static: {
 					const image = this.source.image_.image_;
 					const src = this.source.image_.src_;
 					this.staticImageLoad(image, src);
+					break;
+				}
+				default: {
+					this.source.on('tileloadstart', this.tileLoadStart);
+					this.source.on('tileloadend', this.tileLoadEnd);
+					this.source.on('tileloaderror', this.tileLoadError);
 				}
 			}
 		}
@@ -144,11 +144,13 @@ export class MonitorPlugin extends BaseImageryPlugin {
 	killMonitorEvents() {
 		if (this.source) {
 			switch (this.source.constructor) {
-				case TileSource: {
+				case Static: {
+					break;
+				}
+				default: {
 					this.source.un('tileloadstart', this.tileLoadStart);
 					this.source.un('tileloadend', this.tileLoadEnd);
 					this.source.un('tileloaderror', this.tileLoadError);
-					break;
 				}
 			}
 		}
@@ -181,11 +183,11 @@ export class MonitorPlugin extends BaseImageryPlugin {
 					let reader = new FileReader();
 					reader.readAsDataURL(event.body);
 					reader.onloadend = () => {
-						(<any>image).src =  reader.result;
+						(<any>image).src = reader.result;
 					};
 					break;
 				}
 			}
-		})
-	}
+		});
+	};
 }

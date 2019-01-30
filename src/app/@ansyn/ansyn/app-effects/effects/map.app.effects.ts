@@ -164,11 +164,11 @@ export class MapAppEffects {
 	markupOnMapsDataChanges$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapState]) => Boolean(mapState && mapState.entities && Object.values(mapState.entities).length)),
-			map(([action, { entities, activeMapId }]) => {
+			filter(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => Boolean(mapState && mapState.entities && Object.values(mapState.entities).length)),
+			map(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => {
 					const actives = [];
 					const displayed = [];
-					Object.values(entities).forEach((map: ICaseMapState) => {
+					Object.values(mapState.entities).forEach((map: ICaseMapState) => {
 						if (Boolean(map.data.overlay)) {
 							if (map.id === activeMapId) {
 								actives.push(map.data.overlay.id);
@@ -214,8 +214,8 @@ export class MapAppEffects {
 	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([action, mapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
-			map(([action, mapState]) => {
+			filter(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
+			map(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => {
 				const activeMapState = MapFacadeService.activeMap(mapState);
 				const isGeoRegistered = activeMapState && MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
 				return new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered);

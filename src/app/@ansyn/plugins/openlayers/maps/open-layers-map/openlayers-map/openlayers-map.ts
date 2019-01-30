@@ -28,7 +28,7 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
@@ -62,10 +62,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	setLoadedLayersToActiveMap$: Observable<any> = this.actions$.pipe(
 		ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
 		filter(() => this.backgroundMapObject.getLayers().getLength() > 0),
-		filter(({payload}) => {
+		filter(({ payload }) => {
 			console.log('progress', payload.progress);
 			return payload.progress === 100;
 		}),
+		tap(() => console.log('load complete')),
+		debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
 		tap(({ payload }) => {
 			console.log('setting main layer to active map');
 			this.setMainLayer(this.loadedLayer);
@@ -280,7 +282,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
 		return this.projectionService.projectAccuratelyToImage(center, this).pipe(map(projectedCenter => {
-			const olCenter = <[number, number]> projectedCenter.coordinates;
+			const olCenter = <[number, number]>projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {
@@ -310,7 +312,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (!areCoordinatesNumeric(center)) {
 			return of(null);
 		}
-		const point = <GeoPoint> turf.geometry('Point', center);
+		const point = <GeoPoint>turf.geometry('Point', center);
 
 		return this.projectionService.projectAccurately(point, this);
 	}
@@ -361,7 +363,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
 			map((features: olFeature[]) => {
 				const view: View = olmap.getView();
-				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
+				const geoJsonFeature = <any>this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });
 				const geoJsonExtent = geoJsonFeature.features[0].geometry;
 
@@ -398,7 +400,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public getPosition(): Observable<ICaseMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
-		const projectedState = { ...(<any>view).getState(), center: (<any>view).getCenter(), projection: { code: projection.getCode() } };
+		const projectedState = {
+			...(<any>view).getState(),
+			center: (<any>view).getCenter(),
+			projection: { code: projection.getCode() }
+		};
 
 		return this.calculateRotateExtent(this.mapObject).pipe(map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
@@ -45,18 +45,7 @@ import {
 } from '@ansyn/core';
 import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
 import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import {
-	catchError,
-	debounceTime,
-	filter,
-	map,
-	mergeMap,
-	pairwise,
-	startWith,
-	switchMap,
-	tap,
-	withLatestFrom
-} from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -95,12 +84,12 @@ export class MapAppEffects {
 
 	@Effect()
 	onDisplayOverlayHideLoader$ = this.actions$
-		.ofType<DisplayOverlayAction>(
-			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-			CoreActionTypes.BACK_TO_WORLD_VIEW
-		)
 		.pipe(
+			ofType<DisplayOverlayAction>(
+				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+				CoreActionTypes.BACK_TO_WORLD_VIEW
+			),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
 				mapId: payload.mapId, show: false
 			}))
@@ -108,8 +97,8 @@ export class MapAppEffects {
 
 	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
-		.ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING)
 		.pipe(
+			ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
 			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
@@ -127,8 +116,8 @@ export class MapAppEffects {
 
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.IMAGERY_CREATED)
 		.pipe(
+			ofType(MapActionTypes.IMAGERY_CREATED),
 			withLatestFrom(this.store$.select(selectMaps)),
 			filter(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities && Object.values(entities).length > 0),
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
@@ -145,8 +134,8 @@ export class MapAppEffects {
 
 	@Effect()
 	onOverlayFromURL$: Observable<any> = this.actions$
-		.ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY)
 		.pipe(
+			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
 			filter((action: DisplayOverlayAction) => !isFullOverlay(action.payload.overlay)),
 			mergeMap((action: DisplayOverlayAction) => {
 				return [
@@ -162,8 +151,8 @@ export class MapAppEffects {
 
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
-		.ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED)
 		.pipe(
+			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
 			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
 			map((action) => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
@@ -213,8 +202,8 @@ export class MapAppEffects {
 
 	@Effect({ dispatch: false })
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
-		.ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS)
 		.pipe(
+			ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS),
 			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
 			tap((communicator: CommunicatorEntity) => {
 				communicator.visualizers.forEach(v => v.toggleVisibility());

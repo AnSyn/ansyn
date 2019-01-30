@@ -14,10 +14,10 @@
 	},
 	"dependencies": {
 		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^6.0.1",
+		"@ngrx/store": "^7.2.0",
 		"@turf/turf": "5.1.6",
 		"lodash": "4.17.5",
-		"@ngrx/effects": "^6.0.1",
+		"@ngrx/effects": "^7.2.0",
 		"@ngx-translate/core": "^10.0.2",
 		"ngx-treeview": "^2.0.7",
 		"angular2-uuid": "1.1.1",

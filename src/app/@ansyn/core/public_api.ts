@@ -21,6 +21,7 @@ export { AnsynTranslationModule } from './translation/ansyn-translation.module';
 export { SliderCheckboxComponent } from './forms/slider-checkbox/slider-checkbox.component';
 export { MockComponent } from './test/mock-component';
 export { ClickOutsideDirective } from './directives/click-outside.directive';
+export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { createStore, IStoreFixture } from './test/mock-store';
 export { AnsynCheckboxComponent } from './forms/ansyn-checkbox/ansyn-checkbox.component';
 export { asyncData } from './test/async-observable-helpers';

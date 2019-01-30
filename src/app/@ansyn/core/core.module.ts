@@ -19,6 +19,7 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 import { ManualRemovedOverlaysComponent } from './components/manual-removed-overlays/manual-removed-overlays.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
@@ -55,6 +56,7 @@ import { FormsModule } from '@angular/forms';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
+		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnnotationsColorComponent,
 		AnnotationsWeightComponent
@@ -68,6 +70,7 @@ import { FormsModule } from '@angular/forms';
 		AnsynLoaderComponent,
 		ManualRemovedOverlaysComponent,
 		ClickOutsideDirective,
+		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnnotationsColorComponent,
 		AnnotationsWeightComponent

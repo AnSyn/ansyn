@@ -50,7 +50,7 @@ export class TasksEffects {
 	onRunTask$: Observable<RunTaskFinishedAction> = this.actions$.pipe(
 		ofType<RunTaskAction>(TasksActionTypes.RUN_TASK),
 		withLatestFrom(this.store.select(selectCurrentAlgorithmTask)),
-		mergeMap(([action, task]: [TasksActionTypes, AlgorithmTask]) => (
+		mergeMap(([action, task]: [RunTaskAction, AlgorithmTask]) => (
 			this.tasksRemoteService.runTask(task).pipe(
 				map(() => new RunTaskFinishedAction(task))
 			)

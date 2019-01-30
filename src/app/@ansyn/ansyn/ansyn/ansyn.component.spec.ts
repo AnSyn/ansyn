@@ -6,8 +6,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
-import { mapStateSelector } from '@ansyn/map-facade';
+import { mapStateSelector, PopupService } from '@ansyn/map-facade';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
+import { MapPopupComponent } from '../../map-facade/components/map-popup/map-popup.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -57,17 +60,27 @@ describe('AnsynComponent', () => {
 				mockImageryView,
 				mockEmptyComponent,
 				mockOverlayOverviewComponent,
-				ansynTools
+				ansynTools,
+				MapPopupComponent
 			],
 			providers: [
 				{
 					provide: COMPONENT_MODE,
 					useValue: false
+				},
+				{
+					provide: ImageryCommunicatorService,
+					useValue: false
+				},
+				{
+					provide: PopupService,
+					useValue: false,
 				}
 			],
 			imports: [
 				RouterTestingModule,
-				StoreModule.forRoot({})]
+				StoreModule.forRoot({}),
+				HttpClientTestingModule]
 		}).compileComponents();
 	});
 

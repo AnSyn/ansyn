@@ -1,3 +1,4 @@
+export { PopupService } from "./services/popup.service";
 export { selectMaps } from './reducers/map.reducer';
 export {
 	initialMapState,

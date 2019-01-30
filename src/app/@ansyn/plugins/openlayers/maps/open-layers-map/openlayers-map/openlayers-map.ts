@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
 import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
-import { combineLatest, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import {
@@ -175,7 +175,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const setMainLayer = layer.get(ImageryLayerProperties.FROM_CACHE) ? this.setMainLayer.bind(this) : this.setMainLayerToBackgroundMap.bind(this);
 		setMainLayer(layer);
 		this._mapObject.setView(view);
-		return combineLatest(this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)).pipe(
+		return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(
 			switchMap(() => {
 				return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation);
 			})

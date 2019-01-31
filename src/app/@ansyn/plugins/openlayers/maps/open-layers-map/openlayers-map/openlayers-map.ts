@@ -32,6 +32,7 @@ import { debounceTime, filter, map, switchMap, take, tap } from 'rxjs/operators'
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
+import { AutoSubscription } from 'auto-subscriptions';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -59,6 +60,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public shadowElement = null;
 	private loadedLayer: Layer;
 
+	@AutoSubscription
 	setLoadedLayersToActiveMap$: Observable<any> = this.actions$.pipe(
 		ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
 		filter(() => this.backgroundMapObject.getLayers().getLength() > 0),
@@ -70,7 +72,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
 		tap(({ payload }) => {
 			console.log('setting main layer to active map');
+			console.log('layers 2', this.mapObject.getLayers().getArray());
 			this.setMainLayer(this.loadedLayer);
+			console.log('layers 3', this.mapObject.getLayers().getArray());
 		}),
 	);
 
@@ -154,7 +158,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		this._mapObject.on('moveend', this._moveEndListener);
 		this._mapObject.on('pointerdown', this._pointerDownListener);
-		this.setLoadedLayersToActiveMap$.subscribe(); // todo: unsubscribe
 	}
 
 	createView(layer): View {
@@ -174,6 +177,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._backgroundMapObject.setView(view);
 		const setMainLayer = layer.get(ImageryLayerProperties.FROM_CACHE) ? this.setMainLayer.bind(this) : this.setMainLayerToBackgroundMap.bind(this);
 		setMainLayer(layer);
+		console.log('layers 1', this.mapObject.getLayers().getArray());
 		this._mapObject.setView(view);
 		return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(
 			switchMap(() => {

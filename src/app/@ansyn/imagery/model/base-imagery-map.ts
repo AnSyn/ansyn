@@ -34,6 +34,9 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract initMap(element: HTMLElement, shadowElement: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
 
+	initMapSubscriptions(): void {
+	};
+
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection

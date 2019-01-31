@@ -2,7 +2,7 @@ import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@an
 import { ICaseMapPosition } from '@ansyn/core';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { filter, map, take } from 'rxjs/operators';
+import { filter, map, take, tap } from 'rxjs/operators';
 import { BaseImageryMap } from '../model/base-imagery-map';
 
 @Component({
@@ -23,7 +23,8 @@ export class MapComponent implements OnInit, OnDestroy {
 			.pipe(
 				filter(success => success),
 				map(() => this.map),
-				take(1)
+				tap(() => this.map.initMapSubscriptions()),
+				take(1),
 			);
 	};
 

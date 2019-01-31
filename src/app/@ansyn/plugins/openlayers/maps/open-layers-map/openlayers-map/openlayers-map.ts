@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
 import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import {
@@ -28,7 +28,7 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { debounceTime, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
@@ -59,6 +59,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 	public shadowElement = null;
 	private loadedLayer: Layer;
+	private backgroundMapWorking = false;
 
 	@AutoSubscription
 	setLoadedLayersToActiveMap$: Observable<any> = this.actions$.pipe(
@@ -175,14 +176,19 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setRotation(rotation ? rotation : 0);
 		view.setResolution(1);
 		this._backgroundMapObject.setView(view);
-		const setMainLayer = layer.get(ImageryLayerProperties.FROM_CACHE) ? this.setMainLayer.bind(this) : this.setMainLayerToBackgroundMap.bind(this);
-		setMainLayer(layer);
+		if (layer.get(ImageryLayerProperties.FROM_CACHE)) {
+			this.setMainLayer(layer)
+		} else {
+			this.setMainLayerToBackgroundMap(layer);
+			this.backgroundMapWorking = true;
+		}
 		console.log('layers 1', this.mapObject.getLayers().getArray());
 		this._mapObject.setView(view);
-		return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(
-			switchMap(() => {
-				return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation);
-			})
+		return combineLatest(this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
+			this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)).pipe(
+			map(([bool1, bool2]) => bool1 && bool2),
+			tap(() => console.log('waiting..')),
+			filter(() => !this.backgroundMapWorking)
 		);
 	}
 
@@ -219,6 +225,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
+		this.backgroundMapWorking = false;
 	}
 
 	setMainLayerToBackgroundMap(layer: Layer) {

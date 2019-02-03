@@ -5,6 +5,8 @@ import { OpenLayerTBSourceProvider } from './map-source-provider/open-layers-TB-
 import { OverlaysModule } from '@ansyn/overlays';
 import { TBSourceProvider } from './overlay-source-provider/tb-source-provider';
 import { UploadsModule } from './uploads/uploads.module';
+import { PopupPlugins } from "./plugins/popup/popup.plugins";
+import { OpenLayersMap } from "@ansyn/plugins";
 
 @NgModule({
 	imports: [
@@ -13,8 +15,8 @@ import { UploadsModule } from './uploads/uploads.module';
 			mapSourceProviders: [
 				OpenLayerTBSourceProvider
 			],
-			plugins: [],
-			maps: []
+			plugins: [PopupPlugins],
+			maps: [OpenLayersMap]
 		}),
 		OverlaysModule.provide({
 			overlaySourceProviders: [TBSourceProvider]

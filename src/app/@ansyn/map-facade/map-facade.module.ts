@@ -17,7 +17,6 @@ import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-ty
 import { CoreModule } from '@ansyn/core';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
-import { MapPopupComponent } from './components/map-popup/map-popup.component';
 
 @NgModule({
 	imports: [
@@ -39,9 +38,8 @@ import { MapPopupComponent } from './components/map-popup/map-popup.component';
 		ImageryTileProgressComponent,
 		OverlaySourceTypeNoticeComponent,
 		MapSearchBoxComponent,
-		MapPopupComponent
 	],
-	exports: [ImageriesManagerComponent, MapPopupComponent]
+	exports: [ImageriesManagerComponent]
 })
 
 export class MapFacadeModule {

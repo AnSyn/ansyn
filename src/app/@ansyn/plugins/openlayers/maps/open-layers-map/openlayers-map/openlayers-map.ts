@@ -145,7 +145,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target: shadowElement,
 			renderer
 		});
-		return this.resetView(layers[0], position);
+		this.resetView(layers[0], position).pipe(take(1)).subscribe();
+		return of(true);
 	}
 
 	initListeners() {

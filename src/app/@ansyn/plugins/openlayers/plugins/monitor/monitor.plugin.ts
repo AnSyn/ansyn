@@ -4,16 +4,18 @@ import TileSource from 'ol/source/Tile';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryPlugin } from '@ansyn/imagery';
 import Static from 'ol/source/ImageStatic';
-import { SetProgressBarAction } from '@ansyn/map-facade';
+import { MapActionTypes, SetIsLoadingTilesAction, SetProgressBarAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
+import { Actions, ofType } from '@ngrx/effects';
+import { AutoSubscription } from 'auto-subscriptions';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	deps: [Store, HttpClient]
+	deps: [Store, Actions, HttpClient]
 })
 export class MonitorPlugin extends BaseImageryPlugin {
 	source: TileSource | Static | any;
@@ -32,8 +34,20 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		one: 'Failed to load a tile'
 	};
 
+	@AutoSubscription
+	onStart$: Observable<any> = this.actions$.pipe(
+		ofType<SetIsLoadingTilesAction>(MapActionTypes.VIEW.SET_IS_LOADING_TILES),
+		filter(( { payload }) => payload.mapId === this.mapId && payload.value),
+		tap(() => {
+			console.log('Got action, starting monitor');
+			this.monitorSource();
+		})
+	);
+
 	constructor(protected store$: Store<any>,
-				protected http: HttpClient) {
+				protected actions$: Actions,
+				protected http: HttpClient
+				) {
 		super();
 	}
 
@@ -43,7 +57,8 @@ export class MonitorPlugin extends BaseImageryPlugin {
 
 	onResetView() {
 		return <Observable<boolean>>super.onResetView()
-			.pipe(tap(this.monitorSource.bind(this)));
+			// .pipe(tap(this.monitorSource.bind(this)))
+			;
 	}
 
 	getMainSource(): TileSource | Static | any {
@@ -114,7 +129,7 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		}));
 
 		this.resetCounterWhenDone();
-	}
+	};
 
 
 	initMonitor() {

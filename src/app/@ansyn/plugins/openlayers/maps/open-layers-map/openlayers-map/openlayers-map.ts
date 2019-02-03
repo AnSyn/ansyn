@@ -28,11 +28,12 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { debounceTime, filter, map, take, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
-import { MapActionTypes, SetProgressBarAction } from '@ansyn/map-facade';
+import { MapActionTypes, SetIsLoadingTilesAction, SetProgressBarAction } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
+import { Store } from '@ngrx/store';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -43,7 +44,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [OpenLayersProjectionService, CoreConfig, Actions],
+	deps: [OpenLayersProjectionService, CoreConfig, Actions, Store],
 	defaultMapSource: 'BING'
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
@@ -59,7 +60,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 	public shadowElement = null;
 	private loadedLayer: Layer;
-	private backgroundMapWorking = false;
+	private mapId: string;
 
 	@AutoSubscription
 	setLoadedLayersToActiveMap$: Observable<any> = this.actions$.pipe(
@@ -84,7 +85,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	};
 
 	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig,
-				public actions$: Actions) {
+				public actions$: Actions,
+				public store$: Store<any>) {
 		super();
 	}
 
@@ -145,6 +147,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target: shadowElement,
 			renderer
 		});
+		// Todo: I needed initMap not to wait for resetView, if resetView waits for the tiles to load.
+		// Otherwise, we get crashes in communicator and plugins.
+		// But, this is not enough. I need the plugins to reset, after resetView is done, and for the world map as well.
 		this.resetView(layers[0], position).pipe(take(1)).subscribe();
 		return of(true);
 	}
@@ -168,8 +173,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
-		console.log('resetView', 'layer', layer, layer.get(ImageryLayerProperties.FROM_CACHE));
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, mapId?: string): Observable<boolean> {
+		console.log('resetView', 'mapId', mapId);
 		const rotation: number = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		// set default values to prevent map Assertion error's
@@ -181,7 +186,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this.setMainLayer(layer)
 		} else {
 			this.setMainLayerToBackgroundMap(layer);
-			this.backgroundMapWorking = true;
+			this.mapId = mapId;
+			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
 		}
 		console.log('layers 1', this.mapObject.getLayers().getArray());
 		this._mapObject.setView(view);
@@ -189,7 +195,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)).pipe(
 			map(([bool1, bool2]) => bool1 && bool2),
 			tap(() => console.log('waiting..')),
-			filter(() => !this.backgroundMapWorking)
+			switchMap(() => this.actions$),
+			ofType<SetIsLoadingTilesAction>(MapActionTypes.VIEW.SET_IS_LOADING_TILES),
+			filter(( { payload }) => payload.mapId === mapId && !payload.value),
+			tap(() => console.log('resetView', 'loading finished action detected')),
+			map(() => true)
 		);
 	}
 
@@ -226,7 +236,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
-		this.backgroundMapWorking = false;
+		this.store$.dispatch(new SetIsLoadingTilesAction({ mapId: this.mapId, value: false }));
+
 	}
 
 	setMainLayerToBackgroundMap(layer: Layer) {

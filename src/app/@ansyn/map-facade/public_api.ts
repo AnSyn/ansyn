@@ -34,7 +34,8 @@ export {
 	ChangeImageryMapSuccess,
 	UpdateMapAction,
 	SetMapPositionByRectAction,
-	SetMapPositionByRadiusAction
+	SetMapPositionByRadiusAction,
+	SetIsLoadingTilesAction
 } from './actions/map.actions';
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';

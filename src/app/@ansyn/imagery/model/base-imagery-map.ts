@@ -42,7 +42,7 @@ export abstract class BaseImageryMap<T = any> {
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean>;
+	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, mapId?: string): Observable<boolean>;
 
 	abstract addLayer(layer: any): void;
 

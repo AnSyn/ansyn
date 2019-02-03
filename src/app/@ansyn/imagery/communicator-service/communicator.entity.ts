@@ -243,7 +243,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
-			return this.ActiveMap.resetView(layer, position, extent).pipe(mergeMap(() => this.resetPlugins()));
+			return this.ActiveMap.resetView(layer, position, extent, this.id).pipe(mergeMap(() => this.resetPlugins()));
 		}
 
 		return of(true);

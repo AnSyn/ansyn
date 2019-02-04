@@ -233,7 +233,7 @@ export const droneConfig: any = {
 			},
 			{
 				"modelName": "creditName",
-				"displayName": "Name of credit",
+				"displayName": "Name for Credit",
 				"type": "Enum"
 			},
 			{

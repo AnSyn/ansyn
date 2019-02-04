@@ -169,7 +169,7 @@ export class CasesService {
 		selectedCase.lastModified = currentTime;
 		selectedCase.autoSave = true;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
-			.pipe<any>(
+			.pipe(
 				map(_ => selectedCase),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
 			);

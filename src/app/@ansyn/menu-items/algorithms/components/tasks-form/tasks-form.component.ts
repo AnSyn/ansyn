@@ -83,7 +83,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	currentTaskOverlays$: Observable<IOverlay[]> = this.store$.select(selectCurrentAlgorithmTaskOverlays);
 
 	@AutoSubscription
-	currentTaskMasterOverlay$: Observable<IOverlay[]> = this.store$.select(selectCurrentAlgorithmTaskMasterOverlay);
+	currentTaskMasterOverlay$: Observable<IOverlay> = this.store$.select(selectCurrentAlgorithmTaskMasterOverlay);
 
 	currentTaskRegion$: Observable<IOverlay[]> = this.store$.select(selectCurrentAlgorithmTaskRegion);
 

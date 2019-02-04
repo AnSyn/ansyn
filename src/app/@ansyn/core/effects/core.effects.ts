@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ICoreState } from '../reducers/core.reducer';
 import { Observable } from 'rxjs';
@@ -12,8 +12,8 @@ export class CoreEffects {
 
 	@Effect({ dispatch: false })
 	onWelcomeNotification$: Observable<any> = this.actions$
-		.ofType(CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG)
 		.pipe(
+			ofType(CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG),
 			tap((action: SetWasWelcomeNotificationShownFlagAction) => {
 				const payloadObj = { wasWelcomeNotificationShown: action.payload };
 				updateSession(payloadObj);

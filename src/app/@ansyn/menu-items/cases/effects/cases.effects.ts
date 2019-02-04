@@ -84,7 +84,7 @@ export class CasesEffects {
 		ofType(CasesActionTypes.UPDATE_CASE),
 		map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id]),
 		filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.updatedCase.id !== defaultCaseId && (action.payload.updatedCase.autoSave || action.payload.forceUpdate)),
-		map(([action]: [UpdateCaseAction]) => new UpdateCaseBackendAction(action.payload.updatedCase)),
+		map(([action, defaultCaseId]: [UpdateCaseAction, string]) => new UpdateCaseBackendAction(action.payload.updatedCase)),
 		share());
 
 	@Effect()
@@ -103,12 +103,13 @@ export class CasesEffects {
 		);
 
 	@Effect({ dispatch: false })
-	openModal$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.OPEN_MODAL);
+	openModal$: Observable<any> = this.actions$.pipe(
+		ofType(CasesActionTypes.OPEN_MODAL));
 
 	@Effect({ dispatch: false })
-	closeModal$: Observable<any> = this.actions$
-		.ofType(CasesActionTypes.CLOSE_MODAL);
+	closeModal$: Observable<any> = this.actions$.pipe(
+		ofType(CasesActionTypes.CLOSE_MODAL)
+	);
 
 	@Effect()
 	loadDefaultCase$: Observable<SelectCaseAction> = this.actions$.pipe(

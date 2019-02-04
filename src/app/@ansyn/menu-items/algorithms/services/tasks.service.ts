@@ -72,7 +72,7 @@ export class TasksService {
 
 	createTask(selectedTask: AlgorithmTask): Observable<AlgorithmTask> {
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedTask))
-			.pipe<any>(
+			.pipe(
 				map(_ => selectedTask),
 				catchError(err => this.errorHandlerService.httpErrorHandle<AlgorithmTask>(err, 'Failed to create task in storage', null))
 			);

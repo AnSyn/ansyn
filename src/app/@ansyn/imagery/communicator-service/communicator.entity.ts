@@ -11,12 +11,12 @@ import {
 } from '@angular/core';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap } from '../model/base-imagery-map';
-import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
+import { merge, Observable, of, throwError } from 'rxjs';
 import { CaseMapExtent, getPolygonByPointAndRadius, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { filter, mergeMap, tap } from 'rxjs/operators';
 import { IMAGERY_MAPS, ImageryMaps } from '../providers/imagery-map-collection';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { MapComponent } from '../map/map.component';
@@ -117,7 +117,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType);
 		return getLayers.then((layers) => {
-			return mapComponent.createMap(layers, position)
+			return mapComponent.createMap(layers, position, this.id)
 				.pipe(
 					tap((map) => this.onMapCreated(map, mapType, this.activeMapName)),
 					tap(() => console.log('communicator after createmap'))

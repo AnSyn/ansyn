@@ -82,7 +82,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
 		map((f) => f(this.mapId)),
-		tap((value) => console.log('isLoadingLayers$', value))
+		tap((value) => console.log('isLoadingLayers$ mapId', this.mapId, 'value', value))
 	);
 
 	private _pointerDownListener: (args) => void = () => {
@@ -127,7 +127,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition, mapId?: string): Observable<boolean> {
 		this.shadowElement = shadowElement;
 		this._mapLayers = [];
 		const controls = [
@@ -154,7 +154,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 		// We need initMap not to wait for resetView, because now resetView waits for the tiles to load.
 		// Otherwise, we get crashes in communicator and plugins.
-		this.resetView(layers[0], position).pipe(take(1)).subscribe();
+		this.resetView(layers[0], position, undefined, mapId).pipe(take(1)).subscribe();
 		return of(true);
 	}
 
@@ -235,6 +235,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	setMainLayer(layer: Layer) {
+		console.log('setMainLayer');
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		layer.set(ImageryLayerProperties.MAIN_EXTENT, null);
 		this.removeAllLayers();
@@ -253,6 +254,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	getMainLayer(): Layer {
+		console.log('getMainLayer');
 		const mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 		return mainLayer;
 	}

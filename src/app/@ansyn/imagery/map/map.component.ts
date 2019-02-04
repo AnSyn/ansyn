@@ -17,7 +17,8 @@ export class MapComponent implements OnInit, OnDestroy {
 	constructor(public map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 
-	createMap(layers: any, position?: ICaseMapPosition): Observable<BaseImageryMap> {
+	createMap(layers: any, position?: ICaseMapPosition, mapId?: string): Observable<BaseImageryMap> {
+		console.log('createMap mapId', mapId);
 		return this.map
 			.initMap(this.mapElement.nativeElement, this.mapElementShadow.nativeElement, layers, position)
 			.pipe(

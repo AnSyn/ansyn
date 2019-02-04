@@ -1,0 +1,17 @@
+{
+  "preview": {
+    "id": "da6df5d1-4962-48a5-8645-7b9c674451ad",
+    "name": "Agricultural plots",
+    "url": "https://tiles.arcgis.com/tiles/Fqk0gVrfcnumlR5m/arcgis/rest/services/AgriParcelsForMapiReplaceCache/MapServer/tile/{z}/{y}/{x}",
+    "type": "Static",
+    "layerPluginType": "ARCGIS",
+    "extent": [
+      34.2873748,
+      29.5475804,
+      35.8777505,
+      33.2913015
+    ]
+  },
+  "data":{
+  }
+}

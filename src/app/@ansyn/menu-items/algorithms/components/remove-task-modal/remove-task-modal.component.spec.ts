@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RemoveTaskModalComponent } from './remove-task-modal.component';
 import { FormsModule } from '@angular/forms';
 import { AnsynInputComponent } from '@ansyn/core';
-import { MatFormField, MatInputModule, MatFormFieldModule } from '@angular/material';
+import { MatInputModule, MatFormFieldModule } from '@angular/material';
 
 describe('RemoveTaskModalComponent', () => {
 	let component: RemoveTaskModalComponent;
@@ -11,7 +11,7 @@ describe('RemoveTaskModalComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MatInputModule, MatFormFieldModule],
-			declarations: [RemoveTaskModalComponent, AnsynInputComponent, MatFormField]
+			declarations: [RemoveTaskModalComponent, AnsynInputComponent]
 		})
 			.compileComponents();
 	}));

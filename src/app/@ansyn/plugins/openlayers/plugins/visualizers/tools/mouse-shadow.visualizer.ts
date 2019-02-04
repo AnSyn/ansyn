@@ -44,7 +44,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
 		.pipe(tap(() => {
 			this.clearEntities();
-			this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
+			this.iMap.mapObject.un('pointermove', this.onPointerMove.bind(this), this);
 		}));
 
 	@AutoSubscription
@@ -52,9 +52,9 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		.pipe(tap(([isActive, shadowMouseFlag]) => {
 			this.clearEntities();
 			if (isActive && shadowMouseFlag) {
-				this.iMap.mapObject.on('pointermove', this.onPointerMove, this);
+				this.iMap.mapObject.on('pointermove', this.onPointerMove.bind(this), this);
 			} else {
-				this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
+				this.iMap.mapObject.un('pointermove', this.onPointerMove.bind(this), this);
 			}
 		}));
 

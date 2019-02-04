@@ -67,7 +67,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	pointToRealNorth$ = this.actions$.pipe(
 		ofType<PointToRealNorthAction>(MapActionTypes.POINT_TO_REAL_NORTH),
 		filter((action: PointToRealNorthAction) => action.payload === this.mapId),
-		switchMap(([action]: [PointToRealNorthAction]) => {
+		switchMap((action: PointToRealNorthAction) => {
 			return this.setActualNorth();
 		})
 	);

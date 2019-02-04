@@ -29,14 +29,15 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 			const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
 			let layerData;
 			try {
+				const readerResult: string = <string>this.reader.result;
 				switch (fileType.toLowerCase()) {
 					case 'kml':
-						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(this.reader.result, 'text/xml'));
+						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(readerResult, 'text/xml'));
 						this.simpleStyleToVisualizer(layerData);
 						break;
 					case 'json':
 					case 'geojson':
-						layerData = JSON.parse(this.reader.result);
+						layerData = JSON.parse(readerResult);
 						break;
 
 					default:

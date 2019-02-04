@@ -8,7 +8,7 @@ import { EditLayerComponent } from './edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './delete-layer/delete-layer.component';
 import { FormsModule } from '@angular/forms';
 import { AnsynInputComponent, AnsynModalComponent } from '@ansyn/core';
-import { MatFormField } from '@angular/material';
+import { MatInputModule, MatFormFieldModule } from '@angular/material';
 
 describe('DataLayersModalsComponent', () => {
 	let component: DataLayersModalsComponent;
@@ -16,8 +16,8 @@ describe('DataLayersModalsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DataLayersModalsComponent, AnsynModalComponent, DownloadLayersComponent, EditLayerComponent, DeleteLayerComponent, AnsynInputComponent, MatFormField],
-			imports: [FormsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })]
+			declarations: [DataLayersModalsComponent, AnsynModalComponent, DownloadLayersComponent, EditLayerComponent, DeleteLayerComponent, AnsynInputComponent],
+			imports: [MatInputModule, MatFormFieldModule, FormsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })]
 		})
 			.compileComponents();
 	}));

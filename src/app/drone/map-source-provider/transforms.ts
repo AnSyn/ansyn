@@ -43,7 +43,7 @@ function createTransformMatrix(boundary: Array<Array<number>>, width: number, he
 export const FROMPIXEL = 'fromPixel';
 export const FROMCOORDINATES = 'fromCoordinates';
 
-export function createTransform(code: string, boundary: Array<Array<number>>, width: number, height: number): ITransformer {
+export function createTransform(boundary: Array<Array<number>>, width: number, height: number): ITransformer {
 	const A = createTransformMatrix(boundary, width, height);
 	const PIXEL2EPSG = (coords) => {
 		return convertPixels(A, coords);

@@ -40,7 +40,7 @@ export {
 	ToggleFavoriteAction,
 	ToggleMapLayersAction, TogglePresetOverlayAction
 } from './actions/core.actions';
-export { ICaseFacetsState, ICaseFilter } from './models/case.model';
+export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './models/case.model';
 export { InjectionResolverFilter } from './services/generic-type-resolver';
 export { GenericTypeResolverService } from './services/generic-type-resolver.service';
 export { IMapsLayout } from './models/i-maps-layout';

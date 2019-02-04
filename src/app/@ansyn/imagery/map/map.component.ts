@@ -1,8 +1,8 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ICaseMapPosition } from '@ansyn/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { filter, map, take, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { BaseImageryMap } from '../model/base-imagery-map';
 
 @Component({
@@ -23,10 +23,28 @@ export class MapComponent implements OnInit, OnDestroy {
 			.pipe(
 				filter(success => success),
 				map(() => this.map),
-				tap(() => this.map.initMapSubscriptions()),
+				tap(() => {
+					this.map.initMapSubscriptions();
+					this.map.isLoadingLayers$.pipe(
+						filter((isLoadingLayers) => !isLoadingLayers),
+						tap(() => console.log('createMap', 'done Loading Layers, resetting plugins')),
+						switchMap(() => this.resetPlugins()),
+						take(1)
+					).subscribe();
+				}),
 				take(1),
 			);
 	};
+
+	resetPlugins(): Observable<boolean> {
+		console.log('resetPlugins');
+		if (!this.plugins || this.plugins.length === 0) {
+			return of(true);
+		}
+
+		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
+		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
+	}
 
 	ngOnDestroy(): void {
 		if (this.map) {

@@ -6,7 +6,8 @@ export {
 	IMapState,
 	mapStateSelector,
 	selectActiveMapId,
-	selectMapsList
+	selectMapsList,
+	selectIsLoadingTiles
 } from './reducers/map.reducer';
 
 export {

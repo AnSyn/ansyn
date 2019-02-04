@@ -28,10 +28,10 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { debounceTime, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
-import { MapActionTypes, SetIsLoadingTilesAction, SetProgressBarAction } from '@ansyn/map-facade';
+import { MapActionTypes, selectIsLoadingTiles, SetIsLoadingTilesAction, SetProgressBarAction } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
 
@@ -78,6 +78,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this.setMainLayer(this.loadedLayer);
 			console.log('layers 3', this.mapObject.getLayers().getArray());
 		}),
+	);
+
+	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
+		map((f) => f(this.mapId)),
+		tap((value) => console.log('isLoadingLayers$', value))
 	);
 
 	private _pointerDownListener: (args) => void = () => {
@@ -147,9 +152,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target: shadowElement,
 			renderer
 		});
-		// Todo: I needed initMap not to wait for resetView, if resetView waits for the tiles to load.
+		// We need initMap not to wait for resetView, because now resetView waits for the tiles to load.
 		// Otherwise, we get crashes in communicator and plugins.
-		// But, this is not enough. I need the plugins to reset, after resetView is done, and for the world map as well.
 		this.resetView(layers[0], position).pipe(take(1)).subscribe();
 		return of(true);
 	}
@@ -191,15 +195,15 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 		console.log('layers 1', this.mapObject.getLayers().getArray());
 		this._mapObject.setView(view);
-		return combineLatest(this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
-			this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)).pipe(
-			map(([bool1, bool2]) => bool1 && bool2),
+
+		return combineLatest(this.isLoadingLayers$,
+			this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
+			this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
+		).pipe(
 			tap(() => console.log('waiting..')),
-			switchMap(() => this.actions$),
-			ofType<SetIsLoadingTilesAction>(MapActionTypes.VIEW.SET_IS_LOADING_TILES),
-			filter(( { payload }) => payload.mapId === mapId && !payload.value),
+			filter(([isLoadingLayers, bool1, bool2]) => !isLoadingLayers),
 			tap(() => console.log('resetView', 'loading finished action detected')),
-			map(() => true)
+			map(([isLoadingLayers, bool1, bool2]) => bool1 && bool2)
 		);
 	}
 

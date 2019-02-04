@@ -40,6 +40,7 @@ export interface IMapState extends EntityState<ICaseMapState> {
 	activeMapId: string;
 	isLoadingMaps: Map<string, string>,
 	isHiddenMaps: Set<string>,
+	isLoadingTilesMaps: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: IPendingOverlay[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -49,6 +50,7 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	activeMapId: null,
 	isLoadingMaps: new Map<string, string>(),
 	isHiddenMaps: new Set<string>(),
+	isLoadingTilesMaps: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: []
 });
@@ -93,6 +95,17 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				isHiddenMaps.delete(mapId);
 			}
 			return { ...state, ...action.payload };
+		}
+
+		case MapActionTypes.VIEW.SET_IS_LOADING_TILES: {
+			const isLoadingTilesMaps = new Set(state.isLoadingTilesMaps);
+			const { mapId, value } = action.payload;
+			if (value) {
+				isLoadingTilesMaps.add(mapId);
+			} else {
+				isLoadingTilesMaps.delete(mapId);
+			}
+			return { ...state, isLoadingTilesMaps };
 		}
 
 		case MapActionTypes.UPDATE_MAP: {
@@ -174,3 +187,5 @@ export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapStat
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);
 export const selectMaps = createSelector(mapStateSelector, selectEntities);
+export const selectIsLoadingTilesMaps = createSelector(mapStateSelector, (map: IMapState) => map.isLoadingTilesMaps);
+export const selectIsLoadingTiles = createSelector(selectIsLoadingTilesMaps, (mapSet: Set<string>) => (mapId: string) => mapSet.has(mapId));

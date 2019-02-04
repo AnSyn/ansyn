@@ -119,7 +119,8 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position)
 				.pipe(
-					tap((map) => this.onMapCreated(map, mapType, this.activeMapName))
+					tap((map) => this.onMapCreated(map, mapType, this.activeMapName)),
+					tap(() => console.log('communicator after createmap'))
 				)
 				.toPromise();
 		});
@@ -245,7 +246,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		if (this.ActiveMap) {
 			return this.ActiveMap.resetView(layer, position, extent, this.id).pipe(mergeMap(() => this.resetPlugins()));
 		}
-
 		return of(true);
 	}
 
@@ -275,19 +275,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-
 	ngOnDestroy() {
 		this.imageryCommunicatorService.remove(this.id);
 		this.destroyPlugins();
 	}
 
 	private resetPlugins(): Observable<boolean> {
-		if (!this.plugins || this.plugins.length === 0) {
-			return of(true);
-		}
-
-		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
-		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
+		return this._mapComponentRef.instance.resetPlugins();
 	}
 
 	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<any> {

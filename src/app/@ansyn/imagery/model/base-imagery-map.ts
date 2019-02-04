@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 
@@ -25,6 +25,7 @@ export abstract class BaseImageryMap<T = any> {
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
 	public mapObject: T;
 	public backgroundMapObject: T;
+	public isLoadingLayers$: Observable<boolean> = of(true);
 
 	abstract getCenter(): Observable<Point>;
 

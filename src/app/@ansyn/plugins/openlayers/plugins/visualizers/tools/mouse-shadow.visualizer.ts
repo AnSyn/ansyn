@@ -5,7 +5,7 @@ import Style from 'ol/style/Style';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
 import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/map-facade';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer } from '@ansyn/imagery';

@@ -20,7 +20,7 @@ export class MapComponent implements OnInit, OnDestroy {
 	createMap(layers: any, position?: ICaseMapPosition, mapId?: string): Observable<BaseImageryMap> {
 		console.log('createMap mapId', mapId);
 		return this.map
-			.initMap(this.mapElement.nativeElement, this.mapElementShadow.nativeElement, layers, position)
+			.initMap(this.mapElement.nativeElement, this.mapElementShadow.nativeElement, layers, position, mapId)
 			.pipe(
 				filter(success => success),
 				map(() => this.map),

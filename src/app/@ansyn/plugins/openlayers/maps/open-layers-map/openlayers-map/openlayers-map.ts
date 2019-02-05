@@ -81,8 +81,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	);
 
 	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
+		tap((f) => console.log('isLoadingLayers$ mapId', this.mapId, 'value', this.mapId ? f(this.mapId) : 'none')),
+		filter(() => Boolean(this.mapId)),
 		map((f) => f(this.mapId)),
-		tap((value) => console.log('isLoadingLayers$ mapId', this.mapId, 'value', value))
 	);
 
 	private _pointerDownListener: (args) => void = () => {
@@ -254,7 +255,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	getMainLayer(): Layer {
-		console.log('getMainLayer');
 		const mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 		return mainLayer;
 	}

@@ -32,7 +32,6 @@ import { debounceTime, filter, map, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, selectIsLoadingTiles, SetIsLoadingTilesAction, SetProgressBarAction } from '@ansyn/map-facade';
-import { AutoSubscription } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
 
 export const OpenlayersMapName = 'openLayersMap';
@@ -62,29 +61,31 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private loadedLayer: Layer;
 	private mapId: string;
 
-	@AutoSubscription
-	setLoadedLayersToActiveMap$: Observable<any> = this.actions$.pipe(
-		ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
-		filter(() => this.backgroundMapObject.getLayers().getLength() > 0),
-		filter(({ payload }) => {
-			console.log('progress', payload.progress);
-			return payload.progress === 100;
-		}),
-		tap(() => console.log('load complete')),
-		debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
-		tap(({ payload }) => {
-			console.log('setting main layer to active map');
-			console.log('layers 2', this.mapObject.getLayers().getArray());
-			this.setMainLayer(this.loadedLayer);
-			console.log('layers 3', this.mapObject.getLayers().getArray());
-		}),
-	);
-
 	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
 		tap((f) => console.log('isLoadingLayers$ mapId', this.mapId, 'value', this.mapId ? f(this.mapId) : 'none')),
 		filter(() => Boolean(this.mapId)),
 		map((f) => f(this.mapId)),
 	);
+
+	setMainLayerToForegroundMapAfterTilesAreLoaded() {
+		this.actions$.pipe(
+			ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
+			filter(() => this.backgroundMapObject.getLayers().getLength() > 0),
+			filter(({ payload }) => {
+				console.log('progress', payload.progress);
+				return payload.progress === 100;
+			}),
+			tap(() => console.log('load complete, mapId', this.mapId)),
+			debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
+			tap(({ payload }) => {
+				console.log('setting main layer to active map');
+				console.log('layers 2', this.mapObject.getLayers().getArray());
+				this.setMainLayer(this.loadedLayer);
+				console.log('layers 3', this.mapObject.getLayers().getArray());
+			}),
+			take(1)
+		).subscribe();
+	}
 
 	private _pointerDownListener: (args) => void = () => {
 		(<any>document.activeElement).blur()
@@ -190,8 +191,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (layer.get(ImageryLayerProperties.FROM_CACHE)) {
 			this.setMainLayer(layer)
 		} else {
-			this.setMainLayerToBackgroundMap(layer);
 			this.mapId = mapId;
+			this.setMainLayerToBackgroundMap(layer);
+			this.setMainLayerToForegroundMapAfterTilesAreLoaded();
 			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
 		}
 		console.log('layers 1', this.mapObject.getLayers().getArray());
@@ -201,9 +203,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
 			this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
 		).pipe(
-			tap(() => console.log('waiting..')),
+			tap(() => {
+				console.log('waiting..')
+			}),
 			filter(([isLoadingLayers, bool1, bool2]) => !isLoadingLayers),
-			tap(() => console.log('resetView', 'loading finished action detected')),
+			take(1),
+			tap(() => {
+				console.log('resetView', 'loading finished action detected')
+			}),
 			map(([isLoadingLayers, bool1, bool2]) => bool1 && bool2)
 		);
 	}

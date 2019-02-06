@@ -66,6 +66,13 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 				} else {
 					const extent: any = [0, -metaData.data.overlay.tag.imageData.ExifImageHeight, metaData.data.overlay.tag.imageData.ExifImageWidth, 0];
 					layer = new TileLayer({ visible: true, source, extent });
+					const originalTileUrlFunction = (<any>source).tileUrlFunction;
+					(<any>source).tileUrlFunction = function (...args) {
+						const wmsURL = originalTileUrlFunction(...args);
+						const start = wmsURL.indexOf('SRS=') + 4;
+						const end = wmsURL.indexOf('&', start);
+						return `${wmsURL.substring(0, start)}EPSG:32662${wmsURL.substring(end)}`;
+					}
 				}
 			}
 		return [layer];
@@ -127,7 +134,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 		const transformer = createTransform(boundary, extent[2], extent[3]);
 
 		const projection = new Projection({
-			code: `EPSG:32662`,
+			code: `${overlay.id}`,
 			units: 'm',
 			axisOrientation: 'neu',
 			global: false

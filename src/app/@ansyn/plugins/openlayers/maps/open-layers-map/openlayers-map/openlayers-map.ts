@@ -249,8 +249,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
-		this.store$.dispatch(new SetIsLoadingTilesAction({ mapId: this.mapId, value: false }));
-
+		// We need setTimeout for when we do not use double buffer
+		setTimeout(() => {
+			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId: this.mapId, value: false }));
+		}, 0);
 	}
 
 	setMainLayerToBackgroundMap(layer: Layer) {

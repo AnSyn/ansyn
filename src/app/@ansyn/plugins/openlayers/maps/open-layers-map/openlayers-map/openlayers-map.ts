@@ -52,6 +52,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
 	private _backgroundMapObject: OLMap;
+	private _backgroundMapParams: object;
 
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
@@ -150,14 +151,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			loadTilesWhileAnimating: true
 		});
 		this.initListeners();
-		this._backgroundMapObject = new OLMap({
+		this._backgroundMapParams = {
 			target: shadowElement,
 			renderer
-		});
-		// We need initMap not to wait for resetView, because now resetView waits for the tiles to load.
-		// Otherwise, we get crashes in communicator and plugins.
-		this.resetView(layers[0], position, undefined, mapId).pipe(take(1)).subscribe();
-		return of(true);
+		};
+		// For initMap() we invoke resetView without double buffer
+		// (otherwise resetView() would have waited for the tile loading to end, but we don't want initMap() to wait).
+		// The double buffer is not relevant at this stage anyway.
+		return this.resetView(layers[0], position, undefined, mapId);
 	}
 
 	initListeners() {
@@ -179,40 +180,54 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, mapId?: string): Observable<boolean> {
-		console.log('resetView', 'mapId', mapId);
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, mapId?: string, useDoubleBuffer?: boolean): Observable<boolean> {
+		console.log('resetView', 'mapId', mapId, 'useDoubleBuffer', useDoubleBuffer);
+		if (useDoubleBuffer) {
+			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
+		} else if (this._backgroundMapObject) {
+			this._backgroundMapObject.setTarget(null);
+			this._backgroundMapObject = null;
+		}
 		const rotation: number = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		// set default values to prevent map Assertion error's
 		view.setCenter([0, 0]);
 		view.setRotation(rotation ? rotation : 0);
 		view.setResolution(1);
-		this._backgroundMapObject.setView(view);
 		if (layer.get(ImageryLayerProperties.FROM_CACHE)) {
 			this.setMainLayer(layer)
 		} else {
 			this.mapId = mapId;
-			this.setMainLayerToBackgroundMap(layer);
-			this.setMainLayerToForegroundMapAfterTilesAreLoaded();
+			if (useDoubleBuffer) {
+				this._backgroundMapObject.setView(view);
+				this.setMainLayerToBackgroundMap(layer);
+				this.setMainLayerToForegroundMapAfterTilesAreLoaded();
+			} else {
+				this.setMainLayer(layer)
+			}
 			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
 		}
 		console.log('layers 1', this.mapObject.getLayers().getArray());
 		this._mapObject.setView(view);
 
-		return combineLatest(this.isLoadingLayers$,
-			this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
-			this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
-		).pipe(
-			tap(() => {
-				console.log('waiting..')
-			}),
-			filter(([isLoadingLayers, bool1, bool2]) => !isLoadingLayers),
-			take(1),
-			tap(() => {
-				console.log('resetView', 'loading finished action detected')
-			}),
-			map(([isLoadingLayers, bool1, bool2]) => bool1 && bool2)
-		);
+		if (useDoubleBuffer) {
+			return combineLatest(this.isLoadingLayers$,
+				this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
+				this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
+			).pipe(
+				tap(() => {
+					console.log('waiting..')
+				}),
+				filter(([isLoadingLayers, bool1, bool2]) => !isLoadingLayers),
+				take(1),
+				tap(() => {
+					console.log('resetView', 'loading finished action detected')
+				}),
+				map(([isLoadingLayers, bool1, bool2]) => bool1 && bool2)
+			);
+		} else {
+			return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
+		}
 	}
 
 	// Used by resetView()

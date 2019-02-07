@@ -11,12 +11,12 @@ import {
 } from '@angular/core';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap } from '../model/base-imagery-map';
-import { merge, Observable, of, throwError } from 'rxjs';
+import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
 import { CaseMapExtent, getPolygonByPointAndRadius, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
-import { filter, mergeMap, tap } from 'rxjs/operators';
+import { filter, map, mergeMap, tap } from 'rxjs/operators';
 import { IMAGERY_MAPS, ImageryMaps } from '../providers/imagery-map-collection';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { MapComponent } from '../map/map.component';
@@ -119,8 +119,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return getLayers.then((layers) => {
 			return mapComponent.createMap(layers, position, this.id)
 				.pipe(
-					tap((map) => this.onMapCreated(map, mapType, this.activeMapName)),
-					tap(() => console.log('communicator after createmap'))
+					tap((map) => this.onMapCreated(map, mapType, this.activeMapName))
 				)
 				.toPromise();
 		});
@@ -281,7 +280,11 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	private resetPlugins(): Observable<boolean> {
-		return this._mapComponentRef.instance.resetPlugins();
+		if (!this.plugins || this.plugins.length === 0) {
+			return of(true);
+		}
+		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
+		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}
 
 	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<any> {

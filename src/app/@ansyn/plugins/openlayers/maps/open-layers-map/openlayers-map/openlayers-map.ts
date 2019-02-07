@@ -63,26 +63,19 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private mapId: string;
 
 	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
-		tap((f) => console.log('isLoadingLayers$ mapId', this.mapId, 'value', this.mapId ? f(this.mapId) : 'none')),
-		filter(() => Boolean(this.mapId)),
-		map((f) => f(this.mapId)),
+		map((f) => f(this.mapId))
 	);
 
 	setMainLayerToForegroundMapAfterTilesAreLoaded() {
 		this.actions$.pipe(
 			ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
-			filter(() => this.backgroundMapObject.getLayers().getLength() > 0),
 			filter(({ payload }) => {
-				console.log('progress', payload.progress);
+				// console.log('progress', payload.progress);
 				return payload.progress === 100;
 			}),
-			tap(() => console.log('load complete, mapId', this.mapId)),
 			debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
 			tap(({ payload }) => {
-				console.log('setting main layer to active map');
-				console.log('layers 2', this.mapObject.getLayers().getArray());
 				this.setMainLayer(this.loadedLayer);
-				console.log('layers 3', this.mapObject.getLayers().getArray());
 			}),
 			take(1)
 		).subscribe();
@@ -181,7 +174,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, mapId?: string, useDoubleBuffer?: boolean): Observable<boolean> {
-		console.log('resetView', 'mapId', mapId, 'useDoubleBuffer', useDoubleBuffer);
 		if (useDoubleBuffer) {
 			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
 		} else if (this._backgroundMapObject) {
@@ -207,7 +199,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}
 			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
 		}
-		console.log('layers 1', this.mapObject.getLayers().getArray());
 		this._mapObject.setView(view);
 
 		if (useDoubleBuffer) {
@@ -215,14 +206,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
 				this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
 			).pipe(
-				tap(() => {
-					console.log('waiting..')
-				}),
 				filter(([isLoadingLayers, bool1, bool2]) => !isLoadingLayers),
 				take(1),
-				tap(() => {
-					console.log('resetView', 'loading finished action detected')
-				}),
 				map(([isLoadingLayers, bool1, bool2]) => bool1 && bool2)
 			);
 		} else {
@@ -258,7 +243,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	setMainLayer(layer: Layer) {
-		console.log('setMainLayer');
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		layer.set(ImageryLayerProperties.MAIN_EXTENT, null);
 		this.removeAllLayers();
@@ -275,7 +259,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.loadedLayer = layer;
 		this.backgroundMapObject.getLayers().clear();
 		this.backgroundMapObject.addLayer(layer);
-		console.log('layers', this.backgroundMapObject.getLayers().getLength());
 	}
 
 	getMainLayer(): Layer {

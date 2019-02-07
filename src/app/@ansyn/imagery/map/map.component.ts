@@ -18,34 +18,15 @@ export class MapComponent implements OnInit, OnDestroy {
 	}
 
 	createMap(layers: any, position?: ICaseMapPosition, mapId?: string): Observable<BaseImageryMap> {
-		console.log('createMap mapId', mapId);
 		return this.map
 			.initMap(this.mapElement.nativeElement, this.mapElementShadow.nativeElement, layers, position, mapId)
 			.pipe(
 				filter(success => success),
 				map(() => this.map),
-				tap(() => {
-					this.map.initMapSubscriptions();
-					this.map.isLoadingLayers$.pipe(
-						filter((isLoadingLayers) => !isLoadingLayers),
-						tap(() => console.log('createMap', 'done Loading Layers, resetting plugins')),
-						switchMap(() => this.resetPlugins()),
-						take(1)
-					).subscribe();
-				}),
-				take(1),
+				tap(() => this.map.initMapSubscriptions()),
+				take(1)
 			);
 	};
-
-	resetPlugins(): Observable<boolean> {
-		console.log('resetPlugins');
-		if (!this.plugins || this.plugins.length === 0) {
-			return of(true);
-		}
-
-		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
-		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
-	}
 
 	ngOnDestroy(): void {
 		if (this.map) {

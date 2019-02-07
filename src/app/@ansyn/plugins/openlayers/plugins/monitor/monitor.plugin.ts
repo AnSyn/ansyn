@@ -39,7 +39,6 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		ofType<SetIsLoadingTilesAction>(MapActionTypes.VIEW.SET_IS_LOADING_TILES),
 		filter(( { payload }) => payload.mapId === this.mapId && payload.value),
 		tap(() => {
-			console.log('Got action, starting monitor');
 			this.monitorSource();
 		})
 	);

@@ -14,6 +14,7 @@ import {
 	SetToastMessageAction
 } from '@ansyn/core';
 import {
+	SearchMode,
 	SearchModeEnum,
 	selectGeoFilterIndicator,
 	selectGeoFilterSearchMode,

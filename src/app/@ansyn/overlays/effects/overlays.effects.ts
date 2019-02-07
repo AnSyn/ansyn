@@ -30,7 +30,7 @@ export class OverlaysEffects {
 
 
 	@Effect()
-	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe<any>(
+	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		switchMap((action: LoadOverlaysAction) => {
 			return this.overlaysService.search(action.payload).pipe(

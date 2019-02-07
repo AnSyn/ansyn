@@ -4,7 +4,8 @@ import {
 	ICaseBooleanFilterMetadata,
 	ICaseFacetsState,
 	ICaseFilter,
-	ICaseSliderFilterMetadata
+	ICaseSliderFilterMetadata,
+	CaseFilterMetadata
 } from '@ansyn/core';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';

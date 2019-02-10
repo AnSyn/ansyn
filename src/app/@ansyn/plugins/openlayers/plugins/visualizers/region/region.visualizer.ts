@@ -14,6 +14,7 @@ import {
 	SetToastMessageAction
 } from '@ansyn/core';
 import {
+	SearchMode,
 	SearchModeEnum,
 	selectGeoFilterIndicator,
 	selectGeoFilterSearchMode,
@@ -41,7 +42,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	isActiveGeoFilter$ = this.geoFilter$
 		.pipe(map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter));
 
-	geoFilterSearch$ = this.store$.select(selectGeoFilterSearchMode);
+	geoFilterSearch$: Observable<SearchMode> = this.store$.select(selectGeoFilterSearchMode);
 
 	onSearchMode$ = this.geoFilterSearch$.pipe(
 		map((geoFilterSearch) => geoFilterSearch === this.geoFilter),

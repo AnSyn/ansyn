@@ -59,7 +59,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private _mapLayers = [];
 	public isValidPosition;
 	public shadowElement = null;
-	private loadedLayer: Layer;
+	private savedParams: any;
 	private mapId: string;
 
 	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
@@ -75,7 +75,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}),
 			debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
 			tap(({ payload }) => {
-				this.setMainLayer(this.loadedLayer);
+				const {layer, view, position, extent, rotation} = this.savedParams;
+				this.setMainLayerToForegroundMap(layer);
+				this._mapObject.setView(view);
+				this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(take(1)).subscribe();
 			}),
 			take(1)
 		).subscribe();
@@ -186,28 +189,30 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setRotation(rotation ? rotation : 0);
 		view.setResolution(1);
 		if (layer.get(ImageryLayerProperties.FROM_CACHE)) {
-			this.setMainLayer(layer)
+			this.setMainLayerToForegroundMap(layer)
 		} else {
 			this.mapId = mapId;
 			if (useDoubleBuffer) {
-				this._backgroundMapObject.setView(view);
 				this.setMainLayerToBackgroundMap(layer);
+				this._backgroundMapObject.setView(view);
+				this.savedParams = {
+					layer, view, position, extent, rotation
+				};
 				this.setMainLayerToForegroundMapAfterTilesAreLoaded();
 			} else {
-				this.setMainLayer(layer)
+				this.setMainLayerToForegroundMap(layer);
+				this._mapObject.setView(view);
 			}
 			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
 		}
-		this._mapObject.setView(view);
 
 		if (useDoubleBuffer) {
 			return combineLatest(this.isLoadingLayers$,
-				this._setMapPositionOrExtent(this.mapObject, position, extent, rotation),
 				this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
 			).pipe(
-				filter(([isLoadingLayers, bool1, bool2]) => !isLoadingLayers),
+				filter(([isLoadingLayers, bool]) => !isLoadingLayers),
 				take(1),
-				map(([isLoadingLayers, bool1, bool2]) => bool1 && bool2)
+				map(([isLoadingLayers, bool]) => bool)
 			);
 		} else {
 			return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
@@ -241,7 +246,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	setMainLayer(layer: Layer) {
+	setMainLayerToForegroundMap(layer: Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		layer.set(ImageryLayerProperties.MAIN_EXTENT, null);
 		this.removeAllLayers();
@@ -255,7 +260,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	setMainLayerToBackgroundMap(layer: Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
-		this.loadedLayer = layer;
 		this.backgroundMapObject.getLayers().clear();
 		this.backgroundMapObject.addLayer(layer);
 	}

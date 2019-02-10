@@ -101,7 +101,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			this.idToEntity.set(entity.id, { originalEntity: entity, feature: null });
 		});
 
-		return this.projectionService.projectCollectionApproximatelyToImage<olFeature>(featuresCollectionToAdd, this.iMap).pipe(
+		return this.projectionService.projectCollectionApproximatelyToImage<olFeature>(featuresCollectionToAdd, this.iMap.mapObject).pipe(
 			map((features: olFeature[]) => {
 				features.forEach((feature: olFeature) => {
 					const id: string = <string>feature.getId();
@@ -115,7 +115,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 
 	onPointerMove({ coordinate }: any): Subscription {
 		const point = <GeoPoint>turf.geometry('Point', coordinate);
-		return this.projectionService.projectApproximately(point, this.iMap).pipe(
+		return this.projectionService.projectApproximately(point, this.iMap.mapObject).pipe(
 			take(1),
 			tap((projectedPoint) => {
 				this.store$.dispatch(new ShadowMouseProducer({ point: projectedPoint }));

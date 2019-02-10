@@ -19,7 +19,7 @@ import {
 } from '@ansyn/core';
 import { FeatureCollection } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryVisualizer, IBaseImageryVisualizerClass, VisualizerInteractionTypes } from '@ansyn/imagery';
+import { BaseImageryVisualizer, VisualizerInteractionTypes } from '@ansyn/imagery';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
@@ -220,7 +220,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			return of(true);
 		}
 
-		const featuresCollectionToAdd = <FeatureCollection<any>> {
+		const featuresCollectionToAdd = <FeatureCollection<any>>{
 			type: 'FeatureCollection',
 			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};
@@ -229,7 +229,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			this.removeEntity(entity.id);
 		});
 
-		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
+		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject)
 			.pipe(map((features: Feature[]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();

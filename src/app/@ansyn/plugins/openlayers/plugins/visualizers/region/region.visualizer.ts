@@ -14,7 +14,6 @@ import {
 	SetToastMessageAction
 } from '@ansyn/core';
 import {
-	SearchMode,
 	SearchModeEnum,
 	selectGeoFilterIndicator,
 	selectGeoFilterSearchMode,
@@ -87,7 +86,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	onDrawEndEvent({ feature }) {
 		this.projectionService
-			.projectCollectionAccurately([feature], this.iMap).pipe(
+			.projectCollectionAccurately([feature], this.iMap.mapObject).pipe(
 			take(1),
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
@@ -95,8 +94,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
 					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 					this.store$.dispatch(new UpdateGeoFilterStatus());
-				}
-				else {
+				} else {
 					this.store$.dispatch(new SetToastMessageAction({
 						toastText: this.selfIntersectMessage
 					}));

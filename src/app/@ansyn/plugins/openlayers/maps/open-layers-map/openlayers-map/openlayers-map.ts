@@ -217,9 +217,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	// Used by resetView()
 	private _setMapPositionOrExtent(map: OLMap, position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<boolean> {
 		if (extent) {
-			this.fitToExtent(extent).subscribe();
+			this.fitToExtent(extent, map).subscribe();
 			if (rotation) {
-				map.getView().setRotation(rotation);
+				this.setRotation(rotation, map);
 			}
 			this.isValidPosition = true;
 		} else if (position) {
@@ -265,10 +265,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return mainLayer;
 	}
 
-	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
+	fitToExtent(extent: CaseMapExtent, map: OLMap = this.mapObject, view: View = map.getView()) {
 		const collection: any = turf.featureCollection([ExtentCalculator.extentToPolygon(extent)]);
 
-		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this.mapObject).pipe(
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, map).pipe(
 			tap((features: olFeature[]) => {
 				view.fit(features[0].getGeometry() as olPolygon, { nearest: true, constrainResolution: false });
 			})
@@ -373,7 +373,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		const mainExtent = mainLayer.getExtent();
 		if (mainExtent && !Boolean(cachedMainExtent)) {
 			const layerExtentPolygon = Utils.extentToOlPolygon(mainExtent);
-			return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates)), new olFeature(layerExtentPolygon)], this.mapObject).pipe(
+			return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates)), new olFeature(layerExtentPolygon)], olmap).pipe(
 				map((collection: FeatureCollection<GeometryObject>) => {
 					mainLayer.set(ImageryLayerProperties.MAIN_EXTENT, collection.features[1].geometry as Polygon);
 					return {
@@ -383,7 +383,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				})
 			);
 		}
-		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], this.mapObject)
+		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], olmap)
 			.pipe(map((collection: FeatureCollection<GeometryObject>) => {
 				return {
 					extentPolygon: collection.features[0].geometry as Polygon,
@@ -395,7 +395,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	fitRotateExtent(olmap: OLMap, extentFeature: Feature<CaseMapExtentPolygon>): Observable<boolean> {
 		const collection: any = turf.featureCollection([extentFeature]);
 
-		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this.mapObject).pipe(
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, olmap).pipe(
 			map((features: olFeature[]) => {
 				const view: View = olmap.getView();
 				const geoJsonFeature = <any>this.olGeoJSON.writeFeaturesObject(features,
@@ -476,7 +476,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return cornersInside < 3;
 	}
 
-	public setRotation(rotation: number, view: View = this.mapObject.getView()) {
+	public setRotation(rotation: number, map: OLMap = this.mapObject, view: View = map.getView()) {
 		view.setRotation(rotation);
 	}
 

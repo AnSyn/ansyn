@@ -75,7 +75,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}),
 			debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
 			tap(({ payload }) => {
-				const {layer, view, position, extent, rotation} = this.savedParams;
+				const { layer, view, position, extent, rotation } = this.savedParams;
 				this.setMainLayerToForegroundMap(layer);
 				this._mapObject.setView(view);
 				this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(take(1)).subscribe();
@@ -176,6 +176,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, mapId?: string, useDoubleBuffer?: boolean): Observable<boolean> {
+		useDoubleBuffer = useDoubleBuffer && !layer.get(ImageryLayerProperties.FROM_CACHE);
 		if (useDoubleBuffer) {
 			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
 		} else if (this._backgroundMapObject) {
@@ -188,23 +189,19 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setCenter([0, 0]);
 		view.setRotation(rotation ? rotation : 0);
 		view.setResolution(1);
-		if (layer.get(ImageryLayerProperties.FROM_CACHE)) {
-			this.setMainLayerToForegroundMap(layer)
+		this.mapId = mapId;
+		if (useDoubleBuffer) {
+			this.setMainLayerToBackgroundMap(layer);
+			this._backgroundMapObject.setView(view);
+			this.savedParams = {
+				layer, view, position, extent, rotation
+			};
+			this.setMainLayerToForegroundMapAfterTilesAreLoaded();
 		} else {
-			this.mapId = mapId;
-			if (useDoubleBuffer) {
-				this.setMainLayerToBackgroundMap(layer);
-				this._backgroundMapObject.setView(view);
-				this.savedParams = {
-					layer, view, position, extent, rotation
-				};
-				this.setMainLayerToForegroundMapAfterTilesAreLoaded();
-			} else {
-				this.setMainLayerToForegroundMap(layer);
-				this._mapObject.setView(view);
-			}
-			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
+			this.setMainLayerToForegroundMap(layer);
+			this._mapObject.setView(view);
 		}
+		this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
 
 		if (useDoubleBuffer) {
 			return combineLatest(this.isLoadingLayers$,
@@ -321,7 +318,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
 		return this.projectionService.projectAccuratelyToImage(center, this.mapObject).pipe(map(projectedCenter => {
-			const olCenter = <[number, number]> projectedCenter.coordinates;
+			const olCenter = <[number, number]>projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {

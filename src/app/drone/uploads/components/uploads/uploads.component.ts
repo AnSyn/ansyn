@@ -101,7 +101,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 		let sensorTypes = this.formData.sensorType.split(' ');
 		let type = sensorTypes[sensorTypes.length - 1].replace(/[()]/g, '');
 		if (type.toUpperCase().includes('GEOTIFF')) {
-			return '.tif';
+			return '.tif, .tiff';
 		} else {
 			return '.jpg'
 		}

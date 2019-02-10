@@ -22,12 +22,23 @@ import {
 	selectHoveredOverlay
 } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryMap, BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
-import { catchError, debounceTime, filter, map, mergeMap, retry, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import {
+	catchError,
+	debounceTime,
+	filter,
+	map,
+	mergeMap,
+	retry,
+	switchMap,
+	take,
+	tap,
+	withLatestFrom
+} from 'rxjs/operators';
 
 import OLMap from 'ol/Map';
 import View from 'ol/View';
@@ -211,7 +222,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				view.setRotation(northData.actualNorth);
 				mapObject.renderSync();
 				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-					return throwError({result: northData.actualNorth });
+					return throwError({ result: northData.actualNorth });
 				}
 				return of(northData.actualNorth);
 			}),
@@ -261,11 +272,11 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	projectPoints(coordinates: [number, number][], sourceProjection: string, destProjection: string): Observable<Point[] | any> {
 		return forkJoin(coordinates.map((coordinate) => {
-			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
+			const point = <GeoJSON.Point>turf.geometry('Point', coordinate);
 			if (sourceProjection && destProjection) {
 				return this.projectionService.projectApproximatelyFromProjection(point, sourceProjection, destProjection);
 			}
-			return this.projectionService.projectAccurately(point, this.iMap);
+			return this.projectionService.projectAccurately(point, this.iMap.mapObject);
 		}));
 	}
 

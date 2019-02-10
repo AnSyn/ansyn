@@ -416,7 +416,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 
 		this.projectionService
-			.projectCollectionAccurately([feature], this.iMap)
+			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
 				take(1),
 				withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),

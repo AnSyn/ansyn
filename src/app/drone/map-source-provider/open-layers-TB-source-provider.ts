@@ -62,7 +62,8 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 					projection
 				});
 				if (metaData.data.overlay.sensorType !== 'Awesome Drone Imagery (GeoTIFF)') {
-					layer = new TileLayer({ visible: true, source });
+					const extent = proj.transformExtent(metaData.data.overlay.tag.geoData.bbox, 'EPSG:4326', 'EPSG:3857');
+					layer = new TileLayer({ visible: true, source, extent });
 				} else {
 					const extent: any = [0, -metaData.data.overlay.tag.imageData.ExifImageHeight, metaData.data.overlay.tag.imageData.ExifImageWidth, 0];
 					layer = new TileLayer({ visible: true, source, extent });
@@ -127,7 +128,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 
 	private createDroneTiffProjection(overlay) {
 		if (overlay.sensorType !== 'Awesome Drone Imagery (GeoTIFF)') {
-			return overlay.tag.geoserver.data.srs
+			return 'EPSG:3857'
 		}
 		const extent: any = [0, 0, overlay.tag.imageData.ExifImageWidth, overlay.tag.imageData.ExifImageHeight];
 		const boundary = overlay.tag.geoData.footprint.geometry.coordinates[0];

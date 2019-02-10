@@ -1,4 +1,4 @@
-import { EMPTY, Observable } from 'rxjs';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject } from 'geojson';
@@ -15,7 +15,6 @@ import {
 	SetTaskDrawIndicator,
 	SetCurrentTaskRegion, TasksService, selectCurrentAlgorithmTaskAlgorithmName
 } from '@ansyn/menu-items';
-import { combineLatest } from 'rxjs/index';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
@@ -97,7 +96,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 		this.store$.dispatch(new SetTaskDrawIndicator(false));
 
 		this.projectionService
-			.projectCollectionAccurately([feature], this.iMap).pipe(
+			.projectCollectionAccurately([feature], this.iMap.mapObject).pipe(
 			take(1),
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;

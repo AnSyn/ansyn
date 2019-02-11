@@ -145,3 +145,4 @@ export {
 } from './models/map-source-providers-config';
 export { ExtentCalculator } from './utils/extent-calculator';
 export { IWorldViewMapState } from './models/case.model';
+export { IMapProgress } from './models/map-progress.model';

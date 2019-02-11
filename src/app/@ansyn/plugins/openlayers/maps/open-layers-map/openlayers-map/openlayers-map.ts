@@ -40,6 +40,14 @@ export enum StaticGroupsKeys {
 	layers = 'layers'
 }
 
+interface ISavedParams {
+	layer: Layer,
+	view: View,
+	position: ICaseMapPosition,
+	extent: CaseMapExtent,
+	rotation: number
+}
+
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
@@ -59,7 +67,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private _mapLayers = [];
 	public isValidPosition;
 	public shadowElement = null;
-	private savedParams: any;
+	private savedParams: ISavedParams;
 	private mapId: string;
 
 	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
@@ -70,7 +78,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.actions$.pipe(
 			ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
 			filter(({ payload }) => {
-				// console.log('progress', payload.progress);
 				return payload.progress === 100;
 			}),
 			debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
@@ -513,5 +520,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._mapObject.setTarget(null);
 		}
 
+		if (this._backgroundMapObject) {
+			this._backgroundMapObject.setTarget(null);
+		}
 	}
 }

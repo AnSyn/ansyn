@@ -4,7 +4,7 @@ import { IMapInstanceChanged } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
-	ICaseMapState,
+	ICaseMapState, IMapProgress,
 	IOverlay,
 	IPendingOverlay,
 	IUpdateFeatureEvent,
@@ -71,7 +71,7 @@ export type MapActions = any;
 export class SetProgressBarAction implements Action {
 	type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
-	constructor(public payload: { mapId: string, progress: number }) {
+	constructor(public payload: IMapProgress) {
 	}
 }
 

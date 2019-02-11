@@ -44,6 +44,8 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		return this.mapSourceProvidersConfig[this.sourceType];
 	}
 
+	baseUrl = `${this.config.baseUrl}/ansyn/layers`;
+
 	constructor(
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
@@ -96,7 +98,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			queries
 		};
 
-		return this.http.post<any>(this.config.baseUrl, body).pipe(
+		return this.http.post<any>(this.baseUrl, body).pipe(
 			map((overlays: Array<ITBOverlay>) => overlays
 				.map((element) => this.parseData(element))
 			),
@@ -111,7 +113,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
-		return this.http.get<ITBOverlay>(`${this.config.baseUrl}/${id}`).pipe(
+		return this.http.get<ITBOverlay>(`${this.baseUrl}/${id}`).pipe(
 			map((tbLayer) => this.parseData(tbLayer))
 		);
 	}

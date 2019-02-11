@@ -6,7 +6,6 @@ import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 import { ICaseMapState, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
-import { StoreModule } from '@ngrx/store';
 import { ImageryMapSource } from '../decorators/map-source-provider';
 
 @ImageryMapSource({
@@ -37,7 +36,7 @@ describe('ImageryComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({})],
+			imports: [],
 			declarations: [ImageryComponent],
 			providers: [
 				{ provide: CacheService, useValue: null },

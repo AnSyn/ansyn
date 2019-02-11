@@ -11,17 +11,17 @@
 		<ul class="buttons">
 			<li>
 				<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()"><i
-					class="icon-tools-ruler" tooltip-value="Show Measures" tooltip-class="bottom"></i></button>
+					class="icon-tools-ruler" tooltip-value="Measures" tooltip-class="bottom"></i></button>
 			</li>
 			<li>
 				<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel()"><i
-					class="icon-annotation-label" tooltip-value="Show Label" tooltip-class="bottom"></i>
+					class="icon-annotation-label" tooltip-value="Label" tooltip-class="bottom"></i>
 				</button>
 			</li>
 			<li class="expanded-selection line-width-selection">
 				<p>
 					<button [class.active]="clickMenuProps.showWeight" (click)="toggleWeight()"><i
-						class="icon-annotation-weight" tooltip-value="Show Weight" tooltip-class="bottom"></i></button>
+						class="icon-annotation-weight" tooltip-value="Weight" tooltip-class="bottom"></i></button>
 					<ansyn-annotations-weight
 						[show]="clickMenuProps.showWeight"
 						[properties]="clickMenuProps.style.initial"
@@ -32,7 +32,7 @@
 			<li>
 				<p>
 					<button [class.active]="clickMenuProps.showColorPicker" (click)="toggleColorPicker()">
-						<i class="icon-annotation-color" tooltip-value="Show Color Picker" tooltip-class="bottom"></i></button>
+						<i class="icon-annotation-color" tooltip-value="Color Picker" tooltip-class="bottom"></i></button>
 					<ansyn-annotations-color
 						[show]="clickMenuProps.showColorPicker"
 						[properties]="clickMenuProps.style.initial"
@@ -43,7 +43,7 @@
 			</li>
 
 			<li>
-				<button class='removeFeature' (click)="removeFeature()" tooltip-value="Remove Feature" tooltip-class="bottom"><i class="icon-close"></i></button>
+				<button class='removeFeature' (click)="removeFeature()" tooltip-value="Delete" tooltip-class="bottom"><i class="icon-close"></i></button>
 			</li>
 		</ul>
 	</div>

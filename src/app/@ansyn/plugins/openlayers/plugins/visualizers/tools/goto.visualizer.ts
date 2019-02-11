@@ -75,7 +75,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		zIndex: 100
 	});
 
-	public singleClickListener(e) {
+	public singleClickListener = (e) => {
 		this.projectionService
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap.mapObject)
 			.pipe(take(1))

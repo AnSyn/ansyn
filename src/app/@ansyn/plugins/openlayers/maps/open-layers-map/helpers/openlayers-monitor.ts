@@ -1,16 +1,14 @@
-import { SetToastMessageAction } from '@ansyn/core';
-import { Store } from '@ngrx/store';
+import { IMapErrorMessage, IMapProgress } from '@ansyn/core';
 import TileSource from 'ol/source/Tile';
-import { Observable } from 'rxjs';
 import { IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties } from '@ansyn/imagery';
 import Static from 'ol/source/ImageStatic';
-import { SetProgressBarAction } from '@ansyn/map-facade';
 import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
-import { Actions } from '@ngrx/effects';
 import OLMap from 'ol/Map';
 import { ProjectableRaster } from '../models/projectable-raster';
+import { EventEmitter, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
 
-export class OpenLayersMonitor {
+export class OpenLayersMonitor implements OnDestroy {
 	source: TileSource | Static | any;
 
 	isFirstLoad: boolean;
@@ -28,12 +26,19 @@ export class OpenLayersMonitor {
 	};
 
 	olmap: OLMap;
+	mapId: string;
 
-	constructor(protected http: HttpClient) {
+	public isLoading$: Subject<boolean> = new Subject();
+
+	constructor(protected tilesLoadProgressEventEmitter: EventEmitter<IMapProgress>,
+				protected tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage>,
+				protected http: HttpClient
+	) {
 	}
 
-	start(olmap: OLMap) {
+	start(olmap: OLMap, mapId: string) {
 		this.olmap = olmap;
+		this.mapId = mapId;
 		this.monitorSource();
 	}
 
@@ -68,12 +73,13 @@ export class OpenLayersMonitor {
 			this.tilesCounter.success = 0;
 			this.tilesCounter.error = 0;
 			this.isFirstLoad = false;
+			this.isLoading$.next(false);
 			this.olmap.renderSync();
 		}
 
 		const progress = this.tilesCounter.total ? (this.tilesCounter.success + this.tilesCounter.error) / this.tilesCounter.total : 1;
 
-		this.store$.dispatch(new SetProgressBarAction({ progress: progress * 100, mapId: this.mapId }));
+		this.tilesLoadProgressEventEmitter.emit({ progress: progress * 100, mapId: this.mapId });
 	};
 
 	tileLoadStart = () => {
@@ -98,10 +104,7 @@ export class OpenLayersMonitor {
 			message = this.messages.partial.replace('{{amount}}', String(this.tilesCounter.error));
 		}
 
-		this.store$.dispatch(new SetToastMessageAction({
-			toastText: message,
-			showWarningIcon: true
-		}));
+		this.tilesLoadErrorEventEmitter.emit({ message, mapId: this.mapId });
 
 		this.resetCounterWhenDone();
 	};
@@ -110,6 +113,7 @@ export class OpenLayersMonitor {
 	initMonitor() {
 		this.source = this.getMainSource();
 		this.isFirstLoad = true;
+		this.isLoading$.next(true);
 		const total = 0, success = 0, error = 0;
 		this.tilesCounter = { total, success, error };
 	}
@@ -140,9 +144,8 @@ export class OpenLayersMonitor {
 		}
 	}
 
-	dispose() {
+	ngOnDestroy() {
 		this.killMonitorEvents();
-		super.dispose();
 	}
 
 	staticImageLoad = (image: any, url) => {

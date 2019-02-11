@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
+import { CaseMapExtent, ICaseMapPosition, IMapErrorMessage, IMapProgress } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 
 export interface IImageryMapMetaData {
@@ -23,6 +23,8 @@ export abstract class BaseImageryMap<T = any> {
 	readonly defaultMapSource?: string;
 
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
+	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
+	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
 	public mapObject: T;
 	public backgroundMapObject: T;
 	public isLoadingLayers$: Observable<boolean> = of(true);

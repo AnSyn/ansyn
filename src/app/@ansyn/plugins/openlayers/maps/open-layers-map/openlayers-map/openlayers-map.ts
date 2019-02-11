@@ -23,16 +23,18 @@ import {
 	CoreConfig,
 	ExtentCalculator,
 	ICaseMapPosition,
-	ICoreConfig
+	ICoreConfig,
+	IMapProgress
 } from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
 import { debounceTime, filter, map, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
-import { Actions, ofType } from '@ngrx/effects';
-import { MapActionTypes, selectIsLoadingTiles, SetIsLoadingTilesAction, SetProgressBarAction } from '@ansyn/map-facade';
+import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { HttpClient } from '@angular/common/http';
+import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -70,18 +72,19 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private savedParams: ISavedParams;
 	private mapId: string;
 
-	public isLoadingLayers$: Observable<boolean> = this.store$.select(selectIsLoadingTiles).pipe(
-		map((f) => f(this.mapId))
+	private monitor: OpenLayersMonitor = new OpenLayersMonitor(
+		this.tilesLoadProgressEventEmitter,
+		this.tilesLoadErrorEventEmitter,
+		this.http
 	);
 
 	setMainLayerToForegroundMapAfterTilesAreLoaded() {
-		this.actions$.pipe(
-			ofType<SetProgressBarAction>(MapActionTypes.VIEW.SET_PROGRESS_BAR),
-			filter(({ payload }) => {
+		this.tilesLoadProgressEventEmitter.pipe(
+			filter((payload: IMapProgress) => {
 				return payload.progress === 100;
 			}),
 			debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
-			tap(({ payload }) => {
+			tap(() => {
 				const { layer, view, position, extent, rotation } = this.savedParams;
 				this.setMainLayerToForegroundMap(layer);
 				this._mapObject.setView(view);
@@ -96,8 +99,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	};
 
 	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig,
-				public actions$: Actions,
-				public store$: Store<any>) {
+				protected http: HttpClient
+	) {
 		super();
 	}
 
@@ -203,15 +206,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this.savedParams = {
 				layer, view, position, extent, rotation
 			};
+			this.monitor.start(this.backgroundMapObject, mapId);
 			this.setMainLayerToForegroundMapAfterTilesAreLoaded();
-		} else {
-			this.setMainLayerToForegroundMap(layer);
-			this._mapObject.setView(view);
-		}
-		this.store$.dispatch(new SetIsLoadingTilesAction({ mapId, value: true }));
-
-		if (useDoubleBuffer) {
-			return combineLatest(this.isLoadingLayers$,
+			return combineLatest(this.monitor.isLoading$,
 				this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
 			).pipe(
 				filter(([isLoadingLayers, bool]) => !isLoadingLayers),
@@ -219,6 +216,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				map(([isLoadingLayers, bool]) => bool)
 			);
 		} else {
+			this.setMainLayerToForegroundMap(layer);
+			this._mapObject.setView(view);
+			this.monitor.start(this.mapObject, mapId);
 			return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
 		}
 	}
@@ -256,10 +256,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
-		// We need setTimeout for when we do not use double buffer
-		setTimeout(() => {
-			this.store$.dispatch(new SetIsLoadingTilesAction({ mapId: this.mapId, value: false }));
-		}, 0);
 	}
 
 	setMainLayerToBackgroundMap(layer: Layer) {

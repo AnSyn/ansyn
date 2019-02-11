@@ -6,8 +6,7 @@ export {
 	IMapState,
 	mapStateSelector,
 	selectActiveMapId,
-	selectMapsList,
-	selectIsLoadingTiles
+	selectMapsList
 } from './reducers/map.reducer';
 
 export {
@@ -35,8 +34,7 @@ export {
 	ChangeImageryMapSuccess,
 	UpdateMapAction,
 	SetMapPositionByRectAction,
-	SetMapPositionByRadiusAction,
-	SetIsLoadingTilesAction
+	SetMapPositionByRadiusAction
 } from './actions/map.actions';
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';

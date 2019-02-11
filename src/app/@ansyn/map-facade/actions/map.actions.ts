@@ -31,8 +31,7 @@ export const MapActionTypes = {
 	VIEW: {
 		SET_IS_LOADING: 'SET_IS_LOADING',
 		SET_IS_VISIBLE: 'SET_IS_VISIBLE',
-		SET_PROGRESS_BAR: 'SET_PROGRESS_BAR',
-		SET_IS_LOADING_TILES: 'SET_IS_LOADING_TILES'
+		SET_PROGRESS_BAR: 'SET_PROGRESS_BAR'
 	},
 	TRIGGER: {
 		IMAGERY_MOUSE_ENTER: 'IMAGERY_MOUSE_ENTER',
@@ -72,13 +71,6 @@ export class SetProgressBarAction implements Action {
 	type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
 	constructor(public payload: IMapProgress) {
-	}
-}
-
-export class SetIsLoadingTilesAction implements Action {
-	type = MapActionTypes.VIEW.SET_IS_LOADING_TILES;
-
-	constructor(public payload: { mapId: string, value: boolean }) {
 	}
 }
 

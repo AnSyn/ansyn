@@ -45,7 +45,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE),
 			tap(() => {
 				this.clearEntities();
-				this.iMap.mapObject.un('pointermove', this.onPointerMove.bind(this), this);
+				this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
 			}));
 
 	@AutoSubscription
@@ -53,9 +53,9 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		.pipe(tap(([isActive, shadowMouseFlag]) => {
 			this.clearEntities();
 			if (isActive && shadowMouseFlag) {
-				this.iMap.mapObject.on('pointermove', this.onPointerMove.bind(this), this);
+				this.iMap.mapObject.on('pointermove', this.onPointerMove, this);
 			} else {
-				this.iMap.mapObject.un('pointermove', this.onPointerMove.bind(this), this);
+				this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
 			}
 		}));
 
@@ -113,7 +113,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			}));
 	}
 
-	onPointerMove({ coordinate }: any): Subscription {
+	onPointerMove = ({ coordinate }: any): Subscription => {
 		const point = <GeoPoint>turf.geometry('Point', coordinate);
 		return this.projectionService.projectApproximately(point, this.iMap.mapObject).pipe(
 			take(1),

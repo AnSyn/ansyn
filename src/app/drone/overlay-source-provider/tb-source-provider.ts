@@ -7,11 +7,13 @@ import {
 	ErrorHandlerService,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
-	IMapSourceProvidersConfig, IMultipleOverlaysSourceConfig,
+	IMapSourceProvidersConfig,
+	IMultipleOverlaysSourceConfig,
 	IOverlay,
 	limitArray,
 	LoggerService,
-	MAP_SOURCE_PROVIDERS_CONFIG, MultipleOverlaysSourceConfig,
+	MAP_SOURCE_PROVIDERS_CONFIG,
+	MultipleOverlaysSourceConfig,
 	Overlay,
 	sortByDateDesc
 } from '@ansyn/core';
@@ -75,9 +77,9 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 			// set Sensor Types in the filter query
 			if (fetchParams.dataInputFilters[0].sensorType) {
-				const sensorTypesInput = fetchParams.dataInputFilters.map(filter => filter.sensorType.trim().toLowerCase());
+				const sensorTypesInput = fetchParams.dataInputFilters.map(filter => filter.sensorType);
 				if (sensorTypesInput.some(sensorType => sensorType === 'others')) {
-					const sensorTypesList = this.multipleOverlaysSourceConfig[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType.trim().toLowerCase());
+					const sensorTypesList = this.multipleOverlaysSourceConfig[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType);
 					query.values = sensorTypesList.filter(sensor => !sensorTypesInput.includes(sensor));
 					query.isMatch = false;
 				} else {

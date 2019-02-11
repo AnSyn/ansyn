@@ -1,6 +1,7 @@
 import { BaseMapSourceProvider, ImageryMapSource } from '@ansyn/imagery';
 import { ICaseMapState } from '@ansyn/core';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
+import { CesiumLayer } from "../models/cesium-layer";
 declare const Cesium: any;
 
 @ImageryMapSource({
@@ -21,6 +22,7 @@ export class CesiumPlanetSourceProvider extends BaseMapSourceProvider {
 			url : metaData.data.overlay.imageUrl,
 			credit: new Cesium.Credit('© Imagery provided by Planet.com', 'https://www.planet.com/assets/logos/logo-dark.png', 'https://www.planet.com')
 		});
-		return [xyzTileLayer];
+		const layer = new CesiumLayer(xyzTileLayer);
+		return [layer];
 	}
 }

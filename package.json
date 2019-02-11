@@ -54,7 +54,7 @@
     "angular2-uuid": "1.1.1",
     "auth0-js": "^9.7.3",
     "auto-subscriptions": "^1.0.3",
-    "cesium": "^1.52.0",
+    "cesium": "file:cesium-1.53.0-imagery-reprojection-and-mosaics30198.tgz",
     "core-js": "^2.5.4",
     "crypto-js": "3.1.9-1",
     "d3": "^4.13.0",

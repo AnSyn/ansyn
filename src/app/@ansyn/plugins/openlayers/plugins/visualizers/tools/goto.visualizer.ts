@@ -31,7 +31,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 	/* data */
 	toolsState$ = this.store$.select(toolsStateSelector);
 
-	pinLocation$ = () => this.toolsState$.pipe(
+	pinLocation$ = this.toolsState$.pipe(
 		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
 		map((flags) => flags.get(toolsFlags.pinLocation)),
 		distinctUntilChanged()
@@ -75,7 +75,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		zIndex: 100
 	});
 
-	public singleClickListener(e) {
+	public singleClickListener = (e) => {
 		this.projectionService
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap.mapObject)
 			.pipe(take(1))
@@ -93,11 +93,11 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		return this._iconSrc;
 	}
 
-	public createSingleClickEvent = () => {
+	public createSingleClickEvent() {
 		return this.iMap && this.iMap.mapObject.on('singleclick', this.singleClickListener, this);
 	}
 
-	public removeSingleClickEvent = () => {
+	public removeSingleClickEvent(): void {
 		return this.iMap && this.iMap.mapObject.un('singleclick', this.singleClickListener, this);
 	}
 

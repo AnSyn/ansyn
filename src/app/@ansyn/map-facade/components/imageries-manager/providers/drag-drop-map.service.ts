@@ -11,7 +11,7 @@ export class DragDropMapService {
 	dragElement: HTMLElement;
 	dropElement: HTMLElement;
 
-	constructor(protected store: Store<any>, @Inject(DOCUMENT) protected document: Document) {
+	constructor(protected store: Store<any>, @Inject(DOCUMENT) protected document: any) {
 	}
 
 	onMouseDown($event, dragElement, ids, mapsEntities) {

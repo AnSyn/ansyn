@@ -27,8 +27,6 @@ export class OpenLayersMonitor implements OnDestroy {
 
 	olmap: OLMap;
 
-	public isLoading$: Subject<boolean> = new Subject();
-
 	constructor(protected tilesLoadProgressEventEmitter: EventEmitter<IMapProgress>,
 				protected tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage>,
 				protected http: HttpClient
@@ -71,7 +69,6 @@ export class OpenLayersMonitor implements OnDestroy {
 			this.tilesCounter.success = 0;
 			this.tilesCounter.error = 0;
 			this.isFirstLoad = false;
-			this.isLoading$.next(false);
 			this.olmap.renderSync();
 		}
 
@@ -111,7 +108,6 @@ export class OpenLayersMonitor implements OnDestroy {
 	initMonitor() {
 		this.source = this.getMainSource();
 		this.isFirstLoad = true;
-		this.isLoading$.next(true);
 		const total = 0, success = 0, error = 0;
 		this.tilesCounter = { total, success, error };
 	}

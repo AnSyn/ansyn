@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
 import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import {
@@ -24,15 +24,15 @@ import {
 	ExtentCalculator,
 	ICaseMapPosition,
 	ICoreConfig,
-	IMapProgress
+	IMapProgress,
+	ITilesLoadingConfig,
+	TilesLoadingConfig
 } from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { debounceTime, filter, map, take, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, take, takeUntil, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
-import { Actions } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 
@@ -53,7 +53,7 @@ interface ISavedParams {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [OpenLayersProjectionService, CoreConfig, Actions, Store],
+	deps: [HttpClient, OpenLayersProjectionService, CoreConfig, TilesLoadingConfig],
 	defaultMapSource: 'BING'
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
@@ -70,6 +70,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 	public shadowNorthElement = null;
 	private savedParams: ISavedParams;
+	private isLoading$: Subject<boolean> = new Subject();
 
 	private monitor: OpenLayersMonitor = new OpenLayersMonitor(
 		this.tilesLoadProgressEventEmitter,
@@ -82,23 +83,31 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			filter((payload: IMapProgress) => {
 				return payload.progress === 100;
 			}),
-			debounceTime(500), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
-			tap(() => {
-				const { layer, view, position, extent, rotation } = this.savedParams;
-				this.setMainLayerToForegroundMap(layer);
-				this._mapObject.setView(view);
-				this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(take(1)).subscribe();
-			}),
+			debounceTime(this.tilesLoadingConfig.debounceTimeInMs), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
+			takeUntil(timer(this.tilesLoadingConfig.timeoutInMs).pipe(tap(() => {
+				this._afterTilesLoading()
+			}))),
+			tap(() => this._afterTilesLoading()),
 			take(1)
 		).subscribe();
+	}
+
+	private _afterTilesLoading() {
+		const { layer, view, position, extent, rotation } = this.savedParams;
+		this.setMainLayerToForegroundMap(layer);
+		this._mapObject.setView(view);
+		this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(take(1)).subscribe();
+		this.isLoading$.next(false);
 	}
 
 	private _pointerDownListener: (args) => void = () => {
 		(<any>document.activeElement).blur()
 	};
 
-	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig,
-				protected http: HttpClient
+	constructor(protected http: HttpClient,
+				public projectionService: OpenLayersProjectionService,
+				@Inject(CoreConfig) public coreConfig: ICoreConfig,
+				@Inject(TilesLoadingConfig) public tilesLoadingConfig: ITilesLoadingConfig
 	) {
 		super();
 	}
@@ -206,12 +215,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			};
 			this.monitor.start(this.backgroundMapObject);
 			this.setMainLayerToForegroundMapAfterTilesAreLoaded();
-			return combineLatest(this.monitor.isLoading$,
+			this.isLoading$.next(true);
+			return combineLatest(this.isLoading$,
 				this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
 			).pipe(
-				filter(([isLoadingLayers, bool]) => !isLoadingLayers),
+				filter(([isLoading, bool]) => !isLoading),
 				take(1),
-				map(([isLoadingLayers, bool]) => bool)
+				map(([isLoading, bool]) => bool)
 			);
 		} else {
 			this.setMainLayerToForegroundMap(layer);

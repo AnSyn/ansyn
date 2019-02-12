@@ -27,7 +27,6 @@ export abstract class BaseImageryMap<T = any> {
 	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
 	public mapObject: T;
 	public backgroundMapObject: T;
-	public isLoadingLayers$: Observable<boolean> = of(true);
 
 	abstract getCenter(): Observable<Point>;
 

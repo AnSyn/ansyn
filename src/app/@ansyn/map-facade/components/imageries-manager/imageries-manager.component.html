@@ -5,7 +5,7 @@
 	<ng-template [ngIf]="ids.length">
 		<div *ngFor="let mapId of ids; count as count"
 			 class="map-container-wrapper"
-			 #mapContainerWrapper
+			 #dragElement
 			 (click)="clickMapContainer(mapId)"
 			 (dblclick)="dbclick()"
 			 [id]="mapId"
@@ -14,7 +14,7 @@
 									 [mapState]="mapsEntities[mapId]"
 									 [active]="activeMapId === mapId"
 									 [showStatus]="count > 1"
-									 (onMove)="startMove($event, mapContainerWrapper)"
+									 (onMove)="dragDropMapService.onMouseDown($event, dragElement, ids, mapsEntities)"
 									 [mapsAmount]="ids.length">
 			</ansyn-imagery-container>
 

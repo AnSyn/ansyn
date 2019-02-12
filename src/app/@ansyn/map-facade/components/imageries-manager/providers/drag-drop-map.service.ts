@@ -1,10 +1,10 @@
-import { Injectable, Inject, OnInit } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { SetMapsDataActionStore } from '../../../actions/map.actions';
 import { Store } from '@ngrx/store';
 import { DOCUMENT } from '@angular/common';
 
 @Injectable()
-export class DragDropMapService implements OnInit {
+export class DragDropMapService {
 	TRANSITION_DURATION = 500;
 
 	currentTarget: HTMLElement;

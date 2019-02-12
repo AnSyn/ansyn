@@ -3,7 +3,6 @@ import { OverlayOverviewComponent } from './overlay-overview.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { IOverlay, MockComponent } from '@ansyn/core';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
@@ -14,7 +13,6 @@ describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
 	let fixture: ComponentFixture<OverlayOverviewComponent>;
 	let store: Store<any>;
-	let document: Document;
 
 	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText'] });
 
@@ -36,9 +34,8 @@ describe('OverlayOverviewComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store, DOCUMENT], (_store: Store<IOverlaysState>, _document: Document) => {
+	beforeEach(inject([Store], (_store: Store<IOverlaysState>) => {
 		store = _store;
-		document = _document;
 	}));
 
 	beforeEach(() => {

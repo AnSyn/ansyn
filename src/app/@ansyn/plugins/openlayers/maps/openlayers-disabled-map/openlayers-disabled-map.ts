@@ -15,7 +15,7 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, [mainLayer]: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, [mainLayer]: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',

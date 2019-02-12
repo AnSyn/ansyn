@@ -68,7 +68,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
-	public shadowElement = null;
+	public shadowNorthElement = null;
 	private savedParams: ISavedParams;
 	private mapId: string;
 
@@ -136,8 +136,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition, mapId?: string): Observable<boolean> {
-		this.shadowElement = shadowElement;
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers: any, position?: ICaseMapPosition, mapId?: string): Observable<boolean> {
+		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
@@ -158,7 +158,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 		this.initListeners();
 		this._backgroundMapParams = {
-			target: shadowElement,
+			target: shadowDoubleBufferElement,
 			renderer
 		};
 		// For initMap() we invoke resetView without double buffer

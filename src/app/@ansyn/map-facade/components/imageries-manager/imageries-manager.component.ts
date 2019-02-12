@@ -6,7 +6,7 @@ import { IMapState, selectActiveMapId, selectMaps, selectMapsIds } from '../../r
 import {
 	ActiveImageryMouseEnter,
 	ClickOutsideMap,
-	SetActiveMapId,
+	SetActiveMapId, SetMapsDataActionStore,
 	UpdateMapSizeAction
 } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
@@ -124,6 +124,84 @@ export class ImageriesManagerComponent implements OnInit {
 			this.store.dispatch(new SetActiveMapId(value));
 			this.store.dispatch(new ActiveImageryMouseEnter());
 		}
+	}
+
+	startMove($event, dragElement) {
+		document.body.style.userSelect = 'none';
+		const TRANSITION_DURATION = 200;
+		dragElement.classList.add('draggable');
+		const { x: initialX, y: initialY } = dragElement.getBoundingClientRect();
+		const { currentTarget } = $event;
+		const { width: targetWidth, height: targetHeight } = currentTarget.getBoundingClientRect();
+		let dropElement;
+
+		const mouseMove = ($event) => {
+			dragElement.style.pointerEvents = 'none';
+			const { x, y, width, height }  = dragElement.getBoundingClientRect();
+			const pointElem = document.elementFromPoint(x + (width / 2), y + (height / 2));
+			const newDropElement = pointElem && pointElem.closest('.map-container-wrapper');
+			if (dropElement) {
+				dropElement.style.filter = null;
+				dropElement.querySelector('.active-border').style.height = null;
+			}
+			dropElement = newDropElement;
+			if (dropElement) {
+				dropElement.style.filter = 'blur(2px)';
+				dropElement.querySelector('.active-border').style.height = '100%';
+			}
+			const left = targetWidth / 2;
+			const top = targetHeight / 2;
+			dragElement.style.transition = null;
+			dragElement.style.zIndex = 200;
+			dragElement.style.transform = `translate(${$event.clientX - initialX - left}px, ${$event.clientY - initialY - top}px)`;
+		};
+
+		const mouseUp = () => {
+			document.body.style.userSelect = null;
+			dragElement.style.transition = `${TRANSITION_DURATION}ms`;
+			let mapsList = null;
+
+			if (dropElement) {
+				const dropBoundingRect = dropElement.getBoundingClientRect();
+				dropElement.style.transition = `${TRANSITION_DURATION}ms`;
+				dropElement.style.transform = `translate(${initialX - dropBoundingRect.x}px, ${initialY - dropBoundingRect.y}px)`;
+				dragElement.style.transform = `translate(${dropBoundingRect.x - initialX}px, ${dropBoundingRect.y - initialY}px)`;
+				dropElement.style.zIndex = 199;
+				const ids = [...this.ids];
+				const id1 = dragElement.id;
+				const id2 = dropElement.id;
+				const indexOf1 = ids.indexOf(id1);
+				const indexOf2 = ids.indexOf(id2);
+				ids[indexOf1] = id2;
+				ids[indexOf2] = id1;
+				mapsList = ids.map((id) => this.mapsEntities[id]);
+				dropElement.classList.remove('droppable');
+			} else {
+				dragElement.style.transform = `translate(0, 0)`;
+			}
+			setTimeout(() => {
+				dragElement.classList.remove('draggable');
+				dragElement.style.pointerEvents = null;
+				dragElement.style.transition = null;
+				dragElement.style.transform = null;
+				dragElement.style.zIndex = null;
+				if (dropElement) {
+					dropElement.style.transition = null;
+					dropElement.style.transform = null;
+					dropElement.style.zIndex = null;
+					dropElement.querySelector('.active-border').style.height = null;
+				}
+				if (mapsList) {
+					this.store.dispatch(new SetMapsDataActionStore({ mapsList }));
+				}
+			}, TRANSITION_DURATION);
+
+			document.removeEventListener('mousemove', mouseMove);
+			document.removeEventListener('mouseup', mouseUp);
+		};
+
+		document.addEventListener('mousemove', mouseMove);
+		document.addEventListener('mouseup', mouseUp);
 	}
 
 	dbclick() {

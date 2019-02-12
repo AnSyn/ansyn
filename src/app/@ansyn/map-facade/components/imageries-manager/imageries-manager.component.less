@@ -18,6 +18,14 @@
 
 		div.map-container-wrapper {
 			overflow: hidden;
+			&.draggable {
+				.active-border {
+					height: 100% !important;
+				}
+				/deep/ button.drag-me i{
+					opacity: 1;
+				}
+			}
 		}
 
 		&.pin-location {
@@ -41,7 +49,11 @@
 			z-index: @z-index-imageries-active-border;
 			border: none;
 			pointer-events: none;
-
+			&.drop-border {
+				&.active {
+					border: dotted 3px purple;
+				}
+			}
 			&.active {
 				border: solid 3px @application-main-color;
 			}

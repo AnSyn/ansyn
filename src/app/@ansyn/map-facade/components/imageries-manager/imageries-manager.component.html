@@ -5,19 +5,22 @@
 	<ng-template [ngIf]="ids.length">
 		<div *ngFor="let mapId of ids; count as count"
 			 class="map-container-wrapper"
+			 #mapContainerWrapper
 			 (click)="clickMapContainer(mapId)"
-			 (dblclick)="dbclick()">
+			 (dblclick)="dbclick()"
+			 [id]="mapId"
+			 draggable="false">
 			<ansyn-imagery-container class="map"
 									 [mapState]="mapsEntities[mapId]"
 									 [active]="activeMapId === mapId"
 									 [showStatus]="count > 1"
+									 (onMove)="startMove($event, mapContainerWrapper)"
 									 [mapsAmount]="ids.length">
 			</ansyn-imagery-container>
 
 			<div class="active-border"
 				 [class.active]="activeMapId === mapId">
 			</div>
-
 		</div>
 
 	</ng-template>

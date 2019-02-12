@@ -86,6 +86,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
+	@Output() onMove = new EventEmitter<MouseEvent>();
 
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 

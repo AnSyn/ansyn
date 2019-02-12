@@ -117,7 +117,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType);
 		return getLayers.then((layers) => {
-			return mapComponent.createMap(layers, position, this.id)
+			return mapComponent.createMap(layers, position)
 				.pipe(
 					tap((map) => this.onMapCreated(map, mapType, this.activeMapName))
 				)
@@ -243,7 +243,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
-			return this.ActiveMap.resetView(layer, position, extent, this.id, useDoubleBuffer).pipe(mergeMap(() => this.resetPlugins()));
+			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(mergeMap(() => this.resetPlugins()));
 		}
 		return of(true);
 	}

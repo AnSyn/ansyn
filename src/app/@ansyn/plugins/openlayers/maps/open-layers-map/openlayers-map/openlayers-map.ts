@@ -70,7 +70,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public isValidPosition;
 	public shadowNorthElement = null;
 	private savedParams: ISavedParams;
-	private mapId: string;
 
 	private monitor: OpenLayersMonitor = new OpenLayersMonitor(
 		this.tilesLoadProgressEventEmitter,
@@ -136,7 +135,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers: any, position?: ICaseMapPosition, mapId?: string): Observable<boolean> {
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
 		const controls = [
@@ -164,7 +163,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		// For initMap() we invoke resetView without double buffer
 		// (otherwise resetView() would have waited for the tile loading to end, but we don't want initMap() to wait).
 		// The double buffer is not relevant at this stage anyway.
-		return this.resetView(layers[0], position, undefined, mapId);
+		return this.resetView(layers[0], position);
 	}
 
 	initListeners() {
@@ -185,7 +184,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, mapId?: string, useDoubleBuffer?: boolean): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
 		useDoubleBuffer = useDoubleBuffer && !layer.get(ImageryLayerProperties.FROM_CACHE);
 		if (useDoubleBuffer) {
 			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
@@ -199,14 +198,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setCenter([0, 0]);
 		view.setRotation(rotation ? rotation : 0);
 		view.setResolution(1);
-		this.mapId = mapId;
 		if (useDoubleBuffer) {
 			this.setMainLayerToBackgroundMap(layer);
 			this._backgroundMapObject.setView(view);
 			this.savedParams = {
 				layer, view, position, extent, rotation
 			};
-			this.monitor.start(this.backgroundMapObject, mapId);
+			this.monitor.start(this.backgroundMapObject);
 			this.setMainLayerToForegroundMapAfterTilesAreLoaded();
 			return combineLatest(this.monitor.isLoading$,
 				this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
@@ -218,7 +216,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		} else {
 			this.setMainLayerToForegroundMap(layer);
 			this._mapObject.setView(view);
-			this.monitor.start(this.mapObject, mapId);
+			this.monitor.start(this.mapObject);
 			return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
 		}
 	}

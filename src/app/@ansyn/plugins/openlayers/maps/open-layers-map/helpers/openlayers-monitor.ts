@@ -26,7 +26,6 @@ export class OpenLayersMonitor implements OnDestroy {
 	};
 
 	olmap: OLMap;
-	mapId: string;
 
 	public isLoading$: Subject<boolean> = new Subject();
 
@@ -36,9 +35,8 @@ export class OpenLayersMonitor implements OnDestroy {
 	) {
 	}
 
-	start(olmap: OLMap, mapId: string) {
+	start(olmap: OLMap) {
 		this.olmap = olmap;
-		this.mapId = mapId;
 		this.monitorSource();
 	}
 
@@ -79,7 +77,7 @@ export class OpenLayersMonitor implements OnDestroy {
 
 		const progress = this.tilesCounter.total ? (this.tilesCounter.success + this.tilesCounter.error) / this.tilesCounter.total : 1;
 
-		this.tilesLoadProgressEventEmitter.emit({ progress: progress * 100, mapId: this.mapId });
+		this.tilesLoadProgressEventEmitter.emit({ progress: progress * 100 });
 	};
 
 	tileLoadStart = () => {
@@ -104,7 +102,7 @@ export class OpenLayersMonitor implements OnDestroy {
 			message = this.messages.partial.replace('{{amount}}', String(this.tilesCounter.error));
 		}
 
-		this.tilesLoadErrorEventEmitter.emit({ message, mapId: this.mapId });
+		this.tilesLoadErrorEventEmitter.emit({ message });
 
 		this.resetCounterWhenDone();
 	};

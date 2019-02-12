@@ -1,9 +1,9 @@
 export interface IMapProgress {
-	mapId: string,
+	mapId?: string,
 	progress: number
 }
 
 export interface IMapErrorMessage {
-	mapId: string,
+	mapId?: string,
 	message: string
 }

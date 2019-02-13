@@ -24,7 +24,6 @@ describe('AnsynComponent', () => {
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
-	const ansynTools = MockComponent({ selector: 'ansyn-tools' });
 	const mockOverlayOverviewComponent = MockComponent({ selector: 'ansyn-overlay-overview' });
 
 	const mapState = {
@@ -57,7 +56,6 @@ describe('AnsynComponent', () => {
 				mockImageryView,
 				mockEmptyComponent,
 				mockOverlayOverviewComponent,
-				ansynTools
 			],
 			providers: [
 				{

@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
-import { SetMapsDataActionStore } from '../../../actions/map.actions';
+import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../../actions/map.actions';
 import { Store } from '@ngrx/store';
 import { DOCUMENT } from '@angular/common';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 export interface IDragDropData {
 	target: HTMLElement;
@@ -54,7 +55,7 @@ export class DragDropMapService {
 
 	mouseUp = () => {
 		const { dragElement, dropElement, dragElementInitialBoundingBox, ids: mapIds, entities } = this.data;
-		const { left: initialLeft, top: initialTop } = dragElementInitialBoundingBox;
+		const { left: initialLeft, top: initialTop, width: dragWidth, height: dragHeight } = dragElementInitialBoundingBox;
 		this.document.body.style.userSelect = null;
 		dragElement.style.transition = `${this.TRANSITION_DURATION}ms`;
 
@@ -65,7 +66,9 @@ export class DragDropMapService {
 			target.style.transition = null;
 			target.style.transform = null;
 			target.style.zIndex = null;
-			target.removeEventListener('transitionend', onDragTransitionEnd)
+			target.style.width = null;
+			target.style.height = null;
+			target.removeEventListener('transitionend', onDragTransitionEnd);
 		};
 
 		const onDropTransitionEnd = ($event) => {
@@ -83,20 +86,29 @@ export class DragDropMapService {
 			ids[indexOf2] = id1;
 			const mapsList = ids.map((id) => entities[id]);
 			this.store.dispatch(new SetMapsDataActionStore({ mapsList }));
-			target.removeEventListener('transitionend', onDropTransitionEnd)
+			target.removeEventListener('transitionend', onDropTransitionEnd);
+			target.style.width = null;
+			target.style.height = null;
+			setTimeout(() => {
+				this.store.dispatch(new UpdateMapSizeAction());
+			}, 0);
 		};
 
 		dragElement.addEventListener('transitionend', onDragTransitionEnd);
 
 		if (dropElement) {
 			dropElement.addEventListener('transitionend', onDropTransitionEnd);
-			const { left: dropLeft, top: dropTop } = dropElement.getBoundingClientRect();
+			const { left: dropLeft, top: dropTop, width: dropWidth, height: dropHeight } = dropElement.getBoundingClientRect();
 			dropElement.style.filter = null;
 			dropElement.style.transition = `${this.TRANSITION_DURATION}ms`;
 			dropElement.style.transform = `translate(${initialLeft - dropLeft}px, ${initialTop - dropTop}px)`;
 			dragElement.style.transform = `translate(${dropLeft - initialLeft}px, ${dropTop - initialTop}px)`;
 			dropElement.style.zIndex = '199';
 			dropElement.classList.remove('droppable');
+			dragElement.style.width = `${dropWidth}px`;
+			dragElement.style.height = `${dropHeight}px`;
+			dropElement.style.width = `${dragWidth}px`;
+			dropElement.style.height = `${dragHeight}px`;
 		} else {
 			dragElement.style.transform = `translate(0, 0)`;
 		}

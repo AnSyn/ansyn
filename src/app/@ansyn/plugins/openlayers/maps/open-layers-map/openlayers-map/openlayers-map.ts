@@ -13,7 +13,7 @@ import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
 import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
-import { combineLatest, Observable, of, Subject, timer } from 'rxjs';
+import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import {
@@ -31,7 +31,7 @@ import {
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { debounceTime, filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
@@ -40,14 +40,6 @@ export const OpenlayersMapName = 'openLayersMap';
 
 export enum StaticGroupsKeys {
 	layers = 'layers'
-}
-
-interface ISavedParams {
-	layer: Layer,
-	view: View,
-	position: ICaseMapPosition,
-	extent: CaseMapExtent,
-	rotation: number
 }
 
 // @dynamic
@@ -69,7 +61,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private _mapLayers = [];
 	public isValidPosition;
 	public shadowNorthElement = null;
-	private savedParams: ISavedParams;
 	private isLoading$: Subject<boolean> = new Subject();
 
 	private monitor: OpenLayersMonitor = new OpenLayersMonitor(
@@ -78,26 +69,21 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.http
 	);
 
-	setMainLayerToForegroundMapAfterTilesAreLoaded() {
+	signalWhenTilesLoadingEnds() {
+		this.isLoading$.next(true);
 		this.tilesLoadProgressEventEmitter.pipe(
 			filter((payload: IMapProgress) => {
 				return payload.progress === 100;
 			}),
 			debounceTime(this.tilesLoadingConfig.debounceTimeInMs), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
 			takeUntil(timer(this.tilesLoadingConfig.timeoutInMs).pipe(tap(() => {
-				this._afterTilesLoading()
+				this.isLoading$.next(false);
 			}))),
-			tap(() => this._afterTilesLoading()),
+			tap(() => {
+				this.isLoading$.next(false)
+			}),
 			take(1)
 		).subscribe();
-	}
-
-	private _afterTilesLoading() {
-		const { layer, view, position, extent, rotation } = this.savedParams;
-		this.setMainLayerToForegroundMap(layer);
-		this._mapObject.setView(view);
-		this._setMapPositionOrExtent(this.mapObject, position, extent, rotation).pipe(take(1)).subscribe();
-		this.isLoading$.next(false);
 	}
 
 	private _pointerDownListener: (args) => void = () => {
@@ -210,18 +196,17 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (useDoubleBuffer) {
 			this.setMainLayerToBackgroundMap(layer);
 			this._backgroundMapObject.setView(view);
-			this.savedParams = {
-				layer, view, position, extent, rotation
-			};
 			this.monitor.start(this.backgroundMapObject);
-			this.setMainLayerToForegroundMapAfterTilesAreLoaded();
-			this.isLoading$.next(true);
-			return combineLatest(this.isLoading$,
-				this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation)
-			).pipe(
-				filter(([isLoading, bool]) => !isLoading),
-				take(1),
-				map(([isLoading, bool]) => bool)
+			this.signalWhenTilesLoadingEnds();
+			return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation).pipe(
+				switchMap(() => this.isLoading$.pipe(
+					filter((isLoading) => !isLoading),
+					take(1))),
+				switchMap(() => {
+					this.setMainLayerToForegroundMap(layer);
+					this._mapObject.setView(view);
+					return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)
+				})
 			);
 		} else {
 			this.setMainLayerToForegroundMap(layer);

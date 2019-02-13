@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CaseMapExtent, ICaseMapPosition, IMapErrorMessage, IMapProgress } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 
@@ -26,7 +26,6 @@ export abstract class BaseImageryMap<T = any> {
 	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
 	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
 	public mapObject: T;
-	public backgroundMapObject: T;
 
 	abstract getCenter(): Observable<Point>;
 
@@ -36,6 +35,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
 
+	// This method is for the use of the @AutoSubscription decorator
 	initMapSubscriptions(): void {
 	};
 

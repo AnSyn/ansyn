@@ -5,8 +5,7 @@ import {
 	ICoreConfig,
 	ILoggerConfig,
 	IMapSourceProvidersConfig,
-	IMultipleOverlaysSourceConfig,
-	ITilesLoadingConfig
+	IMultipleOverlaysSourceConfig
 } from '@ansyn/core';
 import { IStatusBarConfig } from '@ansyn/status-bar';
 import { IMenuConfig } from '@ansyn/menu';
@@ -35,6 +34,5 @@ export interface IConfigModel {
 	openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig,
 	planetOverlaysSourceConfig: IPlanetOverlaySourceConfig,
 	ORIENTATIONS: string[],
-	algorithmsConfig: IAlgorithmsConfig,
-	tilesLoadingConfig: ITilesLoadingConfig
+	algorithmsConfig: IAlgorithmsConfig
 }

@@ -24,9 +24,7 @@ import {
 	ExtentCalculator,
 	ICaseMapPosition,
 	ICoreConfig,
-	IMapProgress,
-	ITilesLoadingConfig,
-	TilesLoadingConfig
+	IMapProgress
 } from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
@@ -45,7 +43,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [HttpClient, OpenLayersProjectionService, CoreConfig, TilesLoadingConfig],
+	deps: [HttpClient, OpenLayersProjectionService, CoreConfig],
 	defaultMapSource: 'BING'
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
@@ -75,8 +73,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			filter((payload: IMapProgress) => {
 				return payload.progress === 100;
 			}),
-			debounceTime(this.tilesLoadingConfig.debounceTimeInMs), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
-			takeUntil(timer(this.tilesLoadingConfig.timeoutInMs).pipe(tap(() => {
+			debounceTime(this.coreConfig.tilesLoadingDoubleBuffer.debounceTimeInMs), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
+			takeUntil(timer(this.coreConfig.tilesLoadingDoubleBuffer.timeoutInMs).pipe(tap(() => {
 				this.isLoading$.next(false);
 			}))),
 			tap(() => {
@@ -92,10 +90,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(protected http: HttpClient,
 				public projectionService: OpenLayersProjectionService,
-				@Inject(CoreConfig) public coreConfig: ICoreConfig,
-				@Inject(TilesLoadingConfig) public tilesLoadingConfig: ITilesLoadingConfig
+				@Inject(CoreConfig) public coreConfig: ICoreConfig
 	) {
 		super();
+		// todo: a more orderly way to give default values to config params
+		this.coreConfig['tilesLoadingDoubleBuffer'] =  this.coreConfig['tilesLoadingDoubleBuffer'] || {
+			debounceTimeInMs: 500,
+			timeoutInMs: 3000
+		};
 	}
 
 	/**
@@ -512,5 +514,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (this._backgroundMapObject) {
 			this._backgroundMapObject.setTarget(null);
 		}
+
+		this.monitor.dispose();
 	}
 }

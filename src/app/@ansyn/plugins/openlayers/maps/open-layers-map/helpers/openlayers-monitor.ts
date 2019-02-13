@@ -5,10 +5,9 @@ import Static from 'ol/source/ImageStatic';
 import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
 import OLMap from 'ol/Map';
 import { ProjectableRaster } from '../models/projectable-raster';
-import { EventEmitter, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { EventEmitter } from '@angular/core';
 
-export class OpenLayersMonitor implements OnDestroy {
+export class OpenLayersMonitor {
 	source: TileSource | Static | any;
 
 	isFirstLoad: boolean;
@@ -138,7 +137,7 @@ export class OpenLayersMonitor implements OnDestroy {
 		}
 	}
 
-	ngOnDestroy() {
+	dispose() {
 		this.killMonitorEvents();
 	}
 

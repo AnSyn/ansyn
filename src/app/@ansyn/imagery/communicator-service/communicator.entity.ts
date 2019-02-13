@@ -21,7 +21,6 @@ import { IMAGERY_MAPS, ImageryMaps } from '../providers/imagery-map-collection';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
-import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
 
@@ -68,7 +67,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	constructor(protected injector: Injector,
-				protected store: Store<any>,
 				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,

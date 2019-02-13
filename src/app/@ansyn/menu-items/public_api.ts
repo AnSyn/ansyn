@@ -125,6 +125,7 @@ export {
 } from './algorithms/services/tasks-remote-default.service';
 
 export {
+	IAlgorithmsConfig,
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './algorithms/models/tasks.model';

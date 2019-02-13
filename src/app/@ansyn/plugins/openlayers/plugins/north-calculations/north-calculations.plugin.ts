@@ -307,7 +307,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	createShadowMap() {
 		const renderer = 'canvas';
 		this.shadowMapObject = new OLMap({
-			target: (<any>this.iMap).shadowElement,
+			target: (<any>this.iMap).shadowNorthElement,
 			renderer,
 			controls: []
 		});

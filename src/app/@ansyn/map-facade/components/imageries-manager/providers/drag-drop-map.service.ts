@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@angular/core';
 import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../../actions/map.actions';
 import { Store } from '@ngrx/store';
 import { DOCUMENT } from '@angular/common';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { fromEvent } from 'rxjs/internal/observable/fromEvent';
 import { forkJoin } from 'rxjs';
 import { tap, take } from 'rxjs/operators';
@@ -18,7 +17,7 @@ export interface IDragDropData {
 
 @Injectable()
 export class DragDropMapService {
-	TRANSITION_DURATION = 200;
+	TRANSITION_DURATION = 500;
 	data: IDragDropData = null;
 
 	constructor(protected store: Store<any>, @Inject(DOCUMENT) protected document: any) {

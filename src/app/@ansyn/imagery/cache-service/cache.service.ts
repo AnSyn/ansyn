@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { IImageryConfig } from '../model/iimagery-config';
 import { IMAGERY_CONFIG } from '../model/configuration.token';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { ICaseMapState } from '@ansyn/core';
+import { ImageryLayerProperties } from '../model/imagery-layer.model';
 
 @Injectable()
 export class CacheService {
@@ -19,7 +19,7 @@ export class CacheService {
 			.communicatorsAsArray()
 			.some((communicator) => {
 				const communicatorLayers = communicator.getLayers();
-				return layers.some((layer) => communicatorLayers.some((layer) => (layer.get && layer.get('cacheId')) === cacheId));
+				return layers.some((layer) => communicatorLayers.some((layer) => (layer.get && layer.get(ImageryLayerProperties.CACHE_ID)) === cacheId));
 			});
 	}
 
@@ -33,7 +33,7 @@ export class CacheService {
 			const key = this.cachedLayesrMap.keys().next();
 			this.cachedLayesrMap.delete(key.value);
 		}
-		layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set('cacheId', cacheId));
+		layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set(ImageryLayerProperties.CACHE_ID, cacheId));
 		this.cachedLayesrMap.set(cacheId, [...layers]);
 	}
 }

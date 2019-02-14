@@ -238,12 +238,11 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
-			return this.ActiveMap.resetView(layer, position, extent).pipe(mergeMap(() => this.resetPlugins()));
+			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(mergeMap(() => this.resetPlugins()));
 		}
-
 		return of(true);
 	}
 
@@ -273,7 +272,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-
 	ngOnDestroy() {
 		this.imageryCommunicatorService.remove(this.id);
 		this.destroyPlugins();
@@ -283,7 +281,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		if (!this.plugins || this.plugins.length === 0) {
 			return of(true);
 		}
-
 		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}

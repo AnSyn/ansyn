@@ -5,8 +5,7 @@
     "@ansyn/core",
     "lodash",
     "@ngx-translate/core",
-    "flatpickr",
-    "ngx-treeview"
+    "flatpickr"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

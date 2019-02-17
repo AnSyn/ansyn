@@ -3,9 +3,6 @@
   "dest": "../../../../dist/ansyn/map-facade",
   "whitelistedNonPeerDependencies": [
     "@ansyn/core",
-    "@ngrx/core",
-    "@ngrx/store",
-    "@ngrx/effects",
     "@turf/turf",
     "lodash",
     "@ansyn/imagery",

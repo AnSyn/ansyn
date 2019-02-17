@@ -3,9 +3,6 @@
   "dest": "../../../../dist/ansyn/status-bar",
   "whitelistedNonPeerDependencies": [
     "@ansyn/core",
-    "@ngrx/core",
-    "@ngrx/store",
-    "@ngrx/effects",
     "lodash",
     "@ngx-translate/core",
     "flatpickr",

@@ -2,13 +2,9 @@
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/core",
   "whitelistedNonPeerDependencies": [
-    "@ngrx/core",
-    "@ngrx/store",
     "@turf/turf",
     "lodash",
-    "@ngrx/effects",
     "@ngx-translate/core",
-    "ngx-treeview",
     "angular2-uuid",
     "auto-subscriptions",
     "lodash-decorators"

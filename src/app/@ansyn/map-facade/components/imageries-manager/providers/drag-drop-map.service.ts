@@ -26,7 +26,6 @@ export class DragDropMapService {
 	onMouseDown($event, dragElement: HTMLElement, ids: string[], entities: object) {
 		this.document.body.style.userSelect = 'none';
 		dragElement.querySelector<HTMLElement>('.active-border').style.height = '100%';
-		dragElement.querySelector<HTMLElement>('.active-border').style.transition = '0s';
 		dragElement.querySelector<HTMLElement>('button.drag-me i').style.opacity = '1';
 
 		const { currentTarget: target } = $event;
@@ -64,7 +63,7 @@ export class DragDropMapService {
 		const { dragElement, dropElement, dragElementInitialBoundingBox, ids: mapIds, entities } = this.data;
 		const { left: initialLeft, top: initialTop, width: dragWidth, height: dragHeight } = dragElementInitialBoundingBox;
 		this.document.body.style.userSelect = null;
-		dragElement.style.transition = `${this.TRANSITION_DURATION}ms`;
+		dragElement.style.transition = `transform ${this.TRANSITION_DURATION}ms`;
 		const dragEnd = fromEvent(dragElement, 'transitionend').pipe(take(1));
 		const dropEnd = fromEvent(dropElement, 'transitionend').pipe(take(1));
 
@@ -72,8 +71,6 @@ export class DragDropMapService {
 			const dragElement = dragEvent.target.closest('.map-container-wrapper');
 			dragElement.querySelector('.active-border').style.height = null;
 			dragElement.querySelector('button.drag-me i').style.opacity = null;
-			dragElement.querySelector('button.drag-me i').style.transition = null;
-			dragElement.querySelector('.active-border').style.transition = null;
 			dragElement.style.pointerEvents = null;
 			dragElement.style.transition = null;
 			dragElement.style.transform = null;
@@ -107,7 +104,7 @@ export class DragDropMapService {
 			forkJoin(dragEnd, dropEnd).pipe(transitionsEnd).subscribe();
 			const { left: dropLeft, top: dropTop, width: dropWidth, height: dropHeight } = dropElement.getBoundingClientRect();
 			dropElement.style.filter = null;
-			dropElement.style.transition = `${this.TRANSITION_DURATION}ms`;
+			dropElement.style.transition = `transform ${this.TRANSITION_DURATION}ms`;
 			dropElement.style.transform = `translate(${initialLeft - dropLeft}px, ${initialTop - dropTop}px)`;
 			dragElement.style.transform = `translate(${dropLeft - initialLeft}px, ${dropTop - initialTop}px)`;
 			dropElement.style.zIndex = '199';
@@ -116,6 +113,7 @@ export class DragDropMapService {
 			dragElement.style.height = `${dropHeight}px`;
 			dropElement.style.width = `${dragWidth}px`;
 			dropElement.style.height = `${dragHeight}px`;
+			this.store.dispatch(new UpdateMapSizeAction());
 		} else {
 			forkJoin(dragEnd).pipe(transitionsEnd).subscribe();
 			dragElement.style.transform = `translate(0, 0)`;

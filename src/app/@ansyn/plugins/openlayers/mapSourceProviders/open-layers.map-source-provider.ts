@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, IBaseMapSourceProviderConstructor } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryLayerProperties } from '@ansyn/imagery';
 import Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import TileLayer from 'ol/layer/Tile';
@@ -70,7 +70,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 	addFootprintToLayerPromise(layerPromise: Promise<any>, metaData: ICaseMapState): Promise<any> {
 		if (this.forOverlay) {
 			return layerPromise.then((layer) => {
-				layer.set('footprint', metaData.data.overlay.footprint);
+				layer.set(ImageryLayerProperties.FOOTPRINT, metaData.data.overlay.footprint);
 				return layer;
 			});
 		}

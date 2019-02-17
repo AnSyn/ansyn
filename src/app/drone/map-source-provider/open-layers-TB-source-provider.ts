@@ -1,17 +1,17 @@
 import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/plugins';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { ICaseMapState, IMapSourceProvidersConfig, IOverlay, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
-import Projection from 'ol/proj/projection';
-import Static from 'ol/source/imagestatic';
-import ImageLayer from 'ol/layer/image';
-import proj from 'ol/proj';
+import Projection from 'ol/proj/Projection';
+import Static from 'ol/source/ImageStatic';
+import ImageLayer from 'ol/layer/Image';
+import * as proj from 'ol/proj';
 import { Inject } from '@angular/core';
 import { ITBConfig } from '../overlay-source-provider/tb.model';
 import { createTransform, FROMCOORDINATES, FROMPIXEL } from './transforms';
-import TileWMS from 'ol/source/tilewms';
-import TileLayer from 'ol/layer/tile';
-import WMTSCapabilities from 'ol/format/wmtscapabilities';
-import WMTS from 'ol/source/wmts';
+import TileWMS from 'ol/source/TileWMS';
+import TileLayer from 'ol/layer/Tile';
+import WMTSCapabilities from 'ol/format/WMSCapabilities';
+import WMTS from 'ol/source/WMTS';
 import { noop, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, tap, catchError } from 'rxjs/operators';
@@ -64,7 +64,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 				projection
 			});
 			const extent: any = [0, -metaData.data.overlay.tag.imageData.ExifImageHeight, metaData.data.overlay.tag.imageData.ExifImageWidth, 0];
-			const originalTileUrlFunction = (<any>source).tileUrlFunction;
+			const originalTileUrlFunction = (<any>source).tileUrlFunction.bind(source);
 			(<any>source).tileUrlFunction = function (...args) {
 				const wmsURL = originalTileUrlFunction(...args);
 				const start = wmsURL.indexOf('SRS=') + 4;

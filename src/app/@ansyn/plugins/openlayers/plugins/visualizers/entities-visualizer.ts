@@ -1,14 +1,14 @@
 import { merge } from 'lodash';
-import SourceVector from 'ol/source/vector';
-import Feature from 'ol/feature';
-import Style from 'ol/style/style';
-import Stroke from 'ol/style/stroke';
-import Circle from 'ol/style/circle';
-import Fill from 'ol/style/fill';
-import Text from 'ol/style/text';
-import Icon from 'ol/style/icon';
-import VectorLayer from 'ol/layer/vector';
-import ol_Layer from 'ol/layer/layer';
+import SourceVector from 'ol/source/Vector';
+import Feature from 'ol/Feature';
+import Style from 'ol/style/Style';
+import Stroke from 'ol/style/Stroke';
+import Circle from 'ol/style/Circle';
+import Fill from 'ol/style/Fill';
+import Text from 'ol/style/Text';
+import Icon from 'ol/style/Icon';
+import VectorLayer from 'ol/layer/Vector';
+import ol_Layer from 'ol/layer/Layer';
 
 import {
 	IVisualizerEntity,
@@ -19,8 +19,8 @@ import {
 } from '@ansyn/core';
 import { FeatureCollection } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryVisualizer, IBaseImageryVisualizerClass, VisualizerInteractionTypes } from '@ansyn/imagery';
-import ol_color from 'ol/color';
+import { BaseImageryVisualizer, VisualizerInteractionTypes } from '@ansyn/imagery';
+import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
 
@@ -220,7 +220,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			return of(true);
 		}
 
-		const featuresCollectionToAdd = <FeatureCollection<any>> {
+		const featuresCollectionToAdd = <FeatureCollection<any>>{
 			type: 'FeatureCollection',
 			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};
@@ -229,7 +229,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			this.removeEntity(entity.id);
 		});
 
-		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap)
+		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject)
 			.pipe(map((features: Feature[]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();

@@ -5,7 +5,6 @@ import { Popup } from "./popup";
 import { layerPluginType, selectLayers, selectSelectedLayersIds } from "@ansyn/menu-items";
 import { AutoSubscription } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
-import { MapBrowserEvent } from 'openlayers';
 import { PopupService } from "./popup.service";
 import { map } from 'rxjs/operators';
 
@@ -16,8 +15,8 @@ import { map } from 'rxjs/operators';
 export class PopupPlugins extends BaseImageryPlugin {
 	popup: Popup;
 	@AutoSubscription
-	$activeMapClick = () => combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)).pipe(
-		map(([layers, selectedLayers]) => {
+	$activeMapClick = () => combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)).pipe<any>(
+		map(([layers, selectedLayers]: [any, any]) => {
 			if (layers.some(layer => layer.layerPluginType === layerPluginType.ARCGIS &&
 				selectedLayers.includes(layer.id))) {
 				this.iMap.mapObject.on('singleclick', this.mapSingleClick)
@@ -33,7 +32,7 @@ export class PopupPlugins extends BaseImageryPlugin {
 		super();
 	}
 
-	mapSingleClick = (ev: MapBrowserEvent) => {
+	mapSingleClick = (ev: any) => {
 		this.popup.set('searching...');
 		this.popup.open(ev.coordinate);
 		this.popupService.getInfo(ev).subscribe((info: any) => {

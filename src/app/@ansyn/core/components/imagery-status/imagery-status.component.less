@@ -1,6 +1,5 @@
 @import "core/less/z-index-globals";
 @import "core/less/common";
-@import "core/less/tooltip";
 
 /deep/ .render {
 	display: flex;
@@ -30,6 +29,19 @@
 		left: 5px;
 		top: 6px;
 		display: flex;
+
+		button.drag-me {
+			background: transparent;
+			color: white;
+			border: none;
+			outline: none;
+			i {
+				opacity: .6;
+			}
+			&:hover i {
+				opacity: .8;
+			}
+		}
 
 		button {
 			position: relative;

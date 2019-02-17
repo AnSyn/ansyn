@@ -1,11 +1,11 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
-import olFeature from 'ol/feature';
-import Icon from 'ol/style/icon';
-import Style from 'ol/style/style';
+import olFeature from 'ol/Feature';
+import Icon from 'ol/style/Icon';
+import Style from 'ol/style/Style';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
 import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/map-facade';
-import { Actions } from '@ngrx/effects';
+import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer } from '@ansyn/imagery';
@@ -28,7 +28,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	);
 
 	mouseShadowProducer$ = this.actions$
-		.ofType<Action>(MapActionTypes.SHADOW_MOUSE_PRODUCER);
+		.pipe(ofType<Action>(MapActionTypes.SHADOW_MOUSE_PRODUCER));
 
 	shadowMouseFlag$ = this.store$.select(toolsStateSelector).pipe(
 		pluck<IToolsState, Map<any, any>>('flags'),
@@ -37,15 +37,16 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	);
 
 	onEnterMap$ = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER);
+		.pipe(ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER));
 
 	@AutoSubscription
 	onLeaveMap$ = this.actions$
-		.ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE)
-		.pipe(tap(() => {
-			this.clearEntities();
-			this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
-		}));
+		.pipe(
+			ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE),
+			tap(() => {
+				this.clearEntities();
+				this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
+			}));
 
 	@AutoSubscription
 	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.onEnterMap$)
@@ -62,9 +63,9 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	drawPoint$ = combineLatest(this.mouseShadowProducer$, this.isActive$).pipe(
 		filter(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => payload.outsideSource || !isActive),
 		mergeMap(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => this.setEntities([{
-				id: 'shadowMouse',
-				featureJson: turf.point(payload.point.coordinates)
-			}
+			id: 'shadowMouse',
+			featureJson: turf.point(payload.point.coordinates)
+		}
 		]))
 	);
 
@@ -100,7 +101,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			this.idToEntity.set(entity.id, { originalEntity: entity, feature: null });
 		});
 
-		return this.projectionService.projectCollectionApproximatelyToImage<olFeature>(featuresCollectionToAdd, this.iMap).pipe(
+		return this.projectionService.projectCollectionApproximatelyToImage<olFeature>(featuresCollectionToAdd, this.iMap.mapObject).pipe(
 			map((features: olFeature[]) => {
 				features.forEach((feature: olFeature) => {
 					const id: string = <string>feature.getId();
@@ -112,9 +113,9 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			}));
 	}
 
-	onPointerMove({ coordinate }: any): Subscription {
-		const point = <GeoPoint> turf.geometry('Point', coordinate);
-		return this.projectionService.projectApproximately(point, this.iMap).pipe(
+	onPointerMove = ({ coordinate }: any): Subscription => {
+		const point = <GeoPoint>turf.geometry('Point', coordinate);
+		return this.projectionService.projectApproximately(point, this.iMap.mapObject).pipe(
 			take(1),
 			tap((projectedPoint) => {
 				this.store$.dispatch(new ShadowMouseProducer({ point: projectedPoint }));

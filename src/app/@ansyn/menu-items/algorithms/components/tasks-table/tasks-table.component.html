@@ -21,7 +21,7 @@
 		</div>
 	</div>
 
-	<div class="tasks-table-body" (infiniteScroll)="loadTasks()" *ngIf="entities$ | async as entities" #tbodyElement>
+	<div class="tasks-table-body" (ansynInfiniteScroll)="loadTasks()" *ngIf="entities$ | async as entities" #tbodyElement>
 
 		<div class="tasks-table-body-row"
 			 *ngFor="let id of ids"

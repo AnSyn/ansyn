@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BaseImageryMap, CommunicatorEntity, ProjectionService } from '@ansyn/imagery';
+import { CommunicatorEntity, ProjectionService } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
-import proj from 'ol/proj';
-import OLGeoJSON from 'ol/format/geojson';
+import * as proj from 'ol/proj';
+import OLGeoJSON from 'ol/format/GeoJSON';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,22 +14,22 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	/* points */
 
-	projectAccurately(point: Point, map: BaseImageryMap): Observable<Point> {
-		return this.projectApproximately(point, map);
+	projectAccurately(point: Point, mapObject: any): Observable<Point> {
+		return this.projectApproximately(point, mapObject);
 	}
 
-	projectAccuratelyToImage<Position>(point: Point, map: BaseImageryMap): Observable<Point> {
-		return this.projectApproximatelyToImage(point, map);
+	projectAccuratelyToImage<Position>(point: Point, mapObject: any): Observable<Point> {
+		return this.projectApproximatelyToImage(point, mapObject);
 	}
 
-	projectApproximatelyToImage<olGeometry>(point: Point, map: BaseImageryMap): Observable<Point> {
-		const projection = map.mapObject.getView().getProjection();
+	projectApproximatelyToImage<olGeometry>(point: Point, mapObject: any): Observable<Point> {
+		const projection = mapObject.getView().getProjection();
 		point.coordinates = proj.fromLonLat(<[number, number]>point.coordinates, projection);
 		return of(point);
 	}
 
-	projectApproximately(point: Point, map: BaseImageryMap): Observable<Point> {
-		const projection = map.mapObject.getView().getProjection();
+	projectApproximately(point: Point, mapObject: any): Observable<Point> {
+		const projection = mapObject.getView().getProjection();
 		point.coordinates = proj.toLonLat(<[number, number]>point.coordinates, projection);
 		return of(point);
 	}
@@ -46,29 +46,29 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	/* collections */
 
-	projectCollectionAccuratelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, map: BaseImageryMap): Observable<olFeature[]> {
-		return this.projectCollectionApproximatelyToImage(featureCollection, map);
+	projectCollectionAccuratelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, mapObject: any): Observable<olFeature[]> {
+		return this.projectCollectionApproximatelyToImage(featureCollection, mapObject);
 	}
 
 
-	projectCollectionAccurately<olFeature>(features: olFeature[] | any, map: BaseImageryMap): Observable<FeatureCollection<GeometryObject>> {
-		return this.projectCollectionApproximately(features, map);
+	projectCollectionAccurately<olFeature>(features: olFeature[] | any, mapObject: any): Observable<FeatureCollection<GeometryObject>> {
+		return this.projectCollectionApproximately(features, mapObject);
 	}
 
-	projectCollectionApproximatelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, map: BaseImageryMap): Observable<olFeature[]> {
-		const view = map.mapObject.getView();
+	projectCollectionApproximatelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, mapObject: any): Observable<olFeature[]> {
+		const view = mapObject.getView();
 		const featureProjection = view.getProjection();
 		const dataProjection = 'EPSG:4326';
 		const options = { featureProjection, dataProjection };
-		const features: olFeature[] = <any> this.olGeoJSON.readFeatures(featureCollection, options);
+		const features: olFeature[] = <any>this.olGeoJSON.readFeatures(featureCollection, options);
 		return of(features);
 	}
 
-	projectCollectionApproximately<olFeature>(features: olFeature[] | any, map: BaseImageryMap): Observable<FeatureCollection<GeometryObject>> {
-		const featureProjection = map.mapObject.getView().getProjection();
+	projectCollectionApproximately<olFeature>(features: olFeature[] | any, mapObject: any): Observable<FeatureCollection<GeometryObject>> {
+		const featureProjection = mapObject.getView().getProjection();
 		const dataProjection = 'EPSG:4326';
 		const options = { featureProjection, dataProjection };
-		const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features, options);
+		const geoJsonFeature = <any>this.olGeoJSON.writeFeaturesObject(features, options);
 		return of(geoJsonFeature);
 	}
 

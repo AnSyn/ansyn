@@ -1,27 +1,38 @@
-import OLMap from 'ol/map';
-import View from 'ol/view';
-import ScaleLine from 'ol/control/scaleline';
-import Group from 'ol/layer/group';
-import olGeoJSON from 'ol/format/geojson';
-import OLGeoJSON from 'ol/format/geojson';
-import Vector from 'ol/source/vector';
-import Layer from 'ol/layer/layer';
-import VectorLayer from 'ol/layer/vector';
-import olFeature from 'ol/feature';
-import olPolygon from 'ol/geom/polygon';
-import AttributionControl from 'ol/control/attribution';
+import OLMap from 'ol/Map';
+import View from 'ol/View';
+import ScaleLine from 'ol/control/ScaleLine';
+import Group from 'ol/layer/Group';
+import olGeoJSON from 'ol/format/GeoJSON';
+import OLGeoJSON from 'ol/format/GeoJSON';
+import Vector from 'ol/source/Vector';
+import Layer from 'ol/layer/Layer';
+import VectorLayer from 'ol/layer/Vector';
+import olFeature from 'ol/Feature';
+import olPolygon from 'ol/geom/Polygon';
+import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
-import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { feature } from '@turf/turf';
+import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
+import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
-import { areCoordinatesNumeric, CaseMapExtent, CaseMapExtentPolygon, CoreConfig, ICaseMapPosition, ICoreConfig, ExtentCalculator } from '@ansyn/core';
+import {
+	areCoordinatesNumeric,
+	CaseMapExtent,
+	CaseMapExtentPolygon,
+	CoreConfig,
+	ExtentCalculator,
+	ICaseMapPosition,
+	ICoreConfig,
+	IMapProgress
+} from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
-import { map, take, tap } from 'rxjs/operators';
-import { feature } from '@turf/turf';
+import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { HttpClient } from '@angular/common/http';
+import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -32,7 +43,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [OpenLayersProjectionService, CoreConfig],
+	deps: [HttpClient, OpenLayersProjectionService, CoreConfig],
 	defaultMapSource: 'BING'
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
@@ -40,15 +51,53 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
 	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
+	private _backgroundMapObject: OLMap;
+	private _backgroundMapParams: object;
 
 	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
-	public shadowElement = null;
+	public shadowNorthElement = null;
+	private isLoading$: Subject<boolean> = new Subject();
 
-	constructor(public projectionService: OpenLayersProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	private monitor: OpenLayersMonitor = new OpenLayersMonitor(
+		this.tilesLoadProgressEventEmitter,
+		this.tilesLoadErrorEventEmitter,
+		this.http
+	);
+
+	signalWhenTilesLoadingEnds() {
+		this.isLoading$.next(true);
+		this.tilesLoadProgressEventEmitter.pipe(
+			filter((payload: IMapProgress) => {
+				return payload.progress === 100;
+			}),
+			debounceTime(this.coreConfig.tilesLoadingDoubleBuffer.debounceTimeInMs), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
+			takeUntil(timer(this.coreConfig.tilesLoadingDoubleBuffer.timeoutInMs).pipe(tap(() => {
+				this.isLoading$.next(false);
+			}))),
+			tap(() => {
+				this.isLoading$.next(false)
+			}),
+			take(1)
+		).subscribe();
+	}
+
+	private _pointerDownListener: (args) => void = () => {
+		(<any>document.activeElement).blur()
+	};
+
+	constructor(protected http: HttpClient,
+				public projectionService: OpenLayersProjectionService,
+				@Inject(CoreConfig) public coreConfig: ICoreConfig
+	) {
 		super();
+		// todo: a more orderly way to give default values to config params
+		this.coreConfig['tilesLoadingDoubleBuffer'] =  this.coreConfig['tilesLoadingDoubleBuffer'] || {
+			debounceTimeInMs: 500,
+			timeoutInMs: 3000
+		};
 	}
 
 	/**
@@ -56,7 +105,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	 * @param layer
 	 */
 	public addLayerIfNotExist(layer): Layer {
-		const layerId = layer.get('id');
+		const layerId = layer.get(ImageryLayerProperties.ID);
 		if (!layerId) {
 			return;
 		}
@@ -83,17 +132,17 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
-		this.shadowElement = shadowElement;
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
 			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
-					coordinateFormat: (coords: ol.Coordinate): string => coords.map((num) => +num.toFixed(4)).toString()
+					coordinateFormat: (coords: [number, number]): string => coords.map((num) => +num.toFixed(4)).toString()
 				},
-				(point) => this.projectionService.projectApproximately(point, this))
+				(point) => this.projectionService.projectApproximately(point, this.mapObject))
 		];
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({
@@ -104,6 +153,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			loadTilesWhileAnimating: true
 		});
 		this.initListeners();
+		this._backgroundMapParams = {
+			target: shadowDoubleBufferElement,
+			renderer
+		};
+		// For initMap() we invoke resetView without double buffer
+		// (otherwise resetView() would have waited for the tile loading to end, but we don't want initMap() to wait).
+		// The double buffer is not relevant at this stage anyway.
 		return this.resetView(layers[0], position);
 	}
 
@@ -115,8 +171,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				}
 			});
 		};
-
 		this._mapObject.on('moveend', this._moveEndListener);
+		this._mapObject.on('pointerdown', this._pointerDownListener);
 	}
 
 	createView(layer): View {
@@ -125,33 +181,60 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
-		this.isValidPosition = false;
-		const rotation = this._mapObject.getView() && this.mapObject.getView().getRotation();
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
+		useDoubleBuffer = useDoubleBuffer && !layer.get(ImageryLayerProperties.FROM_CACHE);
+		if (useDoubleBuffer) {
+			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
+		} else if (this._backgroundMapObject) {
+			this._backgroundMapObject.setTarget(null);
+			this._backgroundMapObject = null;
+		}
+		const rotation: number = this._mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
-		this.setMainLayer(layer);
-		this._mapObject.setView(view);
-
 		// set default values to prevent map Assertion error's
 		view.setCenter([0, 0]);
 		view.setRotation(rotation ? rotation : 0);
 		view.setResolution(1);
+		if (useDoubleBuffer) {
+			this.setMainLayerToBackgroundMap(layer);
+			this._backgroundMapObject.setView(view);
+			this.monitor.start(this.backgroundMapObject);
+			this.signalWhenTilesLoadingEnds();
+			return this._setMapPositionOrExtent(this.backgroundMapObject, position, extent, rotation).pipe(
+				switchMap(() => this.isLoading$.pipe(
+					filter((isLoading) => !isLoading),
+					take(1))),
+				switchMap(() => {
+					this.setMainLayerToForegroundMap(layer);
+					this._mapObject.setView(view);
+					return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)
+				})
+			);
+		} else {
+			this.setMainLayerToForegroundMap(layer);
+			this._mapObject.setView(view);
+			this.monitor.start(this.mapObject);
+			return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
+		}
+	}
 
+	// Used by resetView()
+	private _setMapPositionOrExtent(map: OLMap, position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<boolean> {
 		if (extent) {
-			this.fitToExtent(extent).subscribe();
+			this.fitToExtent(extent, map).subscribe();
 			if (rotation) {
-				this.mapObject.getView().setRotation(rotation);
+				this.setRotation(rotation, map);
 			}
 			this.isValidPosition = true;
 		} else if (position) {
-			return this.setPosition(position);
+			return this.setPosition(position, map);
 		}
 
 		return of(true);
 	}
 
 	public getLayerById(id: string): Layer {
-		return <Layer> this.mapObject.getLayers().getArray().find(item => item.get('id') === id);
+		return <Layer>this.mapObject.getLayers().getArray().find(item => item.get(ImageryLayerProperties.ID) === id);
 	}
 
 	setGroupLayers() {
@@ -162,23 +245,29 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	setMainLayer(layer: Layer) {
-		layer.set('name', 'main');
-		layer.set('mainExtent', null);
+	setMainLayerToForegroundMap(layer: Layer) {
+		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
+		layer.set(ImageryLayerProperties.MAIN_EXTENT, null);
 		this.removeAllLayers();
 		this.addLayer(layer);
 		this.setGroupLayers();
 	}
 
+	setMainLayerToBackgroundMap(layer: Layer) {
+		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
+		this.backgroundMapObject.getLayers().clear();
+		this.backgroundMapObject.addLayer(layer);
+	}
+
 	getMainLayer(): Layer {
-		let mainLayer = this._mapLayers.find((layer: Layer) => layer.get('name') === 'main');
+		const mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 		return mainLayer;
 	}
 
-	fitToExtent(extent: CaseMapExtent, view: View = this.mapObject.getView()) {
+	fitToExtent(extent: CaseMapExtent, map: OLMap = this.mapObject, view: View = map.getView()) {
 		const collection: any = turf.featureCollection([ExtentCalculator.extentToPolygon(extent)]);
 
-		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, map).pipe(
 			tap((features: olFeature[]) => {
 				view.fit(features[0].getGeometry() as olPolygon, { nearest: true, constrainResolution: false });
 			})
@@ -221,9 +310,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this._mapObject;
 	}
 
+	public get backgroundMapObject() {
+		return this._backgroundMapObject;
+	}
+
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
-		return this.projectionService.projectAccuratelyToImage(center, this).pipe(map(projectedCenter => {
-			const olCenter = <ol.Coordinate> projectedCenter.coordinates;
+		return this.projectionService.projectAccuratelyToImage(center, this.mapObject).pipe(map(projectedCenter => {
+			const olCenter = <[number, number]>projectedCenter.coordinates;
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {
@@ -253,9 +346,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (!areCoordinatesNumeric(center)) {
 			return of(null);
 		}
-		const point = <GeoPoint> turf.geometry('Point', center);
+		const point = <GeoPoint>turf.geometry('Point', center);
 
-		return this.projectionService.projectAccurately(point, this);
+		return this.projectionService.projectAccurately(point, this.mapObject);
 	}
 
 	calculateRotateExtent(olmap: OLMap): Observable<{ extentPolygon: CaseMapExtentPolygon, layerExtentPolygon: CaseMapExtentPolygon }> {
@@ -275,13 +368,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of({ extentPolygon: null, layerExtentPolygon: null });
 		}
 
-		const cachedMainExtent = mainLayer.get('mainExtent');
+		const cachedMainExtent = mainLayer.get(ImageryLayerProperties.MAIN_EXTENT);
 		const mainExtent = mainLayer.getExtent();
 		if (mainExtent && !Boolean(cachedMainExtent)) {
 			const layerExtentPolygon = Utils.extentToOlPolygon(mainExtent);
-			return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates)), new olFeature(layerExtentPolygon)], this).pipe(
+			return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates)), new olFeature(layerExtentPolygon)], olmap).pipe(
 				map((collection: FeatureCollection<GeometryObject>) => {
-					mainLayer.set('mainExtent', collection.features[1].geometry as Polygon);
+					mainLayer.set(ImageryLayerProperties.MAIN_EXTENT, collection.features[1].geometry as Polygon);
 					return {
 						extentPolygon: collection.features[0].geometry as Polygon,
 						layerExtentPolygon: collection.features[1].geometry as Polygon
@@ -289,7 +382,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				})
 			);
 		}
-		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], this)
+		return this.projectionService.projectCollectionAccurately([new olFeature(new olPolygon(coordinates))], olmap)
 			.pipe(map((collection: FeatureCollection<GeometryObject>) => {
 				return {
 					extentPolygon: collection.features[0].geometry as Polygon,
@@ -301,10 +394,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	fitRotateExtent(olmap: OLMap, extentFeature: Feature<CaseMapExtentPolygon>): Observable<boolean> {
 		const collection: any = turf.featureCollection([extentFeature]);
 
-		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, this).pipe(
+		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, olmap).pipe(
 			map((features: olFeature[]) => {
 				const view: View = olmap.getView();
-				const geoJsonFeature = <any> this.olGeoJSON.writeFeaturesObject(features,
+				const geoJsonFeature = <any>this.olGeoJSON.writeFeaturesObject(features,
 					{ featureProjection: view.getProjection(), dataProjection: view.getProjection() });
 				const geoJsonExtent = geoJsonFeature.features[0].geometry;
 
@@ -321,7 +414,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
-	public setPosition(position: ICaseMapPosition, view: View = this.mapObject.getView()): Observable<boolean> {
+	public setPosition(position: ICaseMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
 		const { extentPolygon, projectedState } = position;
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = projectedState && viewProjection.getCode() === projectedState.projection.code;
@@ -334,14 +427,18 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of(true);
 		} else {
 			const extentFeature = feature(extentPolygon);
-			return this.fitRotateExtent(this.mapObject, extentFeature);
+			return this.fitRotateExtent(map, extentFeature);
 		}
 	}
 
 	public getPosition(): Observable<ICaseMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
-		const projectedState = { ...(<any>view).getState(), projection: { code: projection.getCode() } };
+		const projectedState = {
+			...(<any>view).getState(),
+			center: (<any>view).getCenter(),
+			projection: { code: projection.getCode() }
+		};
 
 		return this.calculateRotateExtent(this.mapObject).pipe(map(({ extentPolygon: extentPolygon, layerExtentPolygon: layerExtentPolygon }) => {
 			if (!extentPolygon) {
@@ -378,7 +475,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return cornersInside < 3;
 	}
 
-	public setRotation(rotation: number, view: View = this.mapObject.getView()) {
+	public setRotation(rotation: number, map: OLMap = this.mapObject, view: View = map.getView()) {
 		view.setRotation(rotation);
 	}
 
@@ -387,7 +484,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 
-	flyTo(location: ol.Coordinate) {
+	flyTo(location: [number, number]) {
 		const view = this._mapObject.getView();
 		view.animate({
 			center: location,
@@ -410,8 +507,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		if (this._mapObject) {
 			this._mapObject.un('moveend', this._moveEndListener);
+			this._mapObject.un('pointerdown', this._pointerDownListener);
 			this._mapObject.setTarget(null);
 		}
 
+		if (this._backgroundMapObject) {
+			this._backgroundMapObject.setTarget(null);
+		}
+
+		this.monitor.dispose();
 	}
 }

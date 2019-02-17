@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { coreStateSelector, ICoreState } from '../../reducers/core.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/core.actions';
-import { Observable } from 'rxjs';
 import { CoreConfig } from '../../models/core.config';
 import { ICoreConfig } from '../../models/core.config.model';
 import { pluck, take } from 'rxjs/internal/operators';

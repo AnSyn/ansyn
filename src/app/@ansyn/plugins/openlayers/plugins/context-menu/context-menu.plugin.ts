@@ -70,9 +70,9 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			.subscribe();
 	}
 
-	positionToPoint(coordinates: ol.Coordinate): Observable<any> {
+	positionToPoint(coordinates: [number, number]): Observable<any> {
 		const point = <GeoPoint> turf.geometry('Point', coordinates);
 		return this.projectionService
-			.projectAccurately(point, this.iMap).pipe(take(1));
+			.projectAccurately(point, this.iMap.mapObject).pipe(take(1));
 	}
 }

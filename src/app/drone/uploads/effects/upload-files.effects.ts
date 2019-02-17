@@ -23,14 +23,15 @@ import { UploadFileService } from '../services/upload-file.service';
 import { HttpEventType } from '@angular/common/http';
 import { ToggleFavoriteAction } from '@ansyn/core';
 import { DisplayOverlayAction } from '@ansyn/overlays';
+import { ofType } from '@ngrx/effects';
 
 @Injectable()
 export class UploadFilesEffects {
 
 	@Effect()
 	requestUploadFiles: Observable<any> = this.actions$
-		.ofType<RequestUploadFiles>(UploadsActionTypes.requestUploadFiles)
 		.pipe(
+			ofType<RequestUploadFiles>(UploadsActionTypes.requestUploadFiles),
 			withLatestFrom(this.store$.select(selectUploadList), this.store$.select(selectFormData), (action, uploadList, formData): [number, IUploadsFormData] => {
 				return [uploadList.length, formData];
 			}),
@@ -55,8 +56,8 @@ export class UploadFilesEffects {
 
 	@Effect({ dispatch: false })
 	addRequestToFileList: Observable<any> = this.actions$
-		.ofType<AddRequestToFileList>(UploadsActionTypes.addRequestToFileList)
 		.pipe(
+			ofType<AddRequestToFileList>(UploadsActionTypes.addRequestToFileList),
 			tap(({ payload }) => {
 				const requestFile = [...payload];
 				requestFile.forEach(file => {
@@ -71,8 +72,8 @@ export class UploadFilesEffects {
 
 	@Effect()
 	moveToUploadOverlay: Observable<any> = this.actions$
-		.ofType<MoveToUploadOverlay>(UploadsActionTypes.moveToUploadOverlay)
 		.pipe(
+			ofType<MoveToUploadOverlay>(UploadsActionTypes.moveToUploadOverlay),
 			map((action => action.payload)),
 			concatMap(({ overlay, mapId }) => [
 				new ToggleFavoriteAction({ value: true, id: overlay.id, overlay }),

@@ -11,9 +11,9 @@ import {
 } from '@ansyn/menu-items';
 import { combineLatest, Observable, of } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import Icon from 'ol/style/icon';
-import Style from 'ol/style/style';
-import Feature from 'ol/feature';
+import Icon from 'ol/style/Icon';
+import Style from 'ol/style/Style';
+import Feature from 'ol/Feature';
 import { Point } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';
@@ -75,9 +75,9 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		zIndex: 100
 	});
 
-	public singleClickListener(e) {
+	public singleClickListener = (e) => {
 		this.projectionService
-			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap)
+			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap.mapObject)
 			.pipe(take(1))
 			.subscribe((point: Point) => {
 				this.store$.dispatch(new SetPinLocationModeAction(false));

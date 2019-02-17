@@ -1,11 +1,10 @@
 import { Observable, of } from 'rxjs';
-import * as ol from 'openlayers';
-import Map from 'ol/map';
-import View from 'ol/view';
-import Layer from 'ol/layer/layer';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import Layer from 'ol/layer/Layer';
 import { ICaseMapPosition } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
-import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
+import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
@@ -16,7 +15,7 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, [mainLayer]: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, [mainLayer]: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
@@ -55,7 +54,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
 		this.mainLayer = layer;
-		this.mainLayer.set('name', 'main');
+		this.mainLayer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.mapObject.addLayer(this.mainLayer);
 		const layerExtent = this.mainLayer.getExtent();
 		if (layerExtent) {
@@ -84,7 +83,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		});
 	}
 
-	fitToMainLayerExtent(extent: ol.Extent) {
+	fitToMainLayerExtent(extent: [number, number, number, number]) {
 		const view = this.mapObject.getView();
 		view.fit(extent, {
 			size: this.mapObject.getSize(),

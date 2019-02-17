@@ -7,9 +7,7 @@ import { of, Subject } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
 import { mapStateSelector } from '@ansyn/map-facade';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -26,7 +24,6 @@ describe('AnsynComponent', () => {
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
-	const ansynTools = MockComponent({ selector: 'ansyn-tools' });
 	const mockOverlayOverviewComponent = MockComponent({ selector: 'ansyn-overlay-overview' });
 
 	const mapState = {
@@ -59,22 +56,16 @@ describe('AnsynComponent', () => {
 				mockImageryView,
 				mockEmptyComponent,
 				mockOverlayOverviewComponent,
-				ansynTools,
 			],
 			providers: [
 				{
 					provide: COMPONENT_MODE,
 					useValue: false
-				},
-				{
-					provide: ImageryCommunicatorService,
-					useValue: false
 				}
 			],
 			imports: [
 				RouterTestingModule,
-				StoreModule.forRoot({}),
-				HttpClientTestingModule]
+				StoreModule.forRoot({})]
 		}).compileComponents();
 	});
 

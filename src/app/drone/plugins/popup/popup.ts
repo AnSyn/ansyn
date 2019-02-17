@@ -1,5 +1,5 @@
-import Overlay from "ol/overlay";
-import OLMap from 'ol/map';
+import Overlay from "ol/Overlay";
+import OLMap from 'ol/Map';
 
 const STYLEID = 'ANSYNSTYLE';
 const STYLE = `.ol-popup {

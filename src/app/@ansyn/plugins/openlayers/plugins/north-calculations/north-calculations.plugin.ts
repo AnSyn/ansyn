@@ -22,15 +22,26 @@ import {
 	selectHoveredOverlay
 } from '@ansyn/overlays';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryMap, BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '@ansyn/status-bar';
 import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
-import { catchError, debounceTime, filter, map, mergeMap, retry, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import {
+	catchError,
+	debounceTime,
+	filter,
+	map,
+	mergeMap,
+	retry,
+	switchMap,
+	take,
+	tap,
+	withLatestFrom
+} from 'rxjs/operators';
 
-import OLMap from 'ol/map';
-import View from 'ol/view';
+import OLMap from 'ol/Map';
+import View from 'ol/View';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 
 @ImageryPlugin({
@@ -67,7 +78,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	pointToRealNorth$ = this.actions$.pipe(
 		ofType<PointToRealNorthAction>(MapActionTypes.POINT_TO_REAL_NORTH),
 		filter((action: PointToRealNorthAction) => action.payload === this.mapId),
-		switchMap(([action]: [PointToRealNorthAction]) => {
+		switchMap((action: PointToRealNorthAction) => {
 			return this.setActualNorth();
 		})
 	);
@@ -211,7 +222,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				view.setRotation(northData.actualNorth);
 				mapObject.renderSync();
 				if (Math.abs(northData.northOffsetDeg) > this.thresholdDegrees) {
-					return throwError({result: northData.actualNorth });
+					return throwError({ result: northData.actualNorth });
 				}
 				return of(northData.actualNorth);
 			}),
@@ -259,13 +270,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		);
 	}
 
-	projectPoints(coordinates: ol.Coordinate[], sourceProjection: string, destProjection: string): Observable<Point[] | any> {
+	projectPoints(coordinates: [number, number][], sourceProjection: string, destProjection: string): Observable<Point[] | any> {
 		return forkJoin(coordinates.map((coordinate) => {
-			const point = <GeoJSON.Point> turf.geometry('Point', coordinate);
+			const point = <GeoJSON.Point>turf.geometry('Point', coordinate);
 			if (sourceProjection && destProjection) {
 				return this.projectionService.projectApproximatelyFromProjection(point, sourceProjection, destProjection);
 			}
-			return this.projectionService.projectAccurately(point, this.iMap);
+			return this.projectionService.projectAccurately(point, this.iMap.mapObject);
 		}));
 	}
 
@@ -282,7 +293,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 			observer.next([olCenterView, olCenterViewWithOffset]);
 		})
-			.pipe(switchMap((centers: ol.Coordinate[]) => this.projectPoints(centers, sourceProjection, destProjection)));
+			.pipe(switchMap((centers: [number, number][]) => this.projectPoints(centers, sourceProjection, destProjection)));
 	}
 
 	onResetView(): Observable<boolean> {
@@ -296,7 +307,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	createShadowMap() {
 		const renderer = 'canvas';
 		this.shadowMapObject = new OLMap({
-			target: (<any>this.iMap).shadowElement,
+			target: (<any>this.iMap).shadowNorthElement,
 			renderer,
 			controls: []
 		});

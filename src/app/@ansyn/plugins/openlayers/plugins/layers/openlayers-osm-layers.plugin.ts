@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import { ILayer, layerPluginType } from '@ansyn/menu-items';
-import OSM from 'ol/source/osm';
-import TileLayer from 'ol/layer/tile';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
 import { ImageryPlugin } from '@ansyn/imagery';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenlayersBaseLayersPlugins } from "./openlayers-base-layers.plugins";

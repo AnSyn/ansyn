@@ -5,9 +5,9 @@ import {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/core';
-import Projection from 'ol/proj/projection';
-import Static from 'ol/source/imagestatic';
-import ImageLayer from 'ol/layer/image';
+import Projection from 'ol/proj/Projection';
+import Static from 'ol/source/ImageStatic';
+import ImageLayer from 'ol/layer/Image';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';

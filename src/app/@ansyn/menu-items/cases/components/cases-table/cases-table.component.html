@@ -21,7 +21,7 @@
 		</div>
 	</div>
 
-	<div class="cases-table-body" (infiniteScroll)="loadCases()" *ngIf="entities$ | async as entities" #tbodyElement>
+	<div class="cases-table-body" (ansynInfiniteScroll)="loadCases()" *ngIf="entities$ | async as entities" #tbodyElement>
 
 		<div class="cases-table-body-row"
 			 *ngFor="let id of ids"

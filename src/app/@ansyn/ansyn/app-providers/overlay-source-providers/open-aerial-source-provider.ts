@@ -79,7 +79,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
-		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe <any>(
+		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe(
 			map(data => {
 				return this.extractData(data.results);
 			}),

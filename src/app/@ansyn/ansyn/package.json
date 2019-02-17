@@ -1,32 +1,33 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "0.2.89",
+	"version": "0.2.95",
 	"peerDependencies": {
 		"rxjs-compat": "^6.2.1",
-		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3",
-		"@ansyn/assets": "0.2.89"
+		"@angular/common": "^7.2.2",
+		"@angular/core": "^7.2.2",
+		"@ansyn/assets": "0.2.95"
 	},
 	"dependencies": {
-		"@ansyn/context": "0.2.89",
-		"@ansyn/core": "0.2.89",
-		"@ansyn/imagery": "0.2.89",
-		"@ansyn/map-facade": "0.2.89",
-		"@ansyn/menu": "0.2.89",
-		"@ansyn/menu-items": "0.2.89",
-		"@ansyn/overlays": "0.2.89",
-		"@ansyn/plugins": "0.2.89",
-		"@ansyn/status-bar": "0.2.89",
+		"@ansyn/context": "0.2.95",
+		"@ansyn/core": "0.2.95",
+		"@ansyn/imagery": "0.2.95",
+		"@ansyn/map-facade": "0.2.95",
+		"@ansyn/menu": "0.2.95",
+		"@ansyn/menu-items": "0.2.95",
+		"@ansyn/overlays": "0.2.95",
+		"@ansyn/plugins": "0.2.95",
+		"@ansyn/status-bar": "0.2.95",
 		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^6.0.1",
-		"@ngrx/effects": "^6.0.1",
+		"@ngrx/store": "^7.2.0",
+		"@ngrx/effects": "^7.2.0",
 		"@turf/turf": "5.1.6",
 		"geojson": "^0.5.0",
 		"lodash": "4.17.5",
 		"moment": "^2.21.0",
-		"ol": "4.6.3",
+		"ol": "^5.3.0",
 		"wellknown": "0.5.0",
-		"@angular/material": "^6.4.1"
+		"@angular/cdk": "^7.3.0",
+		"@angular/material": "^7.3.0"
 	},
 	"license": "MIT"
 }

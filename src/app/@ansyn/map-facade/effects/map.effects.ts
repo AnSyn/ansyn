@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	BackToWorldSuccess,
@@ -26,7 +26,7 @@ import {
 	ChangeImageryMapSuccess,
 	ContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
-	ImageryCreatedAction,
+	ImageryCreatedAction, ImageryMouseEnter, ImageryMouseLeave,
 	ImageryRemovedAction,
 	MapActionTypes,
 	PinLocationModeTriggerAction,
@@ -121,8 +121,8 @@ export class MapEffects {
 
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
-		.ofType(CoreActionTypes.BACK_TO_WORLD_VIEW)
 		.pipe(
+			ofType(CoreActionTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(selectMaps)),
 			map(([action, entities]: [BackToWorldView, Dictionary<ICaseMapState>]) => {
 				const mapId = action.payload.mapId;
@@ -216,7 +216,7 @@ export class MapEffects {
 	activeMapEnter$ = this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
-		filter(([id, activeMapId]: [string, string]) => id === activeMapId),
+		filter(([action, activeMapId]: [ImageryMouseEnter, string]) => action.payload === activeMapId),
 		map(() => new ActiveImageryMouseEnter())
 	);
 
@@ -224,7 +224,7 @@ export class MapEffects {
 	activeMapLeave$ = this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
-		filter(([id, activeMapId]: [string, string]) => id === activeMapId),
+		filter(([action, activeMapId]: [ImageryMouseLeave, string]) => action.payload === activeMapId),
 		map(() => new ActiveImageryMouseLeave())
 	);
 

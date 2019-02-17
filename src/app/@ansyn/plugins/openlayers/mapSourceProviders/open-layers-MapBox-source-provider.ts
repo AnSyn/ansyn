@@ -1,5 +1,5 @@
-import XYZ from 'ol/source/xyz';
-import TileLayer from 'ol/layer/tile';
+import XYZ from 'ol/source/XYZ';
+import TileLayer from 'ol/layer/Tile';
 import { ICaseMapState } from '@ansyn/core';
 import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';

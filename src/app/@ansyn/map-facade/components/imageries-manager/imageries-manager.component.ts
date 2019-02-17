@@ -6,7 +6,7 @@ import { IMapState, selectActiveMapId, selectMaps, selectMapsIds } from '../../r
 import {
 	ActiveImageryMouseEnter,
 	ClickOutsideMap,
-	SetActiveMapId,
+	SetActiveMapId, SetMapsDataActionStore,
 	UpdateMapSizeAction
 } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
@@ -21,12 +21,14 @@ import {
 } from '@ansyn/core';
 import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { DragDropMapService } from './providers/drag-drop-map.service';
 
 // @dynamic
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
-	styleUrls: ['./imageries-manager.component.less']
+	styleUrls: ['./imageries-manager.component.less'],
+	providers: [DragDropMapService]
 })
 
 export class ImageriesManagerComponent implements OnInit {
@@ -59,7 +61,11 @@ export class ImageriesManagerComponent implements OnInit {
 	mapsEntities: Dictionary<ICaseMapState>;
 	activeMapId: string;
 
-	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>, @Inject(DOCUMENT) protected document: Document) {
+	constructor(protected mapEffects: MapEffects,
+				protected store: Store<IMapState>,
+				@Inject(DOCUMENT) protected document: Document,
+				public dragDropMapService: DragDropMapService
+	) {
 	}
 
 	ngOnInit() {

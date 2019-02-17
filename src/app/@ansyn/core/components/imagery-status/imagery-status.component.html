@@ -1,4 +1,13 @@
 <div class="buttons">
+	<button
+		*ngIf="mapsAmount > 1"
+		class="drag-me"
+		tooltip-value="Move"
+		tooltip-class="bottom"
+		(mousedown)="onMove.emit($event)">
+		<i class="fa fa-arrows"></i>
+	</button>
+
 	<button (click)="backToWorldView()"
 			class="back-to-world-view"
 			*ngIf="overlay"

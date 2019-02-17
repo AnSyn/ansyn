@@ -29,14 +29,15 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 			const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
 			let layerData;
 			try {
+				const readerResult: string = <string>this.reader.result;
 				switch (fileType.toLowerCase()) {
 					case 'kml':
-						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(this.reader.result, 'text/xml'));
+						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(readerResult, 'text/xml'));
 						this.simpleStyleToVisualizer(layerData);
 						break;
 					case 'json':
 					case 'geojson':
-						layerData = JSON.parse(this.reader.result);
+						layerData = JSON.parse(readerResult);
 						break;
 
 					default:
@@ -87,11 +88,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	simpleStyleToVisualizer(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			let { id, label, showLabel, showMeasures, mode, ...initial } = feature.properties;
-			id = id || UUID.UUID();
-			showLabel = showLabel || false;
-			showMeasures = showMeasures || false;
-			feature.properties = { id, label, showLabel: JSON.parse(showLabel), showMeasures: JSON.parse(showMeasures), mode, style: { initial } };
+			const { id, label, showLabel, showMeasures, mode, ...initial } = feature.properties;
+			feature.properties = { id, label, showLabel: JSON.parse(showLabel ? showLabel : null), showMeasures: JSON.parse(showMeasures ? showMeasures : null), mode, style: { initial } };
 		});
 	}
 

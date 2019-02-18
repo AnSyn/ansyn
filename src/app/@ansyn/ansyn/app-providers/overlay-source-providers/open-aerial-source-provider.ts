@@ -128,7 +128,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: openAerialElement.acquisition_end,
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
-			isGeoRegistered: GeoRegisteration.isGeoRegistered,
+			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: openAerialElement
 		});
 

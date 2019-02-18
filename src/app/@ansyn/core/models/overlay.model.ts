@@ -18,7 +18,7 @@ export interface IPendingOverlay {
 }
 
 export enum GeoRegisteration {
-	isGeoRegistered = 'isGeoRegistered',
+	geoRegistered = 'geoRegistered',
 	notGeoRegistered = 'notGeoRegistered',
 	poorGeoRegistered = 'poorGeoRegistered',
 }

@@ -1,4 +1,5 @@
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from './case.model';
+import { MultiPolygon } from "geojson";
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],
@@ -18,7 +19,7 @@ export interface IPendingOverlay {
 }
 
 export interface IOverlay extends IDilutedOverlay {
-	footprint?: any; // @TODO add type geojson multipoligon,
+	footprint?: MultiPolygon; // @TODO add type geojson multipoligon,
 	sensorType?: string;
 	sensorName?: string;
 	creditName?: string;

@@ -1,4 +1,3 @@
-import { TreeviewItem } from 'ngx-treeview';
 export const MultipleOverlaysSourceConfig = 'multipleOverlaysSourceConfig';
 
 export interface IDateRange {
@@ -17,7 +16,7 @@ export interface IOverlaysSourceProvider {
 	inActive?: boolean;
 	whitelist: IFiltersList[];
 	blacklist: IFiltersList[];
-	dataInputFiltersConfig?: TreeviewItem
+	dataInputFiltersConfig?: any
 }
 
 export interface IMultipleOverlaysSourceConfig {

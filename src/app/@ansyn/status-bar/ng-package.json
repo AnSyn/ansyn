@@ -3,13 +3,9 @@
   "dest": "../../../../dist/ansyn/status-bar",
   "whitelistedNonPeerDependencies": [
     "@ansyn/core",
-    "@ngrx/core",
-    "@ngrx/store",
-    "@ngrx/effects",
     "lodash",
     "@ngx-translate/core",
-    "flatpickr",
-    "ngx-treeview"
+    "flatpickr"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

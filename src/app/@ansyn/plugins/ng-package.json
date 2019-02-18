@@ -3,9 +3,6 @@
   "dest": "../../../../dist/ansyn/plugins",
   "whitelistedNonPeerDependencies": [
     "@ansyn/core",
-    "@ngrx/core",
-    "@ngrx/store",
-    "@ngrx/effects",
     "@turf/turf",
     "lodash",
     "ol",

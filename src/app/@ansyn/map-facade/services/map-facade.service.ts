@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
-import { getFootprintIntersectionRatioInExtent, ICaseMapPosition, ICaseMapState, IOverlay } from '@ansyn/core';
+import {
+	GeoRegisteration,
+	getFootprintIntersectionRatioInExtent,
+	ICaseMapPosition,
+	ICaseMapState,
+	IOverlay
+} from '@ansyn/core';
 import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 
@@ -25,7 +31,7 @@ export class MapFacadeService {
 		if (!overlay) {
 			return true;
 		}
-		return overlay.isGeoRegistered;
+		return overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered;
 	}
 
 	static activeMap(mapState: IMapState): ICaseMapState {

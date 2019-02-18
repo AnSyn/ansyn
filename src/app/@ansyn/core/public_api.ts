@@ -1,3 +1,4 @@
+export { GeoRegisteration } from './models/overlay.model';
 export {
 	IMultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceConfig,

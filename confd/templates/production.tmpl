@@ -88,14 +88,7 @@
         "facets": {
           "showOnlyFavorites": false,
           "filters": [
-            {
-              "fieldName": "isGeoRegistered",
-              "metadata": {
-                "displayTrue": true,
-                "displayFalse": false
-              },
-              "type": "Boolean"
-            }
+
           ]
         }
       }
@@ -182,11 +175,7 @@
       {
         "modelName": "isGeoRegistered",
         "displayName": "Geo Registration",
-        "type": "Boolean",
-        "customData": {
-          "displayTrueName": "Geo registered",
-          "displayFalseName": "Not Geo registered"
-        }
+        "type": "Enum"
       },
       {
         "modelName": "bestResolution",
@@ -382,7 +371,10 @@
     	"default": {
 		 	"Sentinel-2A": "Sentinel 2A",
 		 	"alg_1": "name 1",
-		 	"alg_2": "name 2"
+		 	"alg_2": "name 2",
+		 	"isGeoRegistered": "Is Geo Registered",
+		 	"NotGeoRegistered": "Not Geo Registered",
+			"PoorGeoRegistered": "Poor Geo Registered"
 	   	}
     },
     "needToUseLayerExtent": false,

@@ -36,7 +36,7 @@ export class SandboxComponent implements OnInit {
 			photoTime: date.toISOString(),
 			date: date,
 			azimuth: 0,
-			isGeoRegistered: false,
+			isGeoRegistered: -1,
 			sourceType: OpenLayersStaticImageSourceProviderSourceType,
 			tag: {
 				imageData: {

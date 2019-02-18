@@ -13,7 +13,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import {
 	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon,
+	geojsonPolygonToMultiPolygon, GeoRegisteration,
 	IDataInputFilterValue, IMultipleOverlaysSourceConfig,
 	IOverlay,
 	limitArray,
@@ -404,7 +404,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: element.properties.acquired,
 			azimuth: toRadians(element.properties.view_angle),
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: GeoRegisteration.poorGeoRegistered,
 			tag: element
 		});
 

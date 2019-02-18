@@ -129,7 +129,9 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	public parseData(tbOverlay: ITBOverlay): IOverlay {
-
+		if (tbOverlay.overlay) {
+			return new Overlay(({ ...tbOverlay.overlay }));
+		}
 		return new Overlay({
 			id: tbOverlay._id,
 			name: tbOverlay.name,

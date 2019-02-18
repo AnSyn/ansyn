@@ -1,10 +1,12 @@
 import { Feature, Polygon } from 'geojson';
+import { IOverlay } from "@ansyn/core";
 
 export interface ITBConfig {
 	baseUrl: string;
 }
 
 export interface ITBOverlay {
+	overlay: IOverlay,
 	_id: string,
 	displayUrl: string;
 	thumbnailUrl: string;

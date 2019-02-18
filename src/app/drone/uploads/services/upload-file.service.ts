@@ -26,6 +26,7 @@ export class UploadFileService {
 		formData.append('sensorName', request.sensorName);
 		formData.append('sharing', request.sharing);
 		formData.append('uploads', request.file);
+		formData.append('date', `${request.date}`);
 		return formData;
 	}
 

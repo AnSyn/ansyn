@@ -9,7 +9,6 @@
 	content: attr(tooltip-value);
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="top"]:after {
-	left: auto;
 	bottom: auto;
 	transform: translateY(-100%);
 }
@@ -25,7 +24,6 @@
 	transform: translateY(calc(-100% - 15px));
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="bottom"]:after {
-	left: auto;
 	top: auto;
 	bottom: 0;
 	transform: translateY(100%);
@@ -35,14 +33,12 @@
 	right: auto;
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="bottom"][tooltip-class*="left"]:after {
-	left: auto;
 	right: 0;
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="bottom"]:hover:after {
 	transform: translate(0, calc(100% + 15px));
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="right"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):after {
-	left: auto;
 	right: 0;
 	transform: translate(100%, 0);
 }

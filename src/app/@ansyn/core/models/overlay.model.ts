@@ -24,7 +24,7 @@ export enum GeoRegisteration {
 }
 
 export interface IOverlay extends IDilutedOverlay {
-	footprint?: any; // @TODO add type geojson multipoligon,
+	footprint?: any;
 	sensorType?: string;
 	sensorName?: string;
 	creditName?: string;

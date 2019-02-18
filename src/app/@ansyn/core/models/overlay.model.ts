@@ -18,8 +18,14 @@ export interface IPendingOverlay {
 	extent?: any;
 }
 
+export enum GeoRegisteration {
+	geoRegistered = 'geoRegistered',
+	notGeoRegistered = 'notGeoRegistered',
+	poorGeoRegistered = 'poorGeoRegistered',
+}
+
 export interface IOverlay extends IDilutedOverlay {
-	footprint?: MultiPolygon; // @TODO add type geojson multipoligon,
+	footprint?: MultiPolygon;
 	sensorType?: string;
 	sensorName?: string;
 	creditName?: string;
@@ -36,7 +42,7 @@ export interface IOverlay extends IDilutedOverlay {
 	azimuth: number; // radians
 	approximateTransform?: any;
 	csmState?: string;
-	isGeoRegistered: boolean;
+	isGeoRegistered: GeoRegisteration;
 	tag?: any; // original metadata
 	projection?: string;
 	token?: string;
@@ -65,7 +71,7 @@ export class Overlay implements IOverlay {
 	azimuth: number = Overlay.DEFAULT_AZIMUTH; // radians
 	approximateTransform?: any;
 	csmState?: string;
-	isGeoRegistered: boolean;
+	isGeoRegistered: GeoRegisteration;
 	tag?: any; // original metadata
 	projection?: string = Overlay.DEFAULT_PROJECTION;
 	id: string;

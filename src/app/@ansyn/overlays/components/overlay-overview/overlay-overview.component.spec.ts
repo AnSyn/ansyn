@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
-import { IOverlay, MockComponent } from '@ansyn/core';
+import { GeoRegisteration, IOverlay, MockComponent } from '@ansyn/core';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
@@ -57,7 +57,7 @@ describe('OverlayOverviewComponent', () => {
 			photoTime: 'ttt',
 			date: new Date(),
 			azimuth: 100,
-			isGeoRegistered: true
+			isGeoRegistered: GeoRegisteration.geoRegistered
 		}];
 		let neededElement: Element;
 

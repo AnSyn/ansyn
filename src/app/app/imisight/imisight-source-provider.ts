@@ -8,7 +8,7 @@ import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon,
+	geojsonPolygonToMultiPolygon, GeoRegisteration,
 	getPolygonByPointAndRadius,
 	IOverlay,
 	limitArray,
@@ -148,7 +148,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: imiSightElement.timestamp,
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: imiSightElement
 		});
 	}

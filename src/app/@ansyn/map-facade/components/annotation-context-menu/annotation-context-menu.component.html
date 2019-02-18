@@ -4,17 +4,48 @@
 	 [style.width.px]="clickMenuProps .boundingRect.width"
 	 [style.height.px]="clickMenuProps.boundingRect.height"
 	 [style.left.px]="clickMenuProps.boundingRect.left"
-	 eventListener="mousedown"
+	 eventListener="pointerdown"
 	 (ansynClickOutside)="close()">
 
 	<div class="context-menu">
-		<div class="buttons">
-			<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()"><i
-				class="icon-tools-ruler"></i></button>
-			<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel()"><i
-				class="icon-annotation-label"></i></button>
-			<button class='removeFeature' (click)="removeFeature()"><i class="icon-close"></i></button>
-		</div>
+		<ul class="buttons">
+			<li>
+				<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()"><i
+					class="icon-tools-ruler" tooltip-value="Measures" tooltip-class="bottom"></i></button>
+			</li>
+			<li>
+				<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel()"><i
+					class="icon-annotation-label" tooltip-value="Label" tooltip-class="bottom"></i>
+				</button>
+			</li>
+			<li class="expanded-selection line-width-selection">
+				<p>
+					<button [class.active]="clickMenuProps.showWeight" (click)="toggleWeight()"><i
+						class="icon-annotation-weight" tooltip-value="Width" tooltip-class="bottom"></i></button>
+					<ansyn-annotations-weight
+						[show]="clickMenuProps.showWeight"
+						[properties]="clickMenuProps.style.initial"
+						(selectLineWidth)="selectLineWidth($event.width)">
+					</ansyn-annotations-weight>
+				</p>
+			</li>
+			<li>
+				<p>
+					<button [class.active]="clickMenuProps.showColorPicker" (click)="toggleColorPicker()">
+						<i class="icon-annotation-color" tooltip-value="Color Picker" tooltip-class="bottom"></i></button>
+					<ansyn-annotations-color
+						[show]="clickMenuProps.showColorPicker"
+						[properties]="clickMenuProps.style.initial"
+						(colorChange)="colorChange($event)"
+						(activeChange)="activeChange($event)"
+					></ansyn-annotations-color>
+				</p>
+			</li>
+
+			<li>
+				<button class='removeFeature' (click)="removeFeature()" tooltip-value="Delete" tooltip-class="bottom"><i class="icon-close"></i></button>
+			</li>
+		</ul>
 	</div>
 
 	<form class="annotation-label-edit" (ngSubmit)="updateLabel()" *ngIf="clickMenuProps.showLabel">
@@ -22,6 +53,7 @@
 			   name="EditLabel">
 		<i (click)="updateLabel()" class="icon-edit"></i>
 	</form>
+
 
 </div>
 

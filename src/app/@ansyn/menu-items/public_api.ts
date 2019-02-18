@@ -1,3 +1,5 @@
+export { ILayersManagerConfig } from "./layers-manager/models/layers-manager-config";
+export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
 export { DataLayersService } from './layers-manager/services/data-layers.service';
 export { ProjectionConverterService } from './tools/services/projection-converter.service';
@@ -7,12 +9,13 @@ export { GoToAction } from './tools/actions/tools.actions';
 export { ILayerState } from './layers-manager/reducers/layers.reducer';
 export { ICasesState } from './cases/reducers/cases.reducer';
 export { IToolsState } from './tools/reducers/tools.reducer';
+export { ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive } from './settings/reducers/settings.reducer';
 export { LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction } from './cases/actions/cases.actions';
 export { Filters, IFiltersState } from './filters/reducer/filters.reducer';
 export { IFilter } from './filters/models/IFilter';
 export { ILayer } from './layers-manager/models/layers.model';
 export { SetAutoImageProcessing, ShowOverlaysFootprintAction } from './tools/actions/tools.actions';
-export { AlgorithmsComponent } from './algorithms/algorithms/algorithms.component';
+export { TasksComponent } from './algorithms/components/tasks/tasks.component';
 export {
 	DisableImageProcessing,
 	EnableImageProcessing,
@@ -47,7 +50,6 @@ export {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes, InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction,
 	UpdateFacetsAction
 } from './filters/actions/filters.actions';
 export {
@@ -74,7 +76,6 @@ export {
 	filtersStateSelector,
 	selectFacets,
 	selectFilters,
-	selectOldFilters,
 	selectShowOnlyFavorites
 } from './filters/reducer/filters.reducer';
 export { ToolsComponent } from './tools/tools/tools.component';
@@ -84,7 +85,7 @@ export { FiltersCollectionComponent } from './filters/components/filters-collect
 export { CasesComponent } from './cases/components/cases/cases.component';
 export { IToolsConfig, toolsConfig, IImageProcParam } from './tools/models/tools-config';
 export { CasesModule } from './cases/cases.module';
-export { AlgorithmsModule } from './algorithms/algorithms.module';
+export { TasksModule } from './algorithms/tasks.module';
 export { FiltersModule } from './filters/filters.module';
 export { HelpModule } from './help/help.module';
 export { LayersManagerModule } from './layers-manager/layers-manager.module';
@@ -104,3 +105,27 @@ export { AddCaseAction } from './cases/actions/cases.actions';
 export { QueryParamsHelper } from './cases/services/helpers/cases.service.query-params-helper';
 export { UpdateFilterAction } from './filters/actions/filters.actions';
 export { IEnumFiled } from './filters/models/metadata/enum-filter-metadata';
+export {
+	selectCurrentAlgorithmTaskRegion,
+	selectAlgorithmTaskDrawIndicator,
+	selectCurrentAlgorithmTaskAlgorithmName
+} from './algorithms/reducers/tasks.reducer';
+export {
+	SetTaskDrawIndicator,
+	SetCurrentTaskRegion,
+} from './algorithms/actions/tasks.actions';
+export {
+	TasksService
+} from './algorithms/services/tasks.service';
+export {
+	TasksRemoteService
+} from './algorithms/services/tasks-remote.service';
+export {
+	TasksRemoteDefaultService
+} from './algorithms/services/tasks-remote-default.service';
+
+export {
+	IAlgorithmsConfig,
+	AlgorithmTask,
+	AlgorithmTaskStatus
+} from './algorithms/models/tasks.model';

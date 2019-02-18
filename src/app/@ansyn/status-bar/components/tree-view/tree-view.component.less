@@ -1,6 +1,5 @@
 @import "core/less/common";
 @import "core/less/z-index-globals";
-@import "core/less/tooltip";
 
 :host {
 	position: absolute;
@@ -29,23 +28,38 @@
 	}
 
 	div.data-input-filters-buttons {
+		button {
+			background: transparent;
+			border: none;
+			color: @overlays-dots-color;
+			&:disabled {
+				cursor: default;
+				pointer-events: none;
+				opacity: .6;
+			}
+		}
 		margin-top: 10px;
 		display: flex;
 		justify-content: space-between;
 		color: @overlays-dots-color;
-		a {
-			cursor: pointer;
-			&:hover {
-				font-weight: bold;
-			}
-			&:first-child {
-				margin-right: 9px;
-				width: 42px;
-			}
-			&:last-child {
-				width: 17px;
+		div {
+			button {
+				a {
+				}
+				cursor: pointer;
+				&:hover:not(:disabled) {
+					font-weight: bold;
+				}
+				&:first-child {
+					margin-right: 9px;
+					width: 42px;
+				}
+				&:last-child {
+					width: 17px;
+				}
 			}
 		}
+
 		.error {
 			color: crimson;
 		}

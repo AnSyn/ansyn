@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	Inject,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+	ViewEncapsulation
+} from '@angular/core';
 import { selection } from 'd3';
 import * as d3 from 'd3/build/d3';
 import eventDrops from '@ansyn/event-drops';
@@ -9,12 +18,11 @@ import {
 	ITimelineRange,
 	MarkUpClass,
 	MarkUpTypes,
-	OverlayDrop,
 	selectDropMarkup,
 	selectDrops,
 	selectTimelineRange
 } from '../../reducers/overlays.reducer';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import {
@@ -24,12 +32,13 @@ import {
 	SetMarkUp,
 	SetTimelineStateAction
 } from '../../actions/overlays.actions';
-import { Subscription } from 'rxjs/Subscription';
 import { schemeCategory10 } from 'd3-scale';
-import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
+import { DOCUMENT } from '@angular/common';
+import { IOverlayDrop } from '@ansyn/core';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {
@@ -47,7 +56,8 @@ export interface IEventDropsEvent {
 	selector: 'ansyn-timeline',
 	templateUrl: './timeline.component.html',
 	styleUrls: ['./timeline.component.less'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	encapsulation: ViewEncapsulation.None
 })
 
 export class TimelineComponent implements OnInit, OnDestroy {
@@ -133,8 +143,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			})
 		);
 
-	dropsIdMap: Map<string, OverlayDrop> = new Map();
-	dropsChange$: Observable<OverlayDrop[]> = this.store$
+	dropsIdMap: Map<string, IOverlayDrop> = new Map();
+	dropsChange$: Observable<IOverlayDrop[]> = this.store$
 		.pipe(
 			select(selectDrops),
 			distinctUntilChanged(isEqual),
@@ -156,12 +166,20 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		);
 
 	constructor(@Inject(OverlaysService) protected overlaysService: OverlaysService,
+				protected elementRef: ElementRef,
+				@Inject(DOCUMENT) protected document: any,
 				protected store$: Store<IOverlaysState>,
 				protected actions$: Actions) {
 	}
 
+	addRStyle() {
+		const circlesR: HTMLStyleElement = this.document.createElement('style');
+		circlesR.innerText = ` circle.displayed, circle.active { r: 8; } `;
+		this.elementRef.nativeElement.appendChild(circlesR);
+	}
 
 	ngOnInit() {
+		this.addRStyle();
 		this.subscribers = [this.dropsChange$.subscribe(),
 			this.dropsMarkUp$.subscribe(),
 			this.timeLineRange$.subscribe(),
@@ -180,7 +198,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
-		if (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID) {
+		if (!d3.event.toElement  || (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID)) {
 			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}

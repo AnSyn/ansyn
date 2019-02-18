@@ -2,13 +2,18 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 
 import { TreeViewComponent } from './tree-view.component';
 import { TreeviewModule } from 'ngx-treeview';
-import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
-import { coreInitialState, coreStateSelector, IOverlaysCriteria, SliderCheckboxComponent } from '@ansyn/core';
+import {
+	coreInitialState,
+	coreStateSelector,
+	IOverlaysCriteria,
+	MultipleOverlaysSourceConfig,
+	SliderCheckboxComponent
+} from '@ansyn/core';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 
@@ -30,7 +35,7 @@ describe('TreeViewComponent', () => {
 				{ provide: USE_DEFAULT_LANG },
 				MissingTranslationHandler,
 				{
-					provide: StatusBarConfig,
+					provide: MultipleOverlaysSourceConfig,
 					useValue: { toolTips: {}, dataInputFiltersConfig: {} }
 				},
 				provideMockActions(() => actions)
@@ -84,7 +89,7 @@ describe('TreeViewComponent', () => {
 			[coreStateSelector, coreState]
 		]);
 
-		spyOn(store, 'select').and.callFake(type => Observable.of(fakeStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(() => {

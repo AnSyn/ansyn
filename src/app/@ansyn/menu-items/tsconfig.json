@@ -10,6 +10,15 @@
       ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
+      ],
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery/public_api"
+      ],
+      "@ansyn/map-facade": [
+        "src/app/@ansyn/map-facade/public_api"
+      ],
+      "@ansyn/overlays": [
+        "src/app/@ansyn/overlays/public_api"
       ]
     }
   }

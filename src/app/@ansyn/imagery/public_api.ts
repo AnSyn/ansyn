@@ -1,6 +1,6 @@
+export { ImageryMapSources } from './providers/map-source-providers';
+export { IMapInstanceChanged } from './communicator-service/communicator.entity';
 export { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
-export { IImageryChanged } from './communicator-service/communicator.service';
-export { IMapInstanceChanged } from './imagery/manager/imagery.component.manager';
 export { VisualizerInteractions } from './model/base-imagery-visualizer';
 export { IBaseImageryMapConstructor } from './model/base-imagery-map';
 export {
@@ -29,3 +29,4 @@ export { CommunicatorEntity } from './communicator-service/communicator.entity';
 export { ProjectionService } from './projection-service/projection.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
+export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME } from './model/imagery-layer.model';

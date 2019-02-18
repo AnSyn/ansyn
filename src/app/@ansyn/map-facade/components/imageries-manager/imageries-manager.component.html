@@ -2,28 +2,31 @@
 	 #imageriesContainer
 	 [ngClass]="{'pin-location': pinLocationMode}">
 
-	<ng-template [ngIf]="mapsList">
-		<div *ngFor="let mapData of mapsList; count as count"
+	<ng-template [ngIf]="ids.length">
+		<div *ngFor="let mapId of ids; count as count"
 			 class="map-container-wrapper"
-			 (click)="clickMapContainer(mapData.id)"
-			 (dblclick)="dbclick()">
+			 #dragElement
+			 (click)="clickMapContainer(mapId)"
+			 (dblclick)="dbclick()"
+			 [id]="mapId"
+			 draggable="false">
 			<ansyn-imagery-container class="map"
-									 [mapState]="mapData"
-									 [active]="activeMapId === mapData.id"
+									 [mapState]="mapsEntities[mapId]"
+									 [active]="activeMapId === mapId"
 									 [showStatus]="count > 1"
-									 [mapsAmount]="mapsList.length">
+									 (onMove)="dragDropMapService.onMouseDown($event, dragElement, ids, mapsEntities)"
+									 [mapsAmount]="ids.length">
 			</ansyn-imagery-container>
 
 			<div class="active-border"
-				 [class.active]="activeMapId === mapData.id">
+				 [class.active]="activeMapId === mapId">
 			</div>
-
 		</div>
 
 	</ng-template>
 </div>
 
-<ansyn-context-menu></ansyn-context-menu>
+<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 
 <ansyn-welcome-notification *ngIf="showWelcomeNotification$ | async"></ansyn-welcome-notification>
 

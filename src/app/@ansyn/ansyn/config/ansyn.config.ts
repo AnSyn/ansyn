@@ -1,12 +1,15 @@
 import {
+	TasksComponent,
 	CasesComponent,
 	FiltersCollectionComponent,
 	HelpComponent,
 	LayersManagerComponent,
+	SettingsComponent,
 	ToolsComponent
 } from '@ansyn/menu-items';
 import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
+import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -22,8 +25,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		},
 		{
 			key: 'overlaysOutOfBounds',
-			background: '#80c5d4',
-			text: 'Image is out of bounds'
+			component: OverlayOutOfBoundsComponent
 		}
 	],
 	ansynMenuItems: [
@@ -46,6 +48,16 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Tools',
 			component: ToolsComponent,
 			iconClass: 'icon-main-tools'
+		},
+		{
+			name: 'Algorithms',
+			component: TasksComponent,
+			iconClass: 'icon-main-algorithms'
+		},
+		{
+			name: 'Settings',
+			component: SettingsComponent,
+			iconClass: 'icon-main-settings'
 		},
 		{
 			name: 'Help',

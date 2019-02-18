@@ -10,14 +10,14 @@ describe('FiltersReducer', () => {
 	it('UPDATE_FILTER_METADATA should update the metadata of the filter in the store', () => {
 		const filter1: IFilter = { modelName: 'filter1', displayName: 'filter1', type: FilterType.Enum };
 		const metadata1: FilterMetadata = new EnumFilterMetadata();
-		metadata1.initializeFilter(['metadata1']);
+		metadata1.initializeFilter([], 'filter1', <any> { metadata: ['metadata1'] });
 
 		const filter2: IFilter = { modelName: 'filter2', displayName: 'filter2', type: FilterType.Enum };
 		const metadata2: FilterMetadata = new EnumFilterMetadata();
-		metadata2.initializeFilter(['metadata2']);
+		metadata2.initializeFilter([], 'filter2', <any> { metadata: ['metadata2'] });
 
 		const metadata3: FilterMetadata = new EnumFilterMetadata();
-		metadata3.initializeFilter(['metadata3']);
+		metadata3.initializeFilter([], 'filter3', <any> { metadata: ['metadata3'] });
 
 		const initialState = new Map<IFilter, FilterMetadata>();
 		initialState.set(filter1, metadata1);

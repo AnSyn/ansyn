@@ -1,12 +1,12 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
-import { ImageryComponentManager, IMapInstanceChanged } from '../imagery/manager/imagery.component.manager';
 import { EventEmitter } from '@angular/core';
 import { ICaseMapPosition } from '@ansyn/core';
+import { CommunicatorEntity, IMapInstanceChanged } from './communicator.entity';
 
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
-	const componentManager1: ImageryComponentManager = <any>{
+	const componentManager1: CommunicatorEntity = <any>{
 		id: '1',
 		positionChanged: new EventEmitter<{ id: string, position: ICaseMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
@@ -16,7 +16,7 @@ describe('ImageryCommunicatorService', () => {
 		plugins: []
 	};
 
-	const componentManager2: ImageryComponentManager = <any>{
+	const componentManager2: CommunicatorEntity = <any>{
 		id: '2',
 		positionChanged: new EventEmitter<{ id: string, position: ICaseMapPosition }>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
@@ -51,8 +51,8 @@ describe('ImageryCommunicatorService', () => {
 		imageryCommunicatorService.createCommunicator(componentManager1);
 		imageryCommunicatorService.createCommunicator(componentManager2);
 
-		expect((<any>(imageryCommunicatorService.provide(componentManager2.id)))._manager).toEqual(componentManager2);
-		expect((<any>(imageryCommunicatorService.provide(componentManager1.id)))._manager).toEqual(componentManager1);
+		expect((<any>(imageryCommunicatorService.provide(componentManager2.id)))).toEqual(componentManager2);
+		expect((<any>(imageryCommunicatorService.provide(componentManager1.id)))).toEqual(componentManager1);
 		expect(imageryCommunicatorService.provide('3')).toEqual(null);
 	});
 
@@ -62,7 +62,7 @@ describe('ImageryCommunicatorService', () => {
 		imageryCommunicatorService.createCommunicator(componentManager2);
 
 		const communicatorsObject = imageryCommunicatorService.communicators;
-		expect((<any>(communicatorsObject[componentManager1.id]))._manager).toEqual(componentManager1);
+		expect((<any>(communicatorsObject[componentManager1.id]))).toEqual(componentManager1);
 	});
 
 	it('communicatorsAsArray should return array of communicators', () => {

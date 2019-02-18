@@ -1,12 +1,15 @@
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/mergeMap';
-
+export { IMultipleOverlaysSource, MultipleOverlaysSource } from './models/overlays-source-providers';
+export { IOverlaysConfig } from "./models/overlays.config";
+export { OverlaySourceProvider } from './models/overlays-source-providers';
+export { MultipleOverlaysSourceProvider } from './services/multiple-source-provider';
+export { IOverlayByIdMetaData } from './services/overlays.service';
 export { selectHoveredOverlay } from './reducers/overlays.reducer';
+export { timeIntersection } from './models/base-overlay-source-provider.model';
 export { ChangeOverlayPreviewRotationAction } from './actions/overlays.actions';
 export { selectLoading } from './reducers/overlays.reducer';
 export { LoadOverlaysSuccessAction } from './actions/overlays.actions';
 export { IMarkUpData } from './reducers/overlays.reducer';
-export { IDateRange, IFetchParams, IOverlayFilter } from './models/base-overlay-source-provider.model';
+export { IFetchParams, IOverlayFilter } from './models/base-overlay-source-provider.model';
 export { ExtendMap } from './reducers/extendedMap.class';
 export { IStartAndEndDate } from './models/base-overlay-source-provider.model';
 export { IOverlaysState } from './reducers/overlays.reducer';
@@ -20,17 +23,17 @@ export {
 	OverlaysActionTypes,
 	RedrawTimelineAction, RequestOverlayByIDFromBackendAction,
 	SetFilteredOverlaysAction, SetHoveredOverlayAction, SetMarkUp,
-	SetOverlaysStatusMessage, SetSpecialObjectsActionStore
+	SetOverlaysStatusMessage, SetSpecialObjectsActionStore, SetDropsAction
 } from './actions/overlays.actions';
 export {
 	MarkUpClass,
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
 	selectFilteredOveralys, selectOverlaysArray,
-	selectOverlaysMap
+	selectOverlaysMap, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
 } from './reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './services/overlays.service';
-export { BaseOverlaySourceProvider, UNKNOWN_NAME } from './models/base-overlay-source-provider.model';
+export { BaseOverlaySourceProvider } from './models/base-overlay-source-provider.model';
 export { overlayOverviewComponentConstants } from './components/overlay-overview/overlay-overview.component.const';
 export { OverlaysModule } from './overlays.module';
 export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './reducers/overlays.reducer';

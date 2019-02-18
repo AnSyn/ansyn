@@ -9,10 +9,10 @@ import {
 	SetSubMenu
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/pluck';
 import { ClearActiveInteractionsAction, copyFromContent, ICoordinatesSystem } from '@ansyn/core';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
+import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -23,12 +23,14 @@ export class GoToComponent implements OnInit {
 	@Input() disabled: boolean;
 	private _expand: boolean;
 	public activeCenter: number[];
-	public gotoExpand$: Observable<boolean> = this.store$.select(selectSubMenu)
-		.map((subMenu) => subMenu === SubMenuEnum.goTo)
-		.distinctUntilChanged();
-	activeCenter$: Observable<number[]> = this.store$.select(toolsStateSelector)
-		.pluck<any, any>('activeCenter')
-		.distinctUntilChanged();
+	public gotoExpand$: Observable<boolean> = this.store$.select(selectSubMenu).pipe(
+		map((subMenu) => subMenu === SubMenuEnum.goTo),
+		distinctUntilChanged()
+	);
+	activeCenter$: Observable<number[]> = this.store$.select(toolsStateSelector).pipe(
+		pluck<any, any>('activeCenter'),
+		distinctUntilChanged()
+	);
 
 	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
@@ -37,9 +39,10 @@ export class GoToComponent implements OnInit {
 		to: []
 	};
 
-	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector)
-		.map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation))
-		.distinctUntilChanged();
+	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
+		map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation)),
+		distinctUntilChanged()
+	);
 
 	pinLocationMode: boolean;
 
@@ -58,6 +61,10 @@ export class GoToComponent implements OnInit {
 
 	get to(): ICoordinatesSystem {
 		return this.config.GoTo.to;
+	}
+
+	get notification(): string {
+		return this.config.Proj4.ed50Notification;
 	}
 
 	ngOnInit(): void {

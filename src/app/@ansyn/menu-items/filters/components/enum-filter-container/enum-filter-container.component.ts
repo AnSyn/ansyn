@@ -7,23 +7,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 	styleUrls: ['./enum-filter-container.component.less']
 })
 export class EnumFilterContainerComponent {
-
-
 	@Input() metadata: EnumFilterMetadata;
 	@Input() isLongFiltersList: boolean;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
 
 	onInputClicked(key: string) {
-		const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
-		clonedMetadata.updateMetadata(key);
-
-		this.onMetadataChange.emit(clonedMetadata);
+		this.metadata.updateMetadata(key);
+		this.onMetadataChange.emit(this.metadata);
 	}
 
 	selectOnly(key: any) {
-		const clonedMetadata: EnumFilterMetadata = Object.assign(Object.create(this.metadata), this.metadata);
-		clonedMetadata.selectOnly(key);
-
-		this.onMetadataChange.emit(clonedMetadata);
+		this.metadata.selectOnly(key);
+		this.onMetadataChange.emit(this.metadata);
 	}
 }

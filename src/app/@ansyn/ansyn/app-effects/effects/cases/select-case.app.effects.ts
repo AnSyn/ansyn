@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/do';
 import { Observable } from 'rxjs';
 import {
 	CoreConfig,
@@ -14,7 +12,6 @@ import {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
 	SetLayoutAction,
-	SetMapsDataActionStore,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
@@ -32,14 +29,19 @@ import {
 import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
+import { ofType } from '@ngrx/effects';
+import { mergeMap, concatMap } from 'rxjs/operators';
+import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
+import { UUID } from 'angular2-uuid';
 
 @Injectable()
 export class SelectCaseAppEffects {
 
 	@Effect()
-	selectCase$: Observable<any> = this.actions$
-		.ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE)
-		.mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch));
+	selectCase$: Observable<any> = this.actions$.pipe(
+		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE),
+		concatMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
+	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
@@ -51,7 +53,14 @@ export class SelectCaseAppEffects {
 		// status-bar
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
-		const { data, activeMapId } = state.maps;
+		const { data, activeMapId: currentActiveMapID } = state.maps;
+		data.forEach(map => {
+			let thisMapId = map.id;
+			map.id = UUID.UUID();
+			if (thisMapId === currentActiveMapID) {
+				state.maps.activeMapId = map.id;
+			}
+		});
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities } = state;
 		let { time } = state;
@@ -76,7 +85,8 @@ export class SelectCaseAppEffects {
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)), activeMapId }),
+			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
+			new SetActiveMapId(state.maps.activeMapId),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),

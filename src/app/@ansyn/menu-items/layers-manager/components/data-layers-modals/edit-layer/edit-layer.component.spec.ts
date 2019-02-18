@@ -14,6 +14,8 @@ import {
 	LoggerService,
 	StorageService
 } from '@ansyn/core';
+import { MatInputModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditLayerComponent', () => {
 	let component: EditLayerComponent;
@@ -21,7 +23,7 @@ describe('EditLayerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, HttpClientModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })],
+			imports: [FormsModule, HttpClientModule, MatInputModule, BrowserAnimationsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })],
 			providers: [
 				StorageService,
 				DataLayersService,

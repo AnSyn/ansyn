@@ -1,0 +1,11 @@
+<ng-container [ngSwitch]="pageToShow$ | async">
+
+	<ansyn-tasks-table-page
+		*ngSwitchCase="TasksPageToShow.TASKS_TABLE"
+	></ansyn-tasks-table-page>
+
+	<ansyn-tasks-form-page
+		*ngSwitchCase="TasksPageToShow.TASK_FORM"
+	></ansyn-tasks-form-page>
+
+</ng-container>

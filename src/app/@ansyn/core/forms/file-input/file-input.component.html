@@ -1,0 +1,16 @@
+<input [id]="id"
+	   #input
+	   type="file"
+	   [accept]="accept"
+	   [multiple]="multiple"
+	   [disabled]="disabled"
+	   [(ngModel)]="value"
+	   (change)="change.emit($event)"/>
+
+<label [for]="id">
+	<span class="placeholder">{{placeholder}}</span>
+</label>
+
+<span class="files">
+	{{ input.files.length > 1 ? input.files.length + ' files' : input.files.item(0)?.name }}
+</span>

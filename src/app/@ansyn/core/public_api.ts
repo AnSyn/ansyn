@@ -1,19 +1,37 @@
-export { fetchConfigProviders } from './models/fetch-config-providers';
+export {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig,
+	IDateRange,
+	IFiltersList,
+	IOverlaysSourceProvider
+} from './models/multiple-overlays-source-config';
+export { ChangeImageryMap } from './actions/core.actions';
+export { FileInputComponent } from './forms/file-input/file-input.component';
+export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
+export { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
+export { ICaseSliderFilterMetadata } from './models/case.model';
+export { AnsynFormsModule } from './forms/ansyn-forms.module';
+export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
+export { forkJoinSafe } from './utils/rxjs/observables/fork-join-safe';
+export { mergeArrays } from './utils/merge-arrays';
+export { selectTime } from './reducers/core.reducer';
 export { IAlertComponent } from './alerts/alerts.model';
 export { ILoggerConfig } from './models/logger-config.model';
 export { AnsynTranslationModule } from './translation/ansyn-translation.module';
-export { SliderCheckboxComponent } from './components/slider-checkbox/slider-checkbox.component';
+export { SliderCheckboxComponent } from './forms/slider-checkbox/slider-checkbox.component';
 export { MockComponent } from './test/mock-component';
 export { ClickOutsideDirective } from './directives/click-outside.directive';
+export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { createStore, IStoreFixture } from './test/mock-store';
-export { AnsynCheckboxComponent } from './components/ansyn-checkbox/ansyn-checkbox.component';
+export { AnsynCheckboxComponent } from './forms/ansyn-checkbox/ansyn-checkbox.component';
 export { asyncData } from './test/async-observable-helpers';
 export { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 export { ICaseLayersState } from './models/case.model';
 export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+export { ColorPickerComponent } from './forms/color-picker/color-picker.component';
 export { AlertComponentDirective } from './alerts/alert-component.directive';
 export { coreFeatureKey, coreInitialState, CoreReducer } from './reducers/core.reducer';
-export { CaseFilters, ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './models/case.model';
+export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './models/case.model';
 export { type } from './utils/type';
 export { selectAutoSave, selectRemovedOverlays, selectRemovedOverlaysVisibility } from './reducers/core.reducer';
 export {
@@ -22,7 +40,7 @@ export {
 	ToggleFavoriteAction,
 	ToggleMapLayersAction, TogglePresetOverlayAction
 } from './actions/core.actions';
-export { ICaseFacetsState, ICaseFilter } from './models/case.model';
+export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './models/case.model';
 export { InjectionResolverFilter } from './services/generic-type-resolver';
 export { GenericTypeResolverService } from './services/generic-type-resolver.service';
 export { IMapsLayout } from './models/i-maps-layout';
@@ -30,9 +48,8 @@ export { IAlert } from './alerts/alerts.model';
 export { LoggerConfig } from './models/logger.config';
 export { IEntity } from './services/storage/storage.service';
 export { coreStateSelector, selectFavoriteOverlays, selectPresetOverlays } from './reducers/core.reducer';
-export { IOverlaysFetchData, IOverlaySpecialObject } from './models/overlay.model';
+export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './models/overlay.model';
 export { ILimitedArray } from './utils/i-limited-array';
-export { PlaceholderComponent } from './components/placeholder/placeholder.component';
 export { OverlayDisplayMode } from './models/case.model';
 export { ClearActiveInteractionsAction } from './actions/core.actions';
 export { AddAlertMsg, RemoveAlertMsg, SetLayoutSuccessAction } from './actions/core.actions';
@@ -41,14 +58,14 @@ export { IPendingOverlay } from './models/overlay.model';
 export { ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs } from './models/case.model';
 export { IStoredEntity, StorageService } from './services/storage/storage.service';
 export { getTimeFormat } from './utils/time';
-export { AnsynInputComponent } from './components/ansyn-input/ansyn-input.component';
+export { AnsynInputComponent } from './forms/ansyn-input/ansyn-input.component';
 export { copyFromContent } from './utils/clipboard';
 export { ErrorHandlerService } from './services/error-handler.service';
 export { ICase, ICasePreview, IDilutedCase } from './models/case.model';
 export {
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
-	SetMapsDataActionStore, SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
+	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from './actions/core.actions';
 export { ICoreState } from './reducers/core.reducer';
@@ -79,7 +96,7 @@ export {
 	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './models/case.model';
-export { IOverlay, IOverlaysCriteria } from './models/overlay.model';
+export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria } from './models/overlay.model';
 export { IVisualizerEntity } from './models/visualizers/visualizers-entity';
 export { MarkerSize } from './models/visualizers/visualizer-style';
 export { ICoreConfig } from './models/core.config.model';
@@ -95,8 +112,8 @@ export { toDegrees, toRadians } from './utils/math';
 export { toastMessages } from './models/toast-messages';
 export { IContextEntity } from './models/case.model';
 export { ICoordinatesSystem } from './models/coordinate-system.model';
-export { cloneDeep } from './utils/rxjs-operators/cloneDeep';
-export { rxPreventCrash } from './utils/rxjs-operators/rxPreventCrash';
+export { cloneDeep } from './utils/rxjs/operators/cloneDeep';
+export { rxPreventCrash } from './utils/rxjs/operators/rxPreventCrash';
 export {
 	areCoordinatesNumeric,
 	bboxFromGeoJson,
@@ -107,6 +124,7 @@ export {
 } from './utils/geo';
 export { IContext } from './models/context.model';
 export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
+export { mapValuesToArray } from './utils/misc';
 export {
 	AnnotationInteraction, AnnotationMode,
 	IAnnotationBoundingRect,
@@ -119,9 +137,12 @@ export { VisualizerStates } from './models/visualizers/visualizer-state';
 export { CaseMapExtent } from './models/case-map-position.model';
 export { ICaseMapState } from './models/case.model';
 export { ICaseMapPosition } from './models/case-map-position.model';
-export { createEntityAdapter } from '@ngrx/entity';
-export { EntityState } from '@ngrx/entity/src/models';
-export { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 export { DisplayedOverlay } from './models/context.model';
-export { EntityAdapter } from '@ngrx/entity/src/models';
-export { getProviders } from './models/fetch-config-providers';
+export { CaseEnumFilterMetadata } from './models/case.model';
+export {
+	IMapSourceProvidersConfig,
+	MAP_SOURCE_PROVIDERS_CONFIG
+} from './models/map-source-providers-config';
+export { ExtentCalculator } from './utils/extent-calculator';
+export { IWorldViewMapState } from './models/case.model';
+export { IMapProgress, IMapErrorMessage } from './models/map-progress.model';

@@ -1,17 +1,48 @@
-import { BaseOverlaySourceProvider, IStartAndEndDate } from '../models/base-overlay-source-provider.model';
+import { IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '@ansyn/core';
-import { IOverlaysState, ITimelineRange, OverlayDrop } from '../reducers/overlays.reducer';
+import { combineLatest, Observable } from 'rxjs';
+import {
+	IOverlay,
+	IOverlayDrop,
+	IOverlaysCriteria,
+	IOverlaysFetchData,
+	mapValuesToArray,
+	selectFavoriteOverlays,
+	sortByDateDesc
+} from '@ansyn/core';
+import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { unionBy } from 'lodash';
+import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs/internal/operators';
 
 export const OverlaysConfig = 'overlaysConfig';
 
+export interface IOverlayByIdMetaData {
+	id: string;
+	sourceType: string
+}
+
 // @dynamic
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class OverlaysService {
+
+	/**
+	 * @description Observable: get a map with both query overlays and favorite overlays
+	 */
+	getAllOverlays$: Observable<Map<string, IOverlay>> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)).pipe(
+		map(([queryOverlays, favoriteOverlays]: [Map<string, IOverlay>, IOverlay[]]) => {
+			const result = new Map(queryOverlays);
+			favoriteOverlays.forEach(overlay => {
+				result.set(overlay.id, overlay);
+			});
+			return result;
+		})
+	);
+
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
 	 * @param items
@@ -33,10 +64,13 @@ export class OverlaysService {
 			});
 	}
 
-
-	static parseOverlayDataForDisplay({ overlays, filteredOverlays, specialObjects }: IOverlaysState): OverlayDrop[] {
-		const overlaysData = OverlaysService.pluck(overlays, filteredOverlays, ['id', 'date']);
-		return [...overlaysData, ...Array.from(specialObjects.values())];
+	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): IOverlayDrop[] {
+		const criterialOverlays: IOverlay[] = showOnlyFavorites ? [] :
+			overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
+		const allOverlays: IOverlay[] = unionBy( criterialOverlays, favoriteOverlays, ({id}) => id);
+		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({id, date}) => ({id, date}));
+		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
+		return allDrops;
 	}
 
 	get fetchLimit() {
@@ -44,7 +78,8 @@ export class OverlaysService {
 	}
 
 	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
-				protected _overlaySourceProvider: BaseOverlaySourceProvider) {
+				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
+				protected store$: Store<any>) {
 	}
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
@@ -64,6 +99,10 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getById(id, sourceType);
 	}
 
+	getOverlaysById(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
+		return this._overlaySourceProvider.getByIds(ids);
+	}
+
 	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
 		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
 	}
@@ -72,7 +111,7 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
 	}
 
-	getTimeStateByOverlay(displayedOverlay: OverlayDrop, timeLineRange: ITimelineRange): ITimelineRange {
+	getTimeStateByOverlay(displayedOverlay: IOverlayDrop, timeLineRange: ITimelineRange): ITimelineRange {
 		let { start, end } = timeLineRange;
 		const startTime = start.getTime();
 		const endTime = end.getTime();
@@ -104,8 +143,7 @@ export class OverlaysService {
 		};
 	}
 
-
-	getTimeRangeFromDrops(drops: Array<OverlayDrop>): ITimelineRange {
+	getTimeRangeFromDrops(drops: Array<IOverlayDrop>): ITimelineRange {
 		let start = drops[0].date;
 		let end = drops[0].date;
 		drops.forEach(drop => {

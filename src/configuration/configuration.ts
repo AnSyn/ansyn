@@ -1,9 +1,3 @@
 export const configuration = {
-	production: false,
-	configPath: 'assets/config/app.config.json',
-	loginConfig:  {
-		'baseUrl': '',
-		'active': '',
-		'authorizedPath': '/'
-	}
+	production: false
 };

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import {
 	ContextService,
 	IContextParams,
@@ -36,19 +36,21 @@ export class ContextAppEffects {
 			paramsPayload.time = action.payload.time;
 		}
 		const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
-		return this.getCaseForContext(defaultCaseQueryParams, context, paramsPayload)
-			.mergeMap((selectedCase) => [
+		return this.getCaseForContext(defaultCaseQueryParams, context, paramsPayload).pipe(
+			mergeMap((selectedCase) => [
 					new SetContextParamsAction(paramsPayload),
 					new SelectCaseAction(selectedCase)
 				]
-			);
+		));
 	});
 
 	@Effect()
 	loadExistingDefaultCaseContext$: Observable<SetContextParamsAction | SelectCaseAction> =
 		this.loadDefaultCaseContext$
-			.filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => Boolean(context))
-			.pipe(this.setContext);
+			.pipe(
+				filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => Boolean(context)),
+				this.setContext
+			);
 
 	@Effect()
 	loadNotExistingDefaultCaseContext$: Observable<any> =
@@ -57,13 +59,15 @@ export class ContextAppEffects {
 			mergeMap(([action, context, params]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
 				return this.contextService
 					.loadContext(action.payload.context)
-					.map((context: IContext) => [action, context, params])
-					.pipe(this.setContext);
+					.pipe(
+						map((context: IContext) => [action, context, params]),
+						this.setContext
+					);
 			}),
 			catchError((err) => {
 				console.warn('Error loading context as case', err);
 				const defaultCaseParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
-				return Observable.from([new SelectCaseAction(defaultCaseParams),
+				return from([new SelectCaseAction(defaultCaseParams),
 					new SetToastMessageAction({
 						toastText: 'Failed to load context',
 						showWarningIcon: true
@@ -95,7 +99,7 @@ export class ContextAppEffects {
 			}
 		));
 
-		let case$: Observable<ICase> = Observable.of(defaultCaseQueryParams).pipe(<any>mapToCase);
+		let case$: Observable<ICase> = of(defaultCaseQueryParams).pipe(<any>mapToCase);
 
 		if (context.imageryCountBefore && !context.imageryCountAfter) {
 			case$ = <any> this.overlaysService.getStartDateViaLimitFacets({

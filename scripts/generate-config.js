@@ -6,9 +6,15 @@ const exec = require('child_process').execFile;
 let confdUrl = 'https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-windows-amd64.exe';
 let confdExeExtension = '.exe';
 const linuxConfdUrl = 'https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-linux-amd64';
+const darwinConfdUrl ='https://github.com/kelseyhightower/confd/releases/download/v0.15.0/confd-0.15.0-darwin-amd64';
 
 if (process.platform === 'linux') {
 	confdUrl = linuxConfdUrl;
+	confdExeExtension = '';
+}
+
+if (process.platform === 'darwin') {
+	confdUrl = darwinConfdUrl;
 	confdExeExtension = '';
 }
 

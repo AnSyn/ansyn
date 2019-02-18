@@ -11,4 +11,5 @@ export interface IMenuConfig {
 	mode: string;
 	background: string;
 	forkMe: IForkMe;
+	menuItems?: string[];
 }

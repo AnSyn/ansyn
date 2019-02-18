@@ -1,16 +1,13 @@
-import { IFilter } from '../IFilter';
-import { FilterType } from '@ansyn/core';
+import { FilterType, ICaseFilter, IOverlay } from '@ansyn/core';
 
 export abstract class FilterMetadata {
 	type: FilterType;
 
-	abstract initializeFilter(value: any, filter?: IFilter): void;
+	abstract initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter): void;
 
 	abstract accumulateData(value: any): void;
 
 	abstract incrementFilteredCount(value: any): void;
-
-	abstract postInitializeFilter(value: any): void;
 
 	abstract updateMetadata(value: any): void;
 
@@ -23,5 +20,7 @@ export abstract class FilterMetadata {
 	abstract resetFilteredCount(): void;
 
 	abstract showAll(): void;
+
+	abstract shouldBeHidden(): boolean;
 }
 

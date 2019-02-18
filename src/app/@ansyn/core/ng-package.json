@@ -1,6 +1,14 @@
 {
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/core",
+  "whitelistedNonPeerDependencies": [
+    "@turf/turf",
+    "lodash",
+    "@ngx-translate/core",
+    "angular2-uuid",
+    "auto-subscriptions",
+    "lodash-decorators"
+  ],
   "lib": {
     "entryFile": "./public_api.ts",
     "styleIncludePaths": [

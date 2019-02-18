@@ -3,12 +3,11 @@ import { AnsynComponent } from './ansyn.component';
 import { MockComponent } from '@ansyn/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '@ansyn/menu-items';
 import { mapStateSelector } from '@ansyn/map-facade';
-import { COMPONENT_MODE } from '../public_api';
+import { COMPONENT_MODE } from '../app-providers/component-mode';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -25,7 +24,6 @@ describe('AnsynComponent', () => {
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
-	const ansynTools = MockComponent({ selector: 'ansyn-tools' });
 	const mockOverlayOverviewComponent = MockComponent({ selector: 'ansyn-overlay-overview' });
 
 	const mapState = {
@@ -58,7 +56,6 @@ describe('AnsynComponent', () => {
 				mockImageryView,
 				mockEmptyComponent,
 				mockOverlayOverviewComponent,
-				ansynTools
 			],
 			providers: [
 				{
@@ -80,7 +77,7 @@ describe('AnsynComponent', () => {
 			[selectSelectedCase, { name: 'Case name' }],
 			[selectIsPinned, true]
 		]);
-		spyOn(store, 'select').and.callFake(type => Observable.of(mockStore.get(type)));
+		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
 
 
 	}));

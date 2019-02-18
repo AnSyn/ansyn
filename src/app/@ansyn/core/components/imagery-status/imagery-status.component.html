@@ -1,4 +1,13 @@
 <div class="buttons">
+	<button
+		*ngIf="mapsAmount > 1"
+		class="drag-me"
+		tooltip-value="Move"
+		tooltip-class="bottom"
+		(mousedown)="onMove.emit($event)">
+		<i class="fa fa-arrows"></i>
+	</button>
+
 	<button (click)="backToWorldView()"
 			class="back-to-world-view"
 			*ngIf="overlay"
@@ -7,6 +16,23 @@
 		<i class="icon-context-menu-prev"></i>
 		Back to base map
 	</button>
+
+	<ansyn-combo-box
+		*ngIf="false"
+		class="combo-box-width"
+		[direction]="mapsAmount > 1 ? 'bottom' : 'top'"
+		name="mapSource"
+		(ngModelChange)="changeActiveMap($event)"
+		[(ngModel)]="selectedMap">
+
+		<ansyn-combo-box-option value="openLayersMap">
+			Openlayers
+		</ansyn-combo-box-option>
+
+		<ansyn-combo-box-option value="CesiumMap">
+			Cesium
+		</ansyn-combo-box-option>
+	</ansyn-combo-box>
 
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
@@ -20,33 +46,37 @@
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()"
 			tooltip-value="Show/ Hide layers"
+			[disabled]="noGeoRegistration"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i [class.icon-main-data-layers]="layerFlag"
 		   [class.icon-layers-hide]="!layerFlag"></i>
 	</button>
 
-	<button *ngIf="overlay" class="small-icon-button set-favorite"
-			[class.active2]="isFavorite"
-			(click)="toggleFavorite()"
-			[attr.tooltip-value]="favoritesButtonText"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i class="icon icon-favorites"></i>
-	</button>
+	<ng-container *ngIf="overlay">
+		<button class="small-icon-button set-favorite"
+				[class.active2]="isFavorite"
+				(click)="toggleFavorite()"
+				[attr.tooltip-value]="favoritesButtonText"
+				[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+			<i class="icon icon-favorites"></i>
+		</button>
 
-	<button *ngIf="overlay" class="small-icon-button set-preset"
-			[class.active2]="isPreset"
-			(click)="togglePreset()"
-			[attr.tooltip-value]="presetsButtonText"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i class="icon icon-presets"></i>
-	</button>
+		<button class="small-icon-button set-preset"
+				[class.active2]="isPreset"
+				(click)="togglePreset()"
+				[disabled]="noGeoRegistration"
+				[attr.tooltip-value]="presetsButtonText"
+				[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+			<i class="icon icon-presets"></i>
+		</button>
 
-	<button *ngIf="overlay" class="small-icon-button remove-overlay"
-			(click)="removeOverlay()"
-			[attr.tooltip-value]="isRemoved ? 'Restore overlay' : 'Remove overlay'"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
-	</button>
+		<button class="small-icon-button remove-overlay"
+				(click)="removeOverlay()"
+				[attr.tooltip-value]="isRemoved ? 'Restore overlay' : 'Remove overlay'"
+				[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+			<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
+		</button>
+	</ng-container>
 </div>
 
 <div class="description">
@@ -68,7 +98,7 @@
 
 			<ng-container
 				*ngIf="alert.component; else textAlert"
-				[ansynAlertComponent]="{ component: alert.component, mapId: mapId }">
+				[ansynAlertComponent]="{ component: alert.component, mapId: mapId, overlay: overlay }">
 			</ng-container>
 
 			<ng-template #textAlert>

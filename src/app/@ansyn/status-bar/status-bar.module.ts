@@ -3,16 +3,14 @@ import { CommonModule } from '@angular/common';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@ansyn/core';
-import { ComboBoxComponent } from './components/combo-box/combo-box.component';
 import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
-import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from './models/combo-boxes.model';
+import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from './models/combo-boxes.model';
 import { TreeviewModule } from 'ngx-treeview';
 import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
-import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-box-trigger.component';
 
 @NgModule({
 	imports: [
@@ -22,12 +20,8 @@ import { ComboBoxTriggerComponent } from './components/combo-box-trigger/combo-b
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
 	],
-	declarations: [StatusBarComponent, ComboBoxComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, ComboBoxTriggerComponent],
+	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, ],
 	providers: [
-		{
-			provide: ORIENTATIONS,
-			useValue: comboBoxesOptions.orientations
-		},
 		{
 			provide: TIME_FILTERS,
 			useValue: comboBoxesOptions.timeFilters

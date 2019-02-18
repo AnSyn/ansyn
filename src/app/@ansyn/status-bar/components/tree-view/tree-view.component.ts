@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
 import {
-	IDataInputFilterValue,
+	IDataInputFilterValue, IOverlaysSourceProvider,
 	selectDataInputFilter,
 	SetOverlaysCriteriaAction,
-	SetToastMessageAction
+	SetToastMessageAction,
+	MultipleOverlaysSourceConfig, IMultipleOverlaysSourceConfig
 } from '@ansyn/core';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
-import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { StatusBarConfig } from '../../models/statusBar.config';
 import { isEqual } from 'lodash';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { filter, tap, take } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -27,16 +27,16 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
 
-	onDataInputFilterChange$ = this.dataInputFilter$
-		.distinctUntilChanged()
-		.filter(Boolean)
-		.do(_preFilter => {
+	onDataInputFilterChange$ = this.dataInputFilter$.pipe(
+		filter(Boolean),
+		tap(_preFilter => {
 			this._selectedFilters = _preFilter.filters;
 			this.dataInputFiltersActive = _preFilter.active;
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(root => this.updateInputDataFilterMenu(root));
 			}
-		});
+		})
+	);
 
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: false,
@@ -49,7 +49,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	private subscribers = [];
 	public dataInputFiltersActive: boolean;
 
-	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				public store: Store<IStatusBarState>,
 				private translate: TranslateService) {
 
@@ -67,28 +67,26 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	get dataFilters(): TreeviewItem[] {
 		this.leavesCount = 0;
-		Object.keys(this.statusBarConfig.dataInputFiltersConfig)
-			.forEach(providerName => {
-					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
+		return Object.entries(this.multipleOverlaysSourceConfig)
+			.filter(([providerName, { inActive, dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => !inActive && dataInputFiltersConfig)
+			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
+					this.visitLeafes(dataInputFiltersConfig, (leaf) => {
 						this.leavesCount++;
 						leaf.value.providerName = providerName;
-					});
-					this.visitLeaves(this.statusBarConfig.dataInputFiltersConfig[providerName], (leaf) => {
 						if (leaf.text) {
-							this.translate.get(leaf.text).subscribe((res: string) => {
+							this.translate.get(leaf.text).pipe(take(1)).subscribe((res: string) => {
 								leaf.text = res;
 							});
 						}
 					});
+					return dataInputFiltersConfig;
 				}
 			);
-
-		return Object.values(this.statusBarConfig.dataInputFiltersConfig);
 	}
 
-	visitLeaves(curr: TreeviewItem, cb: (leaf: TreeviewItem) => void) {
+	visitLeafes(curr: TreeviewItem, cb: (leaf: TreeviewItem) => void) {
 		if (Boolean(curr.children)) {
-			curr.children.forEach(c => this.visitLeaves(c, cb));
+			curr.children.forEach(c => this.visitLeafes(c, cb));
 			return;
 		}
 		cb(curr);

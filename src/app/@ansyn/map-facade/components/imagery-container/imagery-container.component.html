@@ -7,6 +7,7 @@
 						  [active]="active"
 						  [layerFlag]="mapState.flags.displayLayers"
 						  [mapsAmount]="mapsAmount"
+						  (onMove)="onMove.emit($event)"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
 
@@ -14,7 +15,7 @@
 
 	<ansyn-imagery-rotation [mapState]="mapState"></ansyn-imagery-rotation>
 
-	<ansyn-imagery-view [mapComponentSettings]="mapState"></ansyn-imagery-view>
+	<ansyn-imagery-view [settings]="mapState"></ansyn-imagery-view>
 
 	<ansyn-annotations-context-menu [mapId]="mapState.id"></ansyn-annotations-context-menu>
 

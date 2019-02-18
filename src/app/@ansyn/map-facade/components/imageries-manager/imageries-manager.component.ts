@@ -1,11 +1,14 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
-import { ActiveImageryMouseEnter, ClickOutsideMap, UpdateMapSizeAction } from '../../actions/map.actions';
+import { select, Store } from '@ngrx/store';
+import { IMapState, selectActiveMapId, selectMaps, selectMapsIds } from '../../reducers/map.reducer';
+import {
+	ActiveImageryMouseEnter,
+	ClickOutsideMap,
+	SetActiveMapId, SetMapsDataActionStore,
+	UpdateMapSizeAction
+} from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import {
 	coreStateSelector,
@@ -14,39 +17,36 @@ import {
 	IMapsLayout,
 	LayoutKey,
 	layoutOptions,
-	SetMapsDataActionStore
+	selectLayout
 } from '@ansyn/core';
-import { filter, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { DragDropMapService } from './providers/drag-drop-map.service';
 
 // @dynamic
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
-	styleUrls: ['./imageries-manager.component.less']
+	styleUrls: ['./imageries-manager.component.less'],
+	providers: [DragDropMapService]
 })
 
 export class ImageriesManagerComponent implements OnInit {
-	public core$: Observable<ICoreState> = this.store.select(coreStateSelector);
-	public mapState$: Observable<IMapState> = this.store.select(mapStateSelector);
+	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
+		select(selectLayout),
+		map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout))
+	);
+	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
+	public mapsEntities$: Observable<Dictionary<ICaseMapState>> = this.store.select(selectMaps);
+	public ids$ = this.store.select(selectMapsIds);
+	public renderContextMenu: boolean;
 
-	public selectedLayout$: Observable<IMapsLayout> = this.core$
-		.pluck<ICoreState, LayoutKey>('layout')
-		.distinctUntilChanged()
-		.map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout));
-
-	public activeMapId$: Observable<string> = this.mapState$
-		.pluck<IMapState, string>('activeMapId')
-		.distinctUntilChanged();
-
-	public mapsList$: Observable<ICaseMapState[]> = this.mapState$
-		.pluck<IMapState, ICaseMapState[]>('mapsList')
-		.distinctUntilChanged();
-
-	public showWelcomeNotification$ = this.store.select(coreStateSelector)
-		.pluck<ICoreState, boolean>('wasWelcomeNotificationShown')
-		.distinctUntilChanged()
-		.map(bool => !bool)
-	;
+	public showWelcomeNotification$ = this.store.pipe(
+		select(coreStateSelector),
+		pluck<ICoreState, boolean>('wasWelcomeNotificationShown'),
+		distinctUntilChanged(),
+		map(bool => !bool)
+	);
 
 	public selectedLayout;
 
@@ -57,16 +57,28 @@ export class ImageriesManagerComponent implements OnInit {
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
-	mapsList: ICaseMapState[];
+	ids: string[] = [];
+	mapsEntities: Dictionary<ICaseMapState>;
 	activeMapId: string;
 
-	constructor(protected mapEffects: MapEffects, protected store: Store<IMapState>, @Inject(DOCUMENT) protected document: Document) {
+	constructor(protected mapEffects: MapEffects,
+				protected store: Store<IMapState>,
+				@Inject(DOCUMENT) protected document: Document,
+				public dragDropMapService: DragDropMapService
+	) {
 	}
 
 	ngOnInit() {
 		this.initListeners();
 		this.initSubscribers();
 		this.initClickOutside();
+		this.initRenderContextMenu();
+	}
+
+	initRenderContextMenu() {
+		setTimeout(() => {
+			this.renderContextMenu = true;
+		}, 1000);
 	}
 
 	initClickOutside() {
@@ -80,7 +92,8 @@ export class ImageriesManagerComponent implements OnInit {
 	initSubscribers() {
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
-		this.mapsList$.subscribe((_mapsList: ICaseMapState[]) => this.mapsList = _mapsList);
+		this.mapsEntities$.subscribe((mapsEntities) => this.mapsEntities = mapsEntities);
+		this.ids$.subscribe((ids: string[]) => this.ids = ids);
 	}
 
 
@@ -114,7 +127,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 	changeActiveImagery(value) {
 		if (this.activeMapId !== value) {
-			this.store.dispatch(new SetMapsDataActionStore({ activeMapId: value }));
+			this.store.dispatch(new SetActiveMapId(value));
 			this.store.dispatch(new ActiveImageryMouseEnter());
 		}
 	}

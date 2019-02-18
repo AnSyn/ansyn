@@ -6,8 +6,8 @@
 	<form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase(selectContextElement.selectedIndex)">
 
 		<ansyn-input
-			#nameInput
 			[(ngModel)]="caseModel.name"
+			select
 			name="name"
 			[required]="true"
 			label="Name">
@@ -17,7 +17,7 @@
 			<label for="context">Context</label>
 			<select id="context"
 					#selectContextElement
-					name="context" required [disabled]="editMode">
+					name="context" required [disabled]="editMode || true">
 				<option
 					*ngFor="let context of contextsList"
 					[selected]="context.id === caseModel.selectedContextId">

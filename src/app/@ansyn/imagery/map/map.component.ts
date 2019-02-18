@@ -2,7 +2,7 @@ import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@an
 import { ICaseMapPosition } from '@ansyn/core';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
-import { filter, map, take } from 'rxjs/operators';
+import { filter, map, take, tap } from 'rxjs/operators';
 import { BaseImageryMap } from '../model/base-imagery-map';
 
 @Component({
@@ -12,16 +12,19 @@ import { BaseImageryMap } from '../model/base-imagery-map';
 })
 export class MapComponent implements OnInit, OnDestroy {
 	@ViewChild('mapElement') protected mapElement: ElementRef;
+	@ViewChild('mapElementShadowNorth') protected mapElementShadowNorth: ElementRef;
+	@ViewChild('mapElementShadowDoubleBuffer') protected mapElementShadowDoubleBuffer: ElementRef;
 
-	constructor(protected map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
+	constructor(public map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 
 	createMap(layers: any, position?: ICaseMapPosition): Observable<BaseImageryMap> {
 		return this.map
-			.initMap(this.mapElement.nativeElement, layers, position)
+			.initMap(this.mapElement.nativeElement, this.mapElementShadowNorth.nativeElement, this.mapElementShadowDoubleBuffer.nativeElement, layers, position)
 			.pipe(
 				filter(success => success),
 				map(() => this.map),
+				tap(() => this.map.initMapSubscriptions()),
 				take(1)
 			);
 	};

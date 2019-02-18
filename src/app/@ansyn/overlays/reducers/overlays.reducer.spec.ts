@@ -2,7 +2,7 @@ import { IOverlaysState, OverlayReducer, overlaysInitialState } from './overlays
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	SelectOverlayAction,
+	SelectOverlayAction, SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetSpecialObjectsActionStore,
 	SetTimelineStateAction,
@@ -135,4 +135,11 @@ describe('Overlay Reducer', () => {
 		expect(result.timeLineRange.start.getTime()).toBe(data1.start.getTime());
 		expect(result.timeLineRange.end.getTime()).toBe(data1.end.getTime());
 	});
+
+	it('set drops action', () => {
+		const newDrops = [{id: '23', date: new Date()}];
+		const action = new SetDropsAction(newDrops);
+		const result = OverlayReducer(overlaysInitialState, action);
+		expect(result.drops).toEqual(newDrops);
+	})
 });

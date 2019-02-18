@@ -62,10 +62,10 @@
 				"mapType": "openLayersMap",
 				"sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
               },
-              "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+              "id": null
             }
           ],
-          "activeMapId": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+          "activeMapId": null
         },
         "layers": {
           "activeLayersIds": []
@@ -192,6 +192,11 @@
         "modelName": "bestResolution",
         "displayName": "Resolution",
         "type": "Slider"
+      },
+      {
+        "modelName": "cloudCoverage",
+        "displayName": "Cloud Coverage",
+        "type": "Slider"
       }
     ]
   },
@@ -214,7 +219,8 @@
     },
     "Proj4": {
       "ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
-      "ed50Customized": ""
+      "ed50Customized": "",
+      "ed50Notification": ""
     },
     "ImageProcParams": [
       {
@@ -271,70 +277,98 @@
       "quickloop": "Next overlay from the quick loop (key: Q)"
     },
     "dataInputFiltersConfig": {
+      "IMISIGHT": {
+        "inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+      	"treeViewItem": {
+		  "text":"Imisight",
+		  "value": 1,
+		  "collapsed": true,
+		  "children": [
+			 {
+				"text": "All",
+				"value": {
+				  "sensorType": "All"
+				}
+			  }
+			]
+		  }
+	  },
       "PLANET": {
-        "text": "Planet",
-        "value": 1,
-        "collapsed":true,
-        "children": [
-          {
-            "text":"REScene",
-            "value": {
-              "sensorType": "REScene"
-            }
-          },
-          {
-            "text": "PSScene3Band",
-            "value": {
-              "sensorType": "PSScene3Band"
-            }
-          },
-		  {
-            "text": "PSOrthoTile",
-            "value": {
-              "sensorType": "PSOrthoTile"
-            }
-          },
-		  {
-            "text": "REOrthoTile",
-            "value": {
-              "sensorType": "REOrthoTile"
-            }
-          },
-		  {
-            "text": "SkySatScene",
-            "value": {
-              "sensorType": "SkySatScene"
-            }
-          },
-		  {
-            "text": "Landsat8L1G",
-            "value": {
-              "sensorType": "Landsat8L1G"
-            }
-          },
-		  {
-            "text": "Sentinel2L1C",
-            "value": {
-              "sensorType": "Sentinel2L1C"
-            }
+        "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
+        "treeViewItem": {
+			"text": "Planet",
+			"value": 1,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "REScene",
+					"value": {
+					  "sensorType": "REScene"
+					}
+				  },
+				  {
+					"text": "PSScene3Band",
+					"value": {
+					  "sensorType": "PSScene3Band"
+					}
+				  },
+				  {
+					"text": "PSOrthoTile",
+					"value": {
+					  "sensorType": "PSOrthoTile"
+					}
+				  },
+				  {
+					"text": "REOrthoTile",
+					"value": {
+					  "sensorType": "REOrthoTile"
+					}
+				  },
+				  {
+					"text": "SkySatScene",
+					"value": {
+					  "sensorType": "SkySatScene"
+					}
+				  },
+				  {
+					"text": "Landsat8L1G",
+					"value": {
+					  "sensorType": "Landsat8L1G"
+					}
+				  },
+				  {
+					"text": "Sentinel2L1C",
+					"value": {
+					  "sensorType": "Sentinel2L1C"
+					}
+				  },
+				  {
+					  "text": "Others",
+					  "value": {
+						"sensorType": "others"
+					  }
+					}
+				]
           }
-        ]
-      },
-      "OPEN_AERIAL": {
-        "text":"OpenAerial",
-        "value": 1,
-        "collapsed": true,
-        "children": [
-          {
-            "text": "UAV",
-            "value": {
-              "sensorType": "UAV"
-            }
+        },
+        "OPEN_AERIAL": {
+          "inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
+          "treeViewItem": {
+            "text": "OpenAerial",
+            "value": 1,
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
           }
-        ]
+        }
       }
-    }
-
   },
   "coreConfig": {
 	"welcomeNotification": {
@@ -346,22 +380,34 @@
     },
     "translation": {
     	"default": {
-		 	"Sentinel-2A": "Sentinel 2A"
+		 	"Sentinel-2A": "Sentinel 2A",
+		 	"alg_1": "name 1",
+		 	"alg_2": "name 2"
 	   	}
     },
-    "needToUseLayerExtent": false
+    "needToUseLayerExtent": false,
+    "tilesLoadingDoubleBuffer": {
+    	"debounceTimeInMs": 500,
+	    "timeoutInMs": 3000
+    }
   },
   "menuConfig": {
+    "menuItems": {{ getv "/ansyn/menu/items" "null" }},
     "path": "assets/logo.svg",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
     "mode": "{{ getv "/ansyn/menu/mode" "" }}",
     "forkMe": {
-    	"active": "{{ getv "/ansyn/menu/forkme" "true" }}",
+    	"active": {{ getv "/ansyn/menu/forkme" "true" }},
     	"image": "assets/icons/forkme.svg",
     	"title": "Fork me on github",
-		"href": "https://github.com/ansyn/ansyn"
+		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     }
+  },
+  "loginConfig": {
+  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
+  	"active":  {{ getv "/ansyn/login/active" "false" }},
+  	"authorizedPath": "/"
   },
   "visualizersConfig": {
     "FrameVisualizer": {
@@ -371,12 +417,16 @@
       }
     },
     "FootprintPolylineVisualizer": {
+      "minSimplifyVertexCountLimit": 100,
       "colors": {
         "active": "#27b2cf",
         "inactive": "#d393e1",
         "display": "#9524ad",
         "favorite": "yellow"
       }
+    },
+    "FootprintHeatmapVisualizer": {
+      "minSimplifyVertexCountLimit": 100
     },
     "exampleFootprintHeatmapVisualizer": {
       "initial": {
@@ -416,7 +466,50 @@
     }
   },
   "multipleOverlaysSourceConfig": {
+	 "defaultProvider": {
+	 	"inActive": false,
+		"whitelist": [
+		  {
+			"name": "Entire Earth",
+			"dates": [
+			  {
+				"start": null,
+				"end": null
+			  }
+			],
+			"sensorNames": [null],
+			"coverage": [
+			  [
+				[
+				  [
+					-180,
+					-90
+				  ],
+				  [
+					-180,
+					90
+				  ],
+				  [
+					180,
+					90
+				  ],
+				  [
+					180,
+					-90
+				  ],
+				  [
+					-180,
+					-90
+				  ]
+				]
+			  ]
+			]
+		  }
+		],
+	  "blacklist": []
+	},
     "IDAHO": {
+	  "inActive": {{ getv "/ansyn/overlay/idaho/inactive" "true" }},
       "whitelist": [
         {
           "name": "Entire Earth",
@@ -426,7 +519,7 @@
               "end": null
             }
           ],
-          "sensorNames": "{{ getv "/ansyn/overlay/idaho/sensor/names" "[]" }}",
+          "sensorNames": [null],
           "coverage": [
             [
               [
@@ -449,59 +542,6 @@
                 [
                   -180,
                   -90
-                ]
-              ]
-            ]
-          ]
-        }
-      ],
-      "blacklist": []
-    },
-    "IDAHO2": {
-      "whitelist": [
-        {
-          "name": "Entire Earth",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "[]",
-          "coverage": [
-            [
-              [
-                [
-                  -74.06810760498047,
-                  40.8028950718582
-                ],
-                [
-                  -74.09557342529297,
-                  40.75453936473234
-                ],
-                [
-                  -74.07463073730469,
-                  40.74543623770158
-                ],
-                [
-                  -74.11308288574219,
-                  40.70536767492135
-                ],
-                [
-                  -74.06330108642578,
-                  40.66918118282895
-                ],
-                [
-                  -74.01283264160156,
-                  40.73347023268492
-                ],
-                [
-                  -74.01111602783203,
-                  40.77768170250654
-                ],
-                [
-                  -74.06810760498047,
-                  40.8028950718582
                 ]
               ]
             ]
@@ -511,18 +551,44 @@
       "blacklist": []
     },
     "PLANET": {
+	  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
       "whitelist": [
-        {
-          "name": "USA",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "{{ if exists "/ansyn/overlay/planet/sensor/names" }}{{ getv "/ansyn/overlay/planet/sensor/names" }}{{ else }}[ \"Landsat8L1G\", \"Sentinel2L1C\" ]{{ end }}",
-		  "coverage": [[[[-126.73828125000001,48.195387408333374],[-51.32812500000002,47.9605023889151],[-80.24414062500001,24.166802085303246],[-125.94726562500003,30.41078179084589],[-126.73828125000001,48.195387408333374]]]]
-        },
+		  {
+			"name": "Entire Earth",
+			"dates": [
+			  {
+				"start": null,
+				"end": null
+			  }
+			],
+			"sensorNames": [ "Landsat8L1G", "Sentinel2L1C" ],
+			"coverage": [
+			  [
+				[
+				  [
+					-180,
+					-90
+				  ],
+				  [
+					-180,
+					90
+				  ],
+				  [
+					180,
+					90
+				  ],
+				  [
+					180,
+					-90
+				  ],
+				  [
+					-180,
+					-90
+				  ]
+				]
+			  ]
+			]
+		  },
         {
           "name": "California",
           "dates": [
@@ -531,7 +597,7 @@
               "end": null
             }
           ],
-          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" " [ null ]" }}" ,
+          "sensorNames": [ null ],
           "coverage": [
             [
               [
@@ -912,103 +978,65 @@
           ]
         }
       ],
-      "blacklist": [
-        {
-          "name": "San Francisco",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "[ null ]",
-          "coverage": [
-            [
-              [
-                [
-                  -122.4281,
-                  37.7068
-                ],
-                [
-                  -122.5048,
-                  37.7068
-                ],
-                [
-                  -122.5158,
-                  37.7835
-                ],
-                [
-                  -122.4062,
-                  37.8108
-                ],
-                [
-                  -122.3569,
-                  37.7287
-                ],
-                [
-                  -122.3898,
-                  37.7068
-                ],
-                [
-                  -122.4281,
-                  37.7068
-                ]
-              ]
-            ]
-          ]
-        }
-      ]
-    },
-    "NOT-GEO-REGISTERED-PLANET": {
-      "whitelist": [
-        {
-          "name": "San Francisco",
-          "dates": [
-            {
-              "start": null,
-              "end": null
-            }
-          ],
-          "sensorNames": "{{ getv "/ansyn/overlay/planet/sensor/names" "[ null ]" }}",
-          "coverage": [
-            [
-              [
-                [
-                  -122.4281,
-                  37.7068
-                ],
-                [
-                  -122.5048,
-                  37.7068
-                ],
-                [
-                  -122.5158,
-                  37.7835
-                ],
-                [
-                  -122.4062,
-                  37.8108
-                ],
-                [
-                  -122.3569,
-                  37.7287
-                ],
-                [
-                  -122.3898,
-                  37.7068
-                ],
-                [
-                  -122.4281,
-                  37.7068
-                ]
-              ]
-            ]
-          ]
-        }
-      ],
-      "blacklist": []
+      "blacklist": [],
+      "dataInputFiltersConfig": {
+		"text": "Planet",
+		"value": 1,
+			"collapsed": true,
+			"children": [
+			  {
+				"text": "REScene",
+				"value": {
+				  "sensorType": "REScene"
+				}
+			  },
+			  {
+				"text": "PSScene3Band",
+				"value": {
+				  "sensorType": "PSScene3Band"
+				}
+			  },
+			  {
+				"text": "PSOrthoTile",
+				"value": {
+				  "sensorType": "PSOrthoTile"
+				}
+			  },
+			  {
+				"text": "REOrthoTile",
+				"value": {
+				  "sensorType": "REOrthoTile"
+				}
+			  },
+			  {
+				"text": "SkySatScene",
+				"value": {
+				  "sensorType": "SkySatScene"
+				}
+			  },
+			  {
+				"text": "Landsat8L1G",
+				"value": {
+				  "sensorType": "Landsat8L1G"
+				}
+			  },
+			  {
+				"text": "Sentinel2L1C",
+				"value": {
+				  "sensorType": "Sentinel2L1C"
+				}
+			  },
+			  {
+				  "text": "Others",
+				  "value": {
+					"sensorType": "others"
+				  }
+				}
+			]
+		}
     },
     "OPEN_AERIAL": {
+    	"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
 		"whitelist": [
 			{
 				"name": "Entire Earth",
@@ -1018,7 +1046,7 @@
 						"end": null
 					}
 				],
-				"sensorNames": "{{ getv "/ansyn/overlay/open/aerial/sensor/names" "[ null ]" }}",
+				"sensorNames": [ null ],
 				"coverage": [
 					[
 						[
@@ -1047,7 +1075,76 @@
 				]
 			}
 		],
-		"blacklist": []
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			"text": "OpenAerial",
+			"value": 1,
+				"indeterminate": true,
+				"collapsed": true,
+				"children": [
+				  {
+					"text": "UAV",
+					"value": {
+					  "sensorType": "UAV"
+					}
+				  }
+				]
+		  }
+	},
+    "IMISIGHT": {
+    	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+		"whitelist": [
+			{
+				"name": "Entire Earth",
+				"dates": [
+					{
+						"start": null,
+						"end": null
+					}
+				],
+				"sensorNames": [null],
+				"coverage": [
+					[
+						[
+							[
+								-180,
+								-90
+							],
+							[
+								-180,
+								90
+							],
+							[
+								180,
+								90
+							],
+							[
+								180,
+								-90
+							],
+							[
+								-180,
+								-90
+							]
+						]
+					]
+				]
+			}
+		],
+		"blacklist": [],
+		"dataInputFiltersConfig": {
+			  "text":"Imisight",
+			  "value": 1,
+			  "collapsed": true,
+			  "children": [
+				 {
+					"text": "All",
+					"value": {
+					  "sensorType": "All"
+					}
+				  }
+				]
+			  }
 	}
   },
   "idahoOverlaysSourceConfig": {
@@ -1057,6 +1154,9 @@
   },
   "openAerialOverlaysSourceConfig": {
   	"baseUrl": "https://api.openaerialmap.org/meta"
+  },
+  "imisightOverlaysSourceConfig": {
+    "baseUrl": "https://gw.sat.imisight.net/a3/search"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",
@@ -1072,5 +1172,33 @@
     "apiKey": "98d4e5a377594e7b80f692d9d487ff26",
     "tilesUrl": "https://tiles.planet.com/data/v1/",
     "delayMultiple": 300
+  },
+  "auth0Config": {
+      "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},
+      "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",
+      "domain": "{{ getv "/ansyn/auth0/domain" "imisight-sat.auth0.com" }}",
+      "responseType": "{{ getv "/ansyn/auth0/responseType" "token id_token" }}",
+      "audience": "{{ getv "/ansyn/auth0/audience" "https://gw.sat.imisight.net" }}",
+      "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
+      "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
+  },
+  "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
+  "algorithmsConfig": {
+    "schema": "tasks",
+    "paginationLimit": 16,
+    "algorithms": {
+		"alg_1" : {
+			"maxOverlays": 20,
+			"timeEstimationPerOverlayInMinutes": 10,
+			"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
+			"regionLengthInMeters": 200
+		},
+		"alg_2" : {
+			"maxOverlays": 2,
+			"timeEstimationPerOverlayInMinutes": 20,
+			"sensorNames": [ "Sentinel-2A" ],
+			"regionLengthInMeters": 100
+		}
+	}
   }
 }

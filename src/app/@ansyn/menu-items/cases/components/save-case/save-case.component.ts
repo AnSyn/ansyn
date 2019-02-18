@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AnsynInputComponent, cloneDeep, ICase } from '@ansyn/core';
+import { cloneDeep, ICase } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
@@ -37,13 +37,6 @@ export class SaveCaseComponent {
 	};
 
 	caseName: string;
-
-	@ViewChild('nameInput') nameInput: AnsynInputComponent;
-
-	@HostListener('@modalContent.done')
-	selectText() {
-		this.nameInput.select();
-	}
 
 	constructor(protected store: Store<ICasesState>,
 				protected casesService: CasesService) {

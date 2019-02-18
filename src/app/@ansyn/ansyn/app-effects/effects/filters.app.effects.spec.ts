@@ -8,16 +8,16 @@ import {
 	EnableOnlyFavoritesSelectionAction,
 	EnumFilterMetadata,
 	FilterMetadata,
+	filtersConfig,
 	filtersFeatureKey,
 	FiltersReducer,
-	FiltersService,
 	IFilter,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	ResetFiltersAction,
 	SliderFilterMetadata
 } from '@ansyn/menu-items';
 import {
+	buildFilteredOverlays,
 	coreFeatureKey,
 	CoreReducer,
 	FilterType,
@@ -25,9 +25,17 @@ import {
 	IOverlay,
 	SetFavoriteOverlaysAction
 } from '@ansyn/core';
-import { LoadOverlaysAction, LoadOverlaysSuccessAction, OverlayReducer, overlaysFeatureKey } from '@ansyn/overlays';
+import {
+	LoadOverlaysAction,
+	OverlayReducer,
+	overlaysFeatureKey,
+	OverlaysService,
+	overlaysStatusMessages,
+	SetDropsAction,
+	SetFilteredOverlaysAction,
+	SetOverlaysStatusMessage
+} from '@ansyn/overlays';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
-import 'rxjs/add/observable/of';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -60,7 +68,7 @@ describe('Filters app effects', () => {
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
-				{ provide: FiltersService, useValue: {} },
+				{ provide: filtersConfig, useValue: {} },
 				provideMockActions(() => actions)
 			]
 		}).compileComponents();
@@ -72,45 +80,54 @@ describe('Filters app effects', () => {
 	}));
 
 	it('updateOverlayFilters$ effect', () => {
-		// spyOn(OverlaysService, 'buildFilteredOverlays').and.callFake(() => []);
-		// store.dispatch(new InitializeFiltersSuccessAction(new Map()));
-		// const expectedResults = cold('(bc)', {
-		// 	b: new SetFilteredOverlaysAction([]),
-		// 	c: new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchFilters)
-		// });
-		// expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		const fakeObj = {
+			buildFilteredOverlays: buildFilteredOverlays
+		};
+		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
+		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
+		const expectedResults = cold('(bc)', {
+			b: new SetFilteredOverlaysAction([]),
+			c: new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchFilters)
+		});
+		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+	});
+
+	it('updateOverlayDrops$ effect', () => {
+		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
+		const expectedResults = cold('(b)', {
+			b: new SetDropsAction([])
+		});
+		expect(filtersAppEffects.updateOverlayDrops$).toBeObservable(expectedResults);
 	});
 
 	it('initializeFilters$ effect', () => {
-		actions = hot('--a--', { a: new LoadOverlaysSuccessAction([]) });
+		actions = hot('--a--', { a: new LoadOverlaysAction(<any> {}) });
 		const expectedResults = cold('--b--', { b: new InitializeFiltersAction() });
 		expect(filtersAppEffects.initializeFilters$).toBeObservable(expectedResults);
 	});
 
-	it('resetFilters$ effect', () => {
-		actions = hot('--a--', { a: new LoadOverlaysAction(<any>null) });
-		const expectedResults = cold('--b--', { b: new ResetFiltersAction() });
-		expect(filtersAppEffects.resetFilters$).toBeObservable(expectedResults);
-	});
-
 	it('updateFiltersBadge$ should calculate filters number', () => {
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', {
+			key: 'example',
 			count: 10,
 			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', {
+			key: 'example2',
 			count: 10,
 			filteredCount: 0,
 			isChecked: false
 		}); // (!isChecked) => 1
 
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', {
+			key: 'example',
 			count: 10,
 			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', {
+			key: 'example2',
 			count: 10,
 			filteredCount: 0,
 			isChecked: false

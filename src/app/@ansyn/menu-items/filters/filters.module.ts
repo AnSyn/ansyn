@@ -1,6 +1,6 @@
 import { MapIteratorPipe } from './pipes/map-iterator.pipe';
 import { EffectsModule } from '@ngrx/effects';
-import { filtersConfig, FiltersService } from './services/filters.service';
+import { filtersConfig } from './services/filters.service';
 import { IFiltersConfig } from './models/filters-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -41,8 +41,7 @@ import { FilterCounterComponent } from './components/filter-counter/filter-count
 		BooleanFilterContainerComponent,
 		ShowMorePipe,
 		FilterCounterComponent],
-	entryComponents: [FiltersCollectionComponent],
-	providers: [FiltersService]
+	entryComponents: [FiltersCollectionComponent]
 })
 export class FiltersModule {
 
@@ -50,7 +49,6 @@ export class FiltersModule {
 		return {
 			ngModule: FiltersModule,
 			providers: [
-				FiltersService,
 				{ provide: filtersConfig, useValue: config }
 			]
 		};

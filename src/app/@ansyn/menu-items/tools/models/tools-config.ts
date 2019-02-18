@@ -1,4 +1,3 @@
-import { InjectionToken } from '@angular/core';
 import { ICoordinatesSystem } from '@ansyn/core';
 
 export interface IToolsConfig {
@@ -12,6 +11,7 @@ export interface IToolsConfig {
 	Proj4: {
 		ed50: string;
 		ed50Customized: string;
+		ed50Notification: string;
 	},
 	ImageProcParams: Array<IImageProcParam>
 }

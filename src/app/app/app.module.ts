@@ -10,6 +10,10 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoginModule } from './login/login.module';
 import { AnsynRouterModule } from './router/router.module';
 import { configuration } from '../../configuration/configuration';
+import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component';
+import { PlaceholderComponent } from './components/placeholder/placeholder.component';
+import { ImisightModule } from './imisight/imisight.module';
+import { SandboxModule } from './sandbox/sandbox.module';
 
 @NgModule({
 	imports: [
@@ -19,8 +23,10 @@ import { configuration } from '../../configuration/configuration';
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),
 		AnsynModule,
 		LoginModule,
+		ImisightModule,
 		AnsynRouterModule,
-		AppRoutingModule
+		AppRoutingModule,
+		SandboxModule
 	],
 	providers: [
 		{
@@ -28,7 +34,7 @@ import { configuration } from '../../configuration/configuration';
 			useClass: LoggerService
 		}
 	],
-	declarations: [AppAnsynComponent],
+	declarations: [AppAnsynComponent, AnsynHostComponent, PlaceholderComponent],
 	exports: [AppAnsynComponent],
 	bootstrap: [AppAnsynComponent]
 })

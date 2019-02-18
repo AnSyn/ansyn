@@ -1,8 +1,6 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { IFiltersConfig } from '../models/filters-config';
+import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import 'rxjs/add/observable/of';
-import { buildFilteredOverlays, CaseFilters, IFilterModel, IOverlay } from '@ansyn/core';
+import { buildFilteredOverlays, FilterType, ICaseFilter, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
@@ -12,26 +10,24 @@ import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadat
 export const filtersConfig = 'filtersConfig';
 
 // @dynamic
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class FiltersService {
-	static buildCaseFilters(filters: Filters): CaseFilters {
-		const caseFilters: CaseFilters = [];
+	static buildCaseFilters(filters: Filters, facetsFilters?: ICaseFilter[]): ICaseFilter[] {
+		const caseFilters: ICaseFilter[] = [];
 
 		filters.forEach((newMetadata: FilterMetadata, filter: IFilter) => {
-			const currentFilter: any = caseFilters.find(({ fieldName }) => fieldName === filter.modelName);
-			const outerStateMetadata: any = newMetadata.getMetadataForOuterState();
-
-			if (!currentFilter && Boolean(outerStateMetadata)) {
-				const [fieldName, metadata] = [filter.modelName, outerStateMetadata];
-				caseFilters.push({ fieldName, metadata, type: filter.type });
-			} else if (currentFilter && Boolean(outerStateMetadata)) {
-				currentFilter.metadata = outerStateMetadata;
-			} else if (currentFilter && !Boolean(outerStateMetadata)) {
-				const index = caseFilters.indexOf(currentFilter);
-				caseFilters.splice(index, 1);
+			let outerStateMetadata: any = newMetadata.getMetadataForOuterState();
+			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName)
+			if (historyEnumFilter) {
+				const facetsFilterToContact = (<string[]>historyEnumFilter.metadata).filter((key) => {
+					return !(<any>newMetadata).enumsFields.has(key)
+				});
+				outerStateMetadata = outerStateMetadata.concat(facetsFilterToContact);
 			}
+			caseFilters.push({ fieldName: filter.modelName, metadata: outerStateMetadata, type: filter.type });
 		});
-
 		return caseFilters;
 	}
 
@@ -65,19 +61,12 @@ export class FiltersService {
 		const cloneFilters = new Map(filterState.filters);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);
-		const filteredOverlays: string[] = buildFilteredOverlays(Array.from(overlays.values()), filterModels, favoriteOverlays, filterState.facets.showOnlyFavorites, removedOverlaysIds, removedOverlaysVisibility);
+		const filteredOverlays: string[] = buildFilteredOverlays(mapValuesToArray(overlays), filterModels, removedOverlaysIds, removedOverlaysVisibility);
 		metadata.resetFilteredCount();
 		filteredOverlays
 			.map((id) => overlays.get(id))
 			.filter(Boolean)
 			.forEach((overlay) => metadata.incrementFilteredCount(overlay[metadataKey.modelName]));
-	}
-
-	constructor(@Inject(filtersConfig) protected config: IFiltersConfig) {
-	}
-
-	getFilters(): IFilter[] {
-		return this.config.filters;
 	}
 
 }

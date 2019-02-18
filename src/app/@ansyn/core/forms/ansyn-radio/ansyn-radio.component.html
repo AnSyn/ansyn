@@ -1,0 +1,14 @@
+<input
+	[id]="id"
+	[value]="value"
+	type="radio"
+	[(ngModel)]="model"
+	[disabled]="disabled"
+/>
+
+<label [for]="id">
+	<div class="outer-circle">
+		<div class="inner-circle"></div>
+	</div>
+	<ng-content></ng-content>
+</label>

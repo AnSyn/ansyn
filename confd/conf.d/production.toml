@@ -8,13 +8,18 @@ keys = [
     "/ansyn/overlay/api/default",
     "/ansyn/login/baseurl",
     "/ansyn/login/active",
+    "/ansyn/menu/items",
     "/ansyn/menu/background",
     "/ansyn/menu/color",
     "/ansyn/menu/mode",
     "/ansyn/menu/forkme",
+    "/ansyn/menu/forkme/url",
     "/ansyn/imagery/mapsource",
     "/ansyn/tools/displayid",
-    "/ansyn/overlay/planet/sensor/names",
-    "/ansyn/overlay/open/aerial/sensor/names",
-    "/ansyn/overlay/idaho/sensor/names"
+	"/ansyn/overlay/open/aerial/inactive",
+	"/ansyn/overlay/planet/inactive",
+	"/ansyn/overlay/idaho/inactive",
+	"/ansyn/imisight/callback/url",
+	"/ansyn/overlay/imisight/inactive",
+	"/ansyn/overlay/tb/inactive"
 ]

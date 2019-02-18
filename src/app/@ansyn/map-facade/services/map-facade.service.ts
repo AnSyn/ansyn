@@ -1,18 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IMapState, mapStateSelector } from '../reducers/map.reducer';
+import { IMapState, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
-import { ICaseMapPosition, ICaseMapState, IOverlay } from '@ansyn/core';
+import { getFootprintIntersectionRatioInExtent, ICaseMapPosition, ICaseMapState, IOverlay } from '@ansyn/core';
 import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 
 // @dynamic
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class MapFacadeService {
 	subscribers: { [key: string]: any[] } = {};
 
-	mapsList$ = this.store.select(mapStateSelector).pluck<IMapState, ICaseMapState[]>('mapsList');
+	mapsList$ = this.store.select(selectMapsList);
 	mapsList: ICaseMapState[] = [];
+
+	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
+		const intersection = getFootprintIntersectionRatioInExtent(extentPolygon, footprint);
+		return intersection < overlayCoverage;
+	}
 
 	static isOverlayGeoRegistered(overlay: IOverlay): boolean {
 		if (!overlay) {
@@ -22,11 +29,11 @@ export class MapFacadeService {
 	}
 
 	static activeMap(mapState: IMapState): ICaseMapState {
-		return MapFacadeService.mapById(mapState.mapsList, mapState.activeMapId);
+		return mapState.entities[mapState.activeMapId];
 	}
 
 	static mapById(mapsList: ICaseMapState[], mapId: string): ICaseMapState {
-		return mapsList.find(function ({ id }: ICaseMapState) {
+		return mapsList.find(({ id }: ICaseMapState) => {
 			return id === mapId;
 		});
 	}
@@ -39,7 +46,7 @@ export class MapFacadeService {
 		const communicator = this.imageryCommunicatorService.provide(id);
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
-			communicator.positionChanged.subscribe(this.positionChanged.bind(this)),
+			communicator.positionChanged.subscribe((position) => this.positionChanged({ id: communicator.id, position })),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this))
 		);
 		this.subscribers[id] = communicatorSubscribers;

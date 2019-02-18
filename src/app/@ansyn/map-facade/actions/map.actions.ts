@@ -1,16 +1,18 @@
 import { Action } from '@ngrx/store';
-import { Point, Position } from 'geojson';
-import { IImageryChanged, IMapInstanceChanged } from '@ansyn/imagery';
+import { Point, Polygon, Position } from 'geojson';
+import { IMapInstanceChanged } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
-	ICaseMapState,
+	ICaseMapState, IMapProgress,
 	IOverlay,
 	IPendingOverlay,
-	IUpdateFeatureEvent
+	IUpdateFeatureEvent,
+	IWorldViewMapState
 } from '@ansyn/core';
 
 export const MapActionTypes = {
+	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
 	IMAGERY_CREATED: 'IMAGERY_CREATED',
@@ -32,10 +34,10 @@ export const MapActionTypes = {
 		SET_PROGRESS_BAR: 'SET_PROGRESS_BAR'
 	},
 	TRIGGER: {
+		IMAGERY_MOUSE_ENTER: 'IMAGERY_MOUSE_ENTER',
+		IMAGERY_MOUSE_LEAVE: 'IMAGERY_MOUSE_LEAVE',
 		ACTIVE_IMAGERY_MOUSE_ENTER: 'ACTIVE_IMAGERY_MOUSE_ENTER',
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
-		ACTIVE_MAP_CHANGED: 'ACTIVE_MAP_CHANGED',
-		MAPS_LIST_CHANGED: 'MAPS_LIST_CHANGED',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		ANNOTATION_SELECT: 'ANNOTATION_SELECT',
@@ -47,7 +49,14 @@ export const MapActionTypes = {
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
 	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
-	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER'
+	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER',
+	SET_MAPS_DATA: 'SET_MAPS_DATA',
+	SET_ACTIVE_MAP_ID: 'SET_ACTIVE_MAP_ID',
+	UPDATE_MAP: 'UPDATE_MAP',
+	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
+	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS',
+	SET_MAP_POSITION_BY_RECT: '[Maps] SET_MAP_POSITION_BY_RECT',
+	SET_MAP_POSITION_BY_RADIUS: '[Maps] SET_MAP_POSITION_BY_RADIUS'
 };
 
 export interface IContextMenuShowPayload {
@@ -61,13 +70,12 @@ export type MapActions = any;
 export class SetProgressBarAction implements Action {
 	type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
-	constructor(public payload: { mapId: string, progress: number }) {
+	constructor(public payload: IMapProgress) {
 	}
 }
 
-
-export class ActiveMapChangedAction implements Action {
-	type = MapActionTypes.TRIGGER.ACTIVE_MAP_CHANGED;
+export class PointToRealNorthAction implements Action {
+	type = MapActionTypes.POINT_TO_REAL_NORTH;
 
 	constructor(public payload: string) {
 	}
@@ -90,14 +98,14 @@ export class UpdateMapSizeAction implements Action {
 export class ImageryCreatedAction implements Action {
 	type = MapActionTypes.IMAGERY_CREATED;
 
-	constructor(public payload: IImageryChanged) {
+	constructor(public payload: { id: string }) {
 	}
 }
 
 export class ImageryRemovedAction implements Action {
 	type = MapActionTypes.IMAGERY_REMOVED;
 
-	constructor(public payload: IImageryChanged) {
+	constructor(public payload: { id: string }) {
 	}
 }
 
@@ -140,13 +148,6 @@ export class PinLocationModeTriggerAction implements Action {
 	type = MapActionTypes.TRIGGER.PIN_LOCATION_MODE;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-export class MapsListChangedAction implements Action {
-	type = MapActionTypes.TRIGGER.MAPS_LIST_CHANGED;
-
-	constructor(public payload: ICaseMapState[]) {
 	}
 }
 
@@ -233,3 +234,66 @@ export class ShadowMouseProducer implements Action {
 
 	}
 }
+
+export class ImageryMouseEnter implements Action {
+	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER;
+	constructor(public payload: string) {
+	}
+}
+
+export class ImageryMouseLeave implements Action {
+	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE;
+	constructor(public payload: string) {
+	}
+}
+
+export class ChangeImageryMap implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP;
+
+	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+export class ChangeImageryMapSuccess implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
+
+	constructor(public payload: { id: string, worldView: IWorldViewMapState}) {
+	}
+}
+
+
+export class SetMapsDataActionStore implements Action {
+	type = MapActionTypes.SET_MAPS_DATA;
+
+	constructor(public payload: { mapsList: ICaseMapState[] }) {
+	}
+}
+
+export class SetActiveMapId implements Action {
+	type = MapActionTypes.SET_ACTIVE_MAP_ID;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class UpdateMapAction implements Action {
+	type = MapActionTypes.UPDATE_MAP;
+
+	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	}
+}
+
+export class SetMapPositionByRectAction implements Action {
+	type = MapActionTypes.SET_MAP_POSITION_BY_RECT;
+
+	constructor(public payload: { id: string; rect: Polygon }) {
+	}
+}
+
+export class SetMapPositionByRadiusAction implements Action {
+	type = MapActionTypes.SET_MAP_POSITION_BY_RADIUS;
+
+	constructor(public payload: { id: string; center: Point; radiusInMeters: number }) {
+	}
+}
+

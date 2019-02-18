@@ -1,7 +1,8 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState, toDegrees } from '@ansyn/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -9,7 +10,7 @@ export interface IsGeoRegisteredProperties {
 	tooltipNorth: 'Drag to Change Orientation' | 'Press Alt+Shift and drag to rotate';
 	tooltip: 'Click once to face north, twice for image perspective' | null;
 	compass: 'assets/icons/map/compass.svg' | 'assets/icons/map/compass_disabled.svg';
-	rotatePointer: 'rotationAngle' | 'notGeoRegitredNorthAngle';
+	rotatePointer: 'rotationAngle' | 'notGeoRegisteredNorthAngle';
 }
 
 @Component({
@@ -19,6 +20,8 @@ export interface IsGeoRegisteredProperties {
 })
 export class ImageryRotationComponent {
 	@Input() mapState: ICaseMapState;
+
+	protected thresholdDegrees = 0.1;
 
 	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: 'N',
@@ -35,12 +38,12 @@ export class ImageryRotationComponent {
 		tooltipNorth: 'Press Alt+Shift and drag to rotate',
 		tooltip: null,
 		compass: 'assets/icons/map/compass_disabled.svg',
-		rotatePointer: 'notGeoRegitredNorthAngle'
+		rotatePointer: 'notGeoRegisteredNorthAngle'
 	};
 
 	isRotating = false;
 
-	get geoRegiteredProperties(): IsGeoRegisteredProperties {
+	get geoRegisteredProperties(): IsGeoRegisteredProperties {
 		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;
 	}
 
@@ -52,8 +55,8 @@ export class ImageryRotationComponent {
 		return this.communicator ? this.communicator.getVirtualNorth() : 0;
 	}
 
-	get notGeoRegitredNorthAngle() {
-		return 0;
+	get notGeoRegisteredNorthAngle() {
+		return ((this.communicator && this.communicator.getRotation()) || 0) ;
 	}
 
 	get rotationAngle() {
@@ -79,13 +82,13 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		if (this.rotationAngle === 0) {
+		if (Math.abs(toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
 				this.setRotation(overlay.azimuth);
 			}
 		} else {
-			this.setRotation(this.virtualNorth);
+			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));
 		}
 	}
 

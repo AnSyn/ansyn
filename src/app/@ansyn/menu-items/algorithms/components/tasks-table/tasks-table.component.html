@@ -1,0 +1,88 @@
+<div class="tasks-table" *ngIf="ids$ | async as ids; else noTasks">
+
+
+	<div class="tasks-table-head">
+		<div class="tasks-table-head-row">
+			<div class="tasks-table-head-row-data">
+				<div class="tasks-table-head-col">
+					Name
+				</div>
+				<div class="tasks-table-head-col">
+					Type
+				</div>
+				<div class="tasks-table-head-col">
+					Status
+				</div>
+				<div class="tasks-table-head-col">
+					Run time
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="tasks-table-body" (ansynInfiniteScroll)="loadTasks()" *ngIf="entities$ | async as entities" #tbodyElement>
+
+		<div class="tasks-table-body-row"
+			 *ngFor="let id of ids"
+			 (click)="selectTask(id)"
+			 [class.active]="false"
+			 [class.selected]="selectedTaskId === id"
+			 (mouseenter)="onMouseEnterTaskRow(taskMenu, taskRow, tbodyElement)"
+			 (mouseleave)="onMouseLeaveTaskRow(taskRow)"
+			 [@leaveAnim]
+			 #taskRow>
+
+			<hr>
+
+			<div class="tasks-table-body-row-data">
+				<hr>
+
+				<div class="tasks-table-body-col">
+					{{entities[id].name}}
+				</div>
+
+				<div class="tasks-table-body-col">
+					{{ entities[id].algorithmName | translate}}
+				</div>
+
+				<div class="tasks-table-body-col">
+					{{entities[id].status}}
+				</div>
+
+				<div class="tasks-table-body-col">
+					{{formatTime(entities[id].runTime)}}
+				</div>
+
+				<!--menu-->
+				<div class="task-menu-container">
+					<div class="task-menu" (click)="taskMenuClick($event, taskRow)" #taskMenu>
+						<button (click)="showModal(id, entities[id].name)">
+							<i class="icon-delete"></i>
+						</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<ng-template #noTasks>
+
+	<p class="no-tasks">
+		No tasks
+	</p>
+
+</ng-template>
+
+<ansyn-modal [show]="modal?.show">
+	<ansyn-remove-task-modal *ngIf="modal?.show"
+							 [message]="'Delete task ' + modal?.name + '?'"
+							 (submit)="onModalResult($event)"
+	></ansyn-remove-task-modal>
+</ansyn-modal>
+
+<ansyn-loader id="ansyn-tasks-table-loader" [show]="isLoading$ | async"></ansyn-loader>

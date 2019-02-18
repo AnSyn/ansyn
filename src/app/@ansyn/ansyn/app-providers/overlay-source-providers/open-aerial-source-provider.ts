@@ -1,5 +1,5 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, UNKNOWN_NAME } from '@ansyn/overlays';
+import { Inject } from '@angular/core';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
@@ -9,12 +9,14 @@ import {
 	IOverlay,
 	limitArray,
 	LoggerService,
+	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '@ansyn/core';
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
+import { catchError, map } from 'rxjs/operators';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';
@@ -25,9 +27,10 @@ export interface IOpenAerialOverlaySourceConfig {
 	baseUrl: string;
 }
 
-@Injectable()
+@OverlaySourceProvider({
+	sourceType: OpenAerialOverlaySourceType
+})
 export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
-	sourceType = OpenAerialOverlaySourceType;
 
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,
@@ -60,28 +63,30 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			acquisition_to: fetchParams.timeRange.end.toISOString()
 		};
 
-		return this.http.get<any>(baseUrl, { params: params })
-			.map(data => {
+		return this.http.get<any>(baseUrl, { params: params }).pipe(
+			map(data => {
 				return this.extractArrayData(data.results);
-			})
-			.map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
+			}),
+			map((overlays: IOverlay[]) => limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
-			}))
-			.catch((error: Response | any) => {
+			})),
+			catchError((error: Response | any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		let baseUrl = this.openAerialOverlaysSourceConfig.baseUrl;
-		return this.http.get<any>(baseUrl, { params: { _id: id } })
-			.map(data => {
+		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe(
+			map(data => {
 				return this.extractData(data.results);
-			})
-			.catch((error: any) => {
+			}),
+			catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
-			});
+			})
+		);
 	}
 
 	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
@@ -108,24 +113,23 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(openAerialElement: any): IOverlay {
-		let overlay: IOverlay = <IOverlay> {};
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
-		overlay.id = openAerialElement._id;
-		overlay.footprint = geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint);
-		overlay.sensorType = openAerialElement.platform ? openAerialElement.platform : UNKNOWN_NAME;
-		overlay.sensorName = openAerialElement.properties.sensor ? openAerialElement.properties.sensor : UNKNOWN_NAME;
-		overlay.bestResolution = openAerialElement.gsd;
-		overlay.name = openAerialElement.title;
-		overlay.imageUrl = openAerialElement.properties.tms;
-		overlay.thumbnailUrl = openAerialElement.properties.thumbnail;
-		overlay.date = new Date(openAerialElement.acquisition_end);
-		overlay.photoTime = openAerialElement.acquisition_end;
-		overlay.azimuth = toRadians(180);
-		overlay.sourceType = this.sourceType;
-		overlay.isGeoRegistered = true;
-		overlay.tag = openAerialElement;
-		overlay.projection = 'EPSG:3857';
+		return new Overlay({
+			id: openAerialElement._id,
+			footprint: geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint),
+			sensorType: openAerialElement.platform,
+			sensorName: openAerialElement.properties.sensor,
+			bestResolution: openAerialElement.gsd,
+			name: openAerialElement.title,
+			imageUrl: openAerialElement.properties.tms,
+			thumbnailUrl: openAerialElement.properties.thumbnail,
+			date: new Date(openAerialElement.acquisition_end),
+			photoTime: openAerialElement.acquisition_end,
+			azimuth: toRadians(180),
+			sourceType: this.sourceType,
+			isGeoRegistered: true,
+			tag: openAerialElement
+		});
 
-		return overlay;
 	}
 }

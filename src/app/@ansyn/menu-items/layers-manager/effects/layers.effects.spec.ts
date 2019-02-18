@@ -4,7 +4,7 @@ import { DataLayersService, layersConfig } from '../services/data-layers.service
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
 import { BeginLayerCollectionLoadAction, LayerCollectionLoadedAction } from '../actions/layers.actions';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -78,7 +78,7 @@ describe('LayersEffects', () => {
 		];
 
 
-		spyOn(dataLayersService, 'getAllLayersInATree').and.returnValue(Observable.of(serverResponse));
+		spyOn(dataLayersService, 'getAllLayersInATree').and.returnValue(of(serverResponse));
 		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
 
 		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });

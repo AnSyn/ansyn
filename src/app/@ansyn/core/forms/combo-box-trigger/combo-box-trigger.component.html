@@ -1,0 +1,7 @@
+<i class="block-icon" [ngClass]="icon" *ngIf="icon"></i>
+
+<ng-content></ng-content>
+
+<span class="arrow">
+	{{ !isActive ? '▼' : '▲'}}
+</span>

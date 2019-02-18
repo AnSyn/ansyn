@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ContextConfig } from '../models/context.config';
 import { IContextConfig } from '../models/context.config.model';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService, IContext, rxPreventCrash, StorageService } from '@ansyn/core';
 
 @Injectable()
@@ -22,10 +22,11 @@ export class ContextService {
 	}
 
 	loadContext(selectedContextId: string): Observable<IContext> {
-		return this.storageService.get<IContext, IContext>(this.config.schema, selectedContextId)
-			.map(storedEntity =>
-				this.parseContext({ ...storedEntity.preview, ...storedEntity.data }))
-			.catch(err => this.errorHandlerService.httpErrorHandle(err));
+		return this.storageService.get<IContext, IContext>(this.config.schema, selectedContextId).pipe(
+			map(storedEntity =>
+				this.parseContext({ ...storedEntity.preview, ...storedEntity.data })),
+			catchError(err => this.errorHandlerService.httpErrorHandle(err))
+		);
 	}
 
 	private parseContext(contextValue: IContext) {

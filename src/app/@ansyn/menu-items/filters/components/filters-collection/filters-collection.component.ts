@@ -1,5 +1,5 @@
-import { FiltersService } from '../../services/filters.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { filtersConfig } from '../../services/filters.service';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IFilter } from '../../models/IFilter';
 import { Store } from '@ngrx/store';
 import { filtersStateSelector, IFiltersState } from '../../reducer/filters.reducer';
@@ -8,6 +8,7 @@ import { distinctUntilChanged, map } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { IFiltersConfig } from '../../models/filters-config';
 
 
 @Component({
@@ -22,8 +23,7 @@ import { Observable } from 'rxjs';
 export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
-	public filters: IFilter[] = this.filtersService.getFilters();
-
+	public filters: IFilter[] = this.config.filters;
 
 	@AutoSubscription
 	filters$: Observable<any> = this.store.select(filtersStateSelector).pipe(
@@ -45,7 +45,7 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	);
 
 
-	constructor(protected filtersService: FiltersService, public store: Store<IFiltersState>) {
+	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, public store: Store<IFiltersState>) {
 	}
 
 	showOnlyFavorites($event) {

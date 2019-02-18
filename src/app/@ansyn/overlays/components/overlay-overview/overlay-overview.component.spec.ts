@@ -3,7 +3,6 @@ import { OverlayOverviewComponent } from './overlay-overview.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
-import { DOCUMENT } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { IOverlay, MockComponent } from '@ansyn/core';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
@@ -14,7 +13,6 @@ describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;
 	let fixture: ComponentFixture<OverlayOverviewComponent>;
 	let store: Store<any>;
-	let document: Document;
 
 	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText'] });
 
@@ -36,9 +34,8 @@ describe('OverlayOverviewComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store, DOCUMENT], (_store: Store<IOverlaysState>, _document: Document) => {
+	beforeEach(inject([Store], (_store: Store<IOverlaysState>) => {
 		store = _store;
-		document = _document;
 	}));
 
 	beforeEach(() => {
@@ -101,12 +98,15 @@ describe('OverlayOverviewComponent', () => {
 		});
 	});
 
-	describe('on mouse leave', () => {
-		it('should call store.dispatch on mouse leave event', () => {
-			let spy = spyOn(component.store$, 'dispatch');
-			fixture.debugElement.triggerEventHandler('mouseleave', {});
-			fixture.detectChanges();
-			expect(spy).toHaveBeenCalled();
-		});
+	it('showPreview should change value of isHoveringOverDrop to true, and call mouseMove$.subscribe ', () => {
+		spyOn(component.mouseLeave$, 'subscribe');
+		component.showOverview();
+		expect(component.isHoveringOverDrop).toBeTruthy();
+		expect(component.mouseLeave$.subscribe).toHaveBeenCalled();
+	});
+
+	it('hidePreview should change value of isHoveringOverDrop to false', () => {
+		component.hideOverview();
+		expect(component.isHoveringOverDrop).toBeFalsy();
 	});
 });

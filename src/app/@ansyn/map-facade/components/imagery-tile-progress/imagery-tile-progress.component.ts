@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
-import { Actions } from '@ngrx/effects';
+import { Observable, Subscription } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
 import { MapActionTypes, SetProgressBarAction } from '../../actions/map.actions';
+import { filter, map, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-imagery-tile-progress',
@@ -14,11 +14,12 @@ export class ImageryTileProgressComponent implements OnInit, OnDestroy {
 	@Input() lowered;
 
 	private _subscriptions: Subscription[] = [];
-	progress$: Observable<any> = this.actions$
-		.ofType(MapActionTypes.VIEW.SET_PROGRESS_BAR)
-		.filter((action: SetProgressBarAction) => action.payload.mapId === this.mapId)
-		.map((action: SetProgressBarAction) => action.payload.progress)
-		.do((progress) => this.progress = progress);
+	progress$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.VIEW.SET_PROGRESS_BAR),
+		filter((action: SetProgressBarAction) => action.payload.mapId === this.mapId),
+		map((action: SetProgressBarAction) => action.payload.progress),
+		tap((progress) => this.progress = progress)
+	);
 
 	progress;
 

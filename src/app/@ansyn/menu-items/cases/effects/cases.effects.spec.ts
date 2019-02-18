@@ -5,17 +5,17 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
-	AddCasesAction,
+	AddCasesAction, LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction,
+	SelectCaseAction, SelectDilutedCaseAction,
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
-import { Observable } from 'rxjs/Rx';
-import { CoreConfig, ErrorHandlerService, ICase, IOverlay, LoggerService, StorageService } from '@ansyn/core';
+import { Observable, of, throwError } from 'rxjs';
+import { CoreConfig, ErrorHandlerService, ICase, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
@@ -31,9 +31,6 @@ describe('CasesEffects', () => {
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
-
-	const fakeOverlay = <IOverlay> { id: 'test' };
-
 
 	const caseMock: ICase = {
 		id: 'case1',
@@ -75,7 +72,7 @@ describe('CasesEffects', () => {
 				{ provide: layersConfig, useValue: {} },
 				{
 					provide: ErrorHandlerService,
-					useValue: { httpErrorHandle: () => Observable.throw(null) }
+					useValue: { httpErrorHandle: () => throwError(null) }
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
@@ -93,7 +90,7 @@ describe('CasesEffects', () => {
 			];
 
 
-		spyOn(store, 'select').and.callFake(() => Observable.of(selectLayersState));
+		spyOn(store, 'select').and.callFake(() => of(selectLayersState));
 	}));
 
 	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
@@ -118,7 +115,7 @@ describe('CasesEffects', () => {
 			...caseMock,
 			id: 'loadedCase2'
 		}, { ...caseMock, id: 'loadedCase1' }];
-		spyOn(casesService, 'loadCases').and.callFake(() => Observable.of(loadedCases));
+		spyOn(casesService, 'loadCases').and.callFake(() => of(loadedCases));
 		actions = hot('--a--', { a: new LoadCasesAction() });
 		const expectedResults = cold('--b--', { b: new AddCasesAction(loadedCases) });
 		expect(casesEffects.loadCases$).toBeObservable(expectedResults);
@@ -126,7 +123,7 @@ describe('CasesEffects', () => {
 
 	it('onAddCase$ should call casesService.createCase with action.payload(new case), and return AddCaseSuccessAction', () => {
 		let newCasePayload: ICase = { ...caseMock, id: 'newCaseId', name: 'newCaseName' };
-		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(newCasePayload));
+		spyOn(casesService, 'createCase').and.callFake(() => of(newCasePayload));
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
 		const expectedResults = cold('--a--', { a: new SelectCaseAction(newCasePayload) });
 		expect(casesEffects.onAddCase$).toBeObservable(expectedResults);
@@ -193,11 +190,29 @@ describe('CasesEffects', () => {
 			}
 		];
 
-		spyOn(dataLayersService, 'addLayer').and.returnValue(Observable.of(serverResponse));
-		spyOn(casesService, 'createCase').and.callFake(() => Observable.of(selectedCase));
+		spyOn(dataLayersService, 'addLayer').and.returnValue(of(serverResponse));
+		spyOn(casesService, 'createCase').and.callFake(() => of(selectedCase));
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
+	});
+
+	describe('loadCase$', () => {
+		it('should load the given case', () => {
+			const myCaseId = 'myCaseId';
+			const caseToLoad: ICase = { ...caseMock, id: myCaseId };
+			spyOn(casesService, 'loadCase').and.returnValue(of(caseToLoad));
+			actions = hot('--a--', { a: new LoadCaseAction(myCaseId) });
+			const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction(caseToLoad) });
+			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
+		});
+		it('should load the default case, if the given case fails to load', () => {
+			const myCaseId = 'myCaseId';
+			spyOn(casesService, 'loadCase').and.throwError('');
+			actions = hot('--a--', { a: new LoadCaseAction(myCaseId) });
+			const expectedResults = cold('--(b|)', { b: new LoadDefaultCaseAction() });
+			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
+		});
 	});
 
 });

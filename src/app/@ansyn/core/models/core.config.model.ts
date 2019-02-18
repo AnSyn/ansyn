@@ -12,4 +12,9 @@ export interface ICoreConfig {
 		[key: string]: any
 	};
 	needToUseLayerExtent: boolean;
+	httpTimeout: number;
+	tilesLoadingDoubleBuffer: {
+		debounceTimeInMs: number,
+		timeoutInMs: number
+	}
 }

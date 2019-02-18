@@ -7,13 +7,13 @@ import { AnsynPluginsModule } from '@ansyn/plugins';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
 import {
-	AlgorithmsModule,
+	TasksModule,
 	CasesModule,
 	FiltersModule,
 	HelpModule,
 	LayersManagerModule,
 	SettingsModule,
-	ToolsModule
+	ToolsModule, TasksRemoteDefaultService
 } from '@ansyn/menu-items';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
@@ -23,24 +23,25 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertsModule, CoreModule } from '@ansyn/core';
-import { RouterModule } from '@angular/router';
+import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ansynConfig } from './config/ansyn.config';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { COMPONENT_MODE } from './app-providers/component-mode';
+import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
+import { ANSYN_ID } from './api/ansyn-id.provider';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		StoreModule.forRoot({}),
 		EffectsModule.forRoot([]),
-		RouterModule.forRoot([]),
 		AppProvidersModule,
 		CasesModule,
 		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,
-		AlgorithmsModule,
+		TasksModule.provideRemote(TasksRemoteDefaultService),
 		SettingsModule,
 		OverlaysModule,
 		FormsModule,
@@ -60,23 +61,37 @@ import { COMPONENT_MODE } from './app-providers/component-mode';
 	],
 	providers: [
 		{
+			provide: ANSYN_ID,
+			useValue: -1
+		},
+		{
 			provide: COMPONENT_MODE,
 			useValue: false
-		}
-
+		},
+		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
-	declarations: [AnsynComponent],
+	entryComponents: [
+		OverlayOutOfBoundsComponent
+	],
+	declarations: [
+		AnsynComponent,
+		OverlayOutOfBoundsComponent
+	],
 	exports: [AnsynComponent]
 })
 
 export class AnsynModule {
-	static component(): ModuleWithProviders {
+	static component(id?: string): ModuleWithProviders {
 		return {
 			ngModule: AnsynModule,
 			providers: [
 				{
 					provide: COMPONENT_MODE,
 					useValue: true
+				},
+				{
+					provide: ANSYN_ID,
+					useValue: id
 				}
 			]
 		}

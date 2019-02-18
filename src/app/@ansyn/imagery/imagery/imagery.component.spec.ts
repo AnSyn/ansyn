@@ -3,15 +3,16 @@ import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { CacheService } from '../cache-service/cache.service';
-import { Store } from '@ngrx/store';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
+import { ImageryMapSource } from '../decorators/map-source-provider';
 
+@ImageryMapSource({
+	sourceType: 'sourceType1',
+	supported: <any> ['mapType1']
+})
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	public supported = ['mapType1'];
-	sourceType = 'sourceType1';
-
 	create(metaData: any): any {
 		return true;
 	}
@@ -32,7 +33,6 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 describe('ImageryComponent', () => {
 	let component: ImageryComponent;
 	let fixture: ComponentFixture<ImageryComponent>;
-	let imageryCommunicatorService: ImageryCommunicatorService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -42,18 +42,21 @@ describe('ImageryComponent', () => {
 				{ provide: CacheService, useValue: null },
 				{ provide: PLUGINS_COLLECTIONS, useValue: [] },
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
-				{ provide: Store, useValue: null },
-				{ provide: IMAGERY_MAPS, useValue: [] },
+				{
+					provide: MAP_SOURCE_PROVIDERS_CONFIG,
+					useValue: {}
+				},
+				{ provide: IMAGERY_MAPS, useValue: {} },
 				ImageryCommunicatorService]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([ImageryCommunicatorService], (_imageryCommunicatorService) => {
-		imageryCommunicatorService = _imageryCommunicatorService;
+	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageryComponent);
 		component = fixture.componentInstance;
+		component.communicator = <any> { ngOnInit: () => {} };
 		fixture.detectChanges();
-	}));
+	});
 
 	it('should create', () => {
 		expect(component).toBeTruthy();

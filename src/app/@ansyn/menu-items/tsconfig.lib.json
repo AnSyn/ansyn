@@ -10,6 +10,15 @@
       ],
       "@ansyn/context": [
         "dist/ansyn/context"
+      ],
+      "@ansyn/imagery": [
+        "dist/ansyn/imagery"
+      ],
+      "@ansyn/map-facade": [
+        "dist/ansyn/map-facade"
+      ],
+      "@ansyn/overlays": [
+        "dist/ansyn/overlays"
       ]
     },
     "outDir": "../../../out-tsc/lib",

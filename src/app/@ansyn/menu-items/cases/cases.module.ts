@@ -16,7 +16,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SaveCaseComponent } from './components/save-case/save-case.component';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
-import { InfiniteScrollModule } from 'ng-infinitescroll';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 
 // @dynamic
@@ -25,7 +24,6 @@ import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-
 		StoreModule.forFeature(casesFeatureKey, CasesReducer),
 		CommonModule,
 		CoreModule,
-		InfiniteScrollModule,
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects]),
 		BrowserAnimationsModule

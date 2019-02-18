@@ -1,10 +1,6 @@
 import { ICasesConfig } from '../models/cases-config';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/observable/of';
 import {
 	ErrorHandlerService,
 	ICase,
@@ -42,16 +38,36 @@ export class CasesService {
 	paginationLimit = 15;
 	queryParamsKeys;
 
-	get defaultCase() {
-		return this.config.defaultCase;
-	}
-
 	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
 				public urlSerializer: UrlSerializer,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
+	}
+
+	get defaultCase() {
+		return this.config.defaultCase;
+	}
+
+	get decodeCaseObjects() {
+		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
+	}
+
+	get encodeCaseObjects() {
+		return this.queryParamsHelper.encodeCaseObjects.bind(this.queryParamsHelper);
+	}
+
+	get generateQueryParamsViaCase() {
+		return this.queryParamsHelper.generateQueryParamsViaCase.bind(this.queryParamsHelper);
+	}
+
+	get updateCaseViaQueryParmas() {
+		return this.queryParamsHelper.updateCaseViaQueryParmas.bind(this.queryParamsHelper);
+	}
+
+	get updateCaseViaContext() {
+		return this.queryParamsHelper.updateCaseViaContext.bind(this.queryParamsHelper);
 	}
 
 	loadCases(casesOffset: number = 0): Observable<any> {
@@ -63,7 +79,7 @@ export class CasesService {
 	}
 
 	parseCasePreview(casePreview: ICasePreview): ICasePreview {
-		return <any> {
+		return <any>{
 			...casePreview,
 			creationTime: new Date(casePreview.creationTime),
 			lastModified: new Date(casePreview.lastModified)
@@ -71,7 +87,7 @@ export class CasesService {
 	}
 
 	parseCase(caseValue: ICase): ICase {
-		return <any> {
+		return <any>{
 			...caseValue,
 			creationTime: new Date(caseValue.creationTime),
 			lastModified: new Date(caseValue.lastModified),
@@ -160,9 +176,8 @@ export class CasesService {
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
-		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase)).catch(err => {
-			return this.errorHandlerService.httpErrorHandle(err);
-		});
+		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase))
+			.pipe<any>(catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
 	removeCase(selectedCaseId: string): Observable<any> {
@@ -181,28 +196,9 @@ export class CasesService {
 	}
 
 	generateLinkWithCaseId(caseId: string) {
-		const baseLocation = this.config.useHash ? `${location.origin}/#` : location.origin;
-		return `${baseLocation}/case/${caseId}`;
-	}
-
-	get decodeCaseObjects() {
-		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
-	}
-
-	get encodeCaseObjects() {
-		return this.queryParamsHelper.encodeCaseObjects.bind(this.queryParamsHelper);
-	}
-
-	get generateQueryParamsViaCase() {
-		return this.queryParamsHelper.generateQueryParamsViaCase.bind(this.queryParamsHelper);
-	}
-
-	get updateCaseViaQueryParmas() {
-		return this.queryParamsHelper.updateCaseViaQueryParmas.bind(this.queryParamsHelper);
-	}
-
-	get updateCaseViaContext() {
-		return this.queryParamsHelper.updateCaseViaContext.bind(this.queryParamsHelper);
+		const baseLocation = location.href.split('#')[0];
+		const href = this.config.useHash ? `${baseLocation}/#` : baseLocation;
+		return `${href}/case/${caseId}`;
 	}
 
 }

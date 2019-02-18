@@ -16,38 +16,45 @@
 		</div>
 	</div>
 
-	<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
-		<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
-			<ansyn-enum-filter-container
-				*ngSwitchCase="'Enum'"
-				[isLongFiltersList]="isLongFiltersList"
-				[metadata]="metadataFromState"
-				(onMetadataChange)="onMetadataChange($event)">
-			</ansyn-enum-filter-container>
+	<div *ngIf="(isLoading$ | async); else filterBody">
+		<ansyn-animated-ellipsis text="Loading"></ansyn-animated-ellipsis>
+	</div>
 
-			<ansyn-slider-filter-container
-				*ngSwitchCase="'Slider'"
-				[metadata]="metadataFromState"
-				(onMetadataChange)="onMetadataChange($event)">
-			</ansyn-slider-filter-container>
+	<ng-template #filterBody>
+		<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
+			<div *ngIf="metadataFromState && !metadataFromState.shouldBeHidden()" [ngSwitch]="metadataFromState?.type">
 
-			<ansyn-boolean-filter-container
-				*ngSwitchCase="'Boolean'"
-				[metadata]="metadataFromState"
-				[customData]="filter.customData"
-				(onMetadataChange)="onMetadataChange($event)">
-			</ansyn-boolean-filter-container>
+				<ansyn-enum-filter-container
+					*ngSwitchCase="'Enum'"
+					[isLongFiltersList]="isLongFiltersList"
+					[metadata]="metadataFromState"
+					(onMetadataChange)="onMetadataChange($event)">
+				</ansyn-enum-filter-container>
+
+				<ansyn-slider-filter-container
+					*ngSwitchCase="'Slider'"
+					[metadata]="metadataFromState"
+					(onMetadataChange)="onMetadataChange($event)">
+				</ansyn-slider-filter-container>
+
+				<ansyn-boolean-filter-container
+					*ngSwitchCase="'Boolean'"
+					[metadata]="metadataFromState"
+					[customData]="filter.customData"
+					(onMetadataChange)="onMetadataChange($event)">
+				</ansyn-boolean-filter-container>
+			</div>
 		</div>
-	</div>
 
-	<div *ngIf="!metadataFromState">
-		Loading...
-	</div>
+		<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
+			<span (click)="toggleShowMoreLess()">SHOW MORE</span>
+		</div>
 
-	<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
-		<span (click)="toggleShowMoreLess()">SHOW MORE</span>
-	</div>
-	<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
-		<span (click)="toggleShowMoreLess()">SHOW LESS</span>
-	</div>
+		<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
+			<span (click)="toggleShowMoreLess()">SHOW LESS</span>
+		</div>
+
+	</ng-template>
+
+
 </div>

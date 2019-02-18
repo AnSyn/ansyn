@@ -46,11 +46,24 @@
 		}
 
 	}
-	.error-message {
-		position: absolute;
+	.error-font() {
 		color: #d50000;
 		font-size: 12px;
+	}
+	.error-message {
+		position: absolute;
+		.error-font();
 		margin: 0;
 		padding: 0 10px;
+	}
+	.goto-projection-title {
+		display: flex;
+		align-items: flex-end;
+
+		.ed50-notification {
+			margin-left: 1em;
+			direction: rtl;
+			.error-font();
+		}
 	}
 }

@@ -1,10 +1,4 @@
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/pluck';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/fromPromise';
-
+export { selectMaps } from './reducers/map.reducer';
 export {
 	initialMapState,
 	mapFeatureKey,
@@ -32,8 +26,15 @@ export {
 	ContextMenuShowAction,
 	ContextMenuTriggerAction,
 	ShadowMouseProducer,
-	ActiveMapChangedAction,
-	MapActionTypes
+	PointToRealNorthAction,
+	MapActionTypes,
+	SetActiveMapId,
+	SetMapsDataActionStore,
+	ChangeImageryMap,
+	ChangeImageryMapSuccess,
+	UpdateMapAction,
+	SetMapPositionByRectAction,
+	SetMapPositionByRadiusAction
 } from './actions/map.actions';
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';

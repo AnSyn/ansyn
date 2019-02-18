@@ -1,0 +1,98 @@
+<form #f="ngForm" (ngSubmit)="onSubmit()">
+
+	<div class=" small-padding-left">Status</div>
+	<div class="big-font wide-underline small-padding-left margin">{{taskStatus}}</div>
+
+	<ansyn-input
+		[(ngModel)]="taskName"
+		(input)="onTaskNameChange()"
+		required
+		[white]="true"
+		name="name"
+		id="ansyn-task-name"
+		class="margin"
+		label="Name"
+	></ansyn-input>
+
+	<ansyn-combo-box
+		[(ngModel)]="algName"
+		(ngModelChange)="onAlgorithmNameChange()"
+		required
+		name="algorithm"
+		[color]="'transparent'"
+		[placeholder]="'Select algorithm'"
+		class="margin"
+	>
+		<ansyn-combo-box-option *ngFor="let algName of algNames" [value]="algName">
+			{{ algName | translate }}
+		</ansyn-combo-box-option>
+	</ansyn-combo-box>
+
+	<hr class="big-font margin">
+
+	<div class="small-padding-left margin">Area of interest</div>
+
+	<div class="small-padding-left margin flex-row">
+		<span>Pin Location</span>
+		<button type="button" class="pin" [class.done]="currentTaskRegion$ | async" (click)="startDrawMode()">
+			<i class="icon-edit"></i>
+		</button>
+	</div>
+
+	<div class="big-font wide-underline margin"></div>
+
+	<div class="two-columns-table">
+		<div>
+			<div>Imagery input</div>
+			<div>Master image</div>
+		</div>
+
+		<div>
+			<ansyn-radio
+				[(ngModel)]="whichOverlays"
+				[value]="'case_overlays'"
+				name="whichOverlays1"
+				disabled
+			>Case overlays
+			</ansyn-radio>
+			<div>Active overlay</div>
+		</div>
+
+		<div>
+			<ansyn-radio
+				[(ngModel)]="whichOverlays"
+				[value]="'favorite_overlays'"
+				name="whichOverlays2"
+			>Favorite overlays
+			</ansyn-radio>
+		</div>
+
+
+		<div>
+			<ansyn-radio
+				[(ngModel)]="whichOverlays"
+				[value]="'displayed_overlays'"
+				name="whichOverlays3"
+				disabled
+			>Displayed overlays
+			</ansyn-radio>
+		</div>
+	</div>
+
+	<div [class.invisible]="!algName">Note: this algorithm is only available for {{algName ? algorithms[algName].maxOverlays : '??'}}
+		overlays</div>
+
+	<div class="big-font wide-underline margin"></div>
+
+	<div class="margin">The results will be available for download when the task is completed</div>
+
+	<div class="run-bar margin">
+		<button ansynButton [disabled]="f.invalid || hasError() || !(currentTaskRegion$ | async) || !(isNewTask$ | async)">Run Task</button>
+		<div *ngIf="algName">Time Estimation: {{timeEstimation$ | async}}m</div>
+	</div>
+
+	<div *ngIf="hasError()" class="errors">{{errorMsg}}</div>
+
+</form>
+
+<ansyn-loader id="ansyn-task-form-loader" [show]="loading"></ansyn-loader>

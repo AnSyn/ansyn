@@ -96,27 +96,36 @@ export interface ICaseBooleanFilterMetadata {
 	displayFalse: boolean;
 }
 
+export interface ICaseSliderFilterMetadata {
+	start: number;
+	end: number;
+}
+
 export type CaseEnumFilterMetadata = string[];
 
-export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata;
+export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata;
 
 export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
 
-export interface ICaseFilter {
+export interface ICaseFilter<T = CaseFilterMetadata> {
 	type: FilterType;
 	fieldName: string;
-	metadata: CaseFilterMetadata;
+	metadata: T;
+	positive?: boolean;
 }
 
-export type CaseFilters = ICaseFilter[];
-
 export interface ICaseFacetsState {
-	filters?: CaseFilters;
+	filters?: ICaseFilter[];
 	showOnlyFavorites?: boolean;
 }
 
 export interface ICaseLayersState {
 	activeLayersIds: string[]
+}
+
+export interface IWorldViewMapState {
+	mapType: string;
+	sourceType: string;
 }
 
 export interface IDilutedCaseMapsState {
@@ -146,10 +155,7 @@ export interface ICaseMapData extends IDilutedCaseMapData {
 export interface IDilutedCaseMapState {
 	id: string;
 	data: IDilutedCaseMapData;
-	worldView: {
-		mapType: string;
-		sourceType: string;
-	},
+	worldView: IWorldViewMapState,
 	flags: {
 		displayLayers?: boolean
 	};

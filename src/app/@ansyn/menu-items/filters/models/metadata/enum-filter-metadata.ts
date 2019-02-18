@@ -1,8 +1,8 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { IFilter } from '../IFilter';
-import { FilterType } from '@ansyn/core';
+import { CaseEnumFilterMetadata, FilterType, ICaseFilter, IOverlay, mapValuesToArray } from '@ansyn/core';
 
 export interface IEnumFiled {
+	key: string;
 	count: number;
 	filteredCount: number;
 	isChecked: boolean;
@@ -10,14 +10,8 @@ export interface IEnumFiled {
 }
 
 export class EnumFilterMetadata implements FilterMetadata {
-
-	enumsFields: Map<string, IEnumFiled>;
-	type: FilterType;
-
-	constructor() {
-		this.enumsFields = new Map<string, IEnumFiled>();
-		this.type = FilterType.Enum;
-	}
+	enumsFields: Map<string, IEnumFiled> = new Map<string, IEnumFiled>();
+	type: FilterType = FilterType.Enum;
 
 	updateMetadata(key: string): void {
 		if (this.enumsFields.get(key)) {
@@ -33,7 +27,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 
 	accumulateData(value: string): void {
 		if (!this.enumsFields.get(value)) {
-			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: false });
+			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: true, key: value });
 		} else {
 			this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
 		}
@@ -49,44 +43,26 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	initializeFilter(selectedValues: string[]): void {
-		this.enumsFields = new Map<string, { count: number, filteredCount: number, isChecked: boolean }>();
-		if (selectedValues) {
-			for (let key of selectedValues) {
-				this.enumsFields.set(key, { count: 0, filteredCount: 0, isChecked: true });
-			}
-		}
-	}
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<CaseEnumFilterMetadata>): void {
+		this.enumsFields = new Map<string, IEnumFiled>();
 
-	postInitializeFilter(value: { oldFiltersArray: [IFilter, EnumFilterMetadata][], modelName: string }): void {
-		this.enumsFields.forEach((value, key, mapObj: Map<any, any>) => {
-			if (!value.count) {
-				mapObj.delete(key);
-			}
+		overlays.forEach((overlay: any) => {
+			this.accumulateData(overlay[modelName]);
 		});
 
-		if (value.oldFiltersArray) {
-			const oldFilterArray = value.oldFiltersArray
-				.find(([oldFilterKey, oldFilter]: [IFilter, FilterMetadata]) => oldFilterKey.modelName === value.modelName);
-
-
-			if (oldFilterArray) {
-				const [oldFilterKey, oldFilter] = oldFilterArray;
-				const oldFilterFields = (<EnumFilterMetadata>oldFilter).enumsFields;
-				const filterFields = this.enumsFields;
-
-				filterFields.forEach((value, key) => {
-					let isChecked = true;
-					if (oldFilterFields.has(key)) {
-						const oldFilter = oldFilterFields.get(key);
-						if (!oldFilter.isChecked) {
-							isChecked = false;
-						}
-					}
-					value.isChecked = isChecked;
+		if (caseFilter) {
+			if (caseFilter.positive) {
+				this.enumsFields.forEach((enumsField: IEnumFiled) => {
+					enumsField.isChecked = caseFilter.metadata.includes(enumsField.key);
 				});
+			} else {
+				caseFilter.metadata
+					.map(key => this.enumsFields.get(key))
+					.filter(Boolean)
+					.forEach((enumsField: IEnumFiled) => enumsField.isChecked = false);
 			}
 		}
+
 	}
 
 	filterFunc(overlay: any, key: string): boolean {
@@ -94,8 +70,8 @@ export class EnumFilterMetadata implements FilterMetadata {
 			return false;
 		}
 		const selectedFields: string[] = [];
-		this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
-			if (value.isChecked) {
+		this.enumsFields.forEach(({ isChecked }: IEnumFiled, key: string) => {
+			if (isChecked) {
 				selectedFields.push(key);
 			}
 		});
@@ -107,7 +83,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 		const returnValue: string[] = [];
 
 		this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
-			if (value.isChecked) {
+			if (!value.isChecked) {
 				returnValue.push(key);
 			}
 		});
@@ -116,12 +92,16 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	isFiltered(): boolean {
-		return Array.from(this.enumsFields.values()).some((value: IEnumFiled) => !value.isChecked);
+		return mapValuesToArray(this.enumsFields).some((value: IEnumFiled) => !value.isChecked);
 	}
 
 	showAll(): void {
 		this.enumsFields.forEach((value: IEnumFiled) => {
 			value.isChecked = true;
 		});
+	}
+
+	shouldBeHidden(): boolean {
+		return false;
 	}
 }

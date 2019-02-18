@@ -1,9 +1,8 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { OverlayStatusComponent } from './components/overlay-status/overlay-status.component';
 import { OverlaysContainerComponent } from './components/container/overlays-container.component';
-import { OverlaysService } from './services/overlays.service';
 import { OverlaysEffects } from './effects/overlays.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
@@ -11,6 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';
 import { CoreModule } from '@ansyn/core';
+import { BaseOverlaySourceFactoryProvider, createOverlaysSourceProviders, IOverlaysMetadata } from './models/overlays-source-providers';
 
 @NgModule({
 	imports: [
@@ -32,11 +32,20 @@ import { CoreModule } from '@ansyn/core';
 		OverlayOverviewComponent
 	],
 	providers: [
-		OverlaysService
+		createOverlaysSourceProviders([]),
+		BaseOverlaySourceFactoryProvider
 	]
 
 })
 export class OverlaysModule {
+	static provide(metadata: IOverlaysMetadata): ModuleWithProviders {
+		return {
+			ngModule: OverlaysModule,
+			providers: [
+				createOverlaysSourceProviders(metadata.overlaySourceProviders)
+			]
+		};
+	}
 }
 
 

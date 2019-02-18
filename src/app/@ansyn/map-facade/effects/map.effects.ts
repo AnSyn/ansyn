@@ -9,6 +9,7 @@ import {
 	BackToWorldView,
 	CaseGeoFilter,
 	CoreActionTypes,
+	geojsonMultiPolygonToPolygon,
 	ICaseMapPosition,
 	ICaseMapState,
 	IWorldViewMapState,
@@ -188,7 +189,11 @@ export class MapEffects {
 			const mapId = action.payload.mapId;
 			if (!mapPosition) {
 				const map: ICaseMapState = mapState.entities[mapId];
-				mapPosition = map.data.position;
+				if (map.data.overlay) {
+					mapPosition = { extentPolygon: geojsonMultiPolygonToPolygon(map.data.overlay.footprint)};
+				} else {
+					mapPosition = map.data.position;
+				}
 			}
 
 			const setPositionObservables = [];

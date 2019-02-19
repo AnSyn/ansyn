@@ -318,3 +318,11 @@
 .icon-annotation-no-fill:before {
 	content: "\e91e";
 }
+
+.icon-hide-menu:before {
+	content: '\e92a';
+}
+
+.icon-show-menu:before {
+	content: '\e92b';
+}

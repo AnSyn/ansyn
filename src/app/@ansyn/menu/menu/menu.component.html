@@ -1,6 +1,6 @@
 <div class="menu-wrapper">
 
-	<div class="menu" #menu [class.expanded]="expand" [class.collapsed]="collapse" (click)="startToggleMenuCollapse()">
+	<div class="menu" #menu [class.expanded]="expand" [class.collapsed]="collapse">
 
 		<ng-container *ngIf="!collapse">
 
@@ -17,6 +17,12 @@
 			</div>
 
 		</ng-container>
+
+			<div
+				class="menu-btn hide-menu"
+				(click)="startToggleMenuCollapse()">
+				<i class="icon-hide-menu" title="Hide menu"></i>
+			</div>
 
 		<div class="logo">
 
@@ -36,6 +42,16 @@
 			</div>
 			<img [src]="menuConfig.path" [alt]="version" [title]="version">
 		</div>
+
+		</ng-container>
+
+		<ng-container *ngIf="collapse">
+
+			<div
+				class="menu-btn show-menu"
+				(click)="startToggleMenuCollapse()">
+				<i class="icon-show-menu" title="Main menu"></i>
+			</div>
 
 		</ng-container>
 

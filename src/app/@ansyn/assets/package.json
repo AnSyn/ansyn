@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/assets",
-	"version": "0.2.99",
+	"version": "0.3.0",
 	"license": "MIT",
 	"dependencies": {
 		"@ansyn/event-drops": "0.2.81.7",

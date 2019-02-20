@@ -73,7 +73,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse = false;
-	// startTime: number;
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {

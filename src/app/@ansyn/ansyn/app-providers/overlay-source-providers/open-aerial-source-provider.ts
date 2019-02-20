@@ -11,7 +11,8 @@ import {
 	LoggerService,
 	Overlay,
 	sortByDateDesc,
-	toRadians
+	toRadians,
+	GeoRegisteration
 } from '@ansyn/core';
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
@@ -127,7 +128,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: openAerialElement.acquisition_end,
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: openAerialElement
 		});
 

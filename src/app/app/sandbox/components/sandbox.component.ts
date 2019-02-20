@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AnsynApi } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
-import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
+import { GeoRegisteration, IOverlay, IOverlaysCriteria } from '@ansyn/core';
 import { OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/plugins';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class SandboxComponent implements OnInit {
 			photoTime: date.toISOString(),
 			date: date,
 			azimuth: 0,
-			isGeoRegistered: false,
+			isGeoRegistered: GeoRegisteration.notGeoRegistered,
 			sourceType: OpenLayersStaticImageSourceProviderSourceType,
 			tag: {
 				imageData: {

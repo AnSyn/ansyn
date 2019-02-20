@@ -32,7 +32,8 @@
 			<li>
 				<p>
 					<button [class.active]="clickMenuProps.showColorPicker" (click)="toggleColorPicker()">
-						<i class="icon-annotation-color" tooltip-value="Color Picker" tooltip-class="bottom"></i></button>
+						<i class="icon-annotation-color" tooltip-value="Color Picker" tooltip-class="bottom"></i>
+					</button>
 					<ansyn-annotations-color
 						[show]="clickMenuProps.showColorPicker"
 						[properties]="clickMenuProps.style.initial"
@@ -43,7 +44,9 @@
 			</li>
 
 			<li>
-				<button class='removeFeature' (click)="removeFeature()" tooltip-value="Delete" tooltip-class="bottom"><i class="icon-close"></i></button>
+					<button class='removeFeature' (click)="removeFeature()">
+						<i class="icon-close" tooltip-value="Delete" tooltip-class="bottom"></i>
+					</button>
 			</li>
 		</ul>
 	</div>

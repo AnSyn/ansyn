@@ -11,6 +11,7 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
+	selectMaps,
 	SetIsLoadingAcion
 } from '@ansyn/map-facade';
 import {
@@ -35,6 +36,7 @@ import {
 } from '@ansyn/status-bar';
 import * as extentFromGeojson from '@ansyn/core';
 import {
+	GeoRegisteration,
 	ICase,
 	ICaseMapState,
 	IOverlay,
@@ -48,7 +50,8 @@ import {
 	CommunicatorEntity,
 	IMAGERY_CONFIG,
 	IMAGERY_MAPS,
-	ImageryCommunicatorService, ImageryMapSource,
+	ImageryCommunicatorService,
+	ImageryMapSource,
 	VisualizersConfig
 } from '@ansyn/imagery';
 import {
@@ -67,7 +70,6 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { selectMaps } from '@ansyn/map-facade';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -249,7 +251,7 @@ describe('MapAppEffects', () => {
 		layerState = cloneDeep(initialLayersState);
 
 		toolsState = cloneDeep(toolsInitialState);
-		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: true };
+		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: GeoRegisteration.geoRegistered };
 		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
 		mapState.entities = icaseState.selectedCase.state.maps.data.reduce((obj, map) => ({ ...obj, [map.id]: map }), {});
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
@@ -316,7 +318,7 @@ describe('MapAppEffects', () => {
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				azimuth: 0,
-				isGeoRegistered: true
+				isGeoRegistered: GeoRegisteration.geoRegistered
 			};
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 			const expectedResults = cold('-');
@@ -331,7 +333,7 @@ describe('MapAppEffects', () => {
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				azimuth: 0,
-				isGeoRegistered: true,
+				isGeoRegistered: GeoRegisteration.geoRegistered,
 				sourceType: 'IDAHO'
 			};
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
@@ -356,7 +358,7 @@ describe('MapAppEffects', () => {
 				photoTime: new Date().toDateString(),
 				date: new Date(),
 				azimuth: 0,
-				isGeoRegistered: true
+				isGeoRegistered: GeoRegisteration.geoRegistered
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
@@ -372,7 +374,7 @@ describe('MapAppEffects', () => {
 				name: 'testOverlay1',
 				photoTime: new Date().toDateString(),
 				azimuth: 0,
-				isGeoRegistered: true,
+				isGeoRegistered: GeoRegisteration.geoRegistered,
 				sourceType: 'PLANET'
 			};
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
@@ -398,7 +400,7 @@ describe('MapAppEffects', () => {
 				photoTime: new Date().toDateString(),
 				date: new Date(),
 				azimuth: 0,
-				isGeoRegistered: true
+				isGeoRegistered: GeoRegisteration.geoRegistered
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = overlay;
 

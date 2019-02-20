@@ -9,7 +9,7 @@
 	content: attr(tooltip-value);
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="top"]:after {
-	left: auto;
+	/*left: auto;*/
 	bottom: auto;
 	transform: translateY(-100%);
 }
@@ -35,18 +35,17 @@
 	right: auto;
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="bottom"][tooltip-class*="left"]:after {
-	left: auto;
 	right: 0;
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="bottom"]:hover:after {
 	transform: translate(0, calc(100% + 15px));
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="right"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):after {
-	left: auto;
 	right: 0;
 	transform: translate(100%, 0);
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="right"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):hover:after {
+	left: auto;
 	transform: translate(calc(100% + 15px), 0);
 }
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="left"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):after {

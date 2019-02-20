@@ -4,7 +4,14 @@ import { IOverlayDropSources } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { EMPTY, Observable, Observer } from 'rxjs';
-import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject, LoggerService } from '@ansyn/core';
+import {
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysCriteria,
+	IOverlaysFetchData,
+	IOverlaySpecialObject,
+	LoggerService
+} from '@ansyn/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
@@ -37,7 +44,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					date: new Date(1999),
 					photoTime: 'dsds',
 					name: 'first',
-					isGeoRegistered: true
+					isGeoRegistered: GeoRegisteration.geoRegistered
 				},
 				{
 					id: 'abc',
@@ -46,7 +53,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					date: new Date(1987),
 					photoTime: 'beww',
 					name: 'second',
-					isGeoRegistered: true
+					isGeoRegistered: GeoRegisteration.geoRegistered
 				}
 			];
 			observer.next({ data: overlays, limited: 3 });
@@ -63,7 +70,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 				date: new Date(1999),
 				photoTime: 'dsds',
 				name: 'first',
-				isGeoRegistered: true
+				isGeoRegistered: GeoRegisteration.geoRegistered
 			};
 			observer.next(overlay);
 			observer.complete();
@@ -162,7 +169,7 @@ describe('OverlaysService', () => {
 			photoTime: new Date().toISOString(),
 			date: new Date(),
 			azimuth: 10,
-			isGeoRegistered: true
+			isGeoRegistered: GeoRegisteration.geoRegistered
 		});
 
 		overlaysTmpData = [{

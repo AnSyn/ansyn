@@ -72,6 +72,7 @@ const animations: any[] = [
 export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
+	collapse = false;
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
@@ -86,6 +87,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return this._componentElem;
 	}
 
+	@ViewChild('menu') menuElement: ElementRef;
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
 
@@ -251,6 +253,15 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new ToggleIsPinnedAction(!this.isPinned));
 	}
 
+	startToggleMenuCollapse() {
+		this.collapse = !this.collapse;
+	}
+
+	onEndToggleMenuCollapse() {
+		this.forceRedraw()
+			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+	}
+
 	ngOnInit() {
 		new MutationObserver(() => {
 			const conPosition = getComputedStyle(this.container.nativeElement).position;
@@ -258,10 +269,11 @@ export class MenuComponent implements OnInit, OnDestroy {
 				this.store.dispatch(new ContainerChangedTriggerAction());
 			}
 		}).observe(this.container.nativeElement, { childList: true });
+
+		this.menuElement.nativeElement.addEventListener('transitionend', this.onEndToggleMenuCollapse.bind(this));
 	}
 
 	ngOnDestroy(): void {
 	}
-
 }
 

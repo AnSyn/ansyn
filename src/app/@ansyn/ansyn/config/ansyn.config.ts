@@ -26,7 +26,12 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			key: 'overlaysOutOfBounds',
 			component: OverlayOutOfBoundsComponent
-		}
+		},
+		{
+			key: 'poorGeoRegistered',
+			background: '#cf802a',
+			text: 'This Image Has Poor Geo-Registration'
+		},
 	],
 	ansynMenuItems: [
 		{

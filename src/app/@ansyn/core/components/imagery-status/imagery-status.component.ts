@@ -9,7 +9,7 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { IOverlay } from '../../models/overlay.model';
+import { GeoRegisteration, IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
 	BackToWorldView,
@@ -184,7 +184,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (!this.overlay) {
 			return false;
 		}
-		return !this.overlay.isGeoRegistered;
+		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
+	}
+
+	get poorGeoRegistered() {
+		if (!this.overlay) {
+			return false;
+		}
+		return this.overlay.isGeoRegistered === GeoRegisteration.poorGeoRegistered;
 	}
 
 	constructor(protected store$: Store<any>,

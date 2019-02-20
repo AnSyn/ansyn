@@ -42,7 +42,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	}
 
 	resetOne(paramToReset) {
-		this.updateParam(this.defaultImageManualProcessArgs[paramToReset], paramToReset.name);
+		this.updateParam(this.defaultImageManualProcessArgs[paramToReset.name], paramToReset.name);
 	}
 
 	updateParam(value, key) {

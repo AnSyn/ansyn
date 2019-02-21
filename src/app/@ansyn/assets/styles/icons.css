@@ -151,7 +151,7 @@
 }
 
 .icon-tools-ruler:before {
-	content: "\e932";
+	content: "\e92a";
 }
 
 .icon-main-settings:before {
@@ -215,7 +215,7 @@
 }
 
 .icon-close:before {
-	content: "\e930";
+	content: "\e92b";
 }
 
 .icon-annotation-point:before {
@@ -243,15 +243,15 @@
 }
 
 .icon-annotation-weight:before {
-	content: "\e94e";
+	content: "\e933";
 }
 
 .icon-annotation-color:before {
-	content: "\e94f";
+	content: "\e932";
 }
 
 .icon-annotation-label:before {
-	content: "\e933";
+	content: "\e930";
 }
 
 .icon-annotation-duplicate:before {

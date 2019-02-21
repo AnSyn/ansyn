@@ -98,6 +98,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			debounceTimeInMs: 500,
 			timeoutInMs: 3000
 		};
+		this.coreConfig['floatingPositionSuffix'] = this.coreConfig['floatingPositionSuffix'] || '';
 	}
 
 	/**
@@ -140,7 +141,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
-					coordinateFormat: (coords: [number, number]): string => coords.map((num) => +num.toFixed(4)).toString()
+					coordinateFormat: (coords: [number, number]): string => coords.map((num) => + num.toFixed(4)).toString() + this.coreConfig.floatingPositionSuffix
 				},
 				(point) => this.projectionService.projectApproximately(point, this.mapObject))
 		];

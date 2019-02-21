@@ -16,5 +16,6 @@ export interface ICoreConfig {
 	tilesLoadingDoubleBuffer: {
 		debounceTimeInMs: number,
 		timeoutInMs: number
-	}
+	};
+	floatingPositionSuffix?: string;
 }

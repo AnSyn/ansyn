@@ -214,8 +214,12 @@
 	content: "\e945";
 }
 
-.icon-close:before {
+.icon-close-big:before {
 	content: "\e92b";
+}
+
+.icon-close-small:before {
+	content: "\e939";
 }
 
 .icon-annotation-point:before {

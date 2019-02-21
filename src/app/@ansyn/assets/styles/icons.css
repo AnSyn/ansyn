@@ -27,7 +27,7 @@
 }
 
 .icon-remove-overlay:before {
-	content: "\e92b";
+	content: "\e978";
 }
 
 .icon-restore-overlay:before {
@@ -151,7 +151,7 @@
 }
 
 .icon-tools-ruler:before {
-	content: "\e922";
+	content: "\e92a";
 }
 
 .icon-main-settings:before {
@@ -214,8 +214,12 @@
 	content: "\e945";
 }
 
-.icon-close:before {
-	content: "\e947";
+.icon-close-big:before {
+	content: "\e92b";
+}
+
+.icon-close-small:before {
+	content: "\e939";
 }
 
 .icon-annotation-point:before {
@@ -243,11 +247,11 @@
 }
 
 .icon-annotation-weight:before {
-	content: "\e94e";
+	content: "\e933";
 }
 
 .icon-annotation-color:before {
-	content: "\e94f";
+	content: "\e932";
 }
 
 .icon-annotation-label:before {

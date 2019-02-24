@@ -38,9 +38,13 @@
 			i {
 				opacity: .6;
 			}
-			&:hover i {
-				opacity: .8;
+			&:hover:not(:disabled) {
+				background: rgba(0, 0, 0, 0.5);
+				i {
+				opacity: 0.8;
 			}
+			}
+
 		}
 
 		button {

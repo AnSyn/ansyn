@@ -1,23 +1,5 @@
 @import 'core/less/common';
 
-@keyframes pinned {
-	from {
-		transform: scale(1.1) translateX(-100px);
-	}
-	to {
-		transform: scale(1) translateX(0);
-	}
-}
-
-@keyframes unPinned {
-	from {
-		transform: scale(1) translateX(200px);
-	}
-	to {
-		transform: scale(1) translateX(0);
-	}
-}
-
 :host {
 	&.component {
 		.app{
@@ -42,15 +24,9 @@
 		height: 100%;
 		width: 100%;
 		overflow: hidden;
+
 		&.isPinned, &.isNotPinned {
 			background: black;
-			div.layer {
-				animation-duration: .4s;
-			}
-		}
-
-		&.isPinned div.layer {
-			animation-name: pinned;
 		}
 
 		&.isPinned div.layer {
@@ -76,10 +52,6 @@
 					}
 				}
 			}
-
-		}
-		&.isNotPinned div.layer {
-			animation-name: unPinned;
 		}
 
 		div.layer {

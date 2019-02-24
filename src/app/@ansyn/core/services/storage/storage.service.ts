@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ICoreConfig } from '../../models/core.config.model';
 import { CoreConfig } from '../../models/core.config';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 export interface IEntity {
 	creationTime: Date;
@@ -38,7 +39,9 @@ export class StorageService {
 
 	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		return this._http.post<P[]>(`${url}/search_by_case`, body);
+		const promise = fetch(`${url}/search_by_case`, { method: 'POST', body })
+			.then(response => response.json());
+		return fromPromise<P[]>(<any>promise);
 	}
 
 	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {

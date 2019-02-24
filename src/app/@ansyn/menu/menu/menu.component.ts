@@ -278,9 +278,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 			}
 		}).observe(this.container.nativeElement, { childList: true });
 
-		new MutationObserver(() => {
-			this.store.dispatch(new ContainerChangedTriggerAction());
-		}).observe(this.animatedElement, { childList: true });
 	}
 
 	ngOnDestroy(): void {

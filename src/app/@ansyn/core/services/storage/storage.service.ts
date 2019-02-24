@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { ICoreConfig } from '../../models/core.config.model';
 import { CoreConfig } from '../../models/core.config';
-import { fromPromise } from 'rxjs/internal-compatibility';
 
 export interface IEntity {
 	creationTime: Date;
@@ -41,7 +40,7 @@ export class StorageService {
 		const url = this._buildSchemaUrl(schema);
 		const promise = fetch(`${url}/search_by_case`, { method: 'POST', body })
 			.then(response => response.json());
-		return fromPromise<P[]>(<any>promise);
+		return from(promise);
 	}
 
 	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {

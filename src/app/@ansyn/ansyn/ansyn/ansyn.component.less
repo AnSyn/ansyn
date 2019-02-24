@@ -42,15 +42,9 @@
 		height: 100%;
 		width: 100%;
 		overflow: hidden;
+
 		&.isPinned, &.isNotPinned {
 			background: black;
-			div.layer {
-				animation-duration: .4s;
-			}
-		}
-
-		&.isPinned div.layer {
-			animation-name: pinned;
 		}
 
 		&.isPinned div.layer {
@@ -76,10 +70,6 @@
 					}
 				}
 			}
-
-		}
-		&.isNotPinned div.layer {
-			animation-name: unPinned;
 		}
 
 		div.layer {
@@ -90,6 +80,7 @@
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
+			background: black;
 
 			div.status-timeline-container {
 				position: relative;

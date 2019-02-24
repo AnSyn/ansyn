@@ -1,9 +1,9 @@
 <div class="app animations" [ngClass]="(isPinnedClass$ | async)">
 	<div class="menu">
-		<ansyn-menu [version]="version"></ansyn-menu>
+		<ansyn-menu [version]="version" [layer]="layer"></ansyn-menu>
 	</div>
 
-	<div class="layer">
+	<div class="layer" #layer>
 		<div class="maps-container">
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 		</div>

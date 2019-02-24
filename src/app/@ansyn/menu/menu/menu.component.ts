@@ -73,7 +73,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse = false;
-
+	// [class.collapsed]="collapse"
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
 		this._componentElem = value;
@@ -87,6 +87,9 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return this._componentElem;
 	}
 
+	@Input() layer: HTMLElement;
+
+	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
 	@ViewChild('menu') menuElement: ElementRef;
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
@@ -172,6 +175,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
 		}
 
+		this.layer.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
+
 		this.forceRedraw()
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
@@ -255,11 +260,13 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 	startToggleMenuCollapse() {
 		this.collapse = !this.collapse;
-	}
 
-	onEndToggleMenuCollapse() {
-		this.forceRedraw()
-			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+		this.menuWrapperElement.nativeElement.classList.toggle('collapsed');
+
+		this.store.dispatch(new ContainerChangedTriggerAction());
+
+		this.layer.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
+
 	}
 
 	ngOnInit() {
@@ -269,8 +276,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 				this.store.dispatch(new ContainerChangedTriggerAction());
 			}
 		}).observe(this.container.nativeElement, { childList: true });
-
-		this.menuElement.nativeElement.addEventListener('transitionend', this.onEndToggleMenuCollapse.bind(this));
 	}
 
 	ngOnDestroy(): void {

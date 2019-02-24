@@ -180,7 +180,7 @@ export class OverlaysAppEffects {
 		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
 		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
 			const mapActions = mapsList
-				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id))
+				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id) && (map.id === payload.mapId))
 				.map((map) => {
 					const mapId = map.id;
 					const id = (displayOverlayHistory[mapId] || []).pop();

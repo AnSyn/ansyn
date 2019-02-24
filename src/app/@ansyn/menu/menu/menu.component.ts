@@ -73,7 +73,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse = false;
-	// [class.collapsed]="collapse"
+
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
 		this._componentElem = value;

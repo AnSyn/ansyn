@@ -263,7 +263,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 		this.menuWrapperElement.nativeElement.classList.toggle('collapsed');
 
-		this.store.dispatch(new ContainerChangedTriggerAction());
+		this.forceRedraw()
+			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 
 		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
 
@@ -276,6 +277,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 				this.store.dispatch(new ContainerChangedTriggerAction());
 			}
 		}).observe(this.container.nativeElement, { childList: true });
+
+		new MutationObserver(() => {
+			this.store.dispatch(new ContainerChangedTriggerAction());
+		}).observe(this.animatedElement, { childList: true });
 	}
 
 	ngOnDestroy(): void {

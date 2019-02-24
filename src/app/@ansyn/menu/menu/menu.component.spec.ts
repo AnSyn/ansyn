@@ -24,6 +24,7 @@ describe('MenuComponent', () => {
 	beforeEach(inject([Store], (_store: Store<IMenuState>) => {
 		fixture = TestBed.createComponent(MenuComponent);
 		menuComponent = fixture.componentInstance;
+		menuComponent.animatedElement = <any> { style: {} };
 		element = fixture.nativeElement;
 		fixture.detectChanges();
 		store = _store;

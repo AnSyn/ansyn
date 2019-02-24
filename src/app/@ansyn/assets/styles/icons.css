@@ -328,10 +328,8 @@
 }
 .icon-hide-menu:before {
 	content: '\e92a';
-	/*content: "\e91c";*/
 }
 
 .icon-show-menu:before {
 	content: '\e92a';
-	/*content: "\e91c";*/
 }

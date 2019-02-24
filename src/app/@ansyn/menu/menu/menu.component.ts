@@ -87,7 +87,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return this._componentElem;
 	}
 
-	@Input() layer: HTMLElement;
+	@Input() animatedElement: HTMLElement;
 
 	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
 	@ViewChild('menu') menuElement: ElementRef;
@@ -175,7 +175,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
 		}
 
-		this.layer.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
+		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
 
 		this.forceRedraw()
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
@@ -265,7 +265,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 		this.store.dispatch(new ContainerChangedTriggerAction());
 
-		this.layer.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
+		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
 
 	}
 

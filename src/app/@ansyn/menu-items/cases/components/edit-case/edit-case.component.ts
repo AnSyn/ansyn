@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash';
 import { ICase, ICasePreview, IContext } from '@ansyn/core';
 import { CasesService } from '../../services/cases.service';
 import { selectContextsArray } from '@ansyn/context';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 const animationsDuring = '0.2s';
 
@@ -105,7 +105,7 @@ export class EditCaseComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.activeCase$.subscribe((activeCase: ICase) => {
+		this.activeCase$.pipe(take(1)).subscribe((activeCase: ICase) => {
 			this.caseModel = activeCase;
 		});
 

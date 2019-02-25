@@ -38,7 +38,7 @@ export class StorageService {
 
 	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		const promise = fetch(`${url}/search_by_case`, { method: 'POST', JSON.stringify(body) })
+		const promise = fetch(`${url}/search_by_case`, { method: 'POST', body: JSON.stringify(body) })
 			.then(response => response.json());
 		return from(promise);
 	}

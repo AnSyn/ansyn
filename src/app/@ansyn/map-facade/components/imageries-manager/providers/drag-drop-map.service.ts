@@ -7,10 +7,10 @@ import { forkJoin } from 'rxjs';
 import { tap, take } from 'rxjs/operators';
 
 export interface IDragDropData {
-	target: HTMLElement;
 	dragElement: HTMLElement;
 	dropElement?: HTMLElement;
 	dragElementInitialBoundingBox: ClientRect;
+	targetElementInitialBoundingBox: ClientRect;
 	ids: string[];
 	entities: object;
 }
@@ -30,15 +30,16 @@ export class DragDropMapService {
 
 		const { currentTarget: target } = $event;
 		const dragElementInitialBoundingBox = dragElement.getBoundingClientRect();
-		this.data = { target, dragElement, dragElementInitialBoundingBox, ids, entities };
+		const targetElementInitialBoundingBox = target.getBoundingClientRect();
+
+		this.data = { dragElement, dragElementInitialBoundingBox, targetElementInitialBoundingBox, ids, entities };
 		this.document.addEventListener('mousemove', this.mouseMove);
 		this.document.addEventListener('mouseup', this.mouseUp);
 	}
 
 	mouseMove = ($event) => {
-		const { target, dragElement, dropElement, dragElementInitialBoundingBox } = this.data;
-		const { width: targetWidth, height: targetHeight } = target.getBoundingClientRect();
-		const { left: initialLeft, top: initialTop } = dragElementInitialBoundingBox;
+		const { dragElement, dropElement, targetElementInitialBoundingBox } = this.data;
+		const { width: targetWidth, height: targetHeight, left: targetLeft, top: targetTop } = targetElementInitialBoundingBox;
 		const { left, top, width, height } = dragElement.getBoundingClientRect();
 		if (dropElement) {
 			dropElement.style.filter = null;
@@ -54,7 +55,7 @@ export class DragDropMapService {
 		this.data.dropElement = newDropElement;
 		dragElement.style.transition = null;
 		dragElement.style.zIndex = '200';
-		dragElement.style.transform = `translate(${$event.clientX - initialLeft - (targetWidth / 2)}px, ${$event.clientY - initialTop - (targetHeight / 2)}px)`;
+		dragElement.style.transform = `translate(${$event.clientX - targetLeft - (targetWidth / 2)}px, ${$event.clientY - targetTop - (targetHeight / 2)}px)`;
 	};
 
 	mouseUp = () => {

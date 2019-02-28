@@ -14,6 +14,7 @@ import { IVisualizersConfig } from '@ansyn/imagery';
 import { IOpenAerialOverlaySourceConfig } from './app-providers/overlay-source-providers/open-aerial-source-provider';
 import { IPlanetOverlaySourceConfig } from './app-providers/overlay-source-providers/planet/planet-source-provider';
 import { IIdahoOverlaySourceConfig } from './app-providers/overlay-source-providers/idaho-source-provider';
+import { IAirbusOverlaySourceConfig } from "./app-providers/overlay-source-providers/airbus-source-provider";
 
 export interface IConfigModel {
 	casesConfig: ICasesConfig,
@@ -32,6 +33,7 @@ export interface IConfigModel {
 	multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 	idahoOverlaysSourceConfig: IIdahoOverlaySourceConfig,
 	openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig,
+	airbusOverlaysSourceConfig: IAirbusOverlaySourceConfig,
 	planetOverlaysSourceConfig: IPlanetOverlaySourceConfig,
 	ORIENTATIONS: string[],
 	algorithmsConfig: IAlgorithmsConfig

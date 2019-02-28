@@ -5,6 +5,7 @@ import { OverlaysModule } from '@ansyn/overlays';
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
+import { AirbusSourceProvider } from "./overlay-source-providers/airbus-source-provider";
 
 @NgModule({
 	imports: [
@@ -13,7 +14,8 @@ import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-pro
 			overlaySourceProviders: [
 				PlanetSourceProvider,
 				OpenAerialSourceProvider,
-				IdahoSourceProvider
+				IdahoSourceProvider,
+				AirbusSourceProvider
 			]
 		})
 	],

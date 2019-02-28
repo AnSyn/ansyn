@@ -146,6 +146,9 @@
 	}
   },
   "mapSourceProvidersConfig": {
+  	"AIRBUS": {
+  		"baseUrl": "{{ getv "/ansyn/airbus/proxy/baseurl" "http://localhost:8100" }}"
+      },
   	"TB": {
   		"baseUrl": "{{ getv "/ansyn/tb/baseurl" "http://localhost:10010/v2/api" }}"
   	},
@@ -1094,6 +1097,118 @@
 				]
 		  }
 	},
+	"AIRBUS": {
+        	"inActive": {{ getv "/ansyn/overlay/airbus/inactive" "true" }},
+    		"whitelist": [
+    			{
+    				"name": "Toulouse",
+    				"dates": [
+    					{
+    						"start": null,
+    						"end": null
+    					}
+    				],
+    				"sensorNames": [ null ],
+    				"coverage": [
+    					[
+						  [
+							[1.3518333435058596, 43.68289454400657],
+							[
+							  1.543407440185547, 43.682646261618416
+							],
+							[
+							  1.5430641174316408, 43.543197873873794
+							],
+							[
+							  1.3518333435058596, 43.54270015326378
+							],
+							[
+							  1.3518333435058596, 43.68289454400657
+							]
+						  ]
+						]
+    				]
+    			},
+    			{
+					"name": "Rotterdam",
+					"dates": [
+						{
+							"start": null,
+							"end": null
+						}
+					],
+					"sensorNames": [ null ],
+					"coverage": [
+						[
+							[
+								[3.925552368164063, 52.030950775600694],
+								[4.5352935791015625, 52.03010586994851],
+								[4.5366668701171875, 51.79460254965141],
+								[3.924179077148438, 51.79460254965141],
+								[3.925552368164063, 52.030950775600694]
+							]
+						]
+					]
+				},
+				{
+					"name": "Sao Paulo",
+					"dates": [
+						{
+							"start": null,
+							"end": null
+						}
+					],
+					"sensorNames": [ null ],
+					"coverage": [
+						[
+						  [
+							[-46.90750122070313, -23.29307189825665],
+							[-46.273040771484375, -23.290549154672572],
+							[-46.273040771484375, -23.85946585466279],
+							[-46.90750122070313, -23.85946585466279],
+							[-46.90750122070313, -23.29307189825665]
+						  ]
+						]
+					]
+				},
+				{
+					"name": "San Francisco",
+					"dates": [
+						{
+							"start": null,
+							"end": null
+						}
+					],
+					"sensorNames": [ null ],
+					"coverage": [
+						[
+						  [
+							[-122.53292083740234, 37.81710713079405],
+							[-122.3537063598633, 37.81602226140253],
+							[-122.3537063598633, 37.680831518969626],
+							[-122.53360748291016, 37.68028808644538],
+							[-122.53292083740234, 37.81710713079405]
+						  ]
+						]
+					]
+				}
+    		],
+    		"blacklist": [],
+    		"dataInputFiltersConfig": {
+    			"text": "Airbus",
+    			"value": 1,
+    				"indeterminate": true,
+    				"collapsed": true,
+    				"children": [
+    				  {
+    					"text": "NL-01",
+    					"value": {
+    					  "sensorType": "NL-01"
+    					}
+    				  }
+    				]
+    		  }
+    	},
     "IMISIGHT": {
     	"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
 		"whitelist": [

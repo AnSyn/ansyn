@@ -22,5 +22,6 @@ keys = [
 	"/ansyn/imisight/callback/url",
 	"/ansyn/overlay/imisight/inactive",
 	"/ansyn/overlay/tb/inactive",
+	"/ansyn/airbus/proxy/baseurl",
 	"/ansyn/tb/baseurl"
 ]

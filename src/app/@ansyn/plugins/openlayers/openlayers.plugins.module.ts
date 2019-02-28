@@ -32,6 +32,7 @@ import { OpenLayerESRI4326SourceProvider } from './mapSourceProviders/open-layer
 import { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-layers-open-aerial-source-provider';
 import { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis-layers.pulgin";
+import { OpenLayersAirbusSourceProvider } from "./mapSourceProviders/open-layers-airbus-source-provider";
 
 @NgModule({
 	imports: [
@@ -70,7 +71,8 @@ import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis
 				OpenLayerBingSourceProvider,
 				OpenLayerESRI4326SourceProvider,
 				OpenLayerOpenAerialSourceProvider,
-				OpenLayersStaticImageSourceProvider
+				OpenLayersStaticImageSourceProvider,
+				OpenLayersAirbusSourceProvider
 			]
 		})
 	]

@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
-import { uploadConfig } from '../config/uploads-config';
 import { IUploadItem } from '../reducers/uploads.reducer';
+import { IUploadsConfig, UploadConfig } from '../config/uploads-config';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class UploadFileService {
 
-	constructor(private http: HttpClient) {
+	constructor(private http: HttpClient, @Inject(UploadConfig) public uploadConfig: IUploadsConfig) {
 	}
 
 	upload(uploadItem: IUploadItem) {
@@ -25,7 +25,7 @@ export class UploadFileService {
 		formData.append('sensorType', request.sensorType);
 		formData.append('sensorName', request.sensorName);
 		formData.append('sharing', request.sharing);
-		formData.append('uploads', request.file);
+		formData.append('file', request.file);
 		formData.append('date', `${request.date}`);
 		return formData;
 	}
@@ -33,7 +33,7 @@ export class UploadFileService {
 	private createUploadRequest(form: FormData): HttpRequest<any> {
 		return new HttpRequest(
 			'POST',
-			uploadConfig.apiUrl,
+			this.uploadConfig.apiUrl,
 			form,
 			{
 				reportProgress: true

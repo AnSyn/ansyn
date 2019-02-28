@@ -16,6 +16,7 @@ import { TBOverlaySourceType } from '../../../overlay-source-provider/tb-source-
 import { UploadFileService } from '../../services/upload-file.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GeotiffDatetimePickerComponent } from "../geotiff-datetime-picker/geotiff-datetime-picker.component";
+import { UploadConfig } from '../../config/uploads-config';
 
 const FakeMultipleOverlaysSource = {
 	[TBOverlaySourceType]: {
@@ -47,6 +48,10 @@ describe('UploadsComponent', () => {
 				GeotiffDatetimePickerComponent
 			],
 			providers: [
+				{
+					provide: UploadConfig,
+					useValue: {}
+				},
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: noop }

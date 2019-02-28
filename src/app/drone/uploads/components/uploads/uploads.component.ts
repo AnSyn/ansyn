@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { uploadConfig } from '../../config/uploads-config';
+import { Component, OnDestroy, OnInit, ViewChild, Inject } from '@angular/core';
+import { IUploadsConfig, UploadConfig } from '../../config/uploads-config';
 import { delay, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ErrorHandlerService, FileInputComponent, SetToastMessageAction } from '@ansyn/core';
@@ -21,9 +21,9 @@ import { UploadFileService } from '../../services/upload-file.service';
 export class UploadsComponent implements OnInit, OnDestroy {
 	@ViewChild('inputFile') inputFile: FileInputComponent;
 	loading = false;
-	readonly sensorNames = uploadConfig.sensorNames;
-	readonly sensorTypes = uploadConfig.sensorTypes;
-	readonly rulesLink = uploadConfig.rulesLink;
+	readonly sensorNames = this.uploadConfig.sensorNames;
+	readonly sensorTypes = this.uploadConfig.sensorTypes;
+	readonly rulesLink = this.uploadConfig.rulesLink;
 	modal = false;
 	formData: IUploadsFormData = { ...initialUploadsFromData };
 	fileInputValue: string;
@@ -43,7 +43,9 @@ export class UploadsComponent implements OnInit, OnDestroy {
 
 	constructor(protected store: Store<any>,
 				public service: UploadFileService,
-				protected errorHandlerService: ErrorHandlerService) {
+				protected errorHandlerService: ErrorHandlerService,
+				@Inject(UploadConfig) public uploadConfig: IUploadsConfig
+	) {
 	}
 
 	disabledReset() {
@@ -61,7 +63,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 			valid = files.every((f: File) => {
 				let name = f.name.toLocaleLowerCase();
 				return accept.some(a => name.endsWith(a.trim()));
-			})
+			});
 		}
 		if (!valid) {
 			this.store.dispatch(new SetToastMessageAction({
@@ -94,7 +96,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	}
 
 	isGeoTiff(str: string) {
-		return str.toUpperCase().includes("GEOTIFF");
+		return str.toUpperCase().includes('GEOTIFF');
 	}
 
 	getAcceptFile() {
@@ -103,7 +105,7 @@ export class UploadsComponent implements OnInit, OnDestroy {
 		if (type.toUpperCase().includes('GEOTIFF')) {
 			return '.tif, .tiff';
 		} else {
-			return '.jpg'
+			return '.jpg';
 		}
 	}
 
@@ -112,9 +114,9 @@ export class UploadsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-	}
+	};
 
 	ngOnDestroy(): void {
-	}
+	};
 
 }

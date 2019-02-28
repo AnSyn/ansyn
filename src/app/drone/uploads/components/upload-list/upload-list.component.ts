@@ -46,7 +46,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 	moveToUpload($event: any): void {
 		if ($event) {
 			this.store.select(selectActiveMapId).pipe(take(1)).subscribe(mapId => {
-				const overlay = (this.overlaysSources[TBOverlaySourceType] as TBSourceProvider).parseData($event['0']);
+				const overlay = (this.overlaysSources[TBOverlaySourceType] as TBSourceProvider).parseData($event);
 				this.store.dispatch(new MoveToUploadOverlay({ overlay, mapId }));
 			});
 		}

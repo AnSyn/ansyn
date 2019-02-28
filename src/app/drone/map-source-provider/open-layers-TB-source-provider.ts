@@ -74,20 +74,17 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 			return Promise.resolve([new TileLayer({ visible: true, source, extent })]);
 		}
 
-		return this.http
-			.get(`${this.config.baseUrl}/geoserver/wmts/getCapabilities/public/${metaData.data.overlay.tag.name}`, { responseType: 'text' })
-			.pipe(
-				map((capabilitiesXml: string) => {
-					const capabilities = WMTSCapabilitiesParser.read(capabilitiesXml);
-					const source = new WMTS({
-						...WMTS.optionsFromCapabilities(capabilities, {
-							layer: metaData.data.overlay.tag.name
-						})
-					});
-					const extent = metaData.data.overlay.tag.geoData.bbox;
-					return [new TileLayer({ visible: true, source, extent })];
-				})
-			).toPromise();
+		const source = new TileWMS(<any>{
+			url: metaData.data.overlay.imageUrl,
+			params: {
+				'VERSION': '1.1.1',
+				LAYERS: metaData.data.overlay.tag.geoserver.layer.resource.name
+			},
+			projection
+		});
+		const { minx, miny, maxx, maxy } = metaData.data.overlay.tag.bbox;
+		const extent = proj.transformExtent([minx, miny, maxx, maxy], 'EPSG:4326', 'EPSG:3857');
+		return Promise.resolve([new TileLayer({ visible: true, source, extent })]);
 	}
 
 	createOrGetFromCache(metaData: ICaseMapState): any {

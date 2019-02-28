@@ -5,6 +5,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { UploadFilesEffects } from './upload-files.effects';
 import { HttpClientModule } from '@angular/common/http';
 import { uploadsFeatureKey, UploadsReducer } from '../reducers/uploads.reducer';
+import { UploadConfig } from '../config/uploads-config';
 
 describe('uploadFilesEffects', () => {
 	let uploadFilesEffect: UploadFilesEffects;
@@ -20,6 +21,10 @@ describe('uploadFilesEffects', () => {
 				HttpClientModule
 			],
 			providers: [
+				{
+					provide: UploadConfig,
+					useValue: {}
+				},
 				UploadFilesEffects,
 				provideMockActions(() => actions)
 			]

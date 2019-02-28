@@ -47,12 +47,13 @@ export class Overlay implements IOverlay {
 	static DEFAULT_CLOUD_COVERAGE = 1;
 	static DEFAULT_PROJECTION = 'EPSG:3857';
 	static DEFAULT_AZIMUTH = 0;
+	static DEFAULT_BEST_RESOLUTION = 1;
 
 	footprint?: any;
 	sensorType = Overlay.UNKNOWN_NAME;
 	sensorName = Overlay.UNKNOWN_NAME;
 	channel?: number;
-	bestResolution?: number;
+	bestResolution?: number = Overlay.DEFAULT_BEST_RESOLUTION;
 	cloudCoverage = Overlay.DEFAULT_CLOUD_COVERAGE;
 	isStereo?: boolean;
 	name: string;

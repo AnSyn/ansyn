@@ -46,7 +46,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		return this.mapSourceProvidersConfig[this.sourceType];
 	}
 
-	baseUrl = `${this.config.baseUrl}/ansyn/layers`;
+	baseUrl = `${this.config.baseUrl}/layers`;
 
 	constructor(
 		public errorHandlerService: ErrorHandlerService,
@@ -130,7 +130,12 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 
 	public parseData(tbOverlay: ITBOverlay): IOverlay {
 		if (tbOverlay.overlay) {
-			return new Overlay(({ ...tbOverlay.overlay }));
+			return new Overlay(({
+				...tbOverlay.overlay,
+				footprint: geojsonPolygonToMultiPolygon(tbOverlay.overlay.footprint),
+				date: new Date(tbOverlay.overlay.date),
+				sourceType: this.sourceType,
+			}));
 		}
 		return new Overlay({
 			id: tbOverlay._id,

@@ -1203,5 +1203,13 @@
 			"regionLengthInMeters": 100
 		}
 	}
+  },
+  "uploadConfig": {
+  	"apiUrl":  "{{ getv "/ansyn/tb/baseurl" "http://localhost:10010/v2/api" }}/layer",
+  	"sensorTypes": ["Drone Imagery (JPG)", "Mobile Imagery (JPG)", "Drone Map (GeoTIFF)", "Satellite GeoTIFF"],
+  	"sensorNames": ["Phantom 3", "Phantom 4", "Phantom 4 Advanced", "Phantom 4 Pro", "Mavic", "Mavic Pro", "Mavic 2", "Spark", "Inspire"],
+  	"defaultSharing": "Public",
+  	"defaultSensorType": "Drone Imagery (JPG)",
+  	"rulesLink": "https://creativecommons.org/licenses/by/4.0/"
   }
 }

@@ -126,12 +126,6 @@ export const droneConfig: any = {
 			}
 		}
 	},
-
-	mapSourceProvidersConfig: {
-		TB: {
-			baseUrl: 'http://tb-server.webiks.com/v2/api'
-		}
-	},
 	multipleOverlaysSourceConfig: {
 		TB: {
 			inActive: false,
@@ -213,6 +207,7 @@ export const droneConfig: any = {
 			}
 		}
 	},
+
 	filtersConfig: {
 		shortFilterListLength: 8,
 		filters: [

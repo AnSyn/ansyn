@@ -1,3 +1,4 @@
+export { IVisualizerEntityTags } from './models/visualizers/visualizers-entity';
 export {
 	IMultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceConfig,

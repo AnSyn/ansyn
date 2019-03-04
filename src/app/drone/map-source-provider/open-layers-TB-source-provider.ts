@@ -54,6 +54,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 			})]);
 		}
 		const projection = this.createDroneTiffProjection(metaData.data.overlay);
+
 		if (metaData.data.overlay.sensorType === 'Awesome Drone Imagery (GeoTIFF)') {
 			const source = new TileWMS(<any>{
 				url: metaData.data.overlay.imageUrl,
@@ -78,6 +79,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 			url: metaData.data.overlay.imageUrl,
 			params: {
 				'VERSION': '1.1.1',
+				STYLES: metaData.data.overlay.sensorName === 'venus' ? metaData.data.overlay.sensorName : '',
 				LAYERS: metaData.data.overlay.tag.geoserver.layer.resource.name
 			},
 			projection

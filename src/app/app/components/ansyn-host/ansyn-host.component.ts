@@ -11,6 +11,6 @@ import { AuthService } from '../../login/services/auth.service';
 })
 export class AnsynHostComponent {
 	version = (<any>packageJson).version;
-	constructor(protected authService: AuthService) {
+	constructor(public authService: AuthService) {
 	}
 }

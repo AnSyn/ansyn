@@ -12,6 +12,17 @@
 			label="Name">
 		</ansyn-input>
 
+		<select
+			class="role"
+			name="role"
+			[(ngModel)]="role">
+
+			<option>ADMIN</option>
+			<option>USER</option>
+			<option>GUEST</option>
+
+		</select>
+
 		<div class="bottom-btns">
 			<button type="button" (click)="close()">Cancel</button>
 			<button type="submit" [disabled]="f.invalid">OK</button>

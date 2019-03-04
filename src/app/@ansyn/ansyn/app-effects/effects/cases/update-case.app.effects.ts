@@ -71,7 +71,7 @@ export class UpdateCaseAppEffects {
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
+			const { id, name, lastModified, owner, creationTime, selectedContextId, role } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
@@ -81,6 +81,7 @@ export class UpdateCaseAppEffects {
 				owner,
 				selectedContextId,
 				autoSave,
+				role,
 				state: {
 					timeFilter,
 					orientation,

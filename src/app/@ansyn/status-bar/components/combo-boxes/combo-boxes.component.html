@@ -1,7 +1,7 @@
 <div class="combo-boxes">
 
 	<!-- data input filter-->
-	<div class="combo-box-container block hidden-medium-resolution">
+	<div class="combo-box-container block hidden-medium-resolution" id="dataInputFilter">
 		<button ansynComboBoxTrigger
 			#trigger
 			class="combo-box-width"
@@ -22,7 +22,7 @@
 	</div>
 
 	<!-- Orientation -->
-	<div class="combo-box-container block">
+	<div class="combo-box-container block" id="orientation">
 		<ansyn-combo-box
 			class="combo-box-width"
 			icon="icon-status-bar-orientation"
@@ -77,7 +77,7 @@
 	</div>
 
 	<!-- Time -->
-	<div class="combo-box-container block with-buttons hidden-low-resolution">
+	<div class="combo-box-container block with-buttons hidden-low-resolution" id="Time">
 		<ansyn-combo-box
 			class="combo-box-width"
 			direction="top"
@@ -93,7 +93,7 @@
 
 		</ansyn-combo-box>
 
-		<div class="buttons" [class.active]="timeSelectionEditIcon">
+		<div class="buttons" [class.active]="timeSelectionEditIcon" >
 			<button (click)="toggleTimelineStartEndSearch()"
 					[attr.tooltip-value]="toolTips.timeFilterEdit"
 					tooltip-class="top right"
@@ -117,7 +117,7 @@
 	</div>
 
 	<!-- Layout -->
-	<div class="combo-box-container block">
+	<div class="combo-box-container block" id="Layout">
 		<ansyn-combo-box
 			class="combo-center"
 			direction="top"

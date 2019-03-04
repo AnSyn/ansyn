@@ -1,0 +1,17 @@
+ansyn-app {
+	&.GUEST {
+		/deep/ #contextGeoFilter, /deep/ li.line-width-selection, /deep/ li.li-icon-annotation-color, /deep/ li.li-removeFeature, /deep/ .menu-btn:not(.Contact-Us), /deep/ #dataInputFilter, /deep/ #orientation, /deep/ #editGeoFilter, /deep/ #Time, /deep/ button.remove-overlay {
+			display: none !important;
+		}
+	}
+	&.USER {
+		/deep/ .menu-btn.Upload {
+			display: none !important;
+		}
+	}
+	&.ADMIN {
+		/deep/ select.role {
+			display: block !important;
+		}
+	}
+}

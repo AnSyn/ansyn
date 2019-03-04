@@ -7,6 +7,7 @@ import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions'
 import { CasesService } from '../../services/cases.service';
 import { take } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
+import { AuthService } from '../../../../../app/login/services/auth.service';
 
 const animationsDuring = '0.2s';
 
@@ -36,10 +37,12 @@ export class SaveCaseComponent {
 		return true;
 	};
 
+	role = this.authService.user.role;
 	caseName: string;
 
 	constructor(protected store: Store<ICasesState>,
-				protected casesService: CasesService) {
+				protected casesService: CasesService,
+				protected authService: AuthService) {
 	}
 
 	close(): void {
@@ -52,7 +55,7 @@ export class SaveCaseComponent {
 				take(1),
 				cloneDeep(),
 				tap((selectedCase: ICase) => {
-					this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
+					this.store.dispatch(new SaveCaseAsAction(<any>{ ...selectedCase, name: this.caseName, role: this.role }));
 					this.close();
 				})
 			).subscribe();

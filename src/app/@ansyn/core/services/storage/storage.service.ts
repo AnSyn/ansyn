@@ -24,15 +24,15 @@ export class StorageService {
 				@Inject(CoreConfig) public config: ICoreConfig) {
 	}
 
-	private _buildSchemaUrl(schema: string) {
+	protected _buildSchemaUrl(schema: string) {
 		return `${this.config.storageService.baseUrl}/${schema}`;
 	}
 
-	private _buildIdUrl(schema: string, id: string) {
+	protected _buildIdUrl(schema: string, id: string) {
 		return `${this._buildSchemaUrl(schema)}/${id}`;
 	}
 
-	private _buildEntityUrl<P extends IEntity, D>(schema: string, entity: IStoredEntity<P, D>) {
+	protected _buildEntityUrl<P extends IEntity, D>(schema: string, entity: IStoredEntity<P, D>) {
 		return this._buildIdUrl(schema, entity.preview.id);
 	}
 

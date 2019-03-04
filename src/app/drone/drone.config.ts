@@ -207,7 +207,6 @@ export const droneConfig: any = {
 			}
 		}
 	},
-
 	filtersConfig: {
 		shortFilterListLength: 8,
 		filters: [
@@ -251,5 +250,12 @@ export const droneConfig: any = {
 				"type": "Slider"
 			}
 		]
-	}
+	},
+	coreConfig: {
+		translation: {
+			default: {
+				TB: 'Ramon'
+			}
+		},
+	},
 };

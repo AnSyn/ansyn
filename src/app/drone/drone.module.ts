@@ -7,10 +7,16 @@ import { TBSourceProvider } from './overlay-source-provider/tb-source-provider';
 import { UploadsModule } from './uploads/uploads.module';
 import { PopupPlugins } from "./plugins/popup/popup.plugins";
 import { OpenLayersMap } from "@ansyn/plugins";
+import { StorageService } from '@ansyn/core';
+import { StorageServiceExtends } from './extends/storage.service.extends';
+import { CasesService } from '@ansyn/menu-items';
+import { CasesServiceExtends } from './extends/cases.service.extends';
+import { ContactUsModule } from './contact-us/contact-us.module';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		ContactUsModule,
 		ImageryModule.provide({
 			mapSourceProviders: [
 				OpenLayerTBSourceProvider
@@ -22,6 +28,16 @@ import { OpenLayersMap } from "@ansyn/plugins";
 			overlaySourceProviders: [TBSourceProvider]
 		}),
 		UploadsModule
+	],
+	providers: [
+		{
+			provide: StorageService,
+			useClass: StorageServiceExtends
+		},
+		{
+			provide: CasesService,
+			useClass: CasesServiceExtends
+		}
 	]
 })
 export class DroneModule {

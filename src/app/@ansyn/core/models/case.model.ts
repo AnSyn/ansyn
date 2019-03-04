@@ -13,6 +13,7 @@ export interface ICasePreview extends IEntity {
 	lastModified: Date;
 	selectedContextId?: string;
 	autoSave: boolean;
+	role?: string;
 }
 
 export interface ICase extends ICasePreview {

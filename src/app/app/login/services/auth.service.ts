@@ -5,8 +5,14 @@ import { LoginConfigService } from './login-config.service';
 import { ILoginConfig } from '../models/login.config';
 import { tap } from 'rxjs/operators';
 
+export interface IUser {
+	username: string;
+	role: 'ADMIN' | 'USER' | 'GUEST'
+}
+
 @Injectable()
 export class AuthService {
+	user: IUser = null;
 
 	get config(): ILoginConfig {
 		return this.loginConfigService.config;
@@ -48,7 +54,7 @@ export class AuthService {
 		const body = JSON.stringify({ authToken });
 		const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 		const options = { headers };
-		return this.httpClient.post(url, body, options);
+		return this.httpClient.post<any>(url, body, options).pipe(tap(res => this.user = res.data));
 	}
 
 	isLoggedIn(): Observable<any> {

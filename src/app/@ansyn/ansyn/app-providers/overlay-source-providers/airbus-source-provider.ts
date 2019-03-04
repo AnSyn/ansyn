@@ -3,7 +3,7 @@ import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourc
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius, IMapSourceProvidersConfig,
 	IOverlay,
 	limitArray,
@@ -113,7 +113,7 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 		const base = airbusElement.properties.tileEngineUrl;
 		return new Overlay({
 			id: airbusElement.id,
-			footprint: airbusElement.geometry,
+			footprint: geojsonPolygonToMultiPolygon(airbusElement.geometry),
 			sensorType: airbusElement.properties.provider,
 			sensorName: airbusElement.properties.instrument,
 			bestResolution: airbusElement.properties.resolution,

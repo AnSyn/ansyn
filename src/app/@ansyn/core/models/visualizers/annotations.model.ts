@@ -1,3 +1,5 @@
+import { IVisualizerEntityTags } from '@ansyn/core';
+
 export interface IAnnotationBoundingRect {
 	top: number;
 	left: number;
@@ -15,8 +17,10 @@ export interface IAnnotationsSelectionEventData {
 	interactionType?: AnnotationInteraction;
 	showLabel?: boolean;
 	showMeasures?: boolean;
-	showColorPicker?: boolean,
-	showWeight?: boolean
+	showColorPicker?: boolean;
+	showWeight?: boolean;
+	showCount?: boolean
+	tags?: IVisualizerEntityTags
 }
 
 export interface IUpdateFeatureEvent {

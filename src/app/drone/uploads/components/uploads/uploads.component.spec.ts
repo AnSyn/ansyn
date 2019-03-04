@@ -15,8 +15,9 @@ import { MultipleOverlaysSource } from '@ansyn/overlays';
 import { TBOverlaySourceType } from '../../../overlay-source-provider/tb-source-provider';
 import { UploadFileService } from '../../services/upload-file.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GeotiffDatetimePickerComponent } from "../geotiff-datetime-picker/geotiff-datetime-picker.component";
+import { GeotiffDatetimePickerComponent } from '../geotiff-datetime-picker/geotiff-datetime-picker.component';
 import { UploadConfig } from '../../config/uploads-config';
+import { uploadsFeatureKey, UploadsReducer } from '../../reducers/uploads.reducer';
 
 const FakeMultipleOverlaysSource = {
 	[TBOverlaySourceType]: {
@@ -36,7 +37,15 @@ describe('UploadsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [AnsynFormsModule, FormsModule, BrowserAnimationsModule, HttpClientModule, StoreModule.forRoot({})],
+			imports: [
+				AnsynFormsModule,
+				FormsModule,
+				BrowserAnimationsModule,
+				HttpClientModule,
+				StoreModule.forRoot({
+					[uploadsFeatureKey]: UploadsReducer
+				})
+			],
 			declarations: [
 				UploadsComponent,
 				AnsynLoaderComponentMock,
@@ -92,9 +101,9 @@ describe('UploadsComponent', () => {
 	it('isMobile should check if "mobile" string includes in input', () => {
 		expect(component.isMobile('blbblbl Mobile blblblbl')).toBeTruthy();
 		expect(component.isMobile('blblblbl blblblbl')).toBeFalsy();
-	})
+	});
 
 	it('getAcceptFile', () => {
 		expect(component.getAcceptFile()).toBeDefined();
-	})
+	});
 });

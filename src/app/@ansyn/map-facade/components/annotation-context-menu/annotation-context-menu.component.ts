@@ -1,19 +1,20 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
-import { IMapState } from '../../reducers/map.reducer';
-import { Store } from '@ngrx/store';
+import { IMapState, selectMapsList } from '../../reducers/map.reducer';
+import { Store, select } from '@ngrx/store';
 import {
 	AnnotationRemoveFeature,
 	AnnotationSelectAction,
 	AnnotationUpdateFeature,
 	MapActionTypes
 } from '../../actions/map.actions';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
+import { AnnotationInteraction, IAnnotationsSelectionEventData, ICaseMapState } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, tap } from 'rxjs/operators';
+import { filter, tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { ofType } from '@ngrx/effects';
+import { MapFacadeService } from '../../services/map-facade.service';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -28,6 +29,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	clickMenuProps: IAnnotationsSelectionEventData;
 	hoverMenuProps: IAnnotationsSelectionEventData;
 	@Input() mapId;
+	overlay: any;
+	form = {};
 
 	@AutoSubscription
 	positionChanged$: Observable<any> = this.actions$.pipe(
@@ -53,6 +56,15 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 					break;
 			}
 		})
+	);
+
+	@AutoSubscription
+	currentOverlay$ = this.store.pipe(
+		select(selectMapsList),
+		map((mapList) => MapFacadeService.mapById(mapList, this.mapId)),
+		filter(Boolean),
+		map((map: ICaseMapState) => map.data.overlay),
+		tap((overlay) => this.overlay = overlay)
 	);
 
 	@HostBinding('attr.tabindex')
@@ -119,15 +131,15 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.clickMenuProps.showMeasures = showMeasures;
 	}
 
-	toggleLabel() {
+	toggleLabel(label) {
 		const { featureId } = this.clickMenuProps;
-		const showLabel = !this.clickMenuProps.showLabel;
+		const showLabel = !this.clickMenuProps[label];
 		this.store.dispatch(new AnnotationUpdateFeature({
 			featureId,
-			properties: { showLabel }
+			properties: { [label]: showLabel }
 		}));
 
-		this.clickMenuProps.showLabel = showLabel;
+		this.clickMenuProps[label] = showLabel;
 	}
 
 	selectLineWidth(w: number) {
@@ -192,6 +204,25 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			featureId,
 			properties: {
 				label: this.clickMenuProps.label
+			}
+		}));
+		this.close();
+	}
+
+	updateCount(count) {
+		const { featureId } = this.clickMenuProps;
+
+		this.store.dispatch(new AnnotationUpdateFeature({
+			featureId,
+			properties: {
+				tags: {
+					...this.clickMenuProps.tags,
+					[this.overlay.id]: {
+						count,
+						id: this.overlay.id,
+						time: this.overlay.date.toISOString()
+					}
+				}
 			}
 		}));
 		this.close();

@@ -14,10 +14,17 @@
 					class="icon-tools-ruler" tooltip-value="Measures" tooltip-class="bottom"></i></button>
 			</li>
 			<li>
-				<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel()"><i
+				<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel('showLabel')"><i
 					class="icon-annotation-label" tooltip-value="Label" tooltip-class="bottom"></i>
 				</button>
 			</li>
+
+			<li>
+				<button [class.active]="clickMenuProps.showCount" [disabled]="!overlay" (click)="toggleLabel('showCount')">
+					<i class="fa fa-calculator"></i>
+				</button>
+			</li>
+
 			<li class="expanded-selection line-width-selection">
 				<p>
 					<button [class.active]="clickMenuProps.showWeight" (click)="toggleWeight()"><i
@@ -46,14 +53,20 @@
 				<button class='removeFeature' (click)="removeFeature()" tooltip-value="Delete" tooltip-class="bottom"><i class="icon-close"></i></button>
 			</li>
 		</ul>
+
+		<div class="annotation-label-edit">
+			<form class="annotation-label-edit-child" (ngSubmit)="updateLabel()" *ngIf="clickMenuProps.showLabel">
+				<input class="label-input" type="text" placeholder="Label" [(ngModel)]="clickMenuProps.label"
+					   name="EditLabel">
+				<i (click)="updateLabel()" class="icon-edit"></i>
+			</form>
+
+			<form class="annotation-label-edit-child" (ngSubmit)="updateCount(+inputCount.value)" *ngIf="clickMenuProps.showCount && overlay">
+				<input class="label-input" min="0" type="number" autocomplete="false" placeholder="Count" #inputCount [value]="clickMenuProps.tags[overlay?.id]?.count" name="EditCount">
+				<i (click)="updateCount(+inputCount.value)" class="icon-edit"></i>
+			</form>
+		</div>
 	</div>
-
-	<form class="annotation-label-edit" (ngSubmit)="updateLabel()" *ngIf="clickMenuProps.showLabel">
-		<input class="label-input" type="text" placeholder="{{clickMenuProps.label}}" [(ngModel)]="clickMenuProps.label"
-			   name="EditLabel">
-		<i (click)="updateLabel()" class="icon-edit"></i>
-	</form>
-
 
 </div>
 

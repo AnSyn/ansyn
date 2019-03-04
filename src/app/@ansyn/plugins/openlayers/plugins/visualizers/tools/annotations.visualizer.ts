@@ -67,6 +67,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	disableCache = true;
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
+	overlayId: any;
 
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
@@ -93,6 +94,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		filter(Boolean),
 		map((map: ICaseMapState) => map.data.overlay)
 	);
+
+	@AutoSubscription
+	currentOverlayId$ = this.currentOverlay$.pipe(
+		map((overlay) => overlay && overlay.id),
+		tap((overlayId) => {
+			this.source.refresh()
+			this.overlayId = overlayId
+		})
+	)
 
 	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
 		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
@@ -179,7 +189,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: feature.properties.style,
 			showMeasures: feature.properties.showMeasures,
 			showLabel: feature.properties.showLabel,
-			label: feature.properties.label
+			label: feature.properties.label,
+			showCount: feature.properties.showCount,
+			tags: feature.properties.tags
 		}));
 	}
 
@@ -195,12 +207,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				if (oldEntity) {
 					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
 					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
+					const isTagsDiff = JSON.stringify(oldEntity.originalEntity.tags) !== JSON.stringify(entity.tags);
 					const isShowLabelDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
 					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
 					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
 					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
 					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
-					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
+					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff || isTagsDiff;
 				}
 				return true;
 			});
@@ -219,7 +232,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
-
 		super(null, {
 			initial: {
 				stroke: '#27b2cfe6',
@@ -236,14 +248,32 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					offsetY: (feature: olFeature) => {
 						const { mode } = feature.getProperties();
 						return mode === 'Point' ? 30 : 0;
-					},
-					text: (feature: olFeature) => {
-						const properties = feature.getProperties();
-						const { showLabel, label } = properties;
-						return showLabel ? label : '';
 					}
 				}
 			}
+		});
+		const that = this;
+		this.updateStyle({
+			initial: {
+				label: {
+					text: (feature: olFeature) => {
+						const properties = feature.getProperties();
+						const { showLabel, showCount, label, tags = {} } = properties;
+						let text = '';
+						if (showLabel && label) {
+							text = `${label}\n`
+						}
+						if (showCount && that.overlayId) {
+							console.log(this.mapId);
+							const count = tags[that.overlayId] && tags[that.overlayId].count || '';
+							if (count) {
+								text =  `${text}count: ${count}`
+							}
+						}
+						return text;
+					}
+					}
+				}
 		});
 
 		//  0 or 1
@@ -286,7 +316,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures, label, showLabel, style } = this.getEntity(selectedFeature);
+		const { id, showMeasures, label, showLabel, style, tags = {}, showCount } = <any> this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
 			label: label,
 			mapId: this.mapId,
@@ -296,7 +326,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			type: selectedFeature ? selectedFeature.values_.mode : undefined,
 			interactionType: AnnotationInteraction.click,
 			showMeasures,
-			showLabel
+			showLabel,
+			showCount,
+			tags,
 		};
 		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
@@ -327,7 +359,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		let selectedFeature, boundingRect, id, label, showLabel, style;
+		let selectedFeature, boundingRect, id, label, showLabel, style, showCount, tags;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
@@ -335,7 +367,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id = this.getEntity(selectedFeature).id;
 			label = this.getEntity(selectedFeature).label;
 			showLabel = this.getEntity(selectedFeature).showLabel;
+			showCount = this.getEntity(selectedFeature).showCount;
 			style = this.getEntity(selectedFeature).style;
+			tags = this.getEntity(selectedFeature).tags;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
 			label: label,
@@ -345,7 +379,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			boundingRect,
 			type: selectedFeature ? selectedFeature.values_.mode : undefined,
 			interactionType: AnnotationInteraction.hover,
-			showLabel: showLabel
+			showLabel: showLabel,
+			showCount: showCount,
+			tags: tags
 		};
 		this.store$.dispatch(new AnnotationSelectAction(eventData));
 	}
@@ -412,6 +448,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			showMeasures: false,
 			showLabel: false,
 			label: '',
+			tags: {},
 			mode
 		});
 
@@ -427,7 +464,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					if (overlay) {
 						geoJsonFeature.properties = {
 							...geoJsonFeature.properties,
-							...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay)
+							...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay),
 						};
 					}
 					geoJsonFeature.properties = { ...geoJsonFeature.properties };

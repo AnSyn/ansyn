@@ -55,7 +55,9 @@
 					justify-content: center;
 					align-items: center;
 					font-size: 20px;
-
+					&:disabled {
+						opacity: .5;
+					}
 					&.removeFeature {
 						font-size: 19px;
 						margin-bottom: 1px;
@@ -64,9 +66,10 @@
 							content: '\2715'; // MULTIPLICATION X
 						}
 					}
-
-					&.active, &:hover {
-						background-color: rgb(41, 127, 155);
+					&:not(:disabled) {
+						&.active, &:hover {
+							background-color: rgb(41, 127, 155);
+						}
 					}
 				}
 
@@ -122,32 +125,37 @@
 			top: calc(~'100% + 20px');
 		}
 
-		form.annotation-label-edit {
+		div.annotation-label-edit {
 			width: 250px;
-			height: 32px;
 			position: absolute;
 			pointer-events: all;
-			border: 1px solid white;
-			box-sizing: border-box;
-			background-color: rgba(255, 255, 255, 0.7);
 			color: black;
+			box-sizing: border-box;
 			display: flex;
 			align-items: center;
 			left: 50%;
 			transform: translateX(-50%);
 			top: calc(~'100% + 20px');
 			display: flex;
-			flex-direction: row;
+			flex-direction: column;
 			justify-content: space-between;
+			.annotation-label-edit-child {
+				margin: 10px 0;
+				display: flex;
+				background-color: rgba(255, 255, 255, 0.7);
+				border: 1px solid white;
+				box-sizing: border-box;
+				flex: 1;
 
-			.label-input {
-				font-size: 17px;
-				width: 100%;
-			}
+				.label-input {
+					font-size: 17px;
+					width: 100%;
+				}
 
-			i.icon-edit {
-				cursor: pointer;
-				font-size: 27px;
+				i.icon-edit {
+					cursor: pointer;
+					font-size: 27px;
+				}
 			}
 		}
 	}

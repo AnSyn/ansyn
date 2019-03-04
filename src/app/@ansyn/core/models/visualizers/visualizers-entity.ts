@@ -1,6 +1,10 @@
 import { IVisualizerStateStyle } from './visualizer-state';
 import { Feature } from 'geojson';
 
+export interface IVisualizerEntityTags  {
+	[id: string]: { time: number, count: number, id: string}
+}
+
 export interface IVisualizerEntity {
 	id: string;
 	label?: string;
@@ -10,4 +14,6 @@ export interface IVisualizerEntity {
 	style?: Partial<IVisualizerStateStyle>;
 	showMeasures?: boolean;
 	showLabel?: boolean;
+	showCount?: boolean;
+	tags?: { [id: string]: { time: number, count: number, id: string} };
 }

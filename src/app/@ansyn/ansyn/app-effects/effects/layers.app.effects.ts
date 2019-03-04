@@ -15,6 +15,7 @@ import { Store } from '@ngrx/store';
 import { Feature } from 'geojson';
 import { AnnotationRemoveFeature, AnnotationUpdateFeature, MapActionTypes } from '@ansyn/map-facade';
 import { Observable } from 'rxjs/index';
+import { SetAutoSave } from '@ansyn/core';
 
 
 @Injectable()
@@ -26,7 +27,8 @@ export class LayersAppEffects {
 			ofType<SaveCaseAsSuccessAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
 			mergeMap((action: SaveCaseAsSuccessAction) => [
 					new BeginLayerCollectionLoadAction({ caseId: action.payload.id }),
-					new UpdateSelectedLayersIds(action.payload.state.layers.activeLayersIds)
+					new UpdateSelectedLayersIds(action.payload.state.layers.activeLayersIds),
+					new SetAutoSave(true)
 				]
 			)
 		);

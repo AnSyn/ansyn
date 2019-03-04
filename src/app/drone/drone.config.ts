@@ -2,7 +2,7 @@ export const droneConfig: any = {
 	casesConfig: {
 		defaultCase: {
 			state: {
-				orientation: 'Imagery Perspective',
+				orientation: 'User Perspective',
 				maps: {
 					data: [
 						{
@@ -86,30 +86,8 @@ export const droneConfig: any = {
 					]
 				},
 				dataInputFilters: {
-					fullyChecked: false,
-					filters: [
-						{
-							sensorType: 'Drone Imagery (JPG)',
-							providerName: 'TB'
-						},
-						{
-							sensorType: 'Mobile Imagery (JPG)',
-							providerName: 'TB'
-						},
-						{
-							sensorType: 'Drone Map (GeoTIFF)',
-							providerName: 'TB'
-						},
-						{
-							sensorType: 'Satellite GeoTIFF',
-							providerName: 'TB'
-						},
-						{
-							sensorType: 'others',
-							providerName: 'TB'
-						}
-					],
-					active: true
+					filters: [],
+					active: false
 				},
 				facets: {
 					filters: [

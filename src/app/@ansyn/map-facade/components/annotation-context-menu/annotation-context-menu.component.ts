@@ -8,7 +8,7 @@ import {
 	AnnotationUpdateFeature,
 	MapActionTypes
 } from '../../actions/map.actions';
-import { AnnotationInteraction, IAnnotationsSelectionEventData, ICaseMapState } from '@ansyn/core';
+import { AnnotationInteraction, IAnnotationsSelectionEventData, ICaseMapState, IOverlay } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -29,8 +29,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	clickMenuProps: IAnnotationsSelectionEventData;
 	hoverMenuProps: IAnnotationsSelectionEventData;
 	@Input() mapId;
-	overlay: any;
-	form = {};
+	overlay: IOverlay;
 
 	@AutoSubscription
 	positionChanged$: Observable<any> = this.actions$.pipe(
@@ -209,7 +208,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.close();
 	}
 
-	updateCount(count) {
+	updateCount(count: number) {
 		const { featureId } = this.clickMenuProps;
 
 		this.store.dispatch(new AnnotationUpdateFeature({
@@ -219,6 +218,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 					...this.clickMenuProps.tags,
 					[this.overlay.id]: {
 						count,
+						sourceType: this.overlay.sourceType,
+						sensorName: this.overlay.sensorName,
+						sensorType: this.overlay.sensorType,
 						id: this.overlay.id,
 						time: this.overlay.date.toISOString()
 					}

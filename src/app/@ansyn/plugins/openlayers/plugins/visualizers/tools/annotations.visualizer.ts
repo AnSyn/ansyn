@@ -264,16 +264,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 							text = `${label}\n`
 						}
 						if (showCount && that.overlayId) {
-							console.log(this.mapId);
-							const count = tags[that.overlayId] && tags[that.overlayId].count || '';
-							if (count) {
-								text =  `${text}count: ${count}`
-							}
+							const count = tags[that.overlayId] && tags[that.overlayId].count || 0;
+							text = `${text}count: ${count}`
+
 						}
 						return text;
 					}
-					}
 				}
+			}
 		});
 
 		//  0 or 1
@@ -316,7 +314,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures, label, showLabel, style, tags = {}, showCount } = <any> this.getEntity(selectedFeature);
+		const { id, showMeasures, label, showLabel, style, tags = {}, showCount } = <any>this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
 			label: label,
 			mapId: this.mapId,

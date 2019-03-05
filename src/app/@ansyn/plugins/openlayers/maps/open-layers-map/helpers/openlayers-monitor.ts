@@ -98,7 +98,8 @@ export class OpenLayersMonitor {
 			message = this.messages.partial.replace('{{amount}}', String(this.tilesCounter.error));
 		}
 
-		this.tilesLoadErrorEventEmitter.emit({ message });
+
+		// this.tilesLoadErrorEventEmitter.emit({ message });
 
 		this.resetCounterWhenDone();
 	};

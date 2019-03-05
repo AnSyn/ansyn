@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';
 import { ProjectionConverterService } from '../../../services/projection-converter.service';
+import { IEd50Notification } from "../../../models/tools-config";
 
 @Component({
 	selector: 'ansyn-utm',
@@ -30,7 +31,7 @@ import { ProjectionConverterService } from '../../../services/projection-convert
 
 export class UtmComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
-	@Input() notification = "";
+	@Input() notification: IEd50Notification;
 
 	coordinates: number[] = [0, 0, 0];
 	validationErr: ValidationErrors = null;

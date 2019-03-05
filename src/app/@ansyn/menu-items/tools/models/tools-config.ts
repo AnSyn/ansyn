@@ -1,5 +1,11 @@
 import { ICoordinatesSystem } from '@ansyn/core';
 
+export interface IEd50Notification {
+	href?: string;
+	title: string;
+	hrefText?: string;
+}
+
 export interface IToolsConfig {
 	Annotations: {
 		displayId: '0' | '1';
@@ -11,7 +17,7 @@ export interface IToolsConfig {
 	Proj4: {
 		ed50: string;
 		ed50Customized: string;
-		ed50Notification: string;
+		ed50Notification: IEd50Notification;
 	},
 	ImageProcParams: Array<IImageProcParam>
 }

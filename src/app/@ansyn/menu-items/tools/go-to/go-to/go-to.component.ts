@@ -10,7 +10,7 @@ import {
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
 import { ClearActiveInteractionsAction, copyFromContent, ICoordinatesSystem } from '@ansyn/core';
-import { IToolsConfig, toolsConfig } from '../../models/tools-config';
+import { IEd50Notification, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 
@@ -63,7 +63,7 @@ export class GoToComponent implements OnInit {
 		return this.config.GoTo.to;
 	}
 
-	get notification(): string {
+	get notification(): IEd50Notification {
 		return this.config.Proj4.ed50Notification;
 	}
 

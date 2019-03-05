@@ -1,6 +1,10 @@
 <div class="goto-projection-title">
 	<span>UTM ED50</span>
-	<span *ngIf="notification" class="ed50-notification">{{notification}}</span>
+	<span *ngIf="notification" class="ed50-notification">{{notification?.title}}
+		<a [href]="notification?.href" target="_blank">
+			{{ notification?.hrefText }}
+		</a>
+	</span>
 </div>
 
 <div class="inputs">

@@ -78,7 +78,7 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 		let baseUrl = this.config.baseUrl;
 		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe(
 			map(data => {
-				return this.extractData(data.features);
+				return this.extractData(data);
 			}),
 			catchError((error: any) => {
 				return this.errorHandlerService.httpErrorHandle(error);
@@ -100,13 +100,11 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 		}
 
 		return overlays.filter(meta => meta.properties && meta.properties.tileEngineUrl && meta.geometry)
-			.map((element) => this.parseData(element));
+			.map((element) => this.extractData(element));
 	}
 
-	private extractData(overlays: Array<any>): IOverlay {
-		if (overlays.length > 0) {
-			return this.parseData(overlays[0]);
-		}
+	private extractData(overlay: any): IOverlay {
+		return this.parseData(overlay)
 	}
 
 	protected parseData(airbusElement: any): IOverlay {

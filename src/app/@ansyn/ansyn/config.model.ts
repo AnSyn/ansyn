@@ -20,6 +20,7 @@ export interface IConfigModel {
 	layersManagerConfig: ILayersManagerConfig,
 	overlaysConfig: IOverlaysConfig,
 	mapFacadeConfig: IMapFacadeConfig,
+	mapProvidersConfig: IMapProvidersConfig,
 	mapSourceProvidersConfig: IMapSourceProvidersConfig,
 	filtersConfig: IFiltersConfig,
 	contextConfig: IContextConfig,

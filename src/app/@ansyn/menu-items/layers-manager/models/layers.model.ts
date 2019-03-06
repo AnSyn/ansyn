@@ -19,7 +19,7 @@ export interface ILayer extends IEntity {
 	url?: string;
 	name: string;
 	type: LayerType;
-	layerPluginType: layerPluginTypeEnum;
+	layerPluginType: layerPluginType;
 	data?: any;
 	caseId?: string;
 	extent?: [number, number, number, number];

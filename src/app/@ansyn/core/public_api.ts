@@ -147,3 +147,5 @@ export {
 export { ExtentCalculator } from './utils/extent-calculator';
 export { IWorldViewMapState } from './models/case.model';
 export { IMapProgress, IMapErrorMessage } from './models/map-progress.model';
+export { BaseFetchService } from './services/base-fetch-service';
+export { FetchService } from './services/fetch.service';

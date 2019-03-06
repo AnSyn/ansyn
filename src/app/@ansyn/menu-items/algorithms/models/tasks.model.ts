@@ -13,11 +13,11 @@ export interface IAlgorithmConfig {
 export interface IAlgorithmsConfig {
 	baseUrl: string;
 	urlSuffix: string;
-	schema: string,
-	paginationLimit: number,
+	schema: string;
+	paginationLimit: number;
 	algorithms: {
 		[algName: string]: IAlgorithmConfig
-	}
+	};
 }
 
 export type AlgorithmTaskWhichOverlays = 'case_overlays' | 'favorite_overlays' | 'displayed_overlays';

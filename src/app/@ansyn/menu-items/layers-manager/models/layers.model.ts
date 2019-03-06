@@ -6,8 +6,9 @@ export enum LayerType {
 	dynamic = 'Dynamic',
 	complex = 'Complex'
 }
+export type layerPluginType = string | layerPluginTypeEnum;
 
-export enum layerPluginType {
+export enum layerPluginTypeEnum {
 	ARCGIS = 'ARCGIS',
 	OSM = 'OSM',
 	geoJson = 'geoJson',
@@ -18,7 +19,7 @@ export interface ILayer extends IEntity {
 	url?: string;
 	name: string;
 	type: LayerType;
-	layerPluginType: layerPluginType;
+	layerPluginType: layerPluginTypeEnum;
 	data?: any;
 	caseId?: string;
 	extent?: [number, number, number, number];

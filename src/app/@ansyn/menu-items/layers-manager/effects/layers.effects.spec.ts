@@ -25,7 +25,7 @@ describe('LayersEffects', () => {
 			],
 			providers: [
 				{ provide: CoreConfig, useValue: {} },
-				StorageService,
+				{ provide: StorageService, useValue: {} },
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }

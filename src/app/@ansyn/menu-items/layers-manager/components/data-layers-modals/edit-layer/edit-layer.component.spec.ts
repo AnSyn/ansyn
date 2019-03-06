@@ -25,7 +25,7 @@ describe('EditLayerComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, HttpClientModule, MatInputModule, BrowserAnimationsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })],
 			providers: [
-				StorageService,
+				{ provide: StorageService, useValue: {} },
 				DataLayersService,
 				ErrorHandlerService,
 				LoggerService,

@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { casesConfig, CasesService } from './cases.service';
 import { UrlSerializer } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { CoreConfig, ErrorHandlerService, ICase, StorageService } from '@ansyn/core';
@@ -71,7 +71,14 @@ describe('CasesService', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
 			providers: [
-				StorageService,
+				{
+					provide: StorageService, useValue: {
+						delete: () => of({}),
+						create: () => of({}),
+						update: () => of({}),
+						get: () => of({})
+					}
+				},
 				CasesService,
 				UrlSerializer,
 				MockCasesConfig,
@@ -97,10 +104,10 @@ describe('CasesService', () => {
 		let fakeId = 'fakerId';
 		let selectedCase: ICase = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'post').and.callFake(() => of(fakeResponse));
+		spyOn(storageService, 'create').and.callFake(() => of(fakeResponse));
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
 		casesService.createCase(selectedCase);
-		expect(http.post).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/${fakeId}`,
+		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema,
 			{
 				preview: {
 					id: fakeId,
@@ -117,9 +124,9 @@ describe('CasesService', () => {
 	it('updateCase should send the case as body in ajax("put")', () => {
 		let selectedCase: ICase = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'put').and.callFake(() => of(fakeResponse));
+		spyOn(storageService, 'update').and.callFake(() => of(fakeResponse));
 		casesService.updateCase(selectedCase);
-		expect(http.put).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/fakerId`,
+		expect(storageService.update).toHaveBeenCalledWith(casesService.config.schema,
 			{
 				preview: {
 					id: selectedCase.id,
@@ -137,16 +144,16 @@ describe('CasesService', () => {
 		let selectedCase: ICase = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let caseIdToRemove = selectedCase.id;
 		let fakeResponse = { selectedCase };
-		spyOn(http, 'delete').and.callFake(() => of(fakeResponse));
+		spyOn(storageService, 'delete').and.callFake(() => of(fakeResponse));
 		casesService.removeCase('fakerId');
-		expect(http.delete).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/${caseIdToRemove}`);
+		expect(storageService.delete).toHaveBeenCalledWith(casesService.config.schema, caseIdToRemove);
 	});
 
 	it('loadCase should get single case from ajax("get")', () => {
 		const caseId = '12345';
-		spyOn(http, 'get').and.returnValue(of([]));
+		spyOn(storageService, 'get').and.returnValue(of([]));
 		casesService.loadCase(caseId);
-		expect(http.get).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${casesService.config.schema}/${caseId}`);
+		expect(storageService.get).toHaveBeenCalledWith(casesService.config.schema, caseId);
 	});
 
 });

@@ -66,7 +66,7 @@ describe('CasesEffects', () => {
 			],
 			providers: [
 				CasesEffects,
-				StorageService,
+				{ provide: StorageService, useValue: {} },
 				CasesService,
 				DataLayersService,
 				{ provide: layersConfig, useValue: {} },

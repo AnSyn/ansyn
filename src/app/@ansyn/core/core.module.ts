@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
@@ -27,8 +27,6 @@ import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
 import { FormsModule } from '@angular/forms';
-import { BaseFetchService } from './services/base-fetch-service';
-import { FetchService } from './services/fetch.service';
 
 @NgModule({
 	imports: [
@@ -45,8 +43,7 @@ import { FetchService } from './services/fetch.service';
 		GenericTypeResolverService,
 		LoggerService,
 		ErrorHandlerService,
-		StorageService,
-		FetchService
+		StorageService
 	],
 	exports: [
 		ImageryStatusComponent,
@@ -81,14 +78,6 @@ import { FetchService } from './services/fetch.service';
 })
 
 export class CoreModule {
-	static provideFetch(value: { new(...args): BaseFetchService }): ModuleWithProviders {
-		return {
-			ngModule: CoreModule,
-			providers: [
-				{ provide: BaseFetchService, useClass: value }
-			]
-		}
-	}
 	constructor(public translate: TranslateService) {
 		translate.setDefaultLang('default');
 	}

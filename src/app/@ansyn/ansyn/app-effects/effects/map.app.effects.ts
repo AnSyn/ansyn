@@ -36,6 +36,7 @@ import {
 	CoreActionTypes,
 	endTimingLog,
 	extentFromGeojson,
+	GeoRegisteration,
 	ICaseMapState,
 	isFullOverlay,
 	SetToastMessageAction,
@@ -45,7 +46,18 @@ import {
 } from '@ansyn/core';
 import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
 import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import { catchError, debounceTime, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import {
+	catchError,
+	debounceTime,
+	filter,
+	map,
+	mergeMap,
+	pairwise,
+	startWith,
+	switchMap,
+	tap,
+	withLatestFrom
+} from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -260,8 +272,8 @@ export class MapAppEffects {
 		/* -2- */
 		const changeActiveMap = mergeMap((layer) => {
 			let observable = of(true);
-			const moveToGeoRegisteredMap = overlay.isGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
-			const moveToNotGeoRegisteredMap = !overlay.isGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
+			const moveToGeoRegisteredMap = overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
+			const moveToNotGeoRegisteredMap = overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
 			const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 			if (newActiveMapName) {

@@ -117,7 +117,7 @@ describe('CasesAppEffects', () => {
 				ImageryCommunicatorService,
 				CasesAppEffects,
 				{ provide: CoreConfig, useValue: {} },
-				StorageService,
+				{ provide: StorageService, useValue: {}},
 				CasesService,
 				{
 					provide: ErrorHandlerService,

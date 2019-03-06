@@ -21,7 +21,11 @@ describe('DataLayersService', () => {
 					provide: CoreConfig,
 					useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' } }
 				},
-				StorageService,
+				{
+					provide: StorageService, useValue: {
+						searchByCase: () => {}
+					}
+				},
 				DataLayersService,
 				{
 					provide: layersConfig,

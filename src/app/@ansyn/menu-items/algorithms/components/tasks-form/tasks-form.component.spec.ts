@@ -19,6 +19,7 @@ import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks
 import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -38,7 +39,7 @@ describe('TasksFormComponent', () => {
 				AnsynFormsModule,
 				BrowserAnimationsModule,
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer, [coreFeatureKey]: CoreReducer }),
+				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer, [coreFeatureKey]: CoreReducer, [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])
 			],
 			providers: [

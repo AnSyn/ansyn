@@ -1,6 +1,6 @@
 import { ValueProvider } from '@angular/core';
-import { mergeWith, isArray } from 'lodash';
-import { IConfigModel } from "./config.model";
+import { mergeWith } from 'lodash';
+import { IConfigModel } from './config.model';
 
 export const getProviders = (conf): any[] => Object.entries(conf).map(([key, value]): ValueProvider => ({
 	provide: key,

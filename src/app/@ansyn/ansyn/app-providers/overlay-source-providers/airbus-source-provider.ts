@@ -32,6 +32,7 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 	get config(): IAirbusOverlaySourceConfig {
 		return this.mapSourceProvidersConfig[this.sourceType];
 	}
+
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,
 				protected http: HttpClient,
@@ -57,7 +58,9 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 		let baseUrl = this.config.baseUrl;
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const params = {
-			bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`
+			bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`,
+			start: fetchParams.timeRange.start.toISOString(),
+			end: fetchParams.timeRange.end.toISOString(),
 		};
 
 		return this.http.get<any>(`${baseUrl}/search`, { params: params }).pipe(

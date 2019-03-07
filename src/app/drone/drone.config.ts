@@ -1,7 +1,7 @@
 export const droneConfig: any = {
 	casesConfig: {
 		defaultCase: {
-			state: {
+			/*state: {
 				orientation: 'User Perspective',
 				maps: {
 					data: [
@@ -98,6 +98,227 @@ export const droneConfig: any = {
 								displayFalse: true
 							},
 							type: 'Boolean'
+						}
+					]
+				}
+			}*/
+			state: {
+				orientation: 'User Perspective',
+				maps: {
+					"layout": "layout1",
+					"data": [
+						{
+							"data": {
+								"position": {
+									"extentPolygon": {
+										"type": "Polygon",
+										"coordinates": [
+											[
+												[
+													-122.63900756835936,
+													37.84463035606055
+												],
+												[
+													-122.63900756835936,
+													37.84463035606055
+												],
+												[
+													-122.01072692871092,
+													37.84463035606055
+												],
+												[
+													-122.01072692871092,
+													37.84463035606055
+												],
+												[
+													-122.63900756835936,
+													37.84463035606055
+												]
+											]
+										]
+									},
+									"projectedState": {
+										"center": [
+											-13617154.942976804,
+											4541696.481191917
+										],
+										"projection": {
+											"code": "EPSG:3857"
+										},
+										"resolution": 38.21851414258813,
+										"rotation": 0,
+										"zoom": 12
+									}
+								},
+								"overlay": null,
+								"isAutoImageProcessingActive": false,
+								"imageManualProcessArgs": {
+									"Sharpness": 0,
+									"Contrast": 0,
+									"Brightness": 0,
+									"Gamma": 100,
+									"Saturation": 100
+								}
+							},
+							"flags": {},
+							"worldView": {
+								"mapType": "openLayersMap",
+								"sourceType": "BING"
+							},
+							"id": null
+						}
+					],
+				},
+				"time": {
+					"type": "absolute",
+					"from": new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7).toISOString(),
+					"to": new Date().toISOString(),
+				},
+				region: {
+					"type": "Polygon",
+					"coordinates": [
+						[
+							[
+								-122.54287719726564,
+								37.80883459900416
+							],
+							[
+								-122.36709594726564,
+								37.806935854373705
+							],
+							[
+								-122.35439300537111,
+								37.684771285715314
+							],
+							[
+								-122.55008697509767,
+								37.68205422759398
+							],
+							[
+								-122.54287719726564,
+								37.80883459900416
+							]
+						]
+					]
+				},
+				dataInputFilters: {
+					"fullyChecked": true,
+					"filters": [
+						{
+							"sensorType": "REScene",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "PSScene3Band",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "PSOrthoTile",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "REOrthoTile",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "SkySatScene",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "Landsat8L1G",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "Sentinel2L1C",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "others",
+							"providerName": "PLANET"
+						},
+						{
+							"sensorType": "UAV",
+							"providerName": "OPEN_AERIAL"
+						},
+						{
+							"sensorType": "PHR1A",
+							"providerName": "AIRBUS"
+						},
+						{
+							"sensorType": "PHR1B",
+							"providerName": "AIRBUS"
+						},
+						{
+							"sensorType": "SPOT6",
+							"providerName": "AIRBUS"
+						},
+						{
+							"sensorType": "SPOT7",
+							"providerName": "AIRBUS"
+						},
+						{
+							"sensorType": "Drone Imagery (JPG)",
+							"providerName": "TB"
+						},
+						{
+							"sensorType": "Mobile Imagery (JPG)",
+							"providerName": "TB"
+						},
+						{
+							"sensorType": "Drone Map (GeoTIFF)",
+							"providerName": "TB"
+						},
+						{
+							"sensorType": "Satellite GeoTIFF",
+							"providerName": "TB"
+						},
+						{
+							"sensorType": "others",
+							"providerName": "TB"
+						}
+					],
+					"active": true
+				},
+				facets: {
+					"showOnlyFavorites": false,
+					"filters": [
+						{
+							"fieldName": "sensorType",
+							"metadata": [],
+							"type": "Enum"
+						},
+						{
+							"fieldName": "sensorName",
+							"metadata": [],
+							"type": "Enum"
+						},
+						{
+							"fieldName": "sourceType",
+							"metadata": [],
+							"type": "Enum"
+						},
+						{
+							"fieldName": "creditName",
+							"metadata": [],
+							"type": "Enum"
+						},
+						{
+							"fieldName": "isGeoRegistered",
+							"metadata": {
+								"displayTrue": true,
+								"displayFalse": true
+							},
+							"type": "Boolean"
+						},
+						{
+							"fieldName": "bestResolution",
+							"metadata": null,
+							"type": "Slider"
+						},
+						{
+							"fieldName": "cloudCoverage",
+							"metadata": null,
+							"type": "Slider"
 						}
 					]
 				}

@@ -12,7 +12,13 @@ import {
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
-import { CaseMapExtent, getPolygonByPointAndRadius, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
+import {
+	CaseMapExtent,
+	getPolygonByPointAndRadius,
+	ICaseMapPosition,
+	ICaseMapState, IMapProviderConfig, IMapProvidersConfig,
+	MAP_PROVIDERS_CONFIG
+} from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
@@ -70,7 +76,9 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources) {
+				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources,
+				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig
+	) {
 	}
 
 	initPlugins() {
@@ -109,7 +117,8 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const mapComponent = this._mapComponentRef.instance;
 
 		if (!sourceType) {
-			sourceType = imageryMap.prototype.defaultMapSource;
+			const mapProviderConfig: IMapProviderConfig = this.mapProvidersConfig[imageryMap.prototype.mapType];
+			sourceType = mapProviderConfig && mapProviderConfig.defaultMapSource;
 			this.mapSettings.worldView.sourceType = sourceType;
 		}
 

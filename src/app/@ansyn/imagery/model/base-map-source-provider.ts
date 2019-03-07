@@ -36,8 +36,6 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
 	}
 
-
-
 	generateLayerId(metaData: ICaseMapState): string {
 		if (this.forOverlay) {
 			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;

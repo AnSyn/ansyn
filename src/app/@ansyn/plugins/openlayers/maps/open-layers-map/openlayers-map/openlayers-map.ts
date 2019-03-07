@@ -43,8 +43,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [HttpClient, OpenLayersProjectionService, CoreConfig],
-	defaultMapSource: 'BING'
+	deps: [HttpClient, OpenLayersProjectionService, CoreConfig]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;

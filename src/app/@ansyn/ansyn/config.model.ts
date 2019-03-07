@@ -3,7 +3,7 @@ import { IOverlaysConfig } from '@ansyn/overlays';
 import { IMapFacadeConfig } from '@ansyn/map-facade';
 import {
 	ICoreConfig,
-	ILoggerConfig,
+	ILoggerConfig, IMapProvidersConfig,
 	IMapSourceProvidersConfig,
 	IMultipleOverlaysSourceConfig
 } from '@ansyn/core';

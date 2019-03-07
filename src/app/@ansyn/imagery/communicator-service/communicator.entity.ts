@@ -116,9 +116,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;
 
-		if (!sourceType) {
+		if (!layer && !sourceType) {
 			const mapProviderConfig: IMapProviderConfig = this.mapProvidersConfig[imageryMap.prototype.mapType];
 			sourceType = mapProviderConfig && mapProviderConfig.defaultMapSource;
+			if (!sourceType) {
+				console.warn(`Couldn't find defaultMapSource setting in config, for map type ${imageryMap.prototype.mapType}`);
+			}
 			this.mapSettings.worldView.sourceType = sourceType;
 		}
 

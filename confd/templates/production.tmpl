@@ -59,8 +59,7 @@
               },
               "flags": {},
               "worldView": {
-				"mapType": "openLayersMap",
-				"sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+				"mapType": "openLayersMap"
               },
               "id": null
             }
@@ -140,7 +139,7 @@
   },
   "mapProvidersConfig": {
   	"openLayersMap": {
-  		"defaultMapSource": "BING"
+  		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
   	},
   	"CesiumMap": {
   		"defaultMapSource": "BING_CESIUM"

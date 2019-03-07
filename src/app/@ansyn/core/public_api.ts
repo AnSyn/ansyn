@@ -141,6 +141,11 @@ export { ICaseMapPosition } from './models/case-map-position.model';
 export { DisplayedOverlay } from './models/context.model';
 export { CaseEnumFilterMetadata } from './models/case.model';
 export {
+	IMapProviderConfig,
+	IMapProvidersConfig,
+	MAP_PROVIDERS_CONFIG
+} from './models/map-providers-config';
+export {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from './models/map-source-providers-config';

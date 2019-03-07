@@ -3,7 +3,7 @@ import { IOverlaysConfig } from '@ansyn/overlays';
 import { IMapFacadeConfig } from '@ansyn/map-facade';
 import {
 	ICoreConfig,
-	ILoggerConfig,
+	ILoggerConfig, IMapProvidersConfig,
 	IMapSourceProvidersConfig,
 	IMultipleOverlaysSourceConfig
 } from '@ansyn/core';
@@ -20,6 +20,7 @@ export interface IConfigModel {
 	layersManagerConfig: ILayersManagerConfig,
 	overlaysConfig: IOverlaysConfig,
 	mapFacadeConfig: IMapFacadeConfig,
+	mapProvidersConfig: IMapProvidersConfig,
 	mapSourceProvidersConfig: IMapSourceProvidersConfig,
 	filtersConfig: IFiltersConfig,
 	contextConfig: IContextConfig,

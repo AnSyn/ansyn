@@ -1,13 +1,13 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
-import { Observable, of, throwError } from 'rxjs';
-import { CaseMapExtent, ExtentCalculator, CoreConfig, ICaseMapPosition, ICoreConfig, toDegrees } from '@ansyn/core';
+import { Observable, of } from 'rxjs';
+import { CaseMapExtent, CoreConfig, ExtentCalculator, ICaseMapPosition, ICoreConfig, toDegrees } from '@ansyn/core';
 import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
 import { map, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
-import * as turf from '@turf/turf';
+
 declare const Cesium: any;
 
 Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');
@@ -18,13 +18,13 @@ export const CesiumMapName = 'CesiumMap';
 // @dynamic
 @ImageryMap({
 	mapType: CesiumMapName,
-	deps: [CesiumProjectionService, CoreConfig],
-	defaultMapSource: 'BING_CESIUM'
+	deps: [CesiumProjectionService, CoreConfig]
 })
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
 	_moveEndListener;
+
 	constructor(public projectionService: CesiumProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
@@ -73,7 +73,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 				const geoJsonCenter = geoJsonFeature.features[0].geometry.coordinates;
 				// TODO: add animation == false option
 				this.mapObject.camera.flyTo({
-					destination : Cesium.Cartesian3.fromDegrees(geoJsonCenter[0], geoJsonCenter[1], currentPosition.height)
+					destination: Cesium.Cartesian3.fromDegrees(geoJsonCenter[0], geoJsonCenter[1], currentPosition.height)
 				});
 				// this.mapObject.camera.setView({
 				// 	destination: Cesium.Rectangle.fromDegrees(...rec)
@@ -151,7 +151,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			const topRight = this._imageToGround({ x: width, y: 0 });
 			const bottomRight = this._imageToGround({ x: width, y: height });
 			const bottomLeft = this._imageToGround({ x: 0, y: height });
-			const extentPolygon = <Polygon> geometry('Polygon', [[topLeft, topRight, bottomRight, bottomLeft, topLeft]]);
+			const extentPolygon = <Polygon>geometry('Polygon', [[topLeft, topRight, bottomRight, bottomLeft, topLeft]]);
 			return of({ extentPolygon });
 		} catch (error) {
 			return of(null);

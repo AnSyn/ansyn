@@ -13,3 +13,4 @@ export { ImageProcessingPlugin } from './openlayers/plugins/image-processing/ima
 export { isRasterLayer, removeWorkers } from './openlayers/maps/open-layers-map/shared/openlayers-shared';
 export { EntitiesVisualizer } from './openlayers/plugins/visualizers/entities-visualizer';
 export { CesiumMapName } from './cesium/maps/cesium-map/cesium-map';
+export { OpenlayersGeoJsonLayersVisualizer } from "./openlayers/plugins/layers/openlayers-geoJson-layers.visualizer";

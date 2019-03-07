@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { ILayer, layerPluginType } from '@ansyn/menu-items';
+import { ILayer, layerPluginTypeEnum } from '@ansyn/menu-items';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import { ImageryPlugin } from '@ansyn/imagery';
@@ -17,7 +17,7 @@ export class OpenlayersOsmLayersPlugin extends OpenlayersBaseLayersPlugins {
 	}
 
 	checkLayer(layer: ILayer) {
-		return layer.layerPluginType === layerPluginType.OSM;
+		return layer.layerPluginType === layerPluginTypeEnum.OSM;
 	}
 
 	createLayer(layer: ILayer): TileLayer {

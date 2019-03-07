@@ -6,8 +6,9 @@ export enum LayerType {
 	dynamic = 'Dynamic',
 	complex = 'Complex'
 }
+export type layerPluginType = string | layerPluginTypeEnum;
 
-export enum layerPluginType {
+export enum layerPluginTypeEnum {
 	ARCGIS = 'ARCGIS',
 	OSM = 'OSM',
 	geoJson = 'geoJson',

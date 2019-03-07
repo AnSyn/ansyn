@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { ILayer, layerPluginType } from '@ansyn/menu-items';
+import { ILayer, layerPluginTypeEnum } from '@ansyn/menu-items';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 import { ImageryPlugin } from '@ansyn/imagery';
@@ -17,7 +17,7 @@ export class OpenlayersArcgisLayersPulgin extends OpenlayersBaseLayersPlugins {
 	}
 
 	checkLayer(layer: ILayer) {
-		return layer.layerPluginType === layerPluginType.ARCGIS
+		return layer.layerPluginType === layerPluginTypeEnum.ARCGIS
 	}
 
 	createLayer(layer: ILayer): TileLayer {

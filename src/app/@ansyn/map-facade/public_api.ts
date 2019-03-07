@@ -14,6 +14,7 @@ export {
 	AnnotationSelectAction,
 	AnnotationUpdateFeature,
 	ImageryCreatedAction,
+	ImageryRemovedAction,
 	PinLocationModeTriggerAction,
 	RemovePendingOverlayAction,
 	SetIsLoadingAcion,

@@ -57,7 +57,7 @@ export {
 	UpdateLayer,
 	UpdateSelectedLayersIds
 } from './layers-manager/actions/layers.actions';
-export { layerPluginType, LayerType } from './layers-manager/models/layers.model';
+export { layerPluginType, layerPluginTypeEnum, LayerType } from './layers-manager/models/layers.model';
 export { BooleanFilterMetadata } from './filters/models/metadata/boolean-filter-metadata';
 export { SliderFilterMetadata } from './filters/models/metadata/slider-filter-metadata';
 export { FilterMetadata } from './filters/models/metadata/filter-metadata.interface';

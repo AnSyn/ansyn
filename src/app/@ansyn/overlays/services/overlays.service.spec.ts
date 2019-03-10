@@ -17,6 +17,7 @@ import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { OverlayReducer, overlaysFeatureKey, OverlaySourceProvider } from '../public_api';
 import { StoreModule } from '@ngrx/store';
+import { take } from 'rxjs/operators';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -318,14 +319,16 @@ describe('OverlaysService', () => {
 
 	});
 
-	it('check the method getOverlayById with mock data IDAHO provider', () => {
-		overlaysService.getOverlayById('test', 'IDAHO').subscribe((result: any) => {
+	it('check the method getOverlayById with mock data IDAHO provider', (done) => {
+		overlaysService.getOverlayById('test', 'IDAHO').pipe(take(1)).subscribe((result: any) => {
+			done();
 			expect(result).toBeTruthy();
 		});
 	});
 
-	it('check the method getOverlayById with mock data PLANET provider', () => {
-		overlaysService.getOverlayById('test', 'PLANET').subscribe((result: any) => {
+	it('check the method getOverlayById with mock data PLANET provider', (done) => {
+		overlaysService.getOverlayById('test', 'PLANET').pipe(take(1)).subscribe((result: any) => {
+			done();
 			expect(result).toBeTruthy();
 		});
 	});

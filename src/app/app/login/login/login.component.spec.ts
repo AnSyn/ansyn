@@ -1,10 +1,10 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed, fakeAsync } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 
@@ -36,6 +36,12 @@ describe('LoginComponent', () => {
 		authService = _authService;
 	}));
 
+	afterEach(() => {
+		component.username = '';
+		component.password = '';
+		component.rememberMe = undefined;
+	});
+
 	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
@@ -48,37 +54,39 @@ describe('LoginComponent', () => {
 	it('login functino should call login$.subscribe', () => {
 		const fakeLogin$ = of('login');
 		spyOn(fakeLogin$, 'subscribe');
-		spyOnProperty(component, 'login$', 'get').and.callFake(() => fakeLogin$);
+		spyOn(component, 'loginRequest').and.callFake(() => fakeLogin$);
 		component.login();
 		expect(fakeLogin$.subscribe).toHaveBeenCalled();
 	});
 
 
-	describe('login$ should be an Observable with catch or switchMap results', () => {
+	describe('loginRequest should be an Observable with catch or mergeMap results', () => {
 		let loginObservable: any = of('ok');
 
 		beforeEach(() => {
 			spyOn(authService, 'login').and.callFake(() => loginObservable);
-			spyOn(router, 'navigateByUrl').and.callFake(() => 'navigation');
+			spyOn(router, 'navigateByUrl').and.callFake(() => Promise.resolve('navigation'));
 		});
 
-		it('on switchMap', () => {
-			component.login$.subscribe(() => {
-				expect(fromPromise).toHaveBeenCalledWith('navigation');
-				expect(router.navigateByUrl).toHaveBeenCalled();
-			});
-		});
+		it('on mergeMap', async(async() => {
+			component.username = 'username';
+			component.password = 'password';
+			component.rememberMe = false;
 
-		// it('on catch (throw error): should call showTryAgainMsg() and throw "Unauthorized" error Observable', () => {
-		// 	loginObservable = loginObservable.do(() => {
-		// 		throw new Error('error');
-		// 	});
-		// 	spyOn(component, 'showTryAgainMsg');
-		// 	component.login$.subscribe(() => {
-		// 		expect(component.showTryAgainMsg).toHaveBeenCalled();
-		// 		// expect(rxjs.throwError).toHaveBeenCalledWith('Unauthorized');
-		// 	});
-		// });
+			await (component.loginRequest()).toPromise();
+			expect(authService.login).toHaveBeenCalledWith('username', 'password', false);
+			expect(router.navigateByUrl).toHaveBeenCalled();
+		}));
+
+		it('on catch (throw error): should call showTryAgainMsg() and throw "Unauthorized" error Observable', async(async() => {
+			spyOn(component, 'showTryAgainMsg');
+			loginObservable = throwError(new Error('error'));
+			try {
+				await (component.loginRequest()).toPromise();
+			} catch (e) {
+				expect(component.showTryAgainMsg).toHaveBeenCalled();
+			}
+		}));
 
 	});
 

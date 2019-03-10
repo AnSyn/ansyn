@@ -39,7 +39,11 @@ describe('TasksFormComponent', () => {
 				AnsynFormsModule,
 				BrowserAnimationsModule,
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({ [tasksFeatureKey]: TasksReducer, [coreFeatureKey]: CoreReducer, [mapFeatureKey]: MapReducer }),
+				StoreModule.forRoot({
+					[tasksFeatureKey]: TasksReducer,
+					[coreFeatureKey]: CoreReducer,
+					[mapFeatureKey]: MapReducer
+				}),
 				EffectsModule.forRoot([])
 			],
 			providers: [

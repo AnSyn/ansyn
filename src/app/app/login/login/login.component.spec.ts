@@ -61,14 +61,9 @@ describe('LoginComponent', () => {
 
 
 	describe('loginRequest should be an Observable with catch or mergeMap results', () => {
-		let loginObservable: any = of('ok');
-
-		beforeEach(() => {
-			spyOn(authService, 'login').and.callFake(() => loginObservable);
-			spyOn(router, 'navigateByUrl').and.callFake(() => Promise.resolve('navigation'));
-		});
-
 		it('on mergeMap', async(async() => {
+			spyOn(authService, 'login').and.callFake(() => of('ok'));
+			spyOn(router, 'navigateByUrl').and.callFake(() => Promise.resolve('navigation'));
 			component.username = 'username';
 			component.password = 'password';
 			component.rememberMe = false;
@@ -79,8 +74,8 @@ describe('LoginComponent', () => {
 		}));
 
 		it('on catch (throw error): should call showTryAgainMsg() and throw "Unauthorized" error Observable', async(async() => {
+			spyOn(authService, 'login').and.callFake(() => throwError(new Error('error')));
 			spyOn(component, 'showTryAgainMsg');
-			loginObservable = throwError(new Error('error'));
 			try {
 				await (component.loginRequest()).toPromise();
 			} catch (e) {

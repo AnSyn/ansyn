@@ -3,7 +3,7 @@ import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayDropSources } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { EMPTY, Observable, Observer } from 'rxjs';
+import { EMPTY, Observable, Observer, of } from 'rxjs';
 import {
 	GeoRegisteration,
 	IOverlay,
@@ -17,6 +17,7 @@ import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { OverlayReducer, overlaysFeatureKey, OverlaySourceProvider } from '../public_api';
 import { StoreModule } from '@ngrx/store';
+import { take } from 'rxjs/operators';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -31,7 +32,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return EMPTY;
+		return of(<any> {});
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
@@ -318,14 +319,9 @@ describe('OverlaysService', () => {
 
 	});
 
-	it('check the method getOverlayById with mock data IDAHO provider', () => {
-		overlaysService.getOverlayById('test', 'IDAHO').subscribe((result: any) => {
-			expect(result).toBeTruthy();
-		});
-	});
-
-	it('check the method getOverlayById with mock data PLANET provider', () => {
-		overlaysService.getOverlayById('test', 'PLANET').subscribe((result: any) => {
+	it('check the method getOverlayById with mock data Mock provider', (done) => {
+		overlaysService.getOverlayById('test', 'Mock').pipe(take(1)).subscribe((result: any) => {
+			done();
 			expect(result).toBeTruthy();
 		});
 	});

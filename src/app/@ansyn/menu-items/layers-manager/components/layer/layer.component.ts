@@ -25,7 +25,7 @@ export class LayerComponent implements OnInit, OnDestroy {
 	selectedLayersIds$: Observable<any> = this.store$
 		.pipe(
 			select(selectSelectedLayersIds),
-			tap(selectedLayersIds => this.isChecked = selectedLayersIds.includes(this.layer.id))
+			tap(selectedLayersIds => this.isChecked = selectedLayersIds.includes(this.layer && this.layer.id))
 		);
 
 	ngOnInit() {

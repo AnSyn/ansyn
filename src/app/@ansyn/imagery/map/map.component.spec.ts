@@ -18,7 +18,8 @@ describe('MapComponent', () => {
 					provide: BaseImageryMap,
 					useValue: {
 						initMap: () => of(true),
-						initMapSubscriptions: () => {}
+						initMapSubscriptions: () => {},
+						dispose: () => {}
 					}
 				},
 				{

@@ -29,6 +29,7 @@ import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
+import { get as _get } from 'lodash';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -57,7 +58,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		);
 
 	get plugins() {
-		return this._mapComponentRef.instance.plugins;
+		return _get(this._mapComponentRef, 'instance.plugins') || [];
 	}
 
 	get visualizers(): BaseImageryVisualizer[] {
@@ -86,7 +87,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	get id() {
-		return this.mapSettings.id;
+		return _get(this.mapSettings, 'id');
 	}
 
 	public get ActiveMap(): BaseImageryMap {

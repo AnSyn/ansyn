@@ -17,7 +17,6 @@ describe('GeocoderService', () => {
 				{
 					provide: ErrorHandlerService, useValue: {
 						httpErrorHandle: error => {
-							console.log(error);
 							return of(error);
 						}
 					}

@@ -24,7 +24,6 @@ export class GeocoderService {
 			map(res => res ? { ...res.point, coordinates: res.point.coordinates.reverse() } : null),
 			catchError((error: Response | any) => {
 				this.errorHandlerService.httpErrorHandle(error);
-				console.warn(error);
 				return of(null);
 			})
 		);

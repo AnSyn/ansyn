@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { cold, hot } from 'jasmine-marbles';
 import {
 	BeginLayerCollectionLoadAction,
-	SelectCaseAction,
+	SelectCaseAction, SelectCaseSuccessAction,
 	UpdateFacetsAction,
 	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
@@ -123,7 +123,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmno)--', {
+			const expectedResult = cold('--(abcdefghijklmnop)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -138,7 +138,8 @@ describe('SelectCaseAppEffects', () => {
 				l: new SetContextParamsAction({ contextEntities }),
 				m: new SetAutoSave(false),
 				n: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-				o: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
+				o: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
+				p: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

@@ -213,13 +213,13 @@ export class CasesService {
 		const cloneA = JSON.parse(JSON.stringify(caseA));
 		const cloneB = JSON.parse(JSON.stringify(caseB));
 		cloneA.data.maps.data.forEach((map, index) => {
-			if (cloneA.data.maps.activeMapId === map.id){
+			if (cloneA.data.maps.activeMapId === map.id) {
 				cloneA.data.maps.activeMapId = index;
 			}
 			map.id = index
 		});
 		cloneB.data.maps.data.forEach((map, index) => {
-			if (cloneB.data.maps.activeMapId === map.id){
+			if (cloneB.data.maps.activeMapId === map.id) {
 				cloneB.data.maps.activeMapId = index;
 			}
 			map.id = index

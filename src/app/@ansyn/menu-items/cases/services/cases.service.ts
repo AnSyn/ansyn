@@ -180,7 +180,6 @@ export class CasesService {
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
 		const storeEntity = this.convertToStoredEntity(selectedCase);
 		if (this.isStoreEntitiesEqual(storeEntity, this.latestStoredEntity)) {
-			console.log('Equallllllllllllllllllllllllllllllllllllllllllllllll!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 			return EMPTY;
 		}
 		this.latestStoredEntity = _cloneDeep(storeEntity);

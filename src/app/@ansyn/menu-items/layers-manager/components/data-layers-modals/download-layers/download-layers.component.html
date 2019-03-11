@@ -1,6 +1,6 @@
 <div class="download">
 
-	<h4><i class="icon-layer-export"></i> Export "{{ layer?.name }}"</h4>
+	<h4 [title]="layer?.name"><i class="icon-layer-export"></i>&nbsp;Export&nbsp;"{{ layer?.name }}"</h4>
 
 	<div class="export-buttons">
 		<button class="format" (click)="downloadGeojson()">GeoJSON</button>

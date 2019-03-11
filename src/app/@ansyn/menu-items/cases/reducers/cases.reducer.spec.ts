@@ -2,7 +2,7 @@ import {
 	AddCaseAction,
 	CloseModalAction,
 	OpenModalAction,
-	SelectCaseAction,
+	SelectCaseAction, SelectCaseSuccessAction,
 	UpdateCaseAction
 } from '../actions/cases.actions';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
@@ -51,10 +51,10 @@ describe('CasesReducer', () => {
 		expect(result.modal.show).toBeFalsy();
 	});
 
-	it('SELECT_CASE action should set selectedCase from payload', () => {
+	it('SELECT_CASE_SUCCESS action should set selectedCase from payload', () => {
 		const fakeCase = { id: 'fakeCaseId', state: {} } as ICase;
 
-		let action: SelectCaseAction = new SelectCaseAction(fakeCase);
+		let action: SelectCaseSuccessAction = new SelectCaseSuccessAction(fakeCase);
 		let result: ICasesState = CasesReducer(initialCasesState, action);
 		expect(result.selectedCase).toEqual(<any>fakeCase);
 	});

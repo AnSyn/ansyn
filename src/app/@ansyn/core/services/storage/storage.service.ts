@@ -40,7 +40,7 @@ export class StorageService {
 
 	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		const promise = this.fetchService.fetch(`${url}/search_by_case`, { method: 'POST', body: JSON.stringify(body) })
+		const promise = this.fetchService.fetch(`${url}/search_by_case`, { method: 'POST', body: JSON.stringify(body),  headers: { 'Content-Type': 'application/json', }, })
 			.then(response => response.json());
 		return from(promise);
 	}

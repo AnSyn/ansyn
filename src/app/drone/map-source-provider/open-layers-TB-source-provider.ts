@@ -36,7 +36,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 	}
 
 	public create(metaData: ICaseMapState): any {
-		if (metaData.data.overlay.tag.fileType === 'image') {
+		if (metaData.data.overlay.sensorType === 'Drone Imagery (JPG)') {
 			const extent: any = [0, 0, metaData.data.overlay.tag.imageData.ExifImageWidth, metaData.data.overlay.tag.imageData.ExifImageHeight];
 			const projection = this.createProjection(metaData.data.overlay);
 
@@ -115,7 +115,7 @@ export class OpenLayerTBSourceProvider extends OpenLayersMapSourceProvider<ITBCo
 
 	private createProjection(overlay) {
 		const extent: any = [0, 0, overlay.tag.imageData.ExifImageWidth, overlay.tag.imageData.ExifImageHeight];
-		const boundary = overlay.tag.geoData.footprint.geometry.coordinates[0];
+		const boundary = overlay.footprint.coordinates[0][0];
 		const code = `tb-image ${overlay.id}`;
 		const transformer = createTransform(boundary, extent[2], extent[3]);
 

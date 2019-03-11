@@ -41,8 +41,6 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
-		console.log('params', fetchParams);
-
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}

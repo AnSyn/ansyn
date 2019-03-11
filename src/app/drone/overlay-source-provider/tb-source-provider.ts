@@ -132,7 +132,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 		if (tbOverlay.overlay) {
 			return new Overlay(({
 				...tbOverlay.overlay,
-				footprint: geojsonPolygonToMultiPolygon(tbOverlay.overlay.footprint),
+				footprint: tbOverlay.overlay.footprint.type !== 'MultiPolygon' ? geojsonPolygonToMultiPolygon(tbOverlay.overlay.footprint) : tbOverlay.overlay.footprint,
 				date: new Date(tbOverlay.overlay.date),
 				sourceType: this.sourceType,
 				thumbnailUrl: `${tbOverlay.overlay.thumbnailUrl}${tbOverlay.overlay.sensorName === 'venus' ? '&styles=venus' : ''}`,

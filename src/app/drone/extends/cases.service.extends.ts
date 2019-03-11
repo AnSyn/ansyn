@@ -8,6 +8,7 @@ import { catchError } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../../app/login/services/auth.service';
 import { StorageServiceExtends } from './storage.service.extends';
+import { get as _get } from 'lodash';
 
 export const casesConfig = 'casesConfig';
 
@@ -26,7 +27,7 @@ export class CasesServiceExtends extends CasesService {
 	}
 
 	loadCases(casesOffset: number = 0): Observable<any> {
-		return this.storageServiceExtends.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, this.authService.user.role)
+		return this.storageServiceExtends.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, _get(this.authService, 'user.role'))
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))

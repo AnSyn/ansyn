@@ -8,6 +8,7 @@ import { CasesService } from '../../services/cases.service';
 import { take } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
 import { AuthService } from '../../../../../app/login/services/auth.service';
+import { get as _get } from 'lodash';
 
 const animationsDuring = '0.2s';
 
@@ -37,7 +38,7 @@ export class SaveCaseComponent {
 		return true;
 	};
 
-	role = this.authService.user.role;
+	role = _get(this.authService, 'user.role');
 	caseName: string;
 
 	constructor(protected store: Store<ICasesState>,

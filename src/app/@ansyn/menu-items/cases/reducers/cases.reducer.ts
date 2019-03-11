@@ -42,12 +42,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
 		}
 
-		// case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS: {
-		// 	const caseToUpdate = { ...action.payload.updatedCase, lastModified: new Date() }
-		// 	const selectedCase = caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
-		// 	return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
-		// }
-
 		case CasesActionTypes.DELETE_CASE:
 			return casesAdapter.removeOne(action.payload, state);
 

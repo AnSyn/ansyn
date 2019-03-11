@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, pipe, EMPTY, of } from 'rxjs';
+import { combineLatest, pipe, EMPTY, of } from 'rxjs';
 import {
 	ICase,
 	selectAutoSave,
@@ -13,7 +13,6 @@ import {
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
 import {
-	casesStateSelector,
 	selectFacets,
 	selectOverlaysManualProcessArgs,
 	selectSelectedCase,
@@ -23,9 +22,9 @@ import {
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
 import { selectContextEntities } from '@ansyn/context';
-import { filter, map, tap, withLatestFrom, mergeMap } from 'rxjs/operators';
+import { filter, tap, withLatestFrom, mergeMap } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
-import { isEqual as _isEqual, cloneDeep as _cloneDeep } from 'lodash';
+import { isEqual as _isEqual } from 'lodash';
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -53,9 +52,9 @@ export class UpdateCaseAppEffects {
 
 	@Effect()
 	shouldUpdateCase$: any = combineLatest(this.events).pipe(
-		withLatestFrom(this.store$.select(selectSelectedCase), this.store$.select(casesStateSelector)),
-		filter(([events, selectedCase, cases]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
-		mergeMap(([events, selectedCase, cases]: [any, any, any]) => {
+		withLatestFrom(this.store$.select(selectSelectedCase)),
+		filter(([events, selectedCase]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
+		mergeMap(([events, selectedCase]: [any, any]) => {
 			const [
 				activeLayersIds,
 				facets,

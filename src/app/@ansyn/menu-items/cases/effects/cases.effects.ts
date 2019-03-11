@@ -30,7 +30,7 @@ import {
 	ICasePreview,
 	IDilutedCaseState,
 	IStoredEntity,
-	rxPreventCrash,
+	rxPreventCrash, SetAutoSave,
 	SetToastMessageAction,
 	toastMessages
 } from '@ansyn/core';
@@ -146,6 +146,12 @@ export class CasesEffects {
 				catchError(() => EMPTY)
 			)
 		));
+
+	@Effect()
+	onSaveCaseAsSuccess$ =   this.actions$.pipe(
+		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
+		map(() => new SetAutoSave(true))
+	);
 
 	@Effect()
 	onCopyShareCaseIdLink$ = this.actions$.pipe(

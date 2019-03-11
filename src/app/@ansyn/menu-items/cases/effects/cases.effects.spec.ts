@@ -16,7 +16,7 @@ import {
 	OpenModalAction
 } from '../actions/cases.actions';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, ICase, LoggerService, StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, ICase, LoggerService, SetAutoSave, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
@@ -196,6 +196,12 @@ describe('CasesEffects', () => {
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
+	});
+
+	it('onSaveCaseAsSuccess$ should set auto save with "true"', () => {
+		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any> {})});
+		const expectedResults = cold('--b--', { b: new SetAutoSave(true) });
+		expect(casesEffects.onSaveCaseAsSuccess$).toBeObservable(expectedResults);
 	});
 
 	describe('loadCase$', () => {

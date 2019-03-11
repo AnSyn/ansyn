@@ -21,7 +21,7 @@ import {
 	BeginLayerCollectionLoadAction,
 	CasesActionTypes,
 	CasesService,
-	SelectCaseAction,
+	SelectCaseAction, SelectCaseSuccessAction,
 	UpdateFacetsAction,
 	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
@@ -33,7 +33,6 @@ import { ofType } from '@ngrx/effects';
 import { mergeMap, concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
-import { SelectCaseSuccessAction } from '../../../../menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {

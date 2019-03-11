@@ -122,6 +122,7 @@ describe('CasesService', () => {
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {
+		spyOn(casesService, 'isStoreEntitiesEqual').and.callFake(() => false);
 		let selectedCase: ICase = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
 		spyOn(storageService, 'update').and.callFake(() => of(fakeResponse));

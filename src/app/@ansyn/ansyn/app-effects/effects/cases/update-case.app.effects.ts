@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, pipe, EMPTY, of } from 'rxjs';
+import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
 import {
 	ICase,
 	selectAutoSave,
@@ -22,9 +22,8 @@ import {
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
 import { selectContextEntities } from '@ansyn/context';
-import { filter, tap, withLatestFrom, mergeMap } from 'rxjs/operators';
+import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
-import { isEqual as _isEqual } from 'lodash';
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -51,10 +50,10 @@ export class UpdateCaseAppEffects {
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
 	@Effect()
-	shouldUpdateCase$: any = combineLatest(this.events).pipe(
+	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
 		withLatestFrom(this.store$.select(selectSelectedCase)),
 		filter(([events, selectedCase]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
-		mergeMap(([events, selectedCase]: [any, any]) => {
+		map(([events, selectedCase]: [any, any]) => {
 			const [
 				activeLayersIds,
 				facets,
@@ -104,19 +103,11 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			if (this.isEqualCases(selectedCase, updatedCase)) {
-				return EMPTY;
-			}
-
-			return of(new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered }));
+			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
 		})
 	);
 
 	constructor(protected store$: Store<IAppState>) {
-	}
-
-	protected isEqualCases(caseA, caseB) {
-		return _isEqual(JSON.parse(JSON.stringify(caseA)), JSON.parse(JSON.stringify(caseB)))
 	}
 
 }

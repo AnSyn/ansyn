@@ -1,6 +1,6 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import {
 	ErrorHandlerService,
 	ICase,
@@ -16,9 +16,10 @@ import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import { cloneDeep } from 'lodash';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
+import { isEqual as _isEqual, cloneDeep as _cloneDeep } from 'lodash';
 
 const moment = momentNs;
 
@@ -37,6 +38,7 @@ export class CasesService {
 	baseUrl;
 	paginationLimit = 15;
 	queryParamsKeys;
+	latestStoredEntity: any;
 
 	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
@@ -176,7 +178,13 @@ export class CasesService {
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
-		return this.storageService.update(this.config.schema, this.convertToStoredEntity(selectedCase))
+		const storeEntity = this.convertToStoredEntity(selectedCase);
+		if (this.isStoreEntitiesEqual(storeEntity, this.latestStoredEntity)) {
+			console.log('Equallllllllllllllllllllllllllllllllllllllllllllllll!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+			return EMPTY;
+		}
+		this.latestStoredEntity = _cloneDeep(storeEntity);
+		return this.storageService.update(this.config.schema, storeEntity)
 			.pipe<any>(catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
@@ -189,6 +197,7 @@ export class CasesService {
 	loadCase(selectedCaseId: string): Observable<any> {
 		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId)
 			.pipe(
+				tap((latestStoredEntity) => this.latestStoredEntity = _cloneDeep(latestStoredEntity)),
 				map(storedEntity =>
 					this.parseCase(<ICase>{ ...storedEntity.preview, state: storedEntity.data }))
 			).pipe(
@@ -201,4 +210,22 @@ export class CasesService {
 		return `${href}/case/${caseId}`;
 	}
 
+	isStoreEntitiesEqual(caseA, caseB) {
+		const cloneA = JSON.parse(JSON.stringify(caseA));
+		const cloneB = JSON.parse(JSON.stringify(caseB));
+		cloneA.data.maps.data.forEach((map, index) => {
+			if (cloneA.data.maps.activeMapId === map.id){
+				cloneA.data.maps.activeMapId = index;
+			}
+			map.id = index
+		});
+		cloneB.data.maps.data.forEach((map, index) => {
+			if (cloneB.data.maps.activeMapId === map.id){
+				cloneB.data.maps.activeMapId = index;
+			}
+			map.id = index
+		});
+
+		return _isEqual(cloneA, cloneB);
+	}
 }

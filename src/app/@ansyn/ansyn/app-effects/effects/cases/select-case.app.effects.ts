@@ -30,7 +30,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
-import { mergeMap, concatMap } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 
@@ -40,7 +40,7 @@ export class SelectCaseAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$.pipe(
 		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE),
-		mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
+		concatMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
 	);
 
 	constructor(protected actions$: Actions,

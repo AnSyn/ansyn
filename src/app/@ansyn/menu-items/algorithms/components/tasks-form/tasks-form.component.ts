@@ -31,7 +31,7 @@ import {
 	selectCurrentAlgorithmTaskRegion,
 	selectCurrentAlgorithmTaskStatus
 } from '../../reducers/tasks.reducer';
-import { MapFacadeService, selectActiveMapId, selectMaps, selectMapsList } from '@ansyn/map-facade';
+import { selectActiveMapId, selectMaps } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 import { Dictionary } from '@ngrx/entity';
 
@@ -106,7 +106,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 				return of(null);
 			}
 		}),
-		take(1) 
+		take(1)
 	);
 
 	@AutoSubscription
@@ -199,6 +199,10 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.algNames = Object.keys(this.algorithms);
+		if (this.algNames.length > 0 && !this.algName) {
+			this.algName = this.algNames[0];
+			this.onAlgorithmNameChange();
+		}
 	}
 
 	ngOnDestroy(): void {

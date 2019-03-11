@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, pipe } from 'rxjs';
+import { combineLatest, Observable, pipe, EMPTY, of } from 'rxjs';
 import {
 	ICase,
 	selectAutoSave,
@@ -13,6 +13,7 @@ import {
 	selectRemovedOverlaysVisibility
 } from '@ansyn/core';
 import {
+	casesStateSelector,
 	selectFacets,
 	selectOverlaysManualProcessArgs,
 	selectSelectedCase,
@@ -22,8 +23,9 @@ import {
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
 import { selectContextEntities } from '@ansyn/context';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, tap, withLatestFrom, mergeMap } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
+import { isEqual as _isEqual, cloneDeep as _cloneDeep } from 'lodash';
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -50,10 +52,10 @@ export class UpdateCaseAppEffects {
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
 	@Effect()
-	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
-		withLatestFrom(this.store$.select(selectSelectedCase)),
-		filter(([events, selectedCase]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
-		map(([events, selectedCase]: [any, any]) => {
+	shouldUpdateCase$: any = combineLatest(this.events).pipe(
+		withLatestFrom(this.store$.select(selectSelectedCase), this.store$.select(casesStateSelector)),
+		filter(([events, selectedCase, cases]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
+		mergeMap(([events, selectedCase, cases]: [any, any, any]) => {
 			const [
 				activeLayersIds,
 				facets,
@@ -71,15 +73,13 @@ export class UpdateCaseAppEffects {
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
+			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
 				name,
 				creationTime,
 				lastModified,
-				owner,
-				selectedContextId,
 				autoSave,
 				state: {
 					timeFilter,
@@ -105,10 +105,19 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
+			if (this.isEqualCases(selectedCase, updatedCase)) {
+				return EMPTY;
+			}
+
+			return of(new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered }));
 		})
 	);
 
 	constructor(protected store$: Store<IAppState>) {
 	}
+
+	protected isEqualCases(caseA, caseB) {
+		return _isEqual(JSON.parse(JSON.stringify(caseA)), JSON.parse(JSON.stringify(caseB)))
+	}
+
 }

@@ -33,6 +33,7 @@ import { ofType } from '@ngrx/effects';
 import { mergeMap, concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
+import { SelectCaseSuccessAction } from '../../../../menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -40,7 +41,7 @@ export class SelectCaseAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$.pipe(
 		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE),
-		concatMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
+		mergeMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
 	);
 
 	constructor(protected actions$: Actions,
@@ -96,7 +97,8 @@ export class SelectCaseAppEffects {
 			new SetContextParamsAction({ contextEntities }),
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
+			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
+			new SelectCaseSuccessAction(payload),
 		];
 	}
 

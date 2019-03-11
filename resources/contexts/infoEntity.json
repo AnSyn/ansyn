@@ -30,7 +30,6 @@
 		"imageryCountBefore": 30,
 		"timeFilter": "start/end",
 		"geoFilter": "Point",
-		"orientation": "original",
 		"requirements": [
 			"geometry",
 			"time"

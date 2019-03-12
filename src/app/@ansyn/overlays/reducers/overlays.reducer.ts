@@ -289,8 +289,8 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 export const { selectEntities, selectAll, selectTotal, selectIds } = overlaysAdapter.getSelectors();
 
-export const selectOverlays: MemoizedSelector<IOverlaysState, Dictionary<IOverlay>> = createSelector(overlaysStateSelector, selectEntities);
-export const selectOverlaysMap: MemoizedSelector<IOverlaysState, Map<string, IOverlay>> = createSelector(selectOverlays , (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
+export const selectOverlays = createSelector(overlaysStateSelector, selectEntities);
+export const selectOverlaysMap: any = createSelector(selectOverlays , (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
 export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);

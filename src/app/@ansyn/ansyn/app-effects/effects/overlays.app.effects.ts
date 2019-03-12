@@ -91,11 +91,11 @@ export class OverlaysAppEffects {
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
 		withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector)),
 		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays.get(overlayId).photoTime < params.time);
-			const overlaysBefore = overlays.get(overlaysBeforeId);
-			const overlaysAfterId = filteredOverlays.find(overlayId => overlays.get(overlayId).photoTime > params.time);
-			const overlaysAfter = overlays.get(overlaysAfterId);
+		mergeMap(([action, params, { entities: overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
+			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays[overlayId].photoTime < params.time);
+			const overlaysBefore = overlays[overlaysBeforeId];
+			const overlaysAfterId = filteredOverlays.find(overlayId => overlays[overlayId].photoTime > params.time);
+			const overlaysAfter = overlays[overlaysAfterId];
 			const featureJson = get(params, 'contextEntities[0].featureJson');
 			let extent;
 			if (featureJson) {
@@ -269,7 +269,6 @@ export class OverlaysAppEffects {
 				date: contextEntity.date,
 				shape: 'star'
 			} as IOverlaySpecialObject));
-			console.log('???????????????????????????????????????????????????', specialObjects)
 			return new SetSpecialObjectsActionStore(specialObjects);
 		})
 	);

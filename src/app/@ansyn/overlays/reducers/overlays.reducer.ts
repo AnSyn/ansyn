@@ -1,16 +1,14 @@
 import {
-	CoreActionTypes, ICasePreview,
+	CoreActionTypes,
 	IOverlay, IOverlayDrop,
 	IOverlaySpecialObject,
-	mapValuesToArray,
 	SetOverlaysCriteriaAction
 } from '@ansyn/core';
-import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
+import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
 import { EntityState, createEntityAdapter, EntityAdapter, Dictionary } from '@ngrx/entity';
-import { casesAdapter, ICasesState } from '../../menu-items/cases/reducers/cases.reducer';
 
 export interface ITimelineRange {
 	start: Date;

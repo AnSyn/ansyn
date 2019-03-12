@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
@@ -66,9 +66,9 @@ describe('DeleteCaseComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('text on "p" tag should include case name', () => {
-		let pTag = fixture.nativeElement.querySelector('p');
-		expect(pTag.innerText).toEqual(`Are you sure you want to delete ${fakeICasesState.entities['fakeId1'].name}?`);
+	it('text on "div.text" tag should include case name', () => {
+		let textElement = fixture.nativeElement.querySelector('div.text');
+		expect(textElement.innerText.includes(fakeICasesState.entities['fakeId1'].name)).toBeTruthy();
 	});
 
 	it('close should call store.dispatch with CloseModalAction', () => {

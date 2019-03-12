@@ -1,4 +1,4 @@
-import { IOverlaysState, OverlayReducer, overlaysInitialState } from './overlays.reducer';
+import { IOverlaysState, OverlayReducer, overlaysAdapter, overlaysInitialState } from './overlays.reducer';
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
@@ -49,13 +49,12 @@ describe('Overlay Reducer', () => {
 
 	it('should activate loadOverlay reducer', () => {
 		const action = new LoadOverlaysAction({});
-		const mockOverlayInitialState = cloneDeep(overlaysInitialState);
-
-		mockOverlayInitialState.overlays.set('tmp', <any> 'value');
-		expect(mockOverlayInitialState.overlays.size).toBe(1);
+		let mockOverlayInitialState = cloneDeep(overlaysInitialState);
+		mockOverlayInitialState = overlaysAdapter.addOne(<any>{ id: 'tmp', value: 'value'}, mockOverlayInitialState);
+		expect(mockOverlayInitialState.ids.length).toBe(1);
 		const result = OverlayReducer(mockOverlayInitialState, action);
 		expect(result.loading).toBe(true);
-		expect(result.overlays.size).toBe(0);
+		expect(mockOverlayInitialState.ids.length).toBe(0);
 	});
 
 
@@ -86,22 +85,23 @@ describe('Overlay Reducer', () => {
 
 
 	it('should load all overlays', () => {
-		overlaysInitialState.overlays = new Map();
+		let mockOverlayInitialState = cloneDeep(overlaysInitialState);
 
 
 		const overlays = [o1, o2] as any;
 
 		const action = new LoadOverlaysSuccessAction(overlays);
-		const result = OverlayReducer(overlaysInitialState, action);
+		const result = OverlayReducer(mockOverlayInitialState, action);
 
-		expect(Array.from(result.overlays.keys())[0]).toBe('12');
-		expect(result.overlays.size).toBe(2);
+		expect(Array.from(Object.keys(result.entities))[0]).toBe('12');
+		expect(result.ids.length).toBe(2);
 		expect(result.loading).toBe(false);
 		expect(result.loaded).toBe(true);
 	});
 
 
 	it('Set Filters actions, should filter only overlays from "overlays" Map', () => {
+		let mockOverlayInitialState = cloneDeep(overlaysInitialState);
 		const filteredOverlays = ['1', '2', '3', '4', '5', '6'];
 		/*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
@@ -111,7 +111,7 @@ describe('Overlay Reducer', () => {
 			['3', { id: '1' }],
 			['4', { id: '1' }]
 		]);
-		const state = OverlayReducer({ ...overlaysInitialState, overlays }, setFilteredOverlaysAction);
+		const state = OverlayReducer(overlaysAdapter.addAll(overlays, mockOverlayInitialState), setFilteredOverlaysAction);
 		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});
 

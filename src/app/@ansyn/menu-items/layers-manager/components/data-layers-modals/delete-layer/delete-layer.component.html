@@ -1,6 +1,6 @@
 <div class="edit-layer">
 	<form class="edit-layer-form" (ngSubmit)="removeLayer()">
-		<h4><i class="icon-delete"></i>Delete "{{ layer?.name }}"?</h4>
+		<h4 [title]="layer?.name"><i class="icon-delete"></i>&nbsp;Delete&nbsp;"{{ layer?.name }}"?</h4>
 
 		<div class="bottom-btns">
 			<button type="button" (click)="closeModal()">Cancel</button>

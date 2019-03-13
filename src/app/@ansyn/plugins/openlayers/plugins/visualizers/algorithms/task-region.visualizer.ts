@@ -72,7 +72,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest(this.region$, this.drawIndicator$).pipe(
+	drawChanges$ = combineLatest(this.region$, this.drawIndicator$, this.regionLengthInMeter$).pipe(
 		mergeMap(this.drawChanges.bind(this)));
 
 	constructor(
@@ -84,7 +84,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	drawChanges([region, drawIndicator]) {
+	drawChanges([region]) {
 		if (!region) {
 			this.clearEntities();
 			return EMPTY;

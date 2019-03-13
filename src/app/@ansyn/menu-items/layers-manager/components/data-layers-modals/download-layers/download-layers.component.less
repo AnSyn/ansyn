@@ -1,4 +1,8 @@
+@import "core/less/globals";
+
 :host {
+	display: block;
+	max-width: @ansyn-menu-width;
 
 	div.download {
 		background: white;
@@ -7,12 +11,19 @@
 		position: relative;
 		h4 {
 			margin: 0;
+			display: flex;;
+
+			span {
+				display: inline-block;
+				max-width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
 		}
 		div.export-buttons {
 			margin-top: 15px;
 			display: flex;
 			button.format {
-				cursor: pointer;
 				cursor: pointer;
 				border: none;
 				font-style: normal;

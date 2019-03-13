@@ -9,9 +9,9 @@
 
 	<form class="edit-case-form" (submit)="onSubmitRemove()">
 
-		<p>
-			Are you sure you want to delete <span class="name">{{activeCase?.name}}</span>?
-		</p>
+		<div class="text">
+			<i class="icon-delete"></i>&nbsp;Delete&nbsp;"<span class="name">{{activeCase?.name}}</span>"?
+		</div>
 
 		<div class="bottom-btns">
 			<button type="button" (click)="close()">Cancel</button>

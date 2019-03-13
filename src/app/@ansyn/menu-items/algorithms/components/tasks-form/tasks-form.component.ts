@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, Observable, of } from 'rxjs/index';
+import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -207,6 +207,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.store$.dispatch(new SetCurrentTask(null));
+		this.store$.dispatch(new SetTaskDrawIndicator(false));
 	}
 
 	showError(msg: string) {

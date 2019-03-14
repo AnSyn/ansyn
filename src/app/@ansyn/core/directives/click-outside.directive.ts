@@ -17,12 +17,9 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	$event: () => any = () => {
-		let eventSource$: Observable<any>;
-		if (this.clickEventType instanceof Array) {
-			eventSource$ = merge(...this.clickEventType.map(clickEventType => fromEvent(window, clickEventType)));
-		} else {
-			eventSource$ = fromEvent(window, this.clickEventType);
-		}
+		let eventSource$: Observable<any> = this.clickEventType instanceof Array ?
+			merge(...this.clickEventType.map(clickEventType => fromEvent(window, clickEventType))) :
+			fromEvent(window, this.clickEventType);
 		return eventSource$.pipe(
 			tap(($event: any) => {
 				setTimeout(() => {

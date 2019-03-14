@@ -145,6 +145,7 @@ describe('OverlaysAppEffects', () => {
 		overlaysState.filteredOverlays = ['first', 'last'];
 		overlaysState.ids = [firstOverlay.id, secondOverlay.id];
 		overlaysState.entities = { ...exampleOverlays };
+		overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 	};
 
 	const coreState = { ...coreInitialState };
@@ -209,7 +210,7 @@ describe('OverlaysAppEffects', () => {
 						},
 						getTimeStateByOverlay: () => {
 						},
-						getAllOverlays$: of(new Map<string, any>(exampleOverlays))
+						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays)))
 					}
 				},
 				{
@@ -243,7 +244,7 @@ describe('OverlaysAppEffects', () => {
 			[statusBarStateSelector, statusBarState],
 			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
-			[selectOverlaysMap, new Map(exampleOverlays)],
+			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
 			[contextFeatureSelector, contextState],
 			[selectContextsParams, contextState.params],
 			[selectMapsList, Object.values(mapState.entities)]
@@ -380,8 +381,8 @@ describe('OverlaysAppEffects', () => {
 
 	describe('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
 		it('MapId on payload', () => {
-			const firstOverlayId: string = exampleOverlays[0][0];
-			const firstOverlay = exampleOverlays[0][1];
+			const firstOverlayId: string = exampleOverlays.first.id;
+			const firstOverlay = exampleOverlays.first;
 			actions = hot('--a--', {
 				a: new DisplayOverlayFromStoreAction({
 					id: firstOverlayId,
@@ -395,8 +396,8 @@ describe('OverlaysAppEffects', () => {
 		});
 
 		it('No MapId on payload( should dispatch activeMapId as mapId )', () => {
-			const lastOverlayId: string = exampleOverlays[1][0];
-			const lastOverlay = exampleOverlays[1][1];
+			const lastOverlayId: string = exampleOverlays.last.id;
+			const lastOverlay = exampleOverlays.last;
 			mapState.activeMapId = 'activeMapId';
 
 			actions = hot('--a--', {

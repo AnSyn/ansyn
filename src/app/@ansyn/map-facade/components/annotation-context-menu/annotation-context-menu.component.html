@@ -4,8 +4,9 @@
 	 [style.width.px]="clickMenuProps .boundingRect.width"
 	 [style.height.px]="clickMenuProps.boundingRect.height"
 	 [style.left.px]="clickMenuProps.boundingRect.left"
-	 eventListener="pointerdown"
+	 [clickEventType]="['pointerdown', 'mousedown']"
 	 (ansynClickOutside)="close()">
+	<!-- Using pointerdown for current Chrome, and mousedown for Chrome 44 -->
 
 	<div class="context-menu">
 		<ul class="buttons">

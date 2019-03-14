@@ -54,7 +54,7 @@ describe('Overlay Reducer', () => {
 		expect(mockOverlayInitialState.ids.length).toBe(1);
 		const result = OverlayReducer(mockOverlayInitialState, action);
 		expect(result.loading).toBe(true);
-		expect(mockOverlayInitialState.ids.length).toBe(0);
+		expect(result.ids.length).toBe(0);
 	});
 
 
@@ -105,12 +105,7 @@ describe('Overlay Reducer', () => {
 		const filteredOverlays = ['1', '2', '3', '4', '5', '6'];
 		/*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
-		const overlays: any = new Map([
-			['1', { id: '1' }],
-			['2', { id: '1' }],
-			['3', { id: '1' }],
-			['4', { id: '1' }]
-		]);
+		const overlays: any = [ { id: '1' }, { id: '2' }, { id: '3' }, { id: '4' } ];
 		const state = OverlayReducer(overlaysAdapter.addAll(overlays, mockOverlayInitialState), setFilteredOverlaysAction);
 		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});

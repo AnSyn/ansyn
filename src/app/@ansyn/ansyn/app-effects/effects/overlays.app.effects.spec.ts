@@ -60,6 +60,7 @@ import {
 	selectContextsParams,
 	SetContextParamsAction
 } from '@ansyn/context';
+import { cloneDeep as _cloneDeep } from 'lodash';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -131,22 +132,19 @@ describe('OverlaysAppEffects', () => {
 		'thumbnailUrl': 'http://last'
 	};
 
-	const exampleOverlays: any = [
-		['first', firstOverlay],
-		['last', secondOverlay]
-	];
+	const exampleOverlays: any = {
+		'first': firstOverlay,
+		'last': secondOverlay
+	};
 
 	const toolsState: IToolsState = { ...toolsInitialState };
 
-	const overlaysState = {
-		...overlaysInitialState,
-		filteredOverlays: ['first', 'last'],
-		overlays: new Map<string, any>(exampleOverlays)
-	};
+	const overlaysState = _cloneDeep(overlaysInitialState);
 
 	const initOverlaysState = () => {
 		overlaysState.filteredOverlays = ['first', 'last'];
-		overlaysState.overlays = new Map<string, any>(exampleOverlays);
+		overlaysState.ids = [firstOverlay.id, secondOverlay.id];
+		overlaysState.entities = { ...exampleOverlays };
 	};
 
 	const coreState = { ...coreInitialState };
@@ -158,8 +156,6 @@ describe('OverlaysAppEffects', () => {
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
 	const contextState: any = { ...contextInitialState };
-
-	overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 
 	@ImageryMapSource({
 		supported: [],
@@ -247,7 +243,7 @@ describe('OverlaysAppEffects', () => {
 			[statusBarStateSelector, statusBarState],
 			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
-			[selectOverlaysMap, overlaysState.overlays],
+			[selectOverlaysMap, new Map(exampleOverlays)],
 			[contextFeatureSelector, contextState],
 			[selectContextsParams, contextState.params],
 			[selectMapsList, Object.values(mapState.entities)]
@@ -297,8 +293,8 @@ describe('OverlaysAppEffects', () => {
 
 	it(`displayTwoNearestOverlay$ effect with overlay before
 	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		const overlay = { 'photoTime': new Date('2014-06-27T08:43:03.624Z') };
-		overlaysState.overlays = new Map<string, any>([['first', overlay]]);
+		const overlay: any = { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') };
+		overlaysState.entities = { [overlay.id]: overlay };
 		overlaysState.filteredOverlays = ['first'];
 
 		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
@@ -314,8 +310,8 @@ describe('OverlaysAppEffects', () => {
 
 	it(`displayTwoNearestOverlay$ effect with overlay after
 	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		const overlay = { 'photoTime': new Date('2016-06-27T08:43:03.624Z') };
-		overlaysState.overlays = new Map<string, any>([['last', overlay]]);
+		const overlay: any = { id: 'last', 'photoTime': new Date('2016-06-27T08:43:03.624Z') };
+		overlaysState.entities = { [overlay.id]: overlay };
 		overlaysState.filteredOverlays = ['last'];
 
 		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
@@ -420,7 +416,7 @@ describe('OverlaysAppEffects', () => {
 	describe('setHoveredOverlay$ effect', () => {
 		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
 			const expectedResults = cold('(b|)', {
-				b: new SetHoveredOverlayAction(overlaysState.overlays.get('first'))
+				b: new SetHoveredOverlayAction(overlaysState.entities['first'])
 			});
 			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});

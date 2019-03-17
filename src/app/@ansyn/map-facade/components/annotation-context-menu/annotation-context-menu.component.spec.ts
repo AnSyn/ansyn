@@ -10,7 +10,7 @@ import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import {
 	AnnotationInteraction,
-	AnnotationsColorComponent,
+	AnnotationsColorComponent, ClickOutsideDirective,
 	ColorPickerComponent,
 	IAnnotationsSelectionEventData
 } from '@ansyn/core';
@@ -39,7 +39,8 @@ describe('AnnotationContextMenuComponent', () => {
 				AnnotationContextMenuComponent,
 				AnnotationsWeightComponent,
 				AnnotationsColorComponent,
-				ColorPickerComponent
+				ColorPickerComponent,
+				ClickOutsideDirective
 			],
 			imports: [
 				FormsModule,

@@ -2,13 +2,13 @@ import {
 	CoreActionTypes,
 	IOverlay, IOverlayDrop,
 	IOverlaySpecialObject,
-	mapValuesToArray,
 	SetOverlaysCriteriaAction
 } from '@ansyn/core';
-import { LoadOverlaysSuccessAction, OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
+import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
+import { EntityState, createEntityAdapter, EntityAdapter, Dictionary } from '@ngrx/entity';
 
 export interface ITimelineRange {
 	start: Date;
@@ -49,10 +49,11 @@ export enum MarkUpTypes {
 	symbole = 'symbole'
 }
 
-export interface IOverlaysState {
+export const overlaysAdapter: EntityAdapter<IOverlay> = createEntityAdapter<IOverlay>();
+
+export interface IOverlaysState extends EntityState<IOverlay> {
 	loaded: boolean;
 	loading: boolean;
-	overlays: Map<string, IOverlay>;
 	displayOverlayHistory: { [mapId: string]: string[] };
 	selectedOverlays: string[];
 	specialObjects: Map<string, IOverlaySpecialObject>;
@@ -69,11 +70,10 @@ Object.keys(MarkUpClass).forEach(key => {
 	initDropsMarkUp.set(MarkUpClass[key], { overlaysIds: [] });
 });
 
-export const overlaysInitialState: IOverlaysState = {
+export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialState({
 	loaded: false,
 	loading: true,
 	// "loading: true" prevents a "no overlays found" message, when starting the app with a context
-	overlays: new Map(),
 	displayOverlayHistory: {},
 	selectedOverlays: [],
 	specialObjects: new Map<string, IOverlaySpecialObject>(),
@@ -83,7 +83,7 @@ export const overlaysInitialState: IOverlaysState = {
 	statusMessage: null,
 	dropsMarkUp: initDropsMarkUp,
 	hoveredOverlay: null
-};
+});
 
 export const overlaysFeatureKey = 'overlays';
 export const overlaysStateSelector: MemoizedSelector<any, IOverlaysState> = createFeatureSelector<IOverlaysState>(overlaysFeatureKey);
@@ -126,31 +126,26 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS: {
-			return {
+			return overlaysAdapter.addAll([], {
 				...state,
 				loading: true,
 				loaded: false,
 				overlays: new Map(),
 				filteredOverlays: []
-			};
+			});
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
-			const overlays = (<LoadOverlaysSuccessAction>action).clearExistingOverlays ? new Map() : new Map(state.overlays);
-			const filteredOverlays = [];
-			action.payload.forEach(overlay => {
-				if (!overlays.has(overlay.id)) {
-					overlays.set(overlay.id, overlay);
-				}
-			});
-			// we already initiliazing the state
-			return {
+			const newState = {
 				...state,
 				loading: false,
 				loaded: true,
-				overlays,
-				filteredOverlays
+				filteredOverlays: []
 			};
+			if (!(<any>action).clearExistingOverlays) {
+				return overlaysAdapter.addMany(action.payload, newState);
+			}
+			return overlaysAdapter.addAll(action.payload, newState);
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
@@ -160,7 +155,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			});
 
 		case OverlaysActionTypes.SET_FILTERED_OVERLAYS: {
-			const filteredOverlays = action.payload.filter((id) => state.overlays.get(id));
+			const filteredOverlays = action.payload.filter((id) => state.entities[id]);
 			return { ...state, filteredOverlays };
 		}
 
@@ -290,8 +285,11 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 }
 
-export const selectOverlaysMap = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlay> => overlays.overlays);
-export const selectOverlaysArray = createSelector(selectOverlaysMap, (overlays: Map<string, IOverlay>): IOverlay[] => mapValuesToArray(overlays));
+export const { selectEntities, selectAll, selectTotal, selectIds } = overlaysAdapter.getSelectors();
+
+export const selectOverlays = createSelector(overlaysStateSelector, selectEntities);
+export const selectOverlaysMap: any = createSelector(selectOverlays , (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
+export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);

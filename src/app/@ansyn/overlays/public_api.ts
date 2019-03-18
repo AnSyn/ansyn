@@ -30,7 +30,7 @@ export {
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
 	selectFilteredOveralys, selectOverlaysArray,
-	selectOverlaysMap, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
+	selectOverlaysMap, selectOverlays, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
 } from './reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './services/overlays.service';
 export { BaseOverlaySourceProvider } from './models/base-overlay-source-provider.model';

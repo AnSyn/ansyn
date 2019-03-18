@@ -252,7 +252,7 @@ describe('MapAppEffects', () => {
 
 		toolsState = cloneDeep(toolsInitialState);
 		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: GeoRegisteration.geoRegistered };
-		overlaysState.overlays.set(fakeOverlay.id, fakeOverlay);
+		overlaysState.entities[fakeOverlay.id] = fakeOverlay;
 		mapState.entities = icaseState.selectedCase.state.maps.data.reduce((obj, map) => ({ ...obj, [map.id]: map }), {});
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
 

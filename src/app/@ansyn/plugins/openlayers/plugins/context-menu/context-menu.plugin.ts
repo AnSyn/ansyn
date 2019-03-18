@@ -62,7 +62,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			withLatestFrom(this.store$.select(overlaysStateSelector)),
 			tap(([point, overlaysState]) => {
 				const overlays = overlaysState.filteredOverlays
-					.map((id: string): IOverlay => overlaysState.overlays.get(id))
+					.map((id: string): IOverlay => overlaysState.entities[id])
 					.filter(({ footprint }) => inside(point, footprint));
 
 				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));

@@ -52,7 +52,8 @@ describe('OverlayContainerComponent', () => {
 			declarations: [
 				OverlaysContainerComponent,
 				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'timeLineRange', 'redraw$', 'markup'] }),
-				MockComponent({ selector: 'ansyn-overlay-status', inputs: [] })
+				MockComponent({ selector: 'ansyn-overlay-status', inputs: [] }),
+				MockComponent({ selector: 'ansyn-overlays-loader', inputs: [] }),
 			],
 			imports: [
 				HttpClientModule,

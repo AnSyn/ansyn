@@ -1,6 +1,6 @@
-<div class="overlays-status" *ngIf="statusMessage && !loading" [@timeline-status] (click)="close()">
+<div class="overlays-status" *ngIf="showStatus" [@timeline-status]>
 	<div class="text-container">
-		<span>{{statusMessage}}</span>
+		<span>{{overlaysStatusMessage$ | async}}</span>
 		<button class="close">X</button>
 	</div>
 </div>

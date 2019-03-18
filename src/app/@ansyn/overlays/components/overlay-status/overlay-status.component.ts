@@ -31,8 +31,6 @@ const animations: any[] = [
 	destroy: 'ngOnDestroy'
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy {
-	loading: boolean;
-	statusMessage: string;
 	showStatus: boolean;
 
 	overlaysStatusMessage$: Observable<any> = this.store$.pipe(

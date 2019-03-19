@@ -154,3 +154,4 @@ export { IWorldViewMapState } from './models/case.model';
 export { IMapProgress, IMapErrorMessage } from './models/map-progress.model';
 export { BaseFetchService } from './services/base-fetch-service';
 export { FetchService } from './services/fetch.service';
+export { IDeltaTime } from './models/time.model';

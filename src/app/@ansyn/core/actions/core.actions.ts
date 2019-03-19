@@ -3,7 +3,6 @@ import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { IContext } from '../models/context.model';
-import { IContextParams } from '../../../app/context/reducers/context.reducer';
 
 export enum CoreActionTypes {
 	TOGGLE_MAP_LAYERS = '[Core] TOGGLE_MAP_LAYERS',
@@ -259,6 +258,6 @@ export class AddAllContextsAction {
 export class SetContextParamsAction {
 	readonly type = ContextActionTypes.SET_CONTEXT_PARAMS;
 
-	constructor(public payload: Partial<IContextParams>) {
+	constructor(public payload: Partial<any>) {
 	}
 }

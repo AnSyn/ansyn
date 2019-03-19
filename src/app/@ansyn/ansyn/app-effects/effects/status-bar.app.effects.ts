@@ -7,11 +7,11 @@ import {
 	selectGeoFilterSearchMode,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
-} from '@ansyn/status-bar';
+} from '../../modules/status-bar/public_api';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { OverlaysService } from '@ansyn/overlays';
-import { casesStateSelector, CopyCaseLinkAction, ICasesState } from '@ansyn/menu-items';
+import { OverlaysService } from '../../modules/overlays/public_api';
+import { casesStateSelector, CopyCaseLinkAction, ICasesState } from '../../modules/menu-items/public_api';
 import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 

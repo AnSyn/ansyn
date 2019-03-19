@@ -10,7 +10,7 @@ import {
 	UpdateFacetsAction,
 	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items';
+} from '../../../modules/menu-items/public_api';
 import {
 	CaseOrientation,
 	CaseRegionState,
@@ -35,7 +35,7 @@ import {
 	SetRemovedOverlaysVisibilityAction
 } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
-import { SetComboBoxesProperties } from '@ansyn/status-bar';
+import { SetComboBoxesProperties } from '../../modules/status-bar/public_api';
 import { SetContextParamsAction } from '@ansyn/core';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';

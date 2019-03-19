@@ -18,9 +18,9 @@ import {
 	selectSelectedCase,
 	selectSelectedLayersIds,
 	UpdateCaseAction
-} from '@ansyn/menu-items';
+} from '../../../modules/menu-items/public_api';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { selectComboBoxesProperties } from '@ansyn/status-bar';
+import { selectComboBoxesProperties } from '../../../modules/status-bar/public_api';
 import { selectContextEntities } from '@ansyn/core';
 import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';

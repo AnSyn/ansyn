@@ -4,9 +4,5 @@
   "core",
   "imagery",
   "map-facade",
-  "menu",
-  "menu-items",
-  "overlays",
-  "plugins",
-  "status-bar"
+  "menu"
 ]

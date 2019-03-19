@@ -1,9 +1,9 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { StatusBarModule } from '@ansyn/status-bar';
-import { OverlaysModule } from '@ansyn/overlays';
-import { AnsynPluginsModule } from '@ansyn/plugins';
+import { StatusBarModule } from './modules/status-bar/public_api';
+import { OverlaysModule } from './modules/overlays/public_api';
+import { AnsynPluginsModule } from './modules/plugins/public_api';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
 import {
@@ -14,7 +14,7 @@ import {
 	LayersManagerModule,
 	SettingsModule,
 	ToolsModule, TasksRemoteDefaultService
-} from '@ansyn/menu-items';
+} from './modules/menu-items/public_api';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ImageryModule } from '@ansyn/imagery';

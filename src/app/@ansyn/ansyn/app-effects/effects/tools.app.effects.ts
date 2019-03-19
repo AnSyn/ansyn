@@ -25,7 +25,7 @@ import {
 	toolsFlags,
 	toolsStateSelector,
 	UpdateToolsFlags
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	IMapState,
@@ -35,7 +35,7 @@ import {
 	selectActiveMapId,
 	selectMapsList, UpdateMapAction
 } from '@ansyn/map-facade';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '@ansyn/overlays';
+import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '../../modules/overlays/public_api';
 import {
 	CaseGeoFilter,
 	ClearActiveInteractionsAction,
@@ -45,7 +45,7 @@ import {
 } from '@ansyn/core';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar';
+import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/public_api';
 import { differenceWith, isEqual } from 'lodash';
 import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 import { IAppState } from '../app.effects.module';

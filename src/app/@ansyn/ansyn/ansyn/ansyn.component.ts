@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ICase, ICaseMapState } from '@ansyn/core';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
-import { LoadDefaultCaseAction, selectSelectedCase } from '@ansyn/menu-items';
+import { LoadDefaultCaseAction, selectSelectedCase } from '../modules/menu-items/public_api';
 import { select } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
 import { Inject } from '@angular/core';

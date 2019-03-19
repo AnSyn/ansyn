@@ -20,7 +20,7 @@ import {
 	SetActiveCenter,
 	ToolsActionsTypes,
 	UpdateLayer
-} from '@ansyn/menu-items';
+} from '../modules/menu-items/public_api';
 import {
 	CoreActionTypes,
 	ICaseMapPosition,
@@ -32,7 +32,7 @@ import {
 	SetLayoutAction,
 	SetOverlaysCriteriaAction
 } from '@ansyn/core';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '@ansyn/overlays';
+import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/public_api';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';

@@ -22,8 +22,8 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes, selectDropsWithoutSpecialObjects,
 	selectOverlaysMap
-} from '@ansyn/overlays';
-import { CasesActionTypes } from '@ansyn/menu-items';
+} from '../../modules/overlays/public_api';
+import { CasesActionTypes } from '../../modules/menu-items/public_api';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';

@@ -8,13 +8,13 @@ import {
 	IOverlayByIdMetaData,
 	OverlaysActionTypes,
 	OverlaysService
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import {
 	CasesActionTypes, IToolsConfig, IToolsState,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
 	SelectDilutedCaseAction, toolsConfig, toolsStateSelector
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import { IMapState, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { IDilutedCase, ImageManualProcessArgs, IOverlay, SetToastMessageAction } from '@ansyn/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';

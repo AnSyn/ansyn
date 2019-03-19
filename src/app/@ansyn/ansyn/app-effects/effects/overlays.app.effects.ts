@@ -20,7 +20,7 @@ import {
 	SetHoveredOverlayAction,
 	SetMarkUp,
 	SetSpecialObjectsActionStore
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import {

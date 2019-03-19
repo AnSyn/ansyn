@@ -1,5 +1,5 @@
 import { Inject } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '../../modules/overlays/public_api';
 import {
 	bboxFromGeoJson,
 	ErrorHandlerService,

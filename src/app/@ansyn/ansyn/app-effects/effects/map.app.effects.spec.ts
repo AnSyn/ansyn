@@ -13,7 +13,7 @@ import {
 	mapStateSelector,
 	selectMaps,
 	SetIsLoadingAcion
-} from '@ansyn/map-facade';
+} from '../../modules/@ansyn/map-facade';
 import {
 	BaseOverlaySourceProvider,
 	DisplayOverlayAction,
@@ -26,14 +26,14 @@ import {
 	OverlaysService,
 	overlaysStateSelector,
 	RequestOverlayByIDFromBackendAction
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
 	StatusBarInitialState,
 	StatusBarReducer,
 	statusBarStateSelector
-} from '@ansyn/status-bar';
+} from '../../modules/status-bar/public_api';
 import * as extentFromGeojson from '@ansyn/core';
 import {
 	GeoRegisteration,
@@ -66,7 +66,7 @@ import {
 	layersStateSelector,
 	toolsInitialState,
 	toolsStateSelector
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';

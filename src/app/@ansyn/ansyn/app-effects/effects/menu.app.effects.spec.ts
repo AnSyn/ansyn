@@ -5,12 +5,12 @@ import {
 	MenuReducer,
 	SelectMenuItemAction
 } from '@ansyn/menu';
-import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items';
+import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/public_api';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
-import { RedrawTimelineAction } from '@ansyn/overlays';
+import { RedrawTimelineAction } from '../../modules/overlays/public_api';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';

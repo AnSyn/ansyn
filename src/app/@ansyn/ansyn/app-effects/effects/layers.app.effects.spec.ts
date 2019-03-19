@@ -9,7 +9,7 @@ import {
 	layersFeatureKey,
 	LayersReducer,
 	layersStateSelector
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';

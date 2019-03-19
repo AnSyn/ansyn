@@ -5,7 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
-import { selectSelectedCase } from '@ansyn/menu-items';
+import { selectSelectedCase } from '../modules/menu-items/public_api';
 import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 

@@ -1,5 +1,6 @@
 export { OpenLayersMapSourceProvider } from './openlayers/mapSourceProviders/open-layers.map-source-provider';
 export { OpenLayersStaticImageSourceProviderSourceType } from './openlayers/mapSourceProviders/open-layers-static-image-source-provider';
+export { OpenLayerMarcoSourceProviderSourceType } from "./openlayers/mapSourceProviders/marco/open-layers-MARCO-source-provider";
 export {
 	DisabledOpenLayersMapName,
 	OpenLayersDisabledMap

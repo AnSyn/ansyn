@@ -74,6 +74,9 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 	}
 
 	getThumbnailUrl(overlay, position): Observable<string> {
+		if (!overlay.thumbnailUrl) {
+			overlay.thumbnailUrl = overlay.imageUrl;
+		}
 		return of(overlay.thumbnailUrl);
 	}
 

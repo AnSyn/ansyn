@@ -215,8 +215,13 @@ export class CasesService {
 	}
 
 	isStoreEntitiesEqual(caseA, caseB) {
-		const cloneA = JSON.parse(JSON.stringify(caseA));
-		const cloneB = JSON.parse(JSON.stringify(caseB));
+		let cloneA, cloneB;
+		try {
+			cloneA = JSON.parse(JSON.stringify(caseA));
+			cloneB = JSON.parse(JSON.stringify(caseB));
+		} catch (e) {
+			return false
+		}
 		cloneA.data.maps.data.forEach((map, index) => {
 			if (cloneA.data.maps.activeMapId === map.id) {
 				cloneA.data.maps.activeMapId = index;

@@ -24,9 +24,6 @@
       "@ansyn/overlays": [
         "src/app/@ansyn/overlays/public_api"
       ],
-      "@ansyn/context": [
-        "src/app/@ansyn/context/public_api"
-      ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
       ],

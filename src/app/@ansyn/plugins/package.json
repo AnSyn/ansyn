@@ -18,7 +18,6 @@
 		"@ansyn/menu-items": "0.3.21",
 		"@ansyn/map-facade": "0.3.21",
 		"@ansyn/imagery": "0.3.21",
-		"@ansyn/context": "0.3.21",
 		"angular2-uuid": "1.1.1",
 		"auto-subscriptions": "^1.0.3",
 		"cesium": "^1.52.0"

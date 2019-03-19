@@ -17,9 +17,6 @@
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
       ],
-      "@ansyn/context": [
-        "dist/ansyn/context"
-      ],
       "@ansyn/overlays": [
         "dist/ansyn/overlays"
       ],

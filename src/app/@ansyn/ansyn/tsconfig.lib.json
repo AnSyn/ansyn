@@ -31,9 +31,6 @@
       ],
       "@ansyn/overlays/*": [
         "dist/ansyn/overlays/*"
-      ],
-      "@ansyn/context": [
-        "dist/ansyn/context"
       ]
     },
     "outDir": "../../../out-tsc/lib",

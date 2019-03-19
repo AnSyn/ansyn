@@ -14,7 +14,7 @@ import {
 	selectOverlaysMap,
 	SetFilteredOverlaysAction
 } from '@ansyn/overlays';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import {
 	casesFeatureKey,
 	CasesReducer,
@@ -34,7 +34,7 @@ import { statusBarStateSelector } from '@ansyn/status-bar';
 import {
 	coreInitialState,
 	coreStateSelector,
-	DisplayedOverlay,
+	DisplayedOverlay, ErrorHandlerService,
 	ICase,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 	StorageService
@@ -47,7 +47,7 @@ import { SetContextParamsAction } from '../actions/context.actions';
 import { contextFeatureSelector, contextInitialState, selectContextsParams } from '../reducers/context.reducer';
 import { ContextConfig } from '../models/context.config';
 
-fdescribe('ContextAppEffects', () => {
+describe('ContextAppEffects', () => {
 	let contextAppEffects: ContextAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
@@ -165,6 +165,10 @@ fdescribe('ContextAppEffects', () => {
 			],
 			providers: [
 				ContextAppEffects,
+				{
+					provide: ErrorHandlerService,
+					useValue: { httpErrorHandle: () => throwError(null) }
+				},
 				{
 					provide: MAP_SOURCE_PROVIDERS_CONFIG,
 					useValue: {}

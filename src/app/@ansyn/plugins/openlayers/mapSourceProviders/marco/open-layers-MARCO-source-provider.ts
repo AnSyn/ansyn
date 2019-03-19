@@ -23,9 +23,9 @@ import { removeWorkers } from "../../maps/open-layers-map/shared/openlayers-shar
 import { MpTileSource } from "./ol-utils/mp-tile-source";
 import { MpTileImageSource } from "./ol-utils/mp-tile-image-source";
 
-export const OpenLayerMwmtsSourceProviderSourceType = 'M_WMTS';
+export const OpenLayerMarcoSourceProviderSourceType = 'MARCO_WMTS';
 
-export interface IMConfig {
+export interface IMarcoConfig {
 	imageUrl: string;
 	thumbnailImageUrl: string;
 	capabilitiesUrl: string;
@@ -33,11 +33,11 @@ export interface IMConfig {
 }
 
 @ImageryMapSource({
-	sourceType: OpenLayerMwmtsSourceProviderSourceType,
+	sourceType: OpenLayerMarcoSourceProviderSourceType,
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
 	forOverlay: true
 })
-export class OpenLayerMwmtsSourceProvider extends OpenLayersMapSourceProvider<IMConfig> {
+export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IMarcoConfig> {
 
 	private server: string;
 

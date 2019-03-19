@@ -32,7 +32,7 @@ import { OpenLayerESRI4326SourceProvider } from './mapSourceProviders/open-layer
 import { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-layers-open-aerial-source-provider';
 import { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis-layers.pulgin";
-import { OpenLayerMwmtsSourceProvider } from "./mapSourceProviders/m-wmts/open-layers-Mwmts-source-provider";
+import { OpenLayerMarcoSourceProvider } from "./mapSourceProviders/marco/open-layers-MARCO-source-provider";
 
 @NgModule({
 	imports: [
@@ -72,7 +72,7 @@ import { OpenLayerMwmtsSourceProvider } from "./mapSourceProviders/m-wmts/open-l
 				OpenLayerESRI4326SourceProvider,
 				OpenLayerOpenAerialSourceProvider,
 				OpenLayersStaticImageSourceProvider,
-				OpenLayerMwmtsSourceProvider
+				OpenLayerMarcoSourceProvider
 			]
 		})
 	]

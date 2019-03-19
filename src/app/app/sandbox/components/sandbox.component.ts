@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AnsynApi } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
 import { GeoRegisteration, IOverlay, IOverlaysCriteria } from '@ansyn/core';
-import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMwmtsSourceProviderSourceType } from '@ansyn/plugins';
+import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/plugins';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
 
@@ -128,16 +128,16 @@ export class SandboxComponent implements OnInit {
 		this.ansynApi.changeMapLayout('layout2');
 	}
 
-	setMOverlays() {
+	setMarcoOverlays() {
 		const overlays = [
-			this.overlay('M000', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_RGB_8bpp.j2k', 576, 1024, 'OGN_RGB_8_j2k'),
-			this.overlay('M001', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_RGB_16bpp.j2k', 576, 1024, 'OGN_RGB_16_j2k'),
-			this.overlay('M002', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_4Band_16bpp.tif', 576, 1024, 'OGN_4Band_16_tif'),
-			this.overlay('M003', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_4Band_8bpp.tif', 576, 1024, 'OGN_4Band_8_tif'),
-			this.overlay('M004', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_IR_16bpp.j2k', 576, 1024, 'OGN_IR_16bpp_j2k'),
-			this.overlay('M005', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.j2k', 576, 1024, 'OGN_IR_8bpp_j2k'),
-			this.overlay('M006', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.tif', 576, 1024, 'OGN_IR_8bpp_tif')// ,
-			// this.overlay('M007', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/14DEC08015334-S2AS_R1C1-054168615010_01_P001.TIF', 576, 1024, '14DEC08015334_tif')
+			this.overlay('M000', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_8bpp.j2k', 576, 1024, 'OGN_RGB_8_j2k'),
+			this.overlay('M001', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_16bpp.j2k', 576, 1024, 'OGN_RGB_16_j2k'),
+			this.overlay('M002', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_16bpp.tif', 576, 1024, 'OGN_4Band_16_tif'),
+			this.overlay('M003', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_8bpp.tif', 576, 1024, 'OGN_4Band_8_tif'),
+			this.overlay('M004', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_16bpp.j2k', 576, 1024, 'OGN_IR_16bpp_j2k'),
+			this.overlay('M005', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.j2k', 576, 1024, 'OGN_IR_8bpp_j2k'),
+			this.overlay('M006', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.tif', 576, 1024, 'OGN_IR_8bpp_tif')// ,
+			// this.overlay('M007', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/14DEC08015334-S2AS_R1C1-054168615010_01_P001.TIF', 576, 1024, '14DEC08015334_tif')
 		];
 		this.ansynApi.setOverlays(overlays);
 	}

@@ -63,8 +63,7 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
-import * as olExtent from 'ol/extent';
-import { transformScale } from '@turf/turf';
+import { transformScale, bbox } from '@turf/turf';
 import { get, isEqual } from 'lodash';
 
 @Injectable()
@@ -100,7 +99,7 @@ export class OverlaysAppEffects {
 			let extent;
 			if (featureJson) {
 				const featureJsonScale = transformScale(featureJson, 1.1);
-				extent = olExtent.boundingExtent(featureJsonScale.geometry.coordinates[0]);
+				extent = bbox(featureJsonScale);
 			}
 			const payload = [{ overlay: overlaysBefore, extent }, {
 				overlay: overlaysAfter,

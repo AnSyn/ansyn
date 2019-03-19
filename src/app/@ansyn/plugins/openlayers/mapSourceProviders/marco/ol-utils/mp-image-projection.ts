@@ -36,9 +36,9 @@ export class MpImageProjection extends Projection {
 			transformStrSource = '1,0,0,0,0,-1,0,0,0,0,1,0,0,1,0,1';
 		}
 		let geoTransformStrArray = transformStrSource.split(',');
-		for (let a in geoTransformStrArray) {
+		geoTransformStrArray.forEach((a) => {
 			geoTransformStrArray[a] = parseFloat(geoTransformStrArray[a]); // parsign from string to float
-		}
+		});
 		const geoTransform = geoTransformStrArray;
 		const that = this;
 		that.matrix = Utils.m4CreateNumber();

@@ -34,7 +34,8 @@ export interface IMConfig {
 
 @ImageryMapSource({
 	sourceType: OpenLayerMwmtsSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	forOverlay: true
 })
 export class OpenLayerMwmtsSourceProvider extends OpenLayersMapSourceProvider<IMConfig> {
 

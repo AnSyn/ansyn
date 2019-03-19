@@ -136,7 +136,8 @@ export class SandboxComponent implements OnInit {
 			this.overlay('M003', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_4Band_8bpp.tif', 576, 1024, 'OGN_4Band_8_tif'),
 			this.overlay('M004', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_IR_16bpp.j2k', 576, 1024, 'OGN_IR_16bpp_j2k'),
 			this.overlay('M005', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.j2k', 576, 1024, 'OGN_IR_8bpp_j2k'),
-			this.overlay('M006', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.tif', 576, 1024, 'OGN_IR_8bpp_tif')
+			this.overlay('M006', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.tif', 576, 1024, 'OGN_IR_8bpp_tif')// ,
+			// this.overlay('M007', OpenLayerMwmtsSourceProviderSourceType, 's3://mp-images/14DEC08015334-S2AS_R1C1-054168615010_01_P001.TIF', 576, 1024, '14DEC08015334_tif')
 		];
 		this.ansynApi.setOverlays(overlays);
 	}

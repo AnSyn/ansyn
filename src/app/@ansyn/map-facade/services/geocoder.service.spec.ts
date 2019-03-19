@@ -87,7 +87,7 @@ describe('GeocoderService', () => {
 		}));
 
 		it('should return null, if there is an error, or unexpected format', fakeAsync(() => {
-			spyOn(window.console, 'warn');
+			spyOn(console, 'warn');
 			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');
 			result$.subscribe(res => {
@@ -95,6 +95,7 @@ describe('GeocoderService', () => {
 			});
 			tick();
 			expect(endResult).toBeFalsy();
+			expect(console.warn).toHaveBeenCalled()
 		}));
 	});
 });

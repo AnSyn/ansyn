@@ -31,17 +31,23 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { statusBarStateSelector } from '@ansyn/status-bar';
-
-import { coreInitialState, coreStateSelector, DisplayedOverlay, ICase, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
+import {
+	coreInitialState,
+	coreStateSelector,
+	DisplayedOverlay,
+	ICase,
+	MAP_SOURCE_PROVIDERS_CONFIG,
+	StorageService
+} from '@ansyn/core';
 import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
-
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { ContextAppEffects } from './context.app.effects';
 import { SetContextParamsAction } from '../actions/context.actions';
-import { contextInitialState } from '../reducers/context.reducer';
+import { contextFeatureSelector, contextInitialState, selectContextsParams } from '../reducers/context.reducer';
+import { ContextConfig } from '../models/context.config';
 
-describe('ContextAppEffects', () => {
+fdescribe('ContextAppEffects', () => {
 	let contextAppEffects: ContextAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
@@ -136,8 +142,6 @@ describe('ContextAppEffects', () => {
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
-	// const contextState: any = { ...contextInitialState };
-
 	@ImageryMapSource({
 		supported: [],
 		sourceType: 'FIRST'
@@ -166,12 +170,17 @@ describe('ContextAppEffects', () => {
 					useValue: {}
 				},
 				provideMockActions(() => actions),
+				{ provide: StorageService, useValue: {}},
 				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: CasesService,
 					useValue: {
 						getOverlaysMarkup: () => null
 					}
+				},
+				{
+					provide: ContextConfig,
+					useValue: {}
 				},
 				{
 					provide: OverlaysService,
@@ -225,8 +234,8 @@ describe('ContextAppEffects', () => {
 			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
-			// [contextFeatureSelector, contextState],
-			// [selectContextsParams, contextState.params],
+			[contextFeatureSelector, contextState],
+			[selectContextsParams, contextState.params],
 			[selectMapsList, Object.values(mapState.entities)]
 		]);
 

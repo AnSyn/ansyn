@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService, IContext, rxPreventCrash, StorageService } from '@ansyn/core';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class ContextService {
 
 	constructor(@Inject(ContextConfig) public config: IContextConfig,

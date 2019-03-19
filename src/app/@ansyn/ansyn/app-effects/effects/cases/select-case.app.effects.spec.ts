@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { cold, hot } from 'jasmine-marbles';
 import {
-	BeginLayerCollectionLoadAction,
+	BeginLayerCollectionLoadAction, CasesService,
 	SelectCaseAction, SelectCaseSuccessAction,
 	UpdateFacetsAction,
 	UpdateOverlaysManualProcessArgs,
@@ -54,7 +54,8 @@ describe('SelectCaseAppEffects', () => {
 			providers: [
 				SelectCaseAppEffects,
 				provideMockActions(() => actions),
-				{ provide: CoreConfig, useValue: {} }
+				{ provide: CoreConfig, useValue: {} },
+				{ provide: CasesService, useValue: {} }
 			]
 		}).compileComponents();
 	}));

@@ -45,7 +45,9 @@ export class SelectCaseAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				@Inject(CoreConfig) protected coreConfig: ICoreConfig) {
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+				protected casesService: CasesService
+				) {
 	}
 
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
@@ -67,7 +69,7 @@ export class SelectCaseAppEffects {
 		const { layout } = state.maps;
 
 		if (!time) {
-			time = CasesService.defaultTime;
+			time = this.casesService.defaultTime;
 		}
 
 		if (typeof time.from === 'string') {

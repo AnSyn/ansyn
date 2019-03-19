@@ -7,7 +7,7 @@ import {
 	ICasePreview,
 	ICaseState,
 	ICaseTimeState,
-	IContextEntity,
+	IContextEntity, IDeltaTime,
 	IDilutedCaseState,
 	IStoredEntity,
 	StorageService
@@ -28,9 +28,14 @@ export const casesConfig = 'casesConfig';
 // @dynamic
 @Injectable()
 export class CasesService {
-	static defaultTime: ICaseTimeState = {
+	defaultSearchFromDeltaTime: IDeltaTime = this.config.defaultSearchFromDeltaTime || {
+		unit: 'years',
+		amount: 1
+	};
+
+	defaultTime: ICaseTimeState = {
 		type: 'absolute',
-		from: moment().subtract(1, 'y').toDate(),
+		from: moment().subtract(this.defaultSearchFromDeltaTime.amount, this.defaultSearchFromDeltaTime.unit).toDate(),
 		to: new Date()
 	};
 

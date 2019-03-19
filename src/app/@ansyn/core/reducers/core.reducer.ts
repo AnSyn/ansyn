@@ -12,12 +12,6 @@ import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
 import { uniq } from 'lodash';
 import { ICaseDataInputFiltersState } from '../models/case.model';
-import {
-	contextAdapter,
-	contextFeatureSelector,
-	IContextParams,
-	selectContextsParams
-} from '../../../app/context/reducers/context.reducer';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',
@@ -163,5 +157,7 @@ export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(cor
 export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(coreStateSelector, (core) => core.removedOverlaysIdsCount);
 
 /* @todo: remove contexts actions */
-export const selectContextEntities = createSelector(selectContextsParams, (params: IContextParams) => params && params.contextEntities);
+export const contextFeatureSelector: any = createFeatureSelector('contexts');
+export const selectContextsParams = createSelector(contextFeatureSelector, (context: any) => context && context.params);
+export const selectContextEntities = createSelector(selectContextsParams, (params: any) => params && params.contextEntities);
 export const selectContextsArray = createSelector(contextFeatureSelector, ({ entities }) => Object.values(entities));

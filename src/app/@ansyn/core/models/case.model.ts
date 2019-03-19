@@ -9,7 +9,7 @@ export interface ICasePreview extends IEntity {
 	creationTime: Date;
 	id: string;
 	name: string;
-	owner: string;
+	owner?: string;
 	lastModified: Date;
 	selectedContextId?: string;
 	autoSave: boolean;

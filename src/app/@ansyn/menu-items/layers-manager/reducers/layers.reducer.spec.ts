@@ -1,6 +1,6 @@
 import { LayerCollectionLoadedAction, ShowAllLayers } from '../actions/layers.actions';
 import { ILayerState, initialLayersState, LayersReducer } from './layers.reducer';
-import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
+import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 
 describe('LayersReducer', () => {
 
@@ -11,7 +11,7 @@ describe('LayersReducer', () => {
 			name: 'staticLayer',
 			type: LayerType.annotation,
 			creationTime: new Date(),
-			layerPluginType: layerPluginType.Annotations
+			layerPluginType: layerPluginTypeEnum.Annotations
 		};
 
 		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);

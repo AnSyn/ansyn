@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
-import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, mergeMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-login',
@@ -37,14 +37,14 @@ export class LoginComponent implements OnInit {
 		this.authService.clear();
 	}
 
-	get login$() {
+	loginRequest(): Observable<any> {
 		return this.authService.login(this.username, this.password, this.rememberMe).pipe(
-			switchMap(() => fromPromise(this.router.navigateByUrl(this.returnUrl))),
+			mergeMap(() => fromPromise(this.router.navigateByUrl(this.returnUrl))),
 			catchError(() => {
 				this.showTryAgainMsg();
 				return throwError('Unauthorized');
 			})
-	)
+	);
 	}
 
 	hideTryAgainMsg() {
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
 	}
 
 	login(): void {
-		this.login$.subscribe();
+		this.loginRequest().subscribe();
 	}
 
 }

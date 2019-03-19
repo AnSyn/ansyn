@@ -30,6 +30,23 @@
 		top: 6px;
 		display: flex;
 
+		button.drag-me {
+			background: transparent;
+			color: white;
+			border: none;
+			outline: none;
+			i {
+				opacity: .6;
+			}
+			&:hover:not(:disabled) {
+				background: rgba(0, 0, 0, 0.5);
+				i {
+				opacity: 0.8;
+			}
+			}
+
+		}
+
 		button {
 			position: relative;
 			padding: 4px 6px;
@@ -41,6 +58,10 @@
 				background: black;
 				border: 1px solid grey;
 				flex: 6;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 			}
 
 			&.small-icon-button {

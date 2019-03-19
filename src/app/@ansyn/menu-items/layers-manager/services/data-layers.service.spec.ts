@@ -21,7 +21,11 @@ describe('DataLayersService', () => {
 					provide: CoreConfig,
 					useValue: { storageService: { baseUrl: 'http://localhost:8080/api/store' } }
 				},
-				StorageService,
+				{
+					provide: StorageService, useValue: {
+						searchByCase: () => {}
+					}
+				},
 				DataLayersService,
 				{
 					provide: layersConfig,
@@ -67,9 +71,9 @@ describe('DataLayersService', () => {
 			}
 		];
 
-		spyOn(http, 'post').and.returnValue(of(serverResponse));
+		spyOn(storageService, 'searchByCase').and.returnValue(of(serverResponse));
 		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
-		expect(http.post).toHaveBeenCalledWith(`${storageService.config.storageService.baseUrl}/${dataLayersService.config.schema}/search_by_case`,
+		expect(storageService.searchByCase).toHaveBeenCalledWith(dataLayersService.config.schema,
 			{ caseId: 'caseId' }
 		);
 	});

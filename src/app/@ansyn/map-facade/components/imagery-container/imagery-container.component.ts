@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ImageryMouseEnter, ImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
 import { AnnotationInteraction, ICaseMapState, IOverlay } from '@ansyn/core';
@@ -18,6 +18,7 @@ export class ImageryContainerComponent {
 	@Input() active: boolean;
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
+	@Output() onMove = new EventEmitter<void>();
 
 	isHidden$: Observable<boolean> = this.store.select(mapStateSelector).pipe(
 		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))

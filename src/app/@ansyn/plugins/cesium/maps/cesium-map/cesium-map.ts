@@ -7,6 +7,7 @@ import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
+
 import { fromPromise } from "rxjs/internal-compatibility";
 import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
 
@@ -20,8 +21,7 @@ export const CesiumMapName = 'CesiumMap';
 // @dynamic
 @ImageryMap({
 	mapType: CesiumMapName,
-	deps: [CesiumProjectionService, CoreConfig],
-	defaultMapSource: 'BING_CESIUM'
+	deps: [CesiumProjectionService, CoreConfig]
 })
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();

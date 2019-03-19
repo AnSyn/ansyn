@@ -120,15 +120,6 @@ describe('StatusBarAppEffects', () => {
 		store.dispatch(new SelectCaseAction(fakeCase));
 	}));
 
-	it('updategeoFilterIndicatorAction$ - add', () => {
-		const action = new UpdateGeoFilterStatus({ indicator: true });
-		store.dispatch(action);
-		const imagery1 = {};
-		spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [imagery1, imagery1, imagery1]);
-		actions = hot('--a--', { a: action });
-	});
-
-
 	it('onExpand$', () => {
 		actions = hot('--a--', { a: new ExpandAction() });
 		const expectedResults = cold('--b--', { b: undefined });

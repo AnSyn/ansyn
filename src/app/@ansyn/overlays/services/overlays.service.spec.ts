@@ -3,13 +3,21 @@ import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayDropSources } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { EMPTY, Observable, Observer } from 'rxjs';
-import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, IOverlaySpecialObject, LoggerService } from '@ansyn/core';
+import { EMPTY, Observable, Observer, of } from 'rxjs';
+import {
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysCriteria,
+	IOverlaysFetchData,
+	IOverlaySpecialObject,
+	LoggerService
+} from '@ansyn/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { OverlayReducer, overlaysFeatureKey, OverlaySourceProvider } from '../public_api';
 import { StoreModule } from '@ngrx/store';
+import { take } from 'rxjs/operators';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -24,7 +32,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return EMPTY;
+		return of(<any> {});
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
@@ -37,7 +45,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					date: new Date(1999),
 					photoTime: 'dsds',
 					name: 'first',
-					isGeoRegistered: true
+					isGeoRegistered: GeoRegisteration.geoRegistered
 				},
 				{
 					id: 'abc',
@@ -46,7 +54,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 					date: new Date(1987),
 					photoTime: 'beww',
 					name: 'second',
-					isGeoRegistered: true
+					isGeoRegistered: GeoRegisteration.geoRegistered
 				}
 			];
 			observer.next({ data: overlays, limited: 3 });
@@ -63,7 +71,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 				date: new Date(1999),
 				photoTime: 'dsds',
 				name: 'first',
-				isGeoRegistered: true
+				isGeoRegistered: GeoRegisteration.geoRegistered
 			};
 			observer.next(overlay);
 			observer.complete();
@@ -162,7 +170,7 @@ describe('OverlaysService', () => {
 			photoTime: new Date().toISOString(),
 			date: new Date(),
 			azimuth: 10,
-			isGeoRegistered: true
+			isGeoRegistered: GeoRegisteration.geoRegistered
 		});
 
 		overlaysTmpData = [{
@@ -311,14 +319,9 @@ describe('OverlaysService', () => {
 
 	});
 
-	it('check the method getOverlayById with mock data IDAHO provider', () => {
-		overlaysService.getOverlayById('test', 'IDAHO').subscribe((result: any) => {
-			expect(result).toBeTruthy();
-		});
-	});
-
-	it('check the method getOverlayById with mock data PLANET provider', () => {
-		overlaysService.getOverlayById('test', 'PLANET').subscribe((result: any) => {
+	it('check the method getOverlayById with mock data Mock provider', (done) => {
+		overlaysService.getOverlayById('test', 'Mock').pipe(take(1)).subscribe((result: any) => {
+			done();
 			expect(result).toBeTruthy();
 		});
 	});

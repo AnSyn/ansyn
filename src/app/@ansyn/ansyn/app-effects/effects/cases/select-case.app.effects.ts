@@ -21,7 +21,7 @@ import {
 	BeginLayerCollectionLoadAction,
 	CasesActionTypes,
 	CasesService,
-	SelectCaseAction,
+	SelectCaseAction, SelectCaseSuccessAction,
 	UpdateFacetsAction,
 	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
@@ -30,7 +30,7 @@ import { SetComboBoxesProperties } from '@ansyn/status-bar';
 import { SetContextParamsAction } from '@ansyn/context';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
-import { mergeMap, concatMap } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 
@@ -45,7 +45,9 @@ export class SelectCaseAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
-				@Inject(CoreConfig) protected coreConfig: ICoreConfig) {
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+				protected casesService: CasesService
+				) {
 	}
 
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
@@ -67,7 +69,7 @@ export class SelectCaseAppEffects {
 		const { layout } = state.maps;
 
 		if (!time) {
-			time = CasesService.defaultTime;
+			time = this.casesService.defaultTime;
 		}
 
 		if (typeof time.from === 'string') {
@@ -96,7 +98,8 @@ export class SelectCaseAppEffects {
 			new SetContextParamsAction({ contextEntities }),
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility)
+			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
+			new SelectCaseSuccessAction(payload),
 		];
 	}
 

@@ -11,7 +11,7 @@ import {
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
 import {
-	OverlayReducer,
+	OverlayReducer, overlaysAdapter,
 	overlaysFeatureKey,
 	overlaysInitialState,
 	overlaysStateSelector
@@ -100,8 +100,8 @@ describe('Overlays Effects ', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const coreState = { ...coreInitialState };
-		const overlayState = cloneDeep(overlaysInitialState);
-		overlays.forEach(o => overlayState.overlays.set(o.id, o));
+		let overlayState = cloneDeep(overlaysInitialState);
+		overlayState = overlaysAdapter.addAll(overlays, overlayState);
 		coreState.favoriteOverlays = favoriteOverlays;
 
 		const fakeStore = new Map<any, any>([

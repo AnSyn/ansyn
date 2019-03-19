@@ -27,11 +27,11 @@
 }
 
 .icon-remove-overlay:before {
-	content: "\e92b";
+	content: "\e978";
 }
 
 .icon-restore-overlay:before {
-	content: "\e92a";
+	content: "\e934";
 }
 
 .icon-presets:before {
@@ -214,8 +214,12 @@
 	content: "\e945";
 }
 
-.icon-close:before {
-	content: "\e947";
+.icon-close-big:before {
+	content: "\e92b";
+}
+
+.icon-close-small:before {
+	content: "\e939";
 }
 
 .icon-annotation-point:before {
@@ -243,11 +247,11 @@
 }
 
 .icon-annotation-weight:before {
-	content: "\e94e";
+	content: "\e933";
 }
 
 .icon-annotation-color:before {
-	content: "\e94f";
+	content: "\e932";
 }
 
 .icon-annotation-label:before {
@@ -317,4 +321,15 @@
 
 .icon-annotation-no-fill:before {
 	content: "\e91e";
+}
+
+.icon-hide-menu {
+	transform: rotate(180deg);
+}
+.icon-hide-menu:before {
+	content: '\e92a';
+}
+
+.icon-show-menu:before {
+	content: '\e92a';
 }

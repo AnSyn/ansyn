@@ -203,7 +203,7 @@ export class ResetRemovedOverlaysIdsAction implements Action {
 export class SetRemovedOverlaysIdAction implements Action {
 	type = CoreActionTypes.SET_REMOVED_OVERLAY_ID;
 
-	constructor(public payload: { id: string, value: boolean }) {
+	constructor(public payload: { mapId: string, id: string, value: boolean }) {
 
 	}
 }

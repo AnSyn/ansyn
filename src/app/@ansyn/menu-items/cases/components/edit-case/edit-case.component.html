@@ -6,6 +6,7 @@
 	<form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase(selectContextElement.selectedIndex)">
 
 		<ansyn-input
+			#nameControl
 			[(ngModel)]="caseModel.name"
 			select
 			name="name"
@@ -28,7 +29,7 @@
 
 		<div class="bottom-btns">
 			<button type="button" (click)="close()">Cancel</button>
-			<button [disabled]="f.invalid">OK</button>
+			<button [disabled]="f.invalid || !nameControl.value?.trim()">OK</button>
 		</div>
 	</form>
 </div>

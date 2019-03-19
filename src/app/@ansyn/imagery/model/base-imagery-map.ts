@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition } from '@ansyn/core';
+import { CaseMapExtent, ICaseMapPosition, IMapErrorMessage, IMapProgress } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
 
 export interface IImageryMapMetaData {
@@ -23,6 +23,8 @@ export abstract class BaseImageryMap<T = any> {
 	readonly defaultMapSource?: string;
 
 	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
+	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
+	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
 	public mapObject: T;
 
 	abstract getCenter(): Observable<Point>;
@@ -31,14 +33,18 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract toggleGroup(groupName: string, newState: boolean);
 
-	abstract initMap(element: HTMLElement, shadowElement: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
+	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
+
+	// This method is for the use of the @AutoSubscription decorator
+	initMapSubscriptions(): void {
+	};
 
 	/**
 	 * @description Reset the Map view with a new view with the new layer projection (NOTE: also Delete's previous layers)
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean>;
+	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
 
 	abstract addLayer(layer: any): void;
 

@@ -1,9 +1,9 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MapComponent } from './map.component';
-import { of } from 'rxjs/index';
 import { cold } from 'jasmine-marbles';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
+import { of } from 'rxjs';
 
 describe('MapComponent', () => {
 	let component: MapComponent;
@@ -16,7 +16,11 @@ describe('MapComponent', () => {
 			providers: [
 				{
 					provide: BaseImageryMap,
-					useValue: { initMap: of(true) }
+					useValue: {
+						initMap: () => of(true),
+						initMapSubscriptions: () => {},
+						dispose: () => {}
+					}
 				},
 				{
 					provide: BaseImageryPlugin,

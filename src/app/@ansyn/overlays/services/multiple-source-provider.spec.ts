@@ -3,7 +3,13 @@ import {
 	MultipleOverlaysSourceProvider
 } from './multiple-source-provider';
 
-import { IOverlay, IOverlaysFetchData, LoggerService, MultipleOverlaysSourceConfig } from '@ansyn/core';
+import {
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysFetchData,
+	LoggerService,
+	MultipleOverlaysSourceConfig
+} from '@ansyn/core';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
@@ -16,7 +22,7 @@ const overlays: IOverlaysFetchData = {
 		{
 			id: '1',
 			name: 'overlay',
-			isGeoRegistered: true,
+			isGeoRegistered: GeoRegisteration.geoRegistered,
 			photoTime: new Date().toISOString(),
 			date: new Date(),
 			azimuth: 0

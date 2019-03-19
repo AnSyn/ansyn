@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ICaseMapState, toDegrees } from '@ansyn/core';
+import { GeoRegisteration, ICaseMapState, toDegrees } from '@ansyn/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
 
@@ -69,7 +69,7 @@ export class ImageryRotationComponent {
 	}
 
 	isGeoRegistered() {
-		return !this.mapState.data.overlay || this.mapState.data.overlay.isGeoRegistered;
+		return !this.mapState.data.overlay || (this.mapState.data.overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered);
 	}
 
 	stopPropagation($event: Event) {

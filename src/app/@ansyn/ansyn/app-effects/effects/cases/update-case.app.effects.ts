@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, pipe } from 'rxjs';
+import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
 import {
 	ICase,
 	selectAutoSave,
@@ -22,7 +22,7 @@ import {
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
 import { selectContextEntities } from '@ansyn/context';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 
 @Injectable()
@@ -71,15 +71,13 @@ export class UpdateCaseAppEffects {
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, owner, creationTime, selectedContextId } = selectedCase;
+			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
 				name,
 				creationTime,
 				lastModified,
-				owner,
-				selectedContextId,
 				autoSave,
 				state: {
 					timeFilter,
@@ -111,4 +109,5 @@ export class UpdateCaseAppEffects {
 
 	constructor(protected store$: Store<IAppState>) {
 	}
+
 }

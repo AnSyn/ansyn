@@ -17,7 +17,6 @@ describe('GeocoderService', () => {
 				{
 					provide: ErrorHandlerService, useValue: {
 						httpErrorHandle: error => {
-							console.log(error);
 							return of(error);
 						}
 					}
@@ -88,6 +87,7 @@ describe('GeocoderService', () => {
 		}));
 
 		it('should return null, if there is an error, or unexpected format', fakeAsync(() => {
+			spyOn(console, 'warn');
 			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');
 			result$.subscribe(res => {
@@ -95,6 +95,7 @@ describe('GeocoderService', () => {
 			});
 			tick();
 			expect(endResult).toBeFalsy();
+			expect(console.warn).toHaveBeenCalled()
 		}));
 	});
 });

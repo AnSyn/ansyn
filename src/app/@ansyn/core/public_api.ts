@@ -1,3 +1,4 @@
+export { GeoRegisteration } from './models/overlay.model';
 export {
 	IMultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceConfig,
@@ -140,8 +141,17 @@ export { ICaseMapPosition } from './models/case-map-position.model';
 export { DisplayedOverlay } from './models/context.model';
 export { CaseEnumFilterMetadata } from './models/case.model';
 export {
+	IMapProviderConfig,
+	IMapProvidersConfig,
+	MAP_PROVIDERS_CONFIG
+} from './models/map-providers-config';
+export {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from './models/map-source-providers-config';
 export { ExtentCalculator } from './utils/extent-calculator';
 export { IWorldViewMapState } from './models/case.model';
+export { IMapProgress, IMapErrorMessage } from './models/map-progress.model';
+export { BaseFetchService } from './services/base-fetch-service';
+export { FetchService } from './services/fetch.service';
+export { IDeltaTime } from './models/time.model';

@@ -1,3 +1,4 @@
+export { SelectCaseSuccessAction } from './cases/actions/cases.actions';
 export { ILayersManagerConfig } from "./layers-manager/models/layers-manager-config";
 export { IFiltersConfig } from './filters/models/filters-config';
 export { IUtmZone } from './tools/services/projection-converter.service';
@@ -57,7 +58,7 @@ export {
 	UpdateLayer,
 	UpdateSelectedLayersIds
 } from './layers-manager/actions/layers.actions';
-export { layerPluginType, LayerType } from './layers-manager/models/layers.model';
+export { layerPluginType, layerPluginTypeEnum, LayerType } from './layers-manager/models/layers.model';
 export { BooleanFilterMetadata } from './filters/models/metadata/boolean-filter-metadata';
 export { SliderFilterMetadata } from './filters/models/metadata/slider-filter-metadata';
 export { FilterMetadata } from './filters/models/metadata/filter-metadata.interface';
@@ -125,6 +126,7 @@ export {
 } from './algorithms/services/tasks-remote-default.service';
 
 export {
+	IAlgorithmsConfig,
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './algorithms/models/tasks.model';

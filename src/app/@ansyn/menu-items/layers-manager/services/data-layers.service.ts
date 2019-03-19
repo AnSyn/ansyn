@@ -8,7 +8,7 @@ import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
 import { catchError, filter, tap } from 'rxjs/internal/operators';
-import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
+import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 
 export const layersConfig = 'layersManagerConfig';
 
@@ -34,7 +34,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
-			layerPluginType: layerPluginType.Annotations,
+			layerPluginType: layerPluginTypeEnum.Annotations,
 			name,
 			caseId: this.caseId,
 			type: LayerType.annotation,

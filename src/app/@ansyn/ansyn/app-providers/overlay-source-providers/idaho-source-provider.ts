@@ -4,7 +4,7 @@ import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
 	ErrorHandlerService,
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToPolygon, GeoRegisteration,
 	getPolygonByPointAndRadius,
 	IOverlay,
 	IOverlaysFetchData,
@@ -131,7 +131,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: idahoElement.properties.acquisitionDate,
 			azimuth: toRadians(180 - idahoElement.properties.satAzimuth),
 			sourceType: this.sourceType,
-			isGeoRegistered: true,
+			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: idahoElement,
 			baseImageUrl: 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true',
 			token: token,

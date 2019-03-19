@@ -1,32 +1,13 @@
 @import 'core/less/common';
 
-@keyframes pinned {
-	from {
-		transform: scale(1.1) translateX(-100px);
-	}
-	to {
-		transform: scale(1) translateX(0);
-	}
-}
-
-@keyframes unPinned {
-	from {
-		transform: scale(1) translateX(200px);
-	}
-	to {
-		transform: scale(1) translateX(0);
-	}
-}
-
 :host {
 	&.component {
 		.app{
-			ansyn-popover.default-case div.pop-hover:hover .pop-content, .pop-content.visible {
+		/deep/ ansyn-popover.default-case div.pop-hover .pop-content {
 				visibility: hidden !important;
 			}
 			div.menu {
 				ansyn-menu {
-					display: none;
 				}
 				ansyn-tools.ansynToolsAlone {
 					display: block;
@@ -43,15 +24,9 @@
 		height: 100%;
 		width: 100%;
 		overflow: hidden;
+
 		&.isPinned, &.isNotPinned {
 			background: black;
-			div.layer {
-				animation-duration: .4s;
-			}
-		}
-
-		&.isPinned div.layer {
-			animation-name: pinned;
 		}
 
 		&.isPinned div.layer {
@@ -77,10 +52,6 @@
 					}
 				}
 			}
-
-		}
-		&.isNotPinned div.layer {
-			animation-name: unPinned;
 		}
 
 		div.layer {
@@ -181,7 +152,6 @@
 	}
 
 	ansyn-menu {
-		display: none;
 	}
 
 	.ansynToolsAlone {

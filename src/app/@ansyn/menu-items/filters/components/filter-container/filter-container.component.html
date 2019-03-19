@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()">
 
 	<div class="title-row">
 
@@ -22,7 +22,7 @@
 
 	<ng-template #filterBody>
 		<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
-			<div *ngIf="metadataFromState && !metadataFromState.shouldBeHidden()" [ngSwitch]="metadataFromState?.type">
+			<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
 
 				<ansyn-enum-filter-container
 					*ngSwitchCase="'Enum'"
@@ -46,11 +46,11 @@
 			</div>
 		</div>
 
-		<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
+		<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
 			<span (click)="toggleShowMoreLess()">SHOW MORE</span>
 		</div>
 
-		<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite">
+		<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
 			<span (click)="toggleShowMoreLess()">SHOW LESS</span>
 		</div>
 

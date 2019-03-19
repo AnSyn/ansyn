@@ -2,20 +2,21 @@ import { CasesEffects } from './cases.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { Store, StoreModule } from '@ngrx/store';
-import { casesFeatureKey, CasesReducer } from '../reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
-	AddCasesAction, LoadCaseAction,
+	AddCasesAction, DeleteCaseAction, LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction, SelectDilutedCaseAction,
 	UpdateCaseAction,
-	UpdateCaseBackendAction
+	UpdateCaseBackendAction,
+	OpenModalAction
 } from '../actions/cases.actions';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, ICase, LoggerService, StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, ICase, LoggerService, SetAutoSave, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
@@ -23,6 +24,11 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
+import { statusBarStateSelector } from '../../../status-bar/reducers/status-bar.reducer';
+import { overlaysStateSelector } from '@ansyn/overlays';
+import { layersStateSelector, selectLayers } from '../../layers-manager/reducers/layers.reducer';
+import { mapStateSelector, selectMaps } from '@ansyn/map-facade';
+import { toolsStateSelector } from '../../tools/reducers/tools.reducer';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -31,6 +37,7 @@ describe('CasesEffects', () => {
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
 	let store: Store<any>;
+	let casesState = { ...initialCasesState };
 
 	const caseMock: ICase = {
 		id: 'case1',
@@ -66,7 +73,7 @@ describe('CasesEffects', () => {
 			],
 			providers: [
 				CasesEffects,
-				StorageService,
+				{ provide: StorageService, useValue: {} },
 				CasesService,
 				DataLayersService,
 				{ provide: layersConfig, useValue: {} },
@@ -84,13 +91,11 @@ describe('CasesEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		let selectLayersState =
-			[
-				{ type: LayerType.annotation }
-			];
-
-
-		spyOn(store, 'select').and.callFake(() => of(selectLayersState));
+		const fakeStore = new Map<any, any>([
+			[selectLayers, [{ type: LayerType.annotation }]],
+			[casesStateSelector, casesState],
+		]);
+		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
 
 	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
@@ -131,16 +136,12 @@ describe('CasesEffects', () => {
 	});
 
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
-
-		// let deletedCase: Case = { id: 'newCaseId', name: 'newCaseName' };
-		// store.dispatch(new AddCaseAction(deletedCase));
-		// store.dispatch(new SelectCaseAction(deletedCase));
-		// store.dispatch(new OpenModalAction({ component: '', caseId: deletedCase.id }));
-		// actions = hot('--a--', { a: new DeleteCaseAction('') });
-		// const expectedResults = cold('--(a)--', {
-		// 	a: new LoadDefaultCaseAction()
-		// });
-		// expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
+		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
+		casesState.modal.id = 'delete-case-id';
+		casesState.selectedCase = <any> { id: 'delete-case-id' };
+		actions = hot('--a--', { a: new DeleteCaseAction('') });
+		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });
+		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
 	});
 
 	it('onUpdateCase$ should call casesService.updateCase with action.payload("updatedCase"), and return UpdateCaseAction', () => {
@@ -195,6 +196,12 @@ describe('CasesEffects', () => {
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
 		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
+	});
+
+	it('onSaveCaseAsSuccess$ should set auto save with "true"', () => {
+		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any> {})});
+		const expectedResults = cold('--b--', { b: new SetAutoSave(true) });
+		expect(casesEffects.onSaveCaseAsSuccess$).toBeObservable(expectedResults);
 	});
 
 	describe('loadCase$', () => {

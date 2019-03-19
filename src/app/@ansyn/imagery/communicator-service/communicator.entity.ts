@@ -12,7 +12,13 @@ import {
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
-import { CaseMapExtent, getPolygonByPointAndRadius, ICaseMapPosition, ICaseMapState } from '@ansyn/core';
+import {
+	CaseMapExtent,
+	getPolygonByPointAndRadius,
+	ICaseMapPosition,
+	ICaseMapState, IMapProviderConfig, IMapProvidersConfig,
+	MAP_PROVIDERS_CONFIG
+} from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
@@ -21,9 +27,9 @@ import { IMAGERY_MAPS, ImageryMaps } from '../providers/imagery-map-collection';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
-import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
+import { get as _get } from 'lodash';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -52,7 +58,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		);
 
 	get plugins() {
-		return this._mapComponentRef.instance.plugins;
+		return _get(this._mapComponentRef, 'instance.plugins') || [];
 	}
 
 	get visualizers(): BaseImageryVisualizer[] {
@@ -68,11 +74,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	constructor(protected injector: Injector,
-				protected store: Store<any>,
 				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources) {
+				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources,
+				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig
+	) {
 	}
 
 	initPlugins() {
@@ -80,7 +87,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	get id() {
-		return this.mapSettings.id;
+		return _get(this.mapSettings, 'id');
 	}
 
 	public get ActiveMap(): BaseImageryMap {
@@ -110,8 +117,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this._mapComponentRef = this.mapComponentElem.createComponent<MapComponent>(factory, undefined, injector);
 		const mapComponent = this._mapComponentRef.instance;
 
-		if (!sourceType) {
-			sourceType = imageryMap.prototype.defaultMapSource;
+		if (!layer && !sourceType) {
+			const mapProviderConfig: IMapProviderConfig = this.mapProvidersConfig[imageryMap.prototype.mapType];
+			sourceType = mapProviderConfig && mapProviderConfig.defaultMapSource;
+			if (!sourceType) {
+				console.warn(`Couldn't find defaultMapSource setting in config, for map type ${imageryMap.prototype.mapType}`);
+			}
 			this.mapSettings.worldView.sourceType = sourceType;
 		}
 
@@ -240,12 +251,11 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
-			return this.ActiveMap.resetView(layer, position, extent).pipe(mergeMap(() => this.resetPlugins()));
+			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(mergeMap(() => this.resetPlugins()));
 		}
-
 		return of(true);
 	}
 
@@ -275,7 +285,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-
 	ngOnDestroy() {
 		this.imageryCommunicatorService.remove(this.id);
 		this.destroyPlugins();
@@ -285,7 +294,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		if (!this.plugins || this.plugins.length === 0) {
 			return of(true);
 		}
-
 		const resetObservables = this.plugins.map((plugin) => plugin.onResetView());
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}

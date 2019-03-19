@@ -1,4 +1,4 @@
-import { ICase } from '@ansyn/core';
+import { ICase, IDeltaTime } from '@ansyn/core';
 
 export interface ICasesConfig {
 	schema: string,
@@ -6,5 +6,6 @@ export interface ICasesConfig {
 	casesQueryParamsKeys: string[],
 	defaultCase: ICase,
 	updateCaseDebounceTime: number,
-	useHash: boolean
+	useHash: boolean,
+	defaultSearchFromDeltaTime?: IDeltaTime
 }

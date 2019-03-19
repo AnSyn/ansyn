@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, Observable, of } from 'rxjs/index';
+import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -31,8 +31,9 @@ import {
 	selectCurrentAlgorithmTaskRegion,
 	selectCurrentAlgorithmTaskStatus
 } from '../../reducers/tasks.reducer';
-import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
+import { selectActiveMapId, selectMaps } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
+import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -105,7 +106,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 				return of(null);
 			}
 		}),
-		take(1) 
+		take(1)
 	);
 
 	@AutoSubscription
@@ -136,7 +137,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		filter(([isNew, algName, overlays]: [boolean, string, IOverlay[]]) => isNew && Boolean(algName)),
 		map((([isNew, algName, overlays]: [boolean, string, IOverlay[]]) => {
 			const result = overlays.filter((overlay: IOverlay) => {
-				return this.algorithms[algName].sensorNames.includes(overlay.sensorName)
+				return this.algorithms[algName].sensorNames.includes(overlay.sensorName);
 			});
 			return result;
 		})),
@@ -149,13 +150,13 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	getMasterOverlayForNewTask$: Observable<any> = combineLatest(
 		this.isNewTask$,
 		this.store$.select(selectActiveMapId),
-		this.store$.select(selectMapsList),
+		this.store$.select(selectMaps),
 		this.store$.select(selectCurrentAlgorithmTaskOverlays)
 	).pipe(
-		filter(([isNew, activeMapId, mapsList, overlays]: [boolean, string, ICaseMapState[], IOverlay[]]) => isNew),
-		map(([isNew, activeMapId, mapsList, overlays]: [boolean, string, ICaseMapState[], IOverlay[]]) => {
-			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
-			return [activeMap.data.overlay, overlays]
+		filter(([isNew, activeMapId, mapEntities]: [boolean, string, Dictionary<ICaseMapState>, IOverlay[]]) => Boolean(isNew && mapEntities[activeMapId])),
+		map(([isNew, activeMapId, mapEntities, overlays]: [boolean, string, Dictionary<ICaseMapState>, IOverlay[]]) => {
+			const activeMap = mapEntities[activeMapId];
+			return [activeMap.data.overlay, overlays];
 		}),
 		tap(([activeOverlay, overlays]: [IOverlay, IOverlay[]]) => {
 			if (!activeOverlay || overlays.find(({ id }) => id === activeOverlay.id)) {
@@ -183,10 +184,10 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			} else if (overlays.length > this.algorithms[algName].maxOverlays) {
 				message = `The number of selected overlays ${overlays.length} should be at most ${this.algorithms[algName].maxOverlays}`;
 			} else if (!masterOverlay) {
-				message = 'No master overlay selected'
+				message = 'No master overlay selected';
 			}
 			this.showError(message);
-		}),
+		})
 	);
 
 	constructor(
@@ -198,10 +199,15 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.algNames = Object.keys(this.algorithms);
+		if (this.algNames.length > 0 && !this.algName) {
+			this.algName = this.algNames[0];
+			this.onAlgorithmNameChange();
+		}
 	}
 
 	ngOnDestroy(): void {
 		this.store$.dispatch(new SetCurrentTask(null));
+		this.store$.dispatch(new SetTaskDrawIndicator(false));
 	}
 
 	showError(msg: string) {

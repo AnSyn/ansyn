@@ -9,7 +9,7 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { IOverlay } from '../../models/overlay.model';
+import { GeoRegisteration, IOverlay } from '../../models/overlay.model';
 import { Store } from '@ngrx/store';
 import {
 	BackToWorldView,
@@ -86,6 +86,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
+	@Output() onMove = new EventEmitter<MouseEvent>();
 
 	core$: Observable<ICoreState> = this.store$.select(coreStateSelector);
 
@@ -183,7 +184,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (!this.overlay) {
 			return false;
 		}
-		return !this.overlay.isGeoRegistered;
+		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
+	}
+
+	get poorGeoRegistered() {
+		if (!this.overlay) {
+			return false;
+		}
+		return this.overlay.isGeoRegistered === GeoRegisteration.poorGeoRegistered;
 	}
 
 	constructor(protected store$: Store<any>,
@@ -250,7 +258,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	removeOverlay() {
-		this.store$.dispatch(new SetRemovedOverlaysIdAction({ id: this.overlay.id, value: !this.isRemoved }));
+		this.store$.dispatch(new SetRemovedOverlaysIdAction({ mapId: this.mapId, id: this.overlay.id, value: !this.isRemoved }));
 	}
 
 	changeActiveMap(mapType: string) {

@@ -34,7 +34,6 @@
     "zoom": 18,
     "imageryCountBefore": 30,
     "timeFilter": "start/end",
-    "orientation": "original",
     "requirements": [
       "geopoint"
     ]

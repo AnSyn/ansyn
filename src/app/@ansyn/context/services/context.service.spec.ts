@@ -14,7 +14,7 @@ describe('ContextService', () => {
 			],
 			providers: [
 				{ provide: CoreConfig, useValue: {} },
-				StorageService,
+				{ provide: StorageService, useValue: {} },
 				{
 					provide: ContextConfig,
 					useValue: {}

@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { ICoreConfig } from '../../models/core.config.model';
 import { CoreConfig } from '../../models/core.config';
+import { FetchService } from '../fetch.service';
 
 export interface IEntity {
 	creationTime: Date;
@@ -21,6 +22,7 @@ export interface IStoredEntity<P extends IEntity, D> {
 @Injectable()
 export class StorageService {
 	constructor(protected _http: HttpClient,
+				protected fetchService: FetchService,
 				@Inject(CoreConfig) public config: ICoreConfig) {
 	}
 
@@ -38,7 +40,9 @@ export class StorageService {
 
 	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		return this._http.post<P[]>(`${url}/search_by_case`, body);
+		const promise = this.fetchService.fetch(`${url}/search_by_case`, { method: 'POST', body: JSON.stringify(body),  headers: { 'Content-Type': 'application/json', }, })
+			.then(response => response.json());
+		return from(promise);
 	}
 
 	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {

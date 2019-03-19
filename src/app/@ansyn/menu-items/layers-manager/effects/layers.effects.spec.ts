@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { ILayer, layerPluginType, LayerType } from '../models/layers.model';
+import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
 
 describe('LayersEffects', () => {
@@ -25,7 +25,7 @@ describe('LayersEffects', () => {
 			],
 			providers: [
 				{ provide: CoreConfig, useValue: {} },
-				StorageService,
+				{ provide: StorageService, useValue: {} },
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }
@@ -63,7 +63,7 @@ describe('LayersEffects', () => {
 			name: 'staticLayer',
 			type: LayerType.annotation,
 			creationTime: timeOfCreation,
-			layerPluginType: layerPluginType.Annotations
+			layerPluginType: layerPluginTypeEnum.Annotations
 		}];
 
 		let serverResponse = [

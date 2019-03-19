@@ -1,5 +1,5 @@
 import { Directive, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { fromEvent, merge, Observable } from 'rxjs';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 
@@ -13,11 +13,14 @@ import { tap } from 'rxjs/operators';
 export class ClickOutsideDirective implements OnInit, OnDestroy {
 	@Output() ansynClickOutside = new EventEmitter();
 	@Input() trigger: any;
-	@Input() eventListener = 'click';
+	@Input() clickEventType: string | string[] = 'click';
 
 	@AutoSubscription
 	$event: () => any = () => {
-		return fromEvent(window, this.eventListener).pipe(
+		let eventSource$: Observable<any> = this.clickEventType instanceof Array ?
+			merge(...this.clickEventType.map(clickEventType => fromEvent(window, clickEventType))) :
+			fromEvent(window, this.clickEventType);
+		return eventSource$.pipe(
 			tap(($event: any) => {
 				setTimeout(() => {
 					const self = $event.path.includes(this.elementRef.nativeElement);

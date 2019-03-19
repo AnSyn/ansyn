@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AnsynApi } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
-import { IOverlay, IOverlaysCriteria } from '@ansyn/core';
-import { OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/plugins';
+import { GeoRegisteration, IOverlay, IOverlaysCriteria } from '@ansyn/core';
+import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/plugins';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from "../../../@ansyn/plugins/cesium/models/cesium-layer";
@@ -17,13 +17,13 @@ const moment = momentNs;
 })
 export class SandboxComponent implements OnInit {
 	overlays = [
-		this.overlay('000', 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', 576, 1024),
-		this.overlay('111', 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
-		this.overlay('222', 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968),
-		this.overlay('333', 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', 1600, 1500)
+		this.overlay('000', OpenLayersStaticImageSourceProviderSourceType, 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', 576, 1024),
+		this.overlay('111', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
+		this.overlay('222', OpenLayersStaticImageSourceProviderSourceType, 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968),
+		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', 1600, 1500)
 	];
 
-	overlay(id: string, imageUrl: string, imageWidth: number, imageHeight: number): IOverlay {
+	overlay(id: string, sourceType: string, imageUrl: string, imageWidth: number, imageHeight: number, name?: string): IOverlay {
 		const days = 10 * Math.random();
 		const date = moment().subtract(days, 'day').toDate();
 		const left = -117.94,
@@ -38,8 +38,9 @@ export class SandboxComponent implements OnInit {
 			photoTime: date.toISOString(),
 			date: date,
 			azimuth: 0,
-			isGeoRegistered: false,
-			sourceType: OpenLayersStaticImageSourceProviderSourceType,
+			approximateTransform: 'Identity',
+			isGeoRegistered: GeoRegisteration.notGeoRegistered,
+			sourceType: sourceType,
 			tag: {
 				imageData: {
 					imageWidth: imageWidth,
@@ -58,8 +59,8 @@ export class SandboxComponent implements OnInit {
 			},
 			baseImageUrl: '',
 			imageUrl: imageUrl,
-			thumbnailUrl: imageUrl,
-			sensorName: 'mySensorName',
+			thumbnailUrl: '',
+			sensorName: name ? name : 'mySensorName',
 			sensorType: 'mySensorType',
 			bestResolution: 1,
 			cloudCoverage: 1
@@ -130,6 +131,20 @@ export class SandboxComponent implements OnInit {
 		this.ansynApi.changeMapLayout('layout2');
 	}
 
+	setMarcoOverlays() {
+		const overlays = [
+			this.overlay('M000', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_8bpp.j2k', 576, 1024, 'OGN_RGB_8_j2k'),
+			this.overlay('M001', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_16bpp.j2k', 576, 1024, 'OGN_RGB_16_j2k'),
+			this.overlay('M002', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_16bpp.tif', 576, 1024, 'OGN_4Band_16_tif'),
+			this.overlay('M003', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_8bpp.tif', 576, 1024, 'OGN_4Band_8_tif'),
+			this.overlay('M004', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_16bpp.j2k', 576, 1024, 'OGN_IR_16bpp_j2k'),
+			this.overlay('M005', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.j2k', 576, 1024, 'OGN_IR_8bpp_j2k'),
+			this.overlay('M006', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.tif', 576, 1024, 'OGN_IR_8bpp_tif')// ,
+			// this.overlay('M007', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/14DEC08015334-S2AS_R1C1-054168615010_01_P001.TIF', 576, 1024, '14DEC08015334_tif')
+		];
+		this.ansynApi.setOverlays(overlays);
+	}
+
 	loadImageToCesium() {
 		// Generate a CustomProjection as the "main layer projection."
 		// This is also the projection for the tiled image.
@@ -184,13 +199,12 @@ export class SandboxComponent implements OnInit {
 			url : 'assets/SampleData/mosaic_2638d8d2-b2e3-45f2-966e-f75c565a5dad/',
 			mapProjection : mainLayerProjection
 		});
-	// public terrainProvider: any = null,
-	// 		public sceneMode: ISceneMode = ISceneMode.SCENE2D,
-	// 		public removePrevLayers = false
+		// public terrainProvider: any = null,
+		// 		public sceneMode: ISceneMode = ISceneMode.SCENE2D,
+		// 		public removePrevLayers = false
 		const cesiumLayer = new CesiumLayer(limaProvider, mainLayerProjection, null, ISceneMode.SCENE2D, false);
 
 		const position = this.ansynApi.getMapPosition();
 		this.imageryCommunicatorService.provide(this.ansynApi.activeMapId).resetView(cesiumLayer, position).subscribe();
 	}
-
 }

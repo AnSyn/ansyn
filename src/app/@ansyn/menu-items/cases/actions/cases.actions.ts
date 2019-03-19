@@ -19,6 +19,8 @@ export const CasesActionTypes = {
 	CLOSE_MODAL: 'CLOSE_MODAL',
 
 	SELECT_CASE: 'SELECT_CASE',
+	SELECT_CASE_SUCCESS: 'SELECT_CASE_SUCCESS',
+
 	SELECT_DILUTED_CASE: 'SELECT_DILUTED_CASE',
 	SELECT_CASE_BY_ID: 'SELECT_CASE_BY_ID',
 
@@ -108,6 +110,13 @@ export class CloseModalAction implements Action {
 
 export class SelectCaseAction implements Action {
 	type = CasesActionTypes.SELECT_CASE;
+
+	constructor(public payload: ICase) {
+	}
+}
+
+export class SelectCaseSuccessAction implements Action {
+	type = CasesActionTypes.SELECT_CASE_SUCCESS;
 
 	constructor(public payload: ICase) {
 	}

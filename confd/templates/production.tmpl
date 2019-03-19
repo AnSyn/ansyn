@@ -59,8 +59,7 @@
               },
               "flags": {},
               "worldView": {
-				"mapType": "openLayersMap",
-				"sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+				"mapType": "openLayersMap"
               },
               "id": null
             }
@@ -88,14 +87,7 @@
         "facets": {
           "showOnlyFavorites": false,
           "filters": [
-            {
-              "fieldName": "isGeoRegistered",
-              "metadata": {
-                "displayTrue": true,
-                "displayFalse": false
-              },
-              "type": "Boolean"
-            }
+
           ]
         }
       }
@@ -110,7 +102,11 @@
       "layers"
     ],
     "updateCaseDebounceTime": 700,
-    "useHash": true
+    "useHash": true,
+    "defaultSearchFromDeltaTime": {
+    	"unit": "years",
+    	"amount": 1
+    }
   },
   "layersManagerConfig": {
     "schema": "layers"
@@ -145,6 +141,14 @@
 		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
 	}
   },
+  "mapProvidersConfig": {
+  	"openLayersMap": {
+  		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+  	},
+  	"CesiumMap": {
+  		"defaultMapSource": "BING_CESIUM"
+  	}
+  },
   "mapSourceProvidersConfig": {
   	"TB": {
         "baseUrl": "http://tb-server.webiks.com/v2/api/ansyn/layers"
@@ -156,6 +160,12 @@
     "TileWMS": {
 
     },
+    "MARCO_WMTS": {
+		"imageUrl": "wmts?format=png&request=GetTile&layer={imagePath}&style=band&tileMatrixSet=Pixel&service=WMTS&version=1.0.0",
+		"thumbnailImageUrl": "wms?layers={url}&request=GetMap&format=png&width=256&height=256&bbox={bbox}",
+		"capabilitiesUrl": "/1.0.0/WMTSCapabilities.json",
+		"tilesServerUrl": "http://marco-polo.imisight.net/mp-gw/"
+	},
   	"ESRI_4326": {
     	"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
     	"projection": "EPSG:4326",
@@ -185,11 +195,7 @@
       {
         "modelName": "isGeoRegistered",
         "displayName": "Geo Registration",
-        "type": "Boolean",
-        "customData": {
-          "displayTrueName": "Geo registered",
-          "displayFalseName": "Not Geo registered"
-        }
+        "type": "Enum"
       },
       {
         "modelName": "bestResolution",
@@ -385,10 +391,19 @@
     	"default": {
 		 	"Sentinel-2A": "Sentinel 2A",
 		 	"alg_1": "name 1",
-		 	"alg_2": "name 2"
+		 	"alg_2": "name 2",
+		 	"geoRegistered": "Geo Registered",
+		 	"notGeoRegistered": "Not Geo Registered",
+			"poorGeoRegistered": "Poor Geo Registered"
 	   	}
     },
-    "needToUseLayerExtent": false
+    "needToUseLayerExtent": false,
+    "tilesLoadingDoubleBuffer": {
+    	"debounceTimeInMs": 500,
+	    "timeoutInMs": 3000
+    },
+	 "floatingPositionSuffix": "",
+	 "httpTimeout": "3000"
   },
   "menuConfig": {
     "menuItems": {{ getv "/ansyn/menu/items" "null" }},
@@ -401,7 +416,8 @@
     	"image": "assets/icons/forkme.svg",
     	"title": "Fork me on github",
 		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
-    }
+    },
+    "isCollapsible": false
   },
   "loginConfig": {
   	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",

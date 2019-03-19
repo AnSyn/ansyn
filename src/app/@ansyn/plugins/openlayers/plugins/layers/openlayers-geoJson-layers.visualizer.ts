@@ -1,10 +1,10 @@
 import { select, Store } from '@ngrx/store';
-import { ILayer, layerPluginType, selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items';
+import { ILayer, layerPluginTypeEnum, selectLayers, selectSelectedLayersIds } from '@ansyn/menu-items';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection } from 'geojson';
-import { filter, map, mergeMap } from 'rxjs/operators';
-import { combineLatest, forkJoin, Observable } from 'rxjs';
-import { ICaseMapState, IVisualizerEntity } from '@ansyn/core';
+import { catchError, filter, map, mergeMap } from 'rxjs/operators';
+import { combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { ICaseMapState, IVisualizerEntity, SetToastMessageAction } from '@ansyn/core';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
@@ -35,13 +35,24 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			)
 		);
 
+	parseLayerData(data) {
+		return data; // override if other data is used
+	}
+
 	layerToObservable(layer: ILayer, selectedLayerIds, isHidden): Observable<boolean> {
 		if (selectedLayerIds.includes(layer.id) && !isHidden) {
 			return this.http.get(layer.url)
-				.pipe(mergeMap((featureCollection: any) => {
-					const entities = this.layerToEntities(featureCollection);
-					return this.setEntities(entities);
-				}));
+				.pipe(
+					map((data) => this.parseLayerData(data)),
+					mergeMap((featureCollection: any) => {
+						const entities = this.layerToEntities(featureCollection);
+						return this.setEntities(entities);
+					}),
+					catchError((e) => {
+						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer${(e && e.error) ? ' ,' + e.error : ''}`}));
+						return of(true);
+					})
+				);
 		}
 		return Observable.create((observer) => {
 			this.clearEntities();
@@ -50,7 +61,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	}
 
 	isGeoJsonLayer(layer: ILayer) {
-		return layer.layerPluginType === layerPluginType.geoJson;
+		return layer.layerPluginType === layerPluginTypeEnum.geoJson;
 	}
 
 	layerToEntities(collection: FeatureCollection<any>): IVisualizerEntity[] {

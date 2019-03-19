@@ -31,6 +31,10 @@ button[disabled] {
 	cursor: initial;
 }
 
+div.pin-location {
+	cursor: url('../cursors/pin-location.cur') 12 12, pointer;
+}
+
 /* latin */
 @font-face {
 	font-family: 'Open Sans';

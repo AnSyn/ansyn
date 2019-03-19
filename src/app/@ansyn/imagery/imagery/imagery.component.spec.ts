@@ -1,17 +1,16 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
-import { ICaseMapState, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
-import { StoreModule } from '@ngrx/store';
+import { ICaseMapState, MAP_PROVIDERS_CONFIG, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 import { ImageryMapSource } from '../decorators/map-source-provider';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
-	supported: <any> ['mapType1']
+	supported: <any>['mapType1']
 })
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	create(metaData: any): any {
@@ -37,7 +36,7 @@ describe('ImageryComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({})],
+			imports: [],
 			declarations: [ImageryComponent],
 			providers: [
 				{ provide: CacheService, useValue: null },
@@ -47,15 +46,22 @@ describe('ImageryComponent', () => {
 					provide: MAP_SOURCE_PROVIDERS_CONFIG,
 					useValue: {}
 				},
+				{
+					provide: MAP_PROVIDERS_CONFIG,
+					useValue: {}
+				},
 				{ provide: IMAGERY_MAPS, useValue: {} },
-				ImageryCommunicatorService]
+				ImageryCommunicatorService
+			]
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageryComponent);
 		component = fixture.componentInstance;
-		component.communicator = <any> { ngOnInit: () => {} };
+		component.communicator = <any>{
+			ngOnInit: () => {}
+		};
 		fixture.detectChanges();
 	});
 

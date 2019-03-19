@@ -37,9 +37,15 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.addOne(action.payload, state);
 
 		case CasesActionTypes.UPDATE_CASE: {
-			const caseToUpdate = <any> { ...action.payload.updatedCase, lastModified: new Date() };
+			const caseToUpdate = { ...action.payload.updatedCase };
 			const selectedCase = caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
 			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
+		}
+
+		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS: {
+			const lastModified = new Date();
+			const selectedCase = { ...state.selectedCase, lastModified };
+			return casesAdapter.updateOne({ id: action.payload._id, changes: { lastModified } }, { ...state, selectedCase });
 		}
 
 		case CasesActionTypes.DELETE_CASE:
@@ -55,6 +61,9 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return { ...state, modal: { id: null, show: false } };
 
 		case CasesActionTypes.SELECT_CASE:
+			return { ...state, selectedCase: null };
+
+		case CasesActionTypes.SELECT_CASE_SUCCESS:
 			return { ...state, selectedCase: action.payload };
 
 		default:

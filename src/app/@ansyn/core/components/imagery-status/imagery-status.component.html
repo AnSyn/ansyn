@@ -1,4 +1,5 @@
 <div class="buttons">
+
 	<button (click)="backToWorldView()"
 			class="back-to-world-view"
 			*ngIf="overlay"
@@ -6,6 +7,15 @@
 			tooltip-value="Back to base map">
 		<i class="icon-context-menu-prev"></i>
 		Back to base map
+	</button>
+
+	<button
+		*ngIf="mapsAmount > 1"
+		class="drag-me"
+		tooltip-value="Move"
+		tooltip-class="bottom"
+		(mousedown)="onMove.emit($event)">
+		<i class="fa fa-arrows"></i>
 	</button>
 
 	<ansyn-combo-box
@@ -27,7 +37,6 @@
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"
-			[disabled]="noGeoRegistration"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>

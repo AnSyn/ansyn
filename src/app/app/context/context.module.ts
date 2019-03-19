@@ -5,8 +5,8 @@ import { ContextService } from './services/context.service';
 import { AddAllContextsAction } from './actions/context.actions';
 import { HttpClientModule } from '@angular/common/http';
 import { IContext } from '@ansyn/core';
-import { ContextAppEffects } from '@ansyn/ansyn';
 import { EffectsModule } from '@ngrx/effects';
+import { ContextAppEffects } from './effects/context.app.effects';
 
 
 @NgModule({

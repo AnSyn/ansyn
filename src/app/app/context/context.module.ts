@@ -5,12 +5,17 @@ import { ContextService } from './services/context.service';
 import { AddAllContextsAction } from './actions/context.actions';
 import { HttpClientModule } from '@angular/common/http';
 import { IContext } from '@ansyn/core';
+import { ContextAppEffects } from '@ansyn/ansyn';
+import { EffectsModule } from '@ngrx/effects';
 
 
 @NgModule({
 	imports: [
 		HttpClientModule,
-		StoreModule.forFeature(contextFeatureKey, ContextReducer)
+		StoreModule.forFeature(contextFeatureKey, ContextReducer),
+		EffectsModule.forFeature([
+			ContextAppEffects
+		])
 	],
 	providers: [ContextService]
 })

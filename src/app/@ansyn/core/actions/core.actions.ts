@@ -2,6 +2,8 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
 import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
+import { IContext } from '../models/context.model';
+import { IContextParams } from '../../../app/context/reducers/context.reducer';
 
 export enum CoreActionTypes {
 	TOGGLE_MAP_LAYERS = '[Core] TOGGLE_MAP_LAYERS',
@@ -29,7 +31,11 @@ export enum CoreActionTypes {
 	RESET_REMOVED_OVERLAY_IDS = 'RESET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	SET_REMOVED_OVERLAY_IDS_COUNT = 'SET_REMOVED_OVERLAY_IDS_COUNT',
-	CHANGE_IMAGERY_MAP = '[Core] CHANGE_IMAGERY_MAP'
+	CHANGE_IMAGERY_MAP = '[Core] CHANGE_IMAGERY_MAP',
+
+	/* @todo: remove contexts actions */
+	ADD_ALL_CONTEXT = '[Context] Add All Contexts',
+	SET_CONTEXT_PARAMS = '[Context] Set context params'
 }
 
 export type CoreActions =
@@ -233,5 +239,26 @@ export class ChangeImageryMap implements Action {
 	readonly type = CoreActionTypes.CHANGE_IMAGERY_MAP;
 
 	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+export enum ContextActionTypes {
+	ADD_ALL_CONTEXT = '[Context] Add All Contexts',
+	SET_CONTEXT_PARAMS = '[Context] Set context params'
+}
+
+/* @todo: remove contexts actions */
+
+export class AddAllContextsAction {
+	readonly type = ContextActionTypes.ADD_ALL_CONTEXT;
+
+	constructor(public payload: IContext[]) {
+	}
+}
+
+export class SetContextParamsAction {
+	readonly type = ContextActionTypes.SET_CONTEXT_PARAMS;
+
+	constructor(public payload: Partial<IContextParams>) {
 	}
 }

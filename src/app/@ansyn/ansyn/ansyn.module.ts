@@ -18,7 +18,6 @@ import {
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ImageryModule } from '@ansyn/imagery';
-import { ContextModule } from '@ansyn/context';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -49,7 +48,6 @@ import { ANSYN_ID } from './api/ansyn-id.provider';
 		BrowserAnimationsModule,
 		AnsynPluginsModule,
 		CoreModule,
-		ContextModule,
 		MenuModule.provideMenuItems(ansynConfig.ansynMenuItems),
 		AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 		AppEffectsModule,

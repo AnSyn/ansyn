@@ -32,7 +32,6 @@ import {
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
-import { ContextConfig, contextFeatureKey, ContextReducer, ContextService } from '@ansyn/context';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IOverlayByIdMetaData } from '@ansyn/overlays';
 
@@ -77,18 +76,11 @@ describe('CasesAppEffects', () => {
 				StoreModule.forRoot({
 					[overlaysFeatureKey]: OverlayReducer,
 					[casesFeatureKey]: CasesReducer,
-					[contextFeatureKey]: ContextReducer,
 					[mapFeatureKey]: MapReducer
 				}),
 				RouterTestingModule
 			],
 			providers: [
-				{
-					provide: ContextService,
-					useValue: {
-						loadContexts: () => of([])
-					}
-				},
 				{
 					provide: OverlaysService,
 					useValue: {
@@ -122,10 +114,6 @@ describe('CasesAppEffects', () => {
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: () => throwError(null) }
-				},
-				{
-					provide: ContextConfig,
-					useValue: {}
 				},
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { schema: null } },

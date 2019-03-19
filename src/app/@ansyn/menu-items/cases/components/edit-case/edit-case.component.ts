@@ -7,7 +7,7 @@ import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions
 import { cloneDeep } from 'lodash';
 import { ICase, ICasePreview, IContext } from '@ansyn/core';
 import { CasesService } from '../../services/cases.service';
-import { selectContextsArray } from '@ansyn/context';
+import { selectContextsArray } from '@ansyn/core';
 import { map, take } from 'rxjs/operators';
 
 const animationsDuring = '0.2s';

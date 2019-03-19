@@ -1,7 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { Component, NgModule, NgModuleRef } from '@angular/core';
 import { AnsynApi, AnsynModule, ContextAppEffects } from '@ansyn/ansyn';
-import { ContextService } from '@ansyn/context';
 import { of } from 'rxjs';
 import { DataLayersService } from '@ansyn/menu-items';
 import { getProviders } from '@ansyn/ansyn';
@@ -69,7 +68,6 @@ export class AnsynBuilder {
 				AnsynModule.component(this.id)
 			],
 			providers: [
-				{ provide: ContextService, useValue: { loadContexts: () => of([]) } },
 				{ provide: DataLayersService, useClass: BuilderDataLayersService },
 				{ provide: ContextAppEffects, useClass: class Empty {} }
 			],

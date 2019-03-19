@@ -54,12 +54,7 @@ import {
 	selectMapsList,
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
-import {
-	contextFeatureSelector,
-	contextInitialState,
-	selectContextsParams,
-	SetContextParamsAction
-} from '@ansyn/context';
+
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 describe('OverlaysAppEffects', () => {
@@ -156,8 +151,6 @@ describe('OverlaysAppEffects', () => {
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
-	const contextState: any = { ...contextInitialState };
-
 	@ImageryMapSource({
 		supported: [],
 		sourceType: 'FIRST'
@@ -245,8 +238,8 @@ describe('OverlaysAppEffects', () => {
 			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
-			[contextFeatureSelector, contextState],
-			[selectContextsParams, contextState.params],
+			// [contextFeatureSelector, contextState],
+			// [selectContextsParams, contextState.params],
 			[selectMapsList, Object.values(mapState.entities)]
 		]);
 
@@ -266,65 +259,65 @@ describe('OverlaysAppEffects', () => {
 	});
 
 
-	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
-		contextState.params.defaultOverlay = DisplayedOverlay.latest;
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(ab)--', {
-			a: new SetContextParamsAction({ defaultOverlay: null }),
-			b: new DisplayOverlayFromStoreAction({ id: 'last' })
-		});
-		expect(overlaysAppEffects.displayLatestOverlay$).toBeObservable(expectedResults);
-	});
+	// it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
+	// 	contextState.params.defaultOverlay = DisplayedOverlay.latest;
+	// 	actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
+	// 	const expectedResults = cold('--(ab)--', {
+	// 		a: new SetContextParamsAction({ defaultOverlay: null }),
+	// 		b: new DisplayOverlayFromStoreAction({ id: 'last' })
+	// 	});
+	// 	expect(overlaysAppEffects.displayLatestOverlay$).toBeObservable(expectedResults);
+	// });
 
-	it(`displayTwoNearestOverlay$ effect with one overlay before and one date after 
-	should call DisplayMultipleOverlaysFromStoreAction with those two overlays`, () => {
-		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
-		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
+	// it(`displayTwoNearestOverlay$ effect with one overlay before and one date after
+	// should call DisplayMultipleOverlaysFromStoreAction with those two overlays`, () => {
+	// 	contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+	// 	contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
+	//
+	// 	actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
+	// 	const expectedResults = cold('--(bc)--', {
+	// 		b: new DisplayMultipleOverlaysFromStoreAction([{
+	// 			overlay: firstOverlay,
+	// 			extent: undefined
+	// 		}, { overlay: secondOverlay, extent: undefined }]),
+	// 		c: new SetContextParamsAction({ defaultOverlay: null })
+	// 	});
+	// 	expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
+	// });
+	//
+	// it(`displayTwoNearestOverlay$ effect with overlay before
+	// should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
+	// 	const overlay: any = { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') };
+	// 	overlaysState.entities = { [overlay.id]: overlay };
+	// 	overlaysState.filteredOverlays = ['first'];
+	//
+	// 	contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+	// 	contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
+	//
+	// 	actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
+	// 	const expectedResults = cold('--(bc)--', {
+	// 		b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
+	// 		c: new SetContextParamsAction({ defaultOverlay: null })
+	// 	});
+	// 	expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
+	// });
 
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(bc)--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([{
-				overlay: firstOverlay,
-				extent: undefined
-			}, { overlay: secondOverlay, extent: undefined }]),
-			c: new SetContextParamsAction({ defaultOverlay: null })
-		});
-		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
-	});
-
-	it(`displayTwoNearestOverlay$ effect with overlay before
-	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		const overlay: any = { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') };
-		overlaysState.entities = { [overlay.id]: overlay };
-		overlaysState.filteredOverlays = ['first'];
-
-		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
-		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
-
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(bc)--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
-			c: new SetContextParamsAction({ defaultOverlay: null })
-		});
-		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
-	});
-
-	it(`displayTwoNearestOverlay$ effect with overlay after
-	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		const overlay: any = { id: 'last', 'photoTime': new Date('2016-06-27T08:43:03.624Z') };
-		overlaysState.entities = { [overlay.id]: overlay };
-		overlaysState.filteredOverlays = ['last'];
-
-		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
-		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
-
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(bc)--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
-			c: new SetContextParamsAction({ defaultOverlay: null })
-		});
-		expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
-	});
+	// it(`displayTwoNearestOverlay$ effect with overlay after
+	// should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
+	// 	const overlay: any = { id: 'last', 'photoTime': new Date('2016-06-27T08:43:03.624Z') };
+	// 	overlaysState.entities = { [overlay.id]: overlay };
+	// 	overlaysState.filteredOverlays = ['last'];
+	//
+	// 	contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+	// 	contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
+	//
+	// 	actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
+	// 	const expectedResults = cold('--(bc)--', {
+	// 		b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
+	// 		c: new SetContextParamsAction({ defaultOverlay: null })
+	// 	});
+	// 	expect(overlaysAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
+	// });
 
 	it(`displayMultipleOverlays$ effect with overlays count smaller than map count
 	should call DisplayOverlayFromStoreAction`, () => {

@@ -57,62 +57,14 @@ import {
 	map,
 	mergeMap,
 	pairwise,
-	share,
 	startWith,
 	switchMap,
 	withLatestFrom
 } from 'rxjs/operators';
-import { IContextParams, selectContextEntities, selectContextsParams, SetContextParamsAction } from '@ansyn/context';
-import * as olExtent from 'ol/extent';
-import { transformScale } from '@turf/turf';
-import { get, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class OverlaysAppEffects {
-
-	@Effect()
-	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
-		withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector)),
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const id = filteredOverlays[filteredOverlays.length - 1];
-			return [
-				new SetContextParamsAction({ defaultOverlay: null }),
-				new DisplayOverlayFromStoreAction({ id })
-			];
-		}),
-		share()
-	);
-
-
-	@Effect()
-	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
-		withLatestFrom(this.store$.select(selectContextsParams), this.store$.select(overlaysStateSelector)),
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { entities: overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays[overlayId].photoTime < params.time);
-			const overlaysBefore = overlays[overlaysBeforeId];
-			const overlaysAfterId = filteredOverlays.find(overlayId => overlays[overlayId].photoTime > params.time);
-			const overlaysAfter = overlays[overlaysAfterId];
-			const featureJson = get(params, 'contextEntities[0].featureJson');
-			let extent;
-			if (featureJson) {
-				const featureJsonScale = transformScale(featureJson, 1.1);
-				extent = olExtent.boundingExtent(featureJsonScale.geometry.coordinates[0]);
-			}
-			const payload = [{ overlay: overlaysBefore, extent }, {
-				overlay: overlaysAfter,
-				extent
-			}].filter(({ overlay }) => Boolean(overlay));
-			return [
-				new DisplayMultipleOverlaysFromStoreAction(payload),
-				new SetContextParamsAction({ defaultOverlay: null })
-			];
-		}),
-		share()
-	);
 
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
@@ -259,19 +211,6 @@ export class OverlaysAppEffects {
 				return of(err);
 			})
 		);
-
-	@Effect()
-	setSpecialObjectsFromContextEntities$: Observable<any> = this.store$.select(selectContextEntities).pipe(
-		filter((contextEntities: IContextEntity[]) => Boolean(contextEntities)),
-		map((contextEntities: IContextEntity[]): Action => {
-			const specialObjects = contextEntities.map(contextEntity => ({
-				id: contextEntity.id,
-				date: contextEntity.date,
-				shape: 'star'
-			} as IOverlaySpecialObject));
-			return new SetSpecialObjectsActionStore(specialObjects);
-		})
-	);
 
 	@Effect()
 	activeMapLeave$ = this.actions$.pipe(

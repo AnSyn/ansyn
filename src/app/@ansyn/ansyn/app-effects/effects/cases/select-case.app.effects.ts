@@ -27,7 +27,7 @@ import {
 	UpdateSelectedLayersIds
 } from '@ansyn/menu-items';
 import { SetComboBoxesProperties } from '@ansyn/status-bar';
-import { SetContextParamsAction } from '@ansyn/context';
+import { SetContextParamsAction } from '@ansyn/core';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';

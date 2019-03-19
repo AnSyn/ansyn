@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { selectContextEntities } from '@ansyn/context';
+import { selectContextEntities } from '@ansyn/core';
 import { IMapState, MapFacadeService, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';

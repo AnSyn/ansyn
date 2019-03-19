@@ -17,7 +17,6 @@ import { CoreAppEffects } from './effects/core.app.effects';
 import { ICoreState } from '@ansyn/core';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
-import { ContextAppEffects } from './effects/context.app.effects';
 
 export interface IAppState {
 	core: ICoreState;
@@ -46,7 +45,6 @@ export interface IAppState {
 			CoreAppEffects,
 			UpdateCaseAppEffects,
 			SelectCaseAppEffects,
-			ContextAppEffects
 		])
 	]
 })

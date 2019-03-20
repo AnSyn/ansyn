@@ -61,7 +61,7 @@ export class ToolsAppEffects {
 		map((mapState) => MapFacadeService.activeMap(mapState)),
 		filter(Boolean)
 	);
-	isShadowMouseActiveByDefault = this.config.ShadowMouse ? this.config.ShadowMouse.activeByDefault : false;
+	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
 
 	get params(): Array<IImageProcParam> {
 		return this.config.ImageProcParams;

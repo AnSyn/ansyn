@@ -97,7 +97,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			if (!layer.sceneMode) {
 				cesiumSceneMode = this.mapObject.scene.mode;
 			}
-			this.internallDestroyCesium();
+			this.internalDestroyCesium();
 		}
 
 		if (layer.mapProjection) {
@@ -297,10 +297,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	public dispose() {
 		this.removeAllLayers();
-		this.internallDestroyCesium();
+		this.internalDestroyCesium();
 	}
 
-	internallDestroyCesium() {
+	internalDestroyCesium() {
 		if (this.mapObject) {
 			this.mapObject.camera.moveEnd.removeEventListener(this._moveEndListener);
 			this.mapObject.destroy();

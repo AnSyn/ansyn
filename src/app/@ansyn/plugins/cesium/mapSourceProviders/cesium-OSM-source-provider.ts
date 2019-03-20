@@ -10,7 +10,7 @@ export const CesiumOSMSourceProviderSourceType = 'OSM';
 	supported: [CesiumMap],
 	sourceType: CesiumOSMSourceProviderSourceType
 })
-export class OsmSourceProvider extends BaseMapSourceProvider {
+export class CesiumOsmSourceProvider extends BaseMapSourceProvider {
 
 	protected create(metaData: ICaseMapState): any[] {
 		const cesiumOsmLayer = Cesium.createOpenStreetMapImageryProvider({ url: 'https://a.tile.openstreetmap.org/' });

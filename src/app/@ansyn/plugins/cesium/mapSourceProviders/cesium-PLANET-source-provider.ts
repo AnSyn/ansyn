@@ -18,11 +18,11 @@ export class CesiumPlanetSourceProvider extends BaseMapSourceProvider {
 	}
 
 	protected create(metaData: ICaseMapState): any[] {
-		const xyzTileLayer = new Cesium.UrlTemplateImageryProvider({
+		const planetLayer = new Cesium.UrlTemplateImageryProvider({
 			url : metaData.data.overlay.imageUrl,
 			credit: new Cesium.Credit('© Imagery provided by Planet.com', 'https://www.planet.com/assets/logos/logo-dark.png', 'https://www.planet.com')
 		});
-		const layer = new CesiumLayer(xyzTileLayer);
+		const layer = new CesiumLayer(planetLayer);
 		return [layer];
 	}
 }

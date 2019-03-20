@@ -90,7 +90,7 @@ export class MapEffects {
 	onCommunicatorChange$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		tap(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction, IMapState]) => {
+		tap(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction | MapInstanceChangedAction, IMapState]) => {
 			if (action instanceof ImageryCreatedAction || action instanceof MapInstanceChangedAction) {
 				this.mapFacadeService.initEmitters(action.payload.id);
 			} else {

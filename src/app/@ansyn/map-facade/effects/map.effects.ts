@@ -30,6 +30,7 @@ import {
 	ImageryCreatedAction, ImageryMouseEnter, ImageryMouseLeave,
 	ImageryRemovedAction,
 	MapActionTypes,
+	MapInstanceChangedAction,
 	PinLocationModeTriggerAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
@@ -87,10 +88,10 @@ export class MapEffects {
 
 	@Effect({ dispatch: false })
 	onCommunicatorChange$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED),
+		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		tap(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction, IMapState]) => {
-			if (action instanceof ImageryCreatedAction) {
+			if (action instanceof ImageryCreatedAction || action instanceof MapInstanceChangedAction) {
 				this.mapFacadeService.initEmitters(action.payload.id);
 			} else {
 				this.mapFacadeService.removeEmitters(action.payload.id);

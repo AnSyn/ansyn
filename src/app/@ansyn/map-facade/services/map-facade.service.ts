@@ -49,6 +49,8 @@ export class MapFacadeService {
 	}
 
 	initEmitters(id: string) {
+		this.removeEmitters(id);
+
 		const communicator = this.imageryCommunicatorService.provide(id);
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(

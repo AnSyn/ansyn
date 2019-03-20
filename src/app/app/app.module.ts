@@ -14,7 +14,6 @@ import { AnsynHostComponent } from './components/ansyn-host/ansyn-host.component
 import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { ImisightModule } from './imisight/imisight.module';
 import { SandboxModule } from './sandbox/sandbox.module';
-import { DroneModule } from "../drone/drone.module";
 
 @NgModule({
 	imports: [
@@ -27,8 +26,7 @@ import { DroneModule } from "../drone/drone.module";
 		ImisightModule,
 		AnsynRouterModule,
 		AppRoutingModule,
-		SandboxModule,
-		DroneModule
+		SandboxModule
 	],
 	providers: [
 		{

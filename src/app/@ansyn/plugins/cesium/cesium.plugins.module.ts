@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ImageryModule } from '@ansyn/imagery';
 import { CesiumMap } from '../cesium/maps/cesium-map/cesium-map';
 import { CesiumBINGSourceProvider } from './mapSourceProviders/cesium-BING-source-provider';
-import { OsmSourceProvider } from './mapSourceProviders/cesium.osm.source-provider';
-import { CesiumPlanetSourceProvider } from './mapSourceProviders/planet.cesium.source-provider';
+import { CesiumOsmSourceProvider } from './mapSourceProviders/cesium-OSM-source-provider';
+import { CesiumPlanetSourceProvider } from './mapSourceProviders/cesium-PLANET-source-provider';
 
 @NgModule({
 	imports: [
@@ -15,7 +15,7 @@ import { CesiumPlanetSourceProvider } from './mapSourceProviders/planet.cesium.s
 				CesiumMap
 			],
 			mapSourceProviders: [
-				OsmSourceProvider,
+				CesiumOsmSourceProvider,
 				CesiumBINGSourceProvider,
 				CesiumPlanetSourceProvider
 			]

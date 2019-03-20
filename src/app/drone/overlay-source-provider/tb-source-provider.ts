@@ -6,12 +6,15 @@ import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourc
 import {
 	ErrorHandlerService,
 	geojsonPolygonToMultiPolygon,
+	GeoRegisteration,
 	getPolygonByPointAndRadius,
-	IMapSourceProvidersConfig, IMultipleOverlaysSourceConfig,
+	IMapSourceProvidersConfig,
+	IMultipleOverlaysSourceConfig,
 	IOverlay,
 	limitArray,
 	LoggerService,
-	MAP_SOURCE_PROVIDERS_CONFIG, MultipleOverlaysSourceConfig,
+	MAP_SOURCE_PROVIDERS_CONFIG,
+	MultipleOverlaysSourceConfig,
 	Overlay,
 	sortByDateDesc
 } from '@ansyn/core';
@@ -140,7 +143,7 @@ export class TBSourceProvider extends BaseOverlaySourceProvider {
 			photoTime: new Date(tbOverlay.createdDate).toISOString(),
 			azimuth: 0,
 			sourceType: this.sourceType,
-			isGeoRegistered: tbOverlay.geoData.isGeoRegistered,
+			isGeoRegistered: tbOverlay.geoData.isGeoRegistered ? GeoRegisteration.poorGeoRegistered : GeoRegisteration.notGeoRegistered,
 			tag: tbOverlay,
 			creditName: tbOverlay.inputData.ansyn.creditName
 		});

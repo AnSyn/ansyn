@@ -6,6 +6,10 @@ export interface IEd50Notification {
 	hrefText?: string;
 }
 
+export interface IShadowMouseConfig {
+	activeByDefault: boolean
+}
+
 export interface IToolsConfig {
 	Annotations: {
 		displayId: '0' | '1';
@@ -19,7 +23,8 @@ export interface IToolsConfig {
 		ed50Customized: string;
 		ed50Notification: IEd50Notification;
 	},
-	ImageProcParams: Array<IImageProcParam>
+	ImageProcParams: Array<IImageProcParam>,
+	ShadowMouse?: IShadowMouseConfig
 }
 
 export interface IImageProcParam {

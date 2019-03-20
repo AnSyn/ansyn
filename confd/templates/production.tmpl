@@ -385,7 +385,7 @@
 		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
 	},
     "storageService": {
-      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8081/api/store" }}"
     },
     "translation": {
     	"default": {
@@ -420,7 +420,7 @@
     "isCollapsible": false
   },
   "loginConfig": {
-  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
+  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",
   	"active":  {{ getv "/ansyn/login/active" "false" }},
   	"authorizedPath": "/"
   },
@@ -1164,7 +1164,7 @@
   },
   "idahoOverlaysSourceConfig": {
     "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
-    "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
+    "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://platform.ansyn.io:9001/api/v1/" }}",
     "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
   },
   "openAerialOverlaysSourceConfig": {

@@ -68,3 +68,4 @@ src/ng-ansyn.metadata.json
 # for base/fork conflict
 
 src/app/@ansyn/assets/SampleData
+src/app/drone

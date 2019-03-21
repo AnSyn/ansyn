@@ -1,8 +1,8 @@
 {
 	"name": "@ansyn/context",
-	"version": "0.3.21",
+	"version": "0.3.22",
 	"peerDependencies": {
-		"@ansyn/core": "0.3.21",
+		"@ansyn/core": "0.3.22",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^7.2.0",
 		"@ngrx/entity": "^7.2.0",

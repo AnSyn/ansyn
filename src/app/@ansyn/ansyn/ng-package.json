@@ -15,10 +15,7 @@
     "geojson",
     "lodash",
     "moment",
-    "ol",
-    "wellknown",
-    "@angular/cdk",
-    "@angular/material"
+    "wellknown"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

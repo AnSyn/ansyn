@@ -5,7 +5,6 @@
     "@ansyn/core",
     "@turf/turf",
     "lodash",
-    "ol",
     "@ansyn/status-bar",
     "@ansyn/overlays",
     "@ansyn/menu-items",
@@ -13,8 +12,7 @@
     "@ansyn/imagery",
     "@ansyn/context",
     "angular2-uuid",
-    "auto-subscriptions",
-    "cesium"
+    "auto-subscriptions"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

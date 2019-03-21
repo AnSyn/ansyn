@@ -260,12 +260,16 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	removeEntity(logicalEntityId: string) {
+		if (!logicalEntityId) {
+			return;
+		}
 		const entityToRemove = this.idToEntity.get(logicalEntityId);
-		if (entityToRemove) {
-			this.idToEntity.delete(logicalEntityId);
-			if (entityToRemove.feature && this.source.getFeatureById(entityToRemove.feature.getId())) {
-				this.source.removeFeature(entityToRemove.feature);
-			}
+		if (!entityToRemove) {
+			return;
+		}
+		this.idToEntity.delete(logicalEntityId);
+		if (entityToRemove.feature && this.source.getFeatureById(entityToRemove.feature.getId())) {
+			this.source.removeFeature(entityToRemove.feature);
 		}
 	}
 

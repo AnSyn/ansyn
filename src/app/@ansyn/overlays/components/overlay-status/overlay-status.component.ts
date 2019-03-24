@@ -41,7 +41,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy {
 		select(selectLoading)
 	);
 
-	// @AutoSubscription
+	@AutoSubscription
 	showStatus$: Observable<any> = combineLatest(this.overlaysStatusMessage$, this.overlaysLoader$).pipe(
 		map(([statusMessage, loading]) => Boolean(statusMessage && !loading)),
 		distinctUntilChanged(),

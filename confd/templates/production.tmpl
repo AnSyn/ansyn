@@ -102,7 +102,11 @@
       "layers"
     ],
     "updateCaseDebounceTime": 700,
-    "useHash": true
+    "useHash": true,
+    "defaultSearchFromDeltaTime": {
+    	"unit": "years",
+    	"amount": 1
+    }
   },
   "layersManagerConfig": {
     "schema": "layers"
@@ -153,6 +157,12 @@
     "TileWMS": {
 
     },
+    "MARCO_WMTS": {
+		"imageUrl": "wmts?format=png&request=GetTile&layer={imagePath}&style=band&tileMatrixSet=Pixel&service=WMTS&version=1.0.0",
+		"thumbnailImageUrl": "wms?layers={url}&request=GetMap&format=png&width=256&height=256&bbox={bbox}",
+		"capabilitiesUrl": "/1.0.0/WMTSCapabilities.json",
+		"tilesServerUrl": "http://marco-polo.imisight.net/mp-gw/"
+	},
   	"ESRI_4326": {
     	"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
     	"projection": "EPSG:4326",
@@ -249,7 +259,10 @@
         "min": 1,
         "max": 100
       }
-    ]
+    ],
+    "ShadowMouse": {
+    	"activeByDefault": false
+    }
   },
   "loggerConfig": {
     "env": "PROD",
@@ -372,7 +385,7 @@
 		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
 	},
     "storageService": {
-      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://ansyn.io:8081/api/store" }}"
+      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8081/api/store" }}"
     },
     "translation": {
     	"default": {
@@ -389,7 +402,8 @@
     	"debounceTimeInMs": 500,
 	    "timeoutInMs": 3000
     },
-	 "floatingPositionSuffix": ""
+	 "floatingPositionSuffix": "",
+	 "httpTimeout": "3000"
   },
   "menuConfig": {
     "menuItems": {{ getv "/ansyn/menu/items" "null" }},
@@ -406,7 +420,7 @@
     "isCollapsible": false
   },
   "loginConfig": {
-  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://ansyn.io:9001/api/v1/login" }}",
+  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",
   	"active":  {{ getv "/ansyn/login/active" "false" }},
   	"authorizedPath": "/"
   },
@@ -1150,7 +1164,7 @@
   },
   "idahoOverlaysSourceConfig": {
     "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
-    "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://ansyn.io:9001/api/v1/" }}",
+    "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://platform.ansyn.io:9001/api/v1/" }}",
     "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
   },
   "openAerialOverlaysSourceConfig": {

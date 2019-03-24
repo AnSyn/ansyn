@@ -235,7 +235,7 @@ export class MapAppEffects {
 		);
 
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
-		const { overlay } = payload;
+		const { overlay, extent: payloadExtent } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
 		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
@@ -285,7 +285,7 @@ export class MapAppEffects {
 		/* -3- */
 		const resetView = pipe(
 			mergeMap((layer) => {
-				const extent = isNotIntersect && extentFromGeojson(overlay.footprint);
+				const extent = payloadExtent || isNotIntersect && extentFromGeojson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
 			map(() => new DisplayOverlaySuccessAction(payload))

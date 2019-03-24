@@ -22,6 +22,7 @@ export interface IConfigModel {
 	mapProvidersConfig: IMapProvidersConfig,
 	mapSourceProvidersConfig: IMapSourceProvidersConfig,
 	filtersConfig: IFiltersConfig,
+	/* @todo: move to app */
 	contextConfig: any,
 	toolsConfig: IToolsConfig,
 	loggerConfig: ILoggerConfig,

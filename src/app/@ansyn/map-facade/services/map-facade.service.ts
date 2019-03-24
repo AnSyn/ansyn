@@ -49,6 +49,8 @@ export class MapFacadeService {
 	}
 
 	initEmitters(id: string) {
+		this.removeEmitters(id);
+
 		const communicator = this.imageryCommunicatorService.provide(id);
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
@@ -59,8 +61,10 @@ export class MapFacadeService {
 	}
 
 	removeEmitters(id: string) {
-		this.subscribers[id].forEach((subscriber) => subscriber.unsubscribe());
-		delete this.subscribers[id];
+		if (this.subscribers[id]) {
+			this.subscribers[id].forEach((subscriber) => subscriber.unsubscribe());
+			delete this.subscribers[id];
+		}
 	}
 
 	mapInstanceChanged($event: IMapInstanceChanged) {

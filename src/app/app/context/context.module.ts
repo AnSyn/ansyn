@@ -7,6 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { IContext } from '@ansyn/core';
 import { EffectsModule } from '@ngrx/effects';
 import { ContextAppEffects } from './effects/context.app.effects';
+import { ImageryModule } from '@ansyn/imagery';
+import { ContextEntityVisualizer } from './plugins/context-entity.visualizer';
 
 
 @NgModule({
@@ -15,7 +17,14 @@ import { ContextAppEffects } from './effects/context.app.effects';
 		StoreModule.forFeature(contextFeatureKey, ContextReducer),
 		EffectsModule.forFeature([
 			ContextAppEffects
-		])
+		]),
+		ImageryModule.provide({
+			maps: [],
+			mapSourceProviders: [],
+			plugins: [
+				ContextEntityVisualizer
+			]
+		})
 	],
 	providers: [ContextService]
 })

@@ -241,12 +241,12 @@ export class ChangeImageryMap implements Action {
 	}
 }
 
+/* @todo: remove contexts actions */
 export enum ContextActionTypes {
 	ADD_ALL_CONTEXT = '[Context] Add All Contexts',
 	SET_CONTEXT_PARAMS = '[Context] Set context params'
 }
 
-/* @todo: remove contexts actions */
 
 export class AddAllContextsAction {
 	readonly type = ContextActionTypes.ADD_ALL_CONTEXT;

@@ -2,22 +2,14 @@
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/ansyn",
   "whitelistedNonPeerDependencies": [
-    "@ansyn/core",
     "@ansyn/imagery",
     "@ansyn/map-facade",
     "@ansyn/menu",
-    "@ansyn/menu-items",
-    "@ansyn/overlays",
-    "@ansyn/plugins",
-    "@ansyn/status-bar",
     "@turf/turf",
     "geojson",
     "lodash",
     "moment",
-    "ol",
-    "wellknown",
-    "@angular/cdk",
-    "@angular/material"
+    "wellknown"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

@@ -18,7 +18,7 @@ import {
 	SetManualImageProcessing,
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
-	ShowOverlaysFootprintAction,
+	ShowOverlaysFootprintAction, StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes,
 	toolsConfig,
@@ -33,7 +33,8 @@ import {
 	mapStateSelector,
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
-	selectMapsList, UpdateMapAction
+	selectMapsList,
+	UpdateMapAction
 } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '../../modules/overlays/public_api';
 import {
@@ -60,7 +61,8 @@ export class ToolsAppEffects {
 		select(mapStateSelector),
 		map((mapState) => MapFacadeService.activeMap(mapState)),
 		filter(Boolean)
-	)
+	);
+	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
 
 	get params(): Array<IImageProcParam> {
 		return this.config.ImageProcParams;
@@ -68,7 +70,7 @@ export class ToolsAppEffects {
 
 	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
 		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
@@ -139,11 +141,14 @@ export class ToolsAppEffects {
 			const activeMap: ICaseMapState = MapFacadeService.activeMap(mapsState);
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
-				new UpdateMapAction({ id: activeMap.id, changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }}),
+				new UpdateMapAction({
+					id: activeMap.id,
+					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
+				}),
 				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
 			];
 		})
-	)
+	);
 
 	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$.pipe(
@@ -191,7 +196,10 @@ export class ToolsAppEffects {
 					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])
 				];
 			}
-			return [new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }])];
+			return [
+				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }]),
+				this.isShadowMouseActiveByDefault ? new StartMouseShadow() : undefined
+			].filter(Boolean);
 		}));
 
 	@Effect()
@@ -202,8 +210,10 @@ export class ToolsAppEffects {
 			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
 				const activeMap = MapFacadeService.activeMap(mapState);
 				activeMap.data.overlayDisplayMode = action.payload;
-				return new UpdateMapAction({ id: activeMap.id,  changes: {
-					data: { ...activeMap.data, overlayDisplayMode: action.payload }}
+				return new UpdateMapAction({
+					id: activeMap.id, changes: {
+						data: { ...activeMap.data, overlayDisplayMode: action.payload }
+					}
 				});
 			})
 		);

@@ -15,7 +15,6 @@
 		"@angular/material": "^7.3.0"
 	},
 	"dependencies": {
-		"@ansyn/context": "0.3.22",
 		"@ansyn/imagery": "0.3.22",
 		"@ansyn/map-facade": "0.3.22",
 		"@ansyn/menu": "0.3.22",

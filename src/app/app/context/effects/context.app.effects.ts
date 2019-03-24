@@ -1,18 +1,37 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
-import {
-	ContextService,
-	IContextParams,
-	selectContextsArray,
-	selectContextsParams,
-	SetContextParamsAction
-} from '@ansyn/context';
 import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items';
-import { ICase, IContext, SetToastMessageAction } from '@ansyn/core';
-import { IStartAndEndDate, OverlaysService } from '@ansyn/overlays';
+import {
+	DisplayedOverlay,
+	ICase,
+	IContext,
+	IContextEntity,
+	IOverlaySpecialObject,
+	SetToastMessageAction
+} from '@ansyn/core';
+import {
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayFromStoreAction,
+	IOverlaysState,
+	IStartAndEndDate,
+	OverlaysActionTypes,
+	OverlaysService,
+	overlaysStateSelector,
+	SetFilteredOverlaysAction, SetSpecialObjectsActionStore
+} from '@ansyn/overlays';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { catchError, filter, map, mergeMap, withLatestFrom, share } from 'rxjs/operators';
+import { Store, Action } from '@ngrx/store';
+import {
+	IContextParams,
+	selectContextEntities,
+	selectContextsArray,
+	selectContextsParams
+} from '../reducers/context.reducer';
+import { SetContextParamsAction } from '../actions/context.actions';
+import { ContextService } from '../services/context.service';
+import { get } from 'lodash';
+import { transformScale, bbox } from '@turf/turf';
 
 @Injectable()
 export class ContextAppEffects {
@@ -74,6 +93,64 @@ export class ContextAppEffects {
 					})]);
 			})
 		);
+
+	@Effect()
+	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
+		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
+		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
+		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0),
+		mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
+			const id = filteredOverlays[filteredOverlays.length - 1];
+			return [
+				new SetContextParamsAction({ defaultOverlay: null }),
+				new DisplayOverlayFromStoreAction({ id })
+			];
+		}),
+		share()
+	);
+
+	@Effect()
+	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
+		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
+		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
+		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
+		mergeMap(([action, params, { entities: overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
+			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays[overlayId].photoTime < params.time);
+			const overlaysBefore = overlays[overlaysBeforeId];
+			const overlaysAfterId = filteredOverlays.find(overlayId => overlays[overlayId].photoTime > params.time);
+			const overlaysAfter = overlays[overlaysAfterId];
+			const featureJson = get(params, 'contextEntities[0].featureJson');
+			let extent;
+			if (featureJson) {
+				const featureJsonScale = transformScale(featureJson, 1.1);
+				if (featureJsonScale.geometry.type !== 'Point') {
+					extent = bbox(featureJsonScale);
+				}
+			}
+			const payload = [{ overlay: overlaysBefore, extent }, {
+				overlay: overlaysAfter,
+				extent
+			}].filter(({ overlay }) => Boolean(overlay));
+			return [
+				new DisplayMultipleOverlaysFromStoreAction(payload),
+				new SetContextParamsAction({ defaultOverlay: null })
+			];
+		}),
+		share()
+	);
+
+	@Effect()
+	setSpecialObjectsFromContextEntities$: Observable<any> = this.store.select(selectContextEntities).pipe(
+		filter((contextEntities: IContextEntity[]) => Boolean(contextEntities)),
+		map((contextEntities: IContextEntity[]): Action => {
+			const specialObjects = contextEntities.map(contextEntity => ({
+				id: contextEntity.id,
+				date: contextEntity.date,
+				shape: 'star'
+			} as IOverlaySpecialObject));
+			return new SetSpecialObjectsActionStore(specialObjects);
+		})
+	);
 
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,

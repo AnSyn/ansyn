@@ -155,3 +155,9 @@ export const selectTime: MemoizedSelector<any, any> = createSelector(selectOverl
 export const selectEnableCopyOriginalOverlayDataFlag: MemoizedSelector<any, any> = createSelector(coreStateSelector, (core) => core.enableCopyOriginalOverlayData);
 export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(coreStateSelector, (core) => core.autoSave);
 export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(coreStateSelector, (core) => core.removedOverlaysIdsCount);
+
+/* @todo: remove contexts actions */
+export const contextFeatureSelector: any = createFeatureSelector('contexts');
+export const selectContextsParams = createSelector(contextFeatureSelector, (context: any) => context && context.params);
+export const selectContextEntities = createSelector(selectContextsParams, (params: any) => params && params.contextEntities);
+export const selectContextsArray = createSelector(contextFeatureSelector, ({ entities }) => Object.values(entities));

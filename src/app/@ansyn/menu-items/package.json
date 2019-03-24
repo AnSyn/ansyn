@@ -16,7 +16,6 @@
 		"moment": "^2.21.0",
 		"wellknown": "^0.5.0",
 		"@ansyn/menu": "0.3.22",
-		"@ansyn/context": "0.3.22",
 		"@ansyn/map-facade": "0.3.22",
 		"@ansyn/overlays": "0.3.22",
 		"@ngx-translate/core": "^10.0.2",

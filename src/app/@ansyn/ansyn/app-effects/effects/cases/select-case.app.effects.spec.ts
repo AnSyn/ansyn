@@ -36,7 +36,7 @@ import {
 } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
 import { SetComboBoxesProperties } from '@ansyn/status-bar';
-import { SetContextParamsAction } from '@ansyn/context';
+import { SetContextParamsAction } from '@ansyn/core';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 

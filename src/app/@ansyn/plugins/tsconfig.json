@@ -17,9 +17,6 @@
       "@ansyn/status-bar": [
         "src/app/@ansyn/status-bar/public_api"
       ],
-      "@ansyn/context": [
-        "src/app/@ansyn/context/public_api"
-      ],
       "@ansyn/overlays": [
         "src/app/@ansyn/overlays/public_api"
       ]

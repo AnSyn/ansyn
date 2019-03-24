@@ -2,7 +2,6 @@
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/ansyn",
   "whitelistedNonPeerDependencies": [
-    "@ansyn/context",
     "@ansyn/imagery",
     "@ansyn/map-facade",
     "@ansyn/menu",

@@ -9,7 +9,6 @@ import {
 } from '@ansyn/core';
 import { IStatusBarConfig } from '@ansyn/status-bar';
 import { IMenuConfig } from '@ansyn/menu';
-import { IContextConfig } from '@ansyn/context';
 import { IVisualizersConfig } from '@ansyn/imagery';
 import { IOpenAerialOverlaySourceConfig } from './app-providers/overlay-source-providers/open-aerial-source-provider';
 import { IPlanetOverlaySourceConfig } from './app-providers/overlay-source-providers/planet/planet-source-provider';
@@ -23,7 +22,8 @@ export interface IConfigModel {
 	mapProvidersConfig: IMapProvidersConfig,
 	mapSourceProvidersConfig: IMapSourceProvidersConfig,
 	filtersConfig: IFiltersConfig,
-	contextConfig: IContextConfig,
+	/* @todo: move to app */
+	contextConfig: any,
 	toolsConfig: IToolsConfig,
 	loggerConfig: ILoggerConfig,
 	statusBarConfig: IStatusBarConfig,

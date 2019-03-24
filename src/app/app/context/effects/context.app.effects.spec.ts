@@ -1,11 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { OverlaysAppEffects } from './overlays.app.effects';
+
 import {
 	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
 	MarkUpClass,
 	OverlayReducer,
 	overlaysFeatureKey,
@@ -14,10 +12,9 @@ import {
 	overlaysStateSelector,
 	selectDropMarkup,
 	selectOverlaysMap,
-	SetFilteredOverlaysAction,
-	SetHoveredOverlayAction
+	SetFilteredOverlaysAction
 } from '@ansyn/overlays';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import {
 	casesFeatureKey,
 	CasesReducer,
@@ -34,36 +31,30 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { statusBarStateSelector } from '@ansyn/status-bar';
-
 import {
 	coreInitialState,
 	coreStateSelector,
-	DisplayedOverlay,
+	DisplayedOverlay, ErrorHandlerService,
 	ICase,
 	MAP_SOURCE_PROVIDERS_CONFIG,
-	SetLayoutAction,
-	SetLayoutSuccessAction
+	StorageService
 } from '@ansyn/core';
 import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
-import {
-	initialMapState,
-	mapFeatureKey,
-	MapReducer,
-	mapStateSelector,
-	RemovePendingOverlayAction,
-	selectMapsList,
-	SetPendingOverlaysAction
-} from '@ansyn/map-facade';
-
+import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { cloneDeep as _cloneDeep } from 'lodash';
+import { ContextAppEffects } from './context.app.effects';
+import { SetContextParamsAction } from '../actions/context.actions';
+import { contextFeatureSelector, contextInitialState, selectContextsParams } from '../reducers/context.reducer';
+import { ContextConfig } from '../models/context.config';
 
-describe('OverlaysAppEffects', () => {
-	let overlaysAppEffects: OverlaysAppEffects;
+describe('ContextAppEffects', () => {
+	let contextAppEffects: ContextAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
 	let casesService: CasesService;
 	let overlaysService: OverlaysService;
 	let imageryCommunicatorService: ImageryCommunicatorService;
+	const contextState: any = { ...contextInitialState };
 
 	let imageryCommunicatorServiceMock = {
 		provide: () => ({
@@ -173,18 +164,27 @@ describe('OverlaysAppEffects', () => {
 				})
 			],
 			providers: [
-				OverlaysAppEffects,
+				ContextAppEffects,
+				{
+					provide: ErrorHandlerService,
+					useValue: { httpErrorHandle: () => throwError(null) }
+				},
 				{
 					provide: MAP_SOURCE_PROVIDERS_CONFIG,
 					useValue: {}
 				},
 				provideMockActions(() => actions),
+				{ provide: StorageService, useValue: {}},
 				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: CasesService,
 					useValue: {
 						getOverlaysMarkup: () => null
 					}
+				},
+				{
+					provide: ContextConfig,
+					useValue: {}
 				},
 				{
 					provide: OverlaysService,
@@ -238,6 +238,8 @@ describe('OverlaysAppEffects', () => {
 			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
+			[contextFeatureSelector, contextState],
+			[selectContextsParams, contextState.params],
 			[selectMapsList, Object.values(mapState.entities)]
 		]);
 
@@ -245,112 +247,76 @@ describe('OverlaysAppEffects', () => {
 
 	}));
 
-	beforeEach(inject([CasesService, ImageryCommunicatorService, OverlaysAppEffects, OverlaysService], (_casesService: CasesService, _imageryCommunicatorService: ImageryCommunicatorService, _overlaysAppEffects: OverlaysAppEffects, _overlaysService: OverlaysService) => {
+	beforeEach(inject([CasesService, ImageryCommunicatorService, ContextAppEffects, OverlaysService], (_casesService: CasesService, _imageryCommunicatorService: ImageryCommunicatorService, _contextAppEffects: ContextAppEffects, _overlaysService: OverlaysService) => {
 		casesService = _casesService;
-		overlaysAppEffects = _overlaysAppEffects;
+		contextAppEffects = _contextAppEffects;
 		overlaysService = _overlaysService;
 		imageryCommunicatorService = _imageryCommunicatorService;
 	}));
 
 	it('should be defined', () => {
-		expect(overlaysAppEffects).toBeTruthy();
+		expect(contextAppEffects).toBeTruthy();
 	});
 
-	it(`displayMultipleOverlays$ effect with overlays count smaller than map count
-	should call DisplayOverlayFromStoreAction`, () => {
-		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction([{ overlay: firstOverlay }, { overlay: secondOverlay }]) });
+
+	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
+		contextState.params.defaultOverlay = DisplayedOverlay.latest;
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
+		const expectedResults = cold('--(ab)--', {
+			a: new SetContextParamsAction({ defaultOverlay: null }),
+			b: new DisplayOverlayFromStoreAction({ id: 'last' })
+		});
+		expect(contextAppEffects.displayLatestOverlay$).toBeObservable(expectedResults);
+	});
+
+	it(`displayTwoNearestOverlay$ effect with one overlay before and one date after 
+	should call DisplayMultipleOverlaysFromStoreAction with those two overlays`, () => {
+		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
+
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--(bc)--', {
-			b: new DisplayOverlayAction({ overlay: firstOverlay, 'mapId': '1', extent: undefined }),
-			c: new DisplayOverlayAction({ overlay: secondOverlay, 'mapId': '2', extent: undefined })
+			b: new DisplayMultipleOverlaysFromStoreAction([{
+				overlay: firstOverlay,
+				extent: undefined
+			}, { overlay: secondOverlay, extent: undefined }]),
+			c: new SetContextParamsAction({ defaultOverlay: null })
 		});
-		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
+		expect(contextAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
 
-	it(`displayMultipleOverlays$ effect with overlays count larger than map count
-	should call SetPendingOverlaysAction and ChangeLayoutAction`, () => {
-		const ov1 = <any>{ overlay: { id: 'one' }, extent: undefined },
-			ov2 = <any>{ overlay: { id: 'two' }, extent: undefined },
-			ov3 = <any>{ overlay: { id: 'three' }, extent: undefined };
-		const payload = [ov1, ov2, ov3];
-		actions = hot('--a--', { a: new DisplayMultipleOverlaysFromStoreAction(payload) });
+	it(`displayTwoNearestOverlay$ effect with overlay before
+	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
+		const overlay: any = { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') };
+		overlaysState.entities = { [overlay.id]: overlay };
+		overlaysState.filteredOverlays = ['first'];
+
+		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
+
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--(bc)--', {
-			b: new SetPendingOverlaysAction(payload),
-			c: new SetLayoutAction('layout4')
+			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
+			c: new SetContextParamsAction({ defaultOverlay: null })
 		});
-		expect(overlaysAppEffects.displayMultipleOverlays$).toBeObservable(expectedResults);
+		expect(contextAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
 
-	it(`displayPendingOverlaysOnChangeLayoutSuccess$ effect with overlays
-	should call DisplayOverlayFromStoreAction`, () => {
-		const ov1 = <any>{ id: 'first' }, ov2 = <any>{ id: 'first' };
-		mapState['pendingOverlays'] = [{ overlay: ov1 }, { overlay: ov2 }];
-		actions = hot('--a--', { a: new SetLayoutSuccessAction() });
+	it(`displayTwoNearestOverlay$ effect with overlay after
+	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
+		const overlay: any = { id: 'last', 'photoTime': new Date('2016-06-27T08:43:03.624Z') };
+		overlaysState.entities = { [overlay.id]: overlay };
+		overlaysState.filteredOverlays = ['last'];
+
+		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
+		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
+
+		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
 		const expectedResults = cold('--(bc)--', {
-			b: new DisplayOverlayAction({ overlay: <any>ov1, 'mapId': '1', extent: undefined }),
-			c: new DisplayOverlayAction({ overlay: <any>ov2, 'mapId': '2', extent: undefined })
+			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
+			c: new SetContextParamsAction({ defaultOverlay: null })
 		});
-		expect(overlaysAppEffects.displayPendingOverlaysOnChangeLayoutSuccess$).toBeObservable(expectedResults);
-	});
-
-	it(`removePendingOverlayOnDisplay$ effect with overlay
-	should call RemovePendingOverlayAction with that overlay`, () => {
-		const ov1 = <any>{ id: 'first' }, ov2 = <any>{ id: 'first' };
-		mapState['pendingOverlays'] = [{ overlay: ov1 }, { overlay: ov2 }];
-		actions = hot('--a--', {
-			a: new DisplayOverlaySuccessAction({
-				overlay: <any>ov1,
-				mapId: mapState.activeMapId
-			})
-		});
-		const expectedResults = cold('--b--', {
-			b: new RemovePendingOverlayAction('first')
-		});
-		expect(overlaysAppEffects.removePendingOverlayOnDisplay$).toBeObservable(expectedResults);
-	});
-
-
-	describe('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
-		it('MapId on payload', () => {
-			const firstOverlayId: string = exampleOverlays.first.id;
-			const firstOverlay = exampleOverlays.first;
-			actions = hot('--a--', {
-				a: new DisplayOverlayFromStoreAction({
-					id: firstOverlayId,
-					mapId: '4444'
-				})
-			});
-			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>firstOverlay, mapId: '4444', extent: undefined })
-			});
-			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
-		});
-
-		it('No MapId on payload( should dispatch activeMapId as mapId )', () => {
-			const lastOverlayId: string = exampleOverlays.last.id;
-			const lastOverlay = exampleOverlays.last;
-			mapState.activeMapId = 'activeMapId';
-
-			actions = hot('--a--', {
-				a: new DisplayOverlayFromStoreAction({
-					id: lastOverlayId
-				})
-			});
-
-			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined })
-			});
-			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
-		});
-
-	});
-
-	describe('setHoveredOverlay$ effect', () => {
-		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
-			const expectedResults = cold('(b|)', {
-				b: new SetHoveredOverlayAction(overlaysState.entities['first'])
-			});
-			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
-		});
+		expect(contextAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
 	});
 
 })

@@ -21,7 +21,7 @@ import {
 } from '@ansyn/menu-items';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '@ansyn/status-bar';
-import { selectContextEntities } from '@ansyn/context';
+import { selectContextEntities } from '@ansyn/core';
 import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 

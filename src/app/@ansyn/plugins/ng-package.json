@@ -9,7 +9,6 @@
     "@ansyn/menu-items",
     "@ansyn/map-facade",
     "@ansyn/imagery",
-    "@ansyn/context",
     "angular2-uuid",
     "auto-subscriptions"
   ],

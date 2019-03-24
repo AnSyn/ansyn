@@ -571,26 +571,6 @@
         }
       }
     },
-    "@ansyn/context": {
-      "root": "src/app/@ansyn/context",
-      "sourceRoot": "src/app/@ansyn/context",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "src/app/@ansyn/context/tsconfig.lib.json",
-            "project": "src/app/@ansyn/context/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "src/app/@ansyn/context/ng-package.json"
-            }
-          }
-        }
-      }
-    }
   },
   "defaultProject": "ansyn",
   "schematics": {

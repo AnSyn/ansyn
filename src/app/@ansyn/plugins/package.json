@@ -19,7 +19,6 @@
 		"@ansyn/menu-items": "0.3.22",
 		"@ansyn/map-facade": "0.3.22",
 		"@ansyn/imagery": "0.3.22",
-		"@ansyn/context": "0.3.22",
 		"angular2-uuid": "^1.1.1",
 		"auto-subscriptions": "^1.0.3"
 	},

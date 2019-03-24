@@ -8,9 +8,6 @@
       "@ansyn/menu": [
         "dist/ansyn/menu"
       ],
-      "@ansyn/context": [
-        "dist/ansyn/context"
-      ],
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
       ],

@@ -7,7 +7,6 @@
     "moment",
     "wellknown",
     "@ansyn/menu",
-    "@ansyn/context",
     "@ansyn/map-facade",
     "@ansyn/overlays",
     "@ngx-translate/core",

@@ -31,7 +31,6 @@ import {
 import { SetContextParamsAction } from '../actions/context.actions';
 import { ContextService } from '../services/context.service';
 import { get } from 'lodash';
-import * as olExtent from 'ol/extent';
 import { transformScale } from '@turf/turf';
 
 @Injectable()
@@ -124,7 +123,9 @@ export class ContextAppEffects {
 			let extent;
 			if (featureJson) {
 				const featureJsonScale = transformScale(featureJson, 1.1);
-				extent = olExtent.boundingExtent(featureJsonScale.geometry.coordinates[0]);
+				if (featureJsonScale.geometry.type !== 'Point') {
+					extent = bbox(featureJsonScale);
+				}
 			}
 			const payload = [{ overlay: overlaysBefore, extent }, {
 				overlay: overlaysAfter,

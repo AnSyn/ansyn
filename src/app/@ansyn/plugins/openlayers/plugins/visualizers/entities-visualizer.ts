@@ -216,16 +216,23 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
-		if (logicalEntities.length <= 0) {
+		const filteredLogicalEntities = logicalEntities.filter(entity => Boolean(entity.id));
+
+		if (filteredLogicalEntities.length < logicalEntities.length) {
+			console.warn('Got empty id\'s for some map features/annotations');
+		}
+
+		if (filteredLogicalEntities.length <= 0) {
 			return of(true);
 		}
 
 		const featuresCollectionToAdd = <FeatureCollection<any>>{
 			type: 'FeatureCollection',
-			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
+			features: filteredLogicalEntities
+				.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};
 
-		logicalEntities.forEach((entity: IVisualizerEntity) => {
+		filteredLogicalEntities.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id);
 		});
 
@@ -234,7 +241,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
 					this.idToEntity.set(_id, <any>{
-						originalEntity: logicalEntities.find(({ id }) => id === _id),
+						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
 					});
 				});

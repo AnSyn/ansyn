@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"@turf/turf": "^5.1.6",
-		"lodash": "^4.17.5",
+		"lodash": "^4.17.11",
 		"@ansyn/imagery": "0.3.22",
 		"@ngx-translate/core": "^10.0.2",
 		"angular2-uuid": "^1.1.1",

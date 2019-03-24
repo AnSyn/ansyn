@@ -25,7 +25,7 @@
 		"@ansyn/status-bar": "0.3.22",
 		"@turf/turf": "^5.1.6",
 		"geojson": "^0.5.0",
-		"lodash": "^4.17.5",
+		"lodash": "^4.17.11",
 		"moment": "^2.21.0",
 		"wellknown": "^0.5.0"
 	},

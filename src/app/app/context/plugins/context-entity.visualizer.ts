@@ -16,8 +16,8 @@ import { select, Store } from '@ngrx/store';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/plugins';
 import { selectContextEntities } from '../reducers/context.reducer';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ansyn';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

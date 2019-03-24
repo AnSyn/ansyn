@@ -5,7 +5,6 @@ import { GeoRegisteration, IOverlay, IOverlaysCriteria } from '@ansyn/core';
 import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ansyn';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
-import { CesiumLayer, ISceneMode } from "@ansyn/plugins";
 import { ImageryCommunicatorService } from "@ansyn/imagery";
 
 const moment = momentNs;

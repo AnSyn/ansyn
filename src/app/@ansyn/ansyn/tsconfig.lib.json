@@ -5,9 +5,6 @@
       "@ansyn/core": [
         "dist/ansyn/core"
       ],
-      "@ansyn/menu-items": [
-        "dist/ansyn/menu-items"
-      ],
       "@ansyn/menu": [
         "dist/ansyn/menu"
       ],
@@ -17,20 +14,8 @@
       "@ansyn/map-facade/*": [
         "dist/ansyn/map-facade/*"
       ],
-      "@ansyn/status-bar": [
-        "dist/ansyn/status-bar"
-      ],
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
-      ],
-      "@ansyn/plugins": [
-        "dist/ansyn/plugins"
-      ],
-      "@ansyn/overlays": [
-        "dist/ansyn/overlays"
-      ],
-      "@ansyn/overlays/*": [
-        "dist/ansyn/overlays/*"
       ]
     },
     "outDir": "../../../out-tsc/lib",

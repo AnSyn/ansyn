@@ -1,5 +1,6 @@
 export { OpenLayersMapSourceProvider } from './openlayers/mapSourceProviders/open-layers.map-source-provider';
 export { OpenLayersStaticImageSourceProviderSourceType } from './openlayers/mapSourceProviders/open-layers-static-image-source-provider';
+export { OpenLayerMarcoSourceProviderSourceType } from "./openlayers/mapSourceProviders/marco/open-layers-MARCO-source-provider";
 export {
 	DisabledOpenLayersMapName,
 	OpenLayersDisabledMap
@@ -14,3 +15,6 @@ export { isRasterLayer, removeWorkers } from './openlayers/maps/open-layers-map/
 export { EntitiesVisualizer } from './openlayers/plugins/visualizers/entities-visualizer';
 export { CesiumMapName } from './cesium/maps/cesium-map/cesium-map';
 export { OpenlayersGeoJsonLayersVisualizer } from "./openlayers/plugins/layers/openlayers-geoJson-layers.visualizer";
+
+export { CesiumMap } from "./cesium/maps/cesium-map/cesium-map";
+export { CesiumLayer, ISceneMode } from "./cesium/models/cesium-layer";

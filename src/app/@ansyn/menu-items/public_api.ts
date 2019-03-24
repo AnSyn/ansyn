@@ -28,6 +28,7 @@ export {
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
+	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs,

@@ -5,8 +5,11 @@ import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
-import { map, take } from 'rxjs/operators';
+import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
+
+import { fromPromise } from "rxjs/internal-compatibility";
+import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
 
 declare const Cesium: any;
 
@@ -23,14 +26,15 @@ export const CesiumMapName = 'CesiumMap';
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
 	mapObject: any;
+	element: HTMLElement;
 	_moveEndListener;
 
 	constructor(public projectionService: CesiumProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
 		super();
 	}
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
-		this.mapObject = new Cesium.Viewer(element);
+	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+		this.element = element;
 
 		return this.resetView(layers[0], position);
 	}
@@ -87,11 +91,101 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
+	createMapObject(layer: CesiumLayer): Observable<boolean> {
+		let cesiumSceneMode = this.getCesiumSceneMode(layer.sceneMode);
+		if (this.mapObject) {
+			if (!layer.sceneMode) {
+				cesiumSceneMode = this.mapObject.scene.mode;
+			}
+			this.internalDestroyCesium();
+		}
 
-	resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+		if (layer.mapProjection) {
+			return fromPromise(layer.mapProjection.readyPromise).pipe(
+				map(() => {
+					const viewer = new Cesium.Viewer(this.element, {
+						mapProjection: layer.mapProjection,
+						sceneMode: cesiumSceneMode,
+						imageryLayers: [layer.layer],
+						baseLayerPicker: true
+					});
+
+					// Set the global imagery layer to fully transparent and set the globe's base color to black
+					// const baseImageryLayer = viewer.imageryLayers.get(0);
+					// baseImageryLayer.alpha = 0.0;
+					viewer.scene.globe.baseColor = Cesium.Color.BLACK;
+					this.mapObject = viewer;
+					this.mapObject.imageryLayers.addImageryProvider(layer.layer);
+					this.initListeners();
+					return true;
+				})
+			);
+		} else {
+			const viewer = new Cesium.Viewer(this.element, {
+				sceneMode: cesiumSceneMode,
+				imageryLayers: [layer.layer],
+				baseLayerPicker: true
+			});
+
+			// Set the global imagery layer to fully transparent and set the globe's base color to black
+			// const baseImageryLayer = viewer.imageryLayers.get(0);
+			// baseImageryLayer.alpha = 0.0;
+			viewer.scene.globe.baseColor = Cesium.Color.BLACK;
+			this.mapObject = viewer;
+			return of(true);
+		}
+	}
+
+	getCesiumSceneMode(sceneMode: ISceneMode): any {
+		switch (sceneMode) {
+			case ISceneMode.COLUMBUS_VIEW: {
+				return Cesium.SceneMode.COLUMBUS_VIEW;
+			}
+			case ISceneMode.MORPHING: {
+				return Cesium.SceneMode.MORPHING;
+			}
+			case ISceneMode.SCENE2D: {
+				return Cesium.SceneMode.SCENE2D;
+			}
+			case ISceneMode.SCENE3D: {
+				return Cesium.SceneMode.SCENE3D;
+			}
+			default: {
+				console.warn('un supported scene mode ', sceneMode);
+				return Cesium.SceneMode.SCENE2D;
+			}
+		}
+	}
+
+	resetView(layer: CesiumLayer, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+		if (!this.mapObject || (layer.mapProjection && this.mapObject.scene.mapProjection.projectionName !== layer.mapProjection.projectionName)) {
+			return this.createMapObject(layer).pipe(
+				mergeMap((isReady) => {
+					if (extent) {
+						return this.fitToExtent(extent);
+					}
+					return this.setPosition(position);
+				}))
+		}
+		;
+
+		// else
 		const imageryLayers = this.mapObject.imageryLayers;
-		imageryLayers.removeAll(false);
-		imageryLayers.addImageryProvider(layer);
+
+		if (layer.removePrevLayers) {
+			imageryLayers.removeAll(false);
+		}
+
+		imageryLayers.addImageryProvider(layer.layer);
+		if (layer.terrainProvider) {
+			this.mapObject.terrainProvider = layer.terrainProvider;
+		}
+
+		if (layer.sceneMode) {
+			let cesiumSceneMode = this.getCesiumSceneMode(layer.sceneMode);
+			this.mapObject.scene.mode = cesiumSceneMode;
+		}
+
 		if (extent) {
 			return this.fitToExtent(extent);
 		}
@@ -145,8 +239,8 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	getPosition(): Observable<ICaseMapPosition> {
-		const { height, width } = this.mapObject.canvas;
 		try {
+			const { height, width } = this.mapObject.canvas;
 			const topLeft = this._imageToGround({ x: 0, y: 0 });
 			const topRight = this._imageToGround({ x: width, y: 0 });
 			const bottomRight = this._imageToGround({ x: width, y: height });
@@ -203,9 +297,13 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	public dispose() {
 		this.removeAllLayers();
+		this.internalDestroyCesium();
+	}
 
+	internalDestroyCesium() {
 		if (this.mapObject) {
 			this.mapObject.camera.moveEnd.removeEventListener(this._moveEndListener);
+			this.mapObject.destroy();
 		}
 	}
 

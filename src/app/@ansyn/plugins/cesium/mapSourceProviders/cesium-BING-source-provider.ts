@@ -1,6 +1,7 @@
 import { BaseMapSourceProvider, ImageryMapSource } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
 import { ICaseMapState } from '@ansyn/core';
+import { CesiumLayer } from "../models/cesium-layer";
 declare const Cesium: any;
 
 export const CesiumBingSourceProviderSourceType = 'BING_CESIUM';
@@ -16,7 +17,8 @@ export class CesiumBINGSourceProvider extends BaseMapSourceProvider {
 			key: 'Ag9RlBTbfJQMhFG3fxO9fLAbYMO8d5sevTe-qtDsAg6MjTYYFMFfFFrF2SrPIZNq',
 			mapStyle: Cesium.BingMapsStyle.AERIAL_WITH_LABELS
 		});
-		return [cesiumBingLayer];
+		const layer = new CesiumLayer(cesiumBingLayer);
+		return [layer];
 	}
 
 }

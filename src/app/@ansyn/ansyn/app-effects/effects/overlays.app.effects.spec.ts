@@ -43,7 +43,7 @@ import {
 	MAP_SOURCE_PROVIDERS_CONFIG,
 	SetLayoutAction,
 	SetLayoutSuccessAction
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import {
 	initialMapState,

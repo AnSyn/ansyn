@@ -5,7 +5,7 @@ import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState } from '../../../../core/public_api';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';

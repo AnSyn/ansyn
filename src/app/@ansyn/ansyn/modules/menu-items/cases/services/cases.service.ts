@@ -11,7 +11,7 @@ import {
 	IDilutedCaseState,
 	IStoredEntity,
 	StorageService
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';

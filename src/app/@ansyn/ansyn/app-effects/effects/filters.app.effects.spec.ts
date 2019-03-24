@@ -24,7 +24,7 @@ import {
 	GenericTypeResolverService,
 	IOverlay,
 	SetFavoriteOverlaysAction
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import {
 	LoadOverlaysAction,
 	OverlayReducer,

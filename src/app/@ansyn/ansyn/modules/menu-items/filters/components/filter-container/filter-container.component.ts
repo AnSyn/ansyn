@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { FilterType } from '@ansyn/core';
+import { FilterType } from '../../../../core/public_api';
 import { clone } from 'lodash';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { filtersConfig } from '../../services/filters.service';

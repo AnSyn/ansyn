@@ -31,7 +31,7 @@ import {
 	LayoutKey,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction
-} from '@ansyn/core';
+} from '../modules/core/public_api';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/public_api';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';

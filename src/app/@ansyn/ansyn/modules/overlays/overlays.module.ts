@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '../core/public_api';
 import { BaseOverlaySourceFactoryProvider, createOverlaysSourceProviders, IOverlaysMetadata } from './models/overlays-source-providers';
 import { OverlaysLoaderComponent } from './components/overlays-loader/overlays-loader.component';
 

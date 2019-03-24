@@ -14,7 +14,7 @@ import {
 	IMapSourceProvidersConfig,
 	IOverlay,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/core';
+} from '../../../../core/public_api';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from '../open-layers.map-source-provider';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';

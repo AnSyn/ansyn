@@ -7,7 +7,7 @@ import {
 	ICaseMapState,
 	IContextEntity,
 	IVisualizerEntity
-} from '@ansyn/core';
+} from '@ansyn/ansyn';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';

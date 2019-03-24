@@ -48,7 +48,7 @@ import {
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()

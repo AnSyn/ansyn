@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { ProjectionConverterService } from './projection-converter.service';
-import { ICoordinatesSystem } from '@ansyn/core';
+import { ICoordinatesSystem } from '../../../core/public_api';
 import { toolsConfig } from '../models/tools-config';
 
 describe('ProjectionConverterService', () => {

@@ -9,7 +9,6 @@
 	"author": "",
 	"license": "MIT",
 	"peerDependencies": {
-		"@ansyn/core": "0.2.81"
 	},
 	"typings": "index.d.ts"
 }

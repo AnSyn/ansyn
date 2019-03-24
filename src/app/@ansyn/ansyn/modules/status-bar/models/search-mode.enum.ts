@@ -1,4 +1,4 @@
-import { CaseGeoFilter } from '@ansyn/core';
+import { CaseGeoFilter } from '../../core/public_api';
 
 export enum SearchModeEnum {
 	none = 'none'

@@ -11,7 +11,7 @@ import {
 	LoggerService,
 	mergeLimitedArrays,
 	sortByDateDesc
-} from '@ansyn/core';
+} from '../../core/public_api';
 import { catchError, map } from 'rxjs/operators';
 import { IOverlayByIdMetaData } from '../services/overlays.service';
 

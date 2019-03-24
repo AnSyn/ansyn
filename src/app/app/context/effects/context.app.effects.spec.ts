@@ -38,7 +38,7 @@ import {
 	ICase,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 	StorageService
-} from '@ansyn/core';
+} from '@ansyn/ansyn';
 import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { cloneDeep as _cloneDeep } from 'lodash';

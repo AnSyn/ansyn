@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RemoveTaskModalComponent } from './remove-task-modal.component';
 import { FormsModule } from '@angular/forms';
-import { AnsynInputComponent } from '@ansyn/core';
+import { AnsynInputComponent } from '../../../../core/public_api';
 import { MatInputModule, MatFormFieldModule } from '@angular/material';
 
 describe('RemoveTaskModalComponent', () => {

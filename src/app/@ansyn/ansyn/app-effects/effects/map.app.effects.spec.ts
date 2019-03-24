@@ -34,7 +34,7 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '../../modules/status-bar/public_api';
-import * as extentFromGeojson from '@ansyn/core';
+import * as extentFromGeojson from '../../modules/core/public_api';
 import {
 	GeoRegisteration,
 	ICase,
@@ -43,7 +43,7 @@ import {
 	IOverlaysFetchData,
 	LoggerService,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import {
 	BaseMapSourceProvider,
 	CacheService,

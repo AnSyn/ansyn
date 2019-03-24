@@ -4,7 +4,7 @@ import { TasksService } from '../services/tasks.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { tasksFeatureKey, TasksReducer } from '../reducers/tasks.reducer';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '../../../core/public_api';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';

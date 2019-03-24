@@ -10,7 +10,7 @@ import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/public_api';
-import { IVisualizerEntity } from '@ansyn/core';
+import { IVisualizerEntity } from '../../../../../core/public_api';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, filter, map, mergeMap, pluck, take, tap } from 'rxjs/operators';

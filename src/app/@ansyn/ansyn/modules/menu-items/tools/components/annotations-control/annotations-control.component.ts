@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
-import { AnnotationMode, ClearActiveInteractionsAction, IVisualizerStyle } from '@ansyn/core';
+import { AnnotationMode, ClearActiveInteractionsAction, IVisualizerStyle } from '../../../../core/public_api';
 import { map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';

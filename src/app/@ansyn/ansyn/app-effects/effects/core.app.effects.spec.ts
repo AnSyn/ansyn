@@ -3,7 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
-import { coreInitialState, coreStateSelector, GoNextPresetOverlay, IOverlay, LoggerService } from '@ansyn/core';
+import { coreInitialState, coreStateSelector, GoNextPresetOverlay, IOverlay, LoggerService } from '../../modules/core/public_api';
 import { cold, hot } from 'jasmine-marbles';
 import { casesStateSelector, initialCasesState } from '../../modules/menu-items/public_api';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade';

@@ -4,7 +4,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { GoToAction, ProjectionConverterService } from '../modules/menu-items/public_api';
 import { AnsynApi } from './ansyn-api.service';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
-import { IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
+import { IOverlay, LayoutKey, SetLayoutAction } from '../modules/core/public_api';
 import { DisplayOverlayAction } from '../modules/overlays/public_api';
 import { ANSYN_ID } from './ansyn-id.provider';
 

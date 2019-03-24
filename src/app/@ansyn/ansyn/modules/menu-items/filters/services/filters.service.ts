@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { buildFilteredOverlays, FilterType, ICaseFilter, IFilterModel, IOverlay, mapValuesToArray } from '@ansyn/core';
+import { buildFilteredOverlays, FilterType, ICaseFilter, IFilterModel, IOverlay, mapValuesToArray } from '../../../core/public_api';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';

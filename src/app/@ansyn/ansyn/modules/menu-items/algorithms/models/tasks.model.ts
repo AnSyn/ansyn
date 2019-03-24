@@ -1,4 +1,4 @@
-import { IDilutedOverlay, IEntity, IOverlay } from '@ansyn/core';
+import { IDilutedOverlay, IEntity, IOverlay } from '../../../core/public_api';
 import { GeometryObject } from 'geojson';
 
 export const AlgorithmsConfig = 'algorithmsConfig';

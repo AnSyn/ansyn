@@ -13,7 +13,7 @@ import {
 	sortByDateDesc,
 	toRadians,
 	GeoRegisteration
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
 import * as wellknown from 'wellknown';

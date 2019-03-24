@@ -3,7 +3,7 @@ import { Point } from 'geojson';
 import { Observable, Subscription } from 'rxjs';
 import * as turf from '@turf/turf';
 import Projection from 'ol/proj/Projection';
-import { areCoordinatesNumeric } from '@ansyn/core';
+import { areCoordinatesNumeric } from '../../../../../core/public_api';
 
 export class OpenLayersMousePositionControl extends MousePosition {
 	private approximateProjectionSubscription: Subscription;

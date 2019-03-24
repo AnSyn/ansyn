@@ -14,7 +14,7 @@ import { IOverlaysState } from '../modules/overlays/public_api';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
-import { ICoreState } from '@ansyn/core';
+import { ICoreState } from '../modules/core/public_api';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 

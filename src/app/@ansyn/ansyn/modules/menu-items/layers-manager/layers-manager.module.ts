@@ -8,7 +8,7 @@ import { LayersManagerComponent } from './components/layers-manager/layers-manag
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
 import { LayerCollectionComponent } from './components/layers-collection/layer-collection.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '../../core/public_api';
 import { DownloadLayersComponent } from './components/data-layers-modals/download-layers/download-layers.component';
 import { LayerComponent } from './components/layer/layer.component';
 import { FormsModule } from '@angular/forms';

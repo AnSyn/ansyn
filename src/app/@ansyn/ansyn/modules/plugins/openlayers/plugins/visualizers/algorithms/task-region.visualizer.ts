@@ -5,7 +5,7 @@ import { FeatureCollection, GeometryObject } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
-import { getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/core';
+import { getPointByGeometry, getPolygonByPointAndRadius } from '../../../../../core/public_api';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';

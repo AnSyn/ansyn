@@ -6,7 +6,7 @@ import {
 	SetOverlaysCriteriaAction,
 	SetToastMessageAction,
 	MultipleOverlaysSourceConfig, IMultipleOverlaysSourceConfig
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';

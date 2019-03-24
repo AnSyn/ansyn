@@ -9,7 +9,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
-import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '../../../core/public_api';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;

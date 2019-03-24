@@ -7,7 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-timepicker.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { ClickOutsideDirective, coreFeatureKey, CoreReducer, MockComponent } from '@ansyn/core';
+import { ClickOutsideDirective, coreFeatureKey, CoreReducer, MockComponent } from '../../../core/public_api';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 
 describe('ComboBoxesComponent', () => {

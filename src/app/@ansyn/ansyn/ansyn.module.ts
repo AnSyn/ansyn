@@ -21,7 +21,7 @@ import { ImageryModule } from '@ansyn/imagery';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AlertsModule, CoreModule } from '@ansyn/core';
+import { AlertsModule, CoreModule } from './modules/core/public_api';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ansynConfig } from './config/ansyn.config';
 import { StoreModule } from '@ngrx/store';

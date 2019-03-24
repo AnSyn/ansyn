@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { Observable, Subscription } from 'rxjs';
-import { ImageManualProcessArgs } from '@ansyn/core';
+import { ImageManualProcessArgs } from '../../../../core/public_api';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
 

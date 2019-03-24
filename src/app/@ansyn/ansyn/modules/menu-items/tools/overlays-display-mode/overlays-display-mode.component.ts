@@ -3,7 +3,7 @@ import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { select, Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { Observable } from 'rxjs';
-import { OverlayDisplayMode } from '@ansyn/core';
+import { OverlayDisplayMode } from '../../../core/public_api';
 import { UUID } from 'angular2-uuid';
 import { map } from 'rxjs/operators';
 

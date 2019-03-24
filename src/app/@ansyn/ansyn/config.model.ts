@@ -6,7 +6,7 @@ import {
 	ILoggerConfig, IMapProvidersConfig,
 	IMapSourceProvidersConfig,
 	IMultipleOverlaysSourceConfig
-} from '@ansyn/core';
+} from './modules/core/public_api';
 import { IStatusBarConfig } from './modules/status-bar/public_api';
 import { IMenuConfig } from '@ansyn/menu';
 import { IVisualizersConfig } from '@ansyn/imagery';

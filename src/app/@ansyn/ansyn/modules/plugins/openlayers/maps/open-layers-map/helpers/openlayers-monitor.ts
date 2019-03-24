@@ -1,4 +1,4 @@
-import { IMapErrorMessage, IMapProgress } from '@ansyn/core';
+import { IMapErrorMessage, IMapProgress } from '../../../../../core/public_api';
 import TileSource from 'ol/source/Tile';
 import { IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties } from '@ansyn/imagery';
 import Static from 'ol/source/ImageStatic';

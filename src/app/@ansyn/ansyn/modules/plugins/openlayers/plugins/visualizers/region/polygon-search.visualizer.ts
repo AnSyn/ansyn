@@ -4,7 +4,7 @@ import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
 import { Position } from 'geojson';
-import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize } from '@ansyn/core';
+import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize } from '../../../../../core/public_api';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/public_api';
 import { RegionVisualizer } from './region.visualizer';

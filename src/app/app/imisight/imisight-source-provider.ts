@@ -16,7 +16,7 @@ import {
 	Overlay,
 	sortByDateDesc,
 	toRadians
-} from '@ansyn/core';
+} from '@ansyn/ansyn';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
 import { Auth0Service } from './auth0.service';
 

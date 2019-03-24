@@ -1,4 +1,4 @@
-import { FilterType, ICaseFilter, IOverlay } from '@ansyn/core';
+import { FilterType, ICaseFilter, IOverlay } from '../../../../core/public_api';
 
 export abstract class FilterMetadata {
 	type: FilterType;

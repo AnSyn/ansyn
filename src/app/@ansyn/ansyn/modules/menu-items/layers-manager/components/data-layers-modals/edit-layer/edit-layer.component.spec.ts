@@ -13,7 +13,7 @@ import {
 	LoggerConfig,
 	LoggerService,
 	StorageService
-} from '@ansyn/core';
+} from '../../../../../core/public_api';
 import { MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 

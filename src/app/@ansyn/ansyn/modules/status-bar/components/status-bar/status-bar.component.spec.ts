@@ -3,7 +3,7 @@ import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { coreFeatureKey, CoreReducer, MockComponent } from '@ansyn/core';
+import { coreFeatureKey, CoreReducer, MockComponent } from '../../../core/public_api';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;

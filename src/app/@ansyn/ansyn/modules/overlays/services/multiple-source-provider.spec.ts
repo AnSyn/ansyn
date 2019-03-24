@@ -9,7 +9,7 @@ import {
 	IOverlaysFetchData,
 	LoggerService,
 	MultipleOverlaysSourceConfig
-} from '@ansyn/core';
+} from '../../core/public_api';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';

@@ -1,4 +1,4 @@
-import { IContext } from '@ansyn/core';
+import { IContext } from '@ansyn/ansyn';
 import { IContextParams } from '../reducers/context.reducer';
 
 export enum ContextActionTypes {

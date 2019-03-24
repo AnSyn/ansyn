@@ -16,7 +16,7 @@ import {
 	SelectDilutedCaseAction, toolsConfig, toolsStateSelector
 } from '../../modules/menu-items/public_api';
 import { IMapState, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
-import { IDilutedCase, ImageManualProcessArgs, IOverlay, SetToastMessageAction } from '@ansyn/core';
+import { IDilutedCase, ImageManualProcessArgs, IOverlay, SetToastMessageAction } from '../../modules/core/public_api';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';

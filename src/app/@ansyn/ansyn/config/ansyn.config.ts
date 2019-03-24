@@ -7,7 +7,7 @@ import {
 	SettingsComponent,
 	ToolsComponent
 } from '../modules/menu-items/public_api';
-import { IAlert } from '@ansyn/core';
+import { IAlert } from '../modules/core/public_api';
 import { IMenuItem } from '@ansyn/menu';
 import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 

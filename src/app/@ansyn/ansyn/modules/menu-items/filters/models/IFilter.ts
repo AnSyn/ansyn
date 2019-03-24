@@ -1,4 +1,4 @@
-import { FilterType } from '@ansyn/core';
+import { FilterType } from '../../../core/public_api';
 
 export interface IFilter {
 	modelName: string;

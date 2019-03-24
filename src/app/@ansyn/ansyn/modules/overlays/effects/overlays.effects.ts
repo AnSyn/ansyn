@@ -22,7 +22,7 @@ import {
 	selectFavoriteOverlays,
 	selectPresetOverlays,
 	UpdateOverlaysCountAction
-} from '@ansyn/core';
+} from '../../core/public_api';
 import { catchError, filter, map, mergeMap, switchMap } from 'rxjs/operators';
 
 @Injectable()

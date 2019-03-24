@@ -13,7 +13,7 @@ import {
 	Overlay,
 	sortByDateDesc,
 	toRadians
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '../../modules/overlays/public_api';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { catchError, map } from 'rxjs/operators';

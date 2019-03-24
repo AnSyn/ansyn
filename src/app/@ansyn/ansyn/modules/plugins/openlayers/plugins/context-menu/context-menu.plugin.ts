@@ -7,7 +7,7 @@ import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
 import { DisplayOverlayFromStoreAction, overlaysStateSelector } from '../../../../overlays/public_api';
-import { areCoordinatesNumeric, IOverlay } from '@ansyn/core';
+import { areCoordinatesNumeric, IOverlay } from '../../../../core/public_api';
 import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';

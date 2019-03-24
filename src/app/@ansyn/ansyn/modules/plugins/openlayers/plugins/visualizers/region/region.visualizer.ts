@@ -12,7 +12,7 @@ import {
 	selectRegion,
 	SetOverlaysCriteriaAction,
 	SetToastMessageAction
-} from '@ansyn/core';
+} from '../../../../../core/public_api';
 import {
 	SearchMode,
 	SearchModeEnum,

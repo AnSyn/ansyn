@@ -6,9 +6,6 @@
       "@ansyn/ansyn": [
         "src/app/@ansyn/ansyn/public_api"
       ],
-      "@ansyn/core": [
-        "src/app/@ansyn/core/public_api"
-      ],
       "@ansyn/imagery": [
         "src/app/@ansyn/imagery/public_api"
       ],

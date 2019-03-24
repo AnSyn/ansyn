@@ -3,7 +3,7 @@ import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CommonModule } from '@angular/common';
 import { TasksComponent } from './components/tasks/tasks.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '../../core/public_api';
 import { TasksTableComponent } from './components/tasks-table/tasks-table.component';
 import { TasksTablePageComponent } from './components/tasks-table-page/tasks-table-page.component';
 import { TasksTablePageHeaderComponent } from './components/tasks-table-page-header/tasks-table-page-header.component';

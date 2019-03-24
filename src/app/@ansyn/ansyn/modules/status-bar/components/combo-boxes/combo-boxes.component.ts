@@ -27,7 +27,7 @@ import {
 	SetLayoutAction,
 	SetOverlaysCriteriaAction,
 	UpdateOverlaysCountAction
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';
 import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';

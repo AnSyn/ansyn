@@ -8,7 +8,7 @@ import {
 	IContextEntity,
 	IOverlaySpecialObject,
 	SetToastMessageAction
-} from '@ansyn/core';
+} from '@ansyn/ansyn';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayFromStoreAction,

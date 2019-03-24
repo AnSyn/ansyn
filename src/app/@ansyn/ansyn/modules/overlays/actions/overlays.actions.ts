@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '@ansyn/core';
+import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay, type } from '../../core/public_api';
 import {
 	IMarkUpData,
 	IOverlayDropMarkUp,

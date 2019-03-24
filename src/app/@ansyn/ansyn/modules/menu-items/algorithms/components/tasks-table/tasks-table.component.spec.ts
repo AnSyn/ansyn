@@ -6,7 +6,7 @@ import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { CoreConfig, LoggerConfig, MockComponent } from '@ansyn/core';
+import { CoreConfig, LoggerConfig, MockComponent } from '../../../../core/public_api';
 import { TasksService } from '../../services/tasks.service';
 import { mapFacadeConfig } from '@ansyn/map-facade';
 import { TasksRemoteService } from '../../services/tasks-remote.service';

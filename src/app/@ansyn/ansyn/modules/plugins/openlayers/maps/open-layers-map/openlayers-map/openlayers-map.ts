@@ -25,7 +25,7 @@ import {
 	ICaseMapPosition,
 	ICoreConfig,
 	IMapProgress
-} from '@ansyn/core';
+} from '../../../../../core/public_api';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';

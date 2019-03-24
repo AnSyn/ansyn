@@ -21,7 +21,7 @@ import {
 	Overlay,
 	sortByDateDesc,
 	toRadians
-} from '@ansyn/core';
+} from '../../../modules/core/public_api';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { catchError, map } from 'rxjs/operators';

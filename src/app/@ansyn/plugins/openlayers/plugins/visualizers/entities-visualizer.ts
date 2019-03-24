@@ -222,8 +222,17 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 		const featuresCollectionToAdd = <FeatureCollection<any>>{
 			type: 'FeatureCollection',
-			features: logicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }))
+			features: logicalEntities
+				.filter(entity => Boolean(entity.id))
+				.map(entity => ({ ...entity.featureJson, id: entity.id }))
 		};
+
+		if (featuresCollectionToAdd.features.length < logicalEntities.length) {
+			console.warn('Got empty id\'s for some map features/annotations');
+			if (featuresCollectionToAdd.features.length === 0) {
+				return of(true);
+			}
+		}
 
 		logicalEntities.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id);

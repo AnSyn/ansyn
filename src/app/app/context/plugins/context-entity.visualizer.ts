@@ -17,8 +17,8 @@ import { selectContextEntities } from '@ansyn/core';
 import { IMapState, MapFacadeService, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer } from '../entities-visualizer';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { EntitiesVisualizer } from '../../../@ansyn/plugins/openlayers/plugins/visualizers/entities-visualizer';
+import { OpenLayersMap } from '../../../@ansyn/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

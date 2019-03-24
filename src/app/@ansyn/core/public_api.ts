@@ -159,7 +159,3 @@ export { IDeltaTime } from './models/time.model';
 /* @todo: remove contexts actions */
 export { AddAllContextsAction, SetContextParamsAction } from './actions/core.actions';
 export { selectContextEntities, selectContextsArray } from './reducers/core.reducer';
-
-/* @todo: remove contexts actions */
-export { AddAllContextsAction, SetContextParamsAction } from './actions/core.actions';
-export { selectContextEntities, selectContextsArray } from './reducers/core.reducer';

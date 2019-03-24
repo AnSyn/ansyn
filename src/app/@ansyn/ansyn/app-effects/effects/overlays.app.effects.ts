@@ -99,7 +99,9 @@ export class OverlaysAppEffects {
 			let extent;
 			if (featureJson) {
 				const featureJsonScale = transformScale(featureJson, 1.1);
-				extent = bbox(featureJsonScale);
+				if (featureJsonScale.geometry.type !== 'Point') {
+					extent = bbox(featureJsonScale);
+				}
 			}
 			const payload = [{ overlay: overlaysBefore, extent }, {
 				overlay: overlaysAfter,

@@ -10,7 +10,6 @@
 		"@ansyn/core": "0.3.22"
 	},
 	"dependencies": {
-		"@ansyn/core": "0.3.22",
 		"auto-subscriptions": "^1.0.3"
 	}
 }

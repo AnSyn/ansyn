@@ -3,7 +3,6 @@
   "dest": "../../../../dist/ansyn/ansyn",
   "whitelistedNonPeerDependencies": [
     "@ansyn/context",
-    "@ansyn/core",
     "@ansyn/imagery",
     "@ansyn/map-facade",
     "@ansyn/menu",

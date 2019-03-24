@@ -2,6 +2,7 @@
 	"name": "@ansyn/plugins",
 	"version": "0.3.22",
 	"peerDependencies": {
+		"@ansyn/core": "0.3.22",
 		"@angular/common": "^7.2.2",
 		"@angular/core": "^7.2.2",
 		"@ngrx/core": "^1.2.0",
@@ -11,7 +12,6 @@
 		"cesium": "^1.52.0"
 	},
 	"dependencies": {
-		"@ansyn/core": "0.3.22",
 		"@turf/turf": "5.1.6",
 		"lodash": "4.17.5",
 		"@ansyn/status-bar": "0.3.22",

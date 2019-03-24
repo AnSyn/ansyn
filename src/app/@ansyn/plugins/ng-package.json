@@ -2,18 +2,15 @@
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/plugins",
   "whitelistedNonPeerDependencies": [
-    "@ansyn/core",
     "@turf/turf",
     "lodash",
-    "ol",
     "@ansyn/status-bar",
     "@ansyn/overlays",
     "@ansyn/menu-items",
     "@ansyn/map-facade",
     "@ansyn/imagery",
     "angular2-uuid",
-    "auto-subscriptions",
-    "cesium"
+    "auto-subscriptions"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

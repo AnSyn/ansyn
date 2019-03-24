@@ -1,6 +1,7 @@
 <mat-form-field class="example-full-width">
 	<input matInput
 		   #input
+		   [maxLength]="maxLength"
 		   [placeholder]="label"
 		   [autocomplete]="autocomplete"
 		   (blur)="onBlur()"

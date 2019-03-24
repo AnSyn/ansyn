@@ -17,6 +17,7 @@ import { Attribute } from '@angular/core';
 	]
 })
 export class AnsynInputComponent implements ControlValueAccessor, OnInit {
+	@Input() maxLength: number = Number.MAX_SAFE_INTEGER;
 	@Input() label: string;
 	@Input() required = true;
 	@Input() autocomplete: 'off' | 'on' = 'off';

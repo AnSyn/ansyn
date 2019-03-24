@@ -35,7 +35,7 @@ import {
 	SetRemovedOverlaysVisibilityAction
 } from '@ansyn/core';
 import { HttpClientModule } from '@angular/common/http';
-import { SetComboBoxesProperties } from '../../modules/status-bar/public_api';
+import { SetComboBoxesProperties } from '../../../modules/status-bar/public_api';
 import { SetContextParamsAction } from '@ansyn/core';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';

@@ -13,7 +13,7 @@ import {
 	mapStateSelector,
 	selectMaps,
 	SetIsLoadingAcion
-} from '../../modules/@ansyn/map-facade';
+} from '../../../map-facade/public_api';
 import {
 	BaseOverlaySourceProvider,
 	DisplayOverlayAction,

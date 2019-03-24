@@ -10,11 +10,11 @@
 		"@ngrx/effects": "^7.2.0"
 	},
 	"dependencies": {
-		"@turf/turf": "5.1.6",
-		"lodash": "4.17.5",
+		"@turf/turf": "^5.1.6",
+		"lodash": "^4.17.5",
 		"@ansyn/imagery": "0.3.22",
 		"@ngx-translate/core": "^10.0.2",
-		"angular2-uuid": "1.1.1",
+		"angular2-uuid": "^1.1.1",
 		"auto-subscriptions": "^1.0.3"
 	},
 	"license": "MIT"

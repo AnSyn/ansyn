@@ -12,15 +12,15 @@
 		"cesium": "^1.52.0"
 	},
 	"dependencies": {
-		"@turf/turf": "5.1.6",
-		"lodash": "4.17.5",
+		"@turf/turf": "^5.1.6",
+		"lodash": "^4.17.5",
 		"@ansyn/status-bar": "0.3.22",
 		"@ansyn/overlays": "0.3.22",
 		"@ansyn/menu-items": "0.3.22",
 		"@ansyn/map-facade": "0.3.22",
 		"@ansyn/imagery": "0.3.22",
 		"@ansyn/context": "0.3.22",
-		"angular2-uuid": "1.1.1",
+		"angular2-uuid": "^1.1.1",
 		"auto-subscriptions": "^1.0.3"
 	},
 	"license": "MIT"

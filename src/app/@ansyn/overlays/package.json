@@ -11,9 +11,9 @@
 		"d3": "^4.13.0"
 	},
 	"dependencies": {
-		"@turf/turf": "5.1.6",
-		"lodash": "4.17.5",
-		"@ansyn/event-drops": "0.2.81.9",
+		"@turf/turf": "^5.1.6",
+		"lodash": "^4.17.5",
+		"@ansyn/event-drops": "^0.2.81.9",
 		"@ngx-translate/core": "^10.0.2",
 		"auto-subscriptions": "^1.0.3"
 	},

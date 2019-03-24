@@ -31,7 +31,7 @@ import {
 import { SetContextParamsAction } from '../actions/context.actions';
 import { ContextService } from '../services/context.service';
 import { get } from 'lodash';
-import { transformScale } from '@turf/turf';
+import { transformScale, bbox } from '@turf/turf';
 
 @Injectable()
 export class ContextAppEffects {

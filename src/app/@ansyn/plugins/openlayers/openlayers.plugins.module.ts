@@ -9,7 +9,6 @@ import { ImageProcessingPlugin } from './plugins/image-processing/image-processi
 import { OpenlayersOsmLayersPlugin } from './plugins/layers/openlayers-osm-layers.plugin';
 import { FootprintHeatmapVisualizer } from './plugins/visualizers/overlays/heatmap-visualizer';
 import { AlertsPlugin } from './plugins/alerts/alerts.plugin';
-import { ContextEntityVisualizer } from './plugins/visualizers/contexts/context-entity.visualizer';
 import { FrameVisualizer } from './plugins/visualizers/overlays/frame-visualizer';
 import { FootprintPolylineVisualizer } from './plugins/visualizers/overlays/polyline-visualizer';
 import { AnnotationsVisualizer } from './plugins/visualizers/tools/annotations.visualizer';
@@ -48,7 +47,6 @@ import { OpenLayerMarcoSourceProvider } from "./mapSourceProviders/marco/open-la
 				OpenlayersArcgisLayersPulgin,
 				AlertsPlugin,
 				// Visualizers
-				ContextEntityVisualizer,
 				FootprintHeatmapVisualizer,
 				FrameVisualizer,
 				FootprintPolylineVisualizer,

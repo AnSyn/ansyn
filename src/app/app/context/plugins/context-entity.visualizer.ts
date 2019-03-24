@@ -13,12 +13,11 @@ import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { selectContextEntities } from '@ansyn/core';
-import { IMapState, MapFacadeService, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
+import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer } from '../../../@ansyn/plugins/openlayers/plugins/visualizers/entities-visualizer';
-import { OpenLayersMap } from '../../../@ansyn/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/plugins';
+import { selectContextEntities } from '../reducers/context.reducer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -99,9 +98,9 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		const entityMap = this.idToEntity.get(featureId);
 
 		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
-			const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
 			const centroid = getPointByGeometry(featureGeoJson.geometry);
-			const point = new olPoint(<[number, number]> centroid.coordinates);
+			const point = new olPoint(<[number, number]>centroid.coordinates);
 
 			this.idToCachedCenter.set(featureId, point);
 			return point;

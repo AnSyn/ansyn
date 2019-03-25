@@ -8,7 +8,7 @@
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^7.2.0",
 		"@ngrx/effects": "^7.2.0",
-		"d3": "^4.13.0"
+		"d3": "^5.9.2"
 	},
 	"dependencies": {
 		"@turf/turf": "^5.1.6",

@@ -9,7 +9,7 @@ import {
 	ViewEncapsulation
 } from '@angular/core';
 import { selection } from 'd3';
-import * as d3 from 'd3/build/d3';
+import * as d3 from 'd3/dist/d3';
 import eventDrops from '@ansyn/event-drops';
 import { OverlaysService } from '../../services/overlays.service';
 import {

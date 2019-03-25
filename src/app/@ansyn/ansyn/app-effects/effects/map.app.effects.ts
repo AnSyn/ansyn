@@ -10,7 +10,7 @@ import {
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import {
 	ImageryCreatedAction,
 	IMapFacadeConfig,
@@ -30,7 +30,7 @@ import {
 	SetMapGeoEnabledModeToolsActionStore,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import {
 	BackToWorldView,
 	CoreActionTypes,
@@ -44,7 +44,7 @@ import {
 	toastMessages,
 	ToggleMapLayersAction
 } from '@ansyn/core';
-import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
+import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '../../modules/plugins/public_api';
 import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	catchError,

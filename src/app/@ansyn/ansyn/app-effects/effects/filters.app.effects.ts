@@ -20,7 +20,7 @@ import {
 	selectFacets,
 	selectFilters,
 	selectShowOnlyFavorites
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import {
 	LoadOverlaysAction,
 	OverlaysActionTypes,
@@ -33,7 +33,7 @@ import {
 	SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import { SetBadgeAction } from '@ansyn/menu';
 import {
 	buildFilteredOverlays,

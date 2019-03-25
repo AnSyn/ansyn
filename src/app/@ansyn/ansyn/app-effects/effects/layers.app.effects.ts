@@ -8,7 +8,7 @@ import {
 	selectLayers,
 	UpdateLayer,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { map, mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { Store } from '@ngrx/store';

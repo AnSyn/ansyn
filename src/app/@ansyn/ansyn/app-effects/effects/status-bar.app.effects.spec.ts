@@ -1,8 +1,8 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ExpandAction, statusBarFeatureKey, StatusBarReducer, UpdateGeoFilterStatus } from '@ansyn/status-bar';
-import { AddCaseAction, casesFeatureKey, CasesReducer, CasesService, SelectCaseAction } from '@ansyn/menu-items';
+import { ExpandAction, statusBarFeatureKey, StatusBarReducer, UpdateGeoFilterStatus } from '../../modules/status-bar/public_api';
+import { AddCaseAction, casesFeatureKey, CasesReducer, CasesService, SelectCaseAction } from '../../modules/menu-items/public_api';
 import { ICase, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
 import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -14,7 +14,7 @@ import {
 	OverlaysConfig,
 	overlaysFeatureKey, OverlaySourceProvider,
 	OverlaysService
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';

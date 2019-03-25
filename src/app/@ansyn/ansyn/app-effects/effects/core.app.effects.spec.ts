@@ -5,9 +5,9 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector, GoNextPresetOverlay, IOverlay, LoggerService } from '@ansyn/core';
 import { cold, hot } from 'jasmine-marbles';
-import { casesStateSelector, initialCasesState } from '@ansyn/menu-items';
+import { casesStateSelector, initialCasesState } from '../../modules/menu-items/public_api';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade';
-import { DisplayOverlayAction } from '@ansyn/overlays';
+import { DisplayOverlayAction } from '../../modules/overlays/public_api';
 
 function mockOverlay(id: string): IOverlay {
 	const overlay = <IOverlay> {};

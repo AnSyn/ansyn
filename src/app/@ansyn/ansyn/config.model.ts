@@ -1,5 +1,5 @@
-import { IAlgorithmsConfig, ICasesConfig, IFiltersConfig, ILayersManagerConfig, IToolsConfig } from '@ansyn/menu-items';
-import { IOverlaysConfig } from '@ansyn/overlays';
+import { IAlgorithmsConfig, ICasesConfig, IFiltersConfig, ILayersManagerConfig, IToolsConfig } from './modules/menu-items/public_api';
+import { IOverlaysConfig } from './modules/overlays/public_api';
 import { IMapFacadeConfig } from '@ansyn/map-facade';
 import {
 	ICoreConfig,
@@ -7,7 +7,7 @@ import {
 	IMapSourceProvidersConfig,
 	IMultipleOverlaysSourceConfig
 } from '@ansyn/core';
-import { IStatusBarConfig } from '@ansyn/status-bar';
+import { IStatusBarConfig } from './modules/status-bar/public_api';
 import { IMenuConfig } from '@ansyn/menu';
 import { IVisualizersConfig } from '@ansyn/imagery';
 import { IOpenAerialOverlaySourceConfig } from './app-providers/overlay-source-providers/open-aerial-source-provider';

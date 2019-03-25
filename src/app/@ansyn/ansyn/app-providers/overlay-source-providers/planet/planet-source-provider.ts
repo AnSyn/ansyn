@@ -7,7 +7,7 @@ import {
 	IStartAndEndDate,
 	OverlaySourceProvider,
 	timeIntersection
-} from '@ansyn/overlays';
+} from '../../../modules/overlays/public_api';
 import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
@@ -29,7 +29,7 @@ import { catchError, map } from 'rxjs/operators';
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
-import { IStatusBarConfig, StatusBarConfig } from '@ansyn/status-bar';
+import { IStatusBarConfig, StatusBarConfig } from '../../../modules/status-bar/public_api';
 
 const moment = momentNs;
 

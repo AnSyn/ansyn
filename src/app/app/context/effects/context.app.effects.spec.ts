@@ -13,7 +13,7 @@ import {
 	selectDropMarkup,
 	selectOverlaysMap,
 	SetFilteredOverlaysAction
-} from '@ansyn/overlays';
+} from '@ansyn/ansyn';
 import { Observable, of, throwError } from 'rxjs';
 import {
 	casesFeatureKey,
@@ -26,11 +26,11 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '@ansyn/menu-items';
+} from '@ansyn/ansyn';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '@ansyn/status-bar';
+import { statusBarStateSelector } from '@ansyn/ansyn';
 import {
 	coreInitialState,
 	coreStateSelector,

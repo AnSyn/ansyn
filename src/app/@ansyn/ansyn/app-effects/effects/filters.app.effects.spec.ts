@@ -15,7 +15,7 @@ import {
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
 	SliderFilterMetadata
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import {
 	buildFilteredOverlays,
 	coreFeatureKey,
@@ -34,7 +34,7 @@ import {
 	SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 
 describe('Filters app effects', () => {

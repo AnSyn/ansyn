@@ -8,7 +8,7 @@ import {
 	OverlayReducer,
 	overlaysFeatureKey,
 	OverlaysService
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import {
 	CoreConfig,
 	ErrorHandlerService,
@@ -28,12 +28,12 @@ import {
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
 	SelectDilutedCaseAction, toolsConfig
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { IOverlayByIdMetaData } from '@ansyn/overlays';
+import { IOverlayByIdMetaData } from '../../modules/overlays/public_api';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

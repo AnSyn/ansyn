@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
-import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/menu-items';
+import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/ansyn';
 import {
 	DisplayedOverlay,
 	ICase,
@@ -18,7 +18,7 @@ import {
 	OverlaysService,
 	overlaysStateSelector,
 	SetFilteredOverlaysAction, SetSpecialObjectsActionStore
-} from '@ansyn/overlays';
+} from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { catchError, filter, map, mergeMap, withLatestFrom, share } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';

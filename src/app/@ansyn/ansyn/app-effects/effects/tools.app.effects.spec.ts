@@ -30,17 +30,17 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import {
 	BackToWorldView,
 	ClearActiveInteractionsAction,
 	ICase
 } from '@ansyn/core';
-import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
+import { DisplayOverlaySuccessAction } from '../../modules/overlays/public_api';
 import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
+import { UpdateGeoFilterStatus } from '../../modules/status-bar/public_api';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

@@ -25,8 +25,8 @@ import {
 	UpdateFacetsAction,
 	UpdateOverlaysManualProcessArgs,
 	UpdateSelectedLayersIds
-} from '@ansyn/menu-items';
-import { SetComboBoxesProperties } from '@ansyn/status-bar';
+} from '../../../modules/menu-items/public_api';
+import { SetComboBoxesProperties } from '../../../modules/status-bar/public_api';
 import { SetContextParamsAction } from '@ansyn/core';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';

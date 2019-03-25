@@ -1,5 +1,5 @@
 import { FiltersAppEffects } from './effects/filters.app.effects';
-import { ICasesState, IFiltersState, ILayerState, IToolsState } from '@ansyn/menu-items';
+import { ICasesState, IFiltersState, ILayerState, IToolsState } from '../modules/menu-items/public_api';
 import { LayersAppEffects } from './effects/layers.app.effects';
 import { IMenuState } from '@ansyn/menu';
 import { NgModule } from '@angular/core';
@@ -8,9 +8,9 @@ import { MapAppEffects } from './effects/map.app.effects';
 import { CasesAppEffects } from './effects/cases.app.effects';
 import { IMapState } from '@ansyn/map-facade';
 import { MenuAppEffects } from './effects/menu.app.effects';
-import { IStatusBarState } from '@ansyn/status-bar';
+import { IStatusBarState } from '../modules/status-bar/public_api';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
-import { IOverlaysState } from '@ansyn/overlays';
+import { IOverlaysState } from '../modules/overlays/public_api';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';

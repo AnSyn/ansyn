@@ -16,7 +16,7 @@ import {
 	selectOverlaysMap,
 	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
-} from '@ansyn/overlays';
+} from '../../modules/overlays/public_api';
 import { Observable, of } from 'rxjs';
 import {
 	casesFeatureKey,
@@ -29,11 +29,11 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '@ansyn/menu-items';
+} from '../../modules/menu-items/public_api';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '@ansyn/status-bar';
+import { statusBarStateSelector } from '../../modules/status-bar/public_api';
 
 import {
 	coreInitialState,

@@ -12,11 +12,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "types": [],
-    "paths": {
-      "@ansyn/core": [
-        "./dist/ansyn/core"
-      ]
-    }
+    "paths": {}
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

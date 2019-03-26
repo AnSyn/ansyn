@@ -4,7 +4,7 @@ import {
 	ICaseMapState,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import Projection from 'ol/proj/Projection';
 import Static from 'ol/source/ImageStatic';
 import ImageLayer from 'ol/layer/Image';

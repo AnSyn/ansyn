@@ -9,7 +9,7 @@ import {
 	mapValuesToArray,
 	selectFavoriteOverlays,
 	sortByDateDesc
-} from '@ansyn/core';
+} from '../../core/public_api';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';

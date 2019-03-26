@@ -43,7 +43,7 @@ import {
 	CoreActionTypes,
 	ICaseMapState,
 	ImageManualProcessArgs
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/public_api';

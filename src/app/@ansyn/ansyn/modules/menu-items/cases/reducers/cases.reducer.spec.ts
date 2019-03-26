@@ -6,7 +6,7 @@ import {
 	UpdateCaseAction
 } from '../actions/cases.actions';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
-import { ICase } from '@ansyn/core';
+import { ICase } from '../../../core/public_api';
 
 
 describe('CasesReducer', () => {

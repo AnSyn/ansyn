@@ -1,4 +1,4 @@
-import { IMapErrorMessage, IMapProgress, SetToastMessageAction } from '@ansyn/core';
+import { IMapErrorMessage, IMapProgress, SetToastMessageAction } from '../../../../core/public_api';
 import { Store } from '@ngrx/store';
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { SetProgressBarAction } from '@ansyn/map-facade';

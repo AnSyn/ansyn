@@ -3,7 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { inject, TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { AddAlertMsg, AlertMsgTypes, RemoveAlertMsg } from '@ansyn/core';
+import { AddAlertMsg, AlertMsgTypes, RemoveAlertMsg } from '../../../../core/public_api';
 
 describe('AlertsPlugin', () => {
 	let alertsPlugin: AlertsPlugin;

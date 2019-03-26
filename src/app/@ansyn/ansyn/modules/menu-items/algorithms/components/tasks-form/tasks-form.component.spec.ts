@@ -10,7 +10,7 @@ import {
 	MockComponent,
 	Overlay,
 	SetFavoriteOverlaysAction
-} from '@ansyn/core';
+} from '../../../../core/public_api';
 import { TranslateModule } from '@ngx-translate/core';
 import { TasksService } from '../../services/tasks.service';
 import { EffectsModule } from '@ngrx/effects';

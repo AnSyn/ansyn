@@ -9,7 +9,7 @@ import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
 import { ProjectionConverterService } from './services/projection-converter.service';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '../../core/public_api';
 
 // @dynamic
 @NgModule({

@@ -8,7 +8,7 @@ import {
 	selectCurrentAlgorithmTask,
 	selectTaskTotal
 } from '../reducers/tasks.reducer';
-import { ErrorHandlerService } from '@ansyn/core';
+import { ErrorHandlerService } from '../../../core/public_api';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { TasksService } from '../services/tasks.service';
 import {

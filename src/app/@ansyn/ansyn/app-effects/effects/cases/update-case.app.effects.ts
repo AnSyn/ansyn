@@ -11,7 +11,7 @@ import {
 	selectPresetOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
-} from '@ansyn/core';
+} from '../../../modules/core/public_api';
 import {
 	selectFacets,
 	selectOverlaysManualProcessArgs,
@@ -21,7 +21,7 @@ import {
 } from '../../../modules/menu-items/public_api';
 import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { selectComboBoxesProperties } from '../../../modules/status-bar/public_api';
-import { selectContextEntities } from '@ansyn/core';
+import { selectContextEntities } from '../../../modules/core/public_api';
 import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 

@@ -2,7 +2,7 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { LayerComponent } from './layer.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { SelectOnlyLayer } from '../../actions/layers.actions';
-import { AnsynCheckboxComponent } from '@ansyn/core';
+import { AnsynCheckboxComponent } from '../../../../core/public_api';
 import { FormsModule } from '@angular/forms';
 
 describe('LayerComponent', () => {

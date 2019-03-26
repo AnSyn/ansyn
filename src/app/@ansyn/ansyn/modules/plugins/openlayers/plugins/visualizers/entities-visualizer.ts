@@ -16,7 +16,7 @@ import {
 	IVisualizerStyle,
 	MarkerSizeDic,
 	VisualizerStates
-} from '@ansyn/core';
+} from '../../../../core/public_api';
 import { FeatureCollection } from 'geojson';
 import { Observable, of } from 'rxjs';
 import { BaseImageryVisualizer, VisualizerInteractionTypes } from '@ansyn/imagery';

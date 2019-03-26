@@ -3,7 +3,7 @@ import { DataLayersService, layersConfig } from './data-layers.service';
 import { of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
-import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '../../../core/public_api';
 
 describe('DataLayersService', () => {
 	let dataLayersService: DataLayersService;

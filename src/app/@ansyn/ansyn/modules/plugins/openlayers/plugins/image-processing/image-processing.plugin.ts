@@ -1,7 +1,7 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
-import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
+import { ICaseMapState, ImageManualProcessArgs } from '../../../../core/public_api';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';

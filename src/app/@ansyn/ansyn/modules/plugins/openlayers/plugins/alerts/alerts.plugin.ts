@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { combineLatest, Observable } from 'rxjs';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { AddAlertMsg, AlertMsgTypes, ICaseMapState, IOverlayDrop, isFullOverlay, RemoveAlertMsg } from '@ansyn/core';
+import { AddAlertMsg, AlertMsgTypes, ICaseMapState, IOverlayDrop, isFullOverlay, RemoveAlertMsg } from '../../../../core/public_api';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';

@@ -6,7 +6,7 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reduce
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
-import { createStore, IStoreFixture, LoggerService } from '@ansyn/core';
+import { createStore, IStoreFixture, LoggerService } from '../../../core/public_api';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
 import { MultipleOverlaysSourceProvider } from '../../services/multiple-source-provider';
 

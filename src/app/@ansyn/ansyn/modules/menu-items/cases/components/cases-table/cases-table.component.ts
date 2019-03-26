@@ -3,7 +3,7 @@ import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
 import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
-import { getTimeFormat, ICasePreview } from '@ansyn/core';
+import { getTimeFormat, ICasePreview } from '../../../../core/public_api';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import {

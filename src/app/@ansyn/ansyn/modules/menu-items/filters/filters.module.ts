@@ -5,7 +5,7 @@ import { IFiltersConfig } from './models/filters-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FiltersCollectionComponent } from './components/filters-collection/filters-collection.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '../../core/public_api';
 import { FilterContainerComponent } from './components/filter-container/filter-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EnumFilterContainerComponent } from './components/enum-filter-container/enum-filter-container.component';

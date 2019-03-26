@@ -43,7 +43,7 @@ import {
 	startTimingLog,
 	toastMessages,
 	ToggleMapLayersAction
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '../../modules/plugins/public_api';
 import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {

@@ -16,7 +16,7 @@ import {
 	IOverlay,
 	SetToastMessageAction,
 	StorageService,
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { MapFacadeService, SetMapsDataActionStore, UpdateMapAction, SetActiveMapId, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import {

@@ -7,7 +7,7 @@ import {
 	IContext,
 	ImageManualProcessArgs,
 	IOverlaysManualProcessArgs
-} from '@ansyn/core';
+} from '../../../../core/public_api';
 import { Params } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';

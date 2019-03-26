@@ -13,7 +13,7 @@ import {
 	IOverlaysFetchData, IOverlaysSourceProvider,
 	mergeArrays,
 	mergeLimitedArrays, MultipleOverlaysSourceConfig, sortByDateDesc
-} from '@ansyn/core';
+} from '../../core/public_api';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';

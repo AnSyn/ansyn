@@ -1,7 +1,7 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
 import { Action } from '@ngrx/store';
-import { ICaseFacetsState } from '@ansyn/core';
+import { ICaseFacetsState } from '../../../core/public_api';
 import { Filters } from '../reducer/filters.reducer';
 
 export const FiltersActionTypes = {

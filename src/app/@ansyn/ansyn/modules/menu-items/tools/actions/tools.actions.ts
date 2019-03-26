@@ -6,7 +6,7 @@ import {
 	IVisualizerStyle,
 	OverlayDisplayMode,
 	type
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 
 export const ToolsActionsTypes = {

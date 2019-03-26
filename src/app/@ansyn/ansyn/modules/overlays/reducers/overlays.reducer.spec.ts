@@ -9,7 +9,7 @@ import {
 	UnSelectOverlayAction
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
-import { IOverlaySpecialObject } from '@ansyn/core';
+import { IOverlaySpecialObject } from '../../core/public_api';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;

@@ -1,4 +1,4 @@
-import { ILimitedArray } from '@ansyn/core';
+import { ILimitedArray } from '../../../modules/core/public_api';
 import { MultiPolygon, Polygon } from 'geojson';
 
 export class PlanetOverlay {

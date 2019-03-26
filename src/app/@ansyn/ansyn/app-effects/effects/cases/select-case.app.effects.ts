@@ -16,7 +16,7 @@ import {
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
-} from '@ansyn/core';
+} from '../../../modules/core/public_api';
 import {
 	BeginLayerCollectionLoadAction,
 	CasesActionTypes,
@@ -27,7 +27,7 @@ import {
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/public_api';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/public_api';
-import { SetContextParamsAction } from '@ansyn/core';
+import { SetContextParamsAction } from '../../../modules/core/public_api';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';

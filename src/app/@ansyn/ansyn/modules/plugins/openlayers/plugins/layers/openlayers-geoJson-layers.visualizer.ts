@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection } from 'geojson';
 import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
-import { ICaseMapState, IVisualizerEntity, SetToastMessageAction } from '@ansyn/core';
+import { ICaseMapState, IVisualizerEntity, SetToastMessageAction } from '../../../../core/public_api';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';

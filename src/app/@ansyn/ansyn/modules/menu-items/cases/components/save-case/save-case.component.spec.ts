@@ -8,7 +8,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { CoreConfig, LoggerConfig } from '@ansyn/core';
+import { CoreConfig, LoggerConfig } from '../../../../core/public_api';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { casesConfig } from '../../services/cases.service';
 

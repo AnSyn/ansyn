@@ -1,7 +1,7 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
 import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ErrorHandlerService, ICase, StorageService } from '@ansyn/core';
+import { ErrorHandlerService, ICase, StorageService } from '../../../core/public_api';
 import { UUID } from 'angular2-uuid';
 import { featureCollection } from '@turf/turf';
 import { select, Store } from '@ngrx/store';

@@ -16,7 +16,7 @@ import {
 	OpenModalAction
 } from '../actions/cases.actions';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, ICase, LoggerService, SetAutoSave, StorageService } from '@ansyn/core';
+import { CoreConfig, ErrorHandlerService, ICase, LoggerService, SetAutoSave, StorageService } from '../../../core/public_api';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';

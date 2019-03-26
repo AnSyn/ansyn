@@ -33,7 +33,7 @@ import {
 	rxPreventCrash, SetAutoSave,
 	SetToastMessageAction,
 	toastMessages
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';

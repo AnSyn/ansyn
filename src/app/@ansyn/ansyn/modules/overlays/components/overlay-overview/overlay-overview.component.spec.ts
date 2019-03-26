@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
-import { GeoRegisteration, IOverlay, MockComponent } from '@ansyn/core';
+import { GeoRegisteration, IOverlay, MockComponent } from '../../../core/public_api';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';

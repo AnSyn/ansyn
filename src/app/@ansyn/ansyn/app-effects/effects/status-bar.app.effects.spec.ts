@@ -3,7 +3,7 @@ import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ExpandAction, statusBarFeatureKey, StatusBarReducer, UpdateGeoFilterStatus } from '../../modules/status-bar/public_api';
 import { AddCaseAction, casesFeatureKey, CasesReducer, CasesService, SelectCaseAction } from '../../modules/menu-items/public_api';
-import { ICase, IOverlay, IOverlaysFetchData, LoggerService } from '@ansyn/core';
+import { ICase, IOverlay, IOverlaysFetchData, LoggerService } from '../../modules/core/public_api';
 import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import {

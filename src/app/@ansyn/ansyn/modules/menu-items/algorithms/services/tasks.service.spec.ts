@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { TasksService } from './tasks.service';
-import { ErrorHandlerService, StorageService } from '@ansyn/core';
+import { ErrorHandlerService, StorageService } from '../../../core/public_api';
 import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 describe('TasksService', () => {

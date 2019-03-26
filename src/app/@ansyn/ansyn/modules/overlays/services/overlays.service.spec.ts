@@ -11,7 +11,7 @@ import {
 	IOverlaysFetchData,
 	IOverlaySpecialObject,
 	LoggerService
-} from '@ansyn/core';
+} from '../../core/public_api';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';

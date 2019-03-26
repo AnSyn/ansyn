@@ -2,7 +2,7 @@ import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
 import * as reducer from './filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
-import { FilterType } from '@ansyn/core';
+import { FilterType } from '../../../core/public_api';
 import * as actions from '../actions/filters.actions';
 
 describe('FiltersReducer', () => {

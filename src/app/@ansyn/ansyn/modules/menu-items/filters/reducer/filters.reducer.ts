@@ -6,7 +6,7 @@ import {
 	ICaseFilter,
 	ICaseSliderFilterMetadata,
 	CaseFilterMetadata
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';

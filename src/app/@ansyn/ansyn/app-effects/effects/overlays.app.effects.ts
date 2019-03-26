@@ -40,7 +40,7 @@ import {
 	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import {
 	IMapState,
 	MapActionTypes,

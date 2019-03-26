@@ -13,7 +13,7 @@ import {
 	IOverlaysCriteria,
 	MultipleOverlaysSourceConfig,
 	SliderCheckboxComponent
-} from '@ansyn/core';
+} from '../../../core/public_api';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 

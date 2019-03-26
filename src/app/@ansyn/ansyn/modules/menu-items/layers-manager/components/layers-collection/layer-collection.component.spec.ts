@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { LayerCollectionComponent } from './layer-collection.component';
-import { MockComponent } from '@ansyn/core';
+import { MockComponent } from '../../../../core/public_api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LayerCollectionComponent', () => {

@@ -3,7 +3,7 @@ import { TasksService } from '../../services/tasks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
+import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '../../../../core/public_api';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { switchMap, take, tap } from 'rxjs/internal/operators';
 import {

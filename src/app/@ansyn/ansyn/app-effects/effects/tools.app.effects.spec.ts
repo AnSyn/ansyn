@@ -35,7 +35,7 @@ import {
 	BackToWorldView,
 	ClearActiveInteractionsAction,
 	ICase
-} from '@ansyn/core';
+} from '../../modules/core/public_api';
 import { DisplayOverlaySuccessAction } from '../../modules/overlays/public_api';
 import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';

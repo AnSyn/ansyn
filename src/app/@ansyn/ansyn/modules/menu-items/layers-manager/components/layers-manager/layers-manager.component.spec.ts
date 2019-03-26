@@ -6,7 +6,7 @@ import { DataLayersService, layersConfig } from '../../services/data-layers.serv
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { CoreConfig, LoggerConfig, LoggerService } from '@ansyn/core';
+import { CoreConfig, LoggerConfig, LoggerService } from '../../../../core/public_api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LayersManagerComponent', () => {

@@ -3,7 +3,7 @@ import {
 	IOverlay, IOverlayDrop,
 	IOverlaySpecialObject,
 	SetOverlaysCriteriaAction
-} from '@ansyn/core';
+} from '../../core/public_api';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';

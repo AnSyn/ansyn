@@ -9,7 +9,7 @@ import {
 	LoggerService,
 	toDegrees,
 	toRadians
-} from '@ansyn/core';
+} from '../../../../core/public_api';
 import { forkJoin, Observable, Observer, of, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';

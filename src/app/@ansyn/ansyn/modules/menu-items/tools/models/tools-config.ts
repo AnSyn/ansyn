@@ -1,4 +1,4 @@
-import { ICoordinatesSystem } from '@ansyn/core';
+import { ICoordinatesSystem } from '../../../core/public_api';
 
 export interface IEd50Notification {
 	href?: string;

@@ -3,7 +3,7 @@ import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService } from '../../services/overlays.service';
 import { EMPTY, Observable } from 'rxjs';
 import { DebugElement } from '@angular/core';
-import { createStore, IOverlay, IOverlaysFetchData, IStoreFixture, MockComponent } from '@ansyn/core';
+import { createStore, IOverlay, IOverlaysFetchData, IStoreFixture, MockComponent } from '../../../core/public_api';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { State, Store, StoreModule } from '@ngrx/store';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';

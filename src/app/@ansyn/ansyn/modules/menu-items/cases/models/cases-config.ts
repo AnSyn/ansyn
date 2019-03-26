@@ -1,4 +1,4 @@
-import { ICase, IDeltaTime } from '@ansyn/core';
+import { ICase, IDeltaTime } from '../../../core/public_api';
 
 export interface ICasesConfig {
 	schema: string,

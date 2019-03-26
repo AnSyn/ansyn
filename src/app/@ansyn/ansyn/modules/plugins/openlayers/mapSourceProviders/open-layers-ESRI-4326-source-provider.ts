@@ -1,6 +1,6 @@
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState } from '../../../core/public_api';
 import { ImageryMapSource } from '@ansyn/imagery';
 import * as proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';

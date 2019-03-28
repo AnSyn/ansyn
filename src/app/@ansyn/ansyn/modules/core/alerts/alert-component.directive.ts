@@ -1,6 +1,6 @@
 import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef } from '@angular/core';
 import { IAlertComponent } from '../alerts/alerts.model';
-import { IOverlay } from '../models/overlay.model';
+import { IOverlay } from '../../../../imagery/model/overlay.model';
 
 
 export interface IAlertComponentSettings {

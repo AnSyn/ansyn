@@ -19,7 +19,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/public_api';
 import { Store } from '@ngrx/store';
-import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '../../../../../core/public_api';
+import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';

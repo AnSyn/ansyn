@@ -5,9 +5,10 @@ import {
 	IOverlaysManualProcessArgs,
 	IVisualizerStyle,
 	OverlayDisplayMode,
-	type
-} from '../../../core/public_api';
+} from '@ansyn/imagery';
+
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
+import { type } from '../../../core/public_api';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),

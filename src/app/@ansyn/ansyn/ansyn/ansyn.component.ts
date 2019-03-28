@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import { Component, HostBinding, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ICase, ICaseMapState } from '../modules/core/public_api';
+import { ICase, ICaseMapState } from '@ansyn/imagery';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
 import { LoadDefaultCaseAction, selectSelectedCase } from '../modules/menu-items/public_api';

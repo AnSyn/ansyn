@@ -1,9 +1,9 @@
 import { ICaseMapPosition } from './case-map-position.model';
 import { IDilutedOverlay, IOverlay } from './overlay.model';
 import { Feature, Point, Polygon } from 'geojson';
-import { IEntity } from '../services/storage/storage.service';
+import { IEntity } from '../../ansyn/modules/core/services/storage/storage.service';
 import { IVisualizerEntity } from './visualizers/visualizers-entity';
-import { LayoutKey } from './layout-options.model';
+import { LayoutKey } from '../../ansyn/modules/core/models/layout-options.model';
 
 export interface ICasePreview extends IEntity {
 	creationTime: Date;

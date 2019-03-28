@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
-import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState, IStoredEntity } from '../../../core/public_api';
+import { IStoredEntity } from '../../../core/public_api';
+import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/imagery';
 import { Params } from '@angular/router';
 
 export const CasesActionTypes = {

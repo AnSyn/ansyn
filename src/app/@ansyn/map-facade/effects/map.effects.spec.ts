@@ -16,7 +16,8 @@ import {
 	SetMapPositionByRectAction,
 	SynchronizeMapsAction
 } from '../actions/map.actions';
-import { ErrorHandlerService, ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { ErrorHandlerService, SetLayoutSuccessAction } from '@ansyn/ansyn';
+import { ICaseMapState } from '@ansyn/imagery';
 import { mapFacadeConfig } from '../models/map-facade.config';
 
 describe('MapEffects', () => {

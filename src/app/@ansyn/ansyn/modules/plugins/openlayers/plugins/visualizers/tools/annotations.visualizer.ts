@@ -26,7 +26,7 @@ import {
 	IVisualizerStyle,
 	MarkerSize,
 	VisualizerStates
-} from '../../../../../core/public_api';
+} from '@ansyn/imagery';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationSelectAction, MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';

@@ -3,7 +3,6 @@ import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
 import {
-	ICase,
 	selectAutoSave,
 	selectFavoriteOverlays,
 	selectLayout,
@@ -24,6 +23,7 @@ import { selectComboBoxesProperties } from '../../../modules/status-bar/public_a
 import { selectContextEntities } from '../../../modules/core/public_api';
 import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
+import { ICase } from '@ansyn/imagery';
 
 @Injectable()
 export class UpdateCaseAppEffects {

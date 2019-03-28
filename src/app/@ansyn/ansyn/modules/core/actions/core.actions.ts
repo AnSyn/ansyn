@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes, IToastMessage } from '../reducers/core.reducer';
-import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysCriteriaOptions } from '../../../../imagery/model/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { IContext } from '../models/context.model';
 

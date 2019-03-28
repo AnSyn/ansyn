@@ -12,10 +12,8 @@ import {
 import {
 	CoreConfig,
 	ErrorHandlerService,
-	ICase,
-	IOverlay,
 	SetToastMessageAction,
-	StorageService,
+	StorageService
 } from '../../modules/core/public_api';
 import { MapFacadeService, SetMapsDataActionStore, UpdateMapAction, SetActiveMapId, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
@@ -32,7 +30,7 @@ import {
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ICase, ImageryCommunicatorService, IOverlay } from '@ansyn/imagery';
 import { IOverlayByIdMetaData } from '../../modules/overlays/public_api';
 
 describe('CasesAppEffects', () => {
@@ -102,7 +100,7 @@ describe('CasesAppEffects', () => {
 							}
 
 							return throwError(new HttpErrorResponse({ status: 404 }));
-						},
+						}
 
 					}
 				},

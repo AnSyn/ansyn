@@ -11,13 +11,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import {
-	CaseGeoFilter,
-	CaseOrientation,
-	CaseTimeFilter,
 	CoreActionTypes,
-	ICaseDataInputFiltersState,
-	ICaseTimeState,
-	IOverlay,
 	LayoutKey,
 	layoutOptions,
 	selectDataInputFilter,
@@ -36,6 +30,13 @@ import { AnimationTriggerMetadata } from '@angular/animations/src/animation_meta
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, map, tap } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
+import {
+	CaseGeoFilter,
+	CaseOrientation,
+	CaseTimeFilter,
+	ICaseDataInputFiltersState,
+	ICaseTimeState, IOverlay
+} from '@ansyn/imagery';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [

@@ -8,12 +8,16 @@ import {
 } from '../models/base-overlay-source-provider.model';
 import {
 	forkJoinSafe,
-	IDataInputFilterValue, ILimitedArray, IMultipleOverlaysSourceConfig,
-	IOverlay,
-	IOverlaysFetchData, IOverlaysSourceProvider,
+	ILimitedArray, IMultipleOverlaysSourceConfig,
+	IOverlaysSourceProvider,
 	mergeArrays,
 	mergeLimitedArrays, MultipleOverlaysSourceConfig, sortByDateDesc
 } from '../../core/public_api';
+import {
+	IDataInputFilterValue,
+	IOverlay,
+	IOverlaysFetchData,
+} from '@ansyn/imagery';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';

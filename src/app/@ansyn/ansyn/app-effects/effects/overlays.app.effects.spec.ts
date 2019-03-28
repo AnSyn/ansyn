@@ -39,12 +39,17 @@ import {
 	coreInitialState,
 	coreStateSelector,
 	DisplayedOverlay,
-	ICase,
-	MAP_SOURCE_PROVIDERS_CONFIG,
 	SetLayoutAction,
 	SetLayoutSuccessAction
 } from '../../modules/core/public_api';
-import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import {
+	BaseMapSourceProvider,
+	CacheService,
+	ImageryCommunicatorService,
+	ImageryMapSource,
+	ICase,
+	MAP_SOURCE_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import {
 	initialMapState,
 	mapFeatureKey,

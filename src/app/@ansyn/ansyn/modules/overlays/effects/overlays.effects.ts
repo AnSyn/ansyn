@@ -16,14 +16,13 @@ import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import {
 	BackToWorldView,
-	IOverlay,
-	IOverlaysFetchData,
 	LoggerService,
 	selectFavoriteOverlays,
 	selectPresetOverlays,
 	UpdateOverlaysCountAction
 } from '../../core/public_api';
 import { catchError, filter, map, mergeMap, switchMap } from 'rxjs/operators';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 
 @Injectable()
 export class OverlaysEffects {

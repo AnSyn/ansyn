@@ -9,7 +9,9 @@ import {
 	MapActionTypes
 } from '../../actions/map.actions';
 import { uniq as _uniq } from 'lodash';
-import { CaseGeoFilter, ICaseMapState, IOverlay, selectRegion } from '@ansyn/core';
+import { selectRegion } from '@ansyn/ansyn';
+import { CaseGeoFilter, ICaseMapState, IOverlay } from '@ansyn/imagery';
+
 import { MapFacadeService } from '../../services/map-facade.service';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';

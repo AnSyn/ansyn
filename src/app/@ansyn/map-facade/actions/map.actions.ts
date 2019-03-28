@@ -9,7 +9,7 @@ import {
 	IPendingOverlay,
 	IUpdateFeatureEvent,
 	IWorldViewMapState
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',

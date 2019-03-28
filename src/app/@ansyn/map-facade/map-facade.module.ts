@@ -14,7 +14,7 @@ import { ImageryRotationComponent } from './components/imagery-rotation/imagery-
 import { ImageryLoaderComponent } from './components/imagery-loader/imagery-loader.component';
 import { ImageryTileProgressComponent } from './components/imagery-tile-progress/imagery-tile-progress.component';
 import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-type-notice/overlay-source-type-notice.component';
-import { CoreModule } from '@ansyn/core';
+import { CoreModule } from '@ansyn/ansyn';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
 

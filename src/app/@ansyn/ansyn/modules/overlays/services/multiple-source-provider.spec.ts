@@ -2,14 +2,15 @@ import { inject, TestBed } from '@angular/core/testing';
 import {
 	MultipleOverlaysSourceProvider
 } from './multiple-source-provider';
-
+import {
+	LoggerService,
+	MultipleOverlaysSourceConfig
+} from '../../core/public_api';
 import {
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysFetchData,
-	LoggerService,
-	MultipleOverlaysSourceConfig
-} from '../../core/public_api';
+} from '@ansyn/imagery';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';

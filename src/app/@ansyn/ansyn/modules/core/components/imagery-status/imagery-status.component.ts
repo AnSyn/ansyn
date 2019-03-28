@@ -9,7 +9,7 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { GeoRegisteration, IOverlay } from '../../models/overlay.model';
+import { GeoRegisteration, IOverlay } from '../../../../../imagery/model/overlay.model';
 import { Store } from '@ngrx/store';
 import {
 	BackToWorldView,

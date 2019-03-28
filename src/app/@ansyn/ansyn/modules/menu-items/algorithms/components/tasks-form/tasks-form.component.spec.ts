@@ -8,7 +8,6 @@ import {
 	coreFeatureKey,
 	CoreReducer,
 	MockComponent,
-	Overlay,
 	SetFavoriteOverlaysAction
 } from '../../../../core/public_api';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,6 +19,7 @@ import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { Overlay } from '@ansyn/imagery';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;

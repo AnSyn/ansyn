@@ -18,9 +18,10 @@ import {
 } from '../reducers/overlays.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreInitialState, coreStateSelector, IOverlay, LoggerService } from '../../core/public_api';
+import { coreInitialState, coreStateSelector, LoggerService } from '../../core/public_api';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { OverlaySourceProvider } from '../public_api';
+import { IOverlay } from '@ansyn/imagery';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

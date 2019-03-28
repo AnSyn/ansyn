@@ -3,7 +3,7 @@ import { ToolsAppEffects } from './tools.app.effects';
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ICase } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
 import {
 	casesFeatureKey,
@@ -33,8 +33,7 @@ import {
 } from '../../modules/menu-items/public_api';
 import {
 	BackToWorldView,
-	ClearActiveInteractionsAction,
-	ICase
+	ClearActiveInteractionsAction
 } from '../../modules/core/public_api';
 import { DisplayOverlaySuccessAction } from '../../modules/overlays/public_api';
 import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';

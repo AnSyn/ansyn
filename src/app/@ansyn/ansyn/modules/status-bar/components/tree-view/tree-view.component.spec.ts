@@ -10,10 +10,10 @@ import { cloneDeep } from 'lodash';
 import {
 	coreInitialState,
 	coreStateSelector,
-	IOverlaysCriteria,
 	MultipleOverlaysSourceConfig,
 	SliderCheckboxComponent
 } from '../../../core/public_api';
+import { IOverlaysCriteria } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 

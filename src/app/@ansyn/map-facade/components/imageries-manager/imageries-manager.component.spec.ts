@@ -12,7 +12,7 @@ import {
 	ImageryStatusComponent,
 	MockComponent,
 	SetLayoutAction
-} from '@ansyn/core';
+} from '@ansyn/ansyn';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
 import { throwError } from 'rxjs';

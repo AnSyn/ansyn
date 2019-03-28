@@ -12,16 +12,18 @@ import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	ErrorHandlerService,
-	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon, GeoRegisteration,
-	IDataInputFilterValue, IMultipleOverlaysSourceConfig,
-	IOverlay,
+	IMultipleOverlaysSourceConfig,
 	limitArray,
 	LoggerService, MultipleOverlaysSourceConfig,
-	Overlay,
 	sortByDateDesc,
 	toRadians
 } from '../../../modules/core/public_api';
+import {
+	geojsonMultiPolygonToPolygon,
+	geojsonPolygonToMultiPolygon, GeoRegisteration,
+	IDataInputFilterValue,
+	IOverlay,
+} from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { catchError, map } from 'rxjs/operators';
@@ -30,6 +32,7 @@ import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
 import { IStatusBarConfig, StatusBarConfig } from '../../../modules/status-bar/public_api';
+import { Overlay } from '@ansyn/imagery';
 
 const moment = momentNs;
 

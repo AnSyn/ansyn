@@ -9,7 +9,8 @@ import {
 } from '../models/tasks.model';
 import { combineLatest, Observable, of } from 'rxjs/index';
 import { catchError, map } from 'rxjs/operators';
-import { ErrorHandlerService, IOverlay, IStoredEntity, StorageService } from '../../../core/public_api';
+import { ErrorHandlerService, IStoredEntity, StorageService } from '../../../core/public_api';
+import { IOverlay } from '@ansyn/imagery';
 import { switchMap } from 'rxjs/internal/operators';
 import { IOverlayByIdMetaData, OverlaysService } from '../../../overlays/services/overlays.service';
 

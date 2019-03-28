@@ -16,7 +16,7 @@ import {
 	OpenModalAction
 } from '../actions/cases.actions';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, ICase, LoggerService, SetAutoSave, StorageService } from '../../../core/public_api';
+import { CoreConfig, ErrorHandlerService, LoggerService, SetAutoSave, StorageService } from '../../../core/public_api';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
@@ -28,6 +28,7 @@ import { statusBarStateSelector } from '../../../status-bar/reducers/status-bar.
 import { layersStateSelector, selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { mapStateSelector, selectMaps } from '@ansyn/map-facade';
 import { toolsStateSelector } from '../../tools/reducers/tools.reducer';
+import { ICase } from '@ansyn/imagery';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;

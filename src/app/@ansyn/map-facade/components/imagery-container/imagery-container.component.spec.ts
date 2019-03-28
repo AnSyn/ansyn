@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryContainerComponent } from './imagery-container.component';
-import { CoreConfig, CoreModule, LoggerConfig, MockComponent } from '@ansyn/core';
+import { CoreConfig, CoreModule, LoggerConfig, MockComponent } from '@ansyn/ansyn';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';

@@ -4,16 +4,16 @@ import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import {
 	forkJoinSafe,
-	IDataInputFilterValue, IDateRange,
+	 IDateRange,
 	ILimitedArray,
-	IOverlay,
-	IOverlaysFetchData,
+
 	LoggerService,
 	mergeLimitedArrays,
 	sortByDateDesc
 } from '../../core/public_api';
 import { catchError, map } from 'rxjs/operators';
 import { IOverlayByIdMetaData } from '../services/overlays.service';
+import { IDataInputFilterValue, IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 
 export interface IFetchParams {
 	limit: number;

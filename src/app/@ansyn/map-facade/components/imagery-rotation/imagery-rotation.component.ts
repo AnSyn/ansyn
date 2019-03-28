@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { GeoRegisteration, ICaseMapState, toDegrees } from '@ansyn/core';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { toDegrees } from '@ansyn/ansyn';
+import { CommunicatorEntity, ImageryCommunicatorService, GeoRegisteration, ICaseMapState } from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IsGeoRegisteredProperties {

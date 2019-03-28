@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import Layer from 'ol/layer/Layer';
-import { ICaseMapPosition } from '../../../../core/public_api';
+import { ICaseMapPosition } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
 import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';

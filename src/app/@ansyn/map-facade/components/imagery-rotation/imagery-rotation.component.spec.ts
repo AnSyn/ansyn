@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { ImageryRotationComponent } from './imagery-rotation.component';
-import { CoreConfig, CoreModule, LoggerConfig } from '@ansyn/core';
+import { CoreConfig, CoreModule, LoggerConfig } from '@ansyn/ansyn';
 import { EffectsModule } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpClientModule } from '@angular/common/http';

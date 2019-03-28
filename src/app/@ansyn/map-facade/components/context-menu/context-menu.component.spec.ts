@@ -7,7 +7,7 @@ import { ContextMenuDisplayAction, ContextMenuShowAction } from '../../actions/m
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { EffectsModule } from '@ngrx/effects';
-import { coreFeatureKey, CoreReducer } from '@ansyn/core';
+import { coreFeatureKey, CoreReducer } from '@ansyn/ansyn';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 

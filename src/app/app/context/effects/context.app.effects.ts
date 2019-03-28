@@ -3,12 +3,14 @@ import { from, Observable, of } from 'rxjs';
 import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/ansyn';
 import {
 	DisplayedOverlay,
-	ICase,
 	IContext,
-	IContextEntity,
-	IOverlaySpecialObject,
 	SetToastMessageAction
 } from '@ansyn/ansyn';
+import {
+	ICase,
+	IContextEntity,
+	IOverlaySpecialObject,
+} from '@ansyn/imagery';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayFromStoreAction,

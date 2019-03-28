@@ -2,7 +2,7 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { GeocoderService } from './geocoder.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { asyncData, ErrorHandlerService } from '@ansyn/core';
+import { asyncData, ErrorHandlerService } from '@ansyn/ansyn';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';

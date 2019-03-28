@@ -1,11 +1,7 @@
 import {
-	areCoordinatesNumeric,
 	BackToWorldSuccess,
 	BackToWorldView,
-	CaseOrientation,
 	CoreActionTypes,
-	ICaseMapPosition,
-	IOverlay,
 	LoggerService,
 	toDegrees,
 	toRadians
@@ -22,7 +18,8 @@ import {
 	selectHoveredOverlay
 } from '../../../../overlays/public_api';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, CaseOrientation, areCoordinatesNumeric, ICaseMapPosition,
+	IOverlay } from '@ansyn/imagery';
 import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '../../../../status-bar/public_api';
 import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -168,7 +165,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 						currentRotationDegrees = currentRotationDegrees % 360;
 						return toRadians(currentRotationDegrees);
 					})
-				)
+				);
 			}
 			return of(0);
 		}),
@@ -314,7 +311,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	resetShadowMapView() {
-		const layers = this.shadowMapObject.getLayers()
+		const layers = this.shadowMapObject.getLayers();
 		layers.forEach((layer) => {
 			this.shadowMapObject.removeLayer(layer);
 		});

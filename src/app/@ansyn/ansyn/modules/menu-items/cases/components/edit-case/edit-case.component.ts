@@ -5,7 +5,8 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { ICase, ICasePreview, IContext, selectContextsArray } from '../../../../core/public_api';
+import { IContext, selectContextsArray } from '../../../../core/public_api';
+import { ICase, ICasePreview } from '@ansyn/imagery';
 import { CasesService } from '../../services/cases.service';
 import { map, take } from 'rxjs/operators';
 

@@ -4,10 +4,7 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	CoreConfig,
-	ICase,
-	ICaseMapState,
 	ICoreConfig,
-	IOverlay,
 	isFullOverlay,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
@@ -33,6 +30,7 @@ import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
+import { ICase, ICaseMapState, IOverlay } from '@ansyn/imagery';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -99,7 +97,7 @@ export class SelectCaseAppEffects {
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-			new SelectCaseSuccessAction(payload),
+			new SelectCaseSuccessAction(payload)
 		];
 	}
 

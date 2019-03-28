@@ -20,11 +20,13 @@ import {
 	buildFilteredOverlays,
 	coreFeatureKey,
 	CoreReducer,
-	FilterType,
 	GenericTypeResolverService,
-	IOverlay,
 	SetFavoriteOverlaysAction
 } from '../../modules/core/public_api';
+import {
+	FilterType,
+	IOverlay,
+} from '@ansyn/imagery';
 import {
 	LoadOverlaysAction,
 	OverlayReducer,

@@ -21,7 +21,7 @@ import {
 	overlaysStateSelector,
 	SetMarkUp
 } from '../../../../../overlays/public_api';
-import { IVisualizerEntity, VisualizerStates } from '../../../../../core/public_api';
+import { IVisualizerEntity, VisualizerStates } from '@ansyn/imagery';
 import { MultiLineString } from 'geojson';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';

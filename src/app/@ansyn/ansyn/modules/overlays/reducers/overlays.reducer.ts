@@ -1,9 +1,11 @@
 import {
 	CoreActionTypes,
-	IOverlay, IOverlayDrop,
-	IOverlaySpecialObject,
 	SetOverlaysCriteriaAction
 } from '../../core/public_api';
+import {
+	IOverlay, IOverlayDrop,
+	IOverlaySpecialObject,
+} from '@ansyn/imagery';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';

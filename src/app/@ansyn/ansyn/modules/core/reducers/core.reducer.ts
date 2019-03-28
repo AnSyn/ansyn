@@ -7,11 +7,11 @@ import {
 	SetToastMessageAction
 } from '../actions/core.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IOverlay, IOverlaysCriteria } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria } from '../../../../imagery/model/overlay.model';
 import { LayoutKey } from '../models/layout-options.model';
 import { sessionData } from '../services/core-session.service';
 import { uniq } from 'lodash';
-import { ICaseDataInputFiltersState } from '../models/case.model';
+import { ICaseDataInputFiltersState } from '../../../../imagery/model/case.model';
 
 export enum AlertMsgTypes {
 	OverlaysOutOfBounds = 'overlaysOutOfBounds',

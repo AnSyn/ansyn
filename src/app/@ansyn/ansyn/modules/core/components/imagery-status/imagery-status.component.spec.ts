@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryStatusComponent } from './imagery-status.component';
 import { StoreModule } from '@ngrx/store';
-import { IOverlay } from '../../models/overlay.model';
+import { IOverlay } from '../../../../../imagery/model/overlay.model';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerConfig } from '../../models/logger.config';
 import { CoreModule } from '../../core.module';

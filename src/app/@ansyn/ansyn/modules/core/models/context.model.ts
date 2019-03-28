@@ -1,4 +1,4 @@
-import { CaseRegionState, ICaseFacetsState, ICaseTimeState } from './case.model';
+import { CaseRegionState, ICaseFacetsState, ICaseTimeState } from '@ansyn/imagery';
 import { IEntity } from '../services/storage/storage.service';
 
 export enum DisplayedOverlay {

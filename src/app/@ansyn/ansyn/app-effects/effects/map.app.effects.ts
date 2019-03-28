@@ -36,8 +36,6 @@ import {
 	CoreActionTypes,
 	endTimingLog,
 	extentFromGeojson,
-	GeoRegisteration,
-	ICaseMapState,
 	isFullOverlay,
 	SetToastMessageAction,
 	startTimingLog,
@@ -45,7 +43,13 @@ import {
 	ToggleMapLayersAction
 } from '../../modules/core/public_api';
 import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '../../modules/plugins/public_api';
-import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import {
+	BaseMapSourceProvider,
+	CommunicatorEntity,
+	ImageryCommunicatorService,
+	GeoRegisteration,
+	ICaseMapState
+} from '@ansyn/imagery';
 import {
 	catchError,
 	debounceTime,

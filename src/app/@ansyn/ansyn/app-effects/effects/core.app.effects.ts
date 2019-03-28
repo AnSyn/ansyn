@@ -7,7 +7,6 @@ import {
 	coreStateSelector,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
-	IOverlay, IOverlayDrop,
 	LoggerService,
 	selectRemovedOverlays,
 	SetOverlaysCriteriaAction,
@@ -28,6 +27,7 @@ import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade
 import { IAppState } from '../app.effects.module';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { ChangeImageryMap as MapFacadeChangeImageryMap } from '@ansyn/map-facade';
+import { IOverlay, IOverlayDrop } from '@ansyn/imagery';
 
 @Injectable()
 export class CoreAppEffects {

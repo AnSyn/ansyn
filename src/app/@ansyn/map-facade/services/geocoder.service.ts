@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core';
+import { ErrorHandlerService } from '@ansyn/ansyn';
 import { Observable, of } from 'rxjs';
 import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';

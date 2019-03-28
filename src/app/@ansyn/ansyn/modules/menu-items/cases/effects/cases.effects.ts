@@ -26,9 +26,6 @@ import { ICasesConfig } from '../models/cases-config';
 import {
 	copyFromContent,
 	ErrorHandlerService,
-	ICase,
-	ICasePreview,
-	IDilutedCaseState,
 	IStoredEntity,
 	rxPreventCrash, SetAutoSave,
 	SetToastMessageAction,
@@ -39,6 +36,7 @@ import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
+import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/imagery';
 
 @Injectable()
 export class CasesEffects {

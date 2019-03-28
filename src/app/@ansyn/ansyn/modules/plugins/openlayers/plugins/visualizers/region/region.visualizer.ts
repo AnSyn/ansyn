@@ -4,11 +4,9 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
 import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
-import { VisualizerInteractions } from '@ansyn/imagery';
+import { CaseGeoFilter, CaseRegionState, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
 import {
-	CaseGeoFilter,
-	CaseRegionState,
 	selectRegion,
 	SetOverlaysCriteriaAction,
 	SetToastMessageAction

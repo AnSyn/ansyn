@@ -4,14 +4,14 @@ import { IOverlayDropSources } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { EMPTY, Observable, Observer, of } from 'rxjs';
+import { LoggerService } from '../../core/public_api';
 import {
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysCriteria,
 	IOverlaysFetchData,
 	IOverlaySpecialObject,
-	LoggerService
-} from '../../core/public_api';
+} from '@ansyn/imagery';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';

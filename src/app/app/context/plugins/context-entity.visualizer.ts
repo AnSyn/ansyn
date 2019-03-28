@@ -1,13 +1,15 @@
 import olPoint from 'ol/geom/Point';
 import olPolygon from 'ol/geom/Polygon';
 import {
-	getPointByGeometry,
 	getTimeDiff,
 	getTimeDiffFormat,
+} from '@ansyn/ansyn';
+import {
+	getPointByGeometry,
 	ICaseMapState,
 	IContextEntity,
 	IVisualizerEntity
-} from '@ansyn/ansyn';
+} from '@ansyn/imagery';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';

@@ -2,14 +2,16 @@ import { IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
-	IOverlay,
-	IOverlayDrop,
-	IOverlaysCriteria,
-	IOverlaysFetchData,
 	mapValuesToArray,
 	selectFavoriteOverlays,
 	sortByDateDesc
 } from '../../core/public_api';
+import {
+	IOverlay,
+	IOverlayDrop,
+	IOverlaysCriteria,
+	IOverlaysFetchData,
+} from '@ansyn/imagery';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';

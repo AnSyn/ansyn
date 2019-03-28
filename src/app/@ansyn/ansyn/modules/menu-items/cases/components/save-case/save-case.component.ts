@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { cloneDeep, ICase } from '../../../../core/public_api';
+import { cloneDeep } from '../../../../core/public_api';
+import { ICase } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';

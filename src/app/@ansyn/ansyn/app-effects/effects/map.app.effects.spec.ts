@@ -41,9 +41,9 @@ import {
 	ICaseMapState,
 	IOverlay,
 	IOverlaysFetchData,
-	LoggerService,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '../../modules/core/public_api';
+} from '@ansyn/imagery';
+import { LoggerService } from '../../modules/core/public_api';
 import {
 	BaseMapSourceProvider,
 	CacheService,

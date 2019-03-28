@@ -16,9 +16,11 @@ import {
 	CaseMapExtent,
 	getPolygonByPointAndRadius,
 	ICaseMapPosition,
-	ICaseMapState, IMapProviderConfig, IMapProvidersConfig,
+	ICaseMapState,
+	IMapProviderConfig,
+	IMapProvidersConfig,
 	MAP_PROVIDERS_CONFIG
-} from '@ansyn/core';
+} from '../public_api';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';

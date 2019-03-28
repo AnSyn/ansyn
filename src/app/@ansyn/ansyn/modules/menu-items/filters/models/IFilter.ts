@@ -1,4 +1,4 @@
-import { FilterType } from '../../../core/public_api';
+import { FilterType } from '@ansyn/imagery';
 
 export interface IFilter {
 	modelName: string;

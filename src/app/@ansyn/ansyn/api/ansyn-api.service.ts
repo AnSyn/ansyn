@@ -23,15 +23,17 @@ import {
 } from '../modules/menu-items/public_api';
 import {
 	CoreActionTypes,
-	ICaseMapPosition,
-	ICaseMapState,
 	ICoordinatesSystem,
-	IOverlay,
-	IOverlaysCriteria,
 	LayoutKey,
 	SetLayoutAction,
 	SetOverlaysCriteriaAction
 } from '../modules/core/public_api';
+import {
+	ICaseMapPosition,
+	ICaseMapState,
+	IOverlay,
+	IOverlaysCriteria,
+} from '@ansyn/imagery';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/public_api';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';

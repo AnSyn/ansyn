@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin, IImageryPluginMetaData } from './base-imagery-plugin';
-import { IVisualizerEntity } from '@ansyn/core';
+import { IVisualizerEntity } from './visualizers/visualizers-entity';
 
 export type VisualizerInteractionTypes =
 	'click'

@@ -38,12 +38,14 @@ import {
 } from '@ansyn/map-facade';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '../../modules/overlays/public_api';
 import {
-	CaseGeoFilter,
 	ClearActiveInteractionsAction,
 	CoreActionTypes,
+} from '../../modules/core/public_api';
+import {
+	CaseGeoFilter,
 	ICaseMapState,
 	ImageManualProcessArgs
-} from '../../modules/core/public_api';
+} from '@ansyn/imagery';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/public_api';

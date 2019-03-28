@@ -7,17 +7,19 @@ import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../r
 import {
 	BackToWorldSuccess,
 	BackToWorldView,
-	CaseGeoFilter,
 	CoreActionTypes,
-	geojsonMultiPolygonToPolygon,
-	ICaseMapPosition,
-	ICaseMapState,
-	IWorldViewMapState,
 	selectRegion,
 	SetLayoutSuccessAction,
 	SetOverlaysCriteriaAction,
 	SetToastMessageAction
-} from '@ansyn/core';
+} from '@ansyn/ansyn';
+import {
+	CaseGeoFilter,
+	geojsonMultiPolygonToPolygon,
+	ICaseMapPosition,
+	ICaseMapState,
+	IWorldViewMapState,
+} from '@ansyn/imagery';
 import * as turf from '@turf/turf';
 import {
 	ActiveImageryMouseEnter,

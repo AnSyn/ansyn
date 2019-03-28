@@ -27,12 +27,6 @@ import {
 	BackToWorldView,
 	CoreActionTypes,
 	DisplayedOverlay,
-	ICaseMapPosition,
-	ICaseMapState,
-	IContextEntity,
-	IOverlay,
-	IOverlaySpecialObject,
-	IPendingOverlay,
 	LayoutKey,
 	layoutOptions,
 	SetLayoutAction,
@@ -50,7 +44,14 @@ import {
 	selectMapsList,
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import {
+	CommunicatorEntity,
+	ImageryCommunicatorService,
+	IPendingOverlay,
+	IOverlaySpecialObject,
+	IOverlay,
+	IContextEntity, ICaseMapState, ICaseMapPosition
+} from '@ansyn/imagery';
 import {
 	catchError,
 	filter,
@@ -187,7 +188,7 @@ export class OverlaysAppEffects {
 		);
 	});
 	private getHoveredOverlayAction = map((overlay: IOverlay) => {
-		return new SetHoveredOverlayAction(overlay)
+		return new SetHoveredOverlayAction(overlay);
 	});
 
 	@Effect()

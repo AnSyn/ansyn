@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { GeometryObject } from 'geojson';
 import { AlgorithmTask, AlgorithmTaskStatus, TasksPageToShow } from '../models/tasks.model';
-import { IOverlay } from '../../../core/public_api';
+import { IOverlay } from '@ansyn/imagery';
 
 export enum TasksActionTypes {
 	SET_DRAW_INDICATOR = '[Algorithms] Set draw indicator',

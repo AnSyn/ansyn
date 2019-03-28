@@ -8,13 +8,12 @@ import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { AnnotationsColorComponent, ClickOutsideDirective, ColorPickerComponent } from '@ansyn/ansyn';
 import {
 	AnnotationInteraction,
-	AnnotationsColorComponent, ClickOutsideDirective,
-	ColorPickerComponent,
 	IAnnotationsSelectionEventData
-} from '@ansyn/core';
-import { AnnotationsWeightComponent } from '@ansyn/core';
+} from '@ansyn/imagery';
+import { AnnotationsWeightComponent } from '@ansyn/ansyn';
 import { PositionChangedAction } from '../../actions/map.actions';
 import { EventEmitter } from '@angular/core';
 

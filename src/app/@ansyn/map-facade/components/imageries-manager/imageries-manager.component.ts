@@ -12,13 +12,13 @@ import {
 import { DOCUMENT } from '@angular/common';
 import {
 	coreStateSelector,
-	ICaseMapState,
 	ICoreState,
 	IMapsLayout,
 	LayoutKey,
 	layoutOptions,
 	selectLayout
-} from '@ansyn/core';
+} from '@ansyn/ansyn';
+import { ICaseMapState, } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { DragDropMapService } from './providers/drag-drop-map.service';

@@ -37,19 +37,16 @@ import {
 import { SetBadgeAction } from '@ansyn/menu';
 import {
 	buildFilteredOverlays,
-	FilterType,
 	GenericTypeResolverService,
-	ICaseFacetsState,
 	IFilterModel,
 	InjectionResolverFilter,
-	IOverlay,
-	IOverlaySpecialObject,
 	mapValuesToArray,
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '../../modules/core/public_api';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { FilterType, ICaseFacetsState, IOverlay, IOverlaySpecialObject } from '@ansyn/imagery';
 
 @Injectable()
 export class FiltersAppEffects {

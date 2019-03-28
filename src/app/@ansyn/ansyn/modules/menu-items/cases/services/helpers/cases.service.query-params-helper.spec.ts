@@ -1,13 +1,14 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
-import { CoreConfig, ErrorHandlerService, ICase, StorageService } from '../../../../core/public_api';
+import { CoreConfig, ErrorHandlerService, StorageService } from '../../../../core/public_api';
 import { CasesService } from '../cases.service';
 import * as rison from 'rison';
 import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
 import { throwError } from 'rxjs';
+import { ICase } from '@ansyn/imagery';
 
 describe('CasesService', () => {
 	let casesService: CasesService;

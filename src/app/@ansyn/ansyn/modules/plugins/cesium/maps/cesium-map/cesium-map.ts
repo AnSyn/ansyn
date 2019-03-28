@@ -1,7 +1,7 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { CaseMapExtent, CoreConfig, ExtentCalculator, ICaseMapPosition, ICoreConfig, toDegrees } from '../../../../core/public_api';
-import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
+import { CoreConfig, ExtentCalculator, ICoreConfig, toDegrees } from '../../../../core/public_api';
+import { BaseImageryMap, ImageryMap, CaseMapExtent, ICaseMapPosition  } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';

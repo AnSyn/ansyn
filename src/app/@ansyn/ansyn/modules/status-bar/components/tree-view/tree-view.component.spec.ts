@@ -33,7 +33,9 @@ describe('TreeViewComponent', () => {
 				MissingTranslationHandler,
 				{
 					provide: MultipleOverlaysSourceConfig,
-					useValue: { toolTips: {}, dataInputFiltersConfig: {} }
+					useValue: {
+						indexProviders: {}
+					}
 				},
 				provideMockActions(() => actions)
 			]

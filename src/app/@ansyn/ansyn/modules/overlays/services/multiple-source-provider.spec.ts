@@ -148,7 +148,9 @@ describe('MultipleSourceProvider', () => {
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
-						Truthy: { whitelist: whitelist, blacklist: [] }
+						indexProviders: {
+							Truthy: { whitelist: whitelist, blacklist: [] }
+						}
 					}
 				},
 				{
@@ -191,7 +193,9 @@ describe('MultipleSourceProvider', () => {
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
-						Faulty: { whitelist: whitelist, blacklist: [] }
+						indexProviders: {
+							Faulty: { whitelist: whitelist, blacklist: [] }
+						}
 					}
 				},
 				{
@@ -227,9 +231,12 @@ describe('MultipleSourceProvider', () => {
 				},
 				MultipleOverlaysSourceProvider,
 				{
-					provide: MultipleOverlaysSourceConfig, useValue: {
-						Truthy: { whitelist: whitelist, blacklist: [] },
-						Faulty: { whitelist: whitelist, blacklist: [] }
+					provide: MultipleOverlaysSourceConfig,
+					useValue: {
+						indexProviders: {
+							Truthy: { whitelist: whitelist, blacklist: [] },
+							Faulty: { whitelist: whitelist, blacklist: [] }
+						}
 					}
 				},
 				{

@@ -8,7 +8,6 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { selectDrops } from '../../../../overlays/reducers/overlays.reducer';
-import { isFullOverlay } from '../../../../core/utils/overlays';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

@@ -52,7 +52,7 @@ export interface IOverlay extends IDilutedOverlay {
 	projection?: string;
 	token?: string;
 	catalogID?: string;
-	photoAngle: PhotoAngle;
+	photoAngle?: PhotoAngle;
 }
 
 export class Overlay implements IOverlay {

@@ -21,5 +21,10 @@ export interface IOverlaysSourceProvider {
 
 export interface IMultipleOverlaysSourceConfig {
 	defaultProvider: IOverlaysSourceProvider;
+	diagonalSensorNames: string[];
+	indexProviders: IIndexProviders;
+}
+
+export interface IIndexProviders {
 	[key: string]: IOverlaysSourceProvider;
 }

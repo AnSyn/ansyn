@@ -1,5 +1,5 @@
 
 export abstract class BaseFetchService {
-	abstract fetch(url: RequestInfo, options?: RequestInit): Promise<Response>;
+	abstract fetch(url: string, options?: RequestInit): Promise<Response>;
 }
 

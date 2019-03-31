@@ -47,7 +47,7 @@ export class MultipleOverlaysSourceProvider {
 	private prepareWhitelist() {
 		const mapProviderConfig = (provider) => {
 			const type = provider.sourceType;
-			let config = this.multipleOverlaysSourceConfig[type];
+			let config = this.multipleOverlaysSourceConfig.indexProviders[type];
 			if (!config) {
 				console.warn(`Missing config for provider ${type}, using defaultProvider config`);
 				config = this.multipleOverlaysSourceConfig.defaultProvider;

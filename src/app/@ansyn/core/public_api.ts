@@ -1,4 +1,3 @@
-export { GeoRegisteration } from './models/overlay.model';
 export {
 	IMultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceConfig,
@@ -49,13 +48,23 @@ export { IAlert } from './alerts/alerts.model';
 export { LoggerConfig } from './models/logger.config';
 export { IEntity } from './services/storage/storage.service';
 export { coreStateSelector, selectFavoriteOverlays, selectPresetOverlays } from './reducers/core.reducer';
-export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './models/overlay.model';
+export {
+	IOverlaysFetchData,
+	IOverlayDrop,
+	IOverlaySpecialObject,
+	GeoRegisteration,
+	IPendingOverlay,
+	IOverlay,
+	IDilutedOverlay,
+	Overlay,
+	IOverlaysCriteria,
+	PhotoAngle
+} from './models/overlay.model';
 export { ILimitedArray } from './utils/i-limited-array';
 export { OverlayDisplayMode } from './models/case.model';
 export { ClearActiveInteractionsAction } from './actions/core.actions';
 export { AddAlertMsg, RemoveAlertMsg, SetLayoutSuccessAction } from './actions/core.actions';
 export { AlertMsgTypes } from './reducers/core.reducer';
-export { IPendingOverlay } from './models/overlay.model';
 export { ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs } from './models/case.model';
 export { IStoredEntity, StorageService } from './services/storage/storage.service';
 export { getTimeFormat } from './utils/time';
@@ -97,7 +106,6 @@ export {
 	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './models/case.model';
-export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria } from './models/overlay.model';
 export { IVisualizerEntity } from './models/visualizers/visualizers-entity';
 export { MarkerSize } from './models/visualizers/visualizer-style';
 export { ICoreConfig } from './models/core.config.model';

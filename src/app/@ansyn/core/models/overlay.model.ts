@@ -21,7 +21,12 @@ export interface IPendingOverlay {
 export enum GeoRegisteration {
 	geoRegistered = 'geoRegistered',
 	notGeoRegistered = 'notGeoRegistered',
-	poorGeoRegistered = 'poorGeoRegistered',
+	poorGeoRegistered = 'poorGeoRegistered'
+}
+
+export enum PhotoAngle {
+	diagonal = 'diagonal',
+	vertical = 'verticle'
 }
 
 export interface IOverlay extends IDilutedOverlay {
@@ -46,7 +51,8 @@ export interface IOverlay extends IDilutedOverlay {
 	tag?: any; // original metadata
 	projection?: string;
 	token?: string;
-	catalogID?: string,
+	catalogID?: string;
+	photoAngle: PhotoAngle;
 }
 
 export class Overlay implements IOverlay {
@@ -76,6 +82,7 @@ export class Overlay implements IOverlay {
 	projection?: string = Overlay.DEFAULT_PROJECTION;
 	id: string;
 	sourceType: string;
+	photoAngle: PhotoAngle = PhotoAngle.vertical;
 
 	constructor(overlayProps: Partial<IOverlay>) {
 		Object.entries(overlayProps).forEach(([key, value]) => {

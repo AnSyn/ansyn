@@ -9,10 +9,10 @@ export { AnsynModule } from './ansyn.module';
 export { IAppState } from './app-effects/app.effects.module';
 export { COMPONENT_MODE } from './app-providers/component-mode';
 export { getProviders, fetchConfigProviders } from './fetch-config-providers';
-export { mergeConfig } from "./fetch-config-providers";
-export { IConfigModel } from "./config.model";
+export { mergeConfig } from './fetch-config-providers';
+export { IConfigModel } from './config.model';
 
-export * from './modules/plugins/public_api'
-export * from './modules/status-bar/public_api'
-export * from './modules/overlays/public_api'
-export * from './modules/menu-items/public_api'
+export * from './modules/plugins/public_api';
+export * from './modules/status-bar/public_api';
+export * from './modules/overlays/public_api';
+export * from './modules/menu-items/public_api';

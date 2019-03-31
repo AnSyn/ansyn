@@ -67,7 +67,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	get dataFilters(): TreeviewItem[] {
 		this.leavesCount = 0;
-		return Object.entries(this.multipleOverlaysSourceConfig)
+		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive, dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => !inActive && dataInputFiltersConfig)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 					this.visitLeafes(dataInputFiltersConfig, (leaf) => {

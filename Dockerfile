@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:9.5.0-slim as builder
+FROM node as builder
 
 RUN apt-get update && apt-get install -y git --no-install-recommends
 

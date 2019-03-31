@@ -215,7 +215,8 @@ export class CasesService {
 	}
 
 	isStoreEntitiesEqual(caseA, caseB) {
-		if (!caseA || !caseB) {
+		// caseA.data == undefined, can happen if you update only the preview data (of other case such as "name" -> updates the preview only)
+		if (!caseA || !caseB || !caseA.data || !caseB.data) {
 			return false;
 		}
 		const cloneA = JSON.parse(JSON.stringify(caseA));

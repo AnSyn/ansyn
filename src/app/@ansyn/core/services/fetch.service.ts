@@ -5,6 +5,6 @@ import { Injectable } from '@angular/core';
 	providedIn: 'root'
 })
 export class FetchService implements BaseFetchService {
-	fetch(url: RequestInfo, options?: RequestInit): Promise<Response> {
+	fetch(url: string, options?: RequestInit): Promise<Response> {
 		return window.fetch(url, options);
 	}}

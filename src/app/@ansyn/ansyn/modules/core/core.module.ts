@@ -17,6 +17,7 @@ import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
+import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 
 @NgModule({
 	imports: [
@@ -39,12 +40,14 @@ import { FormsModule } from '@angular/forms';
 		AnsynFormsModule,
 		AnsynModalComponent,
 		AnsynPopoverComponent,
-		ManualRemovedOverlaysComponent
+		ManualRemovedOverlaysComponent,
+		ContextMenuComponent
 	],
 	declarations: [
 		AnsynModalComponent,
 		AnsynPopoverComponent,
-		ManualRemovedOverlaysComponent
+		ManualRemovedOverlaysComponent,
+		ContextMenuComponent
 	]
 })
 

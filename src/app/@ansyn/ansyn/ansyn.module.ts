@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
-
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ImageryModule } from '@ansyn/imagery';
@@ -30,7 +29,6 @@ import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { HelpModule } from './modules/menu-items/help/help.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
-import { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
 
 @NgModule({
 	imports: [
@@ -76,9 +74,8 @@ import { ContextMenuComponent } from './modules/core/components/context-menu/con
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
-		ContextMenuComponent
 	],
-	exports: [ AnsynComponent, ContextMenuComponent ]
+	exports: [ AnsynComponent ]
 })
 
 export class AnsynModule {

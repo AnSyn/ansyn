@@ -10,6 +10,7 @@ import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../re
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { coreFeatureKey, CoreReducer } from '../../../core/reducers/core.reducer';
 import { ClickOutsideDirective } from '@ansyn/map-facade';
+import { MockComponent } from '../../../core/test/mock-component';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;

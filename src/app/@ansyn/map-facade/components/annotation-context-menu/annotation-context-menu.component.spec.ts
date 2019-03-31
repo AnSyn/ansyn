@@ -17,6 +17,7 @@ import { EventEmitter } from '@angular/core';
 import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
 import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
 import { ColorPickerComponent } from '../color-picker/color-picker.component';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 
 
 describe('AnnotationContextMenuComponent', () => {
@@ -40,7 +41,7 @@ describe('AnnotationContextMenuComponent', () => {
 				AnnotationsWeightComponent,
 				AnnotationsColorComponent,
 				ColorPickerComponent,
-				// ClickOutsideDirective
+				ClickOutsideDirective
 			],
 			imports: [
 				FormsModule,

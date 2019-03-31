@@ -32,7 +32,7 @@ import { SelectCaseAction, SelectCaseSuccessAction } from '../../../modules/menu
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 import {
-	SetAutoSave, SetFavoriteOverlaysAction,
+	SetAutoSave, SetContextParamsAction, SetFavoriteOverlaysAction,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction
 } from '../../../modules/core/actions/core.actions';

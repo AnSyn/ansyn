@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UpdateFacetsAction } from '../../actions/filters.actions';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
+import { MockComponent } from '../../../../core/test/mock-component';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;

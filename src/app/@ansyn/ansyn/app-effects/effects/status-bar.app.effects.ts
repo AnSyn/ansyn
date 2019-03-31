@@ -3,7 +3,6 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { OverlaysService } from '../../modules/overlays/public_api';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { ClickOutsideMap, ContextMenuShowAction, MapActionTypes } from '@ansyn/map-facade';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
@@ -15,6 +14,7 @@ import {
 import { SearchModeEnum } from '../../modules/status-bar/models/search-mode.enum';
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 
 @Injectable()

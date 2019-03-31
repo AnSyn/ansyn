@@ -1,7 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { UrlSerializer } from '@angular/router';
 import { QueryParamsHelper } from './cases.service.query-params-helper';
-import { CoreConfig, ErrorHandlerService, StorageService } from '../../../../core/public_api';
 import { CasesService } from '../cases.service';
 import * as rison from 'rison';
 import * as wellknown from 'wellknown';
@@ -9,6 +8,9 @@ import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { ICase } from '@ansyn/imagery';
+import { CoreConfig } from '../../../../core/models/core.config';
+import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
+import { StorageService } from '../../../../core/services/storage/storage.service';
 
 describe('CasesService', () => {
 	let casesService: CasesService;

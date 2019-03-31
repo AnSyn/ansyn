@@ -3,7 +3,6 @@ import { TasksService } from '../../services/tasks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectFavoriteOverlays } from '../../../../core/public_api';
 import { ICaseMapState, IOverlay } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { switchMap, take, tap } from 'rxjs/internal/operators';
@@ -35,6 +34,7 @@ import {
 import { selectActiveMapId, selectMaps } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 import { Dictionary } from '@ngrx/entity';
+import { selectFavoriteOverlays } from '../../../../core/reducers/core.reducer';
 
 @Component({
 	selector: 'ansyn-tasks-form',

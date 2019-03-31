@@ -3,13 +3,6 @@ import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angu
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
-import {
-	AnsynFormsModule,
-	coreFeatureKey,
-	CoreReducer,
-	MockComponent,
-	SetFavoriteOverlaysAction
-} from '../../../../core/public_api';
 import { TranslateModule } from '@ngx-translate/core';
 import { TasksService } from '../../services/tasks.service';
 import { EffectsModule } from '@ngrx/effects';
@@ -20,6 +13,10 @@ import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverla
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { Overlay } from '@ansyn/imagery';
+import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
+import { coreFeatureKey, CoreReducer } from '../../../../core/reducers/core.reducer';
+import { SetFavoriteOverlaysAction } from '../../../../core/actions/core.actions';
+import { MockComponent } from '../../../../core/test/mock-component';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;

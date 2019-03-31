@@ -14,19 +14,6 @@ import {
 	selectMaps,
 	SetIsLoadingAcion
 } from '@ansyn/map-facade';
-import {
-	BaseOverlaySourceProvider,
-	DisplayOverlayAction,
-	IFetchParams,
-	IOverlaysState,
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
-	OverlaySourceProvider,
-	OverlaysService,
-	overlaysStateSelector,
-	RequestOverlayByIDFromBackendAction
-} from '../../modules/overlays/public_api';
 import * as extentFromGeojson from '@ansyn/map-facade';
 import {
 	GeoRegisteration,
@@ -36,7 +23,6 @@ import {
 	IOverlaysFetchData,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
-import { LoggerService } from '../../modules/core/public_api';
 import {
 	BaseMapSourceProvider,
 	CacheService,
@@ -71,6 +57,22 @@ import {
 	statusBarFeatureKey,
 	StatusBarInitialState, StatusBarReducer, statusBarStateSelector
 } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { LoggerService } from '../../modules/core/services/logger.service';
+import {
+	IOverlaysState, OverlayReducer,
+	overlaysFeatureKey, overlaysInitialState,
+	overlaysStateSelector
+} from '../../modules/overlays/reducers/overlays.reducer';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams
+} from '../../modules/overlays/models/base-overlay-source-provider.model';
+import {
+	DisplayOverlayAction,
+	RequestOverlayByIDFromBackendAction
+} from '../../modules/overlays/actions/overlays.actions';
+import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',

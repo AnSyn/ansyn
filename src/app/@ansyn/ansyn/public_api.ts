@@ -12,14 +12,6 @@ export { getProviders, fetchConfigProviders } from './fetch-config-providers';
 export { mergeConfig } from "./fetch-config-providers";
 export { IConfigModel } from "./config.model";
 
-export * from './modules/plugins/public_api'
-export * from './modules/overlays/public_api'
-export * from './modules/core/public_api'
-
-
-
-
-
 // // statusBar
 export { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';
 export { IComboBoxesProperties } from './modules/status-bar/models/combo-boxes.model';
@@ -52,8 +44,6 @@ export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-bo
 
 
 // menuItems
-
-
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
 export { ILayersManagerConfig } from "./modules/menu-items/layers-manager/models/layers-manager-config";
 export { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
@@ -187,3 +177,157 @@ export {
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './modules/menu-items/algorithms/models/tasks.model';
+
+
+// core
+export {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig,
+	IDateRange,
+	IFiltersList,
+	IOverlaysSourceProvider
+} from './modules/core/models/multiple-overlays-source-config';
+export { ChangeImageryMap } from './modules/core/actions/core.actions';
+export { FileInputComponent } from './modules/core/forms/file-input/file-input.component';
+export { AnsynFormsModule } from './modules/core/forms/ansyn-forms.module';
+export { forkJoinSafe } from './modules/core/utils/rxjs/observables/fork-join-safe';
+export { mergeArrays } from './modules/core/utils/merge-arrays';
+export { selectTime } from './modules/core/reducers/core.reducer';
+export { ILoggerConfig } from './modules/core/models/logger-config.model';
+export { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
+export { SliderCheckboxComponent } from './modules/core/forms/slider-checkbox/slider-checkbox.component';
+export { MockComponent } from './modules/core/test/mock-component';
+export { createStore, IStoreFixture } from './modules/core/test/mock-store';
+export { AnsynCheckboxComponent } from './modules/core/forms/ansyn-checkbox/ansyn-checkbox.component';
+export { asyncData } from './modules/core/test/async-observable-helpers';
+export { AnsynModalComponent } from './modules/core/components/ansyn-modal/ansyn-modal.component';
+export { coreFeatureKey, coreInitialState, CoreReducer } from './modules/core/reducers/core.reducer';
+export { type } from './modules/core/utils/type';
+export { selectAutoSave, selectRemovedOverlays, selectRemovedOverlaysVisibility } from './modules/core/reducers/core.reducer';
+export {
+	SetRemovedOverlayIdsCount,
+	SetRemovedOverlaysIdAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
+} from './modules/core/actions/core.actions';
+export { InjectionResolverFilter } from './modules/core/services/generic-type-resolver';
+export { GenericTypeResolverService } from './modules/core/services/generic-type-resolver.service';
+
+export { LoggerConfig } from './modules/core/models/logger.config';
+export { IEntity } from './modules/core/services/storage/storage.service';
+export { coreStateSelector, selectFavoriteOverlays, selectPresetOverlays } from './modules/core/reducers/core.reducer';
+export { ILimitedArray } from './modules/core/utils/i-limited-array';
+export { ClearActiveInteractionsAction } from './modules/core/actions/core.actions';
+export { IStoredEntity, StorageService } from './modules/core/services/storage/storage.service';
+export { AnsynInputComponent } from './modules/core/forms/ansyn-input/ansyn-input.component';
+export { copyFromContent } from './modules/core/utils/clipboard';
+export { ErrorHandlerService } from './modules/core/services/error-handler.service';
+export {
+	SetAutoSave,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction
+} from './modules/core/actions/core.actions';
+export { ICoreState } from './modules/core/reducers/core.reducer';
+export { GoNextPresetOverlay } from './modules/core/actions/core.actions';
+export { SetOverlaysCriteriaAction } from './modules/core/actions/core.actions';
+export { LoggerService } from './modules/core/services/logger.service';
+export { selectDataInputFilter, selectOverlaysCriteria, selectRegion } from './modules/core/reducers/core.reducer';
+export {
+	CoreActionTypes,
+	EnableCopyOriginalOverlayDataAction,
+	GoAdjacentOverlay,
+	UpdateOverlaysCountAction
+} from './modules/core/actions/core.actions';
+export { ICoreConfig } from './modules/core/models/core.config.model';
+export { CoreConfig } from './modules/core/models/core.config';
+export { endTimingLog, startTimingLog } from './modules/core/utils/logs/timer-logs';
+export { buildFilteredOverlays } from './modules/core/utils/overlays';
+export { isFullOverlay } from './modules/core/utils/overlays';
+export { IFilterModel } from './modules/core/models/IFilterModel';
+export { sortByDate, sortByDateDesc } from './modules/core/utils/sorting';
+export { limitArray, mergeLimitedArrays } from './modules/core/utils/i-limited-array';
+export { toDegrees, toRadians } from './modules/core/utils/math';
+export { toastMessages } from './modules/core/models/toast-messages';
+export { ICoordinatesSystem } from './modules/core/models/coordinate-system.model';
+export { cloneDeep } from './modules/core/utils/rxjs/operators/cloneDeep';
+export { rxPreventCrash } from './modules/core/utils/rxjs/operators/rxPreventCrash';
+export { IContext } from './modules/core/models/context.model';
+export { mapValuesToArray } from './modules/core/utils/misc';
+export { CoreModule } from './modules/core/core.module';
+export { DisplayedOverlay } from './modules/core/models/context.model';
+export { ExtentCalculator } from './modules/core/utils/extent-calculator';
+export { BaseFetchService } from './modules/core/services/base-fetch-service';
+export { FetchService } from './modules/core/services/fetch.service';
+export { IDeltaTime } from './modules/core/models/time.model';
+
+/* @todo: remove contexts actions */
+export { AddAllContextsAction, SetContextParamsAction } from './modules/core/actions/core.actions';
+export { selectContextEntities, selectContextsArray } from './modules/core/reducers/core.reducer';
+
+
+
+// overlays
+
+export { IMultipleOverlaysSource, MultipleOverlaysSource } from './modules/overlays/models/overlays-source-providers';
+export { IOverlaysConfig } from "./modules/overlays/models/overlays.config";
+export { OverlaySourceProvider } from './modules/overlays/models/overlays-source-providers';
+export { MultipleOverlaysSourceProvider } from './modules/overlays/services/multiple-source-provider';
+export { IOverlayByIdMetaData } from './modules/overlays/services/overlays.service';
+export { selectHoveredOverlay } from './modules/overlays/reducers/overlays.reducer';
+export { timeIntersection } from './modules/overlays/models/base-overlay-source-provider.model';
+export { ChangeOverlayPreviewRotationAction } from './modules/overlays/actions/overlays.actions';
+export { selectLoading } from './modules/overlays/reducers/overlays.reducer';
+export { LoadOverlaysSuccessAction } from './modules/overlays/actions/overlays.actions';
+export { IMarkUpData } from './modules/overlays/reducers/overlays.reducer';
+export { IFetchParams, IOverlayFilter } from './modules/overlays/models/base-overlay-source-provider.model';
+export { ExtendMap } from './modules/overlays/reducers/extendedMap.class';
+export { IStartAndEndDate } from './modules/overlays/models/base-overlay-source-provider.model';
+export { IOverlaysState } from './modules/overlays/reducers/overlays.reducer';
+export {
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayAction,
+	DisplayOverlayFailedAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	LoadOverlaysAction,
+	OverlaysActionTypes,
+	RedrawTimelineAction, RequestOverlayByIDFromBackendAction,
+	SetFilteredOverlaysAction, SetHoveredOverlayAction, SetMarkUp,
+	SetOverlaysStatusMessage, SetSpecialObjectsActionStore, SetDropsAction
+} from './modules/overlays/actions/overlays.actions';
+export {
+	MarkUpClass,
+	overlaysStateSelector,
+	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
+	selectFilteredOveralys, selectOverlaysArray,
+	selectOverlaysMap, selectOverlays, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
+} from './modules/overlays/reducers/overlays.reducer';
+export { OverlaysConfig, OverlaysService } from './modules/overlays/services/overlays.service';
+export { BaseOverlaySourceProvider } from './modules/overlays/models/base-overlay-source-provider.model';
+export { overlayOverviewComponentConstants } from './modules/overlays/components/overlay-overview/overlay-overview.component.const';
+export { OverlaysModule } from './modules/overlays/overlays.module';
+export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './modules/overlays/reducers/overlays.reducer';
+
+// plugins
+
+export { OpenLayersMapSourceProvider } from './modules/plugins/openlayers/mapSourceProviders/open-layers.map-source-provider';
+export { OpenLayersStaticImageSourceProviderSourceType } from './modules/plugins/openlayers/mapSourceProviders/open-layers-static-image-source-provider';
+export { OpenLayerMarcoSourceProviderSourceType } from "./modules/plugins/openlayers/mapSourceProviders/marco/open-layers-MARCO-source-provider";
+export {
+	DisabledOpenLayersMapName,
+	OpenLayersDisabledMap
+} from './modules/plugins/openlayers/maps/openlayers-disabled-map/openlayers-disabled-map';
+export { ProjectableRaster } from './modules/plugins/openlayers/maps/open-layers-map/models/projectable-raster';
+export { OpenLayersMap, OpenlayersMapName } from './modules/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
+export { OpenLayersProjectionService } from './modules/plugins/openlayers/projection/open-layers-projection.service';
+export { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
+export { NorthCalculationsPlugin } from './modules/plugins/openlayers/plugins/north-calculations/north-calculations.plugin';
+export { ImageProcessingPlugin } from './modules/plugins/openlayers/plugins/image-processing/image-processing.plugin';
+export { isRasterLayer, removeWorkers } from './modules/plugins/openlayers/maps/open-layers-map/shared/openlayers-shared';
+export { EntitiesVisualizer } from './modules/plugins/openlayers/plugins/visualizers/entities-visualizer';
+export { CesiumMapName } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
+export { OpenlayersGeoJsonLayersVisualizer } from "./modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer";
+
+export { CesiumMap } from "./modules/plugins/cesium/maps/cesium-map/cesium-map";
+export { CesiumLayer, ISceneMode } from "./modules/plugins/cesium/models/cesium-layer";

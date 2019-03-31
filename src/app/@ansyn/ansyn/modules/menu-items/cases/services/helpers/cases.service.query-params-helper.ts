@@ -1,4 +1,4 @@
-import { IContext } from '../../../../core/public_api';
+import { IContext } from '../../../../core/models/context.model';
 import { Params } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';

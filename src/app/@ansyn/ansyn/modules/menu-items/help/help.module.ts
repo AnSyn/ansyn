@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { HelpComponent } from './components/help.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CommonModule } from '@angular/common';
-import { CoreModule } from '../../core/public_api';
 import { EffectsModule } from '@ngrx/effects';
 import { HelpLocalStorageService } from './services/help.local-storage.service';
 import { HelpEffects } from './effects/help.effects';
 import { FormsModule } from '@angular/forms';
+import { CoreModule } from '../../core/core.module';
 
 @NgModule({
 	imports: [

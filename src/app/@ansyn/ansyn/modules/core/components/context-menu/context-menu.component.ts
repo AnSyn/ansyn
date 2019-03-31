@@ -13,12 +13,12 @@ import {
 	IMapFacadeConfig
 } from '@ansyn/map-facade';
 import { uniq as _uniq } from 'lodash';
-import { selectRegion } from '@ansyn/ansyn';
 import { CaseGeoFilter, ICaseMapState, IOverlay } from '@ansyn/imagery';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { selectRegion } from '../../reducers/core.reducer';
 
 
 export interface IOverlayButton {

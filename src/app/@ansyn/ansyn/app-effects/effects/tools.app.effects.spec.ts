@@ -5,7 +5,6 @@ import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService, ICase } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { DisplayOverlaySuccessAction } from '../../modules/overlays/public_api';
 import { BackToWorldView, MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -40,6 +39,7 @@ import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.a
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { ClearActiveInteractionsAction } from '../../modules/core/actions/core.actions';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
+import { DisplayOverlaySuccessAction } from '../../modules/overlays/actions/overlays.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

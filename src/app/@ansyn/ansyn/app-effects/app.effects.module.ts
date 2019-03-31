@@ -9,17 +9,17 @@ import { IMapState } from '@ansyn/map-facade';
 import { MenuAppEffects } from './effects/menu.app.effects';
 import { IStatusBarState } from '../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
-import { IOverlaysState } from '../modules/overlays/public_api';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { CoreAppEffects } from './effects/core.app.effects';
-import { ICoreState } from '../modules/core/public_api';
+import { ICoreState } from '../modules/core/reducers/core.reducer';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 import { ICasesState } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { IFiltersState } from '../modules/menu-items/filters/reducer/filters.reducer';
 import { ILayerState } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer';
+import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
 
 export interface IAppState {
 	core: ICoreState;

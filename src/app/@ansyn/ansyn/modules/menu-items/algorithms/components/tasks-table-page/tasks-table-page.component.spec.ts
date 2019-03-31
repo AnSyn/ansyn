@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TasksTablePageComponent } from './tasks-table-page.component';
-import { MockComponent } from '../../../../core/public_api';
+import { MockComponent } from '../../../../core/test/mock-component';
 
 describe('TasksTablePageComponent', () => {
 	let component: TasksTablePageComponent;

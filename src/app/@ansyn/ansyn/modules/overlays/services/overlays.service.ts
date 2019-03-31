@@ -2,11 +2,6 @@ import { IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
-	mapValuesToArray,
-	selectFavoriteOverlays,
-	sortByDateDesc
-} from '../../core/public_api';
-import {
 	IOverlay,
 	IOverlayDrop,
 	IOverlaysCriteria,
@@ -18,6 +13,9 @@ import { unionBy } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/internal/operators';
+import { selectFavoriteOverlays } from '../../core/reducers/core.reducer';
+import { sortByDateDesc } from '../../core/utils/sorting';
+import { mapValuesToArray } from '../../core/utils/misc';
 
 export const OverlaysConfig = 'overlaysConfig';
 

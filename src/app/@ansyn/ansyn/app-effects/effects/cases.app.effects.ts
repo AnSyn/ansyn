@@ -2,13 +2,6 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	DisplayOverlayAction,
-	DisplayOverlaySuccessAction,
-	IOverlayByIdMetaData,
-	OverlaysActionTypes,
-	OverlaysService
-} from '../../modules/overlays/public_api';
 import { IMapState, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { IDilutedCase, ImageManualProcessArgs, IOverlay } from '@ansyn/imagery';
@@ -24,6 +17,12 @@ import {
 } from '../../modules/menu-items/cases/actions/cases.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { IToolsState, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	DisplayOverlayAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes
+} from '../../modules/overlays/actions/overlays.actions';
+import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 @Injectable()
 export class CasesAppEffects {

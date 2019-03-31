@@ -5,10 +5,11 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { IContext, selectContextsArray } from '../../../../core/public_api';
 import { ICase, ICasePreview } from '@ansyn/imagery';
 import { CasesService } from '../../services/cases.service';
 import { map, take } from 'rxjs/operators';
+import { IContext } from '../../../../core/models/context.model';
+import { selectContextsArray } from '../../../../core/reducers/core.reducer';
 
 const animationsDuring = '0.2s';
 

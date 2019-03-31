@@ -4,11 +4,13 @@ import { Store, StoreModule } from '@ngrx/store';
 import { IToolsState, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
-import { CoreConfig, CoreModule, LoggerConfig } from '../../../../core/public_api';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 import { toolsConfig } from '../../models/tools-config';
+import { CoreConfig } from '../../../../core/models/core.config';
+import { CoreModule } from '../../../../core/core.module';
+import { LoggerConfig } from '../../../../core/models/logger.config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;

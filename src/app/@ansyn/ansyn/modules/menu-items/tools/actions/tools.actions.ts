@@ -8,7 +8,7 @@ import {
 } from '@ansyn/imagery';
 
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
-import { type } from '../../../core/public_api';
+import { type } from '../../../core/utils/type';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),

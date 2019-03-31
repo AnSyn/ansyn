@@ -12,17 +12,11 @@ import {
 } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import {
-	CoreActionTypes,
-	ICoordinatesSystem,
-	SetOverlaysCriteriaAction
-} from '../modules/core/public_api';
-import {
 	ICaseMapPosition,
 	ICaseMapState,
 	IOverlay,
 	IOverlaysCriteria, LayoutKey
 } from '@ansyn/imagery';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/public_api';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
@@ -38,6 +32,9 @@ import {
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
+import { CoreActionTypes, SetOverlaysCriteriaAction } from '../modules/core/actions/core.actions';
+import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
+import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/actions/overlays.actions';
 
 @Injectable({
 	providedIn: 'root'

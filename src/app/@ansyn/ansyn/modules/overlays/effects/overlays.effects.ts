@@ -14,15 +14,12 @@ import {
 import { OverlaysService } from '../services/overlays.service';
 import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
-import {
-	LoggerService,
-	selectFavoriteOverlays,
-	selectPresetOverlays,
-	UpdateOverlaysCountAction
-} from '../../core/public_api';
 import { catchError, filter, map, mergeMap, switchMap } from 'rxjs/operators';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 import { BackToWorldView } from '@ansyn/map-facade';
+import { selectFavoriteOverlays, selectPresetOverlays } from '../../core/reducers/core.reducer';
+import { UpdateOverlaysCountAction } from '../../core/actions/core.actions';
+import { LoggerService } from '../../core/services/logger.service';
 
 @Injectable()
 export class OverlaysEffects {

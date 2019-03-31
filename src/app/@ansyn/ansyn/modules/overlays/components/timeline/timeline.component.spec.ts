@@ -6,9 +6,10 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reduce
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
-import { createStore, IStoreFixture, LoggerService } from '../../../core/public_api';
 import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
 import { MultipleOverlaysSourceProvider } from '../../services/multiple-source-provider';
+import { createStore, IStoreFixture } from '../../../core/test/mock-store';
+import { LoggerService } from '../../../core/services/logger.service';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;

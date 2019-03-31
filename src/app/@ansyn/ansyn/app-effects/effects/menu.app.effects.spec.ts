@@ -10,10 +10,10 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
-import { RedrawTimelineAction } from '../../modules/overlays/public_api';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;

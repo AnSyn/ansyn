@@ -1,35 +1,8 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import {
-	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
-	ExtendMap,
-	IMarkUpData,
-	IOverlaysState,
-	MarkUpClass,
-	overlayOverviewComponentConstants,
-	OverlaysActionTypes,
-	OverlaysService,
-	overlaysStateSelector,
-	selectdisplayOverlayHistory,
-	selectDropMarkup,
-	SetFilteredOverlaysAction,
-	SetHoveredOverlayAction,
-	SetMarkUp,
-	SetSpecialObjectsActionStore
-} from '../../modules/overlays/public_api';
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import {
-	CoreActionTypes,
-	DisplayedOverlay,
-	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
-} from '../../modules/core/public_api';
 import {
 	IMapState,
 	MapActionTypes,
@@ -61,6 +34,27 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
+import {
+	CoreActionTypes,
+	SetRemovedOverlaysIdAction,
+	ToggleFavoriteAction, TogglePresetOverlayAction
+} from '../../modules/core/actions/core.actions';
+import {
+	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction, OverlaysActionTypes, SetFilteredOverlaysAction,
+	SetHoveredOverlayAction,
+	SetMarkUp, SetSpecialObjectsActionStore
+} from '../../modules/overlays/actions/overlays.actions';
+import {
+	IMarkUpData,
+	IOverlaysState, MarkUpClass,
+	overlaysStateSelector, selectdisplayOverlayHistory,
+	selectDropMarkup
+} from '../../modules/overlays/reducers/overlays.reducer';
+import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
+import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 @Injectable()
 export class OverlaysAppEffects {

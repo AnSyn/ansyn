@@ -1,22 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
-import {
-	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
-	MarkUpClass,
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
-	OverlaysService,
-	overlaysStateSelector,
-	selectDropMarkup,
-	selectOverlaysMap,
-	SetFilteredOverlaysAction,
-	SetHoveredOverlayAction
-} from '../../modules/overlays/public_api';
 import { Observable, of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -55,6 +39,21 @@ import {
 	toolsInitialState,
 	ToolsReducer, toolsStateSelector
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	SetFilteredOverlaysAction,
+	SetHoveredOverlayAction
+} from '../../modules/overlays/actions/overlays.actions';
+import {
+	MarkUpClass,
+	OverlayReducer,
+	overlaysFeatureKey, overlaysInitialState,
+	overlaysStateSelector,
+	selectDropMarkup, selectOverlaysMap
+} from '../../modules/overlays/reducers/overlays.reducer';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

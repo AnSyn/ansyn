@@ -9,8 +9,10 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
-import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '../../../core/public_api';
-
+import { CoreConfig } from '../../../core/models/core.config';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { StorageService } from '../../../core/services/storage/storage.service';
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
 	let dataLayersService: DataLayersService;

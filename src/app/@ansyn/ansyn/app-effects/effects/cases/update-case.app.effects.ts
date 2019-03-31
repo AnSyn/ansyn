@@ -3,13 +3,6 @@ import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
-import {
-	selectAutoSave,
-	selectContextEntities,
-	selectFavoriteOverlays, selectOverlaysCriteria, selectPresetOverlays,
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
-} from '../../../modules/core/public_api';
 import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 import { ICase } from '@ansyn/imagery';
@@ -19,6 +12,12 @@ import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import {
+	selectAutoSave, selectContextEntities,
+	selectFavoriteOverlays,
+	selectOverlaysCriteria, selectPresetOverlays, selectRemovedOverlays,
+	selectRemovedOverlaysVisibility
+} from '../../../modules/core/reducers/core.reducer';
 
 @Injectable()
 export class UpdateCaseAppEffects {

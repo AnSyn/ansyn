@@ -1,4 +1,4 @@
-import { OverlaysService } from '../../../../../overlays/public_api';
+import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';

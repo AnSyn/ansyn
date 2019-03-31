@@ -6,20 +6,18 @@ import { FeatureCollection, GeometryObject, Position } from 'geojson';
 import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { CaseGeoFilter, CaseRegionState, VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
-import {
-	selectRegion,
-	SetOverlaysCriteriaAction,
-} from '../../../../../core/public_api';
-import { UpdateGeoFilterStatus } from '../../..//annotations.visualizer.ts(39,10)../../status-bar/actions/status-bar.actions';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
-import { SearchMode } from '../../../../../status-bar/models/search-mode.enum';
+import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
 import {
 	selectGeoFilterIndicator,
 	selectGeoFilterSearchMode
 } from '../../../../../status-bar/reducers/status-bar.reducer';
+import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
+import { SetOverlaysCriteriaAction } from '../../../../../core/actions/core.actions';
+import { selectRegion } from '../../../../../core/reducers/core.reducer';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';

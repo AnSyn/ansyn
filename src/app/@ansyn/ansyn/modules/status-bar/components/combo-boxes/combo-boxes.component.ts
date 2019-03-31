@@ -10,14 +10,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
-import {
-	CoreActionTypes,
-	selectDataInputFilter,
-	selectRegion,
-	selectTime,
-	SetOverlaysCriteriaAction,
-	UpdateOverlaysCountAction
-} from '../../../core/public_api';
 import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';
 import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
@@ -34,6 +26,12 @@ import {
 	ICaseTimeState, IOverlay, LayoutKey, layoutOptions
 } from '@ansyn/imagery';
 import { selectLayout, SetLayoutAction } from '@ansyn/map-facade';
+import {
+	CoreActionTypes,
+	SetOverlaysCriteriaAction,
+	UpdateOverlaysCountAction
+} from '../../../core/actions/core.actions';
+import { selectDataInputFilter, selectRegion, selectTime } from '../../../core/reducers/core.reducer';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [

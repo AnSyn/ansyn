@@ -1,4 +1,4 @@
-import { IEntity } from '../../../core/public_api';
+import { IEntity } from '../../../core/services/storage/storage.service';
 
 export enum LayerType {
 	static = 'Static',

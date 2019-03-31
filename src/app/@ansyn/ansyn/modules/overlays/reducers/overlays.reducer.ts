@@ -1,7 +1,4 @@
-import {
-	CoreActionTypes,
-	SetOverlaysCriteriaAction
-} from '../../core/public_api';
+import { CoreActionTypes, SetOverlaysCriteriaAction } from '../../core/actions/core.actions';
 import {
 	IOverlay, IOverlayDrop,
 	IOverlaySpecialObject,

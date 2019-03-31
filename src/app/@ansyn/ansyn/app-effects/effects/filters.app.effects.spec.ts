@@ -5,26 +5,9 @@ import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	buildFilteredOverlays,
-	coreFeatureKey,
-	CoreReducer,
-	GenericTypeResolverService,
-	SetFavoriteOverlaysAction
-} from '../../modules/core/public_api';
-import {
 	FilterType,
 	IOverlay,
 } from '@ansyn/imagery';
-import {
-	LoadOverlaysAction,
-	OverlayReducer,
-	overlaysFeatureKey,
-	OverlaysService,
-	overlaysStatusMessages,
-	SetDropsAction,
-	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
-} from '../../modules/overlays/public_api';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -36,6 +19,21 @@ import { filtersConfig } from '../../modules/menu-items/filters/services/filters
 import { filtersFeatureKey, FiltersReducer } from '../../modules/menu-items/filters/reducer/filters.reducer';
 import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
 import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/metadata/slider-filter-metadata';
+import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
+import { coreFeatureKey, CoreReducer } from '../../modules/core/reducers/core.reducer';
+import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
+import { SetFavoriteOverlaysAction } from '../../modules/core/actions/core.actions';
+import {
+	LoadOverlaysAction,
+	SetDropsAction,
+	SetFilteredOverlaysAction, SetOverlaysStatusMessage
+} from '../../modules/overlays/actions/overlays.actions';
+import {
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysStatusMessages
+} from '../../modules/overlays/reducers/overlays.reducer';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

@@ -3,10 +3,6 @@ import {
 	MultipleOverlaysSourceProvider
 } from './multiple-source-provider';
 import {
-	LoggerService,
-	MultipleOverlaysSourceConfig
-} from '../../core/public_api';
-import {
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysFetchData,
@@ -17,6 +13,8 @@ import * as turf from '@turf/turf';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MultipleOverlaysSource, OverlaySourceProvider } from '../models/overlays-source-providers';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
+import { MultipleOverlaysSourceConfig } from '../../core/models/multiple-overlays-source-config';
+import { LoggerService } from '../../core/services/logger.service';
 
 const overlays: IOverlaysFetchData = {
 	data: [

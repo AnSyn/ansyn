@@ -1,11 +1,5 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
-import {
-	IOverlaysSourceProvider,
-	selectDataInputFilter,
-	SetOverlaysCriteriaAction,
-	MultipleOverlaysSourceConfig, IMultipleOverlaysSourceConfig
-} from '../../../core/public_api';
 import { IDataInputFilterValue } from '@ansyn/imagery';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
@@ -14,6 +8,13 @@ import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, tap, take } from 'rxjs/operators';
 import { SetToastMessageAction } from '@ansyn/map-facade';
+import { SetOverlaysCriteriaAction } from '../../../core/actions/core.actions';
+import { selectDataInputFilter } from '../../../core/reducers/core.reducer';
+import {
+	IMultipleOverlaysSourceConfig,
+	IOverlaysSourceProvider,
+	MultipleOverlaysSourceConfig
+} from '../../../core/models/multiple-overlays-source-config';
 
 @Component({
 	selector: 'ansyn-tree-view',

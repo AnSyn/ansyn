@@ -30,6 +30,7 @@ import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { HelpModule } from './modules/menu-items/help/help.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
+import { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
 
 @NgModule({
 	imports: [
@@ -74,9 +75,10 @@ import { ToolsModule } from './modules/menu-items/tools/tools.module';
 	],
 	declarations: [
 		AnsynComponent,
-		OverlayOutOfBoundsComponent
+		OverlayOutOfBoundsComponent,
+		ContextMenuComponent
 	],
-	exports: [ AnsynComponent ]
+	exports: [ AnsynComponent, ContextMenuComponent ]
 })
 
 export class AnsynModule {

@@ -1,11 +1,10 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-
 import { NavigationBarComponent } from './navigation-bar.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { ExpandAction } from '../../actions/status-bar.actions';
-import { GoAdjacentOverlay } from '../../../core/public_api';
+import { GoAdjacentOverlay } from '../../../core/actions/core.actions';
 
 describe('NavigationBarComponent', () => {
 	let component: NavigationBarComponent;

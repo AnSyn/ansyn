@@ -1,4 +1,4 @@
-import { IDeltaTime } from '../../../core/public_api';
+import { IDeltaTime } from '../../../core/models/time.model';
 import { ICase } from '@ansyn/imagery';
 
 export interface ICasesConfig {

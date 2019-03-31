@@ -1,20 +1,8 @@
-import {
-	CoreActionTypes,
-	LoggerService,
-	toDegrees,
-	toRadians
-} from '../../../../core/public_api';
 import { forkJoin, Observable, Observer, of, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
-import {
-	ChangeOverlayPreviewRotationAction,
-	DisplayOverlaySuccessAction,
-	OverlaysActionTypes,
-	selectHoveredOverlay
-} from '../../../../overlays/public_api';
 import { select, Store } from '@ngrx/store';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, CaseOrientation, areCoordinatesNumeric, ICaseMapPosition,
 	IOverlay } from '@ansyn/imagery';
@@ -45,6 +33,14 @@ import OLMap from 'ol/Map';
 import View from 'ol/View';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
+import { LoggerService } from '../../../../core/services/logger.service';
+import { toDegrees, toRadians } from '../../../../core/utils/math';
+import {
+	ChangeOverlayPreviewRotationAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes
+} from '../../../../overlays/actions/overlays.actions';
+import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

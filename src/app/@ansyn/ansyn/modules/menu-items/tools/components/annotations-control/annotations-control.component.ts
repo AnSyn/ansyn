@@ -4,13 +4,13 @@ import { select, Store } from '@ngrx/store';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
-import { ClearActiveInteractionsAction } from '../../../../core/public_api';
 import { AnnotationMode, IVisualizerStyle } from '@ansyn/imagery';
 import { map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
+import { ClearActiveInteractionsAction } from '../../../../core/actions/core.actions';
 
 export interface IModeList {
 	mode: AnnotationMode;

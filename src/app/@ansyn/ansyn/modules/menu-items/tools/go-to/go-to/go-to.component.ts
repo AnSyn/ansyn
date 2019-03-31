@@ -9,10 +9,12 @@ import {
 	SetSubMenu
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
-import { ClearActiveInteractionsAction, copyFromContent, ICoordinatesSystem } from '../../../../core/public_api';
 import { IEd50Notification, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { ClearActiveInteractionsAction } from '../../../../core/actions/core.actions';
+import { copyFromContent } from '../../../../core/utils/clipboard';
+import { ICoordinatesSystem } from '../../../../core/models/coordinate-system.model';
 
 @Component({
 	selector: 'ansyn-go-to',

@@ -5,7 +5,6 @@ import { IFiltersConfig } from './models/filters-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FiltersCollectionComponent } from './components/filters-collection/filters-collection.component';
-import { CoreModule } from '../../core/public_api';
 import { FilterContainerComponent } from './components/filter-container/filter-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EnumFilterContainerComponent } from './components/enum-filter-container/enum-filter-container.component';
@@ -20,6 +19,7 @@ import { BooleanFilterContainerComponent } from './components/boolean-filter-con
 import { ShowMorePipe } from './pipes/show-more.pipe';
 import { FilterCounterComponent } from './components/filter-counter/filter-counter.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
+import { CoreModule } from '../../core/core.module';
 
 // @dynamic
 @NgModule({

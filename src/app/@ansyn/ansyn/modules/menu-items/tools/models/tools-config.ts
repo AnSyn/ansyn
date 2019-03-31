@@ -1,4 +1,4 @@
-import { ICoordinatesSystem } from '../../../core/public_api';
+import { ICoordinatesSystem } from '../../../core/models/coordinate-system.model';
 
 export interface IEd50Notification {
 	href?: string;

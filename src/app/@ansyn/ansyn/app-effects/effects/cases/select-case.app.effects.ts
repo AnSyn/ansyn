@@ -2,19 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	CoreConfig,
-	ICoreConfig,
-	isFullOverlay,
-	SetAutoSave,
-	SetFavoriteOverlaysAction,
-	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
-} from '../../../modules/core/public_api';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
-import { SetContextParamsAction } from '../../../modules/core/public_api';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
@@ -33,6 +21,14 @@ import {
 import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
+import {
+	SetAutoSave, SetFavoriteOverlaysAction,
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction, SetContextParamsAction
+} from '../../../modules/core/actions/core.actions';
+import { isFullOverlay } from '../../../modules/core/utils/overlays';
+import { ICoreConfig } from '../../../modules/core/models/core.config.model';
+import { CoreConfig } from '../../../modules/core/models/core.config';
 
 @Injectable()
 export class SelectCaseAppEffects {

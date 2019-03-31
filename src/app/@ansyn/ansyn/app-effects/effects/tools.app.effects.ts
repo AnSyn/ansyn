@@ -13,10 +13,6 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	ClearActiveInteractionsAction,
-	CoreActionTypes,
-} from '../../modules/core/public_api';
-import {
 	CaseGeoFilter,
 	ICaseMapState,
 	ImageManualProcessArgs
@@ -45,6 +41,7 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { ClearActiveInteractionsAction, CoreActionTypes } from '../../modules/core/actions/core.actions';
 
 @Injectable()
 export class ToolsAppEffects {

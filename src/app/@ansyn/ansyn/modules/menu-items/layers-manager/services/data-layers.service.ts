@@ -1,7 +1,6 @@
 import { ILayersManagerConfig } from '../models/layers-manager-config';
 import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ErrorHandlerService, StorageService } from '../../../core/public_api';
 import { UUID } from 'angular2-uuid';
 import { featureCollection } from '@turf/turf';
 import { select, Store } from '@ngrx/store';
@@ -10,6 +9,8 @@ import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
 import { catchError, filter, tap } from 'rxjs/internal/operators';
 import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 import { ICase } from '@ansyn/imagery';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 export const layersConfig = 'layersManagerConfig';
 

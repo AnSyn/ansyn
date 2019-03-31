@@ -3,12 +3,12 @@ import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlay
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { AddAlertMsg, AlertMsgTypes, MapFacadeService, RemoveAlertMsg, selectMapsList } from '@ansyn/map-facade';
-import { isFullOverlay } from '../../../../core/public_api';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { selectDrops } from '../../../../overlays/reducers/overlays.reducer';
+import { isFullOverlay } from '../../../../core/utils/overlays';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

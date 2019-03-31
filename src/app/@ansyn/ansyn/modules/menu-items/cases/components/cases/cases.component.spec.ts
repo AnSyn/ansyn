@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CasesComponent } from './cases.component';
 import { CasesService } from '../../services/cases.service';
-import { MockComponent } from '../../../../core/public_api';
+import { MockComponent } from '../../../../core/test/mock-component';
 
 
 let a = MockComponent({ selector: 'ansyn-cases-tools' });

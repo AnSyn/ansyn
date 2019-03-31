@@ -7,10 +7,6 @@ import ImageLayer from 'ol/layer/Image';
 
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import {
-	ErrorHandlerService,
-} from '../../../../core/public_api';
 import {
 	CacheService,
 	ImageryCommunicatorService,
@@ -26,6 +22,7 @@ import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openla
 import { removeWorkers } from '../../maps/open-layers-map/shared/openlayers-shared';
 import { MpTileSource } from './ol-utils/mp-tile-source';
 import { MpTileImageSource } from './ol-utils/mp-tile-image-source';
+import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
 export const OpenLayerMarcoSourceProviderSourceType = 'MARCO_WMTS';
 

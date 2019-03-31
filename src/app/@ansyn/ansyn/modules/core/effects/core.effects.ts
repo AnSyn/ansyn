@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { ICoreState } from '../reducers/core.reducer';
+import { ICoreState, selectRegion } from '../reducers/core.reducer';
 import { Observable } from 'rxjs';
 import { SetOverlaysCriteriaAction } from '../actions/core.actions';
 import { CaseGeoFilter } from '@ansyn/imagery';
 import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade';
-import { selectRegion } from '../public_api';
 import { distinctUntilChanged, filter, map, withLatestFrom } from 'rxjs/operators';
 import { Position } from 'geojson';
 import * as turf from '@turf/turf';

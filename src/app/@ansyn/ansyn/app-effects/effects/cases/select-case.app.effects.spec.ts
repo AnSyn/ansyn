@@ -4,16 +4,6 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
 import { cold, hot } from 'jasmine-marbles';
-import {
-	CoreConfig,
-	SetAutoSave,
-	SetContextParamsAction,
-	SetFavoriteOverlaysAction,
-	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
-} from '../../../modules/core/public_api';
 import { HttpClientModule } from '@angular/common/http';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
@@ -41,6 +31,12 @@ import { CasesService } from '../../../modules/menu-items/cases/services/cases.s
 import { SelectCaseAction, SelectCaseSuccessAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
+import {
+	SetAutoSave, SetFavoriteOverlaysAction,
+	SetOverlaysCriteriaAction,
+	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction
+} from '../../../modules/core/actions/core.actions';
+import { CoreConfig } from '../../../modules/core/models/core.config';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;

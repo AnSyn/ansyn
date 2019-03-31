@@ -22,11 +22,6 @@ import {
 import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
-import {
-	CoreConfig,
-	ExtentCalculator,
-	ICoreConfig,
-} from '../../../../../core/public_api';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
@@ -34,6 +29,9 @@ import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
+import { CoreConfig } from 'src/app/@ansyn/ansyn/modules/core/models/core.config';
+import { ICoreConfig } from '../../../../../core/models/core.config.model';
+import { ExtentCalculator } from '../../../../../core/utils/extent-calculator';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -78,14 +76,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				this.isLoading$.next(false);
 			}))),
 			tap(() => {
-				this.isLoading$.next(false)
+				this.isLoading$.next(false);
 			}),
 			take(1)
 		).subscribe();
 	}
 
 	private _pointerDownListener: (args) => void = () => {
-		(<any>document.activeElement).blur()
+		(<any>document.activeElement).blur();
 	};
 
 	constructor(protected http: HttpClient,
@@ -208,7 +206,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				switchMap(() => {
 					this.setMainLayerToForegroundMap(layer);
 					this._mapObject.setView(view);
-					return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)
+					return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
 				})
 			);
 		} else {

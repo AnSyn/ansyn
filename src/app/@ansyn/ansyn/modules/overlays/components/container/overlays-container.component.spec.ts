@@ -3,7 +3,6 @@ import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService } from '../../services/overlays.service';
 import { EMPTY, Observable } from 'rxjs';
 import { DebugElement } from '@angular/core';
-import { createStore, IStoreFixture, MockComponent } from '../../../core/public_api';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { State, Store, StoreModule } from '@ngrx/store';
@@ -12,6 +11,8 @@ import { LoadOverlaysAction, LoadOverlaysSuccessAction } from '../../actions/ove
 import { HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../../models//base-overlay-source-provider.model';
 import { OverlaySourceProvider } from '../../models/overlays-source-providers';
+import { createStore, IStoreFixture } from '../../../core/test/mock-store';
+import { MockComponent } from '../../../core/test/mock-component';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -54,7 +55,7 @@ describe('OverlayContainerComponent', () => {
 				OverlaysContainerComponent,
 				MockComponent({ selector: 'ansyn-timeline', inputs: ['drops', 'timeLineRange', 'redraw$', 'markup'] }),
 				MockComponent({ selector: 'ansyn-overlay-status', inputs: [] }),
-				MockComponent({ selector: 'ansyn-overlays-loader', inputs: [] }),
+				MockComponent({ selector: 'ansyn-overlays-loader', inputs: [] })
 			],
 			imports: [
 				HttpClientModule,

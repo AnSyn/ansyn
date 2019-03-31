@@ -15,8 +15,8 @@ import { mergeMap } from 'rxjs/operators';
 import { catchError, filter, map, withLatestFrom } from 'rxjs/internal/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
-import { rxPreventCrash, selectAutoSave } from '../../../core/public_api';
-
+import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
+import { selectAutoSave } from '../../../core/reducers/core.reducer';
 
 @Injectable()
 export class LayersEffects {

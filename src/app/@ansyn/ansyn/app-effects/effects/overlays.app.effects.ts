@@ -24,13 +24,8 @@ import {
 import { Action, Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import {
-	BackToWorldView,
 	CoreActionTypes,
 	DisplayedOverlay,
-	LayoutKey,
-	layoutOptions,
-	SetLayoutAction,
-	SetLayoutSuccessAction,
 	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
@@ -42,15 +37,18 @@ import {
 	RemovePendingOverlayAction,
 	selectActiveMapId,
 	selectMapsList,
-	SetPendingOverlaysAction
+	SetPendingOverlaysAction,
+	BackToWorldView,
+	SetLayoutAction,
+	SetLayoutSuccessAction,
 } from '@ansyn/map-facade';
+
 import {
 	CommunicatorEntity,
 	ImageryCommunicatorService,
 	IPendingOverlay,
-	IOverlaySpecialObject,
 	IOverlay,
-	IContextEntity, ICaseMapState, ICaseMapPosition
+	ICaseMapState, ICaseMapPosition, layoutOptions, LayoutKey
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -93,7 +91,7 @@ export class OverlaysAppEffects {
 
 	@Effect()
 	displayPendingOverlaysOnChangeLayoutSuccess$: Observable<any> = this.actions$.pipe(
-		ofType(CoreActionTypes.SET_LAYOUT_SUCCESS),
+		ofType(MapActionTypes.SET_LAYOUT_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		filter(([action, mapState]) => mapState.pendingOverlays.length > 0),
 		mergeMap(([action, mapState]: [SetLayoutSuccessAction, IMapState]) => {

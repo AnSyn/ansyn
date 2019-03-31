@@ -2,7 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
 import { ErrorHandlerService } from './error-handler.service';
 import { LoggerService } from './logger.service';
-import { SetToastMessageAction } from '../actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 import { catchError } from 'rxjs/internal/operators';
 import { Observable, of } from 'rxjs/index';
 import { CoreConfig } from '../models/core.config';

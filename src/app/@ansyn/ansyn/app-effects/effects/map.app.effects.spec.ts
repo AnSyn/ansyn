@@ -13,7 +13,7 @@ import {
 	mapStateSelector,
 	selectMaps,
 	SetIsLoadingAcion
-} from '../../../map-facade/public_api';
+} from '@ansyn/map-facade';
 import {
 	BaseOverlaySourceProvider,
 	DisplayOverlayAction,
@@ -27,14 +27,7 @@ import {
 	overlaysStateSelector,
 	RequestOverlayByIDFromBackendAction
 } from '../../modules/overlays/public_api';
-import {
-	IStatusBarState,
-	statusBarFeatureKey,
-	StatusBarInitialState,
-	StatusBarReducer,
-	statusBarStateSelector
-} from '../../modules/status-bar/public_api';
-import * as extentFromGeojson from '../../modules/core/public_api';
+import * as extentFromGeojson from '@ansyn/map-facade';
 import {
 	GeoRegisteration,
 	ICase,
@@ -54,22 +47,30 @@ import {
 	ImageryMapSource,
 	VisualizersConfig
 } from '@ansyn/imagery';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	CasesService,
-	casesStateSelector,
-	ICasesState,
-	ILayerState,
-	initialLayersState,
-	IToolsState,
-	layersStateSelector,
-	toolsInitialState,
-	toolsStateSelector
-} from '../../modules/menu-items/public_api';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector, ICasesState
+} from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+import {
+	initialLayersState,
+	layersStateSelector
+} from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayerState } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
+import {
+	IToolsState,
+	toolsInitialState,
+	toolsStateSelector
+} from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	IStatusBarState,
+	statusBarFeatureKey,
+	StatusBarInitialState, StatusBarReducer, statusBarStateSelector
+} from '../../modules/status-bar/reducers/status-bar.reducer';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',

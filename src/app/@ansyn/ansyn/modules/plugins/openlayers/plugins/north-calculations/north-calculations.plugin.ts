@@ -1,6 +1,4 @@
 import {
-	BackToWorldSuccess,
-	BackToWorldView,
 	CoreActionTypes,
 	LoggerService,
 	toDegrees,
@@ -20,8 +18,14 @@ import {
 import { select, Store } from '@ngrx/store';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, CaseOrientation, areCoordinatesNumeric, ICaseMapPosition,
 	IOverlay } from '@ansyn/imagery';
-import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '../../../../status-bar/public_api';
-import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
+import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
+import {
+	BackToWorldSuccess,
+	BackToWorldView,
+	MapActionTypes,
+	PointToRealNorthAction,
+	selectActiveMapId
+} from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import {
@@ -40,6 +44,7 @@ import {
 import OLMap from 'ol/Map';
 import View from 'ol/View';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -106,7 +111,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$.pipe(
-		ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS),
+		ofType<BackToWorldSuccess>(MapActionTypes.BACK_TO_WORLD_SUCCESS),
 		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
 		withLatestFrom(this.store$.select(statusBarStateSelector)),
 		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {

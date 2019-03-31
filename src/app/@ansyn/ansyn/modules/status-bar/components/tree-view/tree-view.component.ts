@@ -4,7 +4,6 @@ import {
 	IOverlaysSourceProvider,
 	selectDataInputFilter,
 	SetOverlaysCriteriaAction,
-	SetToastMessageAction,
 	MultipleOverlaysSourceConfig, IMultipleOverlaysSourceConfig
 } from '../../../core/public_api';
 import { IDataInputFilterValue } from '@ansyn/imagery';
@@ -14,6 +13,7 @@ import { isEqual } from 'lodash';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, tap, take } from 'rxjs/operators';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-tree-view',

@@ -6,11 +6,13 @@ import { OpenLayersImisightSourceProvider } from './open-layers-imisight-source-
 import { CallbackComponent } from './callback/callback.component';
 import { CoreModule } from '@ansyn/ansyn';
 import { MultipleOverlaysSource, OverlaysModule } from '@ansyn/ansyn';
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		CoreModule,
+		MapFacadeModule,
 		ImageryModule.provide({
 			maps: [],
 			plugins: [],
@@ -27,3 +29,11 @@ import { MultipleOverlaysSource, OverlaysModule } from '@ansyn/ansyn';
 })
 export class ImisightModule {
 }
+
+const a = 6, b = 7, c = null;
+
+const obj = {
+	...(a && { a }),
+	...(b && { b }),
+	...(c && { c }),
+};

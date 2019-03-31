@@ -8,11 +8,11 @@ import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openla
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/public_api';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { selectMaps } from '@ansyn/map-facade';
+import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

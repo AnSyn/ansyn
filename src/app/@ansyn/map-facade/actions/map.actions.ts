@@ -10,6 +10,9 @@ import {
 	IUpdateFeatureEvent,
 	IWorldViewMapState
 } from '@ansyn/imagery';
+import { LayoutKey } from '@ansyn/imagery';
+import { AlertMsgTypes } from '../alerts/model';
+import { IToastMessage } from '../reducers/map.reducer';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
@@ -56,7 +59,17 @@ export const MapActionTypes = {
 	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
 	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS',
 	SET_MAP_POSITION_BY_RECT: '[Maps] SET_MAP_POSITION_BY_RECT',
-	SET_MAP_POSITION_BY_RADIUS: '[Maps] SET_MAP_POSITION_BY_RADIUS'
+	SET_MAP_POSITION_BY_RADIUS: '[Maps] SET_MAP_POSITION_BY_RADIUS',
+	SET_LAYOUT: 'SET_LAYOUT',
+	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
+	TOGGLE_MAP_LAYERS: 'TOGGLE_MAP_LAYERS',
+	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
+	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
+	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
+	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
+	ADD_ALERT_MSG: 'ADD_ALERT_MSG',
+	REMOVE_ALERT_MSG: 'REMOVE_ALERT_MSG',
+
 };
 
 export interface IContextMenuShowPayload {
@@ -297,3 +310,63 @@ export class SetMapPositionByRadiusAction implements Action {
 	}
 }
 
+export class SetLayoutAction implements Action {
+	type = MapActionTypes.SET_LAYOUT;
+
+	constructor(public payload: LayoutKey) {
+	}
+}
+
+export class SetLayoutSuccessAction implements Action {
+	type = MapActionTypes.SET_LAYOUT_SUCCESS;
+
+	constructor() {
+	}
+}
+
+export class ToggleMapLayersAction implements Action {
+	type = MapActionTypes.TOGGLE_MAP_LAYERS;
+
+	constructor(public payload: { mapId: string }) {
+	}
+}
+
+export class SetWasWelcomeNotificationShownFlagAction implements Action {
+	type = MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG;
+
+	constructor(public payload: boolean) {
+
+	}
+}
+export class BackToWorldView implements Action {
+	type = MapActionTypes.BACK_TO_WORLD_VIEW;
+
+	constructor(public payload: { mapId: string }) {
+
+	}
+}
+
+export class BackToWorldSuccess extends BackToWorldView {
+	type = MapActionTypes.BACK_TO_WORLD_SUCCESS;
+}
+
+export class SetToastMessageAction implements Action {
+	type = MapActionTypes.SET_TOAST_MESSAGE;
+
+	constructor(public payload?: IToastMessage) {
+	}
+}
+
+export class AddAlertMsg implements Action {
+	type = MapActionTypes.ADD_ALERT_MSG;
+
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}
+
+export class RemoveAlertMsg implements Action {
+	type = MapActionTypes.REMOVE_ALERT_MSG;
+
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}

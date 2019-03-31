@@ -5,27 +5,19 @@ import { Observable } from 'rxjs';
 
 import { cold, hot } from 'jasmine-marbles';
 import {
-	BeginLayerCollectionLoadAction, CasesService,
-	SelectCaseAction, SelectCaseSuccessAction,
-	UpdateFacetsAction,
-	UpdateOverlaysManualProcessArgs,
-	UpdateSelectedLayersIds
-} from '../../../modules/menu-items/public_api';
-import {
 	CoreConfig,
 	SetAutoSave,
 	SetContextParamsAction,
 	SetFavoriteOverlaysAction,
-	SetLayoutAction,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/core/public_api';
 import { HttpClientModule } from '@angular/common/http';
-import { SetComboBoxesProperties } from '../../../modules/status-bar/public_api';
+import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
-import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
+import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
 	CaseOrientation,
 	CaseRegionState,
@@ -41,6 +33,14 @@ import {
 	IOverlay,
 	IOverlaysManualProcessArgs
 } from '@ansyn/imagery';
+import {
+	BeginLayerCollectionLoadAction,
+	UpdateSelectedLayersIds
+} from '../../../modules/menu-items/layers-manager/actions/layers.actions';
+import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+import { SelectCaseAction, SelectCaseSuccessAction } from '../../../modules/menu-items/cases/actions/cases.actions';
+import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;

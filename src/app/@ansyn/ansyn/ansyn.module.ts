@@ -1,27 +1,16 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnsynComponent } from './ansyn/ansyn.component';
-import { StatusBarModule } from './modules/status-bar/public_api';
-import { OverlaysModule } from './modules/overlays/public_api';
-import { AnsynPluginsModule } from './modules/plugins/public_api';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { AppEffectsModule } from './app-effects/app.effects.module';
-import {
-	TasksModule,
-	CasesModule,
-	FiltersModule,
-	HelpModule,
-	LayersManagerModule,
-	SettingsModule,
-	ToolsModule, TasksRemoteDefaultService
-} from './modules/menu-items/public_api';
+
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ImageryModule } from '@ansyn/imagery';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AlertsModule, CoreModule } from './modules/core/public_api';
+import { AlertsModule } from '@ansyn/map-facade';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ansynConfig } from './config/ansyn.config';
 import { StoreModule } from '@ngrx/store';
@@ -29,6 +18,18 @@ import { EffectsModule } from '@ngrx/effects';
 import { COMPONENT_MODE } from './app-providers/component-mode';
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { ANSYN_ID } from './api/ansyn-id.provider';
+import { CoreModule } from './modules/core/core.module';
+import { CasesModule } from './modules/menu-items/cases/cases.module';
+import { FiltersModule } from './modules/menu-items/filters/filters.module';
+import { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
+import { TasksModule } from './modules/menu-items/algorithms/tasks.module';
+import { SettingsModule } from './modules/menu-items/settings/settings.module';
+import { OverlaysModule } from './modules/overlays/overlays.module';
+import { TasksRemoteDefaultService } from './modules/menu-items/algorithms/services/tasks-remote-default.service';
+import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
+import { StatusBarModule } from './modules/status-bar/status-bar.module';
+import { HelpModule } from './modules/menu-items/help/help.module';
+import { ToolsModule } from './modules/menu-items/tools/tools.module';
 
 @NgModule({
 	imports: [
@@ -75,7 +76,7 @@ import { ANSYN_ID } from './api/ansyn-id.provider';
 		AnsynComponent,
 		OverlayOutOfBoundsComponent
 	],
-	exports: [AnsynComponent]
+	exports: [ AnsynComponent ]
 })
 
 export class AnsynModule {
@@ -92,6 +93,6 @@ export class AnsynModule {
 					useValue: id
 				}
 			]
-		}
+		};
 	}
 }

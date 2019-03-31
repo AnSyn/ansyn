@@ -1,20 +1,17 @@
 import { Injectable } from '@angular/core';
-import {
-	BeginLayerCollectionLoadAction,
-	CasesActionTypes,
-	ILayer,
-	LayerType,
-	SaveCaseAsSuccessAction,
-	selectLayers,
-	UpdateLayer,
-	UpdateSelectedLayersIds
-} from '../../modules/menu-items/public_api';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { map, mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { Store } from '@ngrx/store';
 import { Feature } from 'geojson';
 import { AnnotationRemoveFeature, AnnotationUpdateFeature, MapActionTypes } from '@ansyn/map-facade';
 import { Observable } from 'rxjs/index';
+import {
+	BeginLayerCollectionLoadAction,
+	UpdateLayer, UpdateSelectedLayersIds
+} from '../../modules/menu-items/layers-manager/actions/layers.actions';
+import { CasesActionTypes, SaveCaseAsSuccessAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { ILayer, LayerType } from '../../modules/menu-items/layers-manager/models/layers.model';
+import { selectLayers } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 
 
 @Injectable()

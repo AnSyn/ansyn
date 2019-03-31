@@ -81,3 +81,5 @@ export { ProjectionService } from './projection-service/projection.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
 export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME } from './model/imagery-layer.model';
+export { LayoutKey, layoutOptions } from './model/maps-layout';
+export { IMapsLayout } from './model/maps-layout';

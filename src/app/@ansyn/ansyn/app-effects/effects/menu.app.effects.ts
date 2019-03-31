@@ -6,7 +6,7 @@ import { select, Store } from '@ngrx/store';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { MenuActionTypes, SetAutoClose } from '@ansyn/menu';
 import { RedrawTimelineAction } from '../../modules/overlays/public_api';
-import { selectSubMenu } from '../../modules/menu-items/public_api';
+import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable()

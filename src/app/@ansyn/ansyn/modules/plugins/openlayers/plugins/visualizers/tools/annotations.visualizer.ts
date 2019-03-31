@@ -30,31 +30,29 @@ import {
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { AnnotationSelectAction, MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import {
-	ILayer,
-	IToolsConfig,
-	LayerType,
-	selectActiveAnnotationLayer,
-	selectAnnotationMode,
-	selectAnnotationProperties,
-	selectLayersEntities,
-	selectSelectedLayersIds,
-	selectSubMenu,
-	SetAnnotationMode,
-	SubMenuEnum,
-	toolsConfig,
-	UpdateLayer
-} from '../../../../../menu-items/public_api';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { filter, map, mergeMap, take, tap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
-import { SearchMode, SearchModeEnum, selectGeoFilterSearchMode } from '../../../../../status-bar/public_api';
+import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { featureCollection } from '@turf/turf';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
+import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
+import {
+	selectActiveAnnotationLayer, selectLayersEntities,
+	selectSelectedLayersIds
+} from '../../../../../menu-items/layers-manager/reducers/layers.reducer';
+import {
+	selectAnnotationMode,
+	selectAnnotationProperties, selectSubMenu, SubMenuEnum
+} from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { SetAnnotationMode } from '../../../../../menu-items/tools/actions/tools.actions';
+import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
+import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
 
 // @dynamic
 @ImageryVisualizer({

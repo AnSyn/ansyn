@@ -26,22 +26,18 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	SetManualImageProcessing,
-	SetMapGeoEnabledModeToolsActionStore,
-	ToolsActionsTypes,
-	UpdateOverlaysManualProcessArgs
-} from '../../modules/menu-items/public_api';
-import {
-	BackToWorldView,
 	CoreActionTypes,
 	endTimingLog,
-	extentFromGeojson,
 	isFullOverlay,
-	SetToastMessageAction,
 	startTimingLog,
 	toastMessages,
-	ToggleMapLayersAction
 } from '../../modules/core/public_api';
+import {
+	BackToWorldView,
+	extentFromGeojson,
+	ToggleMapLayersAction,
+	SetToastMessageAction
+} from '@ansyn/map-facade'
 import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '../../modules/plugins/public_api';
 import {
 	BaseMapSourceProvider,
@@ -65,6 +61,10 @@ import {
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { fromPromise } from 'rxjs/internal-compatibility';
+import {
+	SetManualImageProcessing,
+	SetMapGeoEnabledModeToolsActionStore, ToolsActionsTypes, UpdateOverlaysManualProcessArgs
+} from '../../modules/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -104,7 +104,7 @@ export class MapAppEffects {
 			ofType<DisplayOverlayAction>(
 				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-				CoreActionTypes.BACK_TO_WORLD_VIEW
+				MapActionTypes.BACK_TO_WORLD_VIEW
 			),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
 				mapId: payload.mapId, show: false
@@ -219,7 +219,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
 		.pipe(
-			ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS),
+			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
 			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
 			tap((communicator: CommunicatorEntity) => {
 				communicator.visualizers.forEach(v => v.toggleVisibility());

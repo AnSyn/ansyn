@@ -19,6 +19,7 @@ import { SliderFilterContainerComponent } from './components/slider-filter-conta
 import { BooleanFilterContainerComponent } from './components/boolean-filter-container/boolean-filter-container.component';
 import { ShowMorePipe } from './pipes/show-more.pipe';
 import { FilterCounterComponent } from './components/filter-counter/filter-counter.component';
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 // @dynamic
 @NgModule({
@@ -29,6 +30,7 @@ import { FilterCounterComponent } from './components/filter-counter/filter-count
 		StoreModule.forFeature(filtersFeatureKey, FiltersReducer),
 		SliderModule,
 		FormsModule,
+		MapFacadeModule,
 		EffectsModule.forFeature([FiltersEffects])
 	],
 	declarations: [

@@ -8,29 +8,31 @@ import {
 	isFullOverlay,
 	SetAutoSave,
 	SetFavoriteOverlaysAction,
-	SetLayoutAction,
 	SetOverlaysCriteriaAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/core/public_api';
-import {
-	BeginLayerCollectionLoadAction,
-	CasesActionTypes,
-	CasesService,
-	SelectCaseAction, SelectCaseSuccessAction,
-	UpdateFacetsAction,
-	UpdateOverlaysManualProcessArgs,
-	UpdateSelectedLayersIds
-} from '../../../modules/menu-items/public_api';
-import { SetComboBoxesProperties } from '../../../modules/status-bar/public_api';
+import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SetContextParamsAction } from '../../../modules/core/public_api';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
-import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
+import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { ICase, ICaseMapState, IOverlay } from '@ansyn/imagery';
+import {
+	BeginLayerCollectionLoadAction,
+	UpdateSelectedLayersIds
+} from '../../../modules/menu-items/layers-manager/actions/layers.actions';
+import {
+	CasesActionTypes,
+	SelectCaseAction,
+	SelectCaseSuccessAction
+} from '../../../modules/menu-items/cases/actions/cases.actions';
+import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {

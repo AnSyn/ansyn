@@ -22,7 +22,7 @@ import {
 	OverlaysActionTypes, selectDropsWithoutSpecialObjects,
 	selectOverlaysMap
 } from '../../modules/overlays/public_api';
-import { CasesActionTypes } from '../../modules/menu-items/public_api';
+import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';

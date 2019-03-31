@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryContainerComponent } from './imagery-container.component';
-import { CoreConfig, CoreModule, LoggerConfig, MockComponent } from '@ansyn/ansyn';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { HttpClientModule } from '@angular/common/http';
+import { MockComponent } from '../../test/mock-component';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -16,13 +16,10 @@ describe('ImageryContainerComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				CoreModule,
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])
 			],
 			providers: [
-				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {} },
 				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig> { mapSearch: {} } }
 			],
 			declarations: [

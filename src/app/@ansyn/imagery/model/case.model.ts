@@ -3,7 +3,7 @@ import { IDilutedOverlay, IOverlay } from './overlay.model';
 import { Feature, Point, Polygon } from 'geojson';
 import { IEntity } from '../../ansyn/modules/core/services/storage/storage.service';
 import { IVisualizerEntity } from './visualizers/visualizers-entity';
-import { LayoutKey } from '../../ansyn/modules/core/models/layout-options.model';
+import { LayoutKey } from './maps-layout';
 
 export interface ICasePreview extends IEntity {
 	creationTime: Date;

@@ -2,11 +2,14 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { GeocoderService } from './geocoder.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { asyncData, ErrorHandlerService } from '@ansyn/ansyn';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, defer } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
+
+function asyncData<T>(data: T): Observable<T> {
+	return defer(() => Promise.resolve(data));
+}
 
 describe('GeocoderService', () => {
 	let me;
@@ -15,11 +18,11 @@ describe('GeocoderService', () => {
 			imports: [HttpClientTestingModule],
 			providers: [GeocoderService,
 				{
-					provide: ErrorHandlerService, useValue: {
-						httpErrorHandle: error => {
-							return of(error);
-						}
-					}
+					// provide: ErrorHandlerService, useValue: {
+					// 	httpErrorHandle: error => {
+					// 		return of(error);
+					// 	}
+					// }
 				},
 				{
 					provide: mapFacadeConfig, useValue: <IMapFacadeConfig> {
@@ -95,7 +98,7 @@ describe('GeocoderService', () => {
 			});
 			tick();
 			expect(endResult).toBeFalsy();
-			expect(console.warn).toHaveBeenCalled()
+			expect(console.warn).toHaveBeenCalled();
 		}));
 	});
 });

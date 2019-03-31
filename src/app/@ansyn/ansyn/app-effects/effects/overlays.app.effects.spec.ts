@@ -18,30 +18,10 @@ import {
 	SetHoveredOverlayAction
 } from '../../modules/overlays/public_api';
 import { Observable, of } from 'rxjs';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	CasesService,
-	casesStateSelector,
-	initialCasesState,
-	IToolsState,
-	toolsFeatureKey,
-	toolsInitialState,
-	ToolsReducer,
-	toolsStateSelector
-} from '../../modules/menu-items/public_api';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '../../modules/status-bar/public_api';
-
-import {
-	coreInitialState,
-	coreStateSelector,
-	DisplayedOverlay,
-	SetLayoutAction,
-	SetLayoutSuccessAction
-} from '../../modules/core/public_api';
+import { statusBarStateSelector } from '../../modules/status-bar/reducers/status-bar.reducer';
 import {
 	BaseMapSourceProvider,
 	CacheService,
@@ -57,10 +37,24 @@ import {
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectMapsList,
-	SetPendingOverlaysAction
+	SetPendingOverlaysAction,
+	SetLayoutAction, SetLayoutSuccessAction
 } from '@ansyn/map-facade';
 
 import { cloneDeep as _cloneDeep } from 'lodash';
+import { coreInitialState, coreStateSelector } from '../../modules/core/reducers/core.reducer';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector, initialCasesState
+} from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+import {
+	IToolsState,
+	toolsFeatureKey,
+	toolsInitialState,
+	ToolsReducer, toolsStateSelector
+} from '../../modules/menu-items/tools/reducers/tools.reducer';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

@@ -5,19 +5,13 @@ import { MapFacadeService } from '../../services/map-facade.service';
 import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
-import {
-	AlertComponentDirective,
-	coreFeatureKey,
-	CoreReducer, ErrorHandlerService,
-	ImageryStatusComponent,
-	MockComponent,
-	SetLayoutAction
-} from '@ansyn/ansyn';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
-import { throwError } from 'rxjs';
 import { mapFacadeConfig } from '../../models/map-facade.config';
-import { SetActiveMapId, SetMapsDataActionStore } from '../../actions/map.actions';
+import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
+import { MockComponent } from '../../test/mock-component';
+import { ImageryStatusComponent } from '../imagery-status/imagery-status.component';
+import { AlertComponentDirective } from '../../alerts/alert-component.directive';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -67,12 +61,11 @@ describe('ImageriesManagerComponent', () => {
 				ImageryCommunicatorService,
 				Actions,
 				MapFacadeService,
-				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
 				{ provide: mapFacadeConfig, useValue: { } }
 			],
 			imports: [
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [coreFeatureKey]: CoreReducer })
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })
 			],
 			declarations: [
 				ImageriesManagerComponent,

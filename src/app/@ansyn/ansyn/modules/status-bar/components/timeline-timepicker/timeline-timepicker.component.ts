@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ICaseTimeState } from '../../../core/public_api';
+import { ICaseTimeState } from '@ansyn/imagery';
 
 declare function require(name: string);
 

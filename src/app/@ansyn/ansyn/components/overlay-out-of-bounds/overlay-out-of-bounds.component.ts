@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { take } from 'rxjs/operators';
-import { extentFromGeojson } from '../../modules/core/public_api';
+import { extentFromGeojson } from '@ansyn/map-facade';
 import { IOverlay } from '@ansyn/imagery';
 
 @Component({

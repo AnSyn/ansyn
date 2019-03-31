@@ -2,14 +2,8 @@
   "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@ansyn/core": [
-        "dist/ansyn/core"
-      ],
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
-      ],
-      "@ansyn/menu": [
-        "dist/ansyn/menu"
       ]
     },
     "outDir": "../../../out-tsc/lib",

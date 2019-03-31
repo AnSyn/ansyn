@@ -1,11 +1,13 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { CoreActionTypes, layoutOptions } from '@ansyn/ansyn';
-import { ICaseMapState, IPendingOverlay } from '@ansyn/imagery';
+import { ICaseMapState, IPendingOverlay, layoutOptions } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { LayoutKey } from '@ansyn/imagery';
+import { sessionData } from '../models/core-session-state.model';
+import { AlertMsg, AlertMsgTypes } from '../alerts/model';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: ICaseMapState[] = [];
@@ -35,6 +37,11 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 	return mapsList;
 }
 
+export interface IToastMessage {
+	toastText: string;
+	showWarningIcon?: boolean;
+}
+
 export const mapsAdapter: EntityAdapter<ICaseMapState> = createEntityAdapter<ICaseMapState>();
 
 export interface IMapState extends EntityState<ICaseMapState> {
@@ -43,15 +50,26 @@ export interface IMapState extends EntityState<ICaseMapState> {
 	isHiddenMaps: Set<string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: IPendingOverlay[]; // a list of overlays waiting for maps to be created in order to be displayed
+	layout: LayoutKey;
+	wasWelcomeNotificationShown: boolean;
+	toastMessage: IToastMessage;
+	alertMsg: AlertMsg;
 }
 
 
 export const initialMapState: IMapState = mapsAdapter.getInitialState({
+	toastMessage: null,
 	activeMapId: null,
 	isLoadingMaps: new Map<string, string>(),
 	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
-	pendingOverlays: []
+	pendingOverlays: [],
+	layout: <LayoutKey> 'layout1',
+	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
+	alertMsg: new Map([
+		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
+		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
+	]),
 });
 
 export const mapFeatureKey = 'map';
@@ -62,6 +80,28 @@ export const mapStateSelector: MemoizedSelector<any, IMapState> = createFeatureS
 export function MapReducer(state: IMapState = initialMapState, action: MapActions | any) {
 
 	switch (action.type) {
+		case MapActionTypes.SET_TOAST_MESSAGE:
+			return { ...state, toastMessage: action.payload };
+
+		case  MapActionTypes.ADD_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.add(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
+
+		case  MapActionTypes.REMOVE_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.delete(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
 
 		case MapActionTypes.IMAGERY_REMOVED: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
@@ -132,21 +172,21 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			const pendingOverlays = state.pendingOverlays.filter((pending) => pending.overlay.id !== action.payload);
 			return { ...state, pendingOverlays };
 
-		case CoreActionTypes.TOGGLE_MAP_LAYERS: {
+		case MapActionTypes.TOGGLE_MAP_LAYERS: {
 			const { mapId: id } = action.payload;
 			const entity = state.entities[id];
 			const flags = { ...entity.flags, displayLayers: !entity.flags.displayLayers };
 			return mapsAdapter.updateOne({ id: action.payload.mapId, changes: { flags } }, state);
 		}
 
-		case CoreActionTypes.SET_LAYOUT:
+		case MapActionTypes.SET_LAYOUT:
 			const layout = layoutOptions.get(action.payload);
 			if (layout.mapsCount !== Object.values(state.entities).length && Object.values(state.entities).length) {
 				const pendingMapsCount = Math.abs(layout.mapsCount - Object.values(state.entities).length);
 				const mapsList = setMapsDataChanges(state.entities, state.activeMapId, layout);
-				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount });
+				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount, layout: action.payload  });
 			}
-			return state;
+			return { ... state, layout: action.payload};
 
 		case MapActionTypes.CHANGE_IMAGERY_MAP: {
 			const { id, mapType, sourceType } = action.payload;
@@ -165,6 +205,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}, state);
 		}
 
+		case MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
+			return { ...state, wasWelcomeNotificationShown: action.payload };
+
 		default:
 			return state;
 	}
@@ -175,3 +218,7 @@ export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapStat
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);
 export const selectMaps = createSelector(mapStateSelector, selectEntities);
+export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);
+export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
+export const selectAlertMsg = createSelector(mapStateSelector, (state) => state.alertMsg);
+export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);

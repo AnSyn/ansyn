@@ -2,28 +2,23 @@ import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
+import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import {
 	selectAutoSave,
-	selectFavoriteOverlays,
-	selectLayout,
-	selectOverlaysCriteria,
-	selectPresetOverlays,
+	selectContextEntities,
+	selectFavoriteOverlays, selectOverlaysCriteria, selectPresetOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from '../../../modules/core/public_api';
-import {
-	selectFacets,
-	selectOverlaysManualProcessArgs,
-	selectSelectedCase,
-	selectSelectedLayersIds,
-	UpdateCaseAction
-} from '../../../modules/menu-items/public_api';
-import { selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { selectComboBoxesProperties } from '../../../modules/status-bar/public_api';
-import { selectContextEntities } from '../../../modules/core/public_api';
 import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 import { ICase } from '@ansyn/imagery';
+import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
+import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';
+import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
+import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
+import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
+import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class UpdateCaseAppEffects {

@@ -10,12 +10,16 @@ import { map } from 'rxjs/operators';
 
 import {
 	ErrorHandlerService,
+} from '../../../../core/public_api';
+import {
+	CacheService,
+	ImageryCommunicatorService,
+	ImageryMapSource,
 	ICaseMapState,
 	IMapSourceProvidersConfig,
 	IOverlay,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '../../../../core/public_api';
-import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+} from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from '../open-layers.map-source-provider';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';

@@ -1,7 +1,6 @@
-import { IMapErrorMessage, IMapProgress, SetToastMessageAction } from '../../../../core/public_api';
 import { Store } from '@ngrx/store';
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
-import { SetProgressBarAction } from '@ansyn/map-facade';
+import { BaseImageryPlugin, ImageryPlugin, IMapErrorMessage, IMapProgress } from '@ansyn/imagery';
+import { SetProgressBarAction, SetToastMessageAction } from '@ansyn/map-facade';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { tap } from 'rxjs/operators';

@@ -28,7 +28,6 @@ import {
 	ErrorHandlerService,
 	IStoredEntity,
 	rxPreventCrash, SetAutoSave,
-	SetToastMessageAction,
 	toastMessages
 } from '../../../core/public_api';
 import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
@@ -37,6 +36,7 @@ import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/imagery';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 
 @Injectable()
 export class CasesEffects {

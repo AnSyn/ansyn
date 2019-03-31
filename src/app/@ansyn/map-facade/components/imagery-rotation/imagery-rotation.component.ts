@@ -1,8 +1,11 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { toDegrees } from '@ansyn/ansyn';
 import { CommunicatorEntity, ImageryCommunicatorService, GeoRegisteration, ICaseMapState } from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
+
+export function toDegrees(radians: number): number {
+	return radians * 180 / Math.PI;
+}
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';

@@ -1,10 +1,9 @@
 import { BaseImageryPlugin, ICaseMapState, ImageryPlugin, IOverlayDrop } from '@ansyn/imagery';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { select, Store } from '@ngrx/store';
-import { Actions } from '@ngrx/effects';
 import { combineLatest, Observable } from 'rxjs';
-import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { AddAlertMsg, AlertMsgTypes, isFullOverlay, RemoveAlertMsg } from '../../../../core/public_api';
+import { AddAlertMsg, AlertMsgTypes, MapFacadeService, RemoveAlertMsg, selectMapsList } from '@ansyn/map-facade';
+import { isFullOverlay } from '../../../../core/public_api';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';

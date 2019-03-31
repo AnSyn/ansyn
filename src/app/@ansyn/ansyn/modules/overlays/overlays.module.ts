@@ -9,9 +9,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';
-import { CoreModule } from '../core/public_api';
 import { BaseOverlaySourceFactoryProvider, createOverlaysSourceProviders, IOverlaysMetadata } from './models/overlays-source-providers';
 import { OverlaysLoaderComponent } from './components/overlays-loader/overlays-loader.component';
+import { MapFacadeModule } from '@ansyn/map-facade';
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
 	imports: [
@@ -19,7 +20,8 @@ import { OverlaysLoaderComponent } from './components/overlays-loader/overlays-l
 		HttpClientModule,
 		StoreModule.forFeature(overlaysFeatureKey, OverlayReducer),
 		EffectsModule.forFeature([OverlaysEffects]),
-		CoreModule
+		CoreModule,
+		MapFacadeModule
 	],
 	declarations: [
 		TimelineComponent,

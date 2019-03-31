@@ -5,18 +5,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	EnableOnlyFavoritesSelectionAction,
-	EnumFilterMetadata,
-	FilterMetadata,
-	filtersConfig,
-	filtersFeatureKey,
-	FiltersReducer,
-	IFilter,
-	InitializeFiltersAction,
-	InitializeFiltersSuccessAction,
-	SliderFilterMetadata
-} from '../../modules/menu-items/public_api';
-import {
 	buildFilteredOverlays,
 	coreFeatureKey,
 	CoreReducer,
@@ -38,6 +26,16 @@ import {
 	SetOverlaysStatusMessage
 } from '../../modules/overlays/public_api';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
+import {
+	EnableOnlyFavoritesSelectionAction,
+	InitializeFiltersAction, InitializeFiltersSuccessAction
+} from '../../modules/menu-items/filters/actions/filters.actions';
+import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
+import { filtersConfig } from '../../modules/menu-items/filters/services/filters.service';
+import { filtersFeatureKey, FiltersReducer } from '../../modules/menu-items/filters/reducer/filters.reducer';
+import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
+import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/metadata/slider-filter-metadata';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

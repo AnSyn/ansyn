@@ -4,7 +4,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { geometry } from '@turf/turf';
-import { extentFromGeojson } from '../../modules/core/public_api';
+import { extentFromGeojson } from '@ansyn/map-facade';
 
 describe('OverlayOutOfBoundsComponent', () => {
 	let component: OverlayOutOfBoundsComponent;

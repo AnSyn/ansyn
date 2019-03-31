@@ -5,31 +5,21 @@ import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store, Action } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
-	BackToWorldSuccess,
-	BackToWorldView,
-	CoreActionTypes,
-	selectRegion,
-	SetLayoutSuccessAction,
-	SetOverlaysCriteriaAction,
-	SetToastMessageAction
-} from '@ansyn/ansyn';
-import {
-	CaseGeoFilter,
 	geojsonMultiPolygonToPolygon,
 	ICaseMapPosition,
 	ICaseMapState,
-	IWorldViewMapState,
+	IWorldViewMapState
 } from '@ansyn/imagery';
-import * as turf from '@turf/turf';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
 	AnnotationSelectAction,
 	ChangeImageryMap,
 	ChangeImageryMapSuccess,
-	ContextMenuTriggerAction,
 	DecreasePendingMapsCountAction,
-	ImageryCreatedAction, ImageryMouseEnter, ImageryMouseLeave,
+	ImageryCreatedAction,
+	ImageryMouseEnter,
+	ImageryMouseLeave,
 	ImageryRemovedAction,
 	MapActionTypes,
 	MapInstanceChangedAction,
@@ -37,39 +27,23 @@ import {
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
 	SynchronizeMapsAction,
-	UpdateMapAction
+	UpdateMapAction,
+	SetWasWelcomeNotificationShownFlagAction,
+	SetLayoutSuccessAction,
+	BackToWorldView,
+	BackToWorldSuccess,
+	SetToastMessageAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import { distinctUntilChanged, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { Position } from 'geojson';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
+import { updateSession } from '../models/core-session-state.model';
 
 @Injectable()
 export class MapEffects {
-
-	region$ = this.store$.select(selectRegion);
-
-	isPinPointSearch$ = this.region$.pipe(
-		filter(Boolean),
-		map((region) => region.type === CaseGeoFilter.PinPoint),
-		distinctUntilChanged()
-	);
-
-	@Effect()
-	onPinPointSearch$: Observable<SetOverlaysCriteriaAction> = this.actions$.pipe(
-		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
-		withLatestFrom(this.isPinPointSearch$),
-		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
-		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
-		map((payload: Position) => {
-			const region = turf.geometry('Point', payload);
-			return new SetOverlaysCriteriaAction({ region });
-		})
-	);
-
 
 	@Effect({ dispatch: false })
 	annotationContextMenuTrigger$ = this.actions$.pipe(
@@ -126,7 +100,7 @@ export class MapEffects {
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
-			ofType(CoreActionTypes.BACK_TO_WORLD_VIEW),
+			ofType(MapActionTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(selectMaps)),
 			map(([action, entities]: [BackToWorldView, Dictionary<ICaseMapState>]) => {
 				const mapId = action.payload.mapId;
@@ -271,6 +245,17 @@ export class MapEffects {
 			return result$;
 		})
 	);
+
+	@Effect({ dispatch: false })
+	onWelcomeNotification$: Observable<any> = this.actions$
+		.pipe(
+			ofType(MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG),
+			tap((action: SetWasWelcomeNotificationShownFlagAction) => {
+				const payloadObj = { wasWelcomeNotificationShown: action.payload };
+				updateSession(payloadObj);
+			})
+		);
+
 
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,

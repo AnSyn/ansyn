@@ -9,18 +9,18 @@ import { getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
-import {
-	selectAlgorithmTaskDrawIndicator,
-	selectCurrentAlgorithmTaskRegion,
-	SetTaskDrawIndicator,
-	SetCurrentTaskRegion, TasksService, selectCurrentAlgorithmTaskAlgorithmName
-} from '../../../../../menu-items/public_api';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import Feature from 'ol/Feature';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import {
+	selectAlgorithmTaskDrawIndicator, selectCurrentAlgorithmTaskAlgorithmName,
+	selectCurrentAlgorithmTaskRegion
+} from '../../../../../menu-items/algorithms/reducers/tasks.reducer';
+import { SetCurrentTaskRegion, SetTaskDrawIndicator } from '../../../../../menu-items/algorithms/actions/tasks.actions';
+import { TasksService } from '../../../../../menu-items/algorithms/services/tasks.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

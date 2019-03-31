@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { DeleteTaskAction, LoadTasksAction, SelectTaskAction, SetTasksPageToShow } from '../../actions/tasks.actions';
-import { getTimeFormat } from '../../../../core/public_api';
+import { getTimeFormat } from '@ansyn/map-facade';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
 import {

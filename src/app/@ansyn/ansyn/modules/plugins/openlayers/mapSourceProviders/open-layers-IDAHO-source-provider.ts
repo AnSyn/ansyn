@@ -1,9 +1,14 @@
-import XYZ from 'ol/source/XYZ';
-import { ICaseMapState, IOverlay } from '../../../core/public_api';
-import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import {
+	CacheService,
+	ICaseMapState,
+	ImageryCommunicatorService,
+	ImageryMapSource,
+	IMapSourceProvidersConfig,
+	MAP_SOURCE_PROVIDERS_CONFIG,
+	IOverlay
+} from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
-import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '../../../core/public_api';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';

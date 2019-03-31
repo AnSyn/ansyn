@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SetToastMessageAction } from '../actions/core.actions';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 import { Observable, of, pipe, throwError, UnaryFunction } from 'rxjs';
 import { LoggerService } from './logger.service';
 import { CoreConfig } from '../models/core.config';

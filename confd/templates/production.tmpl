@@ -115,6 +115,10 @@
     "limit": 249
   },
   "mapFacadeConfig": {
+  	"welcomeNotification": {
+		"headerText": "Welcome to AnSyn!",
+		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
+  	},
     "overlayCoverage": 0.1,
     "displayDebounceTime": 400,
     "sourceTypeNotices": {
@@ -380,10 +384,6 @@
       }
   },
   "coreConfig": {
-	"welcomeNotification": {
-		"headerText": "Welcome to AnSyn!",
-		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
-	},
     "storageService": {
       "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8081/api/store" }}"
     },

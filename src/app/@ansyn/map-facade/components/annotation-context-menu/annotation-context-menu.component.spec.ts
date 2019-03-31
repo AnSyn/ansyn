@@ -8,14 +8,15 @@ import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { AnnotationsColorComponent, ClickOutsideDirective, ColorPickerComponent } from '@ansyn/ansyn';
 import {
 	AnnotationInteraction,
 	IAnnotationsSelectionEventData
 } from '@ansyn/imagery';
-import { AnnotationsWeightComponent } from '@ansyn/ansyn';
 import { PositionChangedAction } from '../../actions/map.actions';
 import { EventEmitter } from '@angular/core';
+import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
+import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
+import { ColorPickerComponent } from '../color-picker/color-picker.component';
 
 
 describe('AnnotationContextMenuComponent', () => {
@@ -39,7 +40,7 @@ describe('AnnotationContextMenuComponent', () => {
 				AnnotationsWeightComponent,
 				AnnotationsColorComponent,
 				ColorPickerComponent,
-				ClickOutsideDirective
+				// ClickOutsideDirective
 			],
 			imports: [
 				FormsModule,

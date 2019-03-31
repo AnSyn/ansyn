@@ -4,7 +4,6 @@ import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectCaseAction
 import {
 	DisplayedOverlay,
 	IContext,
-	SetToastMessageAction
 } from '@ansyn/ansyn';
 import {
 	ICase,
@@ -34,6 +33,7 @@ import { SetContextParamsAction } from '../actions/context.actions';
 import { ContextService } from '../services/context.service';
 import { get } from 'lodash';
 import { transformScale, bbox } from '@turf/turf';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 
 @Injectable()
 export class ContextAppEffects {

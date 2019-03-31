@@ -12,13 +12,9 @@ import { Observable } from 'rxjs';
 import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import {
 	CoreActionTypes,
-	LayoutKey,
-	layoutOptions,
 	selectDataInputFilter,
-	selectLayout,
 	selectRegion,
 	selectTime,
-	SetLayoutAction,
 	SetOverlaysCriteriaAction,
 	UpdateOverlaysCountAction
 } from '../../../core/public_api';
@@ -35,8 +31,9 @@ import {
 	CaseOrientation,
 	CaseTimeFilter,
 	ICaseDataInputFiltersState,
-	ICaseTimeState, IOverlay
+	ICaseTimeState, IOverlay, LayoutKey, layoutOptions
 } from '@ansyn/imagery';
+import { selectLayout, SetLayoutAction } from '@ansyn/map-facade';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [

@@ -1,9 +1,12 @@
-import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import {
+	CacheService,
+	ICaseMapState,
+	ImageryCommunicatorService,
+	ImageryMapSource,
+	IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import {
 	ErrorHandlerService,
-	ICaseMapState,
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG
 } from '../../../core/public_api';
 import Projection from 'ol/proj/Projection';
 import Static from 'ol/source/ImageStatic';

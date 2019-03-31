@@ -3,22 +3,36 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ICoreState } from '../reducers/core.reducer';
 import { Observable } from 'rxjs';
-import { CoreActionTypes, SetWasWelcomeNotificationShownFlagAction } from '../actions/core.actions';
-import { updateSession } from '../services/core-session.service';
-import { tap } from 'rxjs/internal/operators';
+import { SetOverlaysCriteriaAction } from '../actions/core.actions';
+import { CaseGeoFilter } from '@ansyn/imagery';
+import { ContextMenuTriggerAction, MapActionTypes } from '@ansyn/map-facade';
+import { selectRegion } from '../public_api';
+import { distinctUntilChanged, filter, map, withLatestFrom } from 'rxjs/operators';
+import { Position } from 'geojson';
+import * as turf from '@turf/turf';
 
 @Injectable()
 export class CoreEffects {
 
-	@Effect({ dispatch: false })
-	onWelcomeNotification$: Observable<any> = this.actions$
-		.pipe(
-			ofType(CoreActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG),
-			tap((action: SetWasWelcomeNotificationShownFlagAction) => {
-				const payloadObj = { wasWelcomeNotificationShown: action.payload };
-				updateSession(payloadObj);
-			})
-		);
+	region$ = this.store$.select(selectRegion);
+
+	isPinPointSearch$ = this.region$.pipe(
+		filter(Boolean),
+		map((region) => region.type === CaseGeoFilter.PinPoint),
+		distinctUntilChanged()
+	);
+
+	@Effect()
+	onPinPointSearch$: Observable<SetOverlaysCriteriaAction | any> = this.actions$.pipe(
+		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
+		withLatestFrom(this.isPinPointSearch$),
+		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
+		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
+		map((payload: Position) => {
+			const region = turf.geometry('Point', payload);
+			return new SetOverlaysCriteriaAction({ region });
+		})
+	);
 
 
 	constructor(protected actions$: Actions,

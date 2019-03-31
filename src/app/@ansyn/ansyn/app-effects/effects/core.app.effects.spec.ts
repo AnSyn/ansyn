@@ -5,7 +5,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
 import { coreInitialState, coreStateSelector, GoNextPresetOverlay, LoggerService } from '../../modules/core/public_api';
 import { cold, hot } from 'jasmine-marbles';
-import { casesStateSelector, initialCasesState } from '../../modules/menu-items/public_api';
+import { casesStateSelector, initialCasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { initialMapState, mapStateSelector } from '@ansyn/map-facade';
 import { DisplayOverlayAction } from '../../modules/overlays/public_api';
 import { IOverlay } from '@ansyn/imagery';

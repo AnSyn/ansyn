@@ -31,7 +31,6 @@ import { catchError, map } from 'rxjs/operators';
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
-import { IStatusBarConfig, StatusBarConfig } from '../../../modules/status-bar/public_api';
 import { Overlay } from '@ansyn/imagery';
 
 const moment = momentNs;

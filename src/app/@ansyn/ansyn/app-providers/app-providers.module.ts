@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { BooleanFilterMetadata, EnumFilterMetadata, FilterMetadata, SliderFilterMetadata } from '../modules/menu-items/public_api';
 import { OverlaysModule } from '../modules/overlays/public_api';
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
+import { BooleanFilterMetadata } from '../modules/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { EnumFilterMetadata } from '../modules/menu-items/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../modules/menu-items/filters/models/metadata/filter-metadata.interface';
+import { SliderFilterMetadata } from '../modules/menu-items/filters/models/metadata/slider-filter-metadata';
 
 @NgModule({
 	imports: [

@@ -4,7 +4,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { UUID } from 'angular2-uuid';
 import { EMPTY } from 'rxjs';
 import { Feature, Polygon } from 'geojson';
-import { UpdateGeoFilterStatus } from '../../../../../status-bar/public_api';
+import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { PolygonSearchVisualizer } from './polygon-search.visualizer';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 

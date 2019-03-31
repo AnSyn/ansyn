@@ -431,26 +431,6 @@
         }
       }
     },
-    "@ansyn/core": {
-      "root": "projectssrc/app/@ansyn/ansyn/core",
-      "sourceRoot": "src/app/@ansyn/core",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "src/app/@ansyn/core/tsconfig.lib.json",
-            "project": "src/app/@ansyn/core/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "src/app/@ansyn/core/ng-package.json"
-            }
-          }
-        }
-      }
-    },
     "@ansyn/imagery": {
       "root": "src/app/@ansyn/imagery",
       "sourceRoot": "src/app/@ansyn/imagery",
@@ -490,87 +470,7 @@
           }
         }
       }
-    },
-    "@ansyn/status-bar": {
-      "root": "src/app/@ansyn/status-bar",
-      "sourceRoot": "src/app/@ansyn/status-bar",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "src/app/@ansyn/status-bar/tsconfig.lib.json",
-            "project": "src/app/@ansyn/status-bar/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "src/app/@ansyn/menu/ng-package.json"
-            }
-          }
-        }
-      }
-    },
-    "@ansyn/menu-items": {
-      "root": "src/app/@ansyn/menu-items",
-      "sourceRoot": "src/app/@ansyn/menu-items",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "src/app/@ansyn/menu-items/tsconfig.lib.json",
-            "project": "src/app/@ansyn/menu-items/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "src/app/@ansyn/menu/ng-package.json"
-            }
-          }
-        }
-      }
-    },
-    "@ansyn/plugins": {
-      "root": "src/app/@ansyn/plugins",
-      "sourceRoot": "src/app/@ansyn/plugins",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "src/app/@ansyn/plugins/tsconfig.lib.json",
-            "project": "src/app/@ansyn/plugins/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "src/app/@ansyn/plugins/ng-package.json"
-            }
-          }
-        }
-      }
-    },
-    "@ansyn/overlays": {
-      "root": "src/app/@ansyn/overlays",
-      "sourceRoot": "src/app/@ansyn/overlays",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "src/app/@ansyn/overlays/tsconfig.lib.json",
-            "project": "src/app/@ansyn/overlays/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "src/app/@ansyn/overlays/ng-package.json"
-            }
-          }
-        }
-      }
-    },
+    }
   },
   "defaultProject": "ansyn",
   "schematics": {

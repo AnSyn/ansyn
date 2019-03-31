@@ -6,7 +6,7 @@ import {
 	IOverlaysManualProcessArgs,
 	IVisualizerStyle,
 	OverlayDisplayMode
-} from '../../../core/public_api';
+} from '@ansyn/imagery';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',

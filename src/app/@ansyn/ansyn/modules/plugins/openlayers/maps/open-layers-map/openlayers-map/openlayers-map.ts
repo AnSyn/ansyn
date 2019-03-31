@@ -12,19 +12,20 @@ import olPolygon from 'ol/geom/Polygon';
 import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
-import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
+import {
+	areCoordinatesNumeric,
+	BaseImageryMap, CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition,
+	IMAGERY_MAIN_LAYER_NAME,
+	ImageryLayerProperties,
+	ImageryMap, IMapProgress
+} from '@ansyn/imagery';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import {
-	areCoordinatesNumeric,
-	CaseMapExtent,
-	CaseMapExtentPolygon,
 	CoreConfig,
 	ExtentCalculator,
-	ICaseMapPosition,
 	ICoreConfig,
-	IMapProgress
 } from '../../../../../core/public_api';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';

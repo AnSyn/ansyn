@@ -1,8 +1,7 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { ExpandAction, statusBarFeatureKey, StatusBarReducer, UpdateGeoFilterStatus } from '../../modules/status-bar/public_api';
-import { AddCaseAction, casesFeatureKey, CasesReducer, CasesService, SelectCaseAction } from '../../modules/menu-items/public_api';
+import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { LoggerService } from '../../modules/core/public_api';
 import { ICase, IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 import { EMPTY, Observable } from 'rxjs';
@@ -19,6 +18,10 @@ import {
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { ExpandAction, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
+import { statusBarFeatureKey, StatusBarReducer } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

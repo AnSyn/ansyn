@@ -3,7 +3,7 @@ import olPolygon from 'ol/geom/Polygon';
 import {
 	getTimeDiff,
 	getTimeDiffFormat,
-} from '@ansyn/ansyn';
+} from '@ansyn/map-facade';
 import {
 	getPointByGeometry,
 	ICaseMapState,

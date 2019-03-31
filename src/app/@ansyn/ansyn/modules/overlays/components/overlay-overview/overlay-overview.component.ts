@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
-import { getTimeFormat } from '../../../core/public_api';
+import { getTimeFormat } from '@ansyn/map-facade';
 import { IOverlay } from '@ansyn/imagery';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';

@@ -6,8 +6,6 @@ leverage the power of drones and satellites data for your needs!
 
 **[AnSyn Platform](http://platform.ansyn.io)**
 
-# Angular AnSyn Implementation
-
 ### Installation
 
 ##### Install with `npm`

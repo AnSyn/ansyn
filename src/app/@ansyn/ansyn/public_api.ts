@@ -214,7 +214,6 @@ export { ILimitedArray } from './modules/core/utils/i-limited-array';
 export { ClearActiveInteractionsAction } from './modules/core/actions/core.actions';
 export { IStoredEntity, StorageService } from './modules/core/services/storage/storage.service';
 export { AnsynInputComponent } from './modules/core/forms/ansyn-input/ansyn-input.component';
-export { copyFromContent } from './modules/core/utils/clipboard';
 export { ErrorHandlerService } from './modules/core/services/error-handler.service';
 export { SetAutoSave } from './modules/core/actions/core.actions';
 export { ICoreState } from './modules/core/reducers/core.reducer';

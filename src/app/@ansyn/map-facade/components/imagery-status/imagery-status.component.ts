@@ -31,7 +31,12 @@ import {
 	selectPresetOverlays,
 	selectRemovedOverlays
 } from '../../reducers/imagery-status.reducer';
-import { SetRemovedOverlaysIdAction } from '../../actions/imagery-status.actions';
+import {
+	SetRemovedOverlaysIdAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
+} from '../../actions/imagery-status.actions';
+import { copyFromContent } from '../../utils/clipboard';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -166,10 +171,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	copyOverlayDescription() {
 		if (this.enableCopyOriginalOverlayData && this._overlay.tag) {
 			const tagJson = JSON.stringify(this._overlay.tag);
-			// copyFromContent(tagJson);
+			copyFromContent(tagJson);
 			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
 		} else {
-			// copyFromContent(this.overlayDescription);
+			copyFromContent(this.overlayDescription);
 			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
 		}
 	}
@@ -212,14 +217,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		const overlay = this.overlay;
 		const { id } = overlay;
 		const value = !this.isFavorite;
-		// this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
+		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
 	}
 
 	togglePreset() {
 		const overlay = this.overlay;
 		const { id } = overlay;
 		const value = !this.isPreset;
-		// this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
+		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
 	}
 
 	updateFavoriteStatus() {

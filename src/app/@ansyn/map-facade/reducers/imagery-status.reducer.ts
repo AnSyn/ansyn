@@ -65,7 +65,8 @@ export const ImageryStatusReducer = (state: ImageryStatusState = imageryStatusIn
 		case ImageryStatusActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA:
 			return { ...state, enableCopyOriginalOverlayData: action.payload };
 
-
+		default:
+			return state;
 	}
 };
 

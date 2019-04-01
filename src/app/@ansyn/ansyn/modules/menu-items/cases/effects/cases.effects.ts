@@ -32,7 +32,7 @@ import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/imagery';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { SetAutoSave } from '../../../core/actions/core.actions';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { copyFromContent } from '../../../core/utils/clipboard';
+import { copyFromContent } from '@ansyn/map-facade';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { toastMessages } from '../../../core/models/toast-messages';

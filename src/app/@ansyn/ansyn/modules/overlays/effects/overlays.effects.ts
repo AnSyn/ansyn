@@ -16,8 +16,7 @@ import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import { catchError, filter, map, mergeMap, switchMap } from 'rxjs/operators';
 import { IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
-import { BackToWorldView } from '@ansyn/map-facade';
-import { selectFavoriteOverlays, selectPresetOverlays } from '../../core/reducers/core.reducer';
+import { BackToWorldView, selectFavoriteOverlays, selectPresetOverlays  } from '@ansyn/map-facade';
 import { UpdateOverlaysCountAction } from '../../core/actions/core.actions';
 import { LoggerService } from '../../core/services/logger.service';
 

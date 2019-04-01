@@ -11,7 +11,6 @@ import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
-import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
 import { ManualRemovedOverlaysComponent } from './components/manual-removed-overlays/manual-removed-overlays.component';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { DefaultTranslateLoader } from './translation/default-translate-loader';
@@ -39,13 +38,11 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 		AnsynTranslationModule,
 		AnsynFormsModule,
 		AnsynModalComponent,
-		AnsynPopoverComponent,
 		ManualRemovedOverlaysComponent,
 		ContextMenuComponent
 	],
 	declarations: [
 		AnsynModalComponent,
-		AnsynPopoverComponent,
 		ManualRemovedOverlaysComponent,
 		ContextMenuComponent
 	]

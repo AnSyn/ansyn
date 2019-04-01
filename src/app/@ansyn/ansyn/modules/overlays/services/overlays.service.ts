@@ -13,7 +13,7 @@ import { unionBy } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/internal/operators';
-import { selectFavoriteOverlays } from '../../core/reducers/core.reducer';
+import { selectFavoriteOverlays } from '@ansyn/map-facade';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
 

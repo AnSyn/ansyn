@@ -18,21 +18,20 @@
 		<i class="fa fa-arrows"></i>
 	</button>
 
-	<!--<ansyn-combo-box *ngIf="false"-->
-		<!--class="combo-box-width"-->
-		<!--[direction]="mapsAmount > 1 ? 'bottom' : 'top'"-->
-		<!--name="mapSource"-->
-		<!--(ngModelChange)="changeActiveMap($event)"-->
-		<!--[(ngModel)]="selectedMap">-->
+	<select *ngIf="false"
+		class="combo-box-width"
+		name="mapSource"
+		(ngModelChange)="changeActiveMap($event)"
+		[(ngModel)]="selectedMap">
 
-		<!--<ansyn-combo-box-option value="openLayersMap">-->
-			<!--Openlayers-->
-		<!--</ansyn-combo-box-option>-->
+		<option value="openLayersMap">
+			Openlayers
+		</option>
 
-		<!--<ansyn-combo-box-option value="CesiumMap">-->
-			<!--Cesium-->
-		<!--</ansyn-combo-box-option>-->
-	<!--</ansyn-combo-box>-->
+		<option value="CesiumMap">
+			Cesium
+		</option>
+	</select>
 
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
@@ -79,12 +78,12 @@
 </div>
 
 <div class="description">
-	<!--<ansyn-popover *ngIf="overlay" [text]="overlayDescription"-->
-				   <!--[popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">-->
-		<!--<button class="share-link" (click)="copyOverlayDescription()">-->
-			<!--<span>{{overlayDescription}}</span>-->
-		<!--</button>-->
-	<!--</ansyn-popover>-->
+	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
+				   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
+		<button class="share-link" (click)="copyOverlayDescription()">
+			<span>{{overlayDescription}}</span>
+		</button>
+	</ansyn-popover>
 	<div *ngIf="!overlay">
 		{{baseMapDescription}}
 	</div>

@@ -13,7 +13,7 @@ import { IEd50Notification, IToolsConfig, toolsConfig } from '../../models/tools
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { ClearActiveInteractionsAction } from '../../../../core/actions/core.actions';
-import { copyFromContent } from '../../../../core/utils/clipboard';
+import { copyFromContent } from '@ansyn/map-facade';
 import { ICoordinatesSystem } from '../../../../core/models/coordinate-system.model';
 
 @Component({

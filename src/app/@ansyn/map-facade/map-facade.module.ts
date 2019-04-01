@@ -27,10 +27,13 @@ import { InfiniteScrollDirective } from './directives/infinite-scroll.directive'
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 import { AlertsModule } from './alerts/alerts.module';
+import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imagery-status.reducer';
+import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
 
 @NgModule({
 	imports: [
 		StoreModule.forFeature(mapFeatureKey, MapReducer),
+		StoreModule.forFeature(imageryStatusFeatureKey, ImageryStatusReducer),
 		EffectsModule.forFeature([MapEffects]),
 		ImageryModule,
 		CommonModule,
@@ -57,6 +60,7 @@ import { AlertsModule } from './alerts/alerts.module';
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
+		AnsynPopoverComponent
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -70,7 +74,7 @@ import { AlertsModule } from './alerts/alerts.module';
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-
+		AnsynPopoverComponent
 	]
 })
 

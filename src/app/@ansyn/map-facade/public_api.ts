@@ -1,3 +1,5 @@
+export { copyFromContent } from './utils/clipboard';
+
 export { AlertMsgTypes } from './alerts/model';
 export { selectMaps } from './reducers/map.reducer';
 export {

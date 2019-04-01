@@ -22,24 +22,24 @@ yarn add @ansyn/ansyn @ansyn/assets @ansyn/core @ngrx/core @ngrx/store @ngrx/eff
 Add ansyn to your assets / styles on `angular.json` file,  under yourProject/architect/build/options:
 
 ```json
-             "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "./node_modules/@ansyn/assets",
-                  "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "node_modules/cesium/Build/Cesium",
-                  "output": "/assets/Cesium"
-                }
-             ],
-             "styles": [
-               "node_modules/@ansyn/assets/styles/styles.css"
-             ],
-             "scripts": [
-               "node_modules/cesium/Build/Cesium/Cesium.js"
-             ]
+ "assets": [
+	{
+	  "glob": "**/*",
+	  "input": "./node_modules/@ansyn/assets",
+	  "output": "/assets"
+	},
+	{
+	  "glob": "**/*",
+	  "input": "node_modules/cesium/Build/Cesium",
+	  "output": "/assets/Cesium"
+	}
+ ],
+ "styles": [
+   "node_modules/@ansyn/assets/styles/styles.css"
+ ],
+ "scripts": [
+   "node_modules/cesium/Build/Cesium/Cesium.js"
+ ]
 ```
 
 on `main.ts` file:

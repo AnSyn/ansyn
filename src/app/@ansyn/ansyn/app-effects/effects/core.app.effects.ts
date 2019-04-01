@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import {
+	imageryStatusStateSelector,
 	IMapState,
 	MapFacadeService,
 	mapStateSelector,
@@ -96,7 +97,7 @@ export class CoreAppEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
 		}),
-		withLatestFrom(this.store$.select(selectPresetOverlays), ({ overlayId, mapId }, presetOverlays): { overlay: IOverlay, mapId: string } => {
+		withLatestFrom(this.store$.select(imageryStatusStateSelector), ({ overlayId, mapId }, { presetOverlays }): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;
 			if (length === 0) {
 				return;

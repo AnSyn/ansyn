@@ -15,7 +15,7 @@ export interface ImageryStatusState {
 	enableCopyOriginalOverlayData: boolean
 }
 
-const imageryStatusInitial: ImageryStatusState = {
+export const imageryStatusInitialState: ImageryStatusState = {
 	favoriteOverlays: [],
 	removedOverlaysIds: [],
 	presetOverlays: [],
@@ -24,7 +24,7 @@ const imageryStatusInitial: ImageryStatusState = {
 	enableCopyOriginalOverlayData: false
 };
 
-export const ImageryStatusReducer = (state: ImageryStatusState = imageryStatusInitial, action: any): ImageryStatusState => {
+export const ImageryStatusReducer = (state: ImageryStatusState = imageryStatusInitialState, action: any): ImageryStatusState => {
 	switch (action.type) {
 
 		case ImageryStatusActionTypes.TOGGLE_OVERLAY_FAVORITE: {

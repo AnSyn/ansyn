@@ -22,7 +22,7 @@ import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/me
 import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
 import { coreFeatureKey, CoreReducer } from '../../modules/core/reducers/core.reducer';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
-import { SetFavoriteOverlaysAction } from '../../modules/core/actions/core.actions';
+import { SetFavoriteOverlaysAction } from '@ansyn/map-facade';
 import {
 	LoadOverlaysAction,
 	SetDropsAction,
@@ -34,6 +34,7 @@ import {
 	overlaysStatusMessages
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../../map-facade/reducers/imagery-status.reducer';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -60,7 +61,8 @@ describe('Filters app effects', () => {
 					[coreFeatureKey]: CoreReducer,
 					[filtersFeatureKey]: FiltersReducer,
 					[overlaysFeatureKey]: OverlayReducer,
-					[menuFeatureKey]: MenuReducer
+					[menuFeatureKey]: MenuReducer,
+					[imageryStatusFeatureKey]: ImageryStatusReducer
 				})
 			],
 			providers: [

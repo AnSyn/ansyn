@@ -16,7 +16,7 @@ describe('ToastComponent', () => {
 				StoreModule.forRoot({}),
 				EffectsModule.forRoot([])
 			],
-			providers: []
+			declarations: [ToastComponent]
 		}).compileComponents();
 	}));
 

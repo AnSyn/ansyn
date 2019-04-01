@@ -16,16 +16,11 @@ describe('GeocoderService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientTestingModule],
-			providers: [GeocoderService,
+			providers: [
+				GeocoderService,
 				{
-					// provide: ErrorHandlerService, useValue: {
-					// 	httpErrorHandle: error => {
-					// 		return of(error);
-					// 	}
-					// }
-				},
-				{
-					provide: mapFacadeConfig, useValue: <IMapFacadeConfig> {
+					provide: mapFacadeConfig,
+					useValue: <IMapFacadeConfig> {
 						mapSearch: {
 							url: 'find/$searchString/key/$apiKey',
 							apiKey: 'myKey',

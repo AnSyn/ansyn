@@ -11,12 +11,15 @@ import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks
 import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer, SetFavoriteOverlaysAction } from '@ansyn/map-facade';
 import { Overlay } from '@ansyn/imagery';
 import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
 import { coreFeatureKey, CoreReducer } from '../../../../core/reducers/core.reducer';
-import { SetFavoriteOverlaysAction } from '../../../../core/actions/core.actions';
 import { MockComponent } from '../../../../core/test/mock-component';
+import {
+	imageryStatusFeatureKey,
+	ImageryStatusReducer
+} from '../../../../../../map-facade/reducers/imagery-status.reducer';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -38,8 +41,8 @@ describe('TasksFormComponent', () => {
 				TranslateModule.forRoot(),
 				StoreModule.forRoot({
 					[tasksFeatureKey]: TasksReducer,
-					[coreFeatureKey]: CoreReducer,
-					[mapFeatureKey]: MapReducer
+					[mapFeatureKey]: MapReducer,
+					[imageryStatusFeatureKey]: ImageryStatusReducer
 				}),
 				EffectsModule.forRoot([])
 			],

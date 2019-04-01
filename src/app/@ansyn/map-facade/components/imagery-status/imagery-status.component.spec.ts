@@ -7,6 +7,11 @@ import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
+import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
+import { MockComponent } from '../../test/mock-component';
+import { FormsModule } from '@angular/forms';
+import { Directive } from '@angular/core';
+import { AlertsModule } from '../../alerts/alerts.module';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -14,7 +19,22 @@ describe('ImageryStatusComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule, EffectsModule.forRoot([]), StoreModule.forRoot({})],
+			imports: [
+				HttpClientModule,
+				FormsModule,
+				AlertsModule,
+				EffectsModule.forRoot([]),
+				StoreModule.forRoot({
+					[imageryStatusFeatureKey]: ImageryStatusReducer
+				})
+			],
+			declarations: [
+				ImageryStatusComponent,
+				MockComponent({
+					selector: 'ansyn-popover',
+					inputs: ['text', 'icon', 'popDirection']
+				})
+			],
 			providers: [
 				{ provide: ALERTS, useValue: [] },
 				{

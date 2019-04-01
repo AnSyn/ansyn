@@ -59,6 +59,8 @@ export {
 } from './actions/imagery-status.actions'
 
 export {
+	imageryStatusStateSelector,
+	imageryStatusInitialState,
 	selectRemovedOverlaysIdsCount,
 	selectFavoriteOverlays,
 	selectPresetOverlays,

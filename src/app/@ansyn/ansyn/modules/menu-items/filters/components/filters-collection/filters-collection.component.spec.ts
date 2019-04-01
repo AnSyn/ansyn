@@ -11,6 +11,7 @@ import { UpdateFacetsAction } from '../../actions/filters.actions';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { MockComponent } from '../../../../core/test/mock-component';
+import { mapFacadeConfig } from '@ansyn/map-facade';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -41,7 +42,9 @@ describe('FiltersCollectionComponent', () => {
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })
 			],
-			providers: [{ provide: filtersConfig, useValue: { filters: null } }, {
+			providers: [
+				{ provide: mapFacadeConfig, useValue: {} },
+				{ provide: filtersConfig, useValue: { filters: null } }, {
 				provide: LoggerConfig,
 				useValue: {}
 			}, { provide: CoreConfig, useValue: {} }]

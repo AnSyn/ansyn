@@ -1,8 +1,6 @@
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { ImageriesManagerComponent } from './imageries-manager.component';
 import { MapEffects } from '../../effects/map.effects';
-import { MapFacadeService } from '../../services/map-facade.service';
-import { Actions } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -12,6 +10,8 @@ import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '../../a
 import { MockComponent } from '../../test/mock-component';
 import { ImageryStatusComponent } from '../imagery-status/imagery-status.component';
 import { AlertComponentDirective } from '../../alerts/alert-component.directive';
+import { Actions } from '@ngrx/effects';
+import { MapFacadeService } from '../../services/map-facade.service';
 
 const mockAnsynContextMenu = MockComponent({
 	selector: 'ansyn-context-menu',
@@ -93,7 +93,7 @@ describe('ImageriesManagerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ImageriesManagerComponent);
 		component = fixture.componentInstance;
-		const mapsList = <any> [
+		const mapsList = <any>[
 			{ id: 'imagery1', data: { overlay: {} } },
 			{ id: 'imagery2', data: { overlay: {} } }
 		];

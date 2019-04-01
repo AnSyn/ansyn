@@ -29,7 +29,7 @@ export class ToastComponent implements OnInit {
 
 	timeoutRef;
 
-	toastMessage$ = this.store$.select(selectToastMessage)
+	toastMessage$ = this.store$.select(selectToastMessage);
 
 	constructor(protected store$: Store<IMapState>) {
 	}

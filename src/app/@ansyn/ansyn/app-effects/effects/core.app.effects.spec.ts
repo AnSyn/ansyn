@@ -5,15 +5,16 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { CoreAppEffects } from './core.app.effects';
 import { cold, hot } from 'jasmine-marbles';
 import { casesStateSelector, initialCasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { initialMapState, mapStateSelector } from '@ansyn/map-facade';
+import { imageryStatusInitialState, initialMapState, mapStateSelector, selectPresetOverlays } from '@ansyn/map-facade';
 import { IOverlay } from '@ansyn/imagery';
-import { coreInitialState, coreStateSelector } from '../../modules/core/reducers/core.reducer';
+import { coreInitialState } from '../../modules/core/reducers/core.reducer';
 import { GoNextPresetOverlay } from '../../modules/core/actions/core.actions';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { DisplayOverlayAction } from '../../modules/overlays/actions/overlays.actions';
+import { imageryStatusStateSelector } from '../../../map-facade/reducers/imagery-status.reducer';
 
 function mockOverlay(id: string): IOverlay {
-	const overlay = <IOverlay> {};
+	const overlay = <IOverlay>{};
 	overlay.id = id;
 	return overlay;
 }
@@ -24,9 +25,9 @@ describe('CoreAppEffects', () => {
 	let store: Store<any>;
 	let overlays1to3: Array<IOverlay>;
 	let overlays1to4: Array<IOverlay>;
-	const coreState = { ...coreInitialState };
 	const casesState = { ...initialCasesState };
 	const mapsState = { ...initialMapState };
+	const imageryStatusState = { ...imageryStatusInitialState };
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -47,9 +48,9 @@ describe('CoreAppEffects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const fakeStore = new Map<any, any>([
-			[coreStateSelector, coreState],
 			[casesStateSelector, casesState],
-			[mapStateSelector, mapsState]
+			[mapStateSelector, mapsState],
+			[imageryStatusStateSelector, imageryStatusState]
 		]);
 		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));
@@ -75,33 +76,33 @@ describe('CoreAppEffects', () => {
 					}, worldView: { mapType: null, sourceType: null }, flags: null
 				}
 			};
-			coreState.presetOverlays = overlays1to3;
+			imageryStatusState.presetOverlays = overlays1to3;
 		});
 		it('if no preset overlay currently displays, should display presetOverlays[0]', () => {
 			actions = hot('--a--', { a: new GoNextPresetOverlay() });
 
 			const expectedResult = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[0], mapId: 'map_1' })
+				b: new DisplayOverlayAction({ overlay: imageryStatusState.presetOverlays[0], mapId: 'map_1' })
 			});
 
 			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
 		});
 		it('if presetOverlays[n] overlay currently displays, should display presetOverlays[n+1]', () => {
-			mapsState.entities['map_1'].data.overlay = coreState.presetOverlays[0];
+			mapsState.entities['map_1'].data.overlay = imageryStatusState.presetOverlays[0];
 			actions = hot('--a--', { a: new GoNextPresetOverlay() });
 
 			const expectedResult = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[1], mapId: 'map_1' })
+				b: new DisplayOverlayAction({ overlay: imageryStatusState.presetOverlays[1], mapId: 'map_1' })
 			});
 
 			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
 		});
 		it('if presetOverlays[last] overlay currently displays, should display presetOverlays[0]', () => {
-			mapsState.entities['map_1'].data.overlay = coreState.presetOverlays[2];
+			mapsState.entities['map_1'].data.overlay = imageryStatusState.presetOverlays[2];
 			actions = hot('--a--', { a: new GoNextPresetOverlay() });
 
 			const expectedResult = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: coreState.presetOverlays[0], mapId: 'map_1' })
+				b: new DisplayOverlayAction({ overlay: imageryStatusState.presetOverlays[0], mapId: 'map_1' })
 			});
 
 			expect(coreAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);

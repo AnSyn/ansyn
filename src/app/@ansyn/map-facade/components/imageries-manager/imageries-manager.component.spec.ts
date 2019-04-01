@@ -76,7 +76,6 @@ describe('ImageriesManagerComponent', () => {
 				mockAnnotationContextMenu,
 				mockAnsynWelcomeNotification,
 				mockAnsynPopoverComponent,
-				ImageryStatusComponent,
 				AlertComponentDirective
 			]
 

@@ -55,7 +55,7 @@ import { toastMessages } from '../../modules/core/models/toast-messages';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
-	DisplayOverlaySuccessAction, OverlaysActionTypes,
+	DisplayOverlaySuccessAction, LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';

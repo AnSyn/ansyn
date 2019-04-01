@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ResetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction } from '../../actions/core.actions';
-import {
-	ICoreState,
-	selectRemovedOverlaysIdsCount,
-	selectRemovedOverlaysVisibility
-} from '../../reducers/core.reducer';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
 import { Observable } from 'rxjs';
+import {
+	selectRemovedOverlaysIdsCount,
+	ResetRemovedOverlaysIdsAction,
+	selectRemovedOverlaysVisibility,
+	SetRemovedOverlaysVisibilityAction
+} from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-manual-removed-overlays',
@@ -38,7 +38,7 @@ export class ManualRemovedOverlaysComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(protected store: Store<ICoreState>) {
+	constructor(protected store: Store<any>) {
 	}
 
 	ngOnInit() {

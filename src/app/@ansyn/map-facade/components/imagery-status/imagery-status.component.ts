@@ -10,29 +10,28 @@ import {
 	Output
 } from '@angular/core';
 import { GeoRegisteration, IOverlay } from '@ansyn/imagery';
-import { Store, select } from '@ngrx/store';
-// import {
-// 	SetRemovedOverlaysIdAction,
-// 	ToggleFavoriteAction,
-// 	TogglePresetOverlayAction,
-// 	ChangeImageryMap
-// } from '../../../ansyn/modules/core/actions/core.actions';
-// import {
-// 	selectEnableCopyOriginalOverlayDataFlag,
-// 	selectFavoriteOverlays,
-// 	selectPresetOverlays,
-// 	selectRemovedOverlays
-// } from '../../../ansyn/modules/core/reducers/core.reducer';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { getTimeFormat } from '../../utils/time';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { distinctUntilChanged, tap } from 'rxjs/internal/operators';
 import { TranslateService } from '@ngx-translate/core';
-// import { copyFromContent } from '../../../ansyn/modules/core/utils/clipboard';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { BackToWorldView, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import {
+	BackToWorldView,
+	ChangeImageryMap,
+	SetToastMessageAction,
+	ToggleMapLayersAction
+} from '../../actions/map.actions';
 import { selectAlertMsg } from '../../reducers/map.reducer';
 import { AlertMsg } from '../../alerts/model';
+import {
+	selectEnableCopyOriginalOverlayDataFlag,
+	selectFavoriteOverlays,
+	selectPresetOverlays,
+	selectRemovedOverlays
+} from '../../reducers/imagery-status.reducer';
+import { SetRemovedOverlaysIdAction } from '../../actions/imagery-status.actions';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -85,29 +84,29 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 	@Output() onMove = new EventEmitter<MouseEvent>();
 
-	// @AutoSubscription
-	// favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
-	// 	tap((favoriteOverlays) => {
-	// 		this.favoriteOverlays = favoriteOverlays;
-	// 		this.updateFavoriteStatus();
-	// 	})
-	// );
+	@AutoSubscription
+	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
+		tap((favoriteOverlays) => {
+			this.favoriteOverlays = favoriteOverlays;
+			this.updateFavoriteStatus();
+		})
+	);
 
-	// @AutoSubscription
-	// presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays).pipe(
-	// 	tap((presetOverlays) => {
-	// 		this.presetOverlays = presetOverlays;
-	// 		this.updatePresetStatus();
-	// 	})
-	// );
+	@AutoSubscription
+	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays).pipe(
+		tap((presetOverlays) => {
+			this.presetOverlays = presetOverlays;
+			this.updatePresetStatus();
+		})
+	);
 
-	// @AutoSubscription
-	// removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays).pipe(
-	// 	tap((removedOverlaysIds) => {
-	// 		this.removedOverlaysIds = removedOverlaysIds;
-	// 		this.updateRemovedStatus();
-	// 	})
-	// );
+	@AutoSubscription
+	removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays).pipe(
+		tap((removedOverlaysIds) => {
+			this.removedOverlaysIds = removedOverlaysIds;
+			this.updateRemovedStatus();
+		})
+	);
 
 	alertMsg: AlertMsg;
 	enableCopyOriginalOverlayData: boolean;
@@ -119,11 +118,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			tap((alertMsg) => this.alertMsg = alertMsg),
 			distinctUntilChanged()
 		);
-	//
-	// @AutoSubscription
-	// copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
-	// 	tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
-	// );
+
+	@AutoSubscription
+	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
+		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
+	);
 
 	favoriteOverlays: IOverlay[];
 	isFavorite: boolean;
@@ -253,10 +252,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	removeOverlay() {
-		// this.store$.dispatch(new SetRemovedOverlaysIdAction({ mapId: this.mapId, id: this.overlay.id, value: !this.isRemoved }));
+		this.store$.dispatch(new SetRemovedOverlaysIdAction({
+			mapId: this.mapId,
+			id: this.overlay.id,
+			value: !this.isRemoved
+		}));
 	}
 
 	changeActiveMap(mapType: string) {
-		// this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
+		this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
 	}
 }

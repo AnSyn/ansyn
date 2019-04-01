@@ -3,19 +3,26 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
-import { IMapState, MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import {
+	IMapState,
+	MapFacadeService,
+	mapStateSelector,
+	selectPresetOverlays,
+	SetPresetOverlaysAction,
+	SetRemovedOverlayIdsCount
+} from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { ChangeImageryMap as MapFacadeChangeImageryMap } from '@ansyn/map-facade';
+import { ChangeImageryMap as MapFacadeChangeImageryMap, selectRemovedOverlays } from '@ansyn/map-facade';
 import { IOverlay, IOverlayDrop } from '@ansyn/imagery';
 import {
 	ChangeImageryMap,
 	CoreActionTypes,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
-	SetOverlaysCriteriaAction, SetPresetOverlaysAction, SetRemovedOverlayIdsCount
+	SetOverlaysCriteriaAction
 } from '../../modules/core/actions/core.actions';
-import { coreStateSelector, selectRemovedOverlays } from '../../modules/core/reducers/core.reducer';
+import { coreStateSelector } from '../../modules/core/reducers/core.reducer';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import {
 	DisplayOverlayAction, DisplayOverlayFromStoreAction,
@@ -89,7 +96,7 @@ export class CoreAppEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
 		}),
-		withLatestFrom(this.store$.select(coreStateSelector), ({ overlayId, mapId }, { presetOverlays }): { overlay: IOverlay, mapId: string } => {
+		withLatestFrom(this.store$.select(selectPresetOverlays), ({ overlayId, mapId }, presetOverlays): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;
 			if (length === 0) {
 				return;

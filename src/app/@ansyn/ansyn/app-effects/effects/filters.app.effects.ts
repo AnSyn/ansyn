@@ -31,7 +31,7 @@ import {
 	selectFavoriteOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
-} from '../../modules/core/reducers/core.reducer';
+} from '@ansyn/map-facade';
 import {
 	LoadOverlaysAction, OverlaysActionTypes,
 	SetDropsAction, SetFilteredOverlaysAction,

@@ -41,6 +41,29 @@ export {
 	RemoveAlertMsg,
 	SetToastMessageAction
 } from './actions/map.actions';
+
+export {
+	ImageryStatusActionTypes,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction,
+	SetRemovedOverlaysIdAction,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction,
+	ResetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction,
+	EnableCopyOriginalOverlayDataAction,
+	SetRemovedOverlayIdsCount
+} from './actions/imagery-status.actions'
+
+export {
+	selectRemovedOverlaysIdsCount,
+	selectFavoriteOverlays,
+	selectPresetOverlays,
+	selectRemovedOverlays,
+	selectRemovedOverlaysVisibility
+} from './reducers/imagery-status.reducer'
+
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';

@@ -37,12 +37,6 @@ export class GoNextPresetOverlay implements Action {
 	}
 }
 
-export class EnableCopyOriginalOverlayDataAction implements Action {
-	type: string = CoreActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA;
-
-	constructor(public payload: boolean) {
-	}
-}
 
 export class ClearActiveInteractionsAction implements Action {
 	type = CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS;

@@ -203,31 +203,20 @@ export { asyncData } from './modules/core/test/async-observable-helpers';
 export { AnsynModalComponent } from './modules/core/components/ansyn-modal/ansyn-modal.component';
 export { coreFeatureKey, coreInitialState, CoreReducer } from './modules/core/reducers/core.reducer';
 export { type } from './modules/core/utils/type';
-export { selectAutoSave, selectRemovedOverlays, selectRemovedOverlaysVisibility } from './modules/core/reducers/core.reducer';
-export {
-	SetRemovedOverlayIdsCount,
-	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
-} from './modules/core/actions/core.actions';
+export { selectAutoSave } from './modules/core/reducers/core.reducer';
 export { InjectionResolverFilter } from './modules/core/services/generic-type-resolver';
 export { GenericTypeResolverService } from './modules/core/services/generic-type-resolver.service';
 
 export { LoggerConfig } from './modules/core/models/logger.config';
 export { IEntity } from './modules/core/services/storage/storage.service';
-export { coreStateSelector, selectFavoriteOverlays, selectPresetOverlays } from './modules/core/reducers/core.reducer';
+export { coreStateSelector } from './modules/core/reducers/core.reducer';
 export { ILimitedArray } from './modules/core/utils/i-limited-array';
 export { ClearActiveInteractionsAction } from './modules/core/actions/core.actions';
 export { IStoredEntity, StorageService } from './modules/core/services/storage/storage.service';
 export { AnsynInputComponent } from './modules/core/forms/ansyn-input/ansyn-input.component';
 export { copyFromContent } from './modules/core/utils/clipboard';
 export { ErrorHandlerService } from './modules/core/services/error-handler.service';
-export {
-	SetAutoSave,
-	SetFavoriteOverlaysAction,
-	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
-} from './modules/core/actions/core.actions';
+export { SetAutoSave } from './modules/core/actions/core.actions';
 export { ICoreState } from './modules/core/reducers/core.reducer';
 export { GoNextPresetOverlay } from './modules/core/actions/core.actions';
 export { SetOverlaysCriteriaAction } from './modules/core/actions/core.actions';
@@ -235,7 +224,6 @@ export { LoggerService } from './modules/core/services/logger.service';
 export { selectDataInputFilter, selectOverlaysCriteria, selectRegion } from './modules/core/reducers/core.reducer';
 export {
 	CoreActionTypes,
-	EnableCopyOriginalOverlayDataAction,
 	GoAdjacentOverlay,
 	UpdateOverlaysCountAction
 } from './modules/core/actions/core.actions';

@@ -6,7 +6,15 @@ import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/sta
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
-import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
+import {
+	SetActiveMapId,
+	SetLayoutAction,
+	SetMapsDataActionStore,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction,
+} from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { ICase, ICaseMapState, IOverlay } from '@ansyn/imagery';
 import {
@@ -21,10 +29,11 @@ import {
 import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
+
 import {
-	SetAutoSave, SetFavoriteOverlaysAction,
+	SetAutoSave,
 	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction, SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction, SetContextParamsAction
+	SetContextParamsAction
 } from '../../../modules/core/actions/core.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';

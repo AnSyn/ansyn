@@ -41,6 +41,11 @@ import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { updateSession } from '../models/core-session-state.model';
+import {
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes
+} from '../../ansyn/modules/overlays/actions/overlays.actions';
 
 @Injectable()
 export class MapEffects {

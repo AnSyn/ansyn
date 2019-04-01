@@ -5,10 +5,10 @@ import { ExpandAction } from '../../actions/status-bar.actions';
 import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import {
-	EnableCopyOriginalOverlayDataAction,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay
 } from '../../../core/actions/core.actions';
+import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-navigation-bar',

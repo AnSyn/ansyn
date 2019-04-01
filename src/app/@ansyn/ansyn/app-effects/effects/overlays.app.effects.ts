@@ -1,55 +1,50 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import {
+	BackToWorldView,
+	ImageryStatusActionTypes,
 	IMapState,
 	MapActionTypes,
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
 	selectMapsList,
-	SetPendingOverlaysAction,
-	BackToWorldView,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
+	SetPendingOverlaysAction,
+	SetRemovedOverlaysIdAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
 } from '@ansyn/map-facade';
 
 import {
 	CommunicatorEntity,
+	ICaseMapPosition,
+	ICaseMapState,
 	ImageryCommunicatorService,
-	IPendingOverlay,
 	IOverlay,
-	ICaseMapState, ICaseMapPosition, layoutOptions, LayoutKey
+	IPendingOverlay,
+	LayoutKey,
+	layoutOptions
 } from '@ansyn/imagery';
-import {
-	catchError,
-	filter,
-	map,
-	mergeMap,
-	pairwise,
-	startWith,
-	switchMap,
-	withLatestFrom
-} from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
-	CoreActionTypes,
-	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction, TogglePresetOverlayAction
-} from '../../modules/core/actions/core.actions';
-import {
-	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction,
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, OverlaysActionTypes, SetFilteredOverlaysAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
 	SetHoveredOverlayAction,
-	SetMarkUp, SetSpecialObjectsActionStore
+	SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
-	IOverlaysState, MarkUpClass,
-	overlaysStateSelector, selectdisplayOverlayHistory,
+	MarkUpClass,
+	selectdisplayOverlayHistory,
 	selectDropMarkup
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
@@ -120,7 +115,7 @@ export class OverlaysAppEffects {
 
 	@Effect()
 	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
-		ofType<SetRemovedOverlaysIdAction>(CoreActionTypes.SET_REMOVED_OVERLAY_ID),
+		ofType<SetRemovedOverlaysIdAction>(ImageryStatusActionTypes.SET_REMOVED_OVERLAY_ID),
 		filter(({ payload }) => payload.value),
 		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
 		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {

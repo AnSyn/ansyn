@@ -8,6 +8,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
 import { EntityState, createEntityAdapter, EntityAdapter, Dictionary } from '@ngrx/entity';
+import { ImageryStatusActionTypes } from '@ansyn/map-facade';
 
 export interface ITimelineRange {
 	start: Date;
@@ -254,7 +255,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				}
 			};
 
-		case CoreActionTypes.SET_REMOVED_OVERLAY_ID:
+		case ImageryStatusActionTypes.SET_REMOVED_OVERLAY_ID:
 			if (action.payload.value) {
 				const displayOverlayHistory = { ...state.displayOverlayHistory };
 				Object.entries(displayOverlayHistory).forEach(([key, value]) => {

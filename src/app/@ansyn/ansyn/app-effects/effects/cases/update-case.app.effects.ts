@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
-import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
+import {
+	selectActiveMapId, selectLayout, selectMapsList, selectRemovedOverlays,
+	selectRemovedOverlaysVisibility, selectFavoriteOverlays, selectPresetOverlays
+} from '@ansyn/map-facade';
 import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 import { ICase } from '@ansyn/imagery';
@@ -14,9 +17,7 @@ import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/case
 import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import {
 	selectAutoSave, selectContextEntities,
-	selectFavoriteOverlays,
-	selectOverlaysCriteria, selectPresetOverlays, selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
+	selectOverlaysCriteria
 } from '../../../modules/core/reducers/core.reducer';
 
 @Injectable()

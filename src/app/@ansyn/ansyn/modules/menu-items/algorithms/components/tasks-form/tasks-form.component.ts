@@ -31,10 +31,9 @@ import {
 	selectCurrentAlgorithmTaskRegion,
 	selectCurrentAlgorithmTaskStatus
 } from '../../reducers/tasks.reducer';
-import { selectActiveMapId, selectMaps } from '@ansyn/map-facade';
+import { selectActiveMapId, selectMaps, selectFavoriteOverlays } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 import { Dictionary } from '@ngrx/entity';
-import { selectFavoriteOverlays } from '../../../../core/reducers/core.reducer';
 
 @Component({
 	selector: 'ansyn-tasks-form',

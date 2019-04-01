@@ -4,7 +4,9 @@ AnSyn is an end-to-end solution for overhead image analysis.
 Simple, intuitive and easy to use – you don’t have to be an expert anymore to
 leverage the power of drones and satellites data for your needs!
 
-**[AnSyn Platform](http://platform.ansyn.io)**
+**[AnSyn](https://ansyn.io)**
+
+**[Platform](http://platform.ansyn.io)**
 
 ### Installation
 

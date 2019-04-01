@@ -1,13 +1,19 @@
 import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { ICaseMapState, IPendingOverlay, layoutOptions } from '@ansyn/imagery';
+import { ICaseMapState, IOverlay, IPendingOverlay, layoutOptions } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { range } from 'lodash';
+import { range, uniq } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { LayoutKey } from '@ansyn/imagery';
 import { sessionData } from '../models/core-session-state.model';
 import { AlertMsg, AlertMsgTypes } from '../alerts/model';
+import { coreStateSelector } from '../../ansyn/modules/core/reducers/core.reducer';
+import {
+	CoreActionTypes,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction
+} from '../../ansyn/modules/core/actions/core.actions';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: ICaseMapState[] = [];
@@ -54,11 +60,15 @@ export interface IMapState extends EntityState<ICaseMapState> {
 	wasWelcomeNotificationShown: boolean;
 	toastMessage: IToastMessage;
 	alertMsg: AlertMsg;
+	favoriteOverlays: IOverlay[];
+	removedOverlaysIds: string[];
+	presetOverlays: IOverlay[];
+
+
 }
 
 
 export const initialMapState: IMapState = mapsAdapter.getInitialState({
-	toastMessage: null,
 	activeMapId: null,
 	isLoadingMaps: new Map<string, string>(),
 	isHiddenMaps: new Set<string>(),
@@ -70,6 +80,10 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
+	toastMessage: null,
+	favoriteOverlays: [],
+	removedOverlaysIds: [],
+	presetOverlays: []
 });
 
 export const mapFeatureKey = 'map';
@@ -208,6 +222,43 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
 			return { ...state, wasWelcomeNotificationShown: action.payload };
 
+
+		case MapActionTypes.TOGGLE_OVERLAY_FAVORITE: {
+			const { overlay, id, value } = action.payload;
+			const fo = [...state.favoriteOverlays];
+			return { ...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id) };
+		}
+
+		case MapActionTypes.TOGGLE_OVERLAY_PRESET: {
+			const { overlay, id, value } = action.payload;
+			const po = [...state.presetOverlays];
+			return { ...state, presetOverlays: value ? uniq([...po, overlay]) : po.filter((o) => o.id !== id) };
+		}
+
+		case MapActionTypes.SET_FAVORITE_OVERLAYS:
+			return { ...state, favoriteOverlays: (action as SetFavoriteOverlaysAction).payload };
+
+		case MapActionTypes.SET_REMOVED_OVERLAY_IDS:
+			return { ...state, removedOverlaysIds: action.payload };
+
+		case MapActionTypes.SET_REMOVED_OVERLAY_ID:
+			const { id, value } = action.payload;
+			const removedOverlaysIds = value ? uniq([...state.removedOverlaysIds, id]) : state.removedOverlaysIds.filter(_id => id !== _id);
+			return { ...state, removedOverlaysIds };
+
+		case MapActionTypes.RESET_REMOVED_OVERLAY_IDS:
+			return { ...state, removedOverlaysIds: [] };
+
+		case MapActionTypes.SET_REMOVED_OVERLAYS_VISIBILITY:
+			return { ...state, removedOverlaysVisibility: action.payload };
+
+		case CoreActionTypes.SET_REMOVED_OVERLAY_IDS_COUNT:
+			return { ...state, removedOverlaysIdsCount: action.payload };
+
+		case MapActionTypes.SET_PRESET_OVERLAYS:
+			return { ...state, presetOverlays: (action as SetPresetOverlaysAction).payload };
+
+
 		default:
 			return state;
 	}
@@ -222,3 +273,7 @@ export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(map
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectAlertMsg = createSelector(mapStateSelector, (state) => state.alertMsg);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
+
+export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(mapStateSelector, (core) => core.favoriteOverlays);
+export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(mapStateSelector, (core) => core.presetOverlays);
+export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(mapStateSelector, (core) => core.removedOverlaysIds);

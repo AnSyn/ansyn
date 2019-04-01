@@ -1,3 +1,5 @@
+export { IOverlaysCriteriaOptions } from './model/overlay.model';
+
 export { GeoRegisteration } from './model/overlay.model';
 export { ICaseSliderFilterMetadata } from './model/case.model';
 export { ICaseLayersState } from './model/case.model';

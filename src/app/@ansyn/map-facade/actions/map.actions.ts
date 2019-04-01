@@ -13,6 +13,7 @@ import {
 import { LayoutKey } from '@ansyn/imagery';
 import { AlertMsgTypes } from '../alerts/model';
 import { IToastMessage } from '../reducers/map.reducer';
+import { CoreActionTypes } from '../../ansyn/modules/core/actions/core.actions';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
@@ -69,6 +70,13 @@ export const MapActionTypes = {
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
 	ADD_ALERT_MSG: 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG: 'REMOVE_ALERT_MSG',
+
+	TOGGLE_OVERLAY_FAVORITE: 'TOGGLE_OVERLAY_FAVORITE',
+	TOGGLE_OVERLAY_PRESET: 'TOGGLE_OVERLAY_PRESET',
+	SET_FAVORITE_OVERLAYS: 'SET_FAVORITE_OVERLAYS',
+	SET_PRESET_OVERLAYS: 'SET_PRESET_OVERLAYS',
+	SET_REMOVED_OVERLAY_IDS: 'SET_REMOVED_OVERLAY_IDS',
+
 
 };
 
@@ -368,5 +376,70 @@ export class RemoveAlertMsg implements Action {
 	type = MapActionTypes.REMOVE_ALERT_MSG;
 
 	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}
+
+export class ToggleFavoriteAction implements Action {
+	type: string = MapActionTypes.TOGGLE_OVERLAY_FAVORITE;
+
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
+	}
+}
+
+
+export class TogglePresetOverlayAction implements Action {
+	type: string = MapActionTypes.TOGGLE_OVERLAY_PRESET;
+
+	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
+	}
+}
+
+export class SetFavoriteOverlaysAction implements Action {
+	type = MapActionTypes.SET_FAVORITE_OVERLAYS;
+
+	constructor(public payload: IOverlay[]) {
+	}
+}
+
+export class SetPresetOverlaysAction implements Action {
+	type = MapActionTypes.SET_PRESET_OVERLAYS;
+
+	constructor(public payload: IOverlay[]) {
+	}
+}
+
+
+export class SetRemovedOverlaysIdsAction implements Action {
+	type = MapActionTypes.SET_REMOVED_OVERLAY_IDS;
+
+	constructor(public payload: string[]) {
+
+	}
+}
+
+export class ResetRemovedOverlaysIdsAction implements Action {
+	type = MapActionTypes.RESET_REMOVED_OVERLAY_IDS;
+}
+
+export class SetRemovedOverlaysIdAction implements Action {
+	type = MapActionTypes.SET_REMOVED_OVERLAY_ID;
+
+	constructor(public payload: { mapId: string, id: string, value: boolean }) {
+
+	}
+}
+
+export class SetRemovedOverlaysVisibilityAction implements Action {
+	type = MapActionTypes.SET_REMOVED_OVERLAYS_VISIBILITY;
+
+	constructor(public payload: boolean) {
+
+	}
+}
+
+export class SetRemovedOverlayIdsCount implements Action {
+	readonly type = CoreActionTypes.SET_REMOVED_OVERLAY_IDS_COUNT;
+
+	constructor(public payload: number) {
 	}
 }

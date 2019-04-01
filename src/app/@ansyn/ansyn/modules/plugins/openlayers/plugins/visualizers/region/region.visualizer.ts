@@ -16,8 +16,8 @@ import {
 	selectGeoFilterSearchMode
 } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
-import { SetOverlaysCriteriaAction } from '../../../../../core/actions/core.actions';
-import { selectRegion } from '../../../../../core/reducers/core.reducer';
+import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
+import { selectRegion } from '../../../../../overlays/reducers/overlays.reducer';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';

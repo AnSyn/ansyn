@@ -15,7 +15,7 @@ import {
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
-	SelectDilutedCaseAction,
+	SelectDilutedCaseAction, SetAutoSave,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
 	UpdateCaseBackendSuccessAction
@@ -30,7 +30,6 @@ import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/imagery';
 import { SetToastMessageAction } from '@ansyn/map-facade';
-import { SetAutoSave } from '../../../core/actions/core.actions';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { copyFromContent } from '@ansyn/map-facade';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';

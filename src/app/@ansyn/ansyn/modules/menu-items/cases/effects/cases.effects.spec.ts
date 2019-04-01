@@ -13,7 +13,7 @@ import {
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
-	SelectDilutedCaseAction,
+	SelectDilutedCaseAction, SetAutoSave,
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
@@ -27,7 +27,6 @@ import { DataLayersService, layersConfig } from '../../layers-manager/services/d
 import { LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { ICase } from '@ansyn/imagery';
-import { SetAutoSave } from '../../../core/actions/core.actions';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { LoggerService } from '../../../core/services/logger.service';

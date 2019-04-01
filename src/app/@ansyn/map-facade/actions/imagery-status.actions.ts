@@ -1,6 +1,5 @@
 import { IOverlay } from '@ansyn/imagery';
 import { Action } from '@ngrx/store';
-import { CoreActionTypes } from '../../ansyn/modules/core/actions/core.actions';
 
 export enum ImageryStatusActionTypes {
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
@@ -12,7 +11,7 @@ export enum ImageryStatusActionTypes {
 	RESET_REMOVED_OVERLAY_IDS = 'RESET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAY_ID = 'SET_REMOVED_OVERLAY_ID',
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
-	ENABLE_COPY_ORIGINAL_OVERLAY_DATA = 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA'
+	ENABLE_COPY_ORIGINAL_OVERLAY_DATA = 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 }
 
 export class ToggleFavoriteAction implements Action {

@@ -32,7 +32,7 @@ import {
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
-import { CoreActionTypes, SetOverlaysCriteriaAction } from '../modules/core/actions/core.actions';
+import { SetOverlaysCriteriaAction } from '../modules/overlays/actions/overlays.actions';
 import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/actions/overlays.actions';
 

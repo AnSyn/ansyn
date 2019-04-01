@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
 import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
 import {
 	selectActiveMapId, selectLayout, selectMapsList, selectRemovedOverlays,
@@ -14,12 +14,12 @@ import { selectFacets } from '../../../modules/menu-items/filters/reducer/filter
 import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
-import {
-	selectAutoSave, selectContextEntities,
-	selectOverlaysCriteria
-} from '../../../modules/core/reducers/core.reducer';
+import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 
+// HACK //
+const selectContextEntities: any = createSelector(createFeatureSelector('context'), (context: any) => context.entities);
+
+import { selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 @Injectable()
 export class UpdateCaseAppEffects {
 	isAutoSaveTriggered: boolean;

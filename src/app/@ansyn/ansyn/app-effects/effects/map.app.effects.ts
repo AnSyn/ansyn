@@ -50,12 +50,11 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { CoreActionTypes } from '../../modules/core/actions/core.actions';
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
-	DisplayOverlaySuccessAction, LoadOverlaysAction, LoadOverlaysSuccessAction, OverlaysActionTypes,
+	DisplayOverlaySuccessAction, OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';

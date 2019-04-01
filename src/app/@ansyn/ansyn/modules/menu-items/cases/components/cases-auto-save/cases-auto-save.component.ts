@@ -6,7 +6,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { map, tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectCaseEntities } from '../../reducers/cases.reducer';
-import { SetAutoSave } from '../../../../core/actions/core.actions';
+import { SetAutoSave } from '../../actions/cases.actions';
 
 @Component({
 	selector: 'ansyn-cases-auto-save',

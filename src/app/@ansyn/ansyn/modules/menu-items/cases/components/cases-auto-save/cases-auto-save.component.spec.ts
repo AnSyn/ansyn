@@ -3,8 +3,8 @@ import { CasesAutoSaveComponent } from './cases-auto-save.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
 import { ICase } from '@ansyn/imagery';
-import { SetAutoSave } from '../../../../core/actions/core.actions';
 import { SliderCheckboxComponent } from '../../../../core/forms/slider-checkbox/slider-checkbox.component';
+import { SetAutoSave } from '../../actions/cases.actions';
 
 describe('CasesAutoSaveComponent', () => {
 	let component: CasesAutoSaveComponent;

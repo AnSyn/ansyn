@@ -2,6 +2,7 @@ import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import {
+	ClearActiveInteractionsAction,
 	GoToAction,
 	GoToInputChangeAction,
 	PullActiveCenter,
@@ -12,7 +13,6 @@ import { Observable } from 'rxjs';
 import { IEd50Notification, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
-import { ClearActiveInteractionsAction } from '../../../../core/actions/core.actions';
 import { copyFromContent } from '@ansyn/map-facade';
 import { ICoordinatesSystem } from '../../../../core/models/coordinate-system.model';
 

@@ -24,20 +24,15 @@ import {
 import {
 	CasesActionTypes,
 	SelectCaseAction,
-	SelectCaseSuccessAction
+	SelectCaseSuccessAction, SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
-
-import {
-	SetAutoSave,
-	SetOverlaysCriteriaAction,
-	SetContextParamsAction
-} from '../../../modules/core/actions/core.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
+import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -100,7 +95,7 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			new SetContextParamsAction({ contextEntities }),
+			<any> { type: '[Context] Set context params', payload: { contextEntities }},
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),

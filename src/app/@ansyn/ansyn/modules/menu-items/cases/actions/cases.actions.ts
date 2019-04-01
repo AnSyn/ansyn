@@ -37,7 +37,9 @@ export const CasesActionTypes = {
 	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
 
 	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
-	MANUAL_SAVE: 'MANUAL_SAVE'
+	MANUAL_SAVE: 'MANUAL_SAVE',
+
+	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
 };
 
 export type CasesActions = any;
@@ -169,5 +171,12 @@ export class ManualSaveAction implements Action {
 	readonly type = CasesActionTypes.MANUAL_SAVE;
 
 	constructor(public payload: ICase) {
+	}
+}
+
+export class SetAutoSave implements Action {
+	readonly type = CasesActionTypes.SET_AUTO_SAVE;
+
+	constructor(public payload: boolean) {
 	}
 }

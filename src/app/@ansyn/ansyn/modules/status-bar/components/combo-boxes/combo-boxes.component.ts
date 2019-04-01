@@ -26,12 +26,8 @@ import {
 	ICaseTimeState, IOverlay, LayoutKey, layoutOptions
 } from '@ansyn/imagery';
 import { selectLayout, SetLayoutAction } from '@ansyn/map-facade';
-import {
-	CoreActionTypes,
-	SetOverlaysCriteriaAction,
-	UpdateOverlaysCountAction
-} from '../../../core/actions/core.actions';
-import { selectDataInputFilter, selectRegion, selectTime } from '../../../core/reducers/core.reducer';
+import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
+import { OverlaysActionTypes, UpdateOverlaysCountAction, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -72,7 +68,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	);
 
 	overlaysCount$: Observable<number> = this.actions$.pipe(
-		ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT),
+		ofType(OverlaysActionTypes.UPDATE_OVERLAY_COUNT),
 		map(({ payload }: UpdateOverlaysCountAction) => payload)
 	);
 

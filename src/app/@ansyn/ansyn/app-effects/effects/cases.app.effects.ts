@@ -9,7 +9,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, mergeMap, withLatestFrom, tap } from 'rxjs/operators';
 import { Inject } from '@angular/core';
 import {
 	CasesActionTypes,
@@ -23,6 +23,7 @@ import {
 	OverlaysActionTypes
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class CasesAppEffects {
@@ -31,6 +32,23 @@ export class CasesAppEffects {
 			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
+
+	@Effect({ dispatch: false })
+	actionsLogger$: Observable<any> = this.actions$.pipe(
+		ofType(CasesActionTypes.ADD_CASE,
+			CasesActionTypes.DELETE_CASE,
+			CasesActionTypes.LOAD_CASE,
+			CasesActionTypes.LOAD_CASES,
+			CasesActionTypes.ADD_CASES,
+			CasesActionTypes.SAVE_CASE_AS,
+			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
+			CasesActionTypes.UPDATE_CASE,
+			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
+			CasesActionTypes.SELECT_CASE
+		),
+		tap((action) => {
+			this.loggerService.info(JSON.stringify(action));
+		}));
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$.pipe(
@@ -98,6 +116,7 @@ export class CasesAppEffects {
 				protected store$: Store<IAppState>,
 				protected overlaysService: OverlaysService,
 				@Inject(toolsConfig) protected config: IToolsConfig,
+				protected loggerService: LoggerService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

@@ -1,3 +1,4 @@
+
 export { ANSYN_ID } from './api/ansyn-id.provider';
 export { AnsynApi } from './api/ansyn-api.service';
 export { MapAppEffects } from './app-effects/effects/map.app.effects';
@@ -13,6 +14,7 @@ export { mergeConfig } from "./fetch-config-providers";
 export { IConfigModel } from "./config.model";
 
 // // statusBar
+export { GoNextPresetOverlay } from './modules/status-bar/actions/status-bar.actions';
 export { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';
 export { IComboBoxesProperties } from './modules/status-bar/models/combo-boxes.model';
 export {
@@ -44,6 +46,9 @@ export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-bo
 
 
 // menuItems
+export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
+export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
+
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
 export { ILayersManagerConfig } from "./modules/menu-items/layers-manager/models/layers-manager-config";
 export { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
@@ -177,6 +182,7 @@ export {
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './modules/menu-items/algorithms/models/tasks.model';
+export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
 
 
 // core
@@ -187,12 +193,11 @@ export {
 	IFiltersList,
 	IOverlaysSourceProvider
 } from './modules/core/models/multiple-overlays-source-config';
-export { ChangeImageryMap } from './modules/core/actions/core.actions';
 export { FileInputComponent } from './modules/core/forms/file-input/file-input.component';
 export { AnsynFormsModule } from './modules/core/forms/ansyn-forms.module';
 export { forkJoinSafe } from './modules/core/utils/rxjs/observables/fork-join-safe';
 export { mergeArrays } from './modules/core/utils/merge-arrays';
-export { selectTime } from './modules/core/reducers/core.reducer';
+export { selectTime } from './modules/overlays/reducers/overlays.reducer';
 export { ILoggerConfig } from './modules/core/models/logger-config.model';
 export { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
 export { SliderCheckboxComponent } from './modules/core/forms/slider-checkbox/slider-checkbox.component';
@@ -201,31 +206,21 @@ export { createStore, IStoreFixture } from './modules/core/test/mock-store';
 export { AnsynCheckboxComponent } from './modules/core/forms/ansyn-checkbox/ansyn-checkbox.component';
 export { asyncData } from './modules/core/test/async-observable-helpers';
 export { AnsynModalComponent } from './modules/core/components/ansyn-modal/ansyn-modal.component';
-export { coreFeatureKey, coreInitialState, CoreReducer } from './modules/core/reducers/core.reducer';
+
+
 export { type } from './modules/core/utils/type';
-export { selectAutoSave } from './modules/core/reducers/core.reducer';
 export { InjectionResolverFilter } from './modules/core/services/generic-type-resolver';
 export { GenericTypeResolverService } from './modules/core/services/generic-type-resolver.service';
 
 export { LoggerConfig } from './modules/core/models/logger.config';
 export { IEntity } from './modules/core/services/storage/storage.service';
-export { coreStateSelector } from './modules/core/reducers/core.reducer';
 export { ILimitedArray } from './modules/core/utils/i-limited-array';
-export { ClearActiveInteractionsAction } from './modules/core/actions/core.actions';
 export { IStoredEntity, StorageService } from './modules/core/services/storage/storage.service';
 export { AnsynInputComponent } from './modules/core/forms/ansyn-input/ansyn-input.component';
 export { ErrorHandlerService } from './modules/core/services/error-handler.service';
-export { SetAutoSave } from './modules/core/actions/core.actions';
-export { ICoreState } from './modules/core/reducers/core.reducer';
-export { GoNextPresetOverlay } from './modules/core/actions/core.actions';
-export { SetOverlaysCriteriaAction } from './modules/core/actions/core.actions';
 export { LoggerService } from './modules/core/services/logger.service';
-export { selectDataInputFilter, selectOverlaysCriteria, selectRegion } from './modules/core/reducers/core.reducer';
-export {
-	CoreActionTypes,
-	GoAdjacentOverlay,
-	UpdateOverlaysCountAction
-} from './modules/core/actions/core.actions';
+export { selectDataInputFilter, selectOverlaysCriteria, selectRegion } from './modules/overlays/reducers/overlays.reducer';
+export { GoAdjacentOverlay } from './modules/status-bar/actions/status-bar.actions';
 export { ICoreConfig } from './modules/core/models/core.config.model';
 export { CoreConfig } from './modules/core/models/core.config';
 export { endTimingLog, startTimingLog } from './modules/core/utils/logs/timer-logs';
@@ -248,14 +243,8 @@ export { BaseFetchService } from './modules/core/services/base-fetch-service';
 export { FetchService } from './modules/core/services/fetch.service';
 export { IDeltaTime } from './modules/core/models/time.model';
 
-/* @todo: remove contexts actions */
-export { AddAllContextsAction, SetContextParamsAction } from './modules/core/actions/core.actions';
-export { selectContextEntities, selectContextsArray } from './modules/core/reducers/core.reducer';
-
-
-
 // overlays
-
+export { SetOverlaysCriteriaAction, UpdateOverlaysCountAction } from './modules/overlays/actions/overlays.actions';
 export { IMultipleOverlaysSource, MultipleOverlaysSource } from './modules/overlays/models/overlays-source-providers';
 export { IOverlaysConfig } from "./modules/overlays/models/overlays.config";
 export { OverlaySourceProvider } from './modules/overlays/models/overlays-source-providers';

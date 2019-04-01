@@ -13,7 +13,6 @@ import {
 import { LayoutKey } from '@ansyn/imagery';
 import { AlertMsgTypes } from '../alerts/model';
 import { IToastMessage } from '../reducers/map.reducer';
-import { CoreActionTypes } from '../../ansyn/modules/core/actions/core.actions';
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',

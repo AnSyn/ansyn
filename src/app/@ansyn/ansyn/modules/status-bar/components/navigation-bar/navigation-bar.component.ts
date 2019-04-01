@@ -7,7 +7,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import {
 	GoAdjacentOverlay,
 	GoNextPresetOverlay
-} from '../../../core/actions/core.actions';
+} from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
 
 @Component({

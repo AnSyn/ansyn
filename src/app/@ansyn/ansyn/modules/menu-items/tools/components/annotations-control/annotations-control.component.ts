@@ -1,7 +1,7 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
+import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
 import { AnnotationMode, IVisualizerStyle } from '@ansyn/imagery';
@@ -10,7 +10,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
-import { ClearActiveInteractionsAction } from '../../../../core/actions/core.actions';
 
 export interface IModeList {
 	mode: AnnotationMode;

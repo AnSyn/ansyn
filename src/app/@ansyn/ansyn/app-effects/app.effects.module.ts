@@ -11,8 +11,6 @@ import { IStatusBarState } from '../modules/status-bar/reducers/status-bar.reduc
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
-import { CoreAppEffects } from './effects/core.app.effects';
-import { ICoreState } from '../modules/core/reducers/core.reducer';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 import { ICasesState } from '../modules/menu-items/cases/reducers/cases.reducer';
@@ -22,7 +20,6 @@ import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer'
 import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
 
 export interface IAppState {
-	core: ICoreState;
 	overlays: IOverlaysState;
 	cases: ICasesState;
 	menu: IMenuState;
@@ -45,7 +42,6 @@ export interface IAppState {
 			StatusBarAppEffects,
 			FiltersAppEffects,
 			ToolsAppEffects,
-			CoreAppEffects,
 			UpdateCaseAppEffects,
 			SelectCaseAppEffects,
 		])

@@ -1,26 +1,27 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, combineLatest } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import {
-	BackToWorldView,
+	BackToWorldView, ContextMenuTriggerAction,
 	ImageryStatusActionTypes,
 	IMapState,
 	MapActionTypes,
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
-	selectMapsList,
+	selectMapsList, selectRemovedOverlays,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetPendingOverlaysAction,
+	SetPendingOverlaysAction, SetPresetOverlaysAction, SetRemovedOverlayIdsCount,
 	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/map-facade';
 
 import {
+	CaseGeoFilter,
 	CommunicatorEntity,
 	ICaseMapPosition,
 	ICaseMapState,
@@ -30,29 +31,74 @@ import {
 	LayoutKey,
 	layoutOptions
 } from '@ansyn/imagery';
-import { catchError, filter, map, mergeMap, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, pairwise, startWith, switchMap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
+	DisplayOverlaySuccessAction, LoadOverlaysAction, LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
-	SetMarkUp
+	SetMarkUp, SetOverlaysCriteriaAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
 	MarkUpClass,
 	selectdisplayOverlayHistory,
-	selectDropMarkup
+	selectDropMarkup, selectOverlaysMap, selectRegion
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import * as turf from '@turf/turf';
+import { Position } from 'geojson';
 
 @Injectable()
 export class OverlaysAppEffects {
+
+	region$ = this.store$.select(selectRegion);
+
+	isPinPointSearch$ = this.region$.pipe(
+		filter(Boolean),
+		map((region) => region.type === CaseGeoFilter.PinPoint),
+		distinctUntilChanged()
+	);
+
+	@Effect()
+	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
+		map(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
+			const removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
+			return new SetRemovedOverlayIdsCount(removedOverlaysCount);
+		})
+	);
+
+	@Effect()
+	clearPresetsOnClearOverlays$: Observable<any> = this.actions$.pipe(
+		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		filter(({ clearExistingOverlays }) => clearExistingOverlays),
+		map(() => new SetPresetOverlaysAction([]))
+	);
+
+	@Effect()
+	clearPresets$: Observable<any> = this.actions$.pipe(
+		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
+		map(() => new SetPresetOverlaysAction([]))
+	);
+
+
+	@Effect()
+	onPinPointSearch$: Observable<SetOverlaysCriteriaAction | any> = this.actions$.pipe(
+		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
+		withLatestFrom(this.isPinPointSearch$),
+		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
+		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
+		map((payload: Position) => {
+			const region = turf.geometry('Point', payload);
+			return new SetOverlaysCriteriaAction({ region });
+		})
+	);
+
 
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(

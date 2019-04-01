@@ -1,5 +1,12 @@
 import { Action } from '@ngrx/store';
-import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaySpecialObject, IPendingOverlay } from '@ansyn/imagery';
+import {
+	IOverlay,
+	IOverlayDrop,
+	IOverlaysCriteria,
+	IOverlaysCriteriaOptions,
+	IOverlaySpecialObject,
+	IPendingOverlay
+} from '@ansyn/imagery';
 import {
 	IMarkUpData,
 	IOverlayDropMarkUp,
@@ -35,6 +42,10 @@ export const OverlaysActionTypes = {
 	SET_OVERLAYS_STATUS_MESSAGE: type('SET_OVERLAYS_STATUS_MESSAGE'),
 	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY'),
 	CHANGE_OVERLAY_PREVIEW_ROTATION: type('[Overlay] CHANGE_OVERLAY_PREVIEW_ROTATION'),
+	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
+	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT'
+
+
 };
 
 export class SelectOverlayAction implements Action {
@@ -200,6 +211,22 @@ export class ChangeOverlayPreviewRotationAction implements Action {
 	}
 }
 
+export class SetOverlaysCriteriaAction implements Action {
+	type = OverlaysActionTypes.SET_OVERLAYS_CRITERIA;
+
+	constructor(public payload: IOverlaysCriteria,
+				public options: IOverlaysCriteriaOptions = null) {
+	}
+}
+
+export class UpdateOverlaysCountAction {
+	type = OverlaysActionTypes.UPDATE_OVERLAY_COUNT;
+
+	constructor(public payload: number) {
+	}
+}
+
+
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
 	| DisplayMultipleOverlaysFromStoreAction
@@ -221,3 +248,4 @@ export type OverlaysActions
 	| ChangeOverlayPreviewRotationAction
 	| SetSpecialObjectsActionStore
 	| SetDropsAction
+	| SetOverlaysCriteriaAction

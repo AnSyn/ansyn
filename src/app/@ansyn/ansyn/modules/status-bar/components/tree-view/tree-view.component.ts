@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, tap, take } from 'rxjs/operators';
 import { SetToastMessageAction } from '@ansyn/map-facade';
-import { SetOverlaysCriteriaAction } from '../../../core/actions/core.actions';
-import { selectDataInputFilter } from '../../../core/reducers/core.reducer';
+import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { selectDataInputFilter } from '../../../overlays/reducers/overlays.reducer';
 import {
 	IMultipleOverlaysSourceConfig,
 	IOverlaysSourceProvider,

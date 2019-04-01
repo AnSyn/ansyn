@@ -36,11 +36,14 @@ import {
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
 import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
-import { SelectCaseAction, SelectCaseSuccessAction } from '../../../modules/menu-items/cases/actions/cases.actions';
+import {
+	SelectCaseAction,
+	SelectCaseSuccessAction,
+	SetAutoSave
+} from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 import {
-	SetAutoSave,
 	SetContextParamsAction,
 	SetOverlaysCriteriaAction
 } from '../../../modules/core/actions/core.actions';

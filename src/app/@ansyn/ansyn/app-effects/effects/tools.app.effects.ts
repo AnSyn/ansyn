@@ -26,6 +26,7 @@ import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/sta
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import {
+	ClearActiveInteractionsAction,
 	DisableImageProcessing,
 	EnableImageProcessing,
 	GoToAction,
@@ -41,7 +42,6 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { ClearActiveInteractionsAction, CoreActionTypes } from '../../modules/core/actions/core.actions';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -211,7 +211,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
-		ofType<ClearActiveInteractionsAction>(CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS),
+		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_INTERACTIONS),
 		mergeMap(action => {
 			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
 			let clearActions = [

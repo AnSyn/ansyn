@@ -15,7 +15,7 @@ describe('AnsynComponent', () => {
 	let store: Store<any>;
 	let handler: Subject<any>;
 
-	const mockContextMenu = MockComponent({ selector:'ansyn-context-menu' });
+	const mockContextMenu = MockComponent({ selector: 'ansyn-context-menu' });
 	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version', 'animatedElement'] });
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockStatus = MockComponent({

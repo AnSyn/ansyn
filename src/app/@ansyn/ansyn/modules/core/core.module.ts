@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { StoreModule } from '@ngrx/store';
-import { coreFeatureKey, CoreReducer } from './reducers/core.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { CoreEffects } from './effects/core.effects';
 import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
@@ -22,8 +18,6 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 	imports: [
 		CommonModule,
 		AnsynFormsModule,
-		StoreModule.forFeature(coreFeatureKey, CoreReducer),
-		EffectsModule.forFeature([CoreEffects]),
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader]),
 		BrowserAnimationsModule,
 		FormsModule

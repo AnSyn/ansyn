@@ -1,12 +1,13 @@
-import { MapActions, MapActionTypes } from '../actions/map.actions';
-import { ICaseMapState, IOverlay, IPendingOverlay, layoutOptions } from '@ansyn/imagery';
+import { ICaseMapState, IPendingOverlay, layoutOptions } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { range, uniq } from 'lodash';
+import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { LayoutKey } from '@ansyn/imagery';
 import { sessionData } from '../models/core-session-state.model';
+import { MapActions, MapActionTypes, IToastMessage } from '../actions/map.actions';
+
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: ICaseMapState[] = [];
@@ -34,11 +35,6 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 	}
 
 	return mapsList;
-}
-
-export interface IToastMessage {
-	toastText: string;
-	showWarningIcon?: boolean;
 }
 
 export const mapsAdapter: EntityAdapter<ICaseMapState> = createEntityAdapter<ICaseMapState>();

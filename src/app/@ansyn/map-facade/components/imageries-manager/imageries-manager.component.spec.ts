@@ -8,7 +8,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
 import { MockComponent } from '../../test/mock-component';
-import { ImageryStatusComponent } from '../imagery-status/imagery-status.component';
 import { AlertComponentDirective } from '../../alerts/alert-component.directive';
 import { Actions } from '@ngrx/effects';
 import { MapFacadeService } from '../../services/map-facade.service';

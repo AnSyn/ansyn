@@ -1,7 +1,4 @@
-export { copyFromContent } from './utils/clipboard';
-
 export { AlertMsgTypes } from './alerts/model';
-export { selectMaps } from './reducers/map.reducer';
 export {
 	initialMapState,
 	mapFeatureKey,
@@ -9,7 +6,11 @@ export {
 	IMapState,
 	mapStateSelector,
 	selectActiveMapId,
-	selectMapsList
+	selectMapsList,
+	selectMaps,
+	selectLayout,
+	selectWasWelcomeNotificationShown,
+	selectToastMessage
 } from './reducers/map.reducer';
 
 export {
@@ -39,7 +40,13 @@ export {
 	UpdateMapAction,
 	SetMapPositionByRectAction,
 	SetMapPositionByRadiusAction,
-	SetToastMessageAction
+	SetToastMessageAction,
+	PositionChangedAction,
+	BackToWorldSuccess,
+	BackToWorldView,
+	ToggleMapLayersAction,
+	SetLayoutAction,
+	SetLayoutSuccessAction
 } from './actions/map.actions';
 
 export {
@@ -70,26 +77,21 @@ export {
 	selectRemovedOverlaysVisibility
 } from './reducers/imagery-status.reducer'
 
+export { copyFromContent } from './utils/clipboard';
+export { getTimeFormat, getTimeDiff, getTimeDiffFormat  } from './utils/time';
+
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
-export { MapFacadeModule } from './map-facade.module';
-export { PositionChangedAction } from './actions/map.actions';
-
+export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
+export { AlertsModule } from './alerts/alerts.module';
+export { IAlert, IAlertComponent } from './alerts/alerts.model';
+export { AlertComponentDirective } from './alerts/alert-component.directive';
+//
 export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 export { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
-export { ToggleMapLayersAction, SetLayoutAction, SetLayoutSuccessAction } from './actions/map.actions';
-export { selectLayout, selectWasWelcomeNotificationShown } from './reducers/map.reducer';
-export { BackToWorldSuccess, BackToWorldView } from './actions/map.actions';
-export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
 export { ColorPickerComponent } from './components/color-picker/color-picker.component';
-export { AlertsModule } from './alerts/alerts.module';
-export { IAlert } from './alerts/alerts.model';
-export { IAlertComponent } from './alerts/alerts.model';
-export { AlertComponentDirective } from './alerts/alert-component.directive';
-export { selectToastMessage } from './reducers/map.reducer';
-export { getTimeFormat } from './utils/time';
 export { ClickOutsideDirective } from './directives/click-outside.directive';
 export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
-export { getTimeDiff, getTimeDiffFormat } from './utils/time';
+export { MapFacadeModule } from './map-facade.module';

@@ -3,7 +3,6 @@ import { uniq } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IOverlay } from '@ansyn/imagery';
 import { AlertMsg, AlertMsgTypes } from '../alerts/model';
-import { mapStateSelector } from './map.reducer';
 
 export const imageryStatusFeatureKey = 'imageryStatus';
 export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);
@@ -28,10 +27,10 @@ export const imageryStatusInitialState: ImageryStatusState = {
 	alertMsg: new Map([
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
-	]),
+	])
 };
 
-export const ImageryStatusReducer = (state: ImageryStatusState = imageryStatusInitialState, action: any): ImageryStatusState => {
+export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusInitialState, action: any): ImageryStatusState {
 	switch (action.type) {
 
 		case  ImageryStatusActionTypes.ADD_ALERT_MSG: {

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
-import { Store, Action } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	geojsonMultiPolygonToPolygon,
@@ -41,11 +41,6 @@ import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { updateSession } from '../models/core-session-state.model';
-import {
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
-	OverlaysActionTypes
-} from '../../ansyn/modules/overlays/actions/overlays.actions';
 
 @Injectable()
 export class MapEffects {

@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IMapState, IToastMessage, selectToastMessage } from '../../reducers/map.reducer';
-import { SetToastMessageAction } from '../../actions/map.actions';
+import { IMapState, selectToastMessage } from '../../reducers/map.reducer';
+import { IToastMessage, SetToastMessageAction } from '../../actions/map.actions';
 
 const animations: any[] = [
 	trigger('toastAnimation', [

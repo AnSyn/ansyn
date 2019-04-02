@@ -11,8 +11,11 @@ import {
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import { LayoutKey } from '@ansyn/imagery';
-import { AlertMsgTypes } from '../alerts/model';
-import { IToastMessage } from '../reducers/map.reducer';
+
+export interface IToastMessage {
+	toastText: string;
+	showWarningIcon?: boolean;
+}
 
 export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',

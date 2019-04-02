@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Input } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
 export interface IAnnotationWeightProps {
 	'stroke-width': number;
 }
+
 @Component({
 	selector: 'ansyn-annotations-weight',
 	templateUrl: './annotations-weight.component.html',

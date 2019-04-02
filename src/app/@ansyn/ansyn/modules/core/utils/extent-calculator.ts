@@ -1,7 +1,7 @@
 import { center, polygon } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
-import { CaseMapExtent, CaseMapExtentPolygon } from '../../../../imagery/model/case-map-position.model';
-import { toRadians } from './math';
+import { CaseMapExtent, CaseMapExtentPolygon } from '@ansyn/imagery';
+import { toRadians } from '@ansyn/map-facade';
 
 // @dynamic
 export class ExtentCalculator {

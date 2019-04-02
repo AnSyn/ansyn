@@ -1,4 +1,5 @@
 export { AlertMsgTypes } from './alerts/model';
+
 export {
 	initialMapState,
 	mapFeatureKey,
@@ -79,6 +80,8 @@ export {
 
 export { copyFromContent } from './utils/clipboard';
 export { getTimeFormat, getTimeDiff, getTimeDiffFormat  } from './utils/time';
+export { toDegrees, toRadians } from './utils/math';
+
 
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';
@@ -95,3 +98,5 @@ export { ClickOutsideDirective } from './directives/click-outside.directive';
 export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { MapFacadeModule } from './map-facade.module';
+
+

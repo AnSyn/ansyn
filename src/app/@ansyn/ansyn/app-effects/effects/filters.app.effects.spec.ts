@@ -33,7 +33,7 @@ import {
 	overlaysStatusMessages
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../../map-facade/reducers/imagery-status.reducer';
+import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

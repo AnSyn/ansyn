@@ -23,8 +23,7 @@ import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-
 import { IOverlay } from '@ansyn/imagery';
 import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
-import { imageryStatusInitialState } from '@ansyn/map-facade';
-import { imageryStatusFeatureKey } from '../../../../map-facade/reducers/imagery-status.reducer';
+import { imageryStatusInitialState, imageryStatusFeatureKey } from '@ansyn/map-facade';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

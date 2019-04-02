@@ -12,7 +12,7 @@ import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
 import { CoreConfig } from '../../../../core/models/core.config';
 import { ExtentCalculator } from '../../../../core/utils/extent-calculator';
 import { ICoreConfig } from '../../../../core/models/core.config.model';
-import { toDegrees } from '../../../../../../map-facade/components/imagery-rotation/imagery-rotation.component';
+import { toDegrees } from '@ansyn/map-facade';
 
 declare const Cesium: any;
 

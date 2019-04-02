@@ -34,7 +34,7 @@ import View from 'ol/View';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 import { LoggerService } from '../../../../core/services/logger.service';
-import { toDegrees, toRadians } from '../../../../core/utils/math';
+import { toDegrees, toRadians } from '@ansyn/map-facade';
 import {
 	ChangeOverlayPreviewRotationAction,
 	DisplayOverlaySuccessAction,

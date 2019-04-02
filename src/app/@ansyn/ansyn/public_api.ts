@@ -229,7 +229,6 @@ export { isFullOverlay } from './modules/core/utils/overlays';
 export { IFilterModel } from './modules/core/models/IFilterModel';
 export { sortByDate, sortByDateDesc } from './modules/core/utils/sorting';
 export { limitArray, mergeLimitedArrays } from './modules/core/utils/i-limited-array';
-export { toDegrees, toRadians } from './modules/core/utils/math';
 export { toastMessages } from './modules/core/models/toast-messages';
 export { ICoordinatesSystem } from './modules/core/models/coordinate-system.model';
 export { cloneDeep } from './modules/core/utils/rxjs/operators/cloneDeep';

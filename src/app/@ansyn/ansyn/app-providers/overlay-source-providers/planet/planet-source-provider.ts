@@ -20,7 +20,7 @@ import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from '../
 import { limitArray } from '../../../modules/core/utils/i-limited-array';
 import { LoggerService } from '../../../modules/core/services/logger.service';
 import { sortByDateDesc } from '../../../modules/core/utils/sorting';
-import { toRadians } from '../../../modules/core/utils/math';
+import { toRadians } from '@ansyn/map-facade';
 import {
 	BaseOverlaySourceProvider, IFetchParams,
 	IOverlayFilter, IStartAndEndDate, timeIntersection

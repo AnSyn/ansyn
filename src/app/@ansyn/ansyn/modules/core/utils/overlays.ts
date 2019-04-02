@@ -1,4 +1,4 @@
-import { IOverlay } from '../../../../imagery/model/overlay.model';
+import { IOverlay } from '@ansyn/imagery';
 import { IFilterModel } from '../models/IFilterModel';
 import { union } from 'lodash';
 

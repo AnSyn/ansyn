@@ -20,7 +20,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/app/@ansyn/assets",
+                "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
               },
               {
@@ -31,7 +31,7 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "src/app/@ansyn/assets/styles/styles.css"
+              "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -98,7 +98,7 @@
               "node_modules/cesium/Build/Cesium/Cesium.js"
             ],
             "styles": [
-              "src/app/@ansyn/assets/styles/styles.css"
+              "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -108,7 +108,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/app/@ansyn/assets",
+                "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
               },
               {
@@ -181,13 +181,13 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/app/@ansyn/assets",
+                "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
               },
               "src/favicon.ico"
             ],
             "styles": [
-              "src/app/@ansyn/assets/styles/styles.css"
+              "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
             "scripts": []
           },
@@ -248,12 +248,12 @@
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "src/app/@ansyn/assets/styles/styles.css"
+              "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/app/@ansyn/assets",
+                "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
               },
               "src/favicon.ico"
@@ -296,13 +296,13 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/app/@ansyn/assets",
+                "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
               },
               "src/favicon.ico"
             ],
             "styles": [
-              "src/app/@ansyn/assets/styles/styles.css"
+              "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
             "scripts": [
 
@@ -365,12 +365,12 @@
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "src/app/@ansyn/assets/styles/styles.css"
+              "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/app/@ansyn/assets",
+                "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
               },
               "src/favicon.ico"

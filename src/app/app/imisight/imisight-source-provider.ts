@@ -8,8 +8,7 @@ import {
 	ErrorHandlerService,
 	limitArray,
 	LoggerService,
-	sortByDateDesc,
-	toRadians
+	sortByDateDesc
 } from '@ansyn/ansyn';
 import {
 	bboxFromGeoJson,
@@ -17,11 +16,11 @@ import {
 	geojsonPolygonToMultiPolygon, GeoRegisteration,
 	getPolygonByPointAndRadius,
 	IOverlay,
-	Overlay,
+	Overlay
 } from '@ansyn/imagery';
-
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
 import { Auth0Service } from './auth0.service';
+import { toRadians } from '@ansyn/map-facade';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 

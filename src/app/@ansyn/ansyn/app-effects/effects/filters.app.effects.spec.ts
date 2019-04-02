@@ -20,7 +20,6 @@ import { filtersFeatureKey, FiltersReducer } from '../../modules/menu-items/filt
 import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
 import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/metadata/slider-filter-metadata';
 import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
-import { coreFeatureKey, CoreReducer } from '../../modules/core/reducers/core.reducer';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import { SetFavoriteOverlaysAction } from '@ansyn/map-facade';
 import {
@@ -58,7 +57,6 @@ describe('Filters app effects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({
-					[coreFeatureKey]: CoreReducer,
 					[filtersFeatureKey]: FiltersReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[menuFeatureKey]: MenuReducer,

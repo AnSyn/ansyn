@@ -32,8 +32,6 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { statusBarStateSelector } from '@ansyn/ansyn';
 import {
-	coreInitialState,
-	coreStateSelector,
 	DisplayedOverlay, ErrorHandlerService,
 	StorageService
 } from '@ansyn/ansyn';
@@ -136,8 +134,6 @@ describe('ContextAppEffects', () => {
 		overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 	};
 
-	const coreState = { ...coreInitialState };
-
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
 
 	const mapState = { ...initialMapState, entities: { '1': { 'id': '1' }, '2': { 'id': '2' } }, ids: ['1', '2'] };
@@ -237,7 +233,6 @@ describe('ContextAppEffects', () => {
 			[toolsStateSelector, toolsState],
 			[mapStateSelector, mapState],
 			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
 			[contextFeatureSelector, contextState],

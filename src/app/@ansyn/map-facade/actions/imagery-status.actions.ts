@@ -1,5 +1,7 @@
 import { IOverlay } from '@ansyn/imagery';
 import { Action } from '@ngrx/store';
+import { AlertMsgTypes } from '../alerts/model';
+import { MapActionTypes } from './map.actions';
 
 export enum ImageryStatusActionTypes {
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
@@ -12,6 +14,8 @@ export enum ImageryStatusActionTypes {
 	SET_REMOVED_OVERLAY_ID = 'SET_REMOVED_OVERLAY_ID',
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	ENABLE_COPY_ORIGINAL_OVERLAY_DATA = 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
+	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
+	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
 }
 
 export class ToggleFavoriteAction implements Action {
@@ -83,5 +87,19 @@ export class EnableCopyOriginalOverlayDataAction implements Action {
 	type: string = ImageryStatusActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class AddAlertMsg implements Action {
+	type = ImageryStatusActionTypes.ADD_ALERT_MSG;
+
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}
+
+export class RemoveAlertMsg implements Action {
+	type = ImageryStatusActionTypes.REMOVE_ALERT_MSG;
+
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
 }

@@ -43,11 +43,8 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
-import {
-	SetContextParamsAction,
-	SetOverlaysCriteriaAction
-} from '../../../modules/core/actions/core.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
+import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -145,7 +142,7 @@ describe('SelectCaseAppEffects', () => {
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				j: new UpdateFacetsAction(facets),
 				k: new UpdateSelectedLayersIds([]),
-				l: new SetContextParamsAction({ contextEntities }),
+				l: <any> { type: '[Context] Set context params', payload: { contextEntities }},
 				m: new SetAutoSave(false),
 				n: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				o: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),

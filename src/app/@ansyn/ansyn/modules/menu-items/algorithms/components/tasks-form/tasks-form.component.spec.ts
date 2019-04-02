@@ -14,12 +14,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFeatureKey, MapReducer, SetFavoriteOverlaysAction } from '@ansyn/map-facade';
 import { Overlay } from '@ansyn/imagery';
 import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
-import { coreFeatureKey, CoreReducer } from '../../../../core/reducers/core.reducer';
 import { MockComponent } from '../../../../core/test/mock-component';
 import {
 	imageryStatusFeatureKey,
 	ImageryStatusReducer
-} from '../../../../../../map-facade/reducers/imagery-status.reducer';
+} from '@ansyn/map-facade';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;

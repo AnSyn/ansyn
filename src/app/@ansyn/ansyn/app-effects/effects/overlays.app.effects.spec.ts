@@ -26,7 +26,6 @@ import {
 } from '@ansyn/map-facade';
 
 import { cloneDeep as _cloneDeep } from 'lodash';
-import { coreInitialState, coreStateSelector } from '../../modules/core/reducers/core.reducer';
 import {
 	casesFeatureKey,
 	CasesReducer,
@@ -141,8 +140,6 @@ describe('OverlaysAppEffects', () => {
 		overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 	};
 
-	const coreState = { ...coreInitialState };
-
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
 
 	const mapState = { ...initialMapState, entities: { '1': { 'id': '1' }, '2': { 'id': '2' } }, ids: ['1', '2'] };
@@ -233,7 +230,6 @@ describe('OverlaysAppEffects', () => {
 			[toolsStateSelector, toolsState],
 			[mapStateSelector, mapState],
 			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
 			[selectMapsList, Object.values(mapState.entities)]

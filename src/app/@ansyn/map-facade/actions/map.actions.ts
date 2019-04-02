@@ -66,9 +66,7 @@ export const MapActionTypes = {
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
-	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
-	ADD_ALERT_MSG: 'ADD_ALERT_MSG',
-	REMOVE_ALERT_MSG: 'REMOVE_ALERT_MSG',
+	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE'
 };
 
 export interface IContextMenuShowPayload {
@@ -353,19 +351,5 @@ export class SetToastMessageAction implements Action {
 	type = MapActionTypes.SET_TOAST_MESSAGE;
 
 	constructor(public payload?: IToastMessage) {
-	}
-}
-
-export class AddAlertMsg implements Action {
-	type = MapActionTypes.ADD_ALERT_MSG;
-
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
-	}
-}
-
-export class RemoveAlertMsg implements Action {
-	type = MapActionTypes.REMOVE_ALERT_MSG;
-
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
 }

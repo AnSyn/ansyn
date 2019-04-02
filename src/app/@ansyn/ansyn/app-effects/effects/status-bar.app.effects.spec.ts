@@ -22,7 +22,14 @@ import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/
 import { OverlaysConfig, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { DisplayOverlayAction } from '../../modules/overlays/actions/overlays.actions';
-import { SetActiveMapId, SetMapsDataActionStore, SetPresetOverlaysAction } from '@ansyn/map-facade';
+import {
+	imageryStatusFeatureKey, ImageryStatusReducer,
+	mapFeatureKey,
+	MapReducer,
+	SetActiveMapId,
+	SetMapsDataActionStore,
+	SetPresetOverlaysAction
+} from '@ansyn/map-facade';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -68,7 +75,9 @@ describe('StatusBarAppEffects', () => {
 				StoreModule.forRoot({
 					[statusBarFeatureKey]: StatusBarReducer,
 					[casesFeatureKey]: CasesReducer,
-					[overlaysFeatureKey]: OverlayReducer
+					[overlaysFeatureKey]: OverlayReducer,
+					[mapFeatureKey]: MapReducer,
+					[imageryStatusFeatureKey]: ImageryStatusReducer
 				})
 			],
 			providers: [

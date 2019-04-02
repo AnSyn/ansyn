@@ -39,8 +39,6 @@ export {
 	UpdateMapAction,
 	SetMapPositionByRectAction,
 	SetMapPositionByRadiusAction,
-	AddAlertMsg,
-	RemoveAlertMsg,
 	SetToastMessageAction
 } from './actions/map.actions';
 
@@ -55,10 +53,14 @@ export {
 	ResetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction,
 	EnableCopyOriginalOverlayDataAction,
-	SetRemovedOverlayIdsCount
+	SetRemovedOverlayIdsCount,
+	AddAlertMsg,
+	RemoveAlertMsg,
 } from './actions/imagery-status.actions'
 
 export {
+	imageryStatusFeatureKey,
+	ImageryStatusReducer,
 	imageryStatusStateSelector,
 	imageryStatusInitialState,
 	selectRemovedOverlaysIdsCount,

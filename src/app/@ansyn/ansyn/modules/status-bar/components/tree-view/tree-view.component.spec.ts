@@ -11,7 +11,6 @@ import { IOverlaysCriteria } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
-import { coreInitialState, coreStateSelector } from '../../../core/reducers/core.reducer';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 
 describe('TreeViewComponent', () => {
@@ -78,14 +77,11 @@ describe('TreeViewComponent', () => {
 		}
 	};
 
-	const coreState = { ...coreInitialState, searchParams };
-
 	beforeEach(inject([Store], (_store) => {
 		store = _store;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		const fakeStore = new Map<any, any>([
-			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState]
+			[statusBarStateSelector, statusBarState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));

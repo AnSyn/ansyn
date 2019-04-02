@@ -1,5 +1,4 @@
 import { ToolsAppEffects } from './tools.app.effects';
-
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
@@ -26,6 +25,7 @@ import {
 	ICasesState
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
+	ClearActiveInteractionsAction,
 	DisableImageProcessing,
 	GoToAction,
 	PullActiveCenter,
@@ -37,9 +37,7 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { ClearActiveInteractionsAction } from '../../modules/core/actions/core.actions';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { DisplayOverlaySuccessAction } from '../../modules/overlays/actions/overlays.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

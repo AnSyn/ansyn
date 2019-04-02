@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreFeatureKey, CoreReducer } from '../../../core/reducers/core.reducer';
 import { FiltersEffects } from './filters.effects';
 import { filtersFeatureKey, FiltersReducer } from '../reducer/filters.reducer';
 
@@ -14,7 +13,6 @@ describe('FiltersEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({
-					[coreFeatureKey]: CoreReducer,
 					[filtersFeatureKey]: FiltersReducer
 				})
 			],

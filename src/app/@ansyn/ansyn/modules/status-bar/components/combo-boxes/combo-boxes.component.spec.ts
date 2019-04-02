@@ -8,7 +8,6 @@ import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-tim
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
-import { coreFeatureKey, CoreReducer } from '../../../core/reducers/core.reducer';
 import { ClickOutsideDirective } from '@ansyn/map-facade';
 import { MockComponent } from '../../../core/test/mock-component';
 
@@ -47,7 +46,6 @@ describe('ComboBoxesComponent', () => {
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({
-				[coreFeatureKey]: CoreReducer,
 				[statusBarFeatureKey]: StatusBarReducer
 			}), EffectsModule.forRoot([])],
 			providers: [

@@ -3,7 +3,6 @@ import { StatusBarComponent } from './status-bar.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { coreFeatureKey, CoreReducer } from '../../../core/reducers/core.reducer';
 import { MockComponent } from '../../../core/test/mock-component';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 
@@ -27,7 +26,6 @@ describe('StatusBarComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({
 				[statusBarFeatureKey]: StatusBarReducer,
-				[coreFeatureKey]: CoreReducer,
 				[mapFeatureKey]: MapReducer
 			}), EffectsModule.forRoot([])],
 			declarations: [StatusBarComponent,

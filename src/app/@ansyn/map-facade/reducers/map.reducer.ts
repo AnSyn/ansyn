@@ -7,7 +7,6 @@ import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { LayoutKey } from '@ansyn/imagery';
 import { sessionData } from '../models/core-session-state.model';
-import { AlertMsg, AlertMsgTypes } from '../alerts/model';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: ICaseMapState[] = [];
@@ -53,7 +52,6 @@ export interface IMapState extends EntityState<ICaseMapState> {
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
 	toastMessage: IToastMessage;
-	alertMsg: AlertMsg;
 }
 
 
@@ -65,10 +63,6 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	pendingOverlays: [],
 	layout: <LayoutKey> 'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
-	alertMsg: new Map([
-		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
-		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
-	]),
 	toastMessage: null,
 });
 
@@ -82,26 +76,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 	switch (action.type) {
 		case MapActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: action.payload };
-
-		case  MapActionTypes.ADD_ALERT_MSG: {
-			const alertKey = action.payload.key;
-			const mapId = action.payload.value;
-			const alertMsg = new Map(state.alertMsg);
-			const updatedSet = new Set(alertMsg.get(alertKey));
-			updatedSet.add(mapId);
-			alertMsg.set(alertKey, updatedSet);
-			return { ...state, alertMsg };
-		}
-
-		case  MapActionTypes.REMOVE_ALERT_MSG: {
-			const alertKey = action.payload.key;
-			const mapId = action.payload.value;
-			const alertMsg = new Map(state.alertMsg);
-			const updatedSet = new Set(alertMsg.get(alertKey));
-			updatedSet.delete(mapId);
-			alertMsg.set(alertKey, updatedSet);
-			return { ...state, alertMsg };
-		}
 
 		case MapActionTypes.IMAGERY_REMOVED: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
@@ -220,5 +194,4 @@ export const selectMapsIds = createSelector(mapStateSelector, selectIds);
 export const selectMaps = createSelector(mapStateSelector, selectEntities);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
-export const selectAlertMsg = createSelector(mapStateSelector, (state) => state.alertMsg);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);

@@ -23,7 +23,7 @@ import {
 	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '../../actions/map.actions';
-import { selectAlertMsg } from '../../reducers/map.reducer';
+import { selectAlertMsg } from '../../reducers/imagery-status.reducer';
 import { AlertMsg } from '../../alerts/model';
 import {
 	selectEnableCopyOriginalOverlayDataFlag,

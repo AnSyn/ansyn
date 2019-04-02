@@ -13,6 +13,7 @@ import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
+import { casesFeatureKey, CasesReducer } from '../../cases/reducers/cases.reducer';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -24,7 +25,10 @@ describe('LayersEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
+				StoreModule.forRoot({
+					[layersFeatureKey]: LayersReducer,
+					[casesFeatureKey]: CasesReducer
+				})
 			],
 			providers: [
 				{ provide: CoreConfig, useValue: {} },

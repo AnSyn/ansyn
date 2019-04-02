@@ -2,6 +2,8 @@ import { ImageryStatusActionTypes } from '../actions/imagery-status.actions';
 import { uniq } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IOverlay } from '@ansyn/imagery';
+import { AlertMsg, AlertMsgTypes } from '../alerts/model';
+import { mapStateSelector } from './map.reducer';
 
 export const imageryStatusFeatureKey = 'imageryStatus';
 export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);
@@ -12,7 +14,8 @@ export interface ImageryStatusState {
 	presetOverlays: any[],
 	removedOverlaysVisibility: boolean,
 	removedOverlaysIdsCount: number;
-	enableCopyOriginalOverlayData: boolean
+	enableCopyOriginalOverlayData: boolean;
+	alertMsg: AlertMsg;
 }
 
 export const imageryStatusInitialState: ImageryStatusState = {
@@ -21,11 +24,35 @@ export const imageryStatusInitialState: ImageryStatusState = {
 	presetOverlays: [],
 	removedOverlaysVisibility: true,
 	removedOverlaysIdsCount: 0,
-	enableCopyOriginalOverlayData: false
+	enableCopyOriginalOverlayData: false,
+	alertMsg: new Map([
+		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
+		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
+	]),
 };
 
 export const ImageryStatusReducer = (state: ImageryStatusState = imageryStatusInitialState, action: any): ImageryStatusState => {
 	switch (action.type) {
+
+		case  ImageryStatusActionTypes.ADD_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.add(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
+
+		case  ImageryStatusActionTypes.REMOVE_ALERT_MSG: {
+			const alertKey = action.payload.key;
+			const mapId = action.payload.value;
+			const alertMsg = new Map(state.alertMsg);
+			const updatedSet = new Set(alertMsg.get(alertKey));
+			updatedSet.delete(mapId);
+			alertMsg.set(alertKey, updatedSet);
+			return { ...state, alertMsg };
+		}
 
 		case ImageryStatusActionTypes.TOGGLE_OVERLAY_FAVORITE: {
 			const { overlay, id, value } = action.payload;
@@ -76,3 +103,4 @@ export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createS
 export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.presetOverlays);
 export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.removedOverlaysIds);
 export const selectEnableCopyOriginalOverlayDataFlag: MemoizedSelector<any, any> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.enableCopyOriginalOverlayData);
+export const selectAlertMsg = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.alertMsg);

@@ -9,6 +9,7 @@ import { IMapFacadeConfig } from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
+import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -19,6 +20,7 @@ describe('ContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule, TranslateModule.forRoot(), FormsModule, StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer,
+				[overlaysFeatureKey]: OverlayReducer
 			}), EffectsModule.forRoot([])],
 			declarations: [ContextMenuComponent],
 			providers: [{

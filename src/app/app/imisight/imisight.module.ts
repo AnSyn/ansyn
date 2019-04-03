@@ -29,11 +29,3 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 })
 export class ImisightModule {
 }
-
-const a = 6, b = 7, c = null;
-
-const obj = {
-	...(a && { a }),
-	...(b && { b }),
-	...(c && { c }),
-};

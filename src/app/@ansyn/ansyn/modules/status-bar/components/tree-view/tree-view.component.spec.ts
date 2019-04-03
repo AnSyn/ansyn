@@ -12,6 +12,7 @@ import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
+import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -25,7 +26,9 @@ describe('TreeViewComponent', () => {
 			declarations: [TreeViewComponent, SliderCheckboxComponent],
 			imports: [
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({
+					[overlaysFeatureKey]: OverlayReducer
+				}),
 				TreeviewModule.forRoot()],
 			providers: [
 				{ provide: USE_DEFAULT_LANG },

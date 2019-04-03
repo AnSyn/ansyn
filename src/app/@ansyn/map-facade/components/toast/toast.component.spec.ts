@@ -4,6 +4,7 @@ import { ToastComponent } from './toast.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
+import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 
 describe('ToastComponent', () => {
 	let component: ToastComponent;
@@ -13,7 +14,9 @@ describe('ToastComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({
+					[mapFeatureKey]: MapReducer
+				}),
 				EffectsModule.forRoot([])
 			],
 			declarations: [ToastComponent]

@@ -81,4 +81,6 @@ export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
 export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<ICasePreview>>>createSelector(casesStateSelector, selectEntities);
 export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
-export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => cases.autoSave);
+export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
+	return cases.autoSave
+});

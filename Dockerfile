@@ -1,8 +1,6 @@
 # Stage 1: Build
 FROM node as builder
 
-RUN apt-get update && apt-get install -y git --no-install-recommends
-
 WORKDIR /ng-app
 COPY . .
 

@@ -15,7 +15,7 @@ import { LoggerService } from '../../../core/services/logger.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { casesFeatureKey, CasesReducer } from '../../cases/reducers/cases.reducer';
 
-describe('LayersEffects', () => {
+xdescribe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;

@@ -31,6 +31,7 @@ export enum CoreActionTypes {
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	SET_REMOVED_OVERLAY_IDS_COUNT = 'SET_REMOVED_OVERLAY_IDS_COUNT',
 	CHANGE_IMAGERY_MAP = '[Core] CHANGE_IMAGERY_MAP',
+	SET_MAP_EXTRA_DESCRIPTION = 'SET_MAP_EXTRA_DESCRIPTION',
 
 	/* @todo: remove contexts actions */
 	ADD_ALL_CONTEXT = '[Context] Add All Contexts',
@@ -234,10 +235,18 @@ export class SetRemovedOverlayIdsCount implements Action {
 	constructor(public payload: number) {
 	}
 }
+
 export class ChangeImageryMap implements Action {
 	readonly type = CoreActionTypes.CHANGE_IMAGERY_MAP;
 
 	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
+	}
+}
+
+export class SetMapExtraDescriptionAction implements Action {
+	readonly type = CoreActionTypes.SET_MAP_EXTRA_DESCRIPTION;
+
+	constructor(public payload: { id: string, extraDescription: string }) {
 	}
 }
 

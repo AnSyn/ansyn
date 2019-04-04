@@ -40,6 +40,7 @@ export interface IMapState extends EntityState<ICaseMapState> {
 	activeMapId: string;
 	isLoadingMaps: Map<string, string>,
 	isHiddenMaps: Set<string>,
+	mapsExtraDescriptions: Map<string, string>,
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: IPendingOverlay[]; // a list of overlays waiting for maps to be created in order to be displayed
 }
@@ -50,7 +51,8 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	isLoadingMaps: new Map<string, string>(),
 	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
-	pendingOverlays: []
+	pendingOverlays: [],
+	mapsExtraDescriptions: new Map<string, string>()
 });
 
 export const mapFeatureKey = 'map';
@@ -109,6 +111,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				}, state);
 			}
 			return state;
+		}
+
+		case CoreActionTypes.SET_MAP_EXTRA_DESCRIPTION: {
+			const { id, extraDescription } = action.payload;
+			const mapsExtraDescriptions = new Map<string, string>(state.mapsExtraDescriptions);
+			mapsExtraDescriptions.set(id, extraDescription);
+			return { ...state, mapsExtraDescriptions };
 		}
 
 		case MapActionTypes.SET_ACTIVE_MAP_ID: {
@@ -174,3 +183,4 @@ export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapStat
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);
 export const selectMaps = createSelector(mapStateSelector, selectEntities);
+export const selectMapsExtraDescriptions = createSelector(mapStateSelector, (map: IMapState) => map.mapsExtraDescriptions);

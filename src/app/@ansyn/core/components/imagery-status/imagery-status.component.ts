@@ -48,6 +48,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_overlay: IOverlay;
+	_extraDescription = '';
 	selectedMap = 'openLayersMap';
 
 	@HostBinding('class.active') @Input() active: boolean;
@@ -61,6 +62,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@Input() layerFlag = false;
+	@Input() extraDescription(extraDescription: string) {
+		this._extraDescription = extraDescription;
+	}
+
 
 	@Input() set overlay(overlay: IOverlay) {
 		this._overlay = overlay;
@@ -154,7 +159,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get description() {
-		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) : null;
+		return this._extraDescription ? this._extraDescription : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 
 	get baseMapDescription() {

@@ -40,6 +40,7 @@ import {
 	ICaseMapState,
 	isFullOverlay,
 	SetToastMessageAction,
+	SetMapExtraDescriptionAction,
 	startTimingLog,
 	toastMessages,
 	ToggleMapLayersAction
@@ -106,6 +107,15 @@ export class MapAppEffects {
 				mapId: payload.mapId, show: false
 			}))
 		);
+
+	@Effect()
+	onDisplayOverlaySuccessDeleteExtraDescription$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		map(({ payload }: DisplayOverlaySuccessAction) => new SetMapExtraDescriptionAction({
+			id: payload.mapId,
+			extraDescription: null
+		}))
+	);
 
 	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
@@ -316,11 +326,19 @@ export class MapAppEffects {
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
-		const isFull = isFullOverlay(payload.overlay);
-		const { overlay } = payload;
-		const mapData = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId).data;
-		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
-		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
+		const payloadOverlay = payload.overlay;
+		const isFull = isFullOverlay(payloadOverlay);
+		if (!isFull) {
+			return false;
+		}
+
+		const caseMapState: ICaseMapState = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId);
+		if (!caseMapState) {
+			return false;
+		}
+		const mapData = caseMapState.data;
+		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === payloadOverlay.id);
+		return (isNotDisplayed || payload.forceFirstDisplay);
 	}
 
 	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {

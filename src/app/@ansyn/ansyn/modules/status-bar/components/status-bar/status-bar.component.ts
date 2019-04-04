@@ -1,10 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState,
+	selectMapsExtraDescriptions
+} from '../../reducers/status-bar.reducer';
 import { Observable } from 'rxjs';
 import { ICaseMapState, LayoutKey, layoutOptions, selectLayout } from '@ansyn/core';
 import { CopySelectedCaseLinkAction } from '../../actions/status-bar.actions';
-import { tap } from 'rxjs/operators';
+import { tap, filter, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -20,6 +23,10 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		tap((layout) => this.layout = layout));
 	layout: LayoutKey;
 	private subscribers = [];
+
+	extraDescription$ = this.store.select(selectMapsExtraDescriptions).pipe(
+		map((mapsDescription)	=> this.activeMap ? mapsDescription.get(this.activeMap.id) : null)
+	);
 
 	get hideOverlay(): boolean {
 		return layoutOptions.get(this.layout).mapsCount > 1;

@@ -38,7 +38,9 @@ export {
 	SetRemovedOverlayIdsCount,
 	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
-	ToggleMapLayersAction, TogglePresetOverlayAction
+	ToggleMapLayersAction,
+	TogglePresetOverlayAction,
+	SetMapExtraDescriptionAction
 } from './actions/core.actions';
 export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './models/case.model';
 export { InjectionResolverFilter } from './services/generic-type-resolver';

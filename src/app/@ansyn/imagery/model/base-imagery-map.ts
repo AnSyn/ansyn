@@ -76,4 +76,8 @@ export abstract class BaseImageryMap<T = any> {
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');
 	};
+
+	getExtraData(): { [key: string]: any } {
+		return {}
+	}
 }

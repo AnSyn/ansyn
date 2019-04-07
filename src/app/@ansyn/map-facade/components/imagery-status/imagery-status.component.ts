@@ -36,6 +36,7 @@ import {
 	TogglePresetOverlayAction
 } from '../../actions/imagery-status.actions';
 import { copyFromContent } from '../../utils/clipboard';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -152,8 +153,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get description() {
-		// return this._extraDescription ? this._extraDescription : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null
-		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) : null;
+		const { description } = this.communicators.provide(this.mapId).ActiveMap.getExtraData();
+		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null
 	}
 
 	get baseMapDescription() {
@@ -195,6 +196,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(protected store$: Store<any>,
+				protected communicators: ImageryCommunicatorService,
 				@Inject(ALERTS) public alerts: IAlert[],
 				protected translate: TranslateService) {
 	}

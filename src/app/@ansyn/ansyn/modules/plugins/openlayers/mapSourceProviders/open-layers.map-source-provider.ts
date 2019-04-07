@@ -78,7 +78,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 
 	generateExtraData(metaData: ICaseMapState) {
 		if (metaData.data.overlay) {
-			return { [ImageryLayerProperties.FOOTPRINT]: null } // metaData.data.overlay.footprint }
+			return { [ImageryLayerProperties.FOOTPRINT]: metaData.data.overlay.footprint }
 		}
 		return {}
 	}

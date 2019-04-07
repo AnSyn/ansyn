@@ -500,6 +500,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.mapObject.addLayer(layer);
 	}
 
+	getExtraData() {
+		return this.getMainLayer().getProperties()
+	}
+
 	// BaseImageryMap End
 	public dispose() {
 		this.removeAllLayers();

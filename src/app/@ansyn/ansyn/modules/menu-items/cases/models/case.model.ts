@@ -147,6 +147,6 @@ export interface IDilutedCaseMapState extends IMapSettings {
 	data: IDilutedCaseMapData;
 }
 
-export interface ICaseMapState extends IDilutedCaseMapState {
+export interface ICaseMapState extends IMapSettings {
 	data: ICaseMapData;
 }

@@ -36,11 +36,11 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig<CONF>) {
 	}
 
-	generateLayerId(metaData: IMapSettings): string  {
+	generateLayerId<META extends IMapSettings>(metaData: META): string  {
 		return new Date().toISOString()
 	};
 
-	protected createOrGetFromCache(metaData: IMapSettings): Promise<any> {
+	protected createOrGetFromCache<META extends IMapSettings>(metaData: META): Promise<any> {
 		const cacheId = this.generateLayerId(metaData);
 		const cacheLayer = this.cacheService.getLayerFromCache(cacheId);
 		if (cacheLayer) {
@@ -56,19 +56,19 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		});
 	}
 
-	protected abstract create(metaData: IMapSettings): Promise<any>;
+	protected abstract create<META extends IMapSettings>(metaData: META): Promise<any>;
 
-	createAsync(metaData: IMapSettings): Promise<any> {
+	createAsync<META extends IMapSettings>(metaData: META): Promise<any> {
 		return this.createOrGetFromCache(metaData)
 	}
 
-	existsInCache(metaData: IMapSettings): boolean {
+	existsInCache<META extends IMapSettings>(metaData: META): boolean {
 		const cacheId = this.generateLayerId(metaData);
 		const cacheLayer = this.cacheService.getLayerFromCache(cacheId);
 		return Boolean(cacheLayer);
 	}
 
-	generateExtraData(metaData: IMapSettings): any  {
+	generateExtraData<META extends IMapSettings>(metaData: META): any  {
 		return {}
 	};
 

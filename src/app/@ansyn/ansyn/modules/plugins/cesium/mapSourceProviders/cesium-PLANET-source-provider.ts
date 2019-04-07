@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, IBaseImageryMapConstructor, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
+import { BaseMapSourceProvider, IBaseImageryMapConstructor, ImageryMapSource } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
 import { CesiumLayer } from '../models/cesium-layer';
 import { ICaseMapState } from '../../../menu-items/cases/models/case.model';

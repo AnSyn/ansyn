@@ -95,6 +95,7 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
+			// @todo refactor
 			<any> { type: '[Context] Set context params', payload: { contextEntities }},
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),

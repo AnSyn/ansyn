@@ -35,7 +35,7 @@ export const ToolsActionsTypes = {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
 	},
 	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER',
-	CLEAR_ACTIVE_INTERACTIONS: 'CLEAR_ACTIVE_INTERACTIONS'
+	CLEAR_ACTIVE_TOOLS: 'CLEAR_ACTIVE_TOOLS'
 };
 
 export class UpdateOverlaysManualProcessArgs implements Action {
@@ -193,7 +193,7 @@ export class SetSubMenu implements Action {
 	}
 }
 export class ClearActiveInteractionsAction implements Action {
-	type = ToolsActionsTypes.CLEAR_ACTIVE_INTERACTIONS;
+	type = ToolsActionsTypes.CLEAR_ACTIVE_TOOLS;
 
 	constructor(public payload?: { skipClearFor: Array<any> }) {
 

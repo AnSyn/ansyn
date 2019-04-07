@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { catchError, map } from 'rxjs/operators';
+import { SetToastMessageAction } from '../actions/map.actions';
 
 @Injectable()
 export class GeocoderService {
@@ -21,9 +22,8 @@ export class GeocoderService {
 			map(res => res.resourceSets[0].resources[0]),
 			map(res => res ? { ...res.point, coordinates: res.point.coordinates.reverse() } : null),
 			catchError((error: Response | any) => {
-				// this.errorHandlerService.httpErrorHandle(error);
 				console.warn(error);
-				return of(null);
+				return of(new SetToastMessageAction({ toastText: error, showWarningIcon: true }));
 			})
 		);
 	}

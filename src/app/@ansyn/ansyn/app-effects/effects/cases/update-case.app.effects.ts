@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
-import { combineLatest, pipe, EMPTY, of, Observable } from 'rxjs';
+import { combineLatest, pipe, Observable } from 'rxjs';
 import {
 	selectActiveMapId, selectLayout, selectMapsList, selectRemovedOverlays,
 	selectRemovedOverlaysVisibility, selectFavoriteOverlays, selectPresetOverlays
 } from '@ansyn/map-facade';
-import { filter, tap, withLatestFrom, mergeMap, map } from 'rxjs/operators';
+import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
 import { ICase } from '@ansyn/imagery';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
@@ -16,7 +16,7 @@ import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/too
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 
-// HACK //
+// @todo refactor
 const selectContextEntities: any = createSelector(createFeatureSelector('context'), (context: any) => context.entities);
 
 import { selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';

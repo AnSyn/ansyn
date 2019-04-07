@@ -211,7 +211,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
-		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_INTERACTIONS),
+		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),
 		mergeMap(action => {
 			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
 			let clearActions = [

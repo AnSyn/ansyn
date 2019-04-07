@@ -1,7 +1,7 @@
 import { BaseMapSourceProvider, ImageryMapSource } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
-import { ICaseMapState } from '@ansyn/imagery';
 import { CesiumLayer } from "../models/cesium-layer";
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 declare const Cesium: any;
 
 export const CesiumBingSourceProviderSourceType = 'BING_CESIUM';

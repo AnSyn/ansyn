@@ -1,5 +1,5 @@
 import { IDeltaTime } from '../../../core/models/time.model';
-import { ICase } from '@ansyn/imagery';
+import { ICase } from './case.model';
 
 export interface ICasesConfig {
 	schema: string,

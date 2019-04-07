@@ -1,5 +1,7 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseBooleanFilterMetadata, ICaseFilter, IOverlay } from '@ansyn/imagery';
+import { FilterType } from '../filter-type';
+import { ICaseBooleanFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';

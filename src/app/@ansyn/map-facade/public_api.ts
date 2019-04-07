@@ -47,7 +47,8 @@ export {
 	BackToWorldView,
 	ToggleMapLayersAction,
 	SetLayoutAction,
-	SetLayoutSuccessAction
+	SetLayoutSuccessAction,
+	IPendingOverlay
 } from './actions/map.actions';
 
 export {
@@ -100,3 +101,4 @@ export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 export { MapFacadeModule } from './map-facade.module';
 
 
+export { LayoutKey, layoutOptions, IMapsLayout } from './models/maps-layout';

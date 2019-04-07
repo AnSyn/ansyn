@@ -1,58 +1,72 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { Observable, of, combineLatest } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import {
-	BackToWorldView, ContextMenuTriggerAction,
+	BackToWorldView,
+	ContextMenuTriggerAction,
 	ImageryStatusActionTypes,
 	IMapState,
+	LayoutKey,
+	layoutOptions,
 	MapActionTypes,
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
-	selectMapsList, selectRemovedOverlays,
+	selectMapsList,
+	selectRemovedOverlays,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetPendingOverlaysAction, SetPresetOverlaysAction, SetRemovedOverlayIdsCount,
+	SetPendingOverlaysAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlayIdsCount,
 	SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/map-facade';
 
+import { CommunicatorEntity, ICaseMapPosition, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
-	CaseGeoFilter,
-	CommunicatorEntity,
-	ICaseMapPosition,
-	ICaseMapState,
-	ImageryCommunicatorService,
-	IOverlay,
-	IPendingOverlay,
-	LayoutKey,
-	layoutOptions
-} from '@ansyn/imagery';
-import { catchError, filter, map, mergeMap, pairwise, startWith, switchMap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
+	catchError,
+	distinctUntilChanged,
+	filter,
+	map,
+	mergeMap,
+	pairwise,
+	startWith,
+	switchMap,
+	withLatestFrom
+} from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction, LoadOverlaysAction, LoadOverlaysSuccessAction,
+	DisplayOverlaySuccessAction,
+	LoadOverlaysAction,
+	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
-	SetMarkUp, SetOverlaysCriteriaAction
+	SetMarkUp,
+	SetOverlaysCriteriaAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
 	MarkUpClass,
 	selectdisplayOverlayHistory,
-	selectDropMarkup, selectOverlaysMap, selectRegion
+	selectDropMarkup,
+	selectOverlaysMap,
+	selectRegion
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import * as turf from '@turf/turf';
 import { Position } from 'geojson';
+import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { IPendingOverlay } from '../../../map-facade/actions/map.actions';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -209,11 +223,11 @@ export class OverlaysAppEffects {
 			mapType: communicator.activeMapName,
 			sourceType: overlay.sourceType
 		});
-		return sourceProvider.getThumbnailUrl(overlay, position).pipe(
+		return this.overlaysService.getThumbnailUrl(overlay, position).pipe(
 			map(thumbnailUrl => ({
 				...overlay,
 				thumbnailUrl,
-				thumbnailName: sourceProvider.getThumbnailName(overlay)
+				thumbnailName: this.overlaysService.getThumbnailName(overlay)
 			})),
 			catchError(() => {
 				return of(overlay);

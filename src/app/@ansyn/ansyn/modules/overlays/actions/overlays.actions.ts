@@ -1,19 +1,19 @@
 import { Action } from '@ngrx/store';
 import {
-	IOverlay,
-	IOverlayDrop,
-	IOverlaysCriteria,
-	IOverlaysCriteriaOptions,
-	IOverlaySpecialObject,
-	IPendingOverlay
-} from '@ansyn/imagery';
-import {
 	IMarkUpData,
 	IOverlayDropMarkUp,
 	ITimelineRange,
 	MarkUpClass
 } from '../reducers/overlays.reducer';
 import { type } from '../../core/utils/type';
+import {
+	IOverlay,
+	IOverlayDrop,
+	IOverlaysCriteria,
+	IOverlaysCriteriaOptions,
+	IOverlaySpecialObject,
+} from '../models/overlay.model';
+import { IPendingOverlay } from '@ansyn/map-facade';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),

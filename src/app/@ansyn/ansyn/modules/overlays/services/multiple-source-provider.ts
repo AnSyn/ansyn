@@ -1,16 +1,11 @@
 import { forkJoin, from, Observable, throwError } from 'rxjs';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IOverlayFilter, isFaulty,
 	IStartAndEndDate, mergeErrors, mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
-import {
-	IDataInputFilterValue,
-	IOverlay,
-	IOverlaysFetchData,
-} from '@ansyn/imagery';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
@@ -25,6 +20,8 @@ import {
 	IMultipleOverlaysSourceConfig,
 	IOverlaysSourceProvider, MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
+import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
+import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -48,6 +45,21 @@ export class MultipleOverlaysSourceProvider {
 		};
 	}
 
+	getThumbnailUrl(overlay, position): Observable<any> {
+		const overlaysSource = this.overlaysSources[overlay.sourceType];
+		if (overlaysSource) {
+			return overlaysSource.getThumbnailUrl(overlay, position);
+		}
+		return throwError(`Cannot find overlay for source = ${overlay.sourceType} id = ${overlay.id}`);
+	}
+
+	getThumbnailName(overlay): string {
+		const overlaysSource = this.overlaysSources[overlay.sourceType];
+		if (overlaysSource) {
+			return overlaysSource.getThumbnailName(overlay);
+		}
+		return '';
+	}
 
 	private prepareWhitelist() {
 		const mapProviderConfig = (provider) => {

@@ -4,9 +4,7 @@ import {
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
-	IOverlay,
-	Overlay,
-	GeoRegisteration
+
 } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
@@ -22,6 +20,7 @@ import { LoggerService } from '../../modules/core/services/logger.service';
 import { limitArray } from '../../modules/core/utils/i-limited-array';
 import { sortByDateDesc } from '../../modules/core/utils/sorting';
 import { toRadians } from '@ansyn/map-facade';
+import { GeoRegisteration, IOverlay, Overlay } from '../../modules/overlays/models/overlay.model';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';

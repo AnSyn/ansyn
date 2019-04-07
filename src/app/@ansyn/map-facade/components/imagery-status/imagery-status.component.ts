@@ -9,7 +9,6 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { GeoRegisteration, IOverlay } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { getTimeFormat } from '../../utils/time';
@@ -48,7 +47,7 @@ import { copyFromContent } from '../../utils/clipboard';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	_overlay: IOverlay;
+	_overlay: any;
 	selectedMap = 'openLayersMap';
 
 	@HostBinding('class.active') @Input() active: boolean;
@@ -63,7 +62,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@Input() layerFlag = false;
 
-	@Input() set overlay(overlay: IOverlay) {
+	@Input() set overlay(overlay: any) {
 		this._overlay = overlay;
 		if (!this._overlay) {
 			this.translatedOverlaySensorName = '';
@@ -90,7 +89,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Output() onMove = new EventEmitter<MouseEvent>();
 
 	@AutoSubscription
-	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays).pipe(
+	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {
 			this.favoriteOverlays = favoriteOverlays;
 			this.updateFavoriteStatus();
@@ -98,7 +97,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	presetOverlays$: Observable<IOverlay[]> = this.store$.select(selectPresetOverlays).pipe(
+	presetOverlays$: Observable<any[]> = this.store$.select(selectPresetOverlays).pipe(
 		tap((presetOverlays) => {
 			this.presetOverlays = presetOverlays;
 			this.updatePresetStatus();
@@ -129,13 +128,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	favoriteOverlays: IOverlay[];
+	favoriteOverlays: any[];
 	isFavorite: boolean;
 	removedOverlaysIds = [];
 
 	favoritesButtonText: string;
 
-	presetOverlays: IOverlay[];
+	presetOverlays: any[];
 	isPreset: boolean;
 	presetsButtonText: string;
 	isRemoved: boolean;
@@ -183,14 +182,15 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (!this.overlay) {
 			return false;
 		}
-		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
+		// @todo refactor
+		return this.overlay.isGeoRegistered === 'notGeoRegistered';
 	}
 
 	get poorGeoRegistered() {
 		if (!this.overlay) {
 			return false;
 		}
-		return this.overlay.isGeoRegistered === GeoRegisteration.poorGeoRegistered;
+		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
 	}
 
 	constructor(protected store$: Store<any>,

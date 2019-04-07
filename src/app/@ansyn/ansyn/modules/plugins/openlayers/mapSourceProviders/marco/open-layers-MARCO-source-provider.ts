@@ -11,9 +11,7 @@ import {
 	CacheService,
 	ImageryCommunicatorService,
 	ImageryMapSource,
-	ICaseMapState,
 	IMapSourceProvidersConfig,
-	IOverlay,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from '../open-layers.map-source-provider';
@@ -23,6 +21,8 @@ import { removeWorkers } from '../../maps/open-layers-map/shared/openlayers-shar
 import { MpTileSource } from './ol-utils/mp-tile-source';
 import { MpTileImageSource } from './ol-utils/mp-tile-image-source';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 
 export const OpenLayerMarcoSourceProviderSourceType = 'MARCO_WMTS';
 
@@ -35,8 +35,7 @@ export interface IMarcoConfig {
 
 @ImageryMapSource({
 	sourceType: OpenLayerMarcoSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	forOverlay: true
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IMarcoConfig> {
 

@@ -25,8 +25,8 @@ import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
 import { CaseMapExtent, ICaseMapPosition } from '../model/case-map-position.model';
 import { getPolygonByPointAndRadius } from '../utils/geo';
-import { ICaseMapState } from '../model/case.model';
 import { IMapProviderConfig, IMapProvidersConfig, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
+import { IMapSettings } from '../model/map-settings';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -40,7 +40,7 @@ export interface IMapInstanceChanged {
 	destroy: 'ngOnDestroy'
 })
 export class CommunicatorEntity implements OnInit, OnDestroy {
-	public mapSettings: ICaseMapState;
+	public mapSettings: IMapSettings;
 	public mapComponentElem: ViewContainerRef;
 	private _mapComponentRef: ComponentRef<MapComponent>;
 	private _activeMap: BaseImageryMap;

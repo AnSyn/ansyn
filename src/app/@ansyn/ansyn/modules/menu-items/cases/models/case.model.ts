@@ -1,8 +1,9 @@
-import { ICaseMapPosition } from './case-map-position.model';
-import { IDilutedOverlay, IOverlay } from './overlay.model';
+import { IDilutedOverlay, IOverlay } from '../../../overlays/models/overlay.model';
 import { Feature, Point, Polygon } from 'geojson';
-import { IVisualizerEntity } from './visualizers/visualizers-entity';
-import { LayoutKey } from './maps-layout';
+import { LayoutKey } from '@ansyn/map-facade';
+import { FilterType } from '../../filters/models/filter-type';
+import { ICaseMapPosition, IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
+import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
 
 export interface ICasePreview {
 	creationTime: Date;
@@ -104,8 +105,6 @@ export type CaseEnumFilterMetadata = string[];
 
 export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata;
 
-export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
-
 export interface ICaseFilter<T = CaseFilterMetadata> {
 	type: FilterType;
 	fieldName: string;
@@ -122,11 +121,6 @@ export interface ICaseLayersState {
 	activeLayersIds: string[]
 }
 
-export interface IWorldViewMapState {
-	mapType: string;
-	sourceType: string;
-}
-
 export interface IDilutedCaseMapsState {
 	layout: LayoutKey;
 	activeMapId: string;
@@ -137,10 +131,8 @@ export interface ICaseMapsState extends IDilutedCaseMapsState {
 	data: ICaseMapState[]
 }
 
-export type OverlayDisplayMode = 'Heatmap' | 'Polygon' | 'None';
 
-export interface IDilutedCaseMapData {
-	position: ICaseMapPosition,
+export interface IDilutedCaseMapData extends IMapSettingsData {
 	overlay?: IDilutedOverlay,
 	isAutoImageProcessingActive?: boolean,
 	overlayDisplayMode?: OverlayDisplayMode,
@@ -151,13 +143,8 @@ export interface ICaseMapData extends IDilutedCaseMapData {
 	overlay?: IOverlay,
 }
 
-export interface IDilutedCaseMapState {
-	id: string;
+export interface IDilutedCaseMapState extends IMapSettings {
 	data: IDilutedCaseMapData;
-	worldView: IWorldViewMapState,
-	flags: {
-		displayLayers?: boolean
-	};
 }
 
 export interface ICaseMapState extends IDilutedCaseMapState {

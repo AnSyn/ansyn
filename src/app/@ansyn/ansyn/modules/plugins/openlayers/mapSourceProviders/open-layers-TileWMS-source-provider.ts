@@ -1,9 +1,10 @@
 import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
-import { ImageryMapSource, ICaseMapState } from '@ansyn/imagery';
+import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
 export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 

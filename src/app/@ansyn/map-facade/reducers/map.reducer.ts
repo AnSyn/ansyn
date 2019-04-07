@@ -1,24 +1,23 @@
-import { ICaseMapState, IPendingOverlay, layoutOptions } from '@ansyn/imagery';
+import { IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { LayoutKey } from '@ansyn/imagery';
 import { sessionData } from '../models/core-session-state.model';
-import { MapActions, MapActionTypes, IToastMessage } from '../actions/map.actions';
-
+import { MapActions, MapActionTypes, IToastMessage, IPendingOverlay } from '../actions/map.actions';
+import { LayoutKey, layoutOptions } from '../models/maps-layout';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
-	const mapsList: ICaseMapState[] = [];
-	const activeMap: ICaseMapState = oldEntities[oldActiveMapId];
+	const mapsList: IMapSettings[] = [];
+	const activeMap: IMapSettings = oldEntities[oldActiveMapId];
 	const oldMapsList = Object.values(oldEntities);
 
 	range(layout.mapsCount).forEach((index) => {
 		if (oldMapsList[index]) {
 			mapsList.push(oldMapsList[index]);
 		} else {
-			const mapStateCopy: ICaseMapState = {
+			const mapStateCopy: IMapSettings = {
 				id: UUID.UUID(),
 				data: { position: null },
 				worldView: { ...activeMap.worldView },
@@ -37,9 +36,9 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 	return mapsList;
 }
 
-export const mapsAdapter: EntityAdapter<ICaseMapState> = createEntityAdapter<ICaseMapState>();
+export const mapsAdapter: EntityAdapter<IMapSettings> = createEntityAdapter<IMapSettings>();
 
-export interface IMapState extends EntityState<ICaseMapState> {
+export interface IMapState extends EntityState<IMapSettings> {
 	activeMapId: string;
 	isLoadingMaps: Map<string, string>,
 	isHiddenMaps: Set<string>,
@@ -59,7 +58,7 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	pendingOverlays: [],
 	layout: <LayoutKey> 'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
-	toastMessage: null,
+	toastMessage: null
 });
 
 export const mapFeatureKey = 'map';

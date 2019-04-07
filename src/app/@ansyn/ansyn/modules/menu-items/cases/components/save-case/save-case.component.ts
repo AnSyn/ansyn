@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { ICase } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
@@ -8,6 +7,7 @@ import { CasesService } from '../../services/cases.service';
 import { take } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
+import { ICase } from '../../models/case.model';
 
 const animationsDuring = '0.2s';
 

@@ -1,12 +1,12 @@
-import { BaseMapSourceProvider, ImageryMapSource, ICaseMapState } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryMapSource } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
 import { CesiumLayer } from '../models/cesium-layer';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 declare const Cesium: any;
 
 @ImageryMapSource({
 	sourceType: 'PLANET',
-	supported: [CesiumMap],
-	forOverlay: true
+	supported: [CesiumMap]
 })
 export class CesiumPlanetSourceProvider extends BaseMapSourceProvider {
 

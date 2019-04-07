@@ -3,7 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 
 import {
 	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayFromStoreAction,
+	DisplayOverlayFromStoreAction, ICase,
 	MarkUpClass,
 	OverlayReducer,
 	overlaysFeatureKey,
@@ -36,7 +36,6 @@ import {
 	StorageService
 } from '@ansyn/ansyn';
 import {
-	ICase,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 } from '@ansyn/imagery';
 import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';

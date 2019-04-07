@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { ICaseMapState } from '../model/case.model';
+import { ICaseMapState } from '../../ansyn/modules/menu-items/cases/models/case.model';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
 
 @Component({

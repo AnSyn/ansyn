@@ -6,8 +6,7 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	geojsonMultiPolygonToPolygon,
-	ICaseMapPosition,
-	ICaseMapState,
+	ICaseMapPosition, IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import {
@@ -102,15 +101,15 @@ export class MapEffects {
 		.pipe(
 			ofType(MapActionTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(selectMaps)),
-			map(([action, entities]: [BackToWorldView, Dictionary<ICaseMapState>]) => {
+			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
 				const mapId = action.payload.mapId;
 				const selectedMap = entities[mapId];
 				const communicator = this.communicatorsService.provide(mapId);
 				const { position } = selectedMap.data;
 				return [action.payload, selectedMap, communicator, position];
 			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => {
+			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
+			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ICaseMapPosition]) => {
 				const disabledMap = communicator.activeMapName === 'disabledOpenLayersMap';
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
@@ -165,7 +164,7 @@ export class MapEffects {
 		switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
 			const mapId = action.payload.mapId;
 			if (!mapPosition) {
-				const map: ICaseMapState = mapState.entities[mapId];
+				const map: IMapSettings = mapState.entities[mapId];
 				if (map.data.overlay) {
 					mapPosition = { extentPolygon: geojsonMultiPolygonToPolygon(map.data.overlay.footprint)};
 				} else {
@@ -174,7 +173,7 @@ export class MapEffects {
 			}
 
 			const setPositionObservables = [];
-			Object.values(mapState.entities).forEach((mapItem: ICaseMapState) => {
+			Object.values(mapState.entities).forEach((mapItem: IMapSettings) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
 					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));

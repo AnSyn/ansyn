@@ -7,7 +7,7 @@ import { CasesService } from '../../services/cases.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/internal/operators';
 import { tap } from 'rxjs/operators';
-import { ICasePreview } from '@ansyn/imagery';
+import { ICasePreview } from '../../models/case.model';
 
 const animationsDuring = '0.2s';
 

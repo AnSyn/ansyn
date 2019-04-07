@@ -18,16 +18,16 @@ import { AnimationTriggerMetadata } from '@angular/animations/src/animation_meta
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, map, tap } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
+import { LayoutKey, layoutOptions, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
+import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
+import { OverlaysActionTypes, UpdateOverlaysCountAction, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import {
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	ICaseDataInputFiltersState,
-	ICaseTimeState, IOverlay, LayoutKey, layoutOptions
-} from '@ansyn/imagery';
-import { selectLayout, SetLayoutAction } from '@ansyn/map-facade';
-import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { OverlaysActionTypes, UpdateOverlaysCountAction, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+	ICaseDataInputFiltersState, ICaseTimeState
+} from '../../../menu-items/cases/models/case.model';
+import { IOverlay } from '../../../overlays/models/overlay.model';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [

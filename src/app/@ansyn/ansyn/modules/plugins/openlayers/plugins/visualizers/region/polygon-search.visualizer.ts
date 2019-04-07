@@ -4,12 +4,13 @@ import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
 import { Position } from 'geojson';
-import { CaseGeoFilter, CaseRegionState, getPolygonByPointAndRadius, MarkerSize } from '@ansyn/imagery';
+import { getPolygonByPointAndRadius, MarkerSize } from '@ansyn/imagery';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

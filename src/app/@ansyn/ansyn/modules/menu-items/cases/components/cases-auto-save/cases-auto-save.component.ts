@@ -1,12 +1,12 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { ICasePreview } from '@ansyn/imagery';
 import { Observable } from 'rxjs/index';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { map, tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectCaseEntities } from '../../reducers/cases.reducer';
 import { SetAutoSave } from '../../actions/cases.actions';
+import { ICasePreview } from '../../models/case.model';
 
 @Component({
 	selector: 'ansyn-cases-auto-save',

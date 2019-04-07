@@ -1,7 +1,7 @@
-import { IOverlay } from '@ansyn/imagery';
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../alerts/model';
 import { MapActionTypes } from './map.actions';
+import { IOverlay } from '../../ansyn/modules/overlays/models/overlay.model';
 
 export enum ImageryStatusActionTypes {
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',

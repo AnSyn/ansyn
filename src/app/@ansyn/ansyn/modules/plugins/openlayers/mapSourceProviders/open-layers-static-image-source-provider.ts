@@ -1,6 +1,5 @@
 import {
 	CacheService,
-	ICaseMapState,
 	ImageryCommunicatorService,
 	ImageryMapSource,
 	IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG
@@ -14,13 +13,13 @@ import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
 export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 
 @ImageryMapSource({
 	sourceType: OpenLayersStaticImageSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	forOverlay: true
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProvider {
 

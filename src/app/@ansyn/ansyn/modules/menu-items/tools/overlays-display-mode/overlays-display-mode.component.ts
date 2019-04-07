@@ -3,9 +3,10 @@ import { IToolsState, toolsStateSelector } from '../reducers/tools.reducer';
 import { select, Store } from '@ngrx/store';
 import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { Observable } from 'rxjs';
-import { OverlayDisplayMode } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { map } from 'rxjs/operators';
+
+export type OverlayDisplayMode = 'Heatmap' | 'Polygon' | 'None';
 
 @Component({
 	selector: 'ansyn-overlays-display-mode',

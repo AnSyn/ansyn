@@ -2,11 +2,6 @@ import { inject, TestBed } from '@angular/core/testing';
 import {
 	MultipleOverlaysSourceProvider
 } from './multiple-source-provider';
-import {
-	GeoRegisteration,
-	IOverlay,
-	IOverlaysFetchData,
-} from '@ansyn/imagery';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
@@ -15,6 +10,7 @@ import { MultipleOverlaysSource, OverlaySourceProvider } from '../models/overlay
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceConfig } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
+import { GeoRegisteration, IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 
 const overlays: IOverlaysFetchData = {
 	data: [

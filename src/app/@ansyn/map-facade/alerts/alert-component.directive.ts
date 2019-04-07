@@ -1,12 +1,10 @@
 import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef } from '@angular/core';
 import { IAlertComponent } from './alerts.model';
-import { IOverlay } from '@ansyn/imagery';
-
 
 export interface IAlertComponentSettings {
 	component: any
 	mapId: string;
-	overlay: IOverlay;
+	overlay: any;
 }
 
 @Directive({

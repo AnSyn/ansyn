@@ -1,7 +1,7 @@
 import { Component, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ImageryMouseEnter, ImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
-import { AnnotationInteraction, ICaseMapState, IOverlay } from '@ansyn/imagery';
+import { AnnotationInteraction, IMapSettings } from '@ansyn/imagery';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
 import { IMapFacadeConfig } from '../../models/map-config.model';
@@ -14,7 +14,7 @@ import { map } from 'rxjs/operators';
 	styleUrls: ['./imagery-container.component.less']
 })
 export class ImageryContainerComponent {
-	@Input() mapState: ICaseMapState;
+	@Input() mapState: IMapSettings;
 	@Input() active: boolean;
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
@@ -24,7 +24,7 @@ export class ImageryContainerComponent {
 		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))
 	);
 
-	get overlay(): IOverlay {
+	get overlay(): any {
 		return this.mapState.data.overlay;
 	}
 

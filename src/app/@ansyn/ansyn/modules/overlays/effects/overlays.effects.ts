@@ -15,10 +15,10 @@ import { OverlaysService } from '../services/overlays.service';
 import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStateSelector, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 import { BackToWorldView, selectFavoriteOverlays, selectPresetOverlays  } from '@ansyn/map-facade';
 import { UpdateOverlaysCountAction } from '../../overlays/actions/overlays.actions';
 import { LoggerService } from '../../core/services/logger.service';
+import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 
 @Injectable()
 export class OverlaysEffects {

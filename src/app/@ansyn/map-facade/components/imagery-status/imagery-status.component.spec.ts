@@ -1,7 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryStatusComponent } from './imagery-status.component';
 import { StoreModule } from '@ngrx/store';
-import { IOverlay } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
@@ -49,7 +48,7 @@ describe('ImageryStatusComponent', () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
 		component.mapId = 'test';
-		component.overlay = {} as IOverlay;
+		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();
 	}));

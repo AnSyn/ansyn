@@ -1,6 +1,8 @@
-import { BaseMapSourceProvider, ImageryMapSource, ICaseMapState } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryMapSource } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
 import { CesiumLayer } from '../models/cesium-layer';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
+
 declare const Cesium: any;
 
 export const CesiumOSMSourceProviderSourceType = 'OSM';

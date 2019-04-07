@@ -3,8 +3,9 @@ import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
 import { IBaseImageryMapConstructor } from './base-imagery-map';
-import { ICaseMapState } from './case.model';
+import { ICaseMapState } from '../../ansyn/modules/menu-items/cases/models/case.model';
 import { ImageryLayerProperties } from './imagery-layer.model';
+import { IMapSettings } from './map-settings';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
@@ -17,7 +18,6 @@ export interface IMapSourceProvidersConfig<T = any> {
 export interface IImageryMapSourceMetaData {
 	readonly sourceType: string;
 	readonly supported?: IBaseImageryMapConstructor[];
-	readonly forOverlay?: boolean;
 }
 
 export interface IBaseMapSourceProviderConstructor {
@@ -28,7 +28,6 @@ export interface IBaseMapSourceProviderConstructor {
 export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSourceMetaData {
 	readonly sourceType: string;
 	readonly supported?: IBaseImageryMapConstructor[];
-	readonly forOverlay?: boolean;
 
 	protected get config(): CONF {
 		return this.mapSourceProvidersConfig[this.sourceType];
@@ -40,13 +39,14 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 	}
 
 	generateLayerId(metaData: ICaseMapState): string {
-		if (this.forOverlay) {
-			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
-		}
-		return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
+		// if (this.forOverlay) {
+		// 	return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
+		// }
+		// return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
+		return ''
 	}
 
-	protected createOrGetFromCache(metaData: ICaseMapState) {
+	protected createOrGetFromCache(metaData: IMapSettings) {
 		const cacheId = this.generateLayerId(metaData);
 		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
 		if (cacheLayers.length) {
@@ -63,29 +63,22 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		return layers;
 	}
 
-	protected abstract create(metaData: ICaseMapState): any[];
+	protected abstract create(metaData: IMapSettings): any[];
 
-	createAsync(metaData: ICaseMapState): Promise<any> {
+	createAsync(metaData: IMapSettings): Promise<any> {
 		let layer = this.createOrGetFromCache(metaData);
 		return Promise.resolve(layer);
 	}
 
-	existsInCache(metaData: ICaseMapState): boolean {
+	existsInCache(metaData: IMapSettings): boolean {
 		const cacheId = this.generateLayerId(metaData);
 		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
 		return cacheLayers.length > 0;
 	}
 
-	getThumbnailUrl(overlay, position): Observable<string> {
-		if (!overlay.thumbnailUrl) {
-			overlay.thumbnailUrl = overlay.imageUrl;
-		}
-		return of(overlay.thumbnailUrl);
-	}
+	getExtraData(metaData: IMapSettings) {
 
-	getThumbnailName(overlay): string {
-		return overlay.sensorName;
-	}
+	};
 
 	removeExtraData(layer: any) {
 	}

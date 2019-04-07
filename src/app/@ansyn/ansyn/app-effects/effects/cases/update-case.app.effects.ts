@@ -8,7 +8,6 @@ import {
 } from '@ansyn/map-facade';
 import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
-import { ICase } from '@ansyn/imagery';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';
 import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
@@ -20,6 +19,7 @@ import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/
 const selectContextEntities: any = createSelector(createFeatureSelector('context'), (context: any) => context.entities);
 
 import { selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
+import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 @Injectable()
 export class UpdateCaseAppEffects {
 	isAutoSaveTriggered: boolean;

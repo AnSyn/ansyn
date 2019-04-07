@@ -1,14 +1,14 @@
-import { ImageryMapSource, ICaseMapState  } from '@ansyn/imagery';
+import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
 export const OpenLayerOpenAerialSourceProviderSourceType = 'OPEN_AERIAL';
 
 @ImageryMapSource({
 	sourceType: OpenLayerOpenAerialSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	forOverlay: true
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerOpenAerialSourceProvider extends OpenLayersMapSourceProvider {
 

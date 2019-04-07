@@ -1,12 +1,8 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import {
-	AnnotationMode,
-	ImageManualProcessArgs,
-	IOverlaysManualProcessArgs,
-	IVisualizerStyle,
-	OverlayDisplayMode
-} from '@ansyn/imagery';
+import { AnnotationMode, IVisualizerStyle } from '@ansyn/imagery';
+import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
+import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -67,7 +63,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			};
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
-			return { ...state, annotationMode: <AnnotationMode> action.payload };
+			return { ...state, annotationMode: <AnnotationMode>action.payload };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			tmpMap = new Map(state.flags);

@@ -15,7 +15,7 @@ import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
-import { ICase, ImageryCommunicatorService, IOverlay } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { CoreConfig } from '../../modules/core/models/core.config';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
 import { StorageService } from '../../modules/core/services/storage/storage.service';
@@ -35,6 +35,8 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { IOverlay } from '../../modules/overlays/models/overlay.model';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;

@@ -5,7 +5,6 @@ import { Inject, Injectable } from '@angular/core';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { FilterType, ICaseFacetsState, IOverlay, IOverlaySpecialObject } from '@ansyn/imagery';
 import { BooleanFilterMetadata } from '../../modules/menu-items/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -43,6 +42,9 @@ import {
 	selectOverlaysMap, selectSpecialObjects
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
+import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
+import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class FiltersAppEffects {

@@ -1,16 +1,19 @@
 import { Action } from '@ngrx/store';
 import { Point, Polygon, Position } from 'geojson';
-import { IMapInstanceChanged } from '@ansyn/imagery';
+import { IMapInstanceChanged, IMapSettings } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
-	ICaseMapState, IMapProgress,
-	IOverlay,
-	IPendingOverlay,
+	IMapProgress,
 	IUpdateFeatureEvent,
 	IWorldViewMapState
 } from '@ansyn/imagery';
-import { LayoutKey } from '@ansyn/imagery';
+import { LayoutKey } from '../models/maps-layout';
+
+export interface IPendingOverlay {
+	overlay: any;
+	extent?: any;
+}
 
 export interface IToastMessage {
 	toastText: string;
@@ -74,7 +77,7 @@ export const MapActionTypes = {
 
 export interface IContextMenuShowPayload {
 	point: Point;
-	overlays: IOverlay[];
+	overlays: any[];
 	event: MouseEvent;
 }
 
@@ -97,7 +100,7 @@ export class PointToRealNorthAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: ICaseMapPosition, mapInstance: ICaseMapState }) {
+	constructor(public payload: { id: string, position: ICaseMapPosition, mapInstance: any }) {
 	}
 }
 
@@ -278,7 +281,7 @@ export class ChangeImageryMapSuccess implements Action {
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.SET_MAPS_DATA;
 
-	constructor(public payload: { mapsList: ICaseMapState[] }) {
+	constructor(public payload: { mapsList: IMapSettings[] }) {
 	}
 }
 
@@ -292,7 +295,7 @@ export class SetActiveMapId implements Action {
 export class UpdateMapAction implements Action {
 	type = MapActionTypes.UPDATE_MAP;
 
-	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	constructor(public payload: { id: string, changes?: Partial<IMapSettings>, silence?: boolean,  }) {
 	}
 }
 

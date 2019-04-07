@@ -1,4 +1,3 @@
-
 export { ANSYN_ID } from './api/ansyn-id.provider';
 export { AnsynApi } from './api/ansyn-api.service';
 export { MapAppEffects } from './app-effects/effects/map.app.effects';
@@ -10,8 +9,8 @@ export { AnsynModule } from './ansyn.module';
 export { IAppState } from './app-effects/app.effects.module';
 export { COMPONENT_MODE } from './app-providers/component-mode';
 export { getProviders, fetchConfigProviders } from './fetch-config-providers';
-export { mergeConfig } from "./fetch-config-providers";
-export { IConfigModel } from "./config.model";
+export { mergeConfig } from './fetch-config-providers';
+export { IConfigModel } from './config.model';
 
 // // statusBar
 export { GoNextPresetOverlay } from './modules/status-bar/actions/status-bar.actions';
@@ -48,9 +47,11 @@ export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-bo
 // menuItems
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
 export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
+export { FilterType } from './modules/menu-items/filters/models/filter-type';
+export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
-export { ILayersManagerConfig } from "./modules/menu-items/layers-manager/models/layers-manager-config";
+export { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
 export { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
 export { IUtmZone } from './modules/menu-items/tools/services/projection-converter.service';
 export { DataLayersService } from './modules/menu-items/layers-manager/services/data-layers.service';
@@ -165,7 +166,7 @@ export {
 } from './modules/menu-items/algorithms/reducers/tasks.reducer';
 export {
 	SetTaskDrawIndicator,
-	SetCurrentTaskRegion,
+	SetCurrentTaskRegion
 } from './modules/menu-items/algorithms/actions/tasks.actions';
 export {
 	TasksService
@@ -243,9 +244,36 @@ export { FetchService } from './modules/core/services/fetch.service';
 export { IDeltaTime } from './modules/core/models/time.model';
 
 // overlays
+
+export { PhotoAngle } from './modules/overlays/models/overlay.model';
+export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
+export { GeoRegisteration } from './modules/overlays/models/overlay.model';
+export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
+export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria } from './modules/overlays/models/overlay.model';
+
+export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/case.model';
+export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';
+export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './modules/menu-items/cases/models/case.model';
+export { ICase, ICasePreview, IDilutedCase } from './modules/menu-items/cases/models/case.model';
+export { CaseRegionState, IDataInputFilterValue } from './modules/menu-items/cases/models/case.model';
+export {
+	CaseGeoFilter,
+	CaseOrientation,
+	CaseTimeFilter,
+	ICaseDataInputFiltersState,
+	ICaseTimeState
+} from './modules/menu-items/cases/models/case.model';
+export { IContextEntity } from './modules/menu-items/cases/models/case.model';
+export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './modules/menu-items/cases/models/case.model';
+export { ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs } from './modules/menu-items/cases/models/case.model';
+export { CaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
+export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
+
+
+
 export { SetOverlaysCriteriaAction, UpdateOverlaysCountAction } from './modules/overlays/actions/overlays.actions';
 export { IMultipleOverlaysSource, MultipleOverlaysSource } from './modules/overlays/models/overlays-source-providers';
-export { IOverlaysConfig } from "./modules/overlays/models/overlays.config";
+export { IOverlaysConfig } from './modules/overlays/models/overlays.config';
 export { OverlaySourceProvider } from './modules/overlays/models/overlays-source-providers';
 export { MultipleOverlaysSourceProvider } from './modules/overlays/services/multiple-source-provider';
 export { IOverlayByIdMetaData } from './modules/overlays/services/overlays.service';
@@ -288,7 +316,7 @@ export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './modu
 
 export { OpenLayersMapSourceProvider } from './modules/plugins/openlayers/mapSourceProviders/open-layers.map-source-provider';
 export { OpenLayersStaticImageSourceProviderSourceType } from './modules/plugins/openlayers/mapSourceProviders/open-layers-static-image-source-provider';
-export { OpenLayerMarcoSourceProviderSourceType } from "./modules/plugins/openlayers/mapSourceProviders/marco/open-layers-MARCO-source-provider";
+export { OpenLayerMarcoSourceProviderSourceType } from './modules/plugins/openlayers/mapSourceProviders/marco/open-layers-MARCO-source-provider';
 export {
 	DisabledOpenLayersMapName,
 	OpenLayersDisabledMap
@@ -302,7 +330,7 @@ export { ImageProcessingPlugin } from './modules/plugins/openlayers/plugins/imag
 export { isRasterLayer, removeWorkers } from './modules/plugins/openlayers/maps/open-layers-map/shared/openlayers-shared';
 export { EntitiesVisualizer } from './modules/plugins/openlayers/plugins/visualizers/entities-visualizer';
 export { CesiumMapName } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
-export { OpenlayersGeoJsonLayersVisualizer } from "./modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer";
+export { OpenlayersGeoJsonLayersVisualizer } from './modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer';
 
-export { CesiumMap } from "./modules/plugins/cesium/maps/cesium-map/cesium-map";
-export { CesiumLayer, ISceneMode } from "./modules/plugins/cesium/models/cesium-layer";
+export { CesiumMap } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
+export { CesiumLayer, ISceneMode } from './modules/plugins/cesium/models/cesium-layer';

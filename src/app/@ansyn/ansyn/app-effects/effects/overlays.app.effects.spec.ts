@@ -11,7 +11,6 @@ import {
 	CacheService,
 	ImageryCommunicatorService,
 	ImageryMapSource,
-	ICase,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import {
@@ -53,6 +52,7 @@ import {
 	selectDropMarkup, selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { ICase } from '../../modules/menu-items/cases/models/case.model';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

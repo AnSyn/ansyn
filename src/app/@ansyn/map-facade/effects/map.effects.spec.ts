@@ -1,10 +1,10 @@
 import { MapEffects } from './map.effects';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Store, StoreModule } from '@ngrx/store';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { cold, hot } from 'jasmine-marbles';
@@ -17,7 +17,6 @@ import {
 	SynchronizeMapsAction,
 	SetLayoutSuccessAction
 } from '../actions/map.actions';
-import { ICaseMapState } from '@ansyn/imagery';
 import { mapFacadeConfig } from '../models/map-facade.config';
 
 describe('MapEffects', () => {
@@ -109,7 +108,7 @@ describe('MapEffects', () => {
 					return of({});
 				}
 			};
-			const fakeMap: ICaseMapState = <any>{ id: 'imagery2' };
+			const fakeMap: IMapSettings = <any>{ id: 'imagery2' };
 			mapState.entities = { [fakeMap.id]: fakeMap };
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPosition').and.callFake(() => of(true));

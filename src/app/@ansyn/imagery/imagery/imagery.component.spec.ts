@@ -6,7 +6,7 @@ import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 import { ImageryMapSource } from '../decorators/map-source-provider';
-import { ICaseMapState } from '../model/case.model';
+import { ICaseMapState } from '../../ansyn/modules/menu-items/cases/models/case.model';
 import { MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 
 @ImageryMapSource({

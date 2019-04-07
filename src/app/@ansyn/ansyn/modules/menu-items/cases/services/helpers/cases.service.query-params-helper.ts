@@ -10,12 +10,16 @@ import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { UUID } from 'angular2-uuid';
 import {
 	getPolygonByPointAndRadius,
-	ICase,
-	ICaseMapsState, ICaseMapState,
-	ICaseState, ImageManualProcessArgs,
-	IOverlaysManualProcessArgs
-} from '@ansyn/imagery';
 
+} from '@ansyn/imagery';
+import {
+	ICase,
+	ICaseMapsState,
+	ICaseMapState,
+	ICaseState,
+	ImageManualProcessArgs,
+	IOverlaysManualProcessArgs
+} from '../../models/case.model';
 export class QueryParamsHelper {
 
 	constructor(protected casesService: CasesService) {

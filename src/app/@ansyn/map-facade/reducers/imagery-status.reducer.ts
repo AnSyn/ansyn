@@ -1,8 +1,8 @@
 import { ImageryStatusActionTypes } from '../actions/imagery-status.actions';
 import { uniq } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IOverlay } from '@ansyn/imagery';
 import { AlertMsg, AlertMsgTypes } from '../alerts/model';
+import { IOverlay } from '../../ansyn/modules/overlays/models/overlay.model';
 
 export const imageryStatusFeatureKey = 'imageryStatus';
 export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);

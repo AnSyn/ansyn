@@ -26,11 +26,11 @@ import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
-import { ICase } from '@ansyn/imagery';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
+import { ICase } from '../models/case.model';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;

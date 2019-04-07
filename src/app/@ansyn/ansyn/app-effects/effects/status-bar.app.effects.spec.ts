@@ -2,7 +2,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
-import { ICase, IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
@@ -30,6 +29,8 @@ import {
 	SetMapsDataActionStore,
 	SetPresetOverlaysAction
 } from '@ansyn/map-facade';
+import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

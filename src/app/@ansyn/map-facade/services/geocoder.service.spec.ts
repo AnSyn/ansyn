@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, defer } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
+import { SetToastMessageAction } from '../actions/map.actions';
 
 function asyncData<T>(data: T): Observable<T> {
 	return defer(() => Promise.resolve(data));
@@ -84,7 +85,7 @@ describe('GeocoderService', () => {
 			expect(endResult).toBeFalsy();
 		}));
 
-		it('should return null, if there is an error, or unexpected format', fakeAsync(() => {
+		fit('should return (SetToastMessageAction), if there is an error, or unexpected format', fakeAsync(() => {
 			spyOn(console, 'warn');
 			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');
@@ -92,8 +93,8 @@ describe('GeocoderService', () => {
 				endResult = res;
 			});
 			tick();
-			expect(endResult).toBeFalsy();
 			expect(console.warn).toHaveBeenCalled();
+			expect(endResult).toEqual(new SetToastMessageAction({ toastText: 'Connection Problem', showWarningIcon: true }));
 		}));
 	});
 });

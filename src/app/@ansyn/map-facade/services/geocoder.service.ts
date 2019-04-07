@@ -23,7 +23,7 @@ export class GeocoderService {
 			map(res => res ? { ...res.point, coordinates: res.point.coordinates.reverse() } : null),
 			catchError((error: Response | any) => {
 				console.warn(error);
-				return of(new SetToastMessageAction({ toastText: error, showWarningIcon: true }));
+				return of(new SetToastMessageAction({ toastText: 'Connection Problem', showWarningIcon: true }));
 			})
 		);
 	}

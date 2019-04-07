@@ -85,7 +85,7 @@ describe('GeocoderService', () => {
 			expect(endResult).toBeFalsy();
 		}));
 
-		fit('should return (SetToastMessageAction), if there is an error, or unexpected format', fakeAsync(() => {
+		it('should return (SetToastMessageAction), if there is an error, or unexpected format', fakeAsync(() => {
 			spyOn(console, 'warn');
 			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');

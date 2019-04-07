@@ -13,7 +13,7 @@ export const OpenLayerTileWMSSourceProviderSourceType = 'TileWMS';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: ICaseMapState): any[] {
+	create(metaData: ICaseMapState): Promise<any> {
 		const { config } = this;
 		const layers = config.layers.join(',');
 
@@ -28,6 +28,6 @@ export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider 
 		});
 
 		const tiled = new TileLayer({ visible: true, source });
-		return [tiled];
+		return Promise.resolve(tiled);
 	}
 }

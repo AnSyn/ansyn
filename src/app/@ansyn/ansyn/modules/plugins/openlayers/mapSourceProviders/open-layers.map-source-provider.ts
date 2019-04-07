@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, ImageryLayerProperties } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryLayerProperties, IMapSettings } from '@ansyn/imagery';
 import Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import TileLayer from 'ol/layer/Tile';
@@ -9,11 +9,19 @@ import { extentFromGeojson } from '@ansyn/map-facade';
 import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
-	create(metaData: ICaseMapState): any[] {
+	create(metaData: ICaseMapState): Promise<any[]> {
 		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
 		const extent = this.getExtent(metaData.data.overlay.footprint);
 		const tileLayer = this.getTileLayer(source, extent);
-		return [tileLayer];
+		this.setExtraData(tileLayer, { [ImageryLayerProperties.FOOTPRINT]: metaData.data.overlay.footprint });
+		return Promise.resolve(tileLayer);
+	}
+
+	generateLayerId(metaData: ICaseMapState) {
+		if (metaData.data.overlay) {
+			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
+		}
+		return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
 	}
 
 	removeExtraData(layer: any) {
@@ -68,13 +76,16 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return source;
 	}
 
-	addFootprintToLayerPromise(layerPromise: Promise<any>, metaData: ICaseMapState): Promise<any> {
+	generateExtraData(metaData: ICaseMapState) {
 		if (metaData.data.overlay) {
-			return layerPromise.then((layer) => {
-				layer.set(ImageryLayerProperties.FOOTPRINT, metaData.data.overlay.footprint);
-				return layer;
-			});
+			return { [ImageryLayerProperties.FOOTPRINT]: null } // metaData.data.overlay.footprint }
 		}
-		return layerPromise;
+		return {}
+	}
+
+	setExtraData(layer: any, extraData: any): void {
+		Object.entries(extraData).forEach(([key, value]) => {
+			layer.set(key, value)
+		})
 	}
 }

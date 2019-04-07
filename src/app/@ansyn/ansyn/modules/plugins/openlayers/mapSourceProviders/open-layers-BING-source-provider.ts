@@ -19,7 +19,7 @@ export const OpenLayerBingSourceProviderSourceType = 'BING';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider<IBingMapsConfig> {
-	create(metaData: ICaseMapState): any[] {
+	create(metaData: ICaseMapState): Promise<any> {
 		const { config } = this;
 		const source = new BingMaps({
 			key: config.key,
@@ -37,6 +37,6 @@ export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider<IBi
 			source,
 			extent
 		});
-		return [result];
+		return Promise.resolve(result);
 	}
 }

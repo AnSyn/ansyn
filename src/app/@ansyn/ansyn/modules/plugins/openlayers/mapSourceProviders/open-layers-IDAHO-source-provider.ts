@@ -28,7 +28,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	createAsync(metaData: ICaseMapState): Promise<any> {
+	create(metaData: ICaseMapState): Promise<any> {
 		let layerPromise;
 
 		if (metaData.data.overlay.channel === 1) {
@@ -71,7 +71,6 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 			});
 		}
 
-		layerPromise = this.addFootprintToLayerPromise(layerPromise, metaData);
 		return layerPromise;
 	}
 

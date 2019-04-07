@@ -1,9 +1,7 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { Observable, of } from 'rxjs';
 import { IBaseImageryMapConstructor } from './base-imagery-map';
-import { ICaseMapState } from '../../ansyn/modules/menu-items/cases/models/case.model';
 import { ImageryLayerProperties } from './imagery-layer.model';
 import { IMapSettings } from './map-settings';
 
@@ -38,47 +36,44 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig<CONF>) {
 	}
 
-	generateLayerId(metaData: ICaseMapState): string {
-		// if (this.forOverlay) {
-		// 	return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
-		// }
-		// return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
-		return ''
-	}
+	generateLayerId(metaData: IMapSettings): string  {
+		return new Date().toISOString()
+	};
 
-	protected createOrGetFromCache(metaData: IMapSettings) {
+	protected createOrGetFromCache(metaData: IMapSettings): Promise<any> {
 		const cacheId = this.generateLayerId(metaData);
-		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
-		if (cacheLayers.length) {
-			cacheLayers.forEach((layer) => {
-				if (layer.set) {
-					layer.set(ImageryLayerProperties.FROM_CACHE, true);
-				}
-			});
-			return cacheLayers;
+		const cacheLayer = this.cacheService.getLayerFromCache(cacheId);
+		if (cacheLayer) {
+			this.setExtraData(cacheLayer, { [ImageryLayerProperties.FROM_CACHE]: true });
+			return Promise.resolve(cacheLayer);
 		}
 
-		const layers = this.create(metaData);
-		this.cacheService.addLayerToCache(cacheId, layers);
-		return layers;
+		return this.create(metaData).then((layer) => {
+			this.cacheService.addLayerToCache(cacheId, layer);
+			const extraData = this.generateExtraData(metaData);
+			this.setExtraData(layer, extraData);
+			return layer;
+		});
 	}
 
-	protected abstract create(metaData: IMapSettings): any[];
+	protected abstract create(metaData: IMapSettings): Promise<any>;
 
 	createAsync(metaData: IMapSettings): Promise<any> {
-		let layer = this.createOrGetFromCache(metaData);
-		return Promise.resolve(layer);
+		return this.createOrGetFromCache(metaData)
 	}
 
 	existsInCache(metaData: IMapSettings): boolean {
 		const cacheId = this.generateLayerId(metaData);
-		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
-		return cacheLayers.length > 0;
+		const cacheLayer = this.cacheService.getLayerFromCache(cacheId);
+		return Boolean(cacheLayer);
 	}
 
-	getExtraData(metaData: IMapSettings) {
-
+	generateExtraData(metaData: IMapSettings): any  {
+		return {}
 	};
+
+	setExtraData(layer: any, extraData: any): void {
+	}
 
 	removeExtraData(layer: any) {
 	}

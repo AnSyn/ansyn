@@ -25,7 +25,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	public create(metaData: ICaseMapState): any[] {
+	public create(metaData: ICaseMapState): any {
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
 		const projection = 'EPSG:3857';
@@ -52,12 +52,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 			}
 		});
 
-		return [new TileLayer({ source })];
-	}
-
-	createAsync(metaData: ICaseMapState): Promise<any> {
-		let layer = this.createOrGetFromCache(metaData);
-		return Promise.resolve(layer[0]);
+		return Promise.resolve(new TileLayer({ source }));
 	}
 
 	getImageURL(url: string): Observable<any> {

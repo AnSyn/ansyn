@@ -123,9 +123,9 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			this.mapSettings.worldView.sourceType = sourceType;
 		}
 
-		const getLayers = layer ? Promise.resolve([layer]) : this.createMapSourceForMapType(mapType, sourceType);
-		return getLayers.then((layers) => {
-			return mapComponent.createMap(layers, position)
+		const getLayers = layer ? Promise.resolve(layer) : this.createMapSourceForMapType(mapType, sourceType);
+		return getLayers.then((layer) => {
+			return mapComponent.createMap(layer, position)
 				.pipe(
 					tap((map) => this.onMapCreated(map, mapType, this.activeMapName))
 				)
@@ -150,15 +150,10 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				resolve();
 			}
 
-			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType).then((layers) => {
-				this.resetView(layers[0], position).subscribe(() => {
-					if (layers.length > 0) {
-						for (let i = 1; i < layers.length; i++) {
-							this.ActiveMap.addLayer(layers[i]);
-						}
-					}
-
-					resolve(layers);
+			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType).then((layer) => {
+				this.resetView(layer, position).subscribe(() => {
+					this.ActiveMap.addLayer(layer);
+					resolve(layer);
 				});
 			});
 		});

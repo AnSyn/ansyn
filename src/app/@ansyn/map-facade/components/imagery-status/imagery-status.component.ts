@@ -152,6 +152,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get description() {
+		// return this._extraDescription ? this._extraDescription : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null
 		return (this.overlay && this.overlay) ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 

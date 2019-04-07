@@ -131,7 +131,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
 		const controls = [
@@ -159,7 +159,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		// For initMap() we invoke resetView without double buffer
 		// (otherwise resetView() would have waited for the tile loading to end, but we don't want initMap() to wait).
 		// The double buffer is not relevant at this stage anyway.
-		return this.resetView(layers[0], position);
+		return this.resetView(layer, position);
 	}
 
 	initListeners() {

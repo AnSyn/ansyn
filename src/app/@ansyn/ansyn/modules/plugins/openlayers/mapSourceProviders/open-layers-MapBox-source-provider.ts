@@ -13,7 +13,7 @@ export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: ICaseMapState): any[] {
+	create(metaData: ICaseMapState): Promise<any> {
 		const source = new XYZ({
 			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -26,6 +26,6 @@ export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
 			preload: Infinity
 		});
 
-		return [mapBoxLayer];
+		return Promise.resolve(mapBoxLayer);
 	}
 }

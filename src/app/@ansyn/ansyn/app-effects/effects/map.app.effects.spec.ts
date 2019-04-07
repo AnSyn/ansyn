@@ -16,6 +16,7 @@ import {
 } from '@ansyn/map-facade';
 import * as extentFromGeojson from '@ansyn/map-facade';
 import {
+	IBaseImageryMapConstructor, IMapSettings,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import {
@@ -76,8 +77,10 @@ import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case
 	supported: [<any> 'mapType1']
 })
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	create(metaData: any): any {
-		return true;
+	readonly supported: IBaseImageryMapConstructor[] = [];
+
+	create(metaData: any): Promise<any> {
+		return Promise.resolve(true);
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {

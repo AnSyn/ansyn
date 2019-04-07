@@ -14,8 +14,8 @@ import { MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 	supported: <any>['mapType1']
 })
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	create(metaData: any): any {
-		return true;
+	create(metaData: any): Promise<any> {
+		return Promise.resolve(true);
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {

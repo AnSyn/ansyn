@@ -144,8 +144,8 @@ describe('ContextAppEffects', () => {
 		sourceType: 'FIRST'
 	})
 	class MapSourceProviderMock extends BaseMapSourceProvider {
-		public create(metaData: any): any[] {
-			return [];
+		public create(metaData: any): Promise<any> {
+			return Promise.resolve(null);
 		}
 	}
 

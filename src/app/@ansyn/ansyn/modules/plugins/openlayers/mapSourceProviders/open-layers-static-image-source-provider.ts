@@ -32,7 +32,7 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	createAsync(metaData: ICaseMapState): Promise<any> {
+	create(metaData: ICaseMapState): Promise<any> {
 		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.imageWidth, metaData.data.overlay.tag.imageData.imageHeight];
 		const code = `static-image ${metaData.data.overlay.id}`;
 
@@ -53,7 +53,8 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 			source,
 			extent
 		});
-		return this.addFootprintToLayerPromise(Promise.resolve(layer), metaData);
+
+		return Promise.resolve(layer);
 	}
 
 }

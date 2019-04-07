@@ -6,16 +6,16 @@ import {
 	IOverlayDrop,
 	IOverlaysCriteria,
 	IOverlaysFetchData,
-	mapValuesToArray,
-	selectFavoriteOverlays,
-	sortByDateDesc
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/internal/operators';
+import { selectFavoriteOverlays } from '@ansyn/map-facade';
+import { sortByDateDesc } from '../../core/utils/sorting';
+import { mapValuesToArray } from '../../core/utils/misc';
 
 export const OverlaysConfig = 'overlaysConfig';
 

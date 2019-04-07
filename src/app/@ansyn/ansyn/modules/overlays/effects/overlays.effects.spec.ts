@@ -11,16 +11,19 @@ import {
 import { OverlaysEffects } from './overlays.effects';
 import { OverlaysService } from '../services/overlays.service';
 import {
-	OverlayReducer, overlaysAdapter,
+	OverlayReducer,
+	overlaysAdapter,
 	overlaysFeatureKey,
 	overlaysInitialState,
 	overlaysStateSelector
 } from '../reducers/overlays.reducer';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { coreInitialState, coreStateSelector, IOverlay, LoggerService } from '@ansyn/core';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
-import { OverlaySourceProvider } from '../public_api';
+import { IOverlay } from '@ansyn/imagery';
+import { LoggerService } from '../../core/services/logger.service';
+import { OverlaySourceProvider } from '../models/overlays-source-providers';
+import { imageryStatusInitialState, imageryStatusFeatureKey } from '@ansyn/map-facade';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -99,13 +102,13 @@ describe('Overlays Effects ', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		const coreState = { ...coreInitialState };
+		const imageryStatusState = { ...imageryStatusInitialState };
 		let overlayState = cloneDeep(overlaysInitialState);
 		overlayState = overlaysAdapter.addAll(overlays, overlayState);
-		coreState.favoriteOverlays = favoriteOverlays;
+		imageryStatusState.favoriteOverlays = favoriteOverlays;
 
 		const fakeStore = new Map<any, any>([
-			[coreStateSelector, coreState],
+			[imageryStatusFeatureKey, imageryStatusState],
 			[overlaysStateSelector, overlayState]
 		]);
 		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
@@ -128,7 +131,7 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('onRequestOverlayByID$ from IDAHO should dispatch DisplayOverlayAction with overlay', () => {
-		const fakeOverlay = <IOverlay> { id: 'test' };
+		const fakeOverlay = <IOverlay>{ id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
@@ -139,7 +142,7 @@ describe('Overlays Effects ', () => {
 		});
 		const expectedResults = cold('--b--', {
 			b: new DisplayOverlayAction({
-				overlay: <any> fakeOverlay,
+				overlay: <any>fakeOverlay,
 				mapId: 'testMapId',
 				forceFirstDisplay: true
 			})
@@ -149,7 +152,7 @@ describe('Overlays Effects ', () => {
 	});
 
 	it('onRequestOverlayByID$ from PLANET should dispatch DisplayOverlayAction with overlay', () => {
-		const fakeOverlay = <IOverlay> { id: 'test' };
+		const fakeOverlay = <IOverlay>{ id: 'test' };
 		overlaysService.getOverlayById.and.returnValue(of(fakeOverlay));
 		actions = hot('--a--', {
 			a: new RequestOverlayByIDFromBackendAction({
@@ -160,7 +163,7 @@ describe('Overlays Effects ', () => {
 		});
 		const expectedResults = cold('--b--', {
 			b: new DisplayOverlayAction({
-				overlay: <any> fakeOverlay,
+				overlay: <any>fakeOverlay,
 				mapId: 'testMapId',
 				forceFirstDisplay: true
 			})

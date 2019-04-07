@@ -1,10 +1,10 @@
-import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import {
-	ErrorHandlerService,
+	CacheService,
 	ICaseMapState,
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/core';
+	ImageryCommunicatorService,
+	ImageryMapSource,
+	IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import Projection from 'ol/proj/Projection';
 import Static from 'ol/source/ImageStatic';
 import ImageLayer from 'ol/layer/Image';
@@ -13,6 +13,7 @@ import { Inject } from '@angular/core';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 

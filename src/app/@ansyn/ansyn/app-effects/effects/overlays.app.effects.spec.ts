@@ -1,50 +1,19 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
-import {
-	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
-	MarkUpClass,
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
-	OverlaysService,
-	overlaysStateSelector,
-	selectDropMarkup,
-	selectOverlaysMap,
-	SetFilteredOverlaysAction,
-	SetHoveredOverlayAction
-} from '../../modules/overlays/public_api';
 import { Observable, of } from 'rxjs';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	CasesService,
-	casesStateSelector,
-	initialCasesState,
-	IToolsState,
-	toolsFeatureKey,
-	toolsInitialState,
-	ToolsReducer,
-	toolsStateSelector
-} from '../../modules/menu-items/public_api';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '../../modules/status-bar/public_api';
-
+import { statusBarStateSelector } from '../../modules/status-bar/reducers/status-bar.reducer';
 import {
-	coreInitialState,
-	coreStateSelector,
-	DisplayedOverlay,
+	BaseMapSourceProvider,
+	CacheService,
+	ImageryCommunicatorService,
+	ImageryMapSource,
 	ICase,
-	MAP_SOURCE_PROVIDERS_CONFIG,
-	SetLayoutAction,
-	SetLayoutSuccessAction
-} from '@ansyn/core';
-import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+	MAP_SOURCE_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import {
 	initialMapState,
 	mapFeatureKey,
@@ -52,10 +21,38 @@ import {
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectMapsList,
-	SetPendingOverlaysAction
+	SetPendingOverlaysAction,
+	SetLayoutAction, SetLayoutSuccessAction
 } from '@ansyn/map-facade';
 
 import { cloneDeep as _cloneDeep } from 'lodash';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector, initialCasesState
+} from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+import {
+	IToolsState,
+	toolsFeatureKey,
+	toolsInitialState,
+	ToolsReducer, toolsStateSelector
+} from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	DisplayOverlaySuccessAction,
+	SetFilteredOverlaysAction,
+	SetHoveredOverlayAction
+} from '../../modules/overlays/actions/overlays.actions';
+import {
+	MarkUpClass,
+	OverlayReducer,
+	overlaysFeatureKey, overlaysInitialState,
+	overlaysStateSelector,
+	selectDropMarkup, selectOverlaysMap
+} from '../../modules/overlays/reducers/overlays.reducer';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -142,8 +139,6 @@ describe('OverlaysAppEffects', () => {
 		overlaysState.entities = { ...exampleOverlays };
 		overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 	};
-
-	const coreState = { ...coreInitialState };
 
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
 
@@ -235,7 +230,6 @@ describe('OverlaysAppEffects', () => {
 			[toolsStateSelector, toolsState],
 			[mapStateSelector, mapState],
 			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
 			[selectMapsList, Object.values(mapState.entities)]

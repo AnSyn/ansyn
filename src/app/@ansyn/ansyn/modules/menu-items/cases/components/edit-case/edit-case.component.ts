@@ -2,12 +2,11 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { ICase, ICasePreview, IContext } from '@ansyn/core';
+import { ICase, ICasePreview } from '@ansyn/imagery';
 import { CasesService } from '../../services/cases.service';
-import { selectContextsArray } from '@ansyn/core';
 import { map, take } from 'rxjs/operators';
 
 const animationsDuring = '0.2s';
@@ -44,18 +43,18 @@ export class EditCaseComponent implements OnInit {
 	activeCase$: Observable<ICase> = this.casesState$
 		.pipe(map(this.getCloneActiveCase.bind(this)));
 
-	contextsList$: Observable<IContext[]> = this.store.select(selectContextsArray).pipe(
+	contextsList$: Observable<any[]> = of([]).pipe(
 		map(this.addDefaultContext)
 	);
 
-	contextsList: IContext[];
+	contextsList: any[];
 	caseModel: ICase;
 	editMode = false;
 
 	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
 	}
 
-	addDefaultContext(context: IContext[]): IContext[] {
+	addDefaultContext(context: any[]): any[] {
 		return [
 			{ id: 'default', name: 'Default ICase', creationTime: new Date() },
 			...context
@@ -109,7 +108,7 @@ export class EditCaseComponent implements OnInit {
 			this.caseModel = activeCase;
 		});
 
-		this.contextsList$.subscribe((_contextsList: IContext[]) => {
+		this.contextsList$.subscribe((_contextsList: any[]) => {
 			this.contextsList = _contextsList;
 		});
 

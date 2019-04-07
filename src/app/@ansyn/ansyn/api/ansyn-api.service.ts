@@ -5,34 +5,18 @@ import {
 	MapActionTypes,
 	selectActiveMapId,
 	selectMaps,
-	selectMapsList,
+	selectMapsList, SetLayoutAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import {
-	GoToAction,
-	ILayer,
-	ProjectionConverterService,
-	selectActiveAnnotationLayer,
-	selectLayersEntities,
-	SetActiveCenter,
-	ToolsActionsTypes,
-	UpdateLayer
-} from '../modules/menu-items/public_api';
-import {
-	CoreActionTypes,
 	ICaseMapPosition,
 	ICaseMapState,
-	ICoordinatesSystem,
 	IOverlay,
-	IOverlaysCriteria,
-	LayoutKey,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction
-} from '@ansyn/core';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/public_api';
+	IOverlaysCriteria, LayoutKey
+} from '@ansyn/imagery';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
@@ -40,6 +24,17 @@ import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ANSYN_ID } from './ansyn-id.provider';
+import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
+import { ILayer } from '../modules/menu-items/layers-manager/models/layers.model';
+import { ProjectionConverterService } from '../modules/menu-items/tools/services/projection-converter.service';
+import {
+	selectActiveAnnotationLayer,
+	selectLayersEntities
+} from '../modules/menu-items/layers-manager/reducers/layers.reducer';
+import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
+import { SetOverlaysCriteriaAction } from '../modules/overlays/actions/overlays.actions';
+import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
+import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/actions/overlays.actions';
 
 @Injectable({
 	providedIn: 'root'
@@ -90,7 +85,7 @@ export class AnsynApi {
 	);
 
 	onSetLayoutSuccess$: Observable<any> = this.actions$.pipe(
-		ofType(CoreActionTypes.SET_LAYOUT_SUCCESS)
+		ofType(MapActionTypes.SET_LAYOUT_SUCCESS)
 	);
 
 	getActiveCenter$: Observable<any> = this.actions$.pipe(

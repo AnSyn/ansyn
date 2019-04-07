@@ -4,7 +4,10 @@ import { UrlSerializer } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
-import { CoreConfig, ErrorHandlerService, ICase, StorageService } from '@ansyn/core';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { ICase } from '@ansyn/imagery';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 export const MockCasesConfig = {
 	provide: casesConfig,

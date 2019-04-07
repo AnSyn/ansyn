@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SettingsComponent } from './settings.component';
-import { SliderCheckboxComponent } from '@ansyn/core';
 import { StoreModule } from '@ngrx/store';
 import { settingsFeatureKey, SettingsReducer } from '../reducers/settings.reducer';
+import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
 
 describe('SettingsComponent', () => {
 	let component: SettingsComponent;

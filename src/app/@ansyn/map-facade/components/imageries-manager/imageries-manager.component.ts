@@ -2,23 +2,22 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { IMapState, selectActiveMapId, selectMaps, selectMapsIds } from '../../reducers/map.reducer';
+import {
+	IMapState,
+	selectActiveMapId,
+	selectLayout,
+	selectMaps,
+	selectMapsIds,
+	selectWasWelcomeNotificationShown
+} from '../../reducers/map.reducer';
 import {
 	ActiveImageryMouseEnter,
 	ClickOutsideMap,
-	SetActiveMapId, SetMapsDataActionStore,
+	SetActiveMapId,
 	UpdateMapSizeAction
 } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
-import {
-	coreStateSelector,
-	ICaseMapState,
-	ICoreState,
-	IMapsLayout,
-	LayoutKey,
-	layoutOptions,
-	selectLayout
-} from '@ansyn/core';
+import { ICaseMapState, IMapsLayout, LayoutKey, layoutOptions } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { DragDropMapService } from './providers/drag-drop-map.service';
@@ -39,12 +38,9 @@ export class ImageriesManagerComponent implements OnInit {
 	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
 	public mapsEntities$: Observable<Dictionary<ICaseMapState>> = this.store.select(selectMaps);
 	public ids$ = this.store.select(selectMapsIds);
-	public renderContextMenu: boolean;
 
 	public showWelcomeNotification$ = this.store.pipe(
-		select(coreStateSelector),
-		pluck<ICoreState, boolean>('wasWelcomeNotificationShown'),
-		distinctUntilChanged(),
+		select(selectWasWelcomeNotificationShown),
 		map(bool => !bool)
 	);
 
@@ -72,14 +68,9 @@ export class ImageriesManagerComponent implements OnInit {
 		this.initListeners();
 		this.initSubscribers();
 		this.initClickOutside();
-		this.initRenderContextMenu();
 	}
 
-	initRenderContextMenu() {
-		setTimeout(() => {
-			this.renderContextMenu = true;
-		}, 1000);
-	}
+
 
 	initClickOutside() {
 		fromEvent(this.document, 'click').pipe(

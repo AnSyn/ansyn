@@ -1,10 +1,6 @@
 {
   "extends": "../../../../tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "@ansyn/core": [
-        "src/app/@ansyn/core/public_api"
-      ]
-    }
+    "paths": {}
   }
 }

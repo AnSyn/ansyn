@@ -1,12 +1,13 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { GoToAction, ProjectionConverterService } from '../modules/menu-items/public_api';
 import { AnsynApi } from './ansyn-api.service';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
-import { IOverlay, LayoutKey, SetLayoutAction } from '@ansyn/core';
-import { DisplayOverlayAction } from '../modules/overlays/public_api';
+import { mapFeatureKey, MapReducer, SetLayoutAction } from '@ansyn/map-facade';
+import { IOverlay, LayoutKey } from '@ansyn/imagery';
 import { ANSYN_ID } from './ansyn-id.provider';
+import { GoToAction } from '../modules/menu-items/tools/actions/tools.actions';
+import { ProjectionConverterService } from '../modules/menu-items/tools/services/projection-converter.service';
+import { DisplayOverlayAction } from '../modules/overlays/actions/overlays.actions';
 
 describe('apiService', () => {
 	let ansynApi: AnsynApi;

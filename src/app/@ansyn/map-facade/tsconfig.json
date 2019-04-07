@@ -3,14 +3,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "paths": {
-      "@ansyn/core": [
-        "src/app/@ansyn/core/public_api"
-      ],
       "@ansyn/imagery": [
         "src/app/@ansyn/imagery/public_api"
-      ],
-      "@ansyn/menu": [
-        "src/app/@ansyn/menu/public_api"
       ]
     },
     "target": "es5",

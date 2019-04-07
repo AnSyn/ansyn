@@ -7,15 +7,12 @@ import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
-import {
-	coreInitialState,
-	coreStateSelector,
-	IOverlaysCriteria,
-	MultipleOverlaysSourceConfig,
-	SliderCheckboxComponent
-} from '@ansyn/core';
+import { IOverlaysCriteria } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
+import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
+import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -29,7 +26,9 @@ describe('TreeViewComponent', () => {
 			declarations: [TreeViewComponent, SliderCheckboxComponent],
 			imports: [
 				TranslateModule.forRoot(),
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({
+					[overlaysFeatureKey]: OverlayReducer
+				}),
 				TreeviewModule.forRoot()],
 			providers: [
 				{ provide: USE_DEFAULT_LANG },
@@ -81,14 +80,11 @@ describe('TreeViewComponent', () => {
 		}
 	};
 
-	const coreState = { ...coreInitialState, searchParams };
-
 	beforeEach(inject([Store], (_store) => {
 		store = _store;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		const fakeStore = new Map<any, any>([
-			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState]
+			[statusBarStateSelector, statusBarState]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));

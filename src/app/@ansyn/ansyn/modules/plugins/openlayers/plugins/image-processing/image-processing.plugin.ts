@@ -1,18 +1,18 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
-import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/core';
+import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/public_api';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { selectMaps } from '@ansyn/map-facade';
+import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

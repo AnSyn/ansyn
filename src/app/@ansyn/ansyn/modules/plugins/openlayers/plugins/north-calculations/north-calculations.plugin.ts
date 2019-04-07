@@ -1,30 +1,19 @@
-import {
-	areCoordinatesNumeric,
-	BackToWorldSuccess,
-	BackToWorldView,
-	CaseOrientation,
-	CoreActionTypes,
-	ICaseMapPosition,
-	IOverlay,
-	LoggerService,
-	toDegrees,
-	toRadians
-} from '@ansyn/core';
 import { forkJoin, Observable, Observer, of, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
-import {
-	ChangeOverlayPreviewRotationAction,
-	DisplayOverlaySuccessAction,
-	OverlaysActionTypes,
-	selectHoveredOverlay
-} from '../../../../overlays/public_api';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
-import { comboBoxesOptions, IStatusBarState, statusBarStateSelector } from '../../../../status-bar/public_api';
-import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, CaseOrientation, areCoordinatesNumeric, ICaseMapPosition,
+	IOverlay } from '@ansyn/imagery';
+import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
+import {
+	BackToWorldSuccess,
+	BackToWorldView,
+	MapActionTypes,
+	PointToRealNorthAction,
+	selectActiveMapId
+} from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import {
@@ -43,6 +32,15 @@ import {
 import OLMap from 'ol/Map';
 import View from 'ol/View';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
+import { LoggerService } from '../../../../core/services/logger.service';
+import { toDegrees, toRadians } from '@ansyn/map-facade';
+import {
+	ChangeOverlayPreviewRotationAction,
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes
+} from '../../../../overlays/actions/overlays.actions';
+import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -109,7 +107,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$.pipe(
-		ofType<BackToWorldSuccess>(CoreActionTypes.BACK_TO_WORLD_SUCCESS),
+		ofType<BackToWorldSuccess>(MapActionTypes.BACK_TO_WORLD_SUCCESS),
 		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
 		withLatestFrom(this.store$.select(statusBarStateSelector)),
 		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
@@ -168,7 +166,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 						currentRotationDegrees = currentRotationDegrees % 360;
 						return toRadians(currentRotationDegrees);
 					})
-				)
+				);
 			}
 			return of(0);
 		}),
@@ -314,7 +312,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	resetShadowMapView() {
-		const layers = this.shadowMapObject.getLayers()
+		const layers = this.shadowMapObject.getLayers();
 		layers.forEach((layer) => {
 			this.shadowMapObject.removeLayer(layer);
 		});

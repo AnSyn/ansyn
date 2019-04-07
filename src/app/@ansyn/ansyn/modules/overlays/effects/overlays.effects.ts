@@ -8,26 +8,28 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
-	SetMarkUp,
+	SetMarkUp, SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
 import { OverlaysService } from '../services/overlays.service';
 import { select, Store } from '@ngrx/store';
-import { MarkUpClass, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
-import {
-	BackToWorldView,
-	IOverlay,
-	IOverlaysFetchData,
-	LoggerService,
-	selectFavoriteOverlays,
-	selectPresetOverlays,
-	UpdateOverlaysCountAction
-} from '@ansyn/core';
-import { catchError, filter, map, mergeMap, switchMap } from 'rxjs/operators';
+import { MarkUpClass, overlaysStateSelector, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
+import { BackToWorldView, selectFavoriteOverlays, selectPresetOverlays  } from '@ansyn/map-facade';
+import { UpdateOverlaysCountAction } from '../../overlays/actions/overlays.actions';
+import { LoggerService } from '../../core/services/logger.service';
 
 @Injectable()
 export class OverlaysEffects {
 
+
+	@Effect()
+	setOverlaysCriteria$ = this.actions$.pipe(
+		ofType<SetOverlaysCriteriaAction>(OverlaysActionTypes.SET_OVERLAYS_CRITERIA),
+		filter(action => !(action.options && action.options.noInitialSearch)),
+		withLatestFrom(this.store$.select(overlaysStateSelector)),
+		map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria)));
 
 	@Effect()
 	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe(
@@ -54,7 +56,7 @@ export class OverlaysEffects {
 					return actions;
 				}),
 				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]))
-			)
+			);
 		})
 	);
 

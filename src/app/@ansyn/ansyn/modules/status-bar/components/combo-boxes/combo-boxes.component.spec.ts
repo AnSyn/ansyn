@@ -7,8 +7,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-timepicker.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { ClickOutsideDirective, coreFeatureKey, CoreReducer, MockComponent } from '@ansyn/core';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
+import { ClickOutsideDirective, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { MockComponent } from '../../../core/test/mock-component';
+import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
@@ -45,8 +47,9 @@ describe('ComboBoxesComponent', () => {
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({
-				[coreFeatureKey]: CoreReducer,
-				[statusBarFeatureKey]: StatusBarReducer
+				[statusBarFeatureKey]: StatusBarReducer,
+				[overlaysFeatureKey]: OverlayReducer,
+				[mapFeatureKey]: MapReducer
 			}), EffectsModule.forRoot([])],
 			providers: [
 				{

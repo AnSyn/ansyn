@@ -8,7 +8,6 @@ import {
 	selectCurrentAlgorithmTask,
 	selectTaskTotal
 } from '../reducers/tasks.reducer';
-import { ErrorHandlerService } from '@ansyn/core';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { TasksService } from '../services/tasks.service';
 import {
@@ -24,6 +23,7 @@ import {
 import { AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';
 import { TasksRemoteService } from '../services/tasks-remote.service';
 import { filter } from 'rxjs/internal/operators';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 
 @Injectable()
 export class TasksEffects {

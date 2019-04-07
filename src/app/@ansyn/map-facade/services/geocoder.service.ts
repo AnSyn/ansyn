@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ErrorHandlerService } from '@ansyn/core';
 import { Observable, of } from 'rxjs';
 import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { catchError, map } from 'rxjs/operators';
+import { SetToastMessageAction } from '../actions/map.actions';
 
 @Injectable()
 export class GeocoderService {
@@ -12,7 +12,6 @@ export class GeocoderService {
 	public config: IMapSearchConfig = null;
 
 	constructor(protected http: HttpClient,
-				protected errorHandlerService: ErrorHandlerService,
 				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig) {
 		this.config = this.packageConfig.mapSearch;
 	}
@@ -23,9 +22,8 @@ export class GeocoderService {
 			map(res => res.resourceSets[0].resources[0]),
 			map(res => res ? { ...res.point, coordinates: res.point.coordinates.reverse() } : null),
 			catchError((error: Response | any) => {
-				this.errorHandlerService.httpErrorHandle(error);
 				console.warn(error);
-				return of(null);
+				return of(new SetToastMessageAction({ toastText: 'Connection Problem', showWarningIcon: true }));
 			})
 		);
 	}

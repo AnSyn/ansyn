@@ -5,9 +5,10 @@ import {
 	IOverlaysManualProcessArgs,
 	IVisualizerStyle,
 	OverlayDisplayMode,
-	type
-} from '@ansyn/core';
+} from '@ansyn/imagery';
+
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
+import { type } from '../../../core/utils/type';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -33,7 +34,8 @@ export const ToolsActionsTypes = {
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
 	},
-	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER'
+	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER',
+	CLEAR_ACTIVE_TOOLS: 'CLEAR_ACTIVE_TOOLS'
 };
 
 export class UpdateOverlaysManualProcessArgs implements Action {
@@ -190,6 +192,13 @@ export class SetSubMenu implements Action {
 
 	}
 }
+export class ClearActiveInteractionsAction implements Action {
+	type = ToolsActionsTypes.CLEAR_ACTIVE_TOOLS;
+
+	constructor(public payload?: { skipClearFor: Array<any> }) {
+
+	}
+}
 
 export type ToolsActions =
 	UpdateOverlaysManualProcessArgs
@@ -210,4 +219,5 @@ export type ToolsActions =
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState
-	| SetSubMenu;
+	| SetSubMenu
+	| ClearActiveInteractionsAction;

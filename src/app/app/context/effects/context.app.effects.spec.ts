@@ -32,13 +32,13 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { statusBarStateSelector } from '@ansyn/ansyn';
 import {
-	coreInitialState,
-	coreStateSelector,
 	DisplayedOverlay, ErrorHandlerService,
+	StorageService
+} from '@ansyn/ansyn';
+import {
 	ICase,
 	MAP_SOURCE_PROVIDERS_CONFIG,
-	StorageService
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { cloneDeep as _cloneDeep } from 'lodash';
@@ -133,8 +133,6 @@ describe('ContextAppEffects', () => {
 		overlaysState.entities = { ...exampleOverlays };
 		overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
 	};
-
-	const coreState = { ...coreInitialState };
 
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
 
@@ -235,7 +233,6 @@ describe('ContextAppEffects', () => {
 			[toolsStateSelector, toolsState],
 			[mapStateSelector, mapState],
 			[statusBarStateSelector, statusBarState],
-			[coreStateSelector, coreState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
 			[contextFeatureSelector, contextState],

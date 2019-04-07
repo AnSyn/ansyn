@@ -2,7 +2,9 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { CasesAutoSaveComponent } from './cases-auto-save.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
-import { ICase, SetAutoSave, SliderCheckboxComponent } from '@ansyn/core';
+import { ICase } from '@ansyn/imagery';
+import { SliderCheckboxComponent } from '../../../../core/forms/slider-checkbox/slider-checkbox.component';
+import { SetAutoSave } from '../../actions/cases.actions';
 
 describe('CasesAutoSaveComponent', () => {
 	let component: CasesAutoSaveComponent;

@@ -4,11 +4,11 @@ import { SortPipe } from '../../pipes/sort.pipe';
 import { MapIteratorPipe } from '../../pipes/map-iterator.pipe';
 import { EnumFilterContainerComponent } from './enum-filter-container.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { AnsynCheckboxComponent } from '@ansyn/core';
 import { ShowMorePipe } from '../../pipes/show-more.pipe';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
 import { filtersConfig } from '../../services/filters.service';
 import { FormsModule } from '@angular/forms';
+import { AnsynCheckboxComponent } from '../../../../core/forms/ansyn-checkbox/ansyn-checkbox.component';
 
 describe('EnumFilterContainerComponent', () => {
 	let component: EnumFilterContainerComponent;

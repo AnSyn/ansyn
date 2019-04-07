@@ -1,15 +1,14 @@
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryPlugin, ICaseMapState, ImageryPlugin, IOverlayDrop } from '@ansyn/imagery';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { select, Store } from '@ngrx/store';
-import { Actions } from '@ngrx/effects';
 import { combineLatest, Observable } from 'rxjs';
-import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { AddAlertMsg, AlertMsgTypes, ICaseMapState, IOverlayDrop, isFullOverlay, RemoveAlertMsg } from '@ansyn/core';
+import { AddAlertMsg, AlertMsgTypes, MapFacadeService, RemoveAlertMsg, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { selectDrops } from '../../../../overlays/reducers/overlays.reducer';
+import { isFullOverlay } from '../../../../core/utils/overlays';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

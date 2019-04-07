@@ -1,7 +1,6 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { CaseMapExtent, CoreConfig, ExtentCalculator, ICaseMapPosition, ICoreConfig, toDegrees } from '@ansyn/core';
-import { BaseImageryMap, ImageryMap } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, CaseMapExtent, ICaseMapPosition  } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
@@ -10,6 +9,10 @@ import { CesiumProjectionService } from '../../projection/cesium-projection.serv
 
 import { fromPromise } from "rxjs/internal-compatibility";
 import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
+import { CoreConfig } from '../../../../core/models/core.config';
+import { ExtentCalculator } from '../../../../core/utils/extent-calculator';
+import { ICoreConfig } from '../../../../core/models/core.config.model';
+import { toDegrees } from '@ansyn/map-facade';
 
 declare const Cesium: any;
 

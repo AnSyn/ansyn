@@ -3,7 +3,6 @@ import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CommonModule } from '@angular/common';
 import { TasksComponent } from './components/tasks/tasks.component';
-import { CoreModule } from '@ansyn/core';
 import { TasksTableComponent } from './components/tasks-table/tasks-table.component';
 import { TasksTablePageComponent } from './components/tasks-table-page/tasks-table-page.component';
 import { TasksTablePageHeaderComponent } from './components/tasks-table-page-header/tasks-table-page-header.component';
@@ -19,6 +18,7 @@ import { TasksEffects } from './effects/tasks.effects';
 import { RemoveTaskModalComponent } from './components/remove-task-modal/remove-task-modal.component';
 import { TasksRemoteService } from './services/tasks-remote.service';
 import { OverlaysModule } from '../../overlays/overlays.module';
+import { CoreModule } from '../../core/core.module';
 
 @NgModule({
 	imports: [

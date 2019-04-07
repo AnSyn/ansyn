@@ -1,14 +1,14 @@
 import {
-	CoreActionTypes,
-	IOverlay, IOverlayDrop,
-	IOverlaySpecialObject,
-	SetOverlaysCriteriaAction
-} from '@ansyn/core';
+	ICaseDataInputFiltersState,
+	IOverlay, IOverlayDrop, IOverlaysCriteria,
+	IOverlaySpecialObject
+} from '@ansyn/imagery';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
 import { EntityState, createEntityAdapter, EntityAdapter, Dictionary } from '@ngrx/entity';
+import { ImageryStatusActionTypes, MapActionTypes } from '@ansyn/map-facade';
 
 export interface ITimelineRange {
 	start: Date;
@@ -25,7 +25,7 @@ export interface IOverlayDropSources {
 	filteredOverlays: string[];
 	specialObjects: Map<string, IOverlaySpecialObject>;
 	favoriteOverlays: IOverlay[];
-	showOnlyFavorites: boolean
+	showOnlyFavorites: boolean;
 }
 
 export interface IMarkUpData {
@@ -63,6 +63,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	statusMessage: string;
 	dropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData>;
 	hoveredOverlay: IOverlay;
+	overlaysCriteria: IOverlaysCriteria;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -82,7 +83,8 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	drops: [],
 	statusMessage: null,
 	dropsMarkUp: initDropsMarkUp,
-	hoveredOverlay: null
+	hoveredOverlay: null,
+	overlaysCriteria: {}
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -96,12 +98,15 @@ export const overlaysStatusMessages = {
 
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
-		case CoreActionTypes.SET_OVERLAYS_CRITERIA:
-			const options = (<SetOverlaysCriteriaAction> action).options;
+		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
+			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
+
+			const { options } = <any>action;
 			if (options && options.noInitialSearch) {
-				return { ...state, loading: false, displayOverlayHistory: {} };
+				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
 			}
-			return { ...state, displayOverlayHistory: {} };
+			return { ...state, displayOverlayHistory: {}, overlaysCriteria };
+		}
 		case OverlaysActionTypes.SELECT_OVERLAY:
 
 			const selected = state.selectedOverlays.slice();
@@ -255,7 +260,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				}
 			};
 
-		case CoreActionTypes.SET_REMOVED_OVERLAY_ID:
+		case ImageryStatusActionTypes.SET_REMOVED_OVERLAY_ID:
 			if (action.payload.value) {
 				const displayOverlayHistory = { ...state.displayOverlayHistory };
 				Object.entries(displayOverlayHistory).forEach(([key, value]) => {
@@ -265,8 +270,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 			return state;
 
-		/* Hack: should be on app effects */
-		case 'SET_MAPS_DATA':
+		case MapActionTypes.SET_MAPS_DATA:
 			const { mapsList } = action.payload;
 			if (mapsList) {
 				const { displayOverlayHistory } = state;
@@ -300,3 +304,9 @@ export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overl
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
+
+
+export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays.overlaysCriteria);
+export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
+export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectTime: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);

@@ -6,7 +6,6 @@ import { DeleteTaskAction, LoadTasksAction } from '../../actions/tasks.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { CoreConfig, LoggerConfig, MockComponent } from '@ansyn/core';
 import { TasksService } from '../../services/tasks.service';
 import { mapFacadeConfig } from '@ansyn/map-facade';
 import { TasksRemoteService } from '../../services/tasks-remote.service';
@@ -14,6 +13,9 @@ import { MenuConfig } from '@ansyn/menu';
 import { TranslateModule } from '@ngx-translate/core';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { of } from 'rxjs/index';
+import { CoreConfig } from '../../../../core/models/core.config';
+import { LoggerConfig } from '../../../../core/models/logger.config';
+import { MockComponent } from '../../../../core/test/mock-component';
 
 describe('TasksTableComponent', () => {
 	let component: TasksTableComponent;

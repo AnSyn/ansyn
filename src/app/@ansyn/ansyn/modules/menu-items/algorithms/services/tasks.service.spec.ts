@@ -1,8 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
-
 import { TasksService } from './tasks.service';
-import { ErrorHandlerService, StorageService } from '@ansyn/core';
 import { OverlaysService } from '../../../overlays/services/overlays.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 describe('TasksService', () => {
 	beforeEach(() => {

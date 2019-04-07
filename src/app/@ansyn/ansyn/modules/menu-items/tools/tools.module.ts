@@ -9,13 +9,13 @@ import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
 import { ProjectionConverterService } from './services/projection-converter.service';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
-import { CoreModule } from '@ansyn/core';
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 // @dynamic
 @NgModule({
 	imports: [
 		CommonModule,
-		CoreModule,
+		MapFacadeModule,
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer)
 	],

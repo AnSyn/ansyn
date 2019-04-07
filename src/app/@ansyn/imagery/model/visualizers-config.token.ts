@@ -1,4 +1,4 @@
-import { IVisualizerStateStyle } from '@ansyn/core';
+import { IVisualizerStateStyle } from './visualizers/visualizer-state';
 
 export const VisualizersConfig = 'visualizersConfig';
 

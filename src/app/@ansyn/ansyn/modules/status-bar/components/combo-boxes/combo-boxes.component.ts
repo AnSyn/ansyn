@@ -10,24 +10,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
-import {
-	CaseGeoFilter,
-	CaseOrientation,
-	CaseTimeFilter,
-	CoreActionTypes,
-	ICaseDataInputFiltersState,
-	ICaseTimeState,
-	IOverlay,
-	LayoutKey,
-	layoutOptions,
-	selectDataInputFilter,
-	selectLayout,
-	selectRegion,
-	selectTime,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction,
-	UpdateOverlaysCountAction
-} from '@ansyn/core';
 import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions } from '@ngrx/effects';
 import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
@@ -36,6 +18,16 @@ import { AnimationTriggerMetadata } from '@angular/animations/src/animation_meta
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, map, tap } from 'rxjs/operators';
 import { ofType } from '@ngrx/effects';
+import {
+	CaseGeoFilter,
+	CaseOrientation,
+	CaseTimeFilter,
+	ICaseDataInputFiltersState,
+	ICaseTimeState, IOverlay, LayoutKey, layoutOptions
+} from '@ansyn/imagery';
+import { selectLayout, SetLayoutAction } from '@ansyn/map-facade';
+import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
+import { OverlaysActionTypes, UpdateOverlaysCountAction, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -76,7 +68,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	);
 
 	overlaysCount$: Observable<number> = this.actions$.pipe(
-		ofType(CoreActionTypes.UPDATE_OVERLAY_COUNT),
+		ofType(OverlaysActionTypes.UPDATE_OVERLAY_COUNT),
 		map(({ payload }: UpdateOverlaysCountAction) => payload)
 	);
 

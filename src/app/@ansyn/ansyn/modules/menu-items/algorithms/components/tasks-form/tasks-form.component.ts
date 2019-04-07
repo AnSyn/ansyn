@@ -3,7 +3,7 @@ import { TasksService } from '../../services/tasks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { ICaseMapState, IOverlay, selectFavoriteOverlays } from '@ansyn/core';
+import { ICaseMapState, IOverlay } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { switchMap, take, tap } from 'rxjs/internal/operators';
 import {
@@ -31,7 +31,7 @@ import {
 	selectCurrentAlgorithmTaskRegion,
 	selectCurrentAlgorithmTaskStatus
 } from '../../reducers/tasks.reducer';
-import { selectActiveMapId, selectMaps } from '@ansyn/map-facade';
+import { selectActiveMapId, selectMaps, selectFavoriteOverlays } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 import { Dictionary } from '@ngrx/entity';
 

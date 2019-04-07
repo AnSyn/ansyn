@@ -2,9 +2,6 @@
   "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@ansyn/core": [
-        "dist/ansyn/core"
-      ],
       "@ansyn/menu": [
         "dist/ansyn/menu"
       ],

@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
-import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState, IStoredEntity } from '@ansyn/core';
+import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/imagery';
 import { Params } from '@angular/router';
+import { IStoredEntity } from '../../../core/services/storage/storage.service';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -36,7 +37,9 @@ export const CasesActionTypes = {
 	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
 
 	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
-	MANUAL_SAVE: 'MANUAL_SAVE'
+	MANUAL_SAVE: 'MANUAL_SAVE',
+
+	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
 };
 
 export type CasesActions = any;
@@ -168,5 +171,12 @@ export class ManualSaveAction implements Action {
 	readonly type = CasesActionTypes.MANUAL_SAVE;
 
 	constructor(public payload: ICase) {
+	}
+}
+
+export class SetAutoSave implements Action {
+	readonly type = CasesActionTypes.SET_AUTO_SAVE;
+
+	constructor(public payload: boolean) {
 	}
 }

@@ -1,10 +1,10 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
+import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
-import { AnnotationMode, ClearActiveInteractionsAction, IVisualizerStyle } from '@ansyn/core';
+import { AnnotationMode, IVisualizerStyle } from '@ansyn/imagery';
 import { map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';

@@ -1,27 +1,12 @@
 import { forkJoin, Observable } from 'rxjs';
-import {
-	BaseOverlaySourceProvider,
-	IFetchParams,
-	IOverlayByIdMetaData,
-	IOverlayFilter,
-	IStartAndEndDate,
-	OverlaySourceProvider,
-	timeIntersection
-} from '../../../modules/overlays/public_api';
 import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
-	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon, GeoRegisteration,
-	IDataInputFilterValue, IMultipleOverlaysSourceConfig,
-	IOverlay,
-	limitArray,
-	LoggerService, MultipleOverlaysSourceConfig,
-	Overlay,
-	sortByDateDesc,
-	toRadians
-} from '@ansyn/core';
+	IDataInputFilterValue,
+	IOverlay
+} from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { catchError, map } from 'rxjs/operators';
@@ -29,7 +14,19 @@ import { catchError, map } from 'rxjs/operators';
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
-import { IStatusBarConfig, StatusBarConfig } from '../../../modules/status-bar/public_api';
+import { Overlay } from '@ansyn/imagery';
+import { ErrorHandlerService } from '../../../modules/core/services/error-handler.service';
+import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from '../../../modules/core/models/multiple-overlays-source-config';
+import { limitArray } from '../../../modules/core/utils/i-limited-array';
+import { LoggerService } from '../../../modules/core/services/logger.service';
+import { sortByDateDesc } from '../../../modules/core/utils/sorting';
+import { toRadians } from '@ansyn/map-facade';
+import {
+	BaseOverlaySourceProvider, IFetchParams,
+	IOverlayFilter, IStartAndEndDate, timeIntersection
+} from '../../../modules/overlays/models/base-overlay-source-provider.model';
+import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
+import { IOverlayByIdMetaData } from '../../../modules/overlays/services/overlays.service';
 
 const moment = momentNs;
 

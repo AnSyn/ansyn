@@ -1,8 +1,8 @@
-import { OverlaysService } from '../../../../../overlays/public_api';
+import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
-import { IVisualizerEntity } from '@ansyn/core';
+import { IVisualizerEntity } from '@ansyn/imagery';
 import * as turf from '@turf/turf';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { BaseFootprintsVisualizer } from './base-footprints-visualizer';

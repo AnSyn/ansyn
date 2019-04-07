@@ -1,4 +1,5 @@
-import { IDilutedOverlay, IEntity, IOverlay } from '@ansyn/core';
+import { IEntity } from '../../../core/services/storage/storage.service';
+import { IDilutedOverlay, IOverlay } from '@ansyn/imagery';
 import { GeometryObject } from 'geojson';
 
 export const AlgorithmsConfig = 'algorithmsConfig';

@@ -1,7 +1,7 @@
 import olPolygon, { fromExtent } from 'ol/geom/Polygon';
 import * as olExtent from 'ol/extent';
 import { Point } from 'geojson';
-import { CaseMapExtent } from '@ansyn/core';
+import { CaseMapExtent } from '@ansyn/imagery';
 
 // @dynamic
 export class Utils {

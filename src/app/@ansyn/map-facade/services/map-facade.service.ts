@@ -4,13 +4,13 @@ import { IMapState, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
 import {
 	GeoRegisteration,
-	getFootprintIntersectionRatioInExtent,
 	ICaseMapPosition,
 	ICaseMapState,
 	IOverlay
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
+import { getFootprintIntersectionRatioInExtent } from '../utils/calc-extent';
 
 // @dynamic
 @Injectable({

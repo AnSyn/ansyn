@@ -4,7 +4,7 @@ import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
-import { AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/core';
+import { AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/map-facade';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;

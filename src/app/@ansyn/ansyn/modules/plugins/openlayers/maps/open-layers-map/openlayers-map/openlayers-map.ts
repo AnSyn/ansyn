@@ -12,20 +12,16 @@ import olPolygon from 'ol/geom/Polygon';
 import AttributionControl from 'ol/control/Attribution';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
-import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
+import {
+	areCoordinatesNumeric,
+	BaseImageryMap, CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition,
+	IMAGERY_MAIN_LAYER_NAME,
+	ImageryLayerProperties,
+	ImageryMap, IMapProgress
+} from '@ansyn/imagery';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
 import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
-import {
-	areCoordinatesNumeric,
-	CaseMapExtent,
-	CaseMapExtentPolygon,
-	CoreConfig,
-	ExtentCalculator,
-	ICaseMapPosition,
-	ICoreConfig,
-	IMapProgress
-} from '@ansyn/core';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
@@ -33,6 +29,9 @@ import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
+import { CoreConfig } from 'src/app/@ansyn/ansyn/modules/core/models/core.config';
+import { ICoreConfig } from '../../../../../core/models/core.config.model';
+import { ExtentCalculator } from '../../../../../core/utils/extent-calculator';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -77,14 +76,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				this.isLoading$.next(false);
 			}))),
 			tap(() => {
-				this.isLoading$.next(false)
+				this.isLoading$.next(false);
 			}),
 			take(1)
 		).subscribe();
 	}
 
 	private _pointerDownListener: (args) => void = () => {
-		(<any>document.activeElement).blur()
+		(<any>document.activeElement).blur();
 	};
 
 	constructor(protected http: HttpClient,
@@ -207,7 +206,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				switchMap(() => {
 					this.setMainLayerToForegroundMap(layer);
 					this._mapObject.setView(view);
-					return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation)
+					return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
 				})
 			);
 		} else {

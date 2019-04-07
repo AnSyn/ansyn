@@ -8,9 +8,10 @@ import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { CoreConfig, LoggerConfig } from '@ansyn/core';
 import { casesConfig, CasesService } from '../../services/cases.service';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
+import { CoreConfig } from '../../../../core/models/core.config';
+import { LoggerConfig } from '../../../../core/models/logger.config';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;

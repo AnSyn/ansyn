@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { take } from 'rxjs/operators';
-import { extentFromGeojson, IOverlay } from '@ansyn/core';
+import { extentFromGeojson } from '@ansyn/map-facade';
+import { IOverlay } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-overlay-out-of-bounds',

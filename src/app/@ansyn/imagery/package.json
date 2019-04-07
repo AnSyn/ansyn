@@ -6,8 +6,7 @@
 	"license": "MIT",
 	"peerDependencies": {
 		"@angular/common": "^7.2.2",
-		"@angular/core": "^7.2.2",
-		"@ansyn/core": "0.3.26"
+		"@angular/core": "^7.2.2"
 	},
 	"dependencies": {
 		"auto-subscriptions": "^1.0.3"

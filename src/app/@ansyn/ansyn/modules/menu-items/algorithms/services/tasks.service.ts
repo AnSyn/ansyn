@@ -9,9 +9,11 @@ import {
 } from '../models/tasks.model';
 import { combineLatest, Observable, of } from 'rxjs/index';
 import { catchError, map } from 'rxjs/operators';
-import { ErrorHandlerService, IOverlay, IStoredEntity, StorageService } from '@ansyn/core';
+import { IOverlay } from '@ansyn/imagery';
 import { switchMap } from 'rxjs/internal/operators';
 import { IOverlayByIdMetaData, OverlaysService } from '../../../overlays/services/overlays.service';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { IStoredEntity, StorageService } from '../../../core/services/storage/storage.service';
 
 @Injectable()
 export class TasksService {

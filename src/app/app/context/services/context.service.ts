@@ -3,7 +3,7 @@ import { ContextConfig } from '../models/context.config';
 import { IContextConfig } from '../models/context.config.model';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { ErrorHandlerService, IContext, rxPreventCrash, StorageService } from '@ansyn/core';
+import { ErrorHandlerService, IContext, rxPreventCrash, StorageService } from '@ansyn/ansyn';
 
 @Injectable({
 	providedIn: 'root'

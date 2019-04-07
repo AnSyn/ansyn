@@ -8,7 +8,7 @@ import {
 	AnnotationUpdateFeature,
 	MapActionTypes
 } from '../../actions/map.actions';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/core';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';

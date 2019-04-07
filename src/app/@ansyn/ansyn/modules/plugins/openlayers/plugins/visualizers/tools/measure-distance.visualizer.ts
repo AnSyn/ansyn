@@ -17,13 +17,13 @@ import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { combineLatest, Observable } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
-import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/public_api';
 import { Store } from '@ngrx/store';
-import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/core';
+import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

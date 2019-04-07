@@ -1,10 +1,14 @@
 import { Component, HostListener, Inject } from '@angular/core';
-import { EnableCopyOriginalOverlayDataAction, GoAdjacentOverlay, GoNextPresetOverlay } from '@ansyn/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { ExpandAction } from '../../actions/status-bar.actions';
 import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
+import {
+	GoAdjacentOverlay,
+	GoNextPresetOverlay
+} from '../../../status-bar/actions/status-bar.actions';
+import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-navigation-bar',

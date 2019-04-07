@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { OverlaysConfig, OverlaysService } from './overlays.service';
-import { IOverlayDropSources } from '../reducers/overlays.reducer';
+import { IOverlayDropSources, OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { EMPTY, Observable, Observer, of } from 'rxjs';
@@ -10,14 +10,14 @@ import {
 	IOverlaysCriteria,
 	IOverlaysFetchData,
 	IOverlaySpecialObject,
-	LoggerService
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
-import { OverlayReducer, overlaysFeatureKey, OverlaySourceProvider } from '../public_api';
 import { StoreModule } from '@ngrx/store';
 import { take } from 'rxjs/operators';
+import { LoggerService } from '../../core/services/logger.service';
+import { OverlaySourceProvider } from '../models/overlays-source-providers';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

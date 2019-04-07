@@ -12,13 +12,6 @@ import {
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
-import {
-	CaseMapExtent,
-	getPolygonByPointAndRadius,
-	ICaseMapPosition,
-	ICaseMapState, IMapProviderConfig, IMapProvidersConfig,
-	MAP_PROVIDERS_CONFIG
-} from '@ansyn/core';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
@@ -30,6 +23,10 @@ import { BaseImageryPluginProvider } from '../imagery/providers/imagery.provider
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
+import { CaseMapExtent, ICaseMapPosition } from '../model/case-map-position.model';
+import { getPolygonByPointAndRadius } from '../utils/geo';
+import { ICaseMapState } from '../model/case.model';
+import { IMapProviderConfig, IMapProvidersConfig, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 
 export interface IMapInstanceChanged {
 	id: string;

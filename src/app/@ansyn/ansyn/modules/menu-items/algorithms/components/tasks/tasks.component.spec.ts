@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TasksComponent } from './tasks.component';
-import { MockComponent } from '@ansyn/core';
+import { MockComponent } from '../../../../core/test/mock-component';
 import { StoreModule } from '@ngrx/store';
 import { tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
 

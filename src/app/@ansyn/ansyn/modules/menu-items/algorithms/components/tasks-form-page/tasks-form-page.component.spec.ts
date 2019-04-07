@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TasksFormPageComponent } from './tasks-form-page.component';
-import { MockComponent } from '@ansyn/core';
+import { MockComponent } from '../../../../core/test/mock-component';
 
 describe('TasksFormPageComponent', () => {
 	let component: TasksFormPageComponent;

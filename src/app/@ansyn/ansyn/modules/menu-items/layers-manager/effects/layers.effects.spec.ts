@@ -9,9 +9,13 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
-import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { StorageService } from '../../../core/services/storage/storage.service';
+import { casesFeatureKey, CasesReducer } from '../../cases/reducers/cases.reducer';
 
-describe('LayersEffects', () => {
+xdescribe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
 	let dataLayersService: DataLayersService;
 	let actions: Observable<any>;
@@ -21,7 +25,10 @@ describe('LayersEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
+				StoreModule.forRoot({
+					[layersFeatureKey]: LayersReducer,
+					[casesFeatureKey]: CasesReducer
+				})
 			],
 			providers: [
 				{ provide: CoreConfig, useValue: {} },

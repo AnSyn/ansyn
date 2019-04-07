@@ -8,7 +8,9 @@ export const StatusBarActionsTypes = {
 	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
 	EXPAND: 'EXPAND',
 	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES',
-	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS'
+	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
+	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
+	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY'
 };
 
 export class CopySelectedCaseLinkAction implements Action {
@@ -37,6 +39,20 @@ export class UpdateGeoFilterStatus implements Action {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
 
 	constructor(public payload: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
+	}
+}
+
+export class GoAdjacentOverlay implements Action {
+	type: string = StatusBarActionsTypes.GO_ADJACENT_OVERLAY;
+
+	constructor(public payload: { isNext: boolean }) {
+	}
+}
+
+export class GoNextPresetOverlay implements Action {
+	type: string = StatusBarActionsTypes.GO_NEXT_PRESET_OVERLAY;
+
+	constructor() {
 	}
 }
 

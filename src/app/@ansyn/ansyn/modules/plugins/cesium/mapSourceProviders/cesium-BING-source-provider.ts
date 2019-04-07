@@ -1,6 +1,6 @@
 import { BaseMapSourceProvider, ImageryMapSource } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
-import { ICaseMapState } from '@ansyn/core';
+import { ICaseMapState } from '@ansyn/imagery';
 import { CesiumLayer } from "../models/cesium-layer";
 declare const Cesium: any;
 

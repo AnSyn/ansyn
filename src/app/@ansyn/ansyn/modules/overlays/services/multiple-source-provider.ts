@@ -7,19 +7,24 @@ import {
 	IStartAndEndDate, mergeErrors, mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
 import {
-	forkJoinSafe,
-	IDataInputFilterValue, ILimitedArray, IMultipleOverlaysSourceConfig,
+	IDataInputFilterValue,
 	IOverlay,
-	IOverlaysFetchData, IOverlaysSourceProvider,
-	mergeArrays,
-	mergeLimitedArrays, MultipleOverlaysSourceConfig, sortByDateDesc
-} from '@ansyn/core';
+	IOverlaysFetchData,
+} from '@ansyn/imagery';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
 import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
+import { ILimitedArray, mergeLimitedArrays } from '../../core/utils/i-limited-array';
+import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
+import { sortByDateDesc } from '../../core/utils/sorting';
+import { mergeArrays } from '../../core/utils/merge-arrays';
+import {
+	IMultipleOverlaysSourceConfig,
+	IOverlaysSourceProvider, MultipleOverlaysSourceConfig
+} from '../../core/models/multiple-overlays-source-config';
 
 @Injectable({
 	providedIn: 'root'

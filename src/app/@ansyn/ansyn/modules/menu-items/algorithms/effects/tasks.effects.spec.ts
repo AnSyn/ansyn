@@ -4,7 +4,6 @@ import { TasksService } from '../services/tasks.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { tasksFeatureKey, TasksReducer } from '../reducers/tasks.reducer';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, LoggerService, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -19,6 +18,10 @@ import {
 	SelectTaskAction
 } from '../actions/tasks.actions';
 import { TasksRemoteService } from '../services/tasks-remote.service';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 describe('TasksEffects', () => {
 	let tasksEffects: TasksEffects;

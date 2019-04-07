@@ -5,18 +5,19 @@ import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
 import {
 	AddCaseAction,
-	AddCasesAction, DeleteCaseAction, LoadCaseAction,
+	AddCasesAction,
+	DeleteCaseAction,
+	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction, SelectDilutedCaseAction,
+	SelectCaseAction,
+	SelectDilutedCaseAction, SetAutoSave,
 	UpdateCaseAction,
-	UpdateCaseBackendAction,
-	OpenModalAction
+	UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { Observable, of, throwError } from 'rxjs';
-import { CoreConfig, ErrorHandlerService, ICase, LoggerService, SetAutoSave, StorageService } from '@ansyn/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Params } from '@angular/router';
@@ -24,10 +25,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
-import { statusBarStateSelector } from '../../../status-bar/reducers/status-bar.reducer';
-import { layersStateSelector, selectLayers } from '../../layers-manager/reducers/layers.reducer';
-import { mapStateSelector, selectMaps } from '@ansyn/map-facade';
-import { toolsStateSelector } from '../../tools/reducers/tools.reducer';
+import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
+import { ICase } from '@ansyn/imagery';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -92,7 +95,7 @@ describe('CasesEffects', () => {
 		store = _store;
 		const fakeStore = new Map<any, any>([
 			[selectLayers, [{ type: LayerType.annotation }]],
-			[casesStateSelector, casesState],
+			[casesStateSelector, casesState]
 		]);
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
@@ -137,7 +140,7 @@ describe('CasesEffects', () => {
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
 		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
 		casesState.modal.id = 'delete-case-id';
-		casesState.selectedCase = <any> { id: 'delete-case-id' };
+		casesState.selectedCase = <any>{ id: 'delete-case-id' };
 		actions = hot('--a--', { a: new DeleteCaseAction('') });
 		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });
 		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
@@ -198,7 +201,7 @@ describe('CasesEffects', () => {
 	});
 
 	it('onSaveCaseAsSuccess$ should set auto save with "true"', () => {
-		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any> {})});
+		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any>{}) });
 		const expectedResults = cold('--b--', { b: new SetAutoSave(true) });
 		expect(casesEffects.onSaveCaseAsSuccess$).toBeObservable(expectedResults);
 	});

@@ -4,18 +4,22 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
 import { cold, hot } from 'jasmine-marbles';
+import { HttpClientModule } from '@angular/common/http';
+import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
+import { SelectCaseAppEffects } from './select-case.app.effects';
 import {
-	BeginLayerCollectionLoadAction, CasesService,
-	SelectCaseAction, SelectCaseSuccessAction,
-	UpdateFacetsAction,
-	UpdateOverlaysManualProcessArgs,
-	UpdateSelectedLayersIds
-} from '../../../modules/menu-items/public_api';
+	SetActiveMapId,
+	SetFavoriteOverlaysAction,
+	SetLayoutAction,
+	SetMapsDataActionStore,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction
+} from '@ansyn/map-facade';
 import {
 	CaseOrientation,
 	CaseRegionState,
 	CaseTimeFilter,
-	CoreConfig,
 	ICase,
 	ICaseDataInputFiltersState,
 	ICaseFacetsState,
@@ -25,20 +29,22 @@ import {
 	ICaseTimeState,
 	IContextEntity,
 	IOverlay,
-	IOverlaysManualProcessArgs,
-	SetAutoSave,
-	SetFavoriteOverlaysAction,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
-} from '@ansyn/core';
-import { HttpClientModule } from '@angular/common/http';
-import { SetComboBoxesProperties } from '../../../modules/status-bar/public_api';
-import { SetContextParamsAction } from '@ansyn/core';
-import { SelectCaseAppEffects } from './select-case.app.effects';
-import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
+	IOverlaysManualProcessArgs
+} from '@ansyn/imagery';
+import {
+	BeginLayerCollectionLoadAction,
+	UpdateSelectedLayersIds
+} from '../../../modules/menu-items/layers-manager/actions/layers.actions';
+import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+import {
+	SelectCaseAction,
+	SelectCaseSuccessAction,
+	SetAutoSave
+} from '../../../modules/menu-items/cases/actions/cases.actions';
+import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
+import { CoreConfig } from '../../../modules/core/models/core.config';
+import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -95,7 +101,7 @@ describe('SelectCaseAppEffects', () => {
 
 			let noInitialSearch;
 
-			const state: ICaseState = <any> {
+			const state: ICaseState = <any>{
 				orientation,
 				timeFilter,
 				time,
@@ -136,7 +142,7 @@ describe('SelectCaseAppEffects', () => {
 				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				j: new UpdateFacetsAction(facets),
 				k: new UpdateSelectedLayersIds([]),
-				l: new SetContextParamsAction({ contextEntities }),
+				l: <any> { type: '[Context] Set context params', payload: { contextEntities }},
 				m: new SetAutoSave(false),
 				n: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				o: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),

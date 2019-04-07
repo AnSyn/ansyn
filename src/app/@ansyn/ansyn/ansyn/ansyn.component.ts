@@ -1,14 +1,15 @@
 import { Store } from '@ngrx/store';
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ICase, ICaseMapState } from '@ansyn/core';
+import { ICase, ICaseMapState } from '@ansyn/imagery';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
-import { LoadDefaultCaseAction, selectSelectedCase } from '../modules/menu-items/public_api';
 import { select } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
 import { Inject } from '@angular/core';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
+import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
+import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 
 @Component({
 	selector: 'ansyn-app',
@@ -16,7 +17,9 @@ import { COMPONENT_MODE } from '../app-providers/component-mode';
 	styleUrls: ['./ansyn.component.less']
 })
 
-export class AnsynComponent {
+export class AnsynComponent implements OnInit {
+	renderContextMenu: boolean;
+
 	selectedCaseName$: Observable<string> = this.store$
 		.pipe(
 			select(selectSelectedCase),
@@ -42,5 +45,11 @@ export class AnsynComponent {
 		if (componentMode) {
 			store$.dispatch(new LoadDefaultCaseAction());
 		}
+	}
+	ngOnInit(): void {
+		setTimeout(() => {
+			this.renderContextMenu = true;
+		}, 1000);
+
 	}
 }

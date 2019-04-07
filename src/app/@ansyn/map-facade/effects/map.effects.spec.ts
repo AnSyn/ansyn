@@ -14,9 +14,10 @@ import {
 	ImageryRemovedAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	SynchronizeMapsAction
+	SynchronizeMapsAction,
+	SetLayoutSuccessAction
 } from '../actions/map.actions';
-import { ErrorHandlerService, ICaseMapState, SetLayoutSuccessAction } from '@ansyn/core';
+import { ICaseMapState } from '@ansyn/imagery';
 import { mapFacadeConfig } from '../models/map-facade.config';
 
 describe('MapEffects', () => {
@@ -35,7 +36,6 @@ describe('MapEffects', () => {
 			providers: [
 				MapEffects,
 				{ provide: mapFacadeConfig, useValue: {} },
-				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
 				MapFacadeService,
 				provideMockActions(() => actions),
 				ImageryCommunicatorService

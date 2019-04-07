@@ -3,11 +3,11 @@ import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ContextMenuDisplayAction, mapFeatureKey, MapReducer, SetActiveMapId } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
-import { DisplayOverlayFromStoreAction } from '../../../../overlays/public_api';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 import { ContextMenuPlugin } from './context-menu.plugin';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { DisplayOverlayFromStoreAction } from '../../../../overlays/actions/overlays.actions';
 
 describe('ContextMenuPlugin', () => {
 	let contextMenuPlugin: ContextMenuPlugin;

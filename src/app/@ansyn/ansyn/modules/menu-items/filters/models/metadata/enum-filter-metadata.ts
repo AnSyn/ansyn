@@ -1,5 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { CaseEnumFilterMetadata, FilterType, ICaseFilter, IOverlay, mapValuesToArray } from '@ansyn/core';
+import { CaseEnumFilterMetadata, FilterType, ICaseFilter, IOverlay } from '@ansyn/imagery';
+import { mapValuesToArray } from '../../../../core/utils/misc';
 
 export interface IEnumFiled {
 	key: string;

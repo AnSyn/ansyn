@@ -1,10 +1,10 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { of } from 'rxjs/index';
-import { toolsConfig } from '../../../../../menu-items/public_api';
 import { featureCollection } from '@turf/turf';
 import { AnnotationsVisualizer } from './annotations.visualizer';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;

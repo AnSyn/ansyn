@@ -6,8 +6,8 @@ import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 import { ImageryMapSource } from '../decorators/map-source-provider';
-import { ICaseMapState } from '../../ansyn/modules/menu-items/cases/models/case.model';
 import { MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
+import { IMapSettings } from '../model/map-settings';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -18,7 +18,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 		return Promise.resolve(true);
 	}
 
-	createAsync(metaData: ICaseMapState): Promise<any> {
+	createAsync(metaData: IMapSettings): Promise<any> {
 		return Promise.resolve();
 	}
 

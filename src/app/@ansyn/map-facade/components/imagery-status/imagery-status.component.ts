@@ -37,6 +37,7 @@ import {
 } from '../../actions/imagery-status.actions';
 import { copyFromContent } from '../../utils/clipboard';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { get as _get } from 'lodash';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -153,7 +154,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get description() {
-		const { description } = this.communicators.provide(this.mapId).ActiveMap.getExtraData();
+		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
+		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
 		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null
 	}
 

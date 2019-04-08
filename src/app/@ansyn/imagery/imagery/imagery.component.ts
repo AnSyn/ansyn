@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { ICaseMapState } from '../../ansyn/modules/menu-items/cases/models/case.model';
 import { CommunicatorEntity } from '../communicator-service/communicator.entity';
+import { IMapSettings } from '../model/map-settings';
 
 @Component({
 	selector: 'ansyn-imagery-view',
@@ -16,7 +16,7 @@ export class ImageryComponent implements OnInit {
 	}
 
 	@Input()
-	set settings(value: ICaseMapState) {
+	set settings(value: IMapSettings) {
 		this.communicator.mapSettings = value;
 	};
 

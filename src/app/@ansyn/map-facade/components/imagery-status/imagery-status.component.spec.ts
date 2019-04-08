@@ -10,6 +10,7 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/im
 import { MockComponent } from '../../test/mock-component';
 import { FormsModule } from '@angular/forms';
 import { AlertsModule } from '../../alerts/alerts.module';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -34,6 +35,7 @@ describe('ImageryStatusComponent', () => {
 				})
 			],
 			providers: [
+				ImageryCommunicatorService,
 				{ provide: ALERTS, useValue: [] },
 				{
 					provide: TranslateService, useValue: {

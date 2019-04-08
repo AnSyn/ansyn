@@ -198,7 +198,8 @@ describe('OverlaysAppEffects', () => {
 						},
 						getTimeStateByOverlay: () => {
 						},
-						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays)))
+						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays))),
+						getThumbnailUrl: () => of('this is a url')
 					}
 				},
 				{

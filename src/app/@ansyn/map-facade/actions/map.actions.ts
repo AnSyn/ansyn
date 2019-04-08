@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
 import { Point, Polygon, Position } from 'geojson';
-import { IMapInstanceChanged, IMapSettings } from '@ansyn/imagery';
 import {
 	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
+	IMapInstanceChanged,
 	IMapProgress,
+	IMapSettings,
 	IUpdateFeatureEvent,
 	IWorldViewMapState
 } from '@ansyn/imagery';
@@ -253,12 +254,14 @@ export class ShadowMouseProducer implements Action {
 
 export class ImageryMouseEnter implements Action {
 	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER;
+
 	constructor(public payload: string) {
 	}
 }
 
 export class ImageryMouseLeave implements Action {
 	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE;
+
 	constructor(public payload: string) {
 	}
 }
@@ -273,7 +276,7 @@ export class ChangeImageryMap implements Action {
 export class ChangeImageryMapSuccess implements Action {
 	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
 
-	constructor(public payload: { id: string, worldView: IWorldViewMapState}) {
+	constructor(public payload: { id: string, worldView: IWorldViewMapState }) {
 	}
 }
 
@@ -295,7 +298,7 @@ export class SetActiveMapId implements Action {
 export class UpdateMapAction implements Action {
 	type = MapActionTypes.UPDATE_MAP;
 
-	constructor(public payload: { id: string, changes?: Partial<IMapSettings>, silence?: boolean,  }) {
+	constructor(public payload: { id: string, changes?: Partial<IMapSettings>, silence?: boolean, }) {
 	}
 }
 
@@ -341,6 +344,7 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 
 	}
 }
+
 export class BackToWorldView implements Action {
 	type = MapActionTypes.BACK_TO_WORLD_VIEW;
 

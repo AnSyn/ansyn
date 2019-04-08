@@ -66,7 +66,7 @@ import * as turf from '@turf/turf';
 import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
-import { IPendingOverlay } from '../../../map-facade/actions/map.actions';
+import { IPendingOverlay } from '@ansyn/map-facade';
 
 @Injectable()
 export class OverlaysAppEffects {

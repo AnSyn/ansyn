@@ -36,10 +36,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 		super();
 	}
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ICaseMapPosition): Observable<boolean> {
 		this.element = element;
 
-		return this.resetView(layers[0], position);
+		return this.resetView(layer, position);
 	}
 
 	initListeners() {

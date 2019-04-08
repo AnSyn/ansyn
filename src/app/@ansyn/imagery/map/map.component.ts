@@ -18,9 +18,9 @@ export class MapComponent implements OnInit, OnDestroy {
 	constructor(public map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 
-	createMap(layers: any, position?: ICaseMapPosition): Observable<BaseImageryMap> {
+	createMap(layer: any, position?: ICaseMapPosition): Observable<BaseImageryMap> {
 		return this.map
-			.initMap(this.mapElement.nativeElement, this.mapElementShadowNorth.nativeElement, this.mapElementShadowDoubleBuffer.nativeElement, layers, position)
+			.initMap(this.mapElement.nativeElement, this.mapElementShadowNorth.nativeElement, this.mapElementShadowDoubleBuffer.nativeElement, layer, position)
 			.pipe(
 				filter(success => success),
 				map(() => this.map),

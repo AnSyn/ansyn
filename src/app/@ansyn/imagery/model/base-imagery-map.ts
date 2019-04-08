@@ -34,7 +34,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract toggleGroup(groupName: string, newState: boolean);
 
-	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
+	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer?: any, position?: ICaseMapPosition): Observable<boolean>;
 
 	// This method is for the use of the @AutoSubscription decorator
 	initMapSubscriptions(): void {

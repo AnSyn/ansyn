@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
+import { SentinelComboBoxComponent } from "../../app/sentinel/sentinel-combo-box/sentinel-combo-box.component";
+import { SentinelModule } from "../../app/sentinel/sentinel.module";
 import { MapEffects } from './effects/map.effects';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
 import { ImageryModule } from '@ansyn/imagery';
@@ -60,7 +62,7 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent
+		AnsynPopoverComponent,
 	],
 	exports: [
 		ImageriesManagerComponent,

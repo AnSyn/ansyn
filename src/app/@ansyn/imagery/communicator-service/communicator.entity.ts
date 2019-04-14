@@ -150,12 +150,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				resolve();
 			}
 
-			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType).then((layer) => {
-				this.resetView(layer, position).subscribe(() => {
-					this.ActiveMap.addLayer(layer);
-					resolve(layer);
+			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType)
+				.then((layer) => {
+					this.resetView(layer, position).subscribe(() => {
+						resolve(layer);
+					});
 				});
-			});
 		});
 	}
 
@@ -246,7 +246,9 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
-			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(mergeMap(() => this.resetPlugins()));
+			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(
+				mergeMap(() => this.resetPlugins())
+			);
 		}
 		return of(true);
 	}
@@ -294,7 +296,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const sourceProvider = this.getMapSourceProvider({
 			mapType, sourceType
 		});
-		return sourceProvider.createAsync(this.mapSettings);
+		return sourceProvider.createAsync({ ...this.mapSettings, data: { ...this.mapSettings.data, overlay: null } });
 	}
 
 	private destroyCurrentComponent(): void {

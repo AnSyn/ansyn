@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { IMapState } from '@ansyn/map-facade';
+import { IEntryComponent, IMapState } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { MapActionTypes } from '@ansyn/map-facade';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -13,7 +13,6 @@ import {
 	ToolsActionsTypes
 } from '../../actions/tools.actions';
 import { IMapSettings } from '@ansyn/imagery';
-import { IEntryComponent } from '../../../../../../map-facade/directives/entry-component.directive';
 import { IAnnotationsSelectionEventData } from '../../models/annotations.model';
 
 @Component({
@@ -74,7 +73,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 	}
 
 	ngOnInit() {
-		console.log('asdkljasdkjlasdkljasdjkladskjl');
 	}
 
 	close() {

@@ -23,7 +23,7 @@ import { BaseImageryPluginProvider } from '../imagery/providers/imagery.provider
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
-import { CaseMapExtent, ICaseMapPosition } from '../model/case-map-position.model';
+import { CaseMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
 import { getPolygonByPointAndRadius } from '../utils/geo';
 import { IMapProviderConfig, IMapProvidersConfig, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
@@ -95,7 +95,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap && this.ActiveMap.mapType;
 	}
 
-	public setActiveMap(mapType: string, position: ICaseMapPosition, sourceType?, layer?: any): Promise<any> {
+	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
@@ -144,7 +144,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		}
 	};
 
-	loadInitialMapSource(position?: ICaseMapPosition): Promise<any> {
+	loadInitialMapSource(position?: ImageryMapPosition): Promise<any> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();
@@ -195,7 +195,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return of(true);
 	}
 
-	public setPosition(position: ICaseMapPosition): Observable<boolean> {
+	public setPosition(position: ImageryMapPosition): Observable<boolean> {
 		if (!this.ActiveMap) {
 			return throwError(new Error('missing active map'));
 		}
@@ -203,7 +203,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap.setPosition(position);
 	}
 
-	public getPosition(): Observable<ICaseMapPosition> {
+	public getPosition(): Observable<ImageryMapPosition> {
 		if (!this.ActiveMap) {
 			return throwError(new Error('missing active map'));
 		}
@@ -211,7 +211,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	setPositionByRect(rect: Polygon): Observable<boolean> {
-		const position: ICaseMapPosition = {
+		const position: ImageryMapPosition = {
 			extentPolygon: rect
 		};
 		return this.setPosition(position);
@@ -219,7 +219,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	setPositionByRadius(center: Point, radiusInMeters: number): Observable<boolean> {
 		const polygon: Feature<Polygon> = getPolygonByPointAndRadius(center.coordinates, radiusInMeters / 1000);
-		const position: ICaseMapPosition = {
+		const position: ImageryMapPosition = {
 			extentPolygon: polygon.geometry
 		};
 		return this.setPosition(position);
@@ -243,7 +243,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
+	public resetView(layer: any, position: ImageryMapPosition, extent?: CaseMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
 			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(

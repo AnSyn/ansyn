@@ -8,7 +8,7 @@ import { mapFacadeConfig } from '../../models/map-facade.config';
 	styleUrls: ['./overlay-source-type-notice.component.less']
 })
 export class OverlaySourceTypeNoticeComponent {
-
+	// @todo IOverlay
 	@Input() set overlay(newOverlay: any) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration

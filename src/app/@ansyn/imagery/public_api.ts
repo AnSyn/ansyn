@@ -1,5 +1,4 @@
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
-export { ICaseMapPosition, CaseMapExtent, CaseMapExtentPolygon, ICaseMapProjectedState } from './model/case-map-position.model';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
 export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
 export { MarkerSize } from './model/visualizers/visualizer-style';

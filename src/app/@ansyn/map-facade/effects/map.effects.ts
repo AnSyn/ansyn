@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	geojsonMultiPolygonToPolygon,
-	ICaseMapPosition, IMapSettings,
+	ImageryMapPosition, IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import {
@@ -101,8 +101,8 @@ export class MapEffects {
 				const { position } = selectedMap.data;
 				return [action.payload, selectedMap, communicator, position];
 			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ICaseMapPosition]) => {
+			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
+			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
 				const disabledMap = communicator.activeMapName === 'disabledOpenLayersMap';
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
@@ -151,7 +151,7 @@ export class MapEffects {
 		switchMap((action: SynchronizeMapsAction) => {
 			const mapId = action.payload.mapId;
 			return this.communicatorsService.provide(mapId).getPosition().pipe(
-				map((position: ICaseMapPosition) => [position, action]));
+				map((position: ImageryMapPosition) => [position, action]));
 		}),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
@@ -256,7 +256,7 @@ export class MapEffects {
 				protected store$: Store<any>) {
 	}
 
-	setPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
+	setPosition(position: ImageryMapPosition, comm, mapItem): Observable<any> {
 		if (mapItem.data.overlay) {
 			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
 			if (isNotIntersect) {

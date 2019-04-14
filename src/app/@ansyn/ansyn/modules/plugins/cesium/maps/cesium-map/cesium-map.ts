@@ -1,6 +1,6 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryMap, ImageryMap, CaseMapExtent, ICaseMapPosition  } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, CaseMapExtent, ImageryMapPosition  } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
@@ -36,7 +36,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		super();
 	}
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
 		this.element = element;
 
 		return this.resetView(layer, position);
@@ -160,7 +160,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	resetView(layer: CesiumLayer, position: ICaseMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent?: CaseMapExtent): Observable<boolean> {
 		if (!this.mapObject || (layer.mapProjection && this.mapObject.scene.mapProjection.projectionName !== layer.mapProjection.projectionName)) {
 			return this.createMapObject(layer).pipe(
 				mergeMap((isReady) => {
@@ -208,7 +208,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	setPosition(position: ICaseMapPosition): Observable<boolean> {
+	setPosition(position: ImageryMapPosition): Observable<boolean> {
 		const { extentPolygon } = position;
 		return this.internalSetPosition(extentPolygon);
 	}
@@ -241,7 +241,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	getPosition(): Observable<ICaseMapPosition> {
+	getPosition(): Observable<ImageryMapPosition> {
 		try {
 			const { height, width } = this.mapObject.canvas;
 			const topLeft = this._imageToGround({ x: 0, y: 0 });

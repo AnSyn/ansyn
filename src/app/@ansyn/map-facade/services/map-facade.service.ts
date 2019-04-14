@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IMapState, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
-import { ICaseMapPosition, ImageryCommunicatorService, IMapInstanceChanged, IMapSettings } from '@ansyn/imagery';
+import { ImageryMapPosition, ImageryCommunicatorService, IMapInstanceChanged, IMapSettings } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 import { getFootprintIntersectionRatioInExtent } from '../utils/calc-extent';
 
@@ -20,7 +20,7 @@ export class MapFacadeService {
 		const intersection = getFootprintIntersectionRatioInExtent(extentPolygon, footprint);
 		return intersection < overlayCoverage;
 	}
-
+	// @todo IOveraly
 	static isOverlayGeoRegistered(overlay: any): boolean {
 		if (!overlay) {
 			return true;
@@ -65,7 +65,7 @@ export class MapFacadeService {
 		this.store.dispatch(new MapInstanceChangedAction($event));
 	}
 
-	positionChanged($event: { id: string, position: ICaseMapPosition }) {
+	positionChanged($event: { id: string, position: ImageryMapPosition }) {
 		const mapInstance = <IMapSettings> MapFacadeService.mapById(this.mapsList, $event.id);
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
 	}

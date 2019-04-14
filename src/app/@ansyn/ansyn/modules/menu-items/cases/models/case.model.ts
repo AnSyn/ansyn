@@ -2,7 +2,7 @@ import { IDilutedOverlay, IOverlay } from '../../../overlays/models/overlay.mode
 import { Feature, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../filters/models/filter-type';
-import { ICaseMapPosition, IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
+import { ImageryMapPosition, IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
 
 export interface ICasePreview {

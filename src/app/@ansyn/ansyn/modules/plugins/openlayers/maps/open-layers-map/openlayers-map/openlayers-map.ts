@@ -14,7 +14,7 @@ import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
 import {
 	areCoordinatesNumeric,
-	BaseImageryMap, CaseMapExtent, CaseMapExtentPolygon, ICaseMapPosition,
+	BaseImageryMap, CaseMapExtent, CaseMapExtentPolygon, ImageryMapPosition,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap, IMapProgress
@@ -131,7 +131,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
 		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
 		const controls = [
@@ -180,7 +180,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
+	public resetView(layer: any, position: ImageryMapPosition, extent?: CaseMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
 		useDoubleBuffer = useDoubleBuffer && !layer.get(ImageryLayerProperties.FROM_CACHE);
 		if (useDoubleBuffer) {
 			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
@@ -218,7 +218,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	// Used by resetView()
-	private _setMapPositionOrExtent(map: OLMap, position: ICaseMapPosition, extent: CaseMapExtent, rotation: number): Observable<boolean> {
+	private _setMapPositionOrExtent(map: OLMap, position: ImageryMapPosition, extent: CaseMapExtent, rotation: number): Observable<boolean> {
 		if (extent) {
 			this.fitToExtent(extent, map).subscribe();
 			if (rotation) {
@@ -413,7 +413,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
-	public setPosition(position: ICaseMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
+	public setPosition(position: ImageryMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
 		const { extentPolygon, projectedState } = position;
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = projectedState && viewProjection.getCode() === projectedState.projection.code;
@@ -430,7 +430,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public getPosition(): Observable<ICaseMapPosition> {
+	public getPosition(): Observable<ImageryMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = {

@@ -7,6 +7,7 @@ export const imageryStatusFeatureKey = 'imageryStatus';
 export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);
 
 export interface ImageryStatusState {
+	// @todo IOverlay
 	favoriteOverlays: any[],
 	removedOverlaysIds: any[],
 	presetOverlays: any[],

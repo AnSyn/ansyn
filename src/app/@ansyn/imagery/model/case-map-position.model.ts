@@ -14,7 +14,7 @@ export interface ICaseMapProjectedState {
 
 export type CaseMapExtentPolygon = Polygon;
 
-export interface ICaseMapPosition {
+export interface ImageryMapPosition {
 	projectedState?: ICaseMapProjectedState;
 	extentPolygon?: CaseMapExtentPolygon;
 }

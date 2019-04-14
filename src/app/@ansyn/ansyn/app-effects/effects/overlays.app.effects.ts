@@ -26,7 +26,7 @@ import {
 	TogglePresetOverlayAction
 } from '@ansyn/map-facade';
 
-import { CommunicatorEntity, ICaseMapPosition, ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryMapPosition, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
 	catchError,
 	distinctUntilChanged,
@@ -211,7 +211,7 @@ export class OverlaysAppEffects {
 		}
 		return communicator.getPosition().pipe(map((position) => [overlay, position, communicator]));
 	});
-	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position, communicator]: [IOverlay, ICaseMapPosition, CommunicatorEntity]) => {
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position, communicator]: [IOverlay, ImageryMapPosition, CommunicatorEntity]) => {
 		if (!overlay) {
 			return [overlay];
 		}

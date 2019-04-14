@@ -8,7 +8,7 @@ import {
 	areCoordinatesNumeric,
 	BaseImageryPlugin,
 	CommunicatorEntity,
-	ICaseMapPosition,
+	ImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
@@ -131,7 +131,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	// @AutoSubscription
 	// positionChangedCalcNorthApproximately$ = () => this.communicator.positionChanged.pipe(
 	// 	debounceTime(50),
-	// 	switchMap((position: ICaseMapPosition) => {
+	// 	switchMap((position: ImageryMapPosition) => {
 	// 		const view = this.communicator.ActiveMap.mapObject.getView();
 	// 		const projection = view.getProjection();
 	// 		if (projection.getUnits() === 'pixels' && position) {
@@ -147,7 +147,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	positionChangedCalcNorthAccurately$ = () => this.communicator.positionChanged.pipe(
 		debounceTime(50),
-		switchMap((position: ICaseMapPosition) => {
+		switchMap((position: ImageryMapPosition) => {
 			const view = this.iMap.mapObject.getView();
 			const projection = view.getProjection();
 			if (projection.getUnits() === 'pixels' && position) {

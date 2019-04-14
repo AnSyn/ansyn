@@ -51,6 +51,7 @@ import { IEntryComponent } from '../../directives/entry-component.directive';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+	// @todo refactor
 	overlay: any;
 	_mapState: IMapSettings;
 	mapsAmount = 1;

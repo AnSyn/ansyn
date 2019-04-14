@@ -40,8 +40,8 @@ export const mapsAdapter: EntityAdapter<IMapSettings> = createEntityAdapter<IMap
 
 export interface IMapState extends EntityState<IMapSettings> {
 	activeMapId: string;
-	isLoadingMaps: Map<string, string>,
-	isHiddenMaps: Set<string>,
+	isLoadingMaps: Map<string, string>;
+	isHiddenMaps: Set<string>;
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: IPendingOverlay[]; // a list of overlays waiting for maps to be created in order to be displayed
 	layout: LayoutKey;

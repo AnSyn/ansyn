@@ -1,4 +1,4 @@
-import { ICaseMapPosition } from './case-map-position.model';
+import { ImageryMapPosition } from './case-map-position.model';
 
 export interface IWorldViewMapState {
 	mapType: string;
@@ -6,7 +6,7 @@ export interface IWorldViewMapState {
 }
 
 export interface IMapSettingsData {
-	position: ICaseMapPosition;
+	position: ImageryMapPosition;
 	[key: string]: any;
 }
 

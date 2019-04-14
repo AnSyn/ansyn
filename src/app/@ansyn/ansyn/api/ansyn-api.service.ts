@@ -12,7 +12,7 @@ import {
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
-import { ICaseMapPosition } from '@ansyn/imagery';
+import { ImageryMapPosition } from '@ansyn/imagery';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
@@ -151,7 +151,7 @@ export class AnsynApi {
 		}
 	}
 
-	getMapPosition(): ICaseMapPosition {
+	getMapPosition(): ImageryMapPosition {
 		return this.mapsEntities[this.activeMapId].data.position;
 	}
 

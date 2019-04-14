@@ -47,8 +47,8 @@
 			tooltip-value="Show/ Hide layers"
 			[disabled]="noGeoRegistration"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i [class.icon-main-data-layers]="layerFlag"
-		   [class.icon-layers-hide]="!layerFlag"></i>
+		<i [class.icon-main-data-layers]="mapState.flags.displayLayers"
+		   [class.icon-layers-hide]="!mapState.flags.displayLayers"></i>
 	</button>
 
 	<ng-container *ngIf="overlay">

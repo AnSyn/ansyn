@@ -13,7 +13,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { getTimeFormat } from '../../utils/time';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
-import { distinctUntilChanged, tap } from 'rxjs/internal/operators';
+import { distinctUntilChanged, tap, map } from 'rxjs/internal/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
@@ -38,6 +38,8 @@ import {
 import { copyFromContent } from '../../utils/clipboard';
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { get as _get } from 'lodash';
+import { selectActiveMapId, selectMapsTotal } from '../../reducers/map.reducer';
+import { IEntryComponent } from '../../directives/entry-component.directive';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -48,45 +50,59 @@ import { get as _get } from 'lodash';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class ImageryStatusComponent implements OnInit, OnDestroy {
-	_overlay: any;
-	selectedMap = 'openLayersMap';
+export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+	overlay: any;
+	_mapState: IMapSettings;
+	mapsAmount = 1;
+	@HostBinding('class.active') isActiveMap: boolean;
 
-	@HostBinding('class.active') @Input() active: boolean;
+	get selectedMap() {
+		return _get(this.communicators.provide(this.mapState.id), 'ActiveMap.mapType');
+	}
 
-	@Input() mapId: string = null;
-	@Input() mapsAmount = 1;
-	@Input() mapState: IMapSettings;
+	@Input()
+	set mapState(value: IMapSettings) {
+		if (_get(this._mapState, 'data.overlay') !== _get(value, 'data.overlay')) {
+			this.overlay = value.data.overlay;
+			if (!this.overlay) {
+				this.translatedOverlaySensorName = '';
+			} else {
+				if (this.overlay.sensorName) {
+					this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
+						this.translatedOverlaySensorName = res;
+					});
+				}
+			}
+			this.updateRemovedStatus();
+			this.updateFavoriteStatus();
+			this.updatePresetStatus();
+		}
+		this._mapState = value;
+	};
+
+	@AutoSubscription
+	active$ = this.store$.pipe(
+		select(selectActiveMapId),
+		map((activeMapId) => activeMapId === this.mapState.id),
+		tap((isActiveMap) => this.isActiveMap = isActiveMap)
+	);
+
+	@AutoSubscription
+	mapsAmount$ = this.store$.pipe(
+		select(selectMapsTotal),
+		tap((mapsAmount) => this.mapsAmount = mapsAmount)
+	);
+
+	get mapState() {
+		return this._mapState;
+	}
 
 	@HostBinding('class.one-map')
 	get oneMap() {
 		return this.mapsAmount === 1;
 	}
 
-	@Input() layerFlag = false;
-
-	@Input() set overlay(overlay: any) {
-		this._overlay = overlay;
-		if (!this._overlay) {
-			this.translatedOverlaySensorName = '';
-		} else {
-			if (this.overlay.sensorName) {
-				this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
-					this.translatedOverlaySensorName = res;
-				});
-			}
-		}
-		this.updateRemovedStatus();
-		this.updateFavoriteStatus();
-		this.updatePresetStatus();
-
-	};
-
 	translatedOverlaySensorName = '';
-
-	get overlay() {
-		return this._overlay;
-	}
 
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 	@Output() onMove = new EventEmitter<MouseEvent>();
@@ -144,7 +160,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:keydown', ['$event'])
 	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.active && this.overlay && $event.which === 46 && !this.isRemoved) {
+		if (this.isActiveMap && this.overlay && $event.which === 46 && !this.isRemoved) {
 			this.removeOverlay();
 		}
 	}
@@ -155,9 +171,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	get description() {
-		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
+		const ActiveMap = _get(this.communicators.provide(this.mapState.id), 'ActiveMap');
 		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
-		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null
+		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 
 	get baseMapDescription() {
@@ -173,8 +189,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	copyOverlayDescription() {
-		if (this.enableCopyOriginalOverlayData && this._overlay.tag) {
-			const tagJson = JSON.stringify(this._overlay.tag);
+		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
+			const tagJson = JSON.stringify(this.overlay.tag);
 			copyFromContent(tagJson);
 			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
 		} else {
@@ -213,7 +229,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	showAlert(alertKey) {
 		const ids = this.alertMsg.get(alertKey);
 		if (ids) {
-			return ids.has(this.mapId);
+			return ids.has(this.mapState.id);
 		} else {
 			return this[alertKey];
 		}
@@ -254,23 +270,23 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.layerFlag = !this.layerFlag;
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
+		// this.mapState.flags.displayLayers = !this.mapState.flags.displayLayers;
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapState.id }));
 	}
 
 	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
+		this.store$.dispatch(new BackToWorldView({ mapId: this.mapState.id }));
 	}
 
 	removeOverlay() {
 		this.store$.dispatch(new SetRemovedOverlaysIdAction({
-			mapId: this.mapId,
+			mapId: this.mapState.id,
 			id: this.overlay.id,
 			value: !this.isRemoved
 		}));
 	}
 
 	changeActiveMap(mapType: string) {
-		this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
+		this.store$.dispatch(new ChangeImageryMap({ id: this.mapState.id, mapType }));
 	}
 }

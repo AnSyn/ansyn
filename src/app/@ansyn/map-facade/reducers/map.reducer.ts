@@ -182,9 +182,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 	}
 }
 
-const { selectAll, selectEntities, selectIds } = mapsAdapter.getSelectors();
+const { selectAll, selectEntities, selectIds, selectTotal } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
+export const selectMapsTotal = createSelector(mapStateSelector, selectTotal);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);
 export const selectMaps = createSelector(mapStateSelector, selectEntities);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);

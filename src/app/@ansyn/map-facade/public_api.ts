@@ -9,6 +9,7 @@ export {
 	mapStateSelector,
 	selectActiveMapId,
 	selectMapsList,
+	selectMapsTotal,
 	selectMaps,
 	selectLayout,
 	selectWasWelcomeNotificationShown,

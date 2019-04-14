@@ -101,7 +101,7 @@ const createDevConfdConfigFile = () => {
 	console.log('Creating a development toml file.');
 	const tmplCopy = copyFile(confdTmplPath, devTmplPath);
 	const tomlCopy = copyFile(confdConfigPath, devConfigPath,
-		(data) => data.replace(/dest = .*/g, 'dest = "src/app/@ansyn/assets/config/app.config.json"'));
+		(data) => data.replace(/dest = .*/g, 'dest = "src/app/@ansyn/ansyn/assets/config/app.config.json"'));
 
 	return Promise.all([tmplCopy, tomlCopy]);
 };

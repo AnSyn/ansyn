@@ -36,7 +36,7 @@ import {
 	TogglePresetOverlayAction
 } from '../../actions/imagery-status.actions';
 import { copyFromContent } from '../../utils/clipboard';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { get as _get } from 'lodash';
 
 @Component({
@@ -56,6 +56,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@Input() mapId: string = null;
 	@Input() mapsAmount = 1;
+	@Input() mapState: IMapSettings;
 
 	@HostBinding('class.one-map')
 	get oneMap() {

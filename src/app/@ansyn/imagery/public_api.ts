@@ -6,11 +6,6 @@ export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
 export { IVisualizerStateStyle } from './model/visualizers/visualizer-state';
 export { VisualizerStates } from './model/visualizers/visualizer-state';
-export {
-	AnnotationInteraction, AnnotationMode,
-	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData, IUpdateFeatureEvent
-} from './model/visualizers/annotations.model';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
 	IMapProviderConfig,

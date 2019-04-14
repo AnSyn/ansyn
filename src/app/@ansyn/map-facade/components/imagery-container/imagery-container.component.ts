@@ -1,12 +1,13 @@
 import { Component, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ImageryMouseEnter, ImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
-import { AnnotationInteraction, IMapSettings } from '@ansyn/imagery';
+import { IMapSettings } from '@ansyn/imagery';
 import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { map } from 'rxjs/operators';
+import { ENTRY_COMPONENTS_PROVIDER } from '../../models/entry-components-provider';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -28,13 +29,11 @@ export class ImageryContainerComponent {
 		return this.mapState.data.overlay;
 	}
 
-	get AnnotationInteraction() {
-		return AnnotationInteraction;
-	}
-
 	constructor(protected store: Store<any>,
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: any,
 				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig
 	) {
+		console.log(entryComponents)
 	}
 
 	toggleMapSynchronization() {

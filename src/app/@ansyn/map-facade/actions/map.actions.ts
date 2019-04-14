@@ -1,12 +1,10 @@
 import { Action } from '@ngrx/store';
 import { Point, Polygon, Position } from 'geojson';
 import {
-	IAnnotationsSelectionEventData,
 	ICaseMapPosition,
 	IMapInstanceChanged,
 	IMapProgress,
 	IMapSettings,
-	IUpdateFeatureEvent,
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import { LayoutKey } from '../models/maps-layout';
@@ -50,9 +48,6 @@ export const MapActionTypes = {
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		ANNOTATION_SELECT: 'ANNOTATION_SELECT',
-		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
-		ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE',
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
 	},
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
@@ -166,30 +161,6 @@ export class PinLocationModeTriggerAction implements Action {
 
 	constructor(public payload: boolean) {
 	}
-}
-
-export class AnnotationSelectAction implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_SELECT;
-
-	constructor(public payload: IAnnotationsSelectionEventData) {
-
-	}
-}
-
-export class AnnotationRemoveFeature implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE;
-
-	constructor(public payload: string) {
-
-	};
-}
-
-export class AnnotationUpdateFeature implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_UPDATE_FEATURE;
-
-	constructor(public payload: IUpdateFeatureEvent) {
-
-	};
 }
 
 export class DecreasePendingMapsCountAction implements Action {

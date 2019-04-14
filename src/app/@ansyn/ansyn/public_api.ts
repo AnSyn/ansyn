@@ -84,7 +84,10 @@ export {
 	StopMouseShadow,
 	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs,
-	UpdateToolsFlags
+	UpdateToolsFlags,
+	AnnotationRemoveFeature,
+	AnnotationSelectAction,
+	AnnotationUpdateFeature,
 } from './modules/menu-items/tools/actions/tools.actions';
 export {
 	CasesActionTypes, CopyCaseLinkAction,
@@ -334,3 +337,11 @@ export { OpenlayersGeoJsonLayersVisualizer } from './modules/plugins/openlayers/
 
 export { CesiumMap } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
 export { CesiumLayer, ISceneMode } from './modules/plugins/cesium/models/cesium-layer';
+
+export {
+	AnnotationInteraction,
+	AnnotationMode,
+	IAnnotationBoundingRect,
+	IAnnotationsSelectionEventData,
+	IUpdateFeatureEvent
+} from './modules/menu-items/tools/models/annotations.model';

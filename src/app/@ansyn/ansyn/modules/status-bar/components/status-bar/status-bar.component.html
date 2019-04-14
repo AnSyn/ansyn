@@ -1,5 +1,6 @@
 <ansyn-imagery-status
 	*ngIf="!hideOverlay"
+	[mapState]="activeMap"
 	[overlay]="activeMap?.data?.overlay"
 	[active]="true"
 	[mapId]="activeMap?.id">

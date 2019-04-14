@@ -12,7 +12,6 @@ import {
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
-	AnnotationSelectAction,
 	ChangeImageryMap,
 	ChangeImageryMapSuccess,
 	DecreasePendingMapsCountAction,
@@ -43,12 +42,6 @@ import { updateSession } from '../models/core-session-state.model';
 
 @Injectable()
 export class MapEffects {
-
-	@Effect({ dispatch: false })
-	annotationContextMenuTrigger$ = this.actions$.pipe(
-		ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT),
-		share()
-	);
 
 	@Effect({ dispatch: false })
 	onUpdateSize$: Observable<void> = this.actions$.pipe(

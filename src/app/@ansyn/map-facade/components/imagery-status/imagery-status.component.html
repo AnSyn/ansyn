@@ -97,7 +97,7 @@
 
 			<ng-container
 				*ngIf="alert.component; else textAlert"
-				[ansynAlertComponent]="{ component: alert.component, mapId: mapId, overlay: overlay }">
+				[ansynEntryComponent]="{ component: alert.component, mapState: mapState }">
 			</ng-container>
 
 			<ng-template #textAlert>

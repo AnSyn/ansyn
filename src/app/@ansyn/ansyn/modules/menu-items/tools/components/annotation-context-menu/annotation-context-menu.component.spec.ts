@@ -1,9 +1,9 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { AnnotationContextMenuComponent } from './annotation-context-menu.component';
 import { DebugElement } from '@angular/core';
-import { MapEffects } from '../../effects/map.effects';
+import { MapEffects } from '../../../../../../map-facade/effects/map.effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { IMapState, mapFeatureKey, MapReducer } from '../../../../../../map-facade/reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -12,12 +12,12 @@ import {
 	AnnotationInteraction,
 	IAnnotationsSelectionEventData
 } from '@ansyn/imagery';
-import { PositionChangedAction } from '../../actions/map.actions';
+import { PositionChangedAction } from '../../../../../../map-facade/actions/map.actions';
 import { EventEmitter } from '@angular/core';
-import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
-import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
-import { ColorPickerComponent } from '../color-picker/color-picker.component';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { AnnotationsColorComponent } from '../../../../../../map-facade/components/annotations-color/annotations-color.component';
+import { AnnotationsWeightComponent } from '../../../../../../map-facade/components/annotations-weight/annotations-weight.component';
+import { ColorPickerComponent } from '../../../../../../map-facade/components/color-picker/color-picker.component';
+import { ClickOutsideDirective } from '../../../../../../map-facade/directives/click-outside.directive';
 
 
 describe('AnnotationContextMenuComponent', () => {

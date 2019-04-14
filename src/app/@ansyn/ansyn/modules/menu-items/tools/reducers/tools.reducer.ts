@@ -1,8 +1,9 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { AnnotationMode, IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerStyle } from '@ansyn/imagery';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
+import { AnnotationMode } from '../models/annotations.model';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',

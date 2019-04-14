@@ -3,6 +3,7 @@
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
 						  [mapId]="mapState.id"
+						  [mapState]="mapState"
 						  [overlay]="overlay"
 						  [active]="active"
 						  [layerFlag]="mapState.flags.displayLayers"
@@ -17,12 +18,16 @@
 
 	<ansyn-imagery-view [settings]="mapState"></ansyn-imagery-view>
 
-	<ansyn-annotations-context-menu [mapId]="mapState.id"></ansyn-annotations-context-menu>
-
 	<ansyn-imagery-loader [mapId]="mapState.id"></ansyn-imagery-loader>
 
 	<ansyn-overlay-source-type-notice [overlay]="overlay"></ansyn-overlay-source-type-notice>
 
 	<ansyn-map-search-box *ngIf="packageConfig?.mapSearch?.active && !overlay"
 						  [mapId]="mapState.id"></ansyn-map-search-box>
+
+	<ng-container
+		*ngFor="let component of entryComponents"
+		[ansynEntryComponent]="{ component: component , mapState: mapState }">
+	</ng-container>
+
 </div>

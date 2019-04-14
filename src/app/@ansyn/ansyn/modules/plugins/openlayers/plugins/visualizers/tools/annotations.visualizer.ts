@@ -13,25 +13,21 @@ import olText from 'ol/style/Text';
 import olStroke from 'ol/style/Stroke';
 
 import * as condition from 'ol/events/condition';
-import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
-import { cloneDeep, uniq } from 'lodash';
 import {
-	AnnotationInteraction,
-	AnnotationMode,
-	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData,
-
+	ImageryVisualizer,
 	IVisualizerEntity,
 	IVisualizerStyle,
 	MarkerSize,
+	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
+import { cloneDeep, uniq } from 'lodash';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { select, Store } from '@ngrx/store';
-import { AnnotationSelectAction, MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
+import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { filter, map, mergeMap, take, tap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
@@ -42,18 +38,27 @@ import { OpenLayersProjectionService } from '../../../projection/open-layers-pro
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
 import {
-	selectActiveAnnotationLayer, selectLayersEntities,
+	selectActiveAnnotationLayer,
+	selectLayersEntities,
 	selectSelectedLayersIds
 } from '../../../../../menu-items/layers-manager/reducers/layers.reducer';
 import {
 	selectAnnotationMode,
-	selectAnnotationProperties, selectSubMenu, SubMenuEnum
+	selectAnnotationProperties,
+	selectSubMenu,
+	SubMenuEnum
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
-import { SetAnnotationMode } from '../../../../../menu-items/tools/actions/tools.actions';
+import { AnnotationSelectAction, SetAnnotationMode } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
 import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
+import {
+	AnnotationInteraction,
+	AnnotationMode,
+	IAnnotationBoundingRect,
+	IAnnotationsSelectionEventData
+} from '../../../../../menu-items/tools/models/annotations.model';
 
 // @dynamic
 @ImageryVisualizer({

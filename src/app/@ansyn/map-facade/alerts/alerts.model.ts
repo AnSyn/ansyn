@@ -1,10 +1,13 @@
 import { FactoryProvider, InjectionToken } from '@angular/core';
+import { IEntryComponent } from '../directives/entry-component.directive';
 
 export interface IAlert {
 	key: string;
 	background?: string;
 	text?: string;
-	component?: any;
+	component?: {
+		new(...args): IEntryComponent
+	};
 }
 
 export const ALERTS = new InjectionToken<IAlert[]>('Alerts');

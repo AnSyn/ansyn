@@ -1,19 +1,20 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { MapEffects } from '../../effects/map.effects';
-import { IMapState } from '../../reducers/map.reducer';
+import { IMapState } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
+import { MapActionTypes } from '@ansyn/map-facade';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { filter, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
 import {
 	AnnotationRemoveFeature,
 	AnnotationSelectAction,
 	AnnotationUpdateFeature,
-	MapActionTypes
-} from '../../actions/map.actions';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/imagery';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { Actions } from '@ngrx/effects';
-import { ofType } from '@ngrx/effects';
+	ToolsActionsTypes
+} from '../../actions/tools.actions';
+import { IMapSettings } from '@ansyn/imagery';
+import { IEntryComponent } from '../../../../../../map-facade/directives/entry-component.directive';
+import { IAnnotationsSelectionEventData } from '../../models/annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -24,10 +25,10 @@ import { ofType } from '@ngrx/effects';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
+export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntryComponent {
 	clickMenuProps: IAnnotationsSelectionEventData;
 	hoverMenuProps: IAnnotationsSelectionEventData;
-	@Input() mapId;
+	@Input() mapState: IMapSettings;
 
 	@AutoSubscription
 	positionChanged$: Observable<any> = this.actions$.pipe(
@@ -36,15 +37,16 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	annotationContextMenuTrigger$ = this.mapEffect.annotationContextMenuTrigger$.pipe(
-		filter(({ payload }) => payload.mapId === this.mapId),
+	annotationContextMenuTrigger$ = this.actions$.pipe(
+		ofType<AnnotationSelectAction>(ToolsActionsTypes.ANNOTATION_SELECT),
+		filter(({ payload }) => payload.mapId === this.mapState.id),
 		tap((action: AnnotationSelectAction) => {
 			const { boundingRect } = action.payload;
 			switch (action.payload.interactionType) {
-				case AnnotationInteraction.click:
+				case 'click':
 					this.clickMenuProps = action.payload;
 					break;
-				case AnnotationInteraction.hover:
+				case 'hover':
 					if ((!this.clickMenuProps || this.clickMenuProps.featureId !== action.payload.featureId) && boundingRect) {
 						this.hoverMenuProps = action.payload;
 					} else {
@@ -68,10 +70,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.close();
 	}
 
-	constructor(public store: Store<IMapState>, public mapEffect: MapEffects, public actions$: Actions, public host: ElementRef) {
+	constructor(public store: Store<IMapState>, public actions$: Actions, public host: ElementRef) {
 	}
 
 	ngOnInit() {
+		console.log('asdkljasdkjlasdkljasdjkladskjl');
 	}
 
 	close() {

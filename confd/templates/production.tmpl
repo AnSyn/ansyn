@@ -3,95 +3,122 @@
     "schema": "cases",
     "paginationLimit": 16,
     "defaultCase": {
-      "id": "4df64c1a-330b-1332-c286-7d73754bd001",
-      "name": "Default case",
-      "lastModified": "2018-04-04T13:21:45.616Z",
-      "autoSave": false,
-      "state": {
-        "timeFilter": "Start - End",
-        "orientation": "Align North",
-        "maps": {
-          "layout": "layout1",
-          "data": [
-            {
-              "data": {
-                "position": {
-                  "extentPolygon": {
-                    "type": "Polygon",
-                    "coordinates": [
-                      [
-                        [
-                          -117.94293165339445,
-                          33.82040324951603
-                        ],
-                        [
-                          -117.88739896579649,
-                          33.82040324951603
-                        ],
-                        [
-                          -117.88739896579649,
-                          33.80000526593916
-                        ],
-                        [
-                          -117.94293165339445,
-                          33.80000526593916
-                        ],
-                        [
-                          -117.94293165339445,
-                          33.82040324951603
-                        ]
-                      ]
-                    ]
-                  },
-                  "projectedState": {
-                    "center": [
-                      -13126256.030144267,
-                      4003347.018056854
-                    ],
-                    "projection": {
-                      "code": "EPSG:3857"
-                    },
-                    "resolution": 3.3780713146372543,
-                    "rotation": 0,
-                    "zoom": 15.5
-                  }
-                }
-              },
-              "flags": {},
-              "worldView": {
-				"mapType": "openLayersMap"
-              },
-              "id": null
-            }
-          ],
-          "activeMapId": null
-        },
-        "layers": {
-          "activeLayersIds": []
-        },
-        "favoriteOverlays": [],
-        "removedOverlaysIds": [],
-        "removedOverlaysVisibility": true,
-        "region": {
-          "type": "Point",
-          "coordinates": [
-                -117.9189835710201,
-                33.812091224680195
-          ]
-        },
-        "dataInputFilters": {
-          "filters": [],
-          "active": false
-        },
-        "time": null,
-        "facets": {
-          "showOnlyFavorites": false,
-          "filters": [
+		 "id": "4df64c1a-330b-1332-c286-7d73754bd001",
+		 "name": "Default case",
+		 "lastModified": "2018-04-04T13:21:45.616Z",
+		 "autoSave": false,
+		 "state": {
+		   "timeFilter": "Start - End",
+		   "orientation": "Align North",
+		   "maps": {
+			 "layout": "layout1",
+			 "data": [
+			   {
+				 "data": {
+				   "position": {
+					 "extentPolygon": {
+					   "type": "Polygon",
+					   "coordinates": [
+						 [
+						   [
+							 -122.4148614215284,
+							 37.63937724672128
+						   ],
+						   [
+							 -122.33393164831777,
+							 37.63937724672128
+						   ],
+						   [
+							 -122.33393164831777,
+							 37.61041039245376
+						   ],
+						   [
+							 -122.4148614215284,
+							 37.61041039245376
+						   ],
+						   [
+							 -122.4148614215284,
+							 37.63937724672128
+						   ]
+						 ]
+					   ]
+					 },
+					 "projectedState": {
+					   "center": [
+						 -13622657.226970552,
+						 4526568.889831425
+					   ],
+					   "projection": {
+						 "code": "EPSG:3857"
+					   },
+					   "resolution": 4.9229842315974395,
+					   "rotation": 0,
+					   "zoom": 14.956666666666665
+					 }
+				   },
+				   "overlay": null,
+				   "imageManualProcessArgs": {
+					 "Sharpness": 0,
+					 "Contrast": 0,
+					 "Brightness": 0,
+					 "Gamma": 100,
+					 "Saturation": 100
+				   },
+				   "isAutoImageProcessingActive": false
+				 },
+				 "flags": {},
+				 "worldView": {
+				   "mapType": "openLayersMap",
+				   "sourceType": "BING"
+				 },
+				 "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+			   }
+			 ],
+			 "activeMapId": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+		   },
+		   "layers": {
+			 "activeLayersIds": [
+			   "08ca40aa-196c-80a3-d868-0264474319f6"
+			 ]
+		   },
+		   "favoriteOverlays": [],
+		   "removedOverlaysIds": [],
+		   "removedOverlaysVisibility": true,
+		   "presetOverlays": [],
+		   "region": {
+			 "type": "Point",
+			 "coordinates": [
+			   -122.3805754022963,
+			   37.621511305075714
+			 ]
+		   },
+		   "dataInputFilters": {
+			 "filters": [],
+			 "active": false
+		   },
+		   "time": {
+			 "type": "absolute",
+			 "from": "2019-01-01T21:06:00.000Z",
+			 "to": "2019-04-13T20:06:54.891Z"
+		   },
+		   "facets": {
+			 "showOnlyFavorites": false,
+			 "filters": [
 
-          ]
-        }
-      }
-    },
+			 ]
+		   },
+		   "contextEntities": null,
+		   "overlaysManualProcessArgs": {
+			 "20190412_213505_ssc11d2_0011": {
+			   "Sharpness": 0,
+			   "Contrast": 0,
+			   "Brightness": 0,
+			   "Gamma": 100,
+			   "Saturation": 100
+			 }
+		   }
+		 }
+	   },
     "casesQueryParamsKeys": [
       "facets",
       "time",
@@ -154,6 +181,9 @@
   	}
   },
   "mapSourceProvidersConfig": {
+  "SENTINEL":{
+  		"baseUrl": "{{ getv "/ansyn/sentinel/baseurl" "http://ansyn.webiks.com:89/api"}}"
+  	},
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
     	"styles": [ "AerialWithLabels" ]
@@ -1010,6 +1040,62 @@
 						"text": "UAV",
 						"value": {
 						  "sensorType": "UAV"
+						}
+					  }
+					]
+			  }
+		},
+		"SENTINEL": {
+			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "true" }},
+			"whitelist": [
+				{
+					"name": "Entire Earth",
+					"dates": [
+						{
+							"start": null,
+							"end": null
+						}
+					],
+					"sensorNames": [ null ],
+					"coverage": [
+						[
+							[
+								[
+									-180,
+									-90
+								],
+								[
+									-180,
+									90
+								],
+								[
+									180,
+									90
+								],
+								[
+									180,
+									-90
+								],
+								[
+									-180,
+									-90
+								]
+							]
+						]
+					]
+				}
+			],
+			"blacklist": [],
+			"dataInputFiltersConfig": {
+				"text": "Sentinel",
+				"value": 1,
+					"indeterminate": true,
+					"collapsed": true,
+					"children": [
+					  {
+						"text": "S2L2A",
+						"value": {
+						  "sensorType": "S2L2A"
 						}
 					  }
 					]

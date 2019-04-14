@@ -15,6 +15,7 @@ import { PlaceholderComponent } from './components/placeholder/placeholder.compo
 import { ImisightModule } from './imisight/imisight.module';
 import { SandboxModule } from './sandbox/sandbox.module';
 import { ContextModule } from './context/context.module';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 @NgModule({
 	imports: [
@@ -28,7 +29,8 @@ import { ContextModule } from './context/context.module';
 		AnsynRouterModule,
 		AppRoutingModule,
 		ContextModule,
-		SandboxModule
+		SandboxModule,
+		DeviceDetectorModule.forRoot()
 	],
 	providers: [
 		{

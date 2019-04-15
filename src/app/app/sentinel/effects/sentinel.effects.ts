@@ -1,4 +1,4 @@
-import { DisplayOverlayAction } from "@ansyn/ansyn";
+import { DisplayOverlayAction } from "../../../@ansyn/ansyn/modules/overlays/actions/overlays.actions";
 import { ISentinelState } from "../reducers/sentinel.reducer";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
@@ -16,7 +16,7 @@ export class SentinelEffects {
 		ofType<SetSentinelLayerOnMap>(SentinelActionTypes.SET_LAYER_ON_MAP),
 		withLatestFrom(this.store$.select(selectMaps)),
 		map(([{ payload }, maps]) => new DisplayOverlayAction({ overlay: maps[payload.id].data.overlay, mapId: payload.id, force: true }))
-	)
+	);
 
 	constructor(protected actions$: Actions,
 				protected sentinelService: SentinelLayersService,

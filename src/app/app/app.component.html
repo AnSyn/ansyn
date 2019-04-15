@@ -1,1 +1,10 @@
-<router-outlet></router-outlet>
+<ng-container
+	*ngIf="validBrowser; then app; else unsupported"
+></ng-container>
+<ng-template #app>
+	<router-outlet></router-outlet>
+</ng-template>
+<ng-template #unsupported>
+	<ansyn-unsupported-devices [type]="mobileOrTable? 'mobile' : 'browser'"></ansyn-unsupported-devices>
+
+</ng-template>

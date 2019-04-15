@@ -29,6 +29,7 @@ import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { HelpModule } from './modules/menu-items/help/help.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
+import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 
 @NgModule({
 	imports: [
@@ -74,8 +75,9 @@ import { ToolsModule } from './modules/menu-items/tools/tools.module';
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
+		UnsupportedDevicesComponent,
 	],
-	exports: [ AnsynComponent ]
+	exports: [ AnsynComponent, UnsupportedDevicesComponent ]
 })
 
 export class AnsynModule {

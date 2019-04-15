@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { UnsupportedDevicesComponent } from "../@ansyn/ansyn/components/unsupported-devices/unsupported-devices.component";
 import { AppAnsynComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 describe('AppAnsynComponent', () => {
 	let fixture: ComponentFixture<AppAnsynComponent>;
@@ -9,8 +11,9 @@ describe('AppAnsynComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [RouterTestingModule],
-			declarations: [AppAnsynComponent]
+			imports: [RouterTestingModule,
+				DeviceDetectorModule.forRoot()],
+			declarations: [AppAnsynComponent, UnsupportedDevicesComponent]
 		}).compileComponents();
 	}));
 

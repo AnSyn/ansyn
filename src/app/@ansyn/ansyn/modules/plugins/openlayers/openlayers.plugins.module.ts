@@ -71,6 +71,7 @@ import { OpenLayerMarcoSourceProvider } from "./mapSourceProviders/marco/open-la
 				OpenLayerOpenAerialSourceProvider,
 				OpenLayersStaticImageSourceProvider,
 				OpenLayerMarcoSourceProvider
+
 			]
 		})
 	]

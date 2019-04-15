@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from "@ansyn/ansyn";
+import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from "../../../@ansyn/ansyn//modules/core/models/multiple-overlays-source-config";
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from "@ansyn/imagery";
 import { Store } from '@ngrx/store';
 import { WMSCapabilities } from 'ol/format';

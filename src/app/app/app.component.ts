@@ -9,12 +9,10 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 	styleUrls: ['./app.component.less']
 })
 export class AppAnsynComponent implements AfterViewInit {
-	mobileOrTable: boolean;
-	validBrowser: boolean;
+	mobileOrTable: boolean = this.deviceService.isMobile() || this.deviceService.isTablet();
+	validBrowser: boolean = ['chrome', 'safari'].includes(this.deviceService.browser.toLowerCase()) && !this.mobileOrTable;
 
 	constructor(public renderer: Renderer2, @Inject(DOCUMENT) protected document: Document, private deviceService: DeviceDetectorService) {
-		this.mobileOrTable = this.deviceService.isMobile() || this.deviceService.isTablet();
-		this.validBrowser = ['chrome', 'safari'].includes(this.deviceService.browser.toLowerCase()) && !this.mobileOrTable;
 	}
 
 	ngAfterViewInit() {

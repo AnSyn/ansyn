@@ -1,11 +1,15 @@
-import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from "@ansyn/ansyn";
-import TileLayer from 'ol/layer/Tile';
+import { OpenLayersMapSourceProvider } from '../../@ansyn/ansyn/modules/plugins/openlayers/mapSourceProviders/open-layers.map-source-provider';
+import { OpenLayersDisabledMap } from '../../@ansyn/ansyn/modules/plugins/openlayers/maps/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenLayersMap } from '../../@ansyn/ansyn/modules/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
 import {
-	CacheService, ICaseMapState,
+	CacheService,
+	ICaseMapState,
 	ImageryCommunicatorService,
-	ImageryMapSource, IMapSourceProvidersConfig,
+	ImageryMapSource,
+	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/imagery';
+} from "@ansyn/imagery";
+import TileLayer from 'ol/layer/Tile';
 import { GML } from 'ol/format';
 import * as wellknown from 'wellknown';
 import * as turf from '@turf/turf';

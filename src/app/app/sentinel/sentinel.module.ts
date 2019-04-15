@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnsynFormsModule, OverlaysModule } from "@ansyn/ansyn";
+import { OverlaysModule } from '../../@ansyn/ansyn/modules/overlays/overlays.module';
+import { AnsynFormsModule } from '../../@ansyn/ansyn/modules/core/forms/ansyn-forms.module';
 import { EffectsModule } from '@ngrx/effects';
-import { ImageryModule } from "@ansyn/imagery";
+import { ImageryModule } from "../../@ansyn/imagery/imagery.module";
 import { OpenLayersSentinelSourceProvider } from "./open-layers-sentinel-source-provider";
 import { SentinelSourceProvider } from "./sentinel-source-provider";
 import { SentinelComboBoxComponent } from "./sentinel-combo-box/sentinel-combo-box.component";

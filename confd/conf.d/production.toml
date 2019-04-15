@@ -21,7 +21,5 @@ keys = [
 	"/ansyn/overlay/idaho/inactive",
 	"/ansyn/imisight/callback/url",
 	"/ansyn/overlay/imisight/inactive",
-	"/ansyn/overlay/tb/inactive",
-	"/ansyn/overlay/sentinel/inactive",
-	"/ansyn/sentinel/baseurl"
+	"/ansyn/overlay/tb/inactive"
 ]

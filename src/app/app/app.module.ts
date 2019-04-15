@@ -16,7 +16,6 @@ import { ImisightModule } from './imisight/imisight.module';
 import { SandboxModule } from './sandbox/sandbox.module';
 import { ContextModule } from './context/context.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
-import { SentinelModule } from './sentinel/sentinel.module';
 
 @NgModule({
 	imports: [
@@ -31,7 +30,6 @@ import { SentinelModule } from './sentinel/sentinel.module';
 		AppRoutingModule,
 		ContextModule,
 		SandboxModule,
-		SentinelModule,
 		DeviceDetectorModule.forRoot()
 	],
 	providers: [

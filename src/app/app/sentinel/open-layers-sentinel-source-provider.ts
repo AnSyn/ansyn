@@ -87,7 +87,6 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 					return this.addFootprintToLayerPromise(Promise.resolve(layers[0]), metaData);
 				});
 			})).toPromise()
-
 	}
 
 	getThumbnailName(overlay): string {

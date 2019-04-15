@@ -138,7 +138,7 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean }) {
+	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean }) {
 	}
 }
 

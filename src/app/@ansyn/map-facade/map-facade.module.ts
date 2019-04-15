@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
+import { SentinelModule } from "../../app/sentinel/sentinel.module";
 import { MapEffects } from './effects/map.effects';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
 import { ImageryModule } from '@ansyn/imagery';
@@ -38,7 +39,8 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 		ImageryModule,
 		CommonModule,
 		FormsModule,
-		AlertsModule
+		AlertsModule,
+		SentinelModule
 	],
 	providers: [GeocoderService],
 	declarations: [

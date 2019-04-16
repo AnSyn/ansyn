@@ -32,7 +32,7 @@ import {
 	SetMarkUp,
 	SetTimelineStateAction
 } from '../../actions/overlays.actions';
-import { schemeCategory10 } from 'd3-scale';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';

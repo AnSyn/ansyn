@@ -181,6 +181,9 @@
   	}
   },
   "mapSourceProvidersConfig": {
+    "SENTINEL":{
+    	"baseUrl": "{{ getv "/ansyn/sentinel/baseurl" "http://ansyn.webiks.com:89/api"}}"
+    },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
     	"styles": [ "AerialWithLabels" ]
@@ -1096,6 +1099,62 @@
 					  }
 					]
 				  }
+		},
+		"SENTINEL": {
+			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "false" }},
+			"whitelist": [
+				{
+					"name": "Entire Earth",
+					"dates": [
+						{
+							"start": null,
+							"end": null
+						}
+					],
+					"sensorNames": [ null ],
+					"coverage": [
+						[
+							[
+								[
+									-180,
+									-90
+								],
+								[
+									-180,
+									90
+								],
+								[
+									180,
+									90
+								],
+								[
+									180,
+									-90
+								],
+								[
+									-180,
+									-90
+								]
+							]
+						]
+					]
+				}
+			],
+			"blacklist": [],
+			"dataInputFiltersConfig": {
+				"text": "Sentinel",
+				"value": 1,
+					"indeterminate": true,
+					"collapsed": true,
+					"children": [
+					  {
+						"text": "S2L2A",
+						"value": {
+						  "sensorType": "S2L2A"
+						}
+					  }
+					]
+			  }
 		}
 	}
   },

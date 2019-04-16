@@ -1,0 +1,12 @@
+<div class="form-field">
+	<select
+		required
+		name="layerName"
+		[ngModel]="selectedLayer"
+		(ngModelChange)="changeLayer($event)">
+
+		<option *ngFor="let layer of sentinelLayers" [value]="layer.name">
+			{{ layer.title }}
+		</option>
+	</select>
+</div>

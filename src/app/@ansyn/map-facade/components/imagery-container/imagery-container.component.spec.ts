@@ -49,6 +49,9 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-map-search-box', inputs: ['mapId']
+				}),
+				MockComponent({
+					selector: 'ansyn-sentinel-combo-box', inputs: ['mapId']
 				})
 			]
 		}).compileComponents();

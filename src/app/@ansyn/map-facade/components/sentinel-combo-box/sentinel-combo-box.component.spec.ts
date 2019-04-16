@@ -2,7 +2,6 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
-import { SetSentinelLayerOnMap } from "../../../../app/sentinel/actions/sentinel.actions";
 import {
 	selectSentinelLayers,
 	selectSentinelselectedLayers,
@@ -10,7 +9,7 @@ import {
 	SentinelReducer
 } from "../../../../app/sentinel/reducers/sentinel.reducer";
 
-import { SentinelComboBoxComponent } from './sentinel-combo-box.component';
+import { SentinelComboBoxComponent, SetSentinelLayerOnMap } from './sentinel-combo-box.component';
 
 describe('SentinelComboBoxComponent', () => {
 	let component: SentinelComboBoxComponent;
@@ -48,6 +47,6 @@ describe('SentinelComboBoxComponent', () => {
 		component.mapId = 'mapId';
 		const layer = 'TRUE_COLOR';
 		component.changeLayer(layer);
-		expect(store.dispatch).toHaveBeenCalled();
+		expect(store.dispatch).toHaveBeenCalledWith( new SetSentinelLayerOnMap({id: component.mapId, layer}));
 	})
 });

@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 const sentinelFeature = createFeatureSelector('sentinel');
 const selectSentinelLayers = createSelector(sentinelFeature, (sentinel: any) => sentinel && sentinel.layers);
 const selectSentinelselectedLayers = createSelector(sentinelFeature, (sentinel: any) => sentinel && sentinel.selectedLayers);
-class SetSentinelLayerOnMap {
+export class SetSentinelLayerOnMap {
 	type = '[Sentinel] SET_LAYER_ON_MAP';
 	constructor(public payload) {
 	}

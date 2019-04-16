@@ -1,5 +1,5 @@
-import { createFeatureSelector, createSelector, MemoizedSelector } from "@ngrx/store";
-import { SentinelActions, SentinelActionTypes } from "../actions/sentinel.actions";
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { SentinelActions, SentinelActionTypes } from '../actions/sentinel.actions';
 
 export interface ISentinelLayer {
 	name: string,
@@ -17,7 +17,7 @@ export interface ISentinelState {
 }
 
 export const sentinelInitialState: ISentinelState = {
-	selectedLayers: {defaultLayer: 'TRUE_COLOR'},
+	selectedLayers: { defaultLayer: 'TRUE_COLOR' },
 	layers: []
 };
 export const sentinelFeatureKey = 'sentinel';

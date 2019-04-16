@@ -1,6 +1,3 @@
-import { OpenLayersMapSourceProvider } from '../../@ansyn/ansyn/modules/plugins/openlayers/mapSourceProviders/open-layers.map-source-provider';
-import { OpenLayersDisabledMap } from '../../@ansyn/ansyn/modules/plugins/openlayers/maps/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMap } from '../../@ansyn/ansyn/modules/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
 import {
 	CacheService,
 	ICaseMapState,
@@ -8,7 +5,7 @@ import {
 	ImageryMapSource,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from "@ansyn/imagery";
+} from '@ansyn/imagery';
 import TileLayer from 'ol/layer/Tile';
 import { GML } from 'ol/format';
 import * as wellknown from 'wellknown';
@@ -18,8 +15,9 @@ import TileWMS from 'ol/source/TileWMS';
 
 import { Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectSentinelselectedLayers } from "./reducers/sentinel.reducer";
+import { selectSentinelselectedLayers } from './reducers/sentinel.reducer';
 import { map, take } from 'rxjs/operators';
+import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ansyn';
 
 export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';
 
@@ -35,7 +33,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 				protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
-		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig)
+		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
 	public create(metaData: ICaseMapState): any {
@@ -53,7 +51,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 				GEOMETRY: geometry,
 				TIME: this.createDateString(date),
 				MAXCC: 100
-			},
+			}
 		});
 		const layer = new TileLayer({
 			projection,
@@ -86,7 +84,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 				return this.createOrGetFromCache(metaData).then((layers) => {
 					return this.addFootprintToLayerPromise(Promise.resolve(layers[0]), metaData);
 				});
-			})).toPromise()
+			})).toPromise();
 	}
 
 	getThumbnailName(overlay): string {
@@ -98,7 +96,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 		const Y = date.getFullYear();
 		const m = date.getMonth() + 1;
 		const d = date.getDate();
-		const str = `${Y}-${m >= 10 ? m : `0${m}`}-${d >= 10 ? d : `0${d}`}`
-		return `${str}`
+		const str = `${Y}-${m >= 10 ? m : `0${m}`}-${d >= 10 ? d : `0${d}`}`;
+		return `${str}`;
 	}
 }

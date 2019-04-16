@@ -1,12 +1,12 @@
-import { DisplayOverlayAction } from "../../../@ansyn/ansyn/modules/overlays/actions/overlays.actions";
-import { ISentinelState } from "../reducers/sentinel.reducer";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Store } from "@ngrx/store";
-import { Injectable } from "@angular/core";
-import { SentinelLayersService } from "../services/sentinel-layers.service";
-import { SentinelActionTypes, SetSentinelLayerOnMap } from "../actions/sentinel.actions";
-import { map, withLatestFrom } from "rxjs/operators";
-import { selectMaps } from '../../../@ansyn/map-facade/reducers/map.reducer'
+import { ISentinelState } from '../reducers/sentinel.reducer';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { Injectable } from '@angular/core';
+import { SentinelLayersService } from '../services/sentinel-layers.service';
+import { SentinelActionTypes, SetSentinelLayerOnMap } from '../actions/sentinel.actions';
+import { map, withLatestFrom } from 'rxjs/operators';
+import { selectMaps } from '@ansyn/map-facade';
+import { DisplayOverlayAction } from '@ansyn/ansyn';
 
 @Injectable()
 export class SentinelEffects {
@@ -15,7 +15,11 @@ export class SentinelEffects {
 	displaySentinelLayer$ = this.actions$.pipe(
 		ofType<SetSentinelLayerOnMap>(SentinelActionTypes.SET_LAYER_ON_MAP),
 		withLatestFrom(this.store$.select(selectMaps)),
-		map(([{ payload }, maps]) => new DisplayOverlayAction({ overlay: maps[payload.id].data.overlay, mapId: payload.id, force: true }))
+		map(([{ payload }, maps]) => new DisplayOverlayAction({
+			overlay: maps[payload.id].data.overlay,
+			mapId: payload.id,
+			force: true
+		}))
 	);
 
 	constructor(protected actions$: Actions,

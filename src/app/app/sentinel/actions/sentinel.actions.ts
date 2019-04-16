@@ -1,5 +1,5 @@
-import { Action } from "@ngrx/store";
-import { ISentinelLayer } from "../reducers/sentinel.reducer";
+import { Action } from '@ngrx/store';
+import { ISentinelLayer } from '../reducers/sentinel.reducer';
 
 export enum SentinelActionTypes {
 	SET_ALL_LAYERS = '[Sentinel] ALL_LAYERS',

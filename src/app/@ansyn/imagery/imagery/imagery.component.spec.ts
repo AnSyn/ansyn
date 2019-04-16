@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { BaseMapSourceProvider } from '../model/base-map-source-provider';
+import { BaseMapSourceProvider, MAP_SOURCE_PROVIDERS_CONFIG } from '../model/base-map-source-provider';
 import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
-import { ICaseMapState, MAP_PROVIDERS_CONFIG, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
 import { ImageryMapSource } from '../decorators/map-source-provider';
+import { ICaseMapState } from '../model/case.model';
+import { MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',

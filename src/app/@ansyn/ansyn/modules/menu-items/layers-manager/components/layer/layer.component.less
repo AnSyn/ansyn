@@ -1,0 +1,31 @@
+@import "ansyn/less/common";
+
+:host {
+	display: inherit;
+}
+
+div.layer {
+	display: flex;
+	padding: 2.5px 5px;
+	position: relative;
+
+	&:hover span.only-filter {
+		visibility: visible;
+	}
+
+	ansyn-checkbox {
+		max-width: 100%;
+	}
+
+	span.only-filter {
+		visibility: hidden;
+		font-size: 12px;
+		font-style: normal;
+		color: rgba(255, 255, 255, 0.75);
+		cursor: pointer;
+		margin-left: 2px;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

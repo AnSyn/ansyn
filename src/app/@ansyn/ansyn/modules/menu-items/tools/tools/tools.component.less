@@ -1,0 +1,72 @@
+@import "ansyn/less/z-index-globals";
+@import 'ansyn/less/common';
+
+:host {
+	display: block;
+	height: 100%;
+
+	div.tools-menu-item-container {
+		display: flex;
+		flex-direction: column;
+		padding: 50px 0;
+
+		div {
+			position: relative;
+			padding: 0 12px;
+			margin: 5px 0;
+
+			button {
+				margin: 0;
+				padding: 0;
+				border: none;
+				color: white;
+				background: rgba(255, 255, 255, 0.25);
+				box-sizing: border-box;
+				outline: none;
+				width: 34px;
+				height: 34px;
+				font-size: 24px;
+
+				i {
+					vertical-align: middle;
+				}
+
+				&:disabled {
+					opacity: .6;
+					cursor: not-allowed;
+				}
+
+				&.mode-on {
+					border: 1px solid #09F9E8;
+				}
+
+				&:hover:not(:disabled), &.active {
+					background-color: rgb(41, 127, 155);
+				}
+			}
+			&.user-annotations {
+				.icon-annotation {
+					font-size: 26px;
+					padding-left: 2px;
+				}
+				button {
+
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					span {
+						font-size: 22px;
+						color: white;
+					}
+				}
+
+				&.active {
+					button {
+
+					}
+				}
+			}
+		}
+	}
+
+}

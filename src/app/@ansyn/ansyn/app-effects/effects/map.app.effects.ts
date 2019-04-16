@@ -3,15 +3,6 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
-	DisplayOverlayAction,
-	DisplayOverlayFailedAction,
-	DisplayOverlaySuccessAction,
-	MarkUpClass,
-	OverlaysActionTypes,
-	RequestOverlayByIDFromBackendAction,
-	SetMarkUp
-} from '@ansyn/overlays';
-import {
 	ImageryCreatedAction,
 	IMapFacadeConfig,
 	IMapState,
@@ -26,26 +17,18 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	SetManualImageProcessing,
-	SetMapGeoEnabledModeToolsActionStore,
-	ToolsActionsTypes,
-	UpdateOverlaysManualProcessArgs
-} from '@ansyn/menu-items';
-import {
 	BackToWorldView,
-	CoreActionTypes,
-	endTimingLog,
 	extentFromGeojson,
+	ToggleMapLayersAction,
+	SetToastMessageAction
+} from '@ansyn/map-facade'
+import {
+	BaseMapSourceProvider,
+	CommunicatorEntity,
+	ImageryCommunicatorService,
 	GeoRegisteration,
-	ICaseMapState,
-	isFullOverlay,
-	SetToastMessageAction,
-	startTimingLog,
-	toastMessages,
-	ToggleMapLayersAction
-} from '@ansyn/core';
-import { CesiumMapName, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/plugins';
-import { BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+	ICaseMapState
+} from '@ansyn/imagery';
 import {
 	catchError,
 	debounceTime,
@@ -61,6 +44,23 @@ import {
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { fromPromise } from 'rxjs/internal-compatibility';
+import {
+	SetManualImageProcessing,
+	SetMapGeoEnabledModeToolsActionStore, ToolsActionsTypes, UpdateOverlaysManualProcessArgs
+} from '../../modules/menu-items/tools/actions/tools.actions';
+import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
+import { isFullOverlay } from '../../modules/core/utils/overlays';
+import { toastMessages } from '../../modules/core/models/toast-messages';
+import {
+	DisplayOverlayAction,
+	DisplayOverlayFailedAction,
+	DisplayOverlaySuccessAction, OverlaysActionTypes,
+	RequestOverlayByIDFromBackendAction, SetMarkUp
+} from '../../modules/overlays/actions/overlays.actions';
+import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
+import { CesiumMapName } from '../../modules/plugins/cesium/maps/cesium-map/cesium-map';
+import { DisabledOpenLayersMapName } from '../../modules/plugins/openlayers/maps/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersMapName } from '../../modules/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
 
 @Injectable()
 export class MapAppEffects {
@@ -100,7 +100,7 @@ export class MapAppEffects {
 			ofType<DisplayOverlayAction>(
 				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-				CoreActionTypes.BACK_TO_WORLD_VIEW
+				MapActionTypes.BACK_TO_WORLD_VIEW
 			),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
 				mapId: payload.mapId, show: false
@@ -215,7 +215,7 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
 		.pipe(
-			ofType<ToggleMapLayersAction>(CoreActionTypes.TOGGLE_MAP_LAYERS),
+			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
 			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
 			tap((communicator: CommunicatorEntity) => {
 				communicator.visualizers.forEach(v => v.toggleVisibility());
@@ -316,6 +316,9 @@ export class MapAppEffects {
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
+		if (payload.force) {
+			return true
+		}
 		const isFull = isFullOverlay(payload.overlay);
 		const { overlay } = payload;
 		const mapData = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId).data;

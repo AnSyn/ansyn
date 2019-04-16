@@ -2,33 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import {
-	CasesActionTypes,
-	DisableImageProcessing,
-	EnableImageProcessing,
-	GoToAction,
-	IImageProcParam,
-	IToolsConfig,
-	IToolsState,
-	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
-	SetAnnotationMode,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing,
-	SetMeasureDistanceToolState,
-	SetPinLocationModeAction,
-	ShowOverlaysFootprintAction, StartMouseShadow,
-	StopMouseShadow,
-	ToolsActionsTypes,
-	toolsConfig,
-	toolsFlags,
-	toolsStateSelector,
-	UpdateToolsFlags
-} from '@ansyn/menu-items';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import {
-	IMapState,
+	IMapState, MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
 	PinLocationModeTriggerAction,
@@ -38,18 +14,34 @@ import {
 } from '@ansyn/map-facade';
 import {
 	CaseGeoFilter,
-	ClearActiveInteractionsAction,
-	CoreActionTypes,
 	ICaseMapState,
 	ImageManualProcessArgs
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { selectGeoFilterSearchMode, StatusBarActionsTypes, UpdateGeoFilterStatus } from '@ansyn/status-bar';
 import { differenceWith, isEqual } from 'lodash';
 import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
 import { IAppState } from '../app.effects.module';
-
+import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
+import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
+import {
+	ClearActiveInteractionsAction,
+	DisableImageProcessing,
+	EnableImageProcessing,
+	GoToAction,
+	SetActiveCenter,
+	SetActiveOverlaysFootprintModeAction,
+	SetAnnotationMode,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess,
+	SetManualImageProcessing,
+	SetMeasureDistanceToolState,
+	SetPinLocationModeAction,
+	ShowOverlaysFootprintAction, StartMouseShadow, StopMouseShadow, ToolsActionsTypes, UpdateToolsFlags
+} from '../../modules/menu-items/tools/actions/tools.actions';
+import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+import { IToolsState, toolsFlags, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -78,7 +70,7 @@ export class ToolsAppEffects {
 		ofType<Action>(
 			MenuActionTypes.SELECT_MENU_ITEM,
 			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
-			CoreActionTypes.SET_LAYOUT,
+			MapActionTypes.SET_LAYOUT,
 			ToolsActionsTypes.SET_SUB_MENU),
 		withLatestFrom(this.isPolygonSearch$),
 		filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch),
@@ -121,7 +113,7 @@ export class ToolsAppEffects {
 	@Effect()
 	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
 		.pipe(
-			ofType(CoreActionTypes.BACK_TO_WORLD_VIEW),
+			ofType(MapActionTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),
 			filter(communicator => Boolean(communicator)),
 			map(() => new DisableImageProcessing())
@@ -219,7 +211,7 @@ export class ToolsAppEffects {
 
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
-		ofType<ClearActiveInteractionsAction>(CoreActionTypes.CLEAR_ACTIVE_INTERACTIONS),
+		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),
 		mergeMap(action => {
 			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
 			let clearActions = [

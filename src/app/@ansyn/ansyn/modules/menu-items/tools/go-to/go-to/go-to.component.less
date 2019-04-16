@@ -1,0 +1,77 @@
+@import "ansyn/less/common";
+@import "ansyn/less/z-index-globals";
+
+:host {
+	width: 0;
+	height: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(100%);
+	background: @application-main-color;
+	visibility: hidden;
+	transition: .2s;
+	z-index: @z-index-go-to-component;
+	overflow: hidden;
+	&.expand {
+		form {
+			visibility: visible;
+			display: flex;
+			opacity: 1;
+		}
+		visibility: visible;
+		width: 320px;
+		height: 200px;
+	}
+	button.close {
+		position: absolute;
+		right: 0;
+		color: white;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		outline: none;
+		z-index: @z-index-go-to-close;
+		&:hover {
+			color: #2e2d46;
+		}
+	}
+	form {
+		opacity: 0;
+		transition: visibility 0s linear .2s;
+		visibility: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		height: 100%;
+		box-sizing: border-box;
+
+		div.buttons-area {
+			display: flex;
+			width: 100%;
+			justify-content: space-around;
+			margin-top: 5px;
+			button {
+				outline: none;
+			}
+
+			button.pin-location {
+				background: transparent;
+				border: none;
+				color: white;
+				display: flex;
+				font-size: 14px;
+				align-items: center;
+				opacity: .7;
+				&.active {
+					opacity: 1;
+				}
+			}
+
+			button[type='submit'] {
+				width: 83px;
+			}
+		}
+
+	}
+}

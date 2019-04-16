@@ -1,9 +1,9 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ICaseMapPosition } from '@ansyn/core';
 import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { filter, map, take, tap } from 'rxjs/operators';
 import { BaseImageryMap } from '../model/base-imagery-map';
+import { ICaseMapPosition } from '../model/case-map-position.model';
 
 @Component({
 	selector: 'ansyn-map',

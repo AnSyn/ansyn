@@ -1,11 +1,11 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { AnsynComponent } from './ansyn.component';
-import { MockComponent } from '@ansyn/core';
+import { MockComponent } from '../modules/core/test/mock-component';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
-import { selectSelectedCase } from '@ansyn/menu-items';
+import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 
@@ -15,6 +15,7 @@ describe('AnsynComponent', () => {
 	let store: Store<any>;
 	let handler: Subject<any>;
 
+	const mockContextMenu = MockComponent({ selector: 'ansyn-context-menu' });
 	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version', 'animatedElement'] });
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockStatus = MockComponent({
@@ -48,6 +49,7 @@ describe('AnsynComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AnsynComponent,
+				mockContextMenu,
 				mockImageryView,
 				mockMenu,
 				mockToast,

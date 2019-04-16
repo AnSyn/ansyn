@@ -1,46 +1,43 @@
 import { ToolsAppEffects } from './tools.app.effects';
-
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ICase } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
+import { BackToWorldView, MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
+import { cold, hot } from 'jasmine-marbles';
+import { provideMockActions } from '@ngrx/effects/testing';
+import {
+	ILayerState,
+	initialLayersState,
+	layersStateSelector
+} from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
+import {
+	IToolsState,
+	toolsFeatureKey,
+	toolsInitialState,
+	ToolsReducer, toolsStateSelector
+} from '../../modules/menu-items/tools/reducers/tools.reducer';
 import {
 	casesFeatureKey,
 	CasesReducer,
 	casesStateSelector,
+	ICasesState
+} from '../../modules/menu-items/cases/reducers/cases.reducer';
+import {
+	ClearActiveInteractionsAction,
 	DisableImageProcessing,
 	GoToAction,
-	ICasesState,
-	ILayerState,
-	initialLayersState,
-	IToolsState,
-	layersStateSelector,
 	PullActiveCenter,
-	SelectCaseAction,
-	SetActiveCenter,
-	SetAnnotationMode,
+	SetActiveCenter, SetAnnotationMode,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
-	SetMeasureDistanceToolState,
-	SetPinLocationModeAction,
-	ShowOverlaysFootprintAction,
-	toolsConfig,
-	toolsFeatureKey,
-	toolsInitialState,
-	ToolsReducer,
-	toolsStateSelector
-} from '@ansyn/menu-items';
-import {
-	BackToWorldView,
-	ClearActiveInteractionsAction,
-	ICase
-} from '@ansyn/core';
-import { DisplayOverlaySuccessAction } from '@ansyn/overlays';
-import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
-import { cold, hot } from 'jasmine-marbles';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { UpdateGeoFilterStatus } from '@ansyn/status-bar';
+	SetMeasureDistanceToolState, SetPinLocationModeAction,
+	ShowOverlaysFootprintAction
+} from '../../modules/menu-items/tools/actions/tools.actions';
+import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

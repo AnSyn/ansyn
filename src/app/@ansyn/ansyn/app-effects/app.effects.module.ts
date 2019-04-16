@@ -1,5 +1,4 @@
 import { FiltersAppEffects } from './effects/filters.app.effects';
-import { ICasesState, IFiltersState, ILayerState, IToolsState } from '@ansyn/menu-items';
 import { LayersAppEffects } from './effects/layers.app.effects';
 import { IMenuState } from '@ansyn/menu';
 import { NgModule } from '@angular/core';
@@ -8,18 +7,19 @@ import { MapAppEffects } from './effects/map.app.effects';
 import { CasesAppEffects } from './effects/cases.app.effects';
 import { IMapState } from '@ansyn/map-facade';
 import { MenuAppEffects } from './effects/menu.app.effects';
-import { IStatusBarState } from '@ansyn/status-bar';
+import { IStatusBarState } from '../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarAppEffects } from './effects/status-bar.app.effects';
-import { IOverlaysState } from '@ansyn/overlays';
 import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
-import { CoreAppEffects } from './effects/core.app.effects';
-import { ICoreState } from '@ansyn/core';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
+import { ICasesState } from '../modules/menu-items/cases/reducers/cases.reducer';
+import { IFiltersState } from '../modules/menu-items/filters/reducer/filters.reducer';
+import { ILayerState } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
+import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer';
+import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
 
 export interface IAppState {
-	core: ICoreState;
 	overlays: IOverlaysState;
 	cases: ICasesState;
 	menu: IMenuState;
@@ -42,7 +42,6 @@ export interface IAppState {
 			StatusBarAppEffects,
 			FiltersAppEffects,
 			ToolsAppEffects,
-			CoreAppEffects,
 			UpdateCaseAppEffects,
 			SelectCaseAppEffects,
 		])

@@ -14,36 +14,15 @@ import {
 	selectMaps,
 	SetIsLoadingAcion
 } from '@ansyn/map-facade';
-import {
-	BaseOverlaySourceProvider,
-	DisplayOverlayAction,
-	IFetchParams,
-	IOverlaysState,
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
-	OverlaySourceProvider,
-	OverlaysService,
-	overlaysStateSelector,
-	RequestOverlayByIDFromBackendAction
-} from '@ansyn/overlays';
-import {
-	IStatusBarState,
-	statusBarFeatureKey,
-	StatusBarInitialState,
-	StatusBarReducer,
-	statusBarStateSelector
-} from '@ansyn/status-bar';
-import * as extentFromGeojson from '@ansyn/core';
+import * as extentFromGeojson from '@ansyn/map-facade';
 import {
 	GeoRegisteration,
 	ICase,
 	ICaseMapState,
 	IOverlay,
 	IOverlaysFetchData,
-	LoggerService,
 	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 import {
 	BaseMapSourceProvider,
 	CacheService,
@@ -54,22 +33,46 @@ import {
 	ImageryMapSource,
 	VisualizersConfig
 } from '@ansyn/imagery';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	CasesService,
-	casesStateSelector,
-	ICasesState,
-	ILayerState,
-	initialLayersState,
-	IToolsState,
-	layersStateSelector,
-	toolsInitialState,
-	toolsStateSelector
-} from '@ansyn/menu-items';
 import { HttpClientModule } from '@angular/common/http';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector, ICasesState
+} from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+import {
+	initialLayersState,
+	layersStateSelector
+} from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
+import { ILayerState } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
+import {
+	IToolsState,
+	toolsInitialState,
+	toolsStateSelector
+} from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	IStatusBarState,
+	statusBarFeatureKey,
+	StatusBarInitialState, StatusBarReducer, statusBarStateSelector
+} from '../../modules/status-bar/reducers/status-bar.reducer';
+import { LoggerService } from '../../modules/core/services/logger.service';
+import {
+	IOverlaysState, OverlayReducer,
+	overlaysFeatureKey, overlaysInitialState,
+	overlaysStateSelector
+} from '../../modules/overlays/reducers/overlays.reducer';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams
+} from '../../modules/overlays/models/base-overlay-source-provider.model';
+import {
+	DisplayOverlayAction,
+	RequestOverlayByIDFromBackendAction
+} from '../../modules/overlays/actions/overlays.actions';
+import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',

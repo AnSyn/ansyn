@@ -3,13 +3,16 @@ import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { Observable, of } from 'rxjs';
 import { IBaseImageryMapConstructor } from './base-imagery-map';
-import { ICaseMapState, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/core';
-import {
-	IMapSourceProvidersConfig
-} from '@ansyn/core';
+import { ICaseMapState } from './case.model';
 import { ImageryLayerProperties } from './imagery-layer.model';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
+
+export const MAP_SOURCE_PROVIDERS_CONFIG = 'mapSourceProvidersConfig';
+
+export interface IMapSourceProvidersConfig<T = any> {
+	[key: string]: T;
+}
 
 export interface IImageryMapSourceMetaData {
 	readonly sourceType: string;
@@ -33,7 +36,7 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 
 	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
+				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig<CONF>) {
 	}
 
 	generateLayerId(metaData: ICaseMapState): string {

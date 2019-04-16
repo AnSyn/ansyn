@@ -1,0 +1,162 @@
+@import "ansyn/less/common";
+@import "ansyn/less/z-index-globals";
+
+@tools-box-width: 296px;
+@tools-box-height: 46px;
+
+:host {
+	width: 0;
+	position: absolute;
+	top: -6px;
+	right: 0;
+	transform: translateX(100%);
+	background: @application-main-color;
+	transition-property: width, visibility;
+	transition-duration: 0.1s;
+	z-index: @z-index-annotations-control;
+	.selected-layer {
+		color: white;
+		visibility: hidden;
+		display: flex;
+		position: absolute;
+		width: 100%;
+		transform: translateY(-100%);
+		background: #27b2cf;
+		padding: 0 10px;
+		box-sizing: border-box;
+		div {
+			width: 100%;
+			border-bottom: 1px solid;
+			padding: 7px 0;
+			display: flex;
+			overflow: hidden;
+
+			select.active-annotation-layer {
+				background: transparent;
+				border: none;
+				color: white;
+				outline: none;
+				border-bottom: 1px solid white;
+				margin-left: 5px;
+				margin-top: 2px;
+				appearance: none;
+				padding-right: 18px;
+				option {
+					color: black;
+				}
+			}
+		}
+	}
+	&.expand {
+		.selected-layer {
+			visibility: visible;
+		}
+		width: @tools-box-width;
+		transition-delay: 0.1s;
+		ul.annotations-options {
+			visibility: visible;
+			li {
+				visibility: visible;
+				opacity: 1;
+			}
+		}
+	}
+
+	ul.annotations-options {
+		transition: 0.1s;
+		visibility: hidden;
+		display: flex;
+		align-items: center;
+		padding: 0;
+		margin: 0;
+		height: @tools-box-height;
+
+		li {
+			transition: visibility 0s linear .2s;
+			visibility: hidden;
+			opacity: 0;
+			position: relative;
+		}
+
+		& > li {
+			list-style-type: none;
+
+			span {
+				color: white;
+				font-size: 35px;
+			}
+			&:hover:not(.mode-on), &.mode-on {
+				background-color: rgb(41, 127, 155);
+			}
+
+			&.spliter {
+				display: flex;
+				align-items: center;
+				height: 100%;
+				margin: 0 4px;
+				div {
+					height: 70%;
+					border: 1px solid black;
+					opacity: 0.4;
+				}
+
+			}
+			&:last-child {
+				padding-right: 2px;
+			}
+			button {
+				background: transparent;
+				padding: 0;
+				border: none;
+				outline: 0 none;
+			}
+		}
+
+		li.expanded-selection {
+			position: relative;
+
+			button.expand {
+				background-color: #297f9b;
+			}
+
+			div.list {
+				display: flex;
+				flex-direction: column;
+				position: absolute;
+				top: 35px;
+				left: 0;
+				overflow: hidden;
+				padding: 0;
+				margin: 0;
+				text-align: center;
+				transition: height 0.3s;
+				background: @application-main-color;
+				.item {
+					cursor: pointer;
+					&:hover, &.selected {
+						background-color: #297f9b;
+					}
+				}
+
+				&.line-width-expand {
+					width: 100%;
+					outline: none;
+				}
+
+				&.color-selection-expand.open {
+					visibility: visible;
+				}
+			}
+		}
+
+	}
+}
+
+span.dummy-arrow {
+	position: relative;
+	font-size: 7px;
+	right: 10px;
+	color: white;
+	top: -1px;
+	pointer-events: none;
+}

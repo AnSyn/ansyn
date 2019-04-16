@@ -10,13 +10,14 @@ import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import {
 	AnnotationInteraction,
-	AnnotationsColorComponent, ClickOutsideDirective,
-	ColorPickerComponent,
 	IAnnotationsSelectionEventData
-} from '@ansyn/core';
-import { AnnotationsWeightComponent } from '@ansyn/core';
+} from '@ansyn/imagery';
 import { PositionChangedAction } from '../../actions/map.actions';
 import { EventEmitter } from '@angular/core';
+import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
+import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
+import { ColorPickerComponent } from '../color-picker/color-picker.component';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 
 
 describe('AnnotationContextMenuComponent', () => {

@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import { NavigateCaseTriggerAction, RouterActionTypes } from '../actions/router.actions';
 import { Router } from '@angular/router';
 import { ISetStatePayload, SetStateAction } from '../actions/router.actions';
-import { casesStateSelector, ICasesState } from '@ansyn/menu-items';
+import { casesStateSelector, ICasesState } from '@ansyn/ansyn';
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import {
 	CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction, SelectCaseAction
-} from '@ansyn/menu-items';
+} from '@ansyn/ansyn';
 import { Store } from '@ngrx/store';
-import { CasesService } from '@ansyn/menu-items';
+import { CasesService } from '@ansyn/ansyn';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()

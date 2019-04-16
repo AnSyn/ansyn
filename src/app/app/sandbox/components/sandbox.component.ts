@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AnsynApi } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
-import { GeoRegisteration, IOverlay, IOverlaysCriteria } from '@ansyn/core';
-import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/plugins';
+import { GeoRegisteration, IOverlay, IOverlaysCriteria, PhotoAngle } from '@ansyn/imagery';
+import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ansyn';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
-import { CesiumLayer, ISceneMode } from "@ansyn/plugins";
 import { ImageryCommunicatorService } from "@ansyn/imagery";
 
 const moment = momentNs;
@@ -63,7 +62,8 @@ export class SandboxComponent implements OnInit {
 			sensorName: name ? name : 'mySensorName',
 			sensorType: 'mySensorType',
 			bestResolution: 1,
-			cloudCoverage: 1
+			cloudCoverage: 1,
+			photoAngle: PhotoAngle.vertical
 		}
 	}
 

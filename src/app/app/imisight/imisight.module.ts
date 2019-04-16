@@ -4,13 +4,15 @@ import { ImisightSourceProvider } from './imisight-source-provider';
 import { ImageryModule } from '@ansyn/imagery';
 import { OpenLayersImisightSourceProvider } from './open-layers-imisight-source-provider';
 import { CallbackComponent } from './callback/callback.component';
-import { CoreModule } from '@ansyn/core';
-import { MultipleOverlaysSource, OverlaysModule } from '@ansyn/overlays';
+import { CoreModule } from '@ansyn/ansyn';
+import { MultipleOverlaysSource, OverlaysModule } from '@ansyn/ansyn';
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		CoreModule,
+		MapFacadeModule,
 		ImageryModule.provide({
 			maps: [],
 			plugins: [],

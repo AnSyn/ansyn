@@ -1,15 +1,13 @@
-import {
-	TasksComponent,
-	CasesComponent,
-	FiltersCollectionComponent,
-	HelpComponent,
-	LayersManagerComponent,
-	SettingsComponent,
-	ToolsComponent
-} from '@ansyn/menu-items';
-import { IAlert } from '@ansyn/core';
 import { IMenuItem } from '@ansyn/menu';
 import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
+import { IAlert } from '@ansyn/map-facade';
+import { CasesComponent } from '../modules/menu-items/cases/components/cases/cases.component';
+import { FiltersCollectionComponent } from '../modules/menu-items/filters/components/filters-collection/filters-collection.component';
+import { LayersManagerComponent } from '../modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
+import { ToolsComponent } from '../modules/menu-items/tools/tools/tools.component';
+import { SettingsComponent } from '../modules/menu-items/settings/settings/settings.component';
+import { HelpComponent } from '../modules/menu-items/help/components/help.component';
+import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -31,7 +29,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			key: 'poorGeoRegistered',
 			background: '#cf802a',
 			text: 'This Image Has Poor Geo-Registration'
-		},
+		}
 	],
 	ansynMenuItems: [
 		{

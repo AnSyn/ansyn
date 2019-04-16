@@ -3,37 +3,38 @@ import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
-	DisplayOverlaySuccessAction,
-	LoadOverlaysSuccessAction,
-	OverlayReducer,
-	overlaysFeatureKey,
-	OverlaysService
-} from '@ansyn/overlays';
-import {
-	CoreConfig,
-	ErrorHandlerService,
-	ICase,
-	IOverlay,
+	MapFacadeService,
+	mapFeatureKey,
+	MapReducer,
+	SetActiveMapId,
+	SetMapsDataActionStore,
 	SetToastMessageAction,
-	StorageService,
-} from '@ansyn/core';
-import { MapFacadeService, SetMapsDataActionStore, UpdateMapAction, SetActiveMapId, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+	UpdateMapAction
+} from '@ansyn/map-facade';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import {
-	AddCaseAction,
-	casesConfig,
-	casesFeatureKey,
-	CasesReducer,
-	CasesService,
-	LoadDefaultCaseIfNoActiveCaseAction,
-	SelectCaseAction,
-	SelectDilutedCaseAction, toolsConfig
-} from '@ansyn/menu-items';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { IOverlayByIdMetaData } from '@ansyn/overlays';
+import { ICase, ImageryCommunicatorService, IOverlay } from '@ansyn/imagery';
+import { CoreConfig } from '../../modules/core/models/core.config';
+import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
+import { StorageService } from '../../modules/core/services/storage/storage.service';
+import {
+	AddCaseAction,
+	LoadDefaultCaseIfNoActiveCaseAction,
+	SelectCaseAction,
+	SelectDilutedCaseAction
+} from '../../modules/menu-items/cases/actions/cases.actions';
+import { casesConfig, CasesService } from '../../modules/menu-items/cases/services/cases.service';
+import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+import { OverlayReducer, overlaysFeatureKey } from '../../modules/overlays/reducers/overlays.reducer';
+import {
+	DisplayOverlaySuccessAction,
+	LoadOverlaysSuccessAction
+} from '../../modules/overlays/actions/overlays.actions';
+import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -82,11 +83,17 @@ describe('CasesAppEffects', () => {
 			],
 			providers: [
 				{
+					provide: LoggerService, useValue: {
+						info: () => {
+						}
+					}
+				},
+				{
 					provide: OverlaysService,
 					useValue: {
 						getOverlayById: (id: string) => {
 							if (['uuu', 'eee'].includes(id)) {
-								const overlay = <IOverlay> {};
+								const overlay = <IOverlay>{};
 								overlay.id = id;
 
 								return of(overlay);
@@ -97,19 +104,19 @@ describe('CasesAppEffects', () => {
 
 						getOverlaysById: (ids: IOverlayByIdMetaData[]) => {
 							if (ids.every(({ id }) => ['uuu', 'eee'].includes(id))) {
-								const overlay = <IOverlay> {};
+								const overlay = <IOverlay>{};
 								return of([overlay]);
 							}
 
 							return throwError(new HttpErrorResponse({ status: 404 }));
-						},
+						}
 
 					}
 				},
 				ImageryCommunicatorService,
 				CasesAppEffects,
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: StorageService, useValue: {}},
+				{ provide: StorageService, useValue: {} },
 				CasesService,
 				{
 					provide: ErrorHandlerService,
@@ -181,19 +188,23 @@ describe('CasesAppEffects', () => {
 	it('Effect : onDisplayOverlay$ - with the active map id ', () => {
 		const mapsList: any[] = [{ id: 'map1', data: {} }, { id: 'map2', data: {} }];
 		const activeMapId = 'map1';
-		const overlay = <IOverlay> { id: 'tmp' };
+		const overlay = <IOverlay>{ id: 'tmp' };
 		store.dispatch(new SetMapsDataActionStore({ mapsList }));
 		store.dispatch(new SetActiveMapId(activeMapId));
 		const action = new DisplayOverlaySuccessAction({ overlay, mapId: 'map1' });
 		actions = hot('--a--', { a: action });
 		const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
-		const expectedResults = cold('--b--', { b: new UpdateMapAction({ id: activeMapId, changes: {
-			data: {
-				...activeMap.data,
-				overlay,
-				isAutoImageProcessingActive: false,
-				imageManualProcessArgs: casesAppEffects.defaultImageManualProcessArgs
-			} }})
+		const expectedResults = cold('--b--', {
+			b: new UpdateMapAction({
+				id: activeMapId, changes: {
+					data: {
+						...activeMap.data,
+						overlay,
+						isAutoImageProcessingActive: false,
+						imageManualProcessArgs: casesAppEffects.defaultImageManualProcessArgs
+					}
+				}
+			})
 		});
 		expect(casesAppEffects.onDisplayOverlay$).toBeObservable(expectedResults);
 	});
@@ -248,7 +259,7 @@ describe('CasesAppEffects', () => {
 			};
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
-			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });
+			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any>caseItem) });
 			const expectedResults = cold('--(bc)--', {
 				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
 				c: new LoadDefaultCaseIfNoActiveCaseAction()
@@ -260,7 +271,7 @@ describe('CasesAppEffects', () => {
 			const caseItem: ICase = caseMock2;
 			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
-			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any> caseItem) });
+			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any>caseItem) });
 			const expectedResults = cold('--(b)--', {
 				b: new SelectCaseAction(caseItem)
 			});

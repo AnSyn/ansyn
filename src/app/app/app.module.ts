@@ -5,7 +5,7 @@ import { AnsynModule } from '@ansyn/ansyn';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
-import { LoggerService } from '@ansyn/core';
+import { LoggerService } from '@ansyn/ansyn';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoginModule } from './login/login.module';
 import { AnsynRouterModule } from './router/router.module';
@@ -15,6 +15,8 @@ import { PlaceholderComponent } from './components/placeholder/placeholder.compo
 import { ImisightModule } from './imisight/imisight.module';
 import { SandboxModule } from './sandbox/sandbox.module';
 import { ContextModule } from './context/context.module';
+import { DeviceDetectorModule } from 'ngx-device-detector';
+import { SentinelModule } from './sentinel/sentinel.module';
 
 @NgModule({
 	imports: [
@@ -28,7 +30,9 @@ import { ContextModule } from './context/context.module';
 		AnsynRouterModule,
 		AppRoutingModule,
 		ContextModule,
-		SandboxModule
+		SandboxModule,
+		SentinelModule,
+		DeviceDetectorModule.forRoot()
 	],
 	providers: [
 		{

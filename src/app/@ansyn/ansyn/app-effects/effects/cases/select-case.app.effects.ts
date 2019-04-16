@@ -2,37 +2,37 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	CoreConfig,
-	ICase,
-	ICaseMapState,
-	ICoreConfig,
-	IOverlay,
-	isFullOverlay,
-	SetAutoSave,
-	SetFavoriteOverlaysAction,
-	SetLayoutAction,
-	SetOverlaysCriteriaAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
-} from '@ansyn/core';
-import {
-	BeginLayerCollectionLoadAction,
-	CasesActionTypes,
-	CasesService,
-	SelectCaseAction, SelectCaseSuccessAction,
-	UpdateFacetsAction,
-	UpdateOverlaysManualProcessArgs,
-	UpdateSelectedLayersIds
-} from '@ansyn/menu-items';
-import { SetComboBoxesProperties } from '@ansyn/status-bar';
-import { SetContextParamsAction } from '@ansyn/core';
+import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
-import { SetActiveMapId, SetMapsDataActionStore } from '@ansyn/map-facade';
+import {
+	SetActiveMapId,
+	SetLayoutAction,
+	SetMapsDataActionStore,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction,
+} from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
+import { ICase, ICaseMapState, IOverlay } from '@ansyn/imagery';
+import {
+	BeginLayerCollectionLoadAction,
+	UpdateSelectedLayersIds
+} from '../../../modules/menu-items/layers-manager/actions/layers.actions';
+import {
+	CasesActionTypes,
+	SelectCaseAction,
+	SelectCaseSuccessAction, SetAutoSave
+} from '../../../modules/menu-items/cases/actions/cases.actions';
+import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
+import { isFullOverlay } from '../../../modules/core/utils/overlays';
+import { ICoreConfig } from '../../../modules/core/models/core.config.model';
+import { CoreConfig } from '../../../modules/core/models/core.config';
+import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -95,11 +95,12 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			new SetContextParamsAction({ contextEntities }),
+			// @todo refactor
+			<any> { type: '[Context] Set context params', payload: { contextEntities }},
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-			new SelectCaseSuccessAction(payload),
+			new SelectCaseSuccessAction(payload)
 		];
 	}
 

@@ -2,8 +2,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { Component, NgModule, NgModuleRef } from '@angular/core';
 import { AnsynApi, AnsynModule, ContextAppEffects } from '@ansyn/ansyn';
 import { of } from 'rxjs';
-import { DataLayersService } from '@ansyn/menu-items';
-import { getProviders } from '@ansyn/ansyn';
+import { getProviders, DataLayersService } from '@ansyn/ansyn';
 import { CommonModule } from '@angular/common';
 
 export const buildAnsynCustomComponent = (selector) => (

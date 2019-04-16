@@ -1,5 +1,5 @@
 import { Component, Inject, Input } from '@angular/core';
-import { IOverlay } from '@ansyn/core';
+import { IOverlay } from '@ansyn/imagery';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 

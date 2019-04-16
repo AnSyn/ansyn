@@ -1,7 +1,7 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
 import { EventEmitter } from '@angular/core';
-import { ICaseMapPosition } from '@ansyn/core';
+import { ICaseMapPosition } from '../model/case-map-position.model';
 import { CommunicatorEntity, IMapInstanceChanged } from './communicator.entity';
 
 describe('ImageryCommunicatorService', () => {

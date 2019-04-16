@@ -6,29 +6,14 @@
       "@ansyn/ansyn": [
         "src/app/@ansyn/ansyn/public_api"
       ],
-      "@ansyn/core": [
-        "src/app/@ansyn/core/public_api"
-      ],
       "@ansyn/imagery": [
         "src/app/@ansyn/imagery/public_api"
-      ],
-      "@ansyn/menu-items": [
-        "src/app/@ansyn/menu-items/public_api"
       ],
       "@ansyn/map-facade": [
         "src/app/@ansyn/map-facade/public_api"
       ],
-      "@ansyn/plugins": [
-        "src/app/@ansyn/plugins/public_api"
-      ],
-      "@ansyn/overlays": [
-        "src/app/@ansyn/overlays/public_api"
-      ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
-      ],
-      "@ansyn/status-bar": [
-        "src/app/@ansyn/status-bar/public_api"
       ],
       "root/package.json": ["./package.json"]
     },

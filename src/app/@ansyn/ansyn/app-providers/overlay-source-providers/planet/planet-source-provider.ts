@@ -1,27 +1,12 @@
 import { forkJoin, Observable } from 'rxjs';
-import {
-	BaseOverlaySourceProvider,
-	IFetchParams,
-	IOverlayByIdMetaData,
-	IOverlayFilter,
-	IStartAndEndDate,
-	OverlaySourceProvider,
-	timeIntersection
-} from '@ansyn/overlays';
 import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
-	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon, GeoRegisteration,
-	IDataInputFilterValue, IMultipleOverlaysSourceConfig,
-	IOverlay,
-	limitArray,
-	LoggerService, MultipleOverlaysSourceConfig,
-	Overlay,
-	sortByDateDesc,
-	toRadians
-} from '@ansyn/core';
+	IDataInputFilterValue,
+	IOverlay
+} from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { catchError, map } from 'rxjs/operators';
@@ -29,7 +14,19 @@ import { catchError, map } from 'rxjs/operators';
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
-import { IStatusBarConfig, StatusBarConfig } from '@ansyn/status-bar';
+import { Overlay } from '@ansyn/imagery';
+import { ErrorHandlerService } from '../../../modules/core/services/error-handler.service';
+import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from '../../../modules/core/models/multiple-overlays-source-config';
+import { limitArray } from '../../../modules/core/utils/i-limited-array';
+import { LoggerService } from '../../../modules/core/services/logger.service';
+import { sortByDateDesc } from '../../../modules/core/utils/sorting';
+import { toRadians } from '@ansyn/map-facade';
+import {
+	BaseOverlaySourceProvider, IFetchParams,
+	IOverlayFilter, IStartAndEndDate, timeIntersection
+} from '../../../modules/overlays/models/base-overlay-source-provider.model';
+import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
+import { IOverlayByIdMetaData } from '../../../modules/overlays/services/overlays.service';
 
 const moment = momentNs;
 
@@ -199,7 +196,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
 			const parsedDataInput = fetchParams.dataInputFilters.map(({ sensorType }) => sensorType).filter(Boolean);
 			if (fetchParams.dataInputFilters.some(({ sensorType }) => sensorType === 'others')) {
-				const allDataInput = this.multipleOverlaysSourceConfig[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType);
+				const allDataInput = this.multipleOverlaysSourceConfig.indexProviders[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType);
 				sensors = sensors.filter((sens) => parsedDataInput.includes(sens) || !allDataInput.includes(sens));
 			} else {
 				sensors = parsedDataInput;

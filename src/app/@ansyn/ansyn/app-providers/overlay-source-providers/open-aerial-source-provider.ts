@@ -1,23 +1,27 @@
 import { Inject } from '@angular/core';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
 import {
 	bboxFromGeoJson,
-	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
 	IOverlay,
-	limitArray,
-	LoggerService,
 	Overlay,
-	sortByDateDesc,
-	toRadians,
 	GeoRegisteration
-} from '@ansyn/core';
+} from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { catchError, map } from 'rxjs/operators';
+import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
+import {
+	BaseOverlaySourceProvider,
+	IFetchParams, IStartAndEndDate
+} from '../../modules/overlays/models/base-overlay-source-provider.model';
+import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
+import { LoggerService } from '../../modules/core/services/logger.service';
+import { limitArray } from '../../modules/core/utils/i-limited-array';
+import { sortByDateDesc } from '../../modules/core/utils/sorting';
+import { toRadians } from '@ansyn/map-facade';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';

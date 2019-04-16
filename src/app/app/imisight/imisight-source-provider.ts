@@ -3,22 +3,24 @@ import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/internal/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/overlays';
+import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/ansyn';
+import {
+	ErrorHandlerService,
+	limitArray,
+	LoggerService,
+	sortByDateDesc
+} from '@ansyn/ansyn';
 import {
 	bboxFromGeoJson,
-	ErrorHandlerService,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon, GeoRegisteration,
 	getPolygonByPointAndRadius,
 	IOverlay,
-	limitArray,
-	LoggerService,
-	Overlay,
-	sortByDateDesc,
-	toRadians
-} from '@ansyn/core';
+	Overlay
+} from '@ansyn/imagery';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
 import { Auth0Service } from './auth0.service';
+import { toRadians } from '@ansyn/map-facade';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 

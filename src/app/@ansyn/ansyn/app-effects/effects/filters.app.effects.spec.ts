@@ -5,37 +5,35 @@ import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	EnableOnlyFavoritesSelectionAction,
-	EnumFilterMetadata,
-	FilterMetadata,
-	filtersConfig,
-	filtersFeatureKey,
-	FiltersReducer,
-	IFilter,
-	InitializeFiltersAction,
-	InitializeFiltersSuccessAction,
-	SliderFilterMetadata
-} from '@ansyn/menu-items';
-import {
-	buildFilteredOverlays,
-	coreFeatureKey,
-	CoreReducer,
 	FilterType,
-	GenericTypeResolverService,
 	IOverlay,
-	SetFavoriteOverlaysAction
-} from '@ansyn/core';
+} from '@ansyn/imagery';
+import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
+import {
+	EnableOnlyFavoritesSelectionAction,
+	InitializeFiltersAction, InitializeFiltersSuccessAction
+} from '../../modules/menu-items/filters/actions/filters.actions';
+import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
+import { filtersConfig } from '../../modules/menu-items/filters/services/filters.service';
+import { filtersFeatureKey, FiltersReducer } from '../../modules/menu-items/filters/reducer/filters.reducer';
+import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
+import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/metadata/slider-filter-metadata';
+import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
+import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
+import { SetFavoriteOverlaysAction } from '@ansyn/map-facade';
 import {
 	LoadOverlaysAction,
+	SetDropsAction,
+	SetFilteredOverlaysAction, SetOverlaysStatusMessage
+} from '../../modules/overlays/actions/overlays.actions';
+import {
 	OverlayReducer,
 	overlaysFeatureKey,
-	OverlaysService,
-	overlaysStatusMessages,
-	SetDropsAction,
-	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
-} from '@ansyn/overlays';
-import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
+	overlaysStatusMessages
+} from '../../modules/overlays/reducers/overlays.reducer';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -59,10 +57,10 @@ describe('Filters app effects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({
-					[coreFeatureKey]: CoreReducer,
 					[filtersFeatureKey]: FiltersReducer,
 					[overlaysFeatureKey]: OverlayReducer,
-					[menuFeatureKey]: MenuReducer
+					[menuFeatureKey]: MenuReducer,
+					[imageryStatusFeatureKey]: ImageryStatusReducer
 				})
 			],
 			providers: [

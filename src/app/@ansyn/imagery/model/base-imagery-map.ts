@@ -1,7 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CaseMapExtent, ICaseMapPosition, IMapErrorMessage, IMapProgress } from '@ansyn/core';
 import { GeoJsonObject, Point } from 'geojson';
+import { CaseMapExtent, ICaseMapPosition } from './case-map-position.model';
+import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 
 export interface IImageryMapMetaData {
 	deps?: any[];

@@ -1,0 +1,78 @@
+@import 'ansyn/less/common';
+@import "ansyn/less/z-index-globals";
+
+@animation-duration: 0.3s;
+@image-height: 150px;
+
+:host {
+	position: fixed;
+	z-index: @z-index-overlay-overview;
+	font-size: 12px;
+	min-width: 250px;
+	user-select: none;
+	visibility: hidden;
+	opacity: 0;
+	overflow: hidden;
+	transform: translateY(calc(~"1px - 100%"));
+	transition: opacity @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
+
+	.overlay-overview {
+		background-color: white;
+		box-shadow: 0 0 15px 0 #2e2d46;
+		border: 2px white solid;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+		position: relative;
+		main {
+			min-height: @image-height;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			// Prevent image overflow when the image is rotated, when the map is rotated
+			overflow: hidden;
+
+			p.error-text {
+				top: 50px;
+				left: 0;
+				position: absolute;
+				color: #2baac3;
+				font-size: 16px;
+				width: 100%;
+				text-align: center;
+			}
+		}
+	}
+
+	.transparent {
+		background-color: transparent;
+		width: 100%;
+		height: 0;
+		transition: height @animation-duration;
+	}
+
+	&.show {
+		visibility: visible;
+		opacity: 1;
+
+		.transparent {
+			// This will be the visible gap between this popup and the drop below it
+			height: 20px;
+		}
+	}
+}
+
+img {
+	height: @image-height;
+
+	&.loading {
+		visibility: hidden;
+	}
+}
+
+footer {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}

@@ -5,15 +5,15 @@ import {
 	MenuReducer,
 	SelectMenuItemAction
 } from '@ansyn/menu';
-import { casesFeatureKey, CasesReducer } from '@ansyn/menu-items';
+import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
-import { RedrawTimelineAction } from '@ansyn/overlays';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
+import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;

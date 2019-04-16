@@ -48,6 +48,6 @@ describe('SentinelComboBoxComponent', () => {
 		component.mapId = 'mapId';
 		const layer = 'TRUE_COLOR';
 		component.changeLayer(layer);
-		expect(store.dispatch).toHaveBeenCalledWith(new SetSentinelLayerOnMap({id: component.mapId, layer: 'TRUE_COLOR'}))
+		expect(store.dispatch).toHaveBeenCalled();
 	})
 });

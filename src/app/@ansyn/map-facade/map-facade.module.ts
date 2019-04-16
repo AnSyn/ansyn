@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
-import { SentinelModule } from "../../app/sentinel/sentinel.module";
 import { MapEffects } from './effects/map.effects';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
 import { ImageryModule } from '@ansyn/imagery';
@@ -30,6 +29,8 @@ import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.com
 import { AlertsModule } from './alerts/alerts.module';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imagery-status.reducer';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
+// @todo remove
+import { SentinelComboBoxComponent } from './components/sentinel-combo-box/sentinel-combo-box.component';
 
 @NgModule({
 	imports: [
@@ -40,7 +41,6 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 		CommonModule,
 		FormsModule,
 		AlertsModule,
-		SentinelModule
 	],
 	providers: [GeocoderService],
 	declarations: [
@@ -62,7 +62,9 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent
+		AnsynPopoverComponent,
+		// @todo remove
+		SentinelComboBoxComponent
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -76,7 +78,7 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent
+		AnsynPopoverComponent,
 	]
 })
 

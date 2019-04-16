@@ -1,21 +1,17 @@
 import { Inject } from '@angular/core';
-import { BaseOverlaySourceProvider } from '../../@ansyn/ansyn/modules/overlays/models/base-overlay-source-provider.model';
-import { ErrorHandlerService } from '../../@ansyn/ansyn/modules/core/services/error-handler.service';
-import { IFetchParams } from '../../@ansyn/ansyn/modules/overlays/models/base-overlay-source-provider.model';
-import { IStartAndEndDate } from '../../@ansyn/ansyn/modules/overlays/models/base-overlay-source-provider.model';
-import { limitArray } from '../../@ansyn/ansyn/modules/core/utils/i-limited-array';
-import { LoggerService } from '../../@ansyn/ansyn/modules/core/services/logger.service';
-import { OverlaySourceProvider } from '../../@ansyn/ansyn/modules/overlays/models/overlays-source-providers';
-import { sortByDateDesc } from '../../@ansyn/ansyn/modules/core/utils/sorting';
 import { HttpClient } from '@angular/common/http';
 import {
 	bboxFromGeoJson,
-	geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon, GeoRegisteration,
+	geojsonMultiPolygonToPolygon,
+	geojsonPolygonToMultiPolygon,
+	GeoRegisteration,
 	getPolygonByPointAndRadius,
 	IMapSourceProvidersConfig,
-	IOverlay, MAP_SOURCE_PROVIDERS_CONFIG, Overlay
-} from "@ansyn/imagery";
-import { toRadians } from "@ansyn/map-facade";
+	IOverlay,
+	MAP_SOURCE_PROVIDERS_CONFIG,
+	Overlay
+} from '@ansyn/imagery';
+import { toRadians } from '@ansyn/map-facade';
 import { empty, Observable } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 
@@ -23,6 +19,16 @@ import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import { Store } from '@ngrx/store';
+import {
+	BaseOverlaySourceProvider,
+	ErrorHandlerService,
+	IFetchParams,
+	IStartAndEndDate,
+	limitArray,
+	LoggerService,
+	OverlaySourceProvider,
+	sortByDateDesc
+} from '@ansyn/ansyn';
 
 const DEFAULT_OVERLAYS_LIMIT = 50;
 export const SentinelOverlaySourceType = 'SENTINEL';

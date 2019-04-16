@@ -1,14 +1,17 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-	ISentinelLayer,
-	ISentinelState,
-	selectSentinelLayers,
-	selectSentinelselectedLayers
-} from "../reducers/sentinel.reducer";
-import { Store } from '@ngrx/store';
-import { SetSentinelLayerOnMap } from "../actions/sentinel.actions";
+import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
+
+// @todo remove and imports selectors
+const sentinelFeature = createFeatureSelector('sentinel');
+const selectSentinelLayers = createSelector(sentinelFeature, (sentinel: any) => sentinel && sentinel.layers);
+const selectSentinelselectedLayers = createSelector(sentinelFeature, (sentinel: any) => sentinel && sentinel.selectedLayers);
+class SetSentinelLayerOnMap {
+	type = '[Sentinel] SET_LAYER_ON_MAP';
+	constructor(public payload) {
+	}
+}
 
 @Component({
 	selector: 'ansyn-sentinel-combo-box',
@@ -20,14 +23,14 @@ import { tap } from 'rxjs/operators';
 	destroy: 'ngOnDestroy'
 })
 export class SentinelComboBoxComponent implements OnInit, OnDestroy {
-	SELECTEDLAYERS: ISentinelLayer[];
+	sentinelLayers: any[]; // @todo // ISentinelLayer[];
 	selectedLayer: string;
 	@Input() mapId: string;
 
 	@AutoSubscription
 	getLayers$ = this.store.select(selectSentinelLayers).pipe(
-		tap((layers: Array<ISentinelLayer>) => {
-			this.SELECTEDLAYERS = layers;
+		tap((layers: Array<any /* @todo ISentinelLayer */>) => {
+			this.sentinelLayers = layers;
 		})
 	);
 	@AutoSubscription
@@ -37,7 +40,7 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(protected store: Store<ISentinelState>) {
+	constructor(protected store: Store<any>) {
 
 	}
 

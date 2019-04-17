@@ -6,8 +6,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { ICase } from '@ansyn/imagery';
 import { StorageService } from '../../../core/services/storage/storage.service';
+import { ICase } from '../models/case.model';
 
 export const MockCasesConfig = {
 	provide: casesConfig,

@@ -1,16 +1,18 @@
 import { Action } from '@ngrx/store';
 import { Point, Polygon, Position } from 'geojson';
-import { IMapInstanceChanged } from '@ansyn/imagery';
 import {
-	IAnnotationsSelectionEventData,
-	ICaseMapPosition,
-	ICaseMapState, IMapProgress,
-	IOverlay,
-	IPendingOverlay,
-	IUpdateFeatureEvent,
+	ImageryMapPosition,
+	IMapInstanceChanged,
+	IMapProgress,
+	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
-import { LayoutKey } from '@ansyn/imagery';
+import { LayoutKey } from '../models/maps-layout';
+
+export interface IPendingOverlay {
+	overlay: any;
+	extent?: any;
+}
 
 export interface IToastMessage {
 	toastText: string;
@@ -46,9 +48,6 @@ export const MapActionTypes = {
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		ANNOTATION_SELECT: 'ANNOTATION_SELECT',
-		ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
-		ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE',
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
 	},
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
@@ -74,7 +73,7 @@ export const MapActionTypes = {
 
 export interface IContextMenuShowPayload {
 	point: Point;
-	overlays: IOverlay[];
+	overlays: any[];
 	event: MouseEvent;
 }
 
@@ -97,7 +96,7 @@ export class PointToRealNorthAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: ICaseMapPosition, mapInstance: ICaseMapState }) {
+	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: any }) {
 	}
 }
 
@@ -164,30 +163,6 @@ export class PinLocationModeTriggerAction implements Action {
 	}
 }
 
-export class AnnotationSelectAction implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_SELECT;
-
-	constructor(public payload: IAnnotationsSelectionEventData) {
-
-	}
-}
-
-export class AnnotationRemoveFeature implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_REMOVE_FEATURE;
-
-	constructor(public payload: string) {
-
-	};
-}
-
-export class AnnotationUpdateFeature implements Action {
-	type = MapActionTypes.TRIGGER.ANNOTATION_UPDATE_FEATURE;
-
-	constructor(public payload: IUpdateFeatureEvent) {
-
-	};
-}
-
 export class DecreasePendingMapsCountAction implements Action {
 	type: string = MapActionTypes.DECREASE_PENDING_MAPS_COUNT;
 
@@ -250,12 +225,14 @@ export class ShadowMouseProducer implements Action {
 
 export class ImageryMouseEnter implements Action {
 	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER;
+
 	constructor(public payload: string) {
 	}
 }
 
 export class ImageryMouseLeave implements Action {
 	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE;
+
 	constructor(public payload: string) {
 	}
 }
@@ -270,7 +247,7 @@ export class ChangeImageryMap implements Action {
 export class ChangeImageryMapSuccess implements Action {
 	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
 
-	constructor(public payload: { id: string, worldView: IWorldViewMapState}) {
+	constructor(public payload: { id: string, worldView: IWorldViewMapState }) {
 	}
 }
 
@@ -278,7 +255,7 @@ export class ChangeImageryMapSuccess implements Action {
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.SET_MAPS_DATA;
 
-	constructor(public payload: { mapsList: ICaseMapState[] }) {
+	constructor(public payload: { mapsList: IMapSettings[] }) {
 	}
 }
 
@@ -292,7 +269,7 @@ export class SetActiveMapId implements Action {
 export class UpdateMapAction implements Action {
 	type = MapActionTypes.UPDATE_MAP;
 
-	constructor(public payload: { id: string, changes?: Partial<ICaseMapState>, silence?: boolean,  }) {
+	constructor(public payload: { id: string, changes?: Partial<IMapSettings>, silence?: boolean, }) {
 	}
 }
 
@@ -338,6 +315,7 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 
 	}
 }
+
 export class BackToWorldView implements Action {
 	type = MapActionTypes.BACK_TO_WORLD_VIEW;
 

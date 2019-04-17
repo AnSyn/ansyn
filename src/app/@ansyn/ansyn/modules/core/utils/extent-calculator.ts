@@ -1,16 +1,16 @@
 import { center, polygon } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
-import { CaseMapExtent, CaseMapExtentPolygon } from '@ansyn/imagery';
 import { toRadians } from '@ansyn/map-facade';
+import { ImageryMapExtent, ImageryMapExtentPolygon } from '@ansyn/imagery';
 
 // @dynamic
 export class ExtentCalculator {
 
-	static polygonToExtent(extentPolygon: CaseMapExtentPolygon): CaseMapExtent {
-		return <CaseMapExtent> [...extentPolygon.coordinates[0][0], ...extentPolygon.coordinates[0][2]];
+	static polygonToExtent(extentPolygon: ImageryMapExtentPolygon): ImageryMapExtent {
+		return <ImageryMapExtent> [...extentPolygon.coordinates[0][0], ...extentPolygon.coordinates[0][2]];
 	}
 
-	static extentToPolygon(extent: CaseMapExtent): Feature<Polygon> {
+	static extentToPolygon(extent: ImageryMapExtent): Feature<Polygon> {
 		const minX = extent[0];
 		const minY = extent[1];
 		const maxX = extent[2];
@@ -21,7 +21,7 @@ export class ExtentCalculator {
 		return polygon([coordinates]);
 	}
 
-	static calcRotation(extentPolygon: CaseMapExtentPolygon) {
+	static calcRotation(extentPolygon: ImageryMapExtentPolygon) {
 		// topLeft , topRight
 		const [[[x1, y1], [x2, y2]]] = extentPolygon.coordinates;
 		let theta = Math.atan2(x1 - x2, y1 - y2);
@@ -30,14 +30,14 @@ export class ExtentCalculator {
 		return (radRotate - theta) % radRotate;
 	}
 
-	static calcCenter(extentPolygon: CaseMapExtentPolygon): [number, number] {
+	static calcCenter(extentPolygon: ImageryMapExtentPolygon): [number, number] {
 		const type = 'Feature';
 		const properties = {};
 		const geometry = extentPolygon;
 		return <[number, number]>center(<any> { type, geometry, properties }).geometry.coordinates;
 	}
 
-	static calcResolution(extentPolygon: CaseMapExtentPolygon, mapSize: [number, number], rotation: number) {
+	static calcResolution(extentPolygon: ImageryMapExtentPolygon, mapSize: [number, number], rotation: number) {
 		const [width, height] = mapSize;
 		const [[topLeft, topRight, bottomRight, bottomLeft]] = extentPolygon.coordinates;
 		const size = width * Math.cos(rotation) + height * Math.sin(rotation);

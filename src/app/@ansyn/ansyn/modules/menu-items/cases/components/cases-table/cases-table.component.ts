@@ -4,7 +4,6 @@ import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
 import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { ICasePreview } from '@ansyn/imagery';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import {
@@ -18,6 +17,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/internal/operators';
+import { ICasePreview } from '../../models/case.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [

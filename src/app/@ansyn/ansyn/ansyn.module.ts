@@ -29,6 +29,7 @@ import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { HelpModule } from './modules/menu-items/help/help.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
+import { AnnotationContextMenuComponent } from './modules/menu-items/tools/components/annotation-context-menu/annotation-context-menu.component';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 
 @NgModule({
@@ -52,7 +53,9 @@ import { UnsupportedDevicesComponent } from './components/unsupported-devices/un
 		MenuModule.provideMenuItems(ansynConfig.ansynMenuItems),
 		AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 		AppEffectsModule,
-		MapFacadeModule,
+		MapFacadeModule.provide({
+			entryComponents: [AnnotationContextMenuComponent]
+		}),
 		ImageryModule,
 		StatusBarModule,
 		RouterModule,

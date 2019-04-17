@@ -4,7 +4,8 @@ export enum ImageryLayerProperties {
 	FROM_CACHE = 'fromCache',
 	CACHE_ID = 'cacheId',
 	MAIN_EXTENT = 'mainExtent',
-	FOOTPRINT = 'footprint'
+	FOOTPRINT = 'footprint',
+	DESCRIPTION = 'description'
 }
 
 export const IMAGERY_MAIN_LAYER_NAME = 'main';

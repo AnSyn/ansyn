@@ -18,11 +18,12 @@
 		<i class="fa fa-arrows"></i>
 	</button>
 
-	<select *ngIf="false"
+	<select
 		class="combo-box-width"
+		hidden
 		name="mapSource"
 		(ngModelChange)="changeActiveMap($event)"
-		[(ngModel)]="selectedMap">
+		[ngModel]="selectedMap">
 
 		<option value="openLayersMap">
 			Openlayers
@@ -46,8 +47,8 @@
 			tooltip-value="Show/ Hide layers"
 			[disabled]="noGeoRegistration"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i [class.icon-main-data-layers]="layerFlag"
-		   [class.icon-layers-hide]="!layerFlag"></i>
+		<i [class.icon-main-data-layers]="mapState.flags?.displayLayers"
+		   [class.icon-layers-hide]="!mapState.flags?.displayLayers"></i>
 	</button>
 
 	<ng-container *ngIf="overlay">
@@ -96,7 +97,7 @@
 
 			<ng-container
 				*ngIf="alert.component; else textAlert"
-				[ansynAlertComponent]="{ component: alert.component, mapId: mapId, overlay: overlay }">
+				[ansynEntryComponent]="{ component: alert.component, mapState: mapState }">
 			</ng-container>
 
 			<ng-template #textAlert>

@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import Layer from 'ol/layer/Layer';
-import { ICaseMapPosition } from '@ansyn/imagery';
+import { ImageryMapPosition } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
 import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';
@@ -15,7 +15,7 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 
-	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, [mainLayer]: any, position?: ICaseMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: any, position?: ImageryMapPosition): Observable<boolean> {
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
@@ -44,12 +44,12 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 
-	resetView(layer: any, position?: ICaseMapPosition): Observable<boolean> {
+	resetView(layer: any, position?: ImageryMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
 		return of(true);
 	}
 
-	setMainLayer(layer: Layer, position?: ICaseMapPosition) {
+	setMainLayer(layer: Layer, position?: ImageryMapPosition) {
 		this.removeMainLayer();
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
@@ -66,7 +66,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return this.mainLayer;
 	}
 
-	generateNewView(layer: Layer, position?: ICaseMapPosition): View {
+	generateNewView(layer: Layer, position?: ImageryMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
 
 		// for outside only
@@ -108,11 +108,11 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		this.mapObject.renderSync();
 	}
 
-	setPosition(position: ICaseMapPosition): Observable<boolean> {
+	setPosition(position: ImageryMapPosition): Observable<boolean> {
 		return of(true);
 	}
 
-	getPosition(): Observable<ICaseMapPosition> {
+	getPosition(): Observable<ImageryMapPosition> {
 		return of(undefined);
 	}
 

@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { SetToastMessageAction } from '@ansyn/map-facade';
-import { IDilutedCase, ImageManualProcessArgs, IOverlay } from '@ansyn/imagery';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { uniqBy } from 'lodash';
@@ -24,6 +23,8 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { IOverlay } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class CasesAppEffects {

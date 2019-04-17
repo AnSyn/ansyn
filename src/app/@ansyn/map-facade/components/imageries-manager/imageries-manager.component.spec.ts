@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '../../actions/map.actions';
 import { MockComponent } from '../../test/mock-component';
-import { AlertComponentDirective } from '../../alerts/alert-component.directive';
+import { EntryComponentDirective } from '../../directives/entry-component.directive';
 import { Actions } from '@ngrx/effects';
 import { MapFacadeService } from '../../services/map-facade.service';
 
@@ -75,7 +75,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnnotationContextMenu,
 				mockAnsynWelcomeNotification,
 				mockAnsynPopoverComponent,
-				AlertComponentDirective
+				EntryComponentDirective
 			]
 
 		}).compileComponents();

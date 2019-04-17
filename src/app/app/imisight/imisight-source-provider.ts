@@ -3,7 +3,13 @@ import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/internal/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BaseOverlaySourceProvider, IFetchParams, IStartAndEndDate, OverlaySourceProvider } from '@ansyn/ansyn';
+import {
+	BaseOverlaySourceProvider,
+	GeoRegisteration,
+	IFetchParams, IOverlay,
+	IStartAndEndDate, Overlay,
+	OverlaySourceProvider
+} from '@ansyn/ansyn';
 import {
 	ErrorHandlerService,
 	limitArray,
@@ -13,10 +19,8 @@ import {
 import {
 	bboxFromGeoJson,
 	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon, GeoRegisteration,
+	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
-	IOverlay,
-	Overlay
 } from '@ansyn/imagery';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
 import { Auth0Service } from './auth0.service';

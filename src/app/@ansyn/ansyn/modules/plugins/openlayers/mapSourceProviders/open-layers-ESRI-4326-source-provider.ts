@@ -1,10 +1,11 @@
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
-import { ImageryMapSource, ICaseMapState } from '@ansyn/imagery';
+import { ImageryMapSource } from '@ansyn/imagery';
 import * as proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
 export interface IESRI4326Config {
 	baseUrl: string;
@@ -21,7 +22,7 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider<IESRI4326Config> {
-	create(metaData: ICaseMapState): any[] {
+	create(metaData: ICaseMapState): Promise<any> {
 		const { config } = this;
 		const source = new XYZ({
 			attributions: config.attributions,
@@ -46,6 +47,6 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 			extent: [x, y, x1, y1]
 		});
 
-		return [esriLayer];
+		return Promise.resolve(esriLayer);
 	}
 }

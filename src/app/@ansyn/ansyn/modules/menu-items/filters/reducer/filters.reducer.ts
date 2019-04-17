@@ -1,16 +1,14 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import {
-	CaseEnumFilterMetadata,
-	ICaseBooleanFilterMetadata,
-	ICaseFacetsState,
-	ICaseFilter,
-	ICaseSliderFilterMetadata,
-	CaseFilterMetadata
-} from '@ansyn/imagery';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FiltersService } from '../services/filters.service';
+import {
+	CaseEnumFilterMetadata,
+	ICaseBooleanFilterMetadata,
+	ICaseFacetsState,
+	ICaseFilter, ICaseSliderFilterMetadata
+} from '../../cases/models/case.model';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 

@@ -1,7 +1,6 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
-import { ICaseMapState, ImageManualProcessArgs } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
@@ -13,6 +12,7 @@ import { Inject } from '@angular/core';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { selectMaps } from '@ansyn/map-facade';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
+import { ICaseMapState, ImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

@@ -1,15 +1,17 @@
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { combineLatest, Observable } from 'rxjs';
-import { IMapState, MapFacadeService, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
+import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { ICaseMapState, IOverlay, IVisualizerEntity, IVisualizerStateStyle } from '@ansyn/imagery';
+import { IVisualizerEntity, IVisualizerStateStyle } from '@ansyn/imagery';
 import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EMPTY } from 'rxjs/index';
 import * as turf from '@turf/turf';
 import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
+import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
+import { IOverlay } from '../../../../../overlays/models/overlay.model';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 

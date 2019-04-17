@@ -1,5 +1,4 @@
 import { Component, Inject, Input } from '@angular/core';
-import { IOverlay } from '@ansyn/imagery';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 
@@ -9,8 +8,8 @@ import { mapFacadeConfig } from '../../models/map-facade.config';
 	styleUrls: ['./overlay-source-type-notice.component.less']
 })
 export class OverlaySourceTypeNoticeComponent {
-
-	@Input() set overlay(newOverlay: IOverlay) {
+	// @todo IOverlay
+	@Input() set overlay(newOverlay: any) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration
 		this._title = newOverlay

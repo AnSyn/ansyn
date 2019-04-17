@@ -1,8 +1,8 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
 import { Action } from '@ngrx/store';
-import { ICaseFacetsState } from '@ansyn/imagery';
 import { Filters } from '../reducer/filters.reducer';
+import { ICaseFacetsState } from '../../cases/models/case.model';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',

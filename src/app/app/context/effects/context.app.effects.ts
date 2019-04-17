@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
-import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/ansyn';
+import {
+	CasesActionTypes,
+	CasesService,
+	ICase,
+	IContextEntity, IOverlaySpecialObject,
+	LoadDefaultCaseAction,
+	SelectCaseAction
+} from '@ansyn/ansyn';
 import {
 	DisplayedOverlay,
 	IContext,
 } from '@ansyn/ansyn';
-import {
-	ICase,
-	IContextEntity,
-	IOverlaySpecialObject,
-} from '@ansyn/imagery';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayFromStoreAction,

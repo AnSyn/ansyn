@@ -7,9 +7,10 @@ import {
 	selectSentinelselectedLayers,
 	sentinelFeatureKey,
 	SentinelReducer
-} from "../../../../app/sentinel/reducers/sentinel.reducer";
+} from "../reducers/sentinel.reducer";
 
-import { SentinelComboBoxComponent, SetSentinelLayerOnMap } from './sentinel-combo-box.component';
+import { SentinelComboBoxComponent } from './sentinel-combo-box.component';
+import { SetSentinelLayerOnMap } from '../actions/sentinel.actions';
 
 describe('SentinelComboBoxComponent', () => {
 	let component: SentinelComboBoxComponent;
@@ -44,9 +45,9 @@ describe('SentinelComboBoxComponent', () => {
 
 	it('changeLayer must fire SetSentinelLayerOnMap action', () => {
 		spyOn(store, 'dispatch');
-		component.mapId = 'mapId';
+		component.mapState = <any> { id: 'mapId' };
 		const layer = 'TRUE_COLOR';
 		component.changeLayer(layer);
-		expect(store.dispatch).toHaveBeenCalledWith( new SetSentinelLayerOnMap({id: component.mapId, layer}));
+		expect(store.dispatch).toHaveBeenCalledWith( new SetSentinelLayerOnMap({id: component.mapState.id, layer}));
 	})
 });

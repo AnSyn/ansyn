@@ -1,14 +1,10 @@
 import { Action } from '@ngrx/store';
-import {
-	AnnotationMode,
-	ImageManualProcessArgs,
-	IOverlaysManualProcessArgs,
-	IVisualizerStyle,
-	OverlayDisplayMode,
-} from '@ansyn/imagery';
-
+import { IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
+import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
+import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
+import { AnnotationMode, IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '../models/annotations.model';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -35,7 +31,11 @@ export const ToolsActionsTypes = {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
 	},
 	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER',
-	CLEAR_ACTIVE_TOOLS: 'CLEAR_ACTIVE_TOOLS'
+	CLEAR_ACTIVE_TOOLS: 'CLEAR_ACTIVE_TOOLS',
+
+	ANNOTATION_SELECT: 'ANNOTATION_SELECT',
+	ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
+	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE',
 };
 
 export class UpdateOverlaysManualProcessArgs implements Action {
@@ -192,12 +192,37 @@ export class SetSubMenu implements Action {
 
 	}
 }
+
 export class ClearActiveInteractionsAction implements Action {
 	type = ToolsActionsTypes.CLEAR_ACTIVE_TOOLS;
 
 	constructor(public payload?: { skipClearFor: Array<any> }) {
 
 	}
+}
+
+export class AnnotationSelectAction implements Action {
+	type = ToolsActionsTypes.ANNOTATION_SELECT;
+
+	constructor(public payload: IAnnotationsSelectionEventData) {
+
+	}
+}
+
+export class AnnotationRemoveFeature implements Action {
+	type = ToolsActionsTypes.ANNOTATION_REMOVE_FEATURE;
+
+	constructor(public payload: string) {
+
+	};
+}
+
+export class AnnotationUpdateFeature implements Action {
+	type = ToolsActionsTypes.ANNOTATION_UPDATE_FEATURE;
+
+	constructor(public payload: IUpdateFeatureEvent) {
+
+	};
 }
 
 export type ToolsActions =

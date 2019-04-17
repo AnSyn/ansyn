@@ -1,4 +1,4 @@
-import { BaseImageryPlugin, ICaseMapState, ImageryPlugin, IOverlayDrop } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
@@ -9,6 +9,8 @@ import { bboxPolygon, intersect } from '@turf/turf';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { selectDrops } from '../../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../../core/utils/overlays';
+import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
+import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

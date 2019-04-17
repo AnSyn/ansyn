@@ -3,9 +3,9 @@ import TileWMS from 'ol/source/TileWMS';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { ICaseMapState, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { ImisightOverlaySourceType } from './imisight-source-provider';
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ansyn';
+import { ICaseMapState, OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ansyn';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { OpenLayersMapSourceProvider } from '@ansyn/ansyn';
@@ -25,7 +25,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	public create(metaData: ICaseMapState): any[] {
+	public create(metaData: ICaseMapState): any {
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
 		const projection = 'EPSG:3857';
@@ -52,12 +52,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 			}
 		});
 
-		return [new TileLayer({ source })];
-	}
-
-	createAsync(metaData: ICaseMapState): Promise<any> {
-		let layer = this.createOrGetFromCache(metaData);
-		return Promise.resolve(layer[0]);
+		return Promise.resolve(new TileLayer({ source }));
 	}
 
 	getImageURL(url: string): Observable<any> {

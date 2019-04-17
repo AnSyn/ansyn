@@ -1,40 +1,33 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { AnnotationContextMenuComponent } from './annotation-context-menu.component';
 import { DebugElement } from '@angular/core';
-import { MapEffects } from '../../effects/map.effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { IMapState, mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { Actions } from '@ngrx/effects';
-import { Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { EventEmitter } from '@angular/core';
 import {
 	AnnotationInteraction,
 	IAnnotationsSelectionEventData
-} from '@ansyn/imagery';
-import { PositionChangedAction } from '../../actions/map.actions';
-import { EventEmitter } from '@angular/core';
-import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
-import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
-import { ColorPickerComponent } from '../color-picker/color-picker.component';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
-
+} from '../../models/annotations.model';
+import {
+	AnnotationsColorComponent,
+	AnnotationsWeightComponent, ClickOutsideDirective, ColorPickerComponent,
+	IMapState, mapFeatureKey, MapReducer,
+	PositionChangedAction
+} from '@ansyn/map-facade';
+import { AnnotationSelectAction } from '../../actions/tools.actions';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
 	let store: Store<IMapState>;
-	let actions: EventEmitter<PositionChangedAction>;
+	let actions: EventEmitter<PositionChangedAction | AnnotationSelectAction>;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				{ provide: Actions, useValue: new EventEmitter() },
-				{
-					provide: MapEffects, useValue: {
-						annotationContextMenuTrigger$: new Subject()
-					}
-				}
 			],
 			declarations: [
 				AnnotationContextMenuComponent,
@@ -54,6 +47,7 @@ describe('AnnotationContextMenuComponent', () => {
 		store = _store;
 		fixture = TestBed.createComponent(AnnotationContextMenuComponent);
 		component = fixture.componentInstance;
+		component.mapState = <any> { id: 'mapId' }
 		actions = _actions;
 		fixture.detectChanges();
 	}));
@@ -68,22 +62,26 @@ describe('AnnotationContextMenuComponent', () => {
 		});
 
 		it(`check Circle annotation shape`, () => {
-			const actionPayload = {
-				payload: {
-					interactionType: AnnotationInteraction.click,
-					featureId: 'featureId',
-					boundingRect: {
-						top: 100,
-						height: 100,
-						left: 100,
-						width: 100
-					}
+			const action = new AnnotationSelectAction({
+				type: '',
+				showMeasures: false,
+				showLabel: false,
+				interactionType: AnnotationInteraction.click,
+				featureId: 'featureId',
+				label: '',
+				mapId: 'mapId',
+				style: {},
+				boundingRect: {
+					top: 100,
+					height: 100,
+					left: 100,
+					width: 100
 				}
-			};
+			});
 
-			(<Subject<any>>component.mapEffect.annotationContextMenuTrigger$).next(actionPayload);
+			actions.next(action);
 
-			expect((<IAnnotationsSelectionEventData>component.clickMenuProps).boundingRect).toEqual({
+			expect(component.clickMenuProps.boundingRect).toEqual({
 				top: 100,
 				height: 100,
 				left: 100,
@@ -103,7 +101,7 @@ describe('AnnotationContextMenuComponent', () => {
 			showLabel: true,
 			featureId: 'featureId',
 			label: 'label',
-			mapId: 'id',
+			mapId: 'mapId',
 			type: 'Rectangle',
 			style: {},
 			boundingRect: {

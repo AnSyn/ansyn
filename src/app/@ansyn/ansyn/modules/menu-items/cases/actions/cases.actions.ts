@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
-import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '@ansyn/imagery';
 import { Params } from '@angular/router';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
+import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '../models/case.model';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',

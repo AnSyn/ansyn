@@ -1,9 +1,10 @@
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
-import { ImageryMapSource, ICaseMapState } from '@ansyn/imagery';
+import { ImageryMapSource } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
 export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 
@@ -12,7 +13,7 @@ export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: ICaseMapState): any[] {
+	create(metaData: ICaseMapState): Promise<any> {
 		const source = new XYZ({
 			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'Anonymous',
@@ -25,6 +26,6 @@ export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
 			preload: Infinity
 		});
 
-		return [mapBoxLayer];
+		return Promise.resolve(mapBoxLayer);
 	}
 }

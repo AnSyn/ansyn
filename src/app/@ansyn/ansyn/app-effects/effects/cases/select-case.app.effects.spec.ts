@@ -17,21 +17,6 @@ import {
 	SetRemovedOverlaysVisibilityAction
 } from '@ansyn/map-facade';
 import {
-	CaseOrientation,
-	CaseRegionState,
-	CaseTimeFilter,
-	ICase,
-	ICaseDataInputFiltersState,
-	ICaseFacetsState,
-	ICaseLayersState,
-	ICaseMapsState,
-	ICaseState,
-	ICaseTimeState,
-	IContextEntity,
-	IOverlay,
-	IOverlaysManualProcessArgs
-} from '@ansyn/imagery';
-import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
@@ -45,6 +30,21 @@ import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
+import {
+	CaseOrientation,
+	CaseRegionState,
+	CaseTimeFilter,
+	ICase,
+	ICaseDataInputFiltersState,
+	ICaseFacetsState,
+	ICaseLayersState,
+	ICaseMapsState,
+	ICaseState,
+	ICaseTimeState,
+	IContextEntity,
+	IOverlaysManualProcessArgs
+} from '../../../modules/menu-items/cases/models/case.model';
+import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;

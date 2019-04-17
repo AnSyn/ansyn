@@ -1,42 +1,13 @@
-export { IOverlaysCriteriaOptions } from './model/overlay.model';
+export { ImageryMapExtent, ImageryMapExtentPolygon } from './model/case-map-position.model';
 
-export { GeoRegisteration } from './model/overlay.model';
-export { ICaseSliderFilterMetadata } from './model/case.model';
-export { ICaseLayersState } from './model/case.model';
-export { OverlayDisplayMode } from './model/case.model';
-export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './model/case.model';
-export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './model/overlay.model';
-export { IPendingOverlay } from './model/overlay.model';
-export { ICase, ICasePreview, IDilutedCase } from './model/case.model';
-export { CaseRegionState, IDataInputFilterValue } from './model/case.model';
-export {
-	CaseGeoFilter,
-	CaseOrientation,
-	CaseTimeFilter, FilterType,
-	ICaseDataInputFiltersState,
-	ICaseTimeState
-} from './model/case.model';
-export { IContextEntity } from './model/case.model';
-export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './model/case.model';
-export { ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs } from './model/case.model';
-export { IWorldViewMapState } from './model/case.model';
-export { CaseEnumFilterMetadata } from './model/case.model';
-export { ICaseMapState } from './model/case.model';
-export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria } from './model/overlay.model';
-
+export { ImageryMapPosition } from './model/case-map-position.model';
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
-export { ICaseMapPosition, CaseMapExtent, CaseMapExtentPolygon, ICaseMapProjectedState } from './model/case-map-position.model';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
 export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
 export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
 export { IVisualizerStateStyle } from './model/visualizers/visualizer-state';
 export { VisualizerStates } from './model/visualizers/visualizer-state';
-export {
-	AnnotationInteraction, AnnotationMode,
-	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData, IUpdateFeatureEvent
-} from './model/visualizers/annotations.model';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
 	IMapProviderConfig,
@@ -83,6 +54,5 @@ export { ProjectionService } from './projection-service/projection.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
 export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME } from './model/imagery-layer.model';
-export { LayoutKey, layoutOptions } from './model/maps-layout';
-export { IMapsLayout } from './model/maps-layout';
-export { PhotoAngle } from './model/overlay.model';
+
+export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';

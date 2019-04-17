@@ -7,10 +7,10 @@ import * as wellknown from 'wellknown';
 import { MockCasesConfig } from '../cases.service.spec';
 import { HttpClientModule } from '@angular/common/http';
 import { throwError } from 'rxjs';
-import { ICase } from '@ansyn/imagery';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 import { StorageService } from '../../../../core/services/storage/storage.service';
+import { ICase } from '../../models/case.model';
 
 describe('CasesService', () => {
 	let casesService: CasesService;

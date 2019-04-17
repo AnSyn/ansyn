@@ -20,10 +20,10 @@ import {
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
-import { IOverlay } from '@ansyn/imagery';
 import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
 import { imageryStatusInitialState, imageryStatusFeatureKey } from '@ansyn/map-facade';
+import { IOverlay } from '../models/overlay.model';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

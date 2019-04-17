@@ -2,7 +2,6 @@ import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Vi
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { IOverlay } from '@ansyn/imagery';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
@@ -15,6 +14,7 @@ import {
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
+import { IOverlay } from '../../models/overlay.model';
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;

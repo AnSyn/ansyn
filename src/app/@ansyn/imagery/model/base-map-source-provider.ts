@@ -1,10 +1,9 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
-import { Observable, of } from 'rxjs';
 import { IBaseImageryMapConstructor } from './base-imagery-map';
-import { ICaseMapState } from './case.model';
 import { ImageryLayerProperties } from './imagery-layer.model';
+import { IMapSettings } from './map-settings';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
 
@@ -17,7 +16,6 @@ export interface IMapSourceProvidersConfig<T = any> {
 export interface IImageryMapSourceMetaData {
 	readonly sourceType: string;
 	readonly supported?: IBaseImageryMapConstructor[];
-	readonly forOverlay?: boolean;
 }
 
 export interface IBaseMapSourceProviderConstructor {
@@ -28,7 +26,6 @@ export interface IBaseMapSourceProviderConstructor {
 export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSourceMetaData {
 	readonly sourceType: string;
 	readonly supported?: IBaseImageryMapConstructor[];
-	readonly forOverlay?: boolean;
 
 	protected get config(): CONF {
 		return this.mapSourceProvidersConfig[this.sourceType];
@@ -39,52 +36,43 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig<CONF>) {
 	}
 
-	generateLayerId(metaData: ICaseMapState): string {
-		if (this.forOverlay) {
-			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
-		}
-		return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
-	}
+	generateLayerId<META extends IMapSettings>(metaData: META): string  {
+		return new Date().toISOString()
+	};
 
-	protected createOrGetFromCache(metaData: ICaseMapState) {
+	protected createOrGetFromCache<META extends IMapSettings>(metaData: META): Promise<any> {
 		const cacheId = this.generateLayerId(metaData);
-		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
-		if (cacheLayers.length) {
-			cacheLayers.forEach((layer) => {
-				if (layer.set) {
-					layer.set(ImageryLayerProperties.FROM_CACHE, true);
-				}
-			});
-			return cacheLayers;
+		const cacheLayer = this.cacheService.getLayerFromCache(cacheId);
+		if (cacheLayer) {
+			this.setExtraData(cacheLayer, { [ImageryLayerProperties.FROM_CACHE]: true });
+			return Promise.resolve(cacheLayer);
 		}
 
-		const layers = this.create(metaData);
-		this.cacheService.addLayerToCache(cacheId, layers);
-		return layers;
+		return this.create(metaData).then((layer) => {
+			this.cacheService.addLayerToCache(cacheId, layer);
+			const extraData = this.generateExtraData(metaData);
+			this.setExtraData(layer, extraData);
+			return layer;
+		});
 	}
 
-	protected abstract create(metaData: ICaseMapState): any[];
+	protected abstract create<META extends IMapSettings>(metaData: META): Promise<any>;
 
-	createAsync(metaData: ICaseMapState): Promise<any> {
-		let layer = this.createOrGetFromCache(metaData);
-		return Promise.resolve(layer);
+	createAsync<META extends IMapSettings>(metaData: META): Promise<any> {
+		return this.createOrGetFromCache(metaData)
 	}
 
-	existsInCache(metaData: ICaseMapState): boolean {
+	existsInCache<META extends IMapSettings>(metaData: META): boolean {
 		const cacheId = this.generateLayerId(metaData);
-		const cacheLayers = this.cacheService.getLayerFromCache(cacheId);
-		return cacheLayers.length > 0;
+		const cacheLayer = this.cacheService.getLayerFromCache(cacheId);
+		return Boolean(cacheLayer);
 	}
 
-	getThumbnailUrl(overlay, position): Observable<string> {
-		if (!overlay.thumbnailUrl) {
-			overlay.thumbnailUrl = overlay.imageUrl;
-		}
-		return of(overlay.thumbnailUrl);
-	}
+	generateExtraData<META extends IMapSettings>(metaData: META): any  {
+		return {}
+	};
 
-	getThumbnailName(overlay): string {
-		return overlay.sensorName;
+	setExtraData(layer: any, extraData: any): void {
 	}
 
 	removeExtraData(layer: any) {

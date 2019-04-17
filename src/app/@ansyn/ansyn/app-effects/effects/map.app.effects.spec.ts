@@ -16,11 +16,7 @@ import {
 } from '@ansyn/map-facade';
 import * as extentFromGeojson from '@ansyn/map-facade';
 import {
-	GeoRegisteration,
-	ICase,
-	ICaseMapState,
-	IOverlay,
-	IOverlaysFetchData,
+	IBaseImageryMapConstructor, IMapSettings,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import {
@@ -73,14 +69,18 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { GeoRegisteration, IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
+import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
 	supported: [<any> 'mapType1']
 })
 class SourceProviderMock1 extends BaseMapSourceProvider {
-	create(metaData: any): any {
-		return true;
+	readonly supported: IBaseImageryMapConstructor[] = [];
+
+	create(metaData: any): Promise<any> {
+		return Promise.resolve(true);
 	}
 
 	createAsync(metaData: ICaseMapState): Promise<any> {

@@ -12,11 +12,6 @@ import {
 	selectMapsList,
 	UpdateMapAction
 } from '@ansyn/map-facade';
-import {
-	CaseGeoFilter,
-	ICaseMapState,
-	ImageManualProcessArgs
-} from '@ansyn/imagery';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith, isEqual } from 'lodash';
@@ -42,6 +37,7 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 
 @Injectable()
 export class ToolsAppEffects {

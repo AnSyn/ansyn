@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ICaseTimeState } from '@ansyn/imagery';
+import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 
 declare function require(name: string);
 

@@ -1,3 +1,4 @@
+export { IEntryComponent } from './directives/entry-component.directive';
 export { AlertMsgTypes } from './alerts/model';
 
 export {
@@ -8,6 +9,7 @@ export {
 	mapStateSelector,
 	selectActiveMapId,
 	selectMapsList,
+	selectMapsTotal,
 	selectMaps,
 	selectLayout,
 	selectWasWelcomeNotificationShown,
@@ -15,9 +17,6 @@ export {
 } from './reducers/map.reducer';
 
 export {
-	AnnotationRemoveFeature,
-	AnnotationSelectAction,
-	AnnotationUpdateFeature,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
 	PinLocationModeTriggerAction,
@@ -47,7 +46,8 @@ export {
 	BackToWorldView,
 	ToggleMapLayersAction,
 	SetLayoutAction,
-	SetLayoutSuccessAction
+	SetLayoutSuccessAction,
+	IPendingOverlay
 } from './actions/map.actions';
 
 export {
@@ -89,7 +89,7 @@ export { mapFacadeConfig } from './models/map-facade.config';
 export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
 export { AlertsModule } from './alerts/alerts.module';
 export { IAlert, IAlertComponent } from './alerts/alerts.model';
-export { AlertComponentDirective } from './alerts/alert-component.directive';
+export { EntryComponentDirective } from './directives/entry-component.directive';
 //
 export { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 export { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
@@ -100,3 +100,4 @@ export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 export { MapFacadeModule } from './map-facade.module';
 
 
+export { LayoutKey, layoutOptions, IMapsLayout } from './models/maps-layout';

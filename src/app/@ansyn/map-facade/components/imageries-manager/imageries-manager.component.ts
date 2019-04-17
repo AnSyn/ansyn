@@ -17,10 +17,11 @@ import {
 	UpdateMapSizeAction
 } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
-import { ICaseMapState, IMapsLayout, LayoutKey, layoutOptions } from '@ansyn/imagery';
-import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { DragDropMapService } from './providers/drag-drop-map.service';
+import { IMapsLayout, LayoutKey, layoutOptions } from '../../models/maps-layout';
+import { IMapSettings } from '@ansyn/imagery';
 
 // @dynamic
 @Component({
@@ -36,7 +37,7 @@ export class ImageriesManagerComponent implements OnInit {
 		map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout))
 	);
 	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
-	public mapsEntities$: Observable<Dictionary<ICaseMapState>> = this.store.select(selectMaps);
+	public mapsEntities$: Observable<Dictionary<IMapSettings>> = this.store.select(selectMaps);
 	public ids$ = this.store.select(selectMapsIds);
 
 	public showWelcomeNotification$ = this.store.pipe(
@@ -54,7 +55,7 @@ export class ImageriesManagerComponent implements OnInit {
 
 	pinLocationMode: boolean;
 	ids: string[] = [];
-	mapsEntities: Dictionary<ICaseMapState>;
+	mapsEntities: Dictionary<IMapSettings>;
 	activeMapId: string;
 
 	constructor(protected mapEffects: MapEffects,

@@ -1,7 +1,5 @@
-import { IOverlay } from '@ansyn/imagery';
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../alerts/model';
-import { MapActionTypes } from './map.actions';
 
 export enum ImageryStatusActionTypes {
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
@@ -21,7 +19,7 @@ export enum ImageryStatusActionTypes {
 export class ToggleFavoriteAction implements Action {
 	type: string = ImageryStatusActionTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
+	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
 	}
 }
 
@@ -29,21 +27,21 @@ export class ToggleFavoriteAction implements Action {
 export class TogglePresetOverlayAction implements Action {
 	type: string = ImageryStatusActionTypes.TOGGLE_OVERLAY_PRESET;
 
-	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
+	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
 	}
 }
 
 export class SetFavoriteOverlaysAction implements Action {
 	type = ImageryStatusActionTypes.SET_FAVORITE_OVERLAYS;
 
-	constructor(public payload: IOverlay[]) {
+	constructor(public payload: any[]) {
 	}
 }
 
 export class SetPresetOverlaysAction implements Action {
 	type = ImageryStatusActionTypes.SET_PRESET_OVERLAYS;
 
-	constructor(public payload: IOverlay[]) {
+	constructor(public payload: any[]) {
 	}
 }
 

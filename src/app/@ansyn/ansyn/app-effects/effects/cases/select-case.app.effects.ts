@@ -16,7 +16,6 @@ import {
 	SetRemovedOverlaysVisibilityAction,
 } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
-import { ICase, ICaseMapState, IOverlay } from '@ansyn/imagery';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -33,6 +32,8 @@ import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
+import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
+import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class SelectCaseAppEffects {

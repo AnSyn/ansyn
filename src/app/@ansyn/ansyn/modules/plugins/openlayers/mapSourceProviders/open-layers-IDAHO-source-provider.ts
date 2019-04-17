@@ -1,24 +1,23 @@
 import {
 	CacheService,
-	ICaseMapState,
 	ImageryCommunicatorService,
 	ImageryMapSource,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG,
-	IOverlay
 } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
+import { IOverlay } from '../../../overlays/models/overlay.model';
 
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
 @ImageryMapSource({
 	sourceType: OpenLayerIDAHOSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	forOverlay: true
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 
@@ -29,7 +28,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	createAsync(metaData: ICaseMapState): Promise<any> {
+	create(metaData: ICaseMapState): Promise<any> {
 		let layerPromise;
 
 		if (metaData.data.overlay.channel === 1) {
@@ -72,7 +71,6 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 			});
 		}
 
-		layerPromise = this.addFootprintToLayerPromise(layerPromise, metaData);
 		return layerPromise;
 	}
 

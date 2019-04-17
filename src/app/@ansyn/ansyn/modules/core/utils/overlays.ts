@@ -1,6 +1,6 @@
-import { IOverlay } from '@ansyn/imagery';
 import { IFilterModel } from '../models/IFilterModel';
 import { union } from 'lodash';
+import { IOverlay } from '../../overlays/models/overlay.model';
 
 export function isFullOverlay(overlay: IOverlay): boolean {
 	return Boolean(overlay && overlay.date);

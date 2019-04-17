@@ -1,7 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryStatusComponent } from './imagery-status.component';
 import { StoreModule } from '@ngrx/store';
-import { IOverlay } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
@@ -11,6 +10,8 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/im
 import { MockComponent } from '../../test/mock-component';
 import { FormsModule } from '@angular/forms';
 import { AlertsModule } from '../../alerts/alerts.module';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -24,7 +25,8 @@ describe('ImageryStatusComponent', () => {
 				AlertsModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({
-					[imageryStatusFeatureKey]: ImageryStatusReducer
+					[imageryStatusFeatureKey]: ImageryStatusReducer,
+					[mapFeatureKey]: MapReducer
 				})
 			],
 			declarations: [
@@ -35,6 +37,7 @@ describe('ImageryStatusComponent', () => {
 				})
 			],
 			providers: [
+				ImageryCommunicatorService,
 				{ provide: ALERTS, useValue: [] },
 				{
 					provide: TranslateService, useValue: {
@@ -48,8 +51,8 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(inject([], () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
-		component.mapId = 'test';
-		component.overlay = {} as IOverlay;
+		component.mapState = <any> { id: 'test', flags: { displayLayers: true } };
+		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();
 	}));
@@ -66,6 +69,7 @@ describe('ImageryStatusComponent', () => {
 
 	it('check click on toggleMapSynchronization', () => {
 		spyOnProperty(component, 'noGeoRegistration', 'get').and.returnValue(false);
+		component.mapsAmount = 2;
 		fixture.detectChanges();
 		spyOn(component.toggleMapSynchronization, 'emit');
 		fixture.nativeElement.querySelector('.link-maps').click();

@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
 import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
-import { CaseGeoFilter, CaseRegionState, VisualizerInteractions } from '@ansyn/imagery';
+import { VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -18,6 +18,7 @@ import {
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { selectRegion } from '../../../../../overlays/reducers/overlays.reducer';
+import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';

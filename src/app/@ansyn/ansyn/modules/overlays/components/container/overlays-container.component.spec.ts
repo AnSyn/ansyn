@@ -3,7 +3,6 @@ import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService } from '../../services/overlays.service';
 import { EMPTY, Observable } from 'rxjs';
 import { DebugElement } from '@angular/core';
-import { IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { State, Store, StoreModule } from '@ngrx/store';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
@@ -13,6 +12,7 @@ import { BaseOverlaySourceProvider, IFetchParams } from '../../models//base-over
 import { OverlaySourceProvider } from '../../models/overlays-source-providers';
 import { createStore, IStoreFixture } from '../../../core/test/mock-store';
 import { MockComponent } from '../../../core/test/mock-component';
+import { IOverlay, IOverlaysFetchData } from '../../models/overlay.model';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

@@ -1,4 +1,4 @@
-import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from './case.model';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { MultiPolygon } from "geojson";
 
 export interface IOverlaysFetchData {
@@ -11,11 +11,6 @@ export interface IOverlaysFetchData {
 export interface IDilutedOverlay {
 	id: string;
 	sourceType?: string;
-}
-
-export interface IPendingOverlay {
-	overlay: IOverlay;
-	extent?: any;
 }
 
 export enum GeoRegisteration {

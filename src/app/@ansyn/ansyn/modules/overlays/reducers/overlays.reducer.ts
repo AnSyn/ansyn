@@ -1,14 +1,11 @@
-import {
-	ICaseDataInputFiltersState,
-	IOverlay, IOverlayDrop, IOverlaysCriteria,
-	IOverlaySpecialObject
-} from '@ansyn/imagery';
 import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
 import { EntityState, createEntityAdapter, EntityAdapter, Dictionary } from '@ngrx/entity';
 import { ImageryStatusActionTypes, MapActionTypes } from '@ansyn/map-facade';
+import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
+import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaySpecialObject } from '../models/overlay.model';
 
 export interface ITimelineRange {
 	start: Date;

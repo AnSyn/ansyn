@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { FilterType, ICaseFilter, IOverlay } from '@ansyn/imagery';
 import { cloneDeep } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
@@ -9,6 +8,9 @@ import { BooleanFilterMetadata } from '../models/metadata/boolean-filter-metadat
 import { buildFilteredOverlays } from '../../../core/utils/overlays';
 import { mapValuesToArray } from '../../../core/utils/misc';
 import { IFilterModel } from '../../../core/models/IFilterModel';
+import { FilterType } from '../models/filter-type';
+import { ICaseFilter } from '../../cases/models/case.model';
+import { IOverlay } from '../../../overlays/models/overlay.model';
 
 export const filtersConfig = 'filtersConfig';
 

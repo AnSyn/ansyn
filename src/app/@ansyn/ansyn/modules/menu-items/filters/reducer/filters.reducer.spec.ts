@@ -3,7 +3,7 @@ import * as reducer from './filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
 import * as actions from '../actions/filters.actions';
-import { FilterType } from '@ansyn/imagery';
+import { FilterType } from '../models/filter-type';
 
 describe('FiltersReducer', () => {
 

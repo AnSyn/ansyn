@@ -13,7 +13,6 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
 		const extent = this.getExtent(metaData.data.overlay.footprint);
 		const tileLayer = this.getTileLayer(source, extent);
-		this.setExtraData(tileLayer, { [ImageryLayerProperties.FOOTPRINT]: metaData.data.overlay.footprint });
 		return Promise.resolve(tileLayer);
 	}
 

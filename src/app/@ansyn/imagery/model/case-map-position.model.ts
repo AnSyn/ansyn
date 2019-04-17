@@ -1,8 +1,8 @@
 import { Polygon } from 'geojson';
 
-export type CaseMapExtent = [number, number, number, number];
+export type ImageryMapExtent = [number, number, number, number];
 
-export interface ICaseMapProjectedState {
+export interface ImageryMapProjectedState {
 	projection: {
 		code: string;
 	};
@@ -12,9 +12,10 @@ export interface ICaseMapProjectedState {
 	zoom?: number;
 }
 
-export type CaseMapExtentPolygon = Polygon;
+export type ImageryMapExtentPolygon = Polygon;
 
 export interface ImageryMapPosition {
-	projectedState?: ICaseMapProjectedState;
-	extentPolygon?: CaseMapExtentPolygon;
+	projectedState?: ImageryMapProjectedState;
+	extentPolygon?: ImageryMapExtentPolygon;
 }
+

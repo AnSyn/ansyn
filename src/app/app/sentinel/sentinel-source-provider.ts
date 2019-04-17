@@ -4,12 +4,9 @@ import {
 	bboxFromGeoJson,
 	geojsonMultiPolygonToPolygon,
 	geojsonPolygonToMultiPolygon,
-	GeoRegisteration,
 	getPolygonByPointAndRadius,
 	IMapSourceProvidersConfig,
-	IOverlay,
 	MAP_SOURCE_PROVIDERS_CONFIG,
-	Overlay
 } from '@ansyn/imagery';
 import { toRadians } from '@ansyn/map-facade';
 import { empty, Observable } from 'rxjs';
@@ -21,11 +18,11 @@ import OLGeoJSON from 'ol/format/GeoJSON';
 import { Store } from '@ngrx/store';
 import {
 	BaseOverlaySourceProvider,
-	ErrorHandlerService,
-	IFetchParams,
+	ErrorHandlerService, GeoRegisteration,
+	IFetchParams, IOverlay,
 	IStartAndEndDate,
 	limitArray,
-	LoggerService,
+	LoggerService, Overlay,
 	OverlaySourceProvider,
 	sortByDateDesc
 } from '@ansyn/ansyn';
@@ -128,6 +125,11 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 	private extractData(overlays: any): IOverlay {
 		return this.parseData(overlays);
 
+	}
+
+	getThumbnailName(overlay): string {
+		const superName = super.getThumbnailName(overlay);
+		return superName.length > 20 ? `...${superName.substring(0, 15)}` : superName;
 	}
 
 	protected parseData(sentinelElement: any): IOverlay {

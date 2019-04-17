@@ -33,7 +33,6 @@ export class ImageryContainerComponent {
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: any,
 				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig
 	) {
-		console.log(entryComponents)
 	}
 
 	toggleMapSynchronization() {

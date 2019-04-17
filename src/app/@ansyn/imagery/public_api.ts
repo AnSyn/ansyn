@@ -1,3 +1,6 @@
+export { ImageryMapExtent, ImageryMapExtentPolygon } from './model/case-map-position.model';
+
+export { ImageryMapPosition } from './model/case-map-position.model';
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
 export { IVisualizerEntity } from './model/visualizers/visualizers-entity';

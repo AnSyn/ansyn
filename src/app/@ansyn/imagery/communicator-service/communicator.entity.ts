@@ -23,7 +23,7 @@ import { BaseImageryPluginProvider } from '../imagery/providers/imagery.provider
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
-import { CaseMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
+import { ImageryMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
 import { getPolygonByPointAndRadius } from '../utils/geo';
 import { IMapProviderConfig, IMapProvidersConfig, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
@@ -243,7 +243,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: ImageryMapPosition, extent?: CaseMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
+	public resetView(layer: any, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
 			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(

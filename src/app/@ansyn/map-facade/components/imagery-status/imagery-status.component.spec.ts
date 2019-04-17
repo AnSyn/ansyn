@@ -49,7 +49,7 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(inject([], () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
-		component.mapId = 'test';
+		component.mapState = <any> { id: 'test' };
 		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();

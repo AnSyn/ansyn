@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
-import { CaseMapExtent, ImageryMapPosition } from './case-map-position.model';
+import { ImageryMapExtent, ImageryMapPosition } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 
 export interface IImageryMapMetaData {
@@ -45,7 +45,7 @@ export abstract class BaseImageryMap<T = any> {
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: ImageryMapPosition, extent?: CaseMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
+	abstract resetView(layer: any, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
 
 	abstract addLayer(layer: any): void;
 

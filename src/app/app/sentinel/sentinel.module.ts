@@ -10,9 +10,11 @@ import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { AnsynFormsModule, OverlaysModule } from '@ansyn/ansyn';
 import { ImageryModule } from '@ansyn/imagery';
+import { MapFacadeModule } from '@ansyn/map-facade';
+import { SentinelComboBoxComponent } from './sentinel-combo-box/sentinel-combo-box.component';
 
 @NgModule({
-	declarations: [],
+	declarations: [SentinelComboBoxComponent],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -25,13 +27,17 @@ import { ImageryModule } from '@ansyn/imagery';
 			mapSourceProviders: [OpenLayersSentinelSourceProvider],
 			plugins: []
 		}),
+		MapFacadeModule.provide({
+			entryComponents: [SentinelComboBoxComponent]
+		}),
 		OverlaysModule.provide({
 			overlaySourceProviders: [
 				SentinelSourceProvider
 			]
 		})
 	],
-	exports: []
+	exports: [SentinelComboBoxComponent],
+	entryComponents: [SentinelComboBoxComponent]
 })
 export class SentinelModule {
 }

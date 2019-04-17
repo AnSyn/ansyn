@@ -1,6 +1,6 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryMap, ImageryMap, CaseMapExtent, ImageryMapPosition  } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition  } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
@@ -160,7 +160,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent?: CaseMapExtent): Observable<boolean> {
+	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent?: ImageryMapExtent): Observable<boolean> {
 		if (!this.mapObject || (layer.mapProjection && this.mapObject.scene.mapProjection.projectionName !== layer.mapProjection.projectionName)) {
 			return this.createMapObject(layer).pipe(
 				mergeMap((isReady) => {
@@ -195,7 +195,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return this.setPosition(position);
 	}
 
-	fitToExtent(extent: CaseMapExtent) {
+	fitToExtent(extent: ImageryMapExtent) {
 		const polygon = ExtentCalculator.extentToPolygon(extent);
 		return this.internalSetPosition((<any>polygon.geometry));
 	}

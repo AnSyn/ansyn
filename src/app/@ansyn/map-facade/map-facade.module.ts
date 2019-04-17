@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { MapEffects } from './effects/map.effects';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
-import { createImageryMapsCollection, ImageryModule } from '@ansyn/imagery';
+import { ImageryModule } from '@ansyn/imagery';
 import { CommonModule } from '@angular/common';
 import { ImageryContainerComponent } from './components/imagery-container/imagery-container.component';
 import { FormsModule } from '@angular/forms';
@@ -30,8 +30,6 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imager
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
 import { EntryComponentsProvider, ENTRY_COMPONENTS_ENTITIES } from './models/entry-components-provider';
 import { IEntryComponent } from './directives/entry-component.directive';
-// @todo remove
-import { SentinelComboBoxComponent } from './components/sentinel-combo-box/sentinel-combo-box.component';
 
 @NgModule({
 	imports: [
@@ -70,9 +68,7 @@ import { SentinelComboBoxComponent } from './components/sentinel-combo-box/senti
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent,
-		// @todo remove
-		SentinelComboBoxComponent
+		AnsynPopoverComponent
 	],
 	exports: [
 		ImageriesManagerComponent,

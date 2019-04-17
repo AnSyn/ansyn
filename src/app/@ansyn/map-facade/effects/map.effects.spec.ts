@@ -9,7 +9,6 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { cold, hot } from 'jasmine-marbles';
 import {
-	AnnotationSelectAction,
 	DecreasePendingMapsCountAction,
 	ImageryRemovedAction,
 	SetMapPositionByRadiusAction,
@@ -58,17 +57,6 @@ describe('MapEffects', () => {
 
 	it('should be defined', () => {
 		expect(mapEffects).toBeDefined();
-	});
-
-	it('check that the action annotationContextMenuTrigger$ was triggerd', () => {
-
-		const action = new AnnotationSelectAction((<any>{}));
-
-
-		actions = hot('--a--', { a: action });
-		const expectedResult = cold('--b--', { b: action });
-		expect(mapEffects.annotationContextMenuTrigger$).toBeObservable(expectedResult);
-
 	});
 
 	describe('onMapCreatedDecreasePendingCount$', () => {

@@ -1,3 +1,8 @@
+export { ProjectableRaster } from './maps/open-layers-map/models/projectable-raster';
+export { OpenLayersProjectionService } from './projection/open-layers-projection.service';
+export { ExtentCalculator } from './utils/extent-calculator';
+export { DisabledOpenLayersMapName } from './maps/openlayers-disabled-map/openlayers-disabled-map';
+export { OpenlayersMapName } from './maps/open-layers-map/openlayers-map/openlayers-map';
 export { OpenLayersStaticImageSourceProviderSourceType } from './mapSourceProviders/open-layers-static-image-source-provider';
 export { OpenLayerMarcoSourceProviderSourceType } from './mapSourceProviders/marco/open-layers-MARCO-source-provider';
 export { OpenLayersMapSourceProvider } from './mapSourceProviders/open-layers.map-source-provider';

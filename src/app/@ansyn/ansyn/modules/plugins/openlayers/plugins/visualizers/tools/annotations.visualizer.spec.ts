@@ -3,7 +3,7 @@ import { StoreModule } from '@ngrx/store';
 import { of } from 'rxjs/index';
 import { featureCollection } from '@turf/turf';
 import { AnnotationsVisualizer } from './annotations.visualizer';
-import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '@ansyn/ol';
 import { toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
 
 describe('AnnotationsVisualizer', () => {

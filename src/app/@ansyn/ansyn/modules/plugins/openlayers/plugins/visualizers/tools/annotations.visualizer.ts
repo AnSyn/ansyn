@@ -33,8 +33,8 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { featureCollection } from '@turf/turf';
-import { OpenLayersMap } from '../../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
-import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
+import { OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersProjectionService } from '@ansyn/ol';
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
 import {

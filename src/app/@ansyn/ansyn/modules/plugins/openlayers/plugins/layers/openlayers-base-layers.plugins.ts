@@ -6,7 +6,7 @@ import { BaseImageryPlugin } from '@ansyn/imagery';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { selectLayers } from '../../../../menu-items/layers-manager/reducers/layers.reducer';

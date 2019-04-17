@@ -24,7 +24,7 @@ import {
 } from '@ansyn/imagery';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
 import { Auth0Service } from './auth0.service';
-import { toRadians } from '@ansyn/map-facade';
+import { toRadians } from '@ansyn/ol';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 

@@ -241,7 +241,6 @@ export { IContext } from './modules/core/models/context.model';
 export { mapValuesToArray } from './modules/core/utils/misc';
 export { CoreModule } from './modules/core/core.module';
 export { DisplayedOverlay } from './modules/core/models/context.model';
-export { ExtentCalculator } from '../ol/utils/extent-calculator';
 export { BaseFetchService } from './modules/core/services/base-fetch-service';
 export { FetchService } from './modules/core/services/fetch.service';
 export { IDeltaTime } from './modules/core/models/time.model';
@@ -317,7 +316,6 @@ export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './modu
 
 // plugins
 
-export { OpenLayersProjectionService } from '../ol/projection/open-layers-projection.service';
 export { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 export { NorthCalculationsPlugin } from './modules/plugins/openlayers/plugins/north-calculations/north-calculations.plugin';
 export { ImageProcessingPlugin } from './modules/plugins/openlayers/plugins/image-processing/image-processing.plugin';

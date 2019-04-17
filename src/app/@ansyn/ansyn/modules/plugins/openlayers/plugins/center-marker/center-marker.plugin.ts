@@ -8,7 +8,7 @@ import { ImageryMapPosition } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { BaseImageryMap, BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/ol';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

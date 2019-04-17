@@ -30,6 +30,8 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imager
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
 import { EntryComponentsProvider, ENTRY_COMPONENTS_ENTITIES } from './models/entry-components-provider';
 import { IEntryComponent } from './directives/entry-component.directive';
+// @todo remove
+import { SentinelComboBoxComponent } from './components/sentinel-combo-box/sentinel-combo-box.component';
 
 @NgModule({
 	imports: [
@@ -39,7 +41,7 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		ImageryModule,
 		CommonModule,
 		FormsModule,
-		AlertsModule
+		AlertsModule,
 	],
 	providers: [
 		GeocoderService,
@@ -69,6 +71,8 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
+		// @todo remove
+		SentinelComboBoxComponent
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -82,7 +86,7 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent
+		AnsynPopoverComponent,
 	]
 })
 

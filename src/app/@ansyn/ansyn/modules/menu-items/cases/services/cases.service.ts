@@ -104,7 +104,7 @@ export class CasesService {
 					from: new Date(caseValue.state.time.from),
 					to: new Date(caseValue.state.time.to)
 				} : null,
-				contextEntities: caseValue.state.contextEntities ?
+				contextEntities: caseValue.state.contextEntities && Array.isArray(caseValue.state.contextEntities) ?
 					caseValue.state.contextEntities.map((contextEntity: IContextEntity) => ({
 						...contextEntity,
 						date: new Date(contextEntity.date)

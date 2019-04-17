@@ -316,6 +316,9 @@ export class MapAppEffects {
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
+		if (payload.force) {
+			return true
+		}
 		const isFull = isFullOverlay(payload.overlay);
 		const { overlay } = payload;
 		const mapData = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId).data;

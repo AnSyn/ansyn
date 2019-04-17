@@ -14,12 +14,14 @@ import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
-
-// @todo refactor
-const selectContextEntities: any = createSelector(createFeatureSelector('context'), (context: any) => context.entities);
-
 import { selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
+
+// @todo refactor
+const contextFeatureSelector = createFeatureSelector('context');
+const selectContextsParams = createSelector(contextFeatureSelector, (context: any) => context && context.params);
+const selectContextEntities = createSelector(selectContextsParams, (params: any) => params && params.contextEntities);
+
 @Injectable()
 export class UpdateCaseAppEffects {
 	isAutoSaveTriggered: boolean;

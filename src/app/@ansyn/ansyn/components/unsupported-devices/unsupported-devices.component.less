@@ -1,0 +1,76 @@
+@import "ansyn/less/common";
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+:host {
+	display: block;
+	animation-name: fadeIn;
+	animation-duration: 1s;
+
+	div.login-wrapper {
+
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+
+		h1.title {
+			padding: 0;
+			margin: 90px 0 0 0;
+			text-align: center;
+			color: white;
+			font-style: normal;
+			font-weight: bold;
+			line-height: normal;
+			font-size: 120px;
+			text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), 0 4px 4px rgba(0, 0, 0, 0.25);
+		}
+
+		h3.title {
+			padding: 0;
+			margin: 30px 0 0 0;
+			background-color: #0000006f;
+			text-align: center;
+			color: white;
+			font-style: normal;
+			font-weight: bold;
+			line-height: normal;
+			font-size: 3vh;
+			text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), 0 4px 4px rgba(0, 0, 0, 0.25);
+		}
+
+		p {
+			color: white;
+			display: flex;
+			justify-content: space-between;
+			font-style: normal;
+			font-weight: normal;
+			line-height: normal;
+			font-size: 25px;
+
+			&:not(:first-child) {
+				margin-top: 23px
+			}
+		}
+
+
+	}
+
+	@media screen and (max-width: 1480px) {
+		div.login-wrapper {
+
+			form.login-form {
+				transform: scale(0.7);
+			}
+		}
+	}
+}

@@ -6,7 +6,7 @@ import {
 	IMapSettings
 } from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
-import { toDegrees } from '../../utils/math';
+import { toDegrees } from '../../../ol/utils/math';
 
 
 export interface IsGeoRegisteredProperties {

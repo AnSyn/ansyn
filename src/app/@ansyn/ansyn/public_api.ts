@@ -241,7 +241,7 @@ export { IContext } from './modules/core/models/context.model';
 export { mapValuesToArray } from './modules/core/utils/misc';
 export { CoreModule } from './modules/core/core.module';
 export { DisplayedOverlay } from './modules/core/models/context.model';
-export { ExtentCalculator } from './modules/core/utils/extent-calculator';
+export { ExtentCalculator } from '../ol/utils/extent-calculator';
 export { BaseFetchService } from './modules/core/services/base-fetch-service';
 export { FetchService } from './modules/core/services/fetch.service';
 export { IDeltaTime } from './modules/core/models/time.model';
@@ -317,20 +317,10 @@ export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './modu
 
 // plugins
 
-export { OpenLayersMapSourceProvider } from './modules/plugins/openlayers/mapSourceProviders/open-layers.map-source-provider';
-export { OpenLayersStaticImageSourceProviderSourceType } from './modules/plugins/openlayers/mapSourceProviders/open-layers-static-image-source-provider';
-export { OpenLayerMarcoSourceProviderSourceType } from './modules/plugins/openlayers/mapSourceProviders/marco/open-layers-MARCO-source-provider';
-export {
-	DisabledOpenLayersMapName,
-	OpenLayersDisabledMap
-} from './modules/plugins/openlayers/maps/openlayers-disabled-map/openlayers-disabled-map';
-export { ProjectableRaster } from './modules/plugins/openlayers/maps/open-layers-map/models/projectable-raster';
-export { OpenLayersMap, OpenlayersMapName } from './modules/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
-export { OpenLayersProjectionService } from './modules/plugins/openlayers/projection/open-layers-projection.service';
+export { OpenLayersProjectionService } from '../ol/projection/open-layers-projection.service';
 export { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 export { NorthCalculationsPlugin } from './modules/plugins/openlayers/plugins/north-calculations/north-calculations.plugin';
 export { ImageProcessingPlugin } from './modules/plugins/openlayers/plugins/image-processing/image-processing.plugin';
-export { isRasterLayer, removeWorkers } from './modules/plugins/openlayers/maps/open-layers-map/shared/openlayers-shared';
 export { EntitiesVisualizer } from './modules/plugins/openlayers/plugins/visualizers/entities-visualizer';
 export { CesiumMapName } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
 export { OpenlayersGeoJsonLayersVisualizer } from './modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer';

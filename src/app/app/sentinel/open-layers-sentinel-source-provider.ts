@@ -16,7 +16,8 @@ import { Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectSentinelselectedLayers } from './reducers/sentinel.reducer';
 import { map, take } from 'rxjs/operators';
-import { ICaseMapState, OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ansyn';
+import { ICaseMapState } from '@ansyn/ansyn';
+import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
 
 export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';
 

@@ -2,7 +2,7 @@ import { Store } from '@ngrx/store';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 import { ImageryPlugin } from '@ansyn/imagery';
-import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
 import * as proj from 'ol/proj';
 import { OpenlayersBaseLayersPlugins } from "./openlayers-base-layers.plugins";
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';

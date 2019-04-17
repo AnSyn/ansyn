@@ -1,4 +1,5 @@
 export { ImageryMapExtent, ImageryMapExtentPolygon } from './model/case-map-position.model';
+export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
 
 export { ImageryMapPosition } from './model/case-map-position.model';
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';

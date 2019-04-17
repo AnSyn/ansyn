@@ -431,6 +431,26 @@
         }
       }
     },
+    "@ansyn/ol": {
+      "root": "src/app/@ansyn/ol",
+      "sourceRoot": "projects/ansyn/ol/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "src/app/@ansyn/ol/tsconfig.lib.json",
+            "project": "src/app/@ansyn/ol/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "src/app/@ansyn/ol/ng-package.json"
+            }
+          }
+        }
+      }
+    },
     "@ansyn/imagery": {
       "root": "src/app/@ansyn/imagery",
       "sourceRoot": "src/app/@ansyn/imagery",

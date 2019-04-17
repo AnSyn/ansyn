@@ -20,9 +20,9 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
 
 @ImageryVisualizer({

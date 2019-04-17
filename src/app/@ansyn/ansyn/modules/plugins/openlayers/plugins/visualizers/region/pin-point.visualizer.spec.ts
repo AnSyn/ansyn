@@ -2,7 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { PinPointVisualizer } from './pin-point.visualizer';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
 
 describe('PinPointVisualizer', () => {
 	let pinPointVisualizer: PinPointVisualizer;

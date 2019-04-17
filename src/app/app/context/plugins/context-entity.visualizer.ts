@@ -18,7 +18,8 @@ import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectContextEntities } from '../reducers/context.reducer';
-import { EntitiesVisualizer, ICaseMapState, IContextEntity, OpenLayersMap } from '@ansyn/ansyn';
+import { EntitiesVisualizer, ICaseMapState, IContextEntity,  } from '@ansyn/ansyn';
+import { OpenLayersMap } from '@ansyn/ol';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

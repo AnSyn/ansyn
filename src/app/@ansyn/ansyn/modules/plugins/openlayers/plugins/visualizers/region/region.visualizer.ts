@@ -9,7 +9,7 @@ import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer } from '../entities-visualizer';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
 import {
 	selectGeoFilterIndicator,

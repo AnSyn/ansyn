@@ -3,7 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { TaskRegionVisualizer } from './task-region.visualizer';
 import { TasksService } from '../../../../../menu-items/algorithms/services/tasks.service';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
 
 describe('TaskRegionVisualizer', () => {
 	let algorithmTaskRegionVisualizer: TaskRegionVisualizer;

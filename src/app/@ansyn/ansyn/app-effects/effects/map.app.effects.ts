@@ -18,7 +18,6 @@ import {
 } from '@ansyn/map-facade';
 import {
 	BackToWorldView,
-	extentFromGeojson,
 	ToggleMapLayersAction,
 	SetToastMessageAction
 } from '@ansyn/map-facade'
@@ -26,6 +25,7 @@ import {
 	BaseMapSourceProvider,
 	CommunicatorEntity,
 	ImageryCommunicatorService,
+	extentFromGeojson
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -57,8 +57,8 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { CesiumMapName } from '../../modules/plugins/cesium/maps/cesium-map/cesium-map';
-import { DisabledOpenLayersMapName } from '../../modules/plugins/openlayers/maps/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenlayersMapName } from '../../modules/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
+import { DisabledOpenLayersMapName } from '../../../ol/maps/openlayers-disabled-map/openlayers-disabled-map';
+import { OpenlayersMapName } from '../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 

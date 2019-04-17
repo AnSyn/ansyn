@@ -9,9 +9,9 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
 import {
 	IToolsState,
 	selectSubMenu, SubMenuEnum,

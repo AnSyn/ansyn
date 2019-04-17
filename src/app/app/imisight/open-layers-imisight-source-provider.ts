@@ -5,10 +5,10 @@ import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { ImisightOverlaySourceType } from './imisight-source-provider';
-import { ICaseMapState, OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ansyn';
+import { ICaseMapState } from '@ansyn/ansyn';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { OpenLayersMapSourceProvider } from '@ansyn/ansyn';
+import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 
 @ImageryMapSource({

@@ -10,7 +10,7 @@ import { CesiumProjectionService } from '../../projection/cesium-projection.serv
 import { fromPromise } from "rxjs/internal-compatibility";
 import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
 import { CoreConfig } from '../../../../core/models/core.config';
-import { ExtentCalculator } from '../../../../core/utils/extent-calculator';
+import { ExtentCalculator } from '../../../../../../ol/utils/extent-calculator';
 import { ICoreConfig } from '../../../../core/models/core.config.model';
 import { toDegrees } from '@ansyn/map-facade';
 

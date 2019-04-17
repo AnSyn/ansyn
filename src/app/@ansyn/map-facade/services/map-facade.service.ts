@@ -4,7 +4,7 @@ import { IMapState, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
 import { ImageryMapPosition, ImageryCommunicatorService, IMapInstanceChanged, IMapSettings } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
-import { getFootprintIntersectionRatioInExtent } from '../utils/calc-extent';
+import { getFootprintIntersectionRatioInExtent } from '../../imagery/utils/calc-extent';
 
 // @dynamic
 @Injectable({

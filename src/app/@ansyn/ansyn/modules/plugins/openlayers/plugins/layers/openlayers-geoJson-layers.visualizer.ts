@@ -9,7 +9,7 @@ import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
 import { ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
 import { EntitiesVisualizer } from '../visualizers/entities-visualizer';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';

@@ -13,6 +13,9 @@
       ],
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
+      ],
+      "@ansyn/ol": [
+        "dist/ansyn/ol"
       ]
     },
     "outDir": "../../../out-tsc/lib",

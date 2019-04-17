@@ -1,10 +1,9 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { OverlayOutOfBoundsComponent } from './overlay-out-of-bounds.component';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, extentFromGeojson } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { geometry } from '@turf/turf';
-import { extentFromGeojson } from '@ansyn/map-facade';
 
 describe('OverlayOutOfBoundsComponent', () => {
 	let component: OverlayOutOfBoundsComponent;

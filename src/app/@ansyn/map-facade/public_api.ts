@@ -80,13 +80,10 @@ export {
 
 export { copyFromContent } from './utils/clipboard';
 export { getTimeFormat, getTimeDiff, getTimeDiffFormat  } from './utils/time';
-export { toDegrees, toRadians } from './utils/math';
-
 
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
-export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
 export { AlertsModule } from './alerts/alerts.module';
 export { IAlert, IAlertComponent } from './alerts/alerts.model';
 export { EntryComponentDirective } from './directives/entry-component.directive';

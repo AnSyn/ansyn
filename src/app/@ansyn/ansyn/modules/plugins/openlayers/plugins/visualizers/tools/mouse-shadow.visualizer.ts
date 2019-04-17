@@ -12,9 +12,9 @@ import { ImageryVisualizer } from '@ansyn/imagery';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
 import { distinctUntilChanged, filter, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

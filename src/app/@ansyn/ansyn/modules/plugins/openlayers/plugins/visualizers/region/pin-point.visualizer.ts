@@ -8,9 +8,9 @@ import * as turf from '@turf/turf';
 import { getPointByGeometry } from '@ansyn/imagery';
 import { Position } from 'geojson';
 import { ImageryVisualizer } from '@ansyn/imagery';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '../../../../../../../ol/maps/open-layers-map/openlayers-map/openlayers-map';
 import { RegionVisualizer } from './region.visualizer';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '../../../../../../../ol/projection/open-layers-projection.service';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 
 @ImageryVisualizer({

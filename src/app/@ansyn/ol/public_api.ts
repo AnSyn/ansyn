@@ -1,3 +1,5 @@
+export { OL_CONFIG } from './config/ol-config';
+export { OpenLayerBingSourceProviderSourceType } from './mapSourceProviders/open-layers-BING-source-provider';
 export { EntitiesVisualizer } from './plugins/entities-visualizer';
 export { ProjectableRaster } from './maps/open-layers-map/models/projectable-raster';
 export { OpenLayersProjectionService } from './projection/open-layers-projection.service';

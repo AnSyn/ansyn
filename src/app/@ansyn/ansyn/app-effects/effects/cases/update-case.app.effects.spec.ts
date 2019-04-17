@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { UpdateCaseAppEffects } from './update-case.app.effects';
 import { casesFeatureKey, CasesReducer } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 
-describe('UpdateCaseAppEffects', () => {
+xdescribe('UpdateCaseAppEffects', () => {
 	let updateCaseAppEffects: UpdateCaseAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;

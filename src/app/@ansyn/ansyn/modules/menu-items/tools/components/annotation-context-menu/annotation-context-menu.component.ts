@@ -13,7 +13,7 @@ import {
 	ToolsActionsTypes
 } from '../../actions/tools.actions';
 import { IMapSettings } from '@ansyn/imagery';
-import { IAnnotationsSelectionEventData } from '../../models/annotations.model';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '../../models/annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -42,10 +42,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 		tap((action: AnnotationSelectAction) => {
 			const { boundingRect } = action.payload;
 			switch (action.payload.interactionType) {
-				case 'click':
+				case AnnotationInteraction.click:
 					this.clickMenuProps = action.payload;
 					break;
-				case 'hover':
+				case AnnotationInteraction.hover:
 					if ((!this.clickMenuProps || this.clickMenuProps.featureId !== action.payload.featureId) && boundingRect) {
 						this.hoverMenuProps = action.payload;
 					} else {

@@ -47,6 +47,7 @@ describe('AnnotationContextMenuComponent', () => {
 		store = _store;
 		fixture = TestBed.createComponent(AnnotationContextMenuComponent);
 		component = fixture.componentInstance;
+		component.mapState = <any> { id: 'mapId' }
 		actions = _actions;
 		fixture.detectChanges();
 	}));
@@ -68,7 +69,7 @@ describe('AnnotationContextMenuComponent', () => {
 				interactionType: AnnotationInteraction.click,
 				featureId: 'featureId',
 				label: '',
-				mapId: 'mapid',
+				mapId: 'mapId',
 				style: {},
 				boundingRect: {
 					top: 100,
@@ -80,8 +81,7 @@ describe('AnnotationContextMenuComponent', () => {
 
 			actions.next(action);
 
-
-			expect((<IAnnotationsSelectionEventData>component.clickMenuProps).boundingRect).toEqual({
+			expect(component.clickMenuProps.boundingRect).toEqual({
 				top: 100,
 				height: 100,
 				left: 100,
@@ -101,7 +101,7 @@ describe('AnnotationContextMenuComponent', () => {
 			showLabel: true,
 			featureId: 'featureId',
 			label: 'label',
-			mapId: 'id',
+			mapId: 'mapId',
 			type: 'Rectangle',
 			style: {},
 			boundingRect: {

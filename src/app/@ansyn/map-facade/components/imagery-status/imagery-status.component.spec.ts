@@ -11,6 +11,7 @@ import { MockComponent } from '../../test/mock-component';
 import { FormsModule } from '@angular/forms';
 import { AlertsModule } from '../../alerts/alerts.module';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
@@ -24,7 +25,8 @@ describe('ImageryStatusComponent', () => {
 				AlertsModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({
-					[imageryStatusFeatureKey]: ImageryStatusReducer
+					[imageryStatusFeatureKey]: ImageryStatusReducer,
+					[mapFeatureKey]: MapReducer
 				})
 			],
 			declarations: [
@@ -49,7 +51,7 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(inject([], () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
-		component.mapState = <any> { id: 'test' };
+		component.mapState = <any> { id: 'test', flags: { displayLayers: true } };
 		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();
@@ -67,6 +69,7 @@ describe('ImageryStatusComponent', () => {
 
 	it('check click on toggleMapSynchronization', () => {
 		spyOnProperty(component, 'noGeoRegistration', 'get').and.returnValue(false);
+		component.mapsAmount = 2;
 		fixture.detectChanges();
 		spyOn(component.toggleMapSynchronization, 'emit');
 		fixture.nativeElement.querySelector('.link-maps').click();

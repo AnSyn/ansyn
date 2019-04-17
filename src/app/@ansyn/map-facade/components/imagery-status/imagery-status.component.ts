@@ -271,7 +271,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleMapLayers() {
-		// this.mapState.flags.displayLayers = !this.mapState.flags.displayLayers;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapState.id }));
 	}
 

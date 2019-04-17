@@ -6,6 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MockComponent } from '../../test/mock-component';
 import { StoreModule } from '@ngrx/store';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { EntryComponentDirective } from '../../directives/entry-component.directive';
+import { ENTRY_COMPONENTS_PROVIDER } from '../../models/entry-components-provider';
 
 describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
@@ -18,13 +20,15 @@ describe('ImageryContainerComponent', () => {
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })
 			],
 			providers: [
-				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig> { mapSearch: {} } }
+				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig> { mapSearch: {} } },
+				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] },
 			],
 			declarations: [
 				ImageryContainerComponent,
+				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-imagery-status',
-					inputs: ['mapId', 'overlay', 'active', 'layerFlag', 'mapsAmount'],
+					inputs: ['mapState'],
 					outputs: ['onMove', 'toggleMapSynchronization']
 				}),
 				MockComponent({

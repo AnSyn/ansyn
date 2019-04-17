@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import { combineLatest, Observable } from 'rxjs';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
@@ -12,6 +11,7 @@ import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
+import { EntitiesVisualizer } from '@ansyn/ol';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 

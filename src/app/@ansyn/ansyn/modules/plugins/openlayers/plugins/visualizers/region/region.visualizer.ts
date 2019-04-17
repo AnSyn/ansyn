@@ -8,8 +8,7 @@ import { VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { EntitiesVisualizer } from '../entities-visualizer';
-import { OpenLayersProjectionService } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersProjectionService } from '@ansyn/ol';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
 import {
 	selectGeoFilterIndicator,

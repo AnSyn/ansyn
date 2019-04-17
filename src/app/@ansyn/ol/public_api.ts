@@ -1,3 +1,4 @@
+export { EntitiesVisualizer } from './plugins/entities-visualizer';
 export { ProjectableRaster } from './maps/open-layers-map/models/projectable-raster';
 export { OpenLayersProjectionService } from './projection/open-layers-projection.service';
 export { ExtentCalculator } from './utils/extent-calculator';

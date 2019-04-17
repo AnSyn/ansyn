@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import Draw from 'ol/interaction/Draw';
 import Select from 'ol/interaction/Select';
 import * as Sphere from 'ol/sphere';
@@ -33,7 +32,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { featureCollection } from '@turf/turf';
-import { OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { OpenLayersProjectionService } from '@ansyn/ol';
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';

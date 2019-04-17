@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import { Observable, of } from 'rxjs';
 import { Inject } from '@angular/core';
 import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
@@ -7,7 +6,7 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { map, tap } from 'rxjs/operators';
-import { OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { UUID } from 'angular2-uuid';
 import { feature } from '@turf/turf';
 

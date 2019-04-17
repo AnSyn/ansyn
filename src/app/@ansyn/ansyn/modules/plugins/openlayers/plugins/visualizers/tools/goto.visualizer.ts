@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import { combineLatest, Observable, of } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import Icon from 'ol/style/Icon';
@@ -9,7 +8,7 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '@ansyn/ol';
 import {

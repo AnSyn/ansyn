@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import olFeature from 'ol/Feature';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
@@ -12,7 +11,7 @@ import { ImageryVisualizer } from '@ansyn/imagery';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { distinctUntilChanged, filter, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '@ansyn/ol';
 

@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import Feature from 'ol/Feature';
 import Draw from 'ol/interaction/Draw';
 import Text from 'ol/style/Text';
@@ -20,7 +19,7 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 import { OpenLayersProjectionService } from '@ansyn/ol';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';

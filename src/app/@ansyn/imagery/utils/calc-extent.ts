@@ -1,6 +1,6 @@
 import { Feature, MultiPolygon, Polygon as geoPolygon } from 'geojson';
 import { area, bbox, feature, intersect, polygon, unkinkPolygon } from '@turf/turf';
-import { ImageryMapExtent } from '@ansyn/imagery';
+import { ImageryMapExtent } from '../model/case-map-position.model';
 
 export function extentFromGeojson(footprint: MultiPolygon | geoPolygon): ImageryMapExtent {
 	const footprintFeature: Feature<any> = feature(footprint);

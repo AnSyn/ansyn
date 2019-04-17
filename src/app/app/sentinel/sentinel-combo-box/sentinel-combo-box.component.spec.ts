@@ -28,6 +28,7 @@ describe('SentinelComboBoxComponent', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		fixture = TestBed.createComponent(SentinelComboBoxComponent);
 		component = fixture.componentInstance;
+		component.mapState = <any> { id: 'mapId' };
 		fixture.detectChanges();
 		store = _store;
 
@@ -45,7 +46,6 @@ describe('SentinelComboBoxComponent', () => {
 
 	it('changeLayer must fire SetSentinelLayerOnMap action', () => {
 		spyOn(store, 'dispatch');
-		component.mapState = <any> { id: 'mapId' };
 		const layer = 'TRUE_COLOR';
 		component.changeLayer(layer);
 		expect(store.dispatch).toHaveBeenCalledWith( new SetSentinelLayerOnMap({id: component.mapState.id, layer}));

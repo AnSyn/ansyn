@@ -1,3 +1,5 @@
+export * from './plugins/plugins.config';
+
 export { OL_CONFIG } from './config/ol-config';
 export { OpenLayerBingSourceProviderSourceType } from './mapSourceProviders/open-layers-BING-source-provider';
 export { EntitiesVisualizer } from './plugins/entities-visualizer';
@@ -22,3 +24,6 @@ export { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-lay
 export { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 export { OpenLayerMarcoSourceProvider } from './mapSourceProviders/marco/open-layers-MARCO-source-provider';
 export { toDegrees, toRadians } from './utils/math';
+
+export * from './plugins/annotations/annotations.model'
+export * from './plugins/annotations/annotations.visualizer'

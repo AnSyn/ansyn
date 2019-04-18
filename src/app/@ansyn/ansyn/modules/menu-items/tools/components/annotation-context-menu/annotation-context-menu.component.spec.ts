@@ -9,7 +9,7 @@ import { EventEmitter } from '@angular/core';
 import {
 	AnnotationInteraction,
 	IAnnotationsSelectionEventData
-} from '../../models/annotations.model';
+} from '../../../../../../ol/plugins/annotations/annotations.model';
 import {
 	AnnotationsColorComponent,
 	AnnotationsWeightComponent, ClickOutsideDirective, ColorPickerComponent,

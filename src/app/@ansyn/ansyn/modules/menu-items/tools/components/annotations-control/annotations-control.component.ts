@@ -10,7 +10,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
-import { AnnotationMode } from '../../models/annotations.model';
+import { AnnotationMode } from '@ansyn/ol';
 
 export interface IModeList {
 	mode: AnnotationMode;

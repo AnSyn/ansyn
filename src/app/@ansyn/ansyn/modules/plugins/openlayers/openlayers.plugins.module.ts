@@ -11,7 +11,7 @@ import { FootprintHeatmapVisualizer } from './plugins/visualizers/overlays/heatm
 import { AlertsPlugin } from './plugins/alerts/alerts.plugin';
 import { FrameVisualizer } from './plugins/visualizers/overlays/frame-visualizer';
 import { FootprintPolylineVisualizer } from './plugins/visualizers/overlays/polyline-visualizer';
-import { AnnotationsVisualizer } from './plugins/visualizers/tools/annotations.visualizer';
+import { AnsynAnnotationsVisualizer } from './plugins/visualizers/tools/annotations.visualizer';
 import { MeasureDistanceVisualizer } from './plugins/visualizers/tools/measure-distance.visualizer';
 import { GoToVisualizer } from './plugins/visualizers/tools/goto.visualizer';
 import { PinPointVisualizer } from './plugins/visualizers/region/pin-point.visualizer';
@@ -21,6 +21,7 @@ import { OpenlayersGeoJsonLayersVisualizer } from './plugins/layers/openlayers-g
 import { TaskRegionVisualizer } from './plugins/visualizers/algorithms/task-region.visualizer';
 import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis-layers.pulgin";
 import {
+	AnnotationsVisualizer,
 	OpenLayerBingSourceProvider,
 	OpenLayerESRI4326SourceProvider,
 	OpenLayerIDAHOSourceProvider,
@@ -51,6 +52,7 @@ import {
 				FrameVisualizer,
 				FootprintPolylineVisualizer,
 				AnnotationsVisualizer,
+				AnsynAnnotationsVisualizer,
 				MeasureDistanceVisualizer,
 				GoToVisualizer,
 				PinPointVisualizer,

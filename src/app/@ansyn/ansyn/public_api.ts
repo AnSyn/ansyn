@@ -327,8 +327,7 @@ export { CesiumLayer, ISceneMode } from './modules/plugins/cesium/models/cesium-
 
 export {
 	AnnotationInteraction,
-	AnnotationMode,
 	IAnnotationBoundingRect,
 	IAnnotationsSelectionEventData,
 	IUpdateFeatureEvent
-} from './modules/menu-items/tools/models/annotations.model';
+} from '../ol/plugins/annotations/annotations.model';

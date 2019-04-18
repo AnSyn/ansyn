@@ -1,3 +1,6 @@
+import olFeature from 'ol/Feature';
+import { FeatureCollection, GeometryObject } from 'geojson';
+
 export interface IAnnotationBoundingRect {
 	top: number;
 	left: number;
@@ -29,4 +32,9 @@ export type AnnotationMode = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Re
 export enum AnnotationInteraction {
 	click = 'click',
 	hover = 'hover'
+}
+
+export interface IDrawEndEvent {
+	GeoJSON: FeatureCollection<GeometryObject>;
+	feature: olFeature;
 }

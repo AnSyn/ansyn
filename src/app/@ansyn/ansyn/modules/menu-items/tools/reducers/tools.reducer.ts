@@ -3,7 +3,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { IVisualizerStyle } from '@ansyn/imagery';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
-import { AnnotationMode } from '../models/annotations.model';
+import { AnnotationMode } from '@ansyn/ol';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',

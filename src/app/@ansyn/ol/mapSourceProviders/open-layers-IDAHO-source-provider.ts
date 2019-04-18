@@ -1,4 +1,5 @@
 import {
+	IMapSettings,
 	CacheService,
 	ImageryCommunicatorService,
 	ImageryMapSource,
@@ -10,8 +11,6 @@ import { Inject } from '@angular/core';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
-import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
-import { IOverlay } from '../../../overlays/models/overlay.model';
 
 export const OpenLayerIDAHOSourceProviderSourceType = 'IDAHO';
 
@@ -28,7 +27,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	create(metaData: ICaseMapState): Promise<any> {
+	create(metaData: IMapSettings): Promise<any> {
 		let layerPromise;
 
 		if (metaData.data.overlay.channel === 1) {
@@ -74,7 +73,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		return layerPromise;
 	}
 
-	getColorChannel(overlay: IOverlay, imageData: any): string {
+	getColorChannel(overlay: any, imageData: any): string {
 		let rgbBans: string;
 		if (imageData && imageData.bandAliases) {
 			const rIndex = imageData.bandAliases.indexOf('R');
@@ -92,11 +91,11 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		return this.getBandsSection(overlay, rgbBans);
 	}
 
-	getBandsSection(overlay: IOverlay, bands: string): string {
+	getBandsSection(overlay: any, bands: string): string {
 		return '&bands=' + bands;
 	}
 
-	getPannedSection(overlay: IOverlay, associationData: any): string {
+	getPannedSection(overlay: any, associationData: any): string {
 		if (associationData.associations && associationData.associations.length > 0) {
 			// overlay.imageUrl = overlay.baseImageUrl + '&panId=' + associationData.associations[0].imageId;
 			return '&panId=' + associationData.associations[0].imageId;
@@ -104,7 +103,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		return '';
 	}
 
-	getImageData(overlay: IOverlay, token, fileName: string): Promise<any> {
+	getImageData(overlay: any, token, fileName: string): Promise<any> {
 		const idahoElement = overlay.tag;
 		const fileUrl = `http://idaho.geobigdata.io/v1/metadata/${idahoElement.properties.bucketName}/${overlay.id}/${fileName}.json`;
 

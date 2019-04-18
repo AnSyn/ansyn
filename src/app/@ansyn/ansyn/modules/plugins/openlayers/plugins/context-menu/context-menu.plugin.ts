@@ -9,8 +9,8 @@ import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, select
 import { areCoordinatesNumeric } from '@ansyn/imagery'
 import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
-import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersProjectionService } from '@ansyn/ol';
 import { overlaysStateSelector } from '../../../../overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '../../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../../overlays/models/overlay.model';

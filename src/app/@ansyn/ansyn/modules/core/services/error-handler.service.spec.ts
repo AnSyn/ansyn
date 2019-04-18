@@ -6,7 +6,6 @@ import { SetToastMessageAction } from '@ansyn/map-facade';
 import { catchError } from 'rxjs/internal/operators';
 import { Observable, of } from 'rxjs/index';
 import { CoreConfig } from '../models/core.config';
-import { ICoreConfig } from '../models/core.config.model';
 
 describe('ErrorHandlerService', () => {
 	let service: ErrorHandlerService;
@@ -17,7 +16,7 @@ describe('ErrorHandlerService', () => {
 			providers: [
 				{
 					provide: CoreConfig,
-					useValue: <ICoreConfig> { needToUseLayerExtent: false }
+					useValue: {}
 				},
 				ErrorHandlerService,
 				{

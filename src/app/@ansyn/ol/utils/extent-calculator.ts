@@ -1,7 +1,7 @@
 import { center, polygon } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
-import { toRadians } from '@ansyn/map-facade';
 import { ImageryMapExtent, ImageryMapExtentPolygon } from '@ansyn/imagery';
+import { toRadians } from './math';
 
 // @dynamic
 export class ExtentCalculator {

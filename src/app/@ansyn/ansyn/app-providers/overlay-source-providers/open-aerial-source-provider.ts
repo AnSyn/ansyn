@@ -19,7 +19,7 @@ import { ErrorHandlerService } from '../../modules/core/services/error-handler.s
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { limitArray } from '../../modules/core/utils/i-limited-array';
 import { sortByDateDesc } from '../../modules/core/utils/sorting';
-import { toRadians } from '@ansyn/map-facade';
+import { toRadians } from '@ansyn/ol';
 import { GeoRegisteration, IOverlay, Overlay } from '../../modules/overlays/models/overlay.model';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;

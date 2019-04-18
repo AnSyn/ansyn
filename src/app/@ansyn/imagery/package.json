@@ -9,6 +9,6 @@
 		"@angular/core": "^7.2.2"
 	},
 	"dependencies": {
-		"auto-subscriptions": "^1.0.3"
+		"auto-subscriptions": "^2.0.5"
 	}
 }

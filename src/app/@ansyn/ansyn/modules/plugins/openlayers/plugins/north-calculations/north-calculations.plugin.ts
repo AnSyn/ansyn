@@ -17,12 +17,10 @@ import {
 	BackToWorldView,
 	MapActionTypes,
 	PointToRealNorthAction,
-	selectActiveMapId,
-	toDegrees,
-	toRadians
+	selectActiveMapId
 } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap, toDegrees, toRadians } from '@ansyn/ol';
 import {
 	catchError,
 	debounceTime,
@@ -38,7 +36,7 @@ import {
 
 import OLMap from 'ol/Map';
 import View from 'ol/View';
-import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '@ansyn/ol';
 import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 import { LoggerService } from '../../../../core/services/logger.service';
 import {

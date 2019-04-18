@@ -29,9 +29,8 @@ import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
-import { CoreConfig } from 'src/app/@ansyn/ansyn/modules/core/models/core.config';
-import { ICoreConfig } from '../../../../../core/models/core.config.model';
-import { ExtentCalculator } from '../../../../../core/utils/extent-calculator';
+import { ExtentCalculator } from '../../../utils/extent-calculator';
+import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -42,7 +41,7 @@ export enum StaticGroupsKeys {
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [HttpClient, OpenLayersProjectionService, CoreConfig]
+	deps: [HttpClient, OpenLayersProjectionService, OL_CONFIG]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
@@ -71,8 +70,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			filter((payload: IMapProgress) => {
 				return payload.progress === 100;
 			}),
-			debounceTime(this.coreConfig.tilesLoadingDoubleBuffer.debounceTimeInMs), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
-			takeUntil(timer(this.coreConfig.tilesLoadingDoubleBuffer.timeoutInMs).pipe(tap(() => {
+			debounceTime(this.olConfig.tilesLoadingDoubleBuffer.debounceTimeInMs), // Adding debounce, to compensate for strange multiple loads when reading tiles from the browser cache (e.g. after browser refresh)
+			takeUntil(timer(this.olConfig.tilesLoadingDoubleBuffer.timeoutInMs).pipe(tap(() => {
 				this.isLoading$.next(false);
 			}))),
 			tap(() => {
@@ -88,15 +87,15 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(protected http: HttpClient,
 				public projectionService: OpenLayersProjectionService,
-				@Inject(CoreConfig) public coreConfig: ICoreConfig
+				@Inject(OL_CONFIG) public olConfig: IOlConfig
 	) {
 		super();
 		// todo: a more orderly way to give default values to config params
-		this.coreConfig['tilesLoadingDoubleBuffer'] =  this.coreConfig['tilesLoadingDoubleBuffer'] || {
+		this.olConfig.tilesLoadingDoubleBuffer =  this.olConfig.tilesLoadingDoubleBuffer || {
 			debounceTimeInMs: 500,
 			timeoutInMs: 3000
 		};
-		this.coreConfig['floatingPositionSuffix'] = this.coreConfig['floatingPositionSuffix'] || '';
+		this.olConfig.floatingPositionSuffix = this.olConfig.floatingPositionSuffix || '';
 	}
 
 	/**
@@ -139,7 +138,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			new AttributionControl(),
 			new OpenLayersMousePositionControl({
 					projection: 'EPSG:4326',
-					coordinateFormat: (coords: [number, number]): string => coords.map((num) => + num.toFixed(4)).toString() + this.coreConfig.floatingPositionSuffix
+					coordinateFormat: (coords: [number, number]): string => coords.map((num) => + num.toFixed(4)).toString() + this.olConfig.floatingPositionSuffix
 				},
 				(point) => this.projectionService.projectApproximately(point, this.mapObject))
 		];
@@ -450,7 +449,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				return null;
 			}
 
-			if (this.coreConfig.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
+			if (this.olConfig.needToUseLayerExtent && this.needToUseLayerExtent(layerExtentPolygon, extentPolygon)) {
 				extentPolygon = layerExtentPolygon;
 			}
 

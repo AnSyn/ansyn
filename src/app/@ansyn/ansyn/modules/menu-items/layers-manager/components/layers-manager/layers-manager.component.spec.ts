@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { LoggerConfig } from '../../../../core/models/logger.config';
+import { casesFeatureKey, CasesReducer } from '../../../cases/reducers/cases.reducer';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -22,7 +23,10 @@ describe('LayersManagerComponent', () => {
 				HttpClientModule,
 				BrowserAnimationsModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
+				StoreModule.forRoot({
+					[layersFeatureKey]: LayersReducer,
+					[casesFeatureKey]: CasesReducer
+				})
 			],
 			providers: [
 				{ provide: layersConfig, useValue: { schema: null } },

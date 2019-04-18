@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AnsynApi, GeoRegisteration, IOverlay, IOverlaysCriteria, PhotoAngle } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
-import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ansyn';
+import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ol';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from "@ansyn/imagery";

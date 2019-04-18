@@ -14,7 +14,7 @@ import {
 	selectMaps,
 	SetIsLoadingAcion
 } from '@ansyn/map-facade';
-import * as extentFromGeojson from '@ansyn/map-facade';
+import * as extentFromGeojson from '@ansyn/imagery';
 import {
 	IBaseImageryMapConstructor, IMapSettings,
 	MAP_SOURCE_PROVIDERS_CONFIG

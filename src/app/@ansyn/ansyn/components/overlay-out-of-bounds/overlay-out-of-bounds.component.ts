@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, extentFromGeojson } from '@ansyn/imagery';
 import { take } from 'rxjs/operators';
-import { extentFromGeojson, IEntryComponent } from '@ansyn/map-facade';
+import { IEntryComponent } from '@ansyn/map-facade';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 
 @Component({

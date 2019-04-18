@@ -1,22 +1,20 @@
-import { BaseMapSourceProvider, ImageryLayerProperties, IMapSettings } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryLayerProperties, extentFromGeojson, IMapSettings } from '@ansyn/imagery';
 import Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import TileLayer from 'ol/layer/Tile';
 import * as proj from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-raster';
-import { extentFromGeojson } from '@ansyn/map-facade';
-import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
-	create(metaData: ICaseMapState): Promise<any[]> {
+	create(metaData: IMapSettings): Promise<any[]> {
 		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
 		const extent = this.getExtent(metaData.data.overlay.footprint);
 		const tileLayer = this.getTileLayer(source, extent);
 		return Promise.resolve(tileLayer);
 	}
 
-	generateLayerId(metaData: ICaseMapState) {
+	generateLayerId(metaData: IMapSettings) {
 		if (metaData.data.overlay) {
 			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
 		}
@@ -75,7 +73,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return source;
 	}
 
-	generateExtraData(metaData: ICaseMapState) {
+	generateExtraData(metaData: IMapSettings) {
 		if (metaData.data.overlay) {
 			return { [ImageryLayerProperties.FOOTPRINT]: metaData.data.overlay.footprint }
 		}

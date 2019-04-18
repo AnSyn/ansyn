@@ -6,8 +6,6 @@ import {
 	IMapSettings
 } from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
-import { toDegrees } from '../../utils/math';
-
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -73,6 +71,10 @@ export class ImageryRotationComponent {
 				protected store: Store<any>) {
 	}
 
+	toDegrees(radians: number): number {
+		return radians * 180 / Math.PI;
+	}
+
 	isGeoRegistered() {
 		return !this.mapState.data.overlay || (this.mapState.data.overlay.isGeoRegistered !== 'notGeoRegistered');
 	}
@@ -87,7 +89,7 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		if (Math.abs(toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
+		if (Math.abs(this.toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
 				this.setRotation(overlay.azimuth);

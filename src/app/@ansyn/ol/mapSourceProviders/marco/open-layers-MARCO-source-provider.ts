@@ -4,13 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import Layer from 'ol/layer/Layer';
 import TileLayer from 'ol/layer/Tile';
 import ImageLayer from 'ol/layer/Image';
-
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
 	CacheService,
 	ImageryCommunicatorService,
 	ImageryMapSource,
+	IMapSettings,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
@@ -20,9 +18,6 @@ import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openla
 import { removeWorkers } from '../../maps/open-layers-map/shared/openlayers-shared';
 import { MpTileSource } from './ol-utils/mp-tile-source';
 import { MpTileImageSource } from './ol-utils/mp-tile-image-source';
-import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
-import { IOverlay } from '../../../../overlays/models/overlay.model';
-import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 
 export const OpenLayerMarcoSourceProviderSourceType = 'MARCO_WMTS';
 
@@ -44,36 +39,16 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
-				protected http: HttpClient,
-				protected errorHandlerService: ErrorHandlerService) {
+				protected http: HttpClient) {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 		this.server = this.config.tilesServerUrl;
 	}
 
-	public create(caseMapState: ICaseMapState | any): any {
+	public create(caseMapState: IMapSettings | any): any {
 		const overlayMetaData = caseMapState.data.overlay;
 		const projectionKey = `projectionKey_${overlayMetaData.id}`;
 
 		return this.createTileLayer(overlayMetaData.imageUrl, overlayMetaData.approximateTransform, overlayMetaData.min, overlayMetaData.max, projectionKey);
-	}
-
-	getThumbnailUrl(overlay: IOverlay) {
-		let { imageUrl, thumbnailUrl } = overlay;
-
-		if (thumbnailUrl) {
-			return of(thumbnailUrl);
-		}
-
-		imageUrl = this.encodeImagePath(imageUrl);
-
-		return this.getWMSCapabilities(imageUrl).pipe(
-			map((res: any) => {
-				const { minx, miny, maxx, maxy } = res.WMS_Capabilities.capability.layer.boundingBox[0];
-				const thumbnailUrl = this.wmsThumbnailUrl(imageUrl, [minx, miny, maxx, maxy]);
-				overlay.thumbnailUrl = thumbnailUrl;
-				return thumbnailUrl;
-			})
-		);
 	}
 
 	encodeImagePath(imagePath) {
@@ -149,27 +124,44 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 	private getWMTSCapabilities(url: string): Promise<any> {
 		return this.http.get(
 			`${this.server}${url}${this.config.capabilitiesUrl}`)
-			.pipe(
-				this.errorHandlerService.handleTimeoutError('Marco WMTSCapabilities.json')
-			).toPromise();
+			.toPromise();
 	}
 
-	wmsThumbnailUrl(url: string, bbox: number[]) {
-		let imageUrl = this.config.thumbnailImageUrl.replace('{url}', `${url}`);
-		imageUrl = imageUrl.replace('{bbox}', `${bbox}`);
-		return `${this.server}${imageUrl}`;
-	}
+	// wmsThumbnailUrl(url: string, bbox: number[]) {
+	// 	let imageUrl = this.config.thumbnailImageUrl.replace('{url}', `${url}`);
+	// 	imageUrl = imageUrl.replace('{bbox}', `${bbox}`);
+	// 	return `${this.server}${imageUrl}`;
+	// }
 
-	getWMSCapabilities(url: string) {
-		return this.http.get(`${this.server}wms/${url}`, {
-			params: {
-				request: 'GetCapabilities',
-				version: '1.0.0',
-				format: 'json',
-				service: 'WMS'
-			}
-		}).pipe(
-			this.errorHandlerService.handleTimeoutError('Marco WMTSCapabilities.json')
-		);
-	}
+	// getThumbnailUrl(overlay: IOverlay) {
+	// 	let { imageUrl, thumbnailUrl } = overlay;
+	//
+	// 	if (thumbnailUrl) {
+	// 		return of(thumbnailUrl);
+	// 	}
+	//
+	// 	imageUrl = this.encodeImagePath(imageUrl);
+	//
+	// 	return this.getWMSCapabilities(imageUrl).pipe(
+	// 		map((res: any) => {
+	// 			const { minx, miny, maxx, maxy } = res.WMS_Capabilities.capability.layer.boundingBox[0];
+	// 			const thumbnailUrl = this.wmsThumbnailUrl(imageUrl, [minx, miny, maxx, maxy]);
+	// 			overlay.thumbnailUrl = thumbnailUrl;
+	// 			return thumbnailUrl;
+	// 		})
+	// 	);
+	// }
+
+	// getWMSCapabilities(url: string) {
+	// 	return this.http.get(`${this.server}wms/${url}`, {
+	// 		params: {
+	// 			request: 'GetCapabilities',
+	// 			version: '1.0.0',
+	// 			format: 'json',
+	// 			service: 'WMS'
+	// 		}
+	// 	}).pipe(
+	// 		this.errorHandlerService.handleTimeoutError('Marco WMTSCapabilities.json')
+	// 	);
+	// }
 }

@@ -27,7 +27,16 @@ export interface IUpdateFeatureEvent {
 	properties: { [k: string]: any }
 }
 
-export type AnnotationMode = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Arrow' | undefined;
+export enum AnnotationMode {
+	Point = 'Point',
+	LineString = 'LineString',
+	Polygon = 'Polygon',
+	Circle = 'Circle',
+	Rectangle = 'Rectangle',
+	Arrow = 'Arrow',
+}
+
+export const ANNOTATION_MODE_LIST: AnnotationMode[] = Object.values(AnnotationMode);
 
 export enum AnnotationInteraction {
 	click = 'click',

@@ -1,6 +1,7 @@
 import { toolsFlags, toolsInitialState, ToolsReducer } from './tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
+import { AnnotationMode } from '@ansyn/ol';
 
 describe('ToolsReducer', () => {
 
@@ -9,7 +10,7 @@ describe('ToolsReducer', () => {
 	});
 
 	it('Check SET_ANNOTATION_MODE', () => {
-		const action = new SetAnnotationMode('Point');
+		const action = new SetAnnotationMode(AnnotationMode.Point);
 		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
 		expect(result.annotationMode).toBe('Point');
 	});

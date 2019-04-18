@@ -5,6 +5,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
 import { AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/map-facade';
+import { AnnotationMode } from '@ansyn/ol';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -51,13 +52,13 @@ describe('AnnotationsControlComponent', () => {
 
 	it('setAnnotationMode', () => {
 		component.mode = undefined;
-		component.setAnnotationMode('Point');
-		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode('Point'));
+		component.setAnnotationMode(AnnotationMode.Point);
+		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode(AnnotationMode.Point));
 	});
 
 	it('setAnnotationMode with mode set', () => {
-		component.mode = 'Point';
-		component.setAnnotationMode('Point');
+		component.mode = AnnotationMode.Point;
+		component.setAnnotationMode(AnnotationMode.Point);
 		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode());
 	});
 

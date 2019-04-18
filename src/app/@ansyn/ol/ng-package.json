@@ -4,7 +4,8 @@
   "whitelistedNonPeerDependencies": [
     "auto-subscriptions",
     "@turf/turf",
-    "ol"
+    "ol",
+    "angular2-uuid"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

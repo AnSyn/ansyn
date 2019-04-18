@@ -13,7 +13,7 @@ import {
 	ToolsActionsTypes
 } from '../../actions/tools.actions';
 import { IMapSettings } from '@ansyn/imagery';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '../../models/annotations.model';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/ol';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',

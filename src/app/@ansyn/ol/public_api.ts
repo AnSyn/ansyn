@@ -1,3 +1,5 @@
+export { ANNOTATION_MODE_LIST } from './plugins/annotations/annotations.model';
+export { OL_PLUGINS_CONFIG, IOLPluginsConfig } from './plugins/plugins.config';
 export { OL_CONFIG } from './config/ol-config';
 export { OpenLayerBingSourceProviderSourceType } from './mapSourceProviders/open-layers-BING-source-provider';
 export { EntitiesVisualizer } from './plugins/entities-visualizer';
@@ -6,7 +8,9 @@ export { OpenLayersProjectionService } from './projection/open-layers-projection
 export { ExtentCalculator } from './utils/extent-calculator';
 export { DisabledOpenLayersMapName } from './maps/openlayers-disabled-map/openlayers-disabled-map';
 export { OpenlayersMapName } from './maps/open-layers-map/openlayers-map/openlayers-map';
-export { OpenLayersStaticImageSourceProviderSourceType } from './mapSourceProviders/open-layers-static-image-source-provider';
+export {
+	OpenLayersStaticImageSourceProviderSourceType
+}from './mapSourceProviders/open-layers-static-image-source-provider';
 export { OpenLayerMarcoSourceProviderSourceType } from './mapSourceProviders/marco/open-layers-MARCO-source-provider';
 export { OpenLayersMapSourceProvider } from './mapSourceProviders/open-layers.map-source-provider';
 export { OpenLayersMap } from './maps/open-layers-map/openlayers-map/openlayers-map';
@@ -22,3 +26,14 @@ export { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-lay
 export { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 export { OpenLayerMarcoSourceProvider } from './mapSourceProviders/marco/open-layers-MARCO-source-provider';
 export { toDegrees, toRadians } from './utils/math';
+
+export {
+	AnnotationInteraction,
+	AnnotationMode,
+	IAnnotationBoundingRect,
+	IAnnotationsSelectionEventData,
+	IDrawEndEvent,
+	IUpdateFeatureEvent
+} from './plugins/annotations/annotations.model';
+
+export { AnnotationsVisualizer } from './plugins/annotations/annotations.visualizer';

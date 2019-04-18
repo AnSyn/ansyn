@@ -239,7 +239,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap.getRotation();
 	}
 
-	public getPlugin<T = BaseImageryPlugin>(plugin: any): T {
+	public getPlugin<T extends BaseImageryPlugin>(plugin: { new(...args): T }): T {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 

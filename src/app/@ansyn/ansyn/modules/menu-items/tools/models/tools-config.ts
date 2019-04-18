@@ -11,9 +11,6 @@ export interface IShadowMouseConfig {
 }
 
 export interface IToolsConfig {
-	Annotations: {
-		displayId: '0' | '1';
-	},
 	GoTo: {
 		from: ICoordinatesSystem;
 		to: ICoordinatesSystem;

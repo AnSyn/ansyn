@@ -12,57 +12,39 @@ import olText from 'ol/style/Text';
 import olStroke from 'ol/style/Stroke';
 
 import * as condition from 'ol/events/condition';
+
 import {
 	ImageryVisualizer,
 	IVisualizerEntity,
-	IVisualizerStyle,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { cloneDeep, uniq } from 'lodash';
+
+import { cloneDeep } from 'lodash';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { select, Store } from '@ngrx/store';
-import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { take, tap, mergeMap } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/GeoJSON';
-import { AutoSubscription } from 'auto-subscriptions';
 import { UUID } from 'angular2-uuid';
-import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
-import { featureCollection } from '@turf/turf';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
-import { OpenLayersProjectionService } from '@ansyn/ol';
-import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
-import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
-import {
-	selectActiveAnnotationLayer,
-	selectLayersEntities,
-	selectSelectedLayersIds
-} from '../../../../../menu-items/layers-manager/reducers/layers.reducer';
-import {
-	selectAnnotationMode,
-	selectAnnotationProperties,
-	selectSubMenu,
-	SubMenuEnum
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
-import { AnnotationSelectAction, SetAnnotationMode } from '../../../../../menu-items/tools/actions/tools.actions';
-import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
-import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
-import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
-import { IOverlay } from '../../../../../overlays/models/overlay.model';
+import { EntitiesVisualizer } from '../entities-visualizer';
+import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import {
 	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData
-} from '../../../../../menu-items/tools/models/annotations.model';
+	IAnnotationsSelectionEventData,
+	IDrawEndEvent
+} from './annotations.model';
+
 
 // @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, OpenLayersProjectionService, toolsConfig],
+	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -83,61 +65,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		offsetY: 30
 	};
 
-	activeAnnotationLayer$: Observable<ILayer> = this.store$
-		.pipe(
-			select(selectActiveAnnotationLayer),
-			withLatestFrom(this.store$.select(selectLayersEntities)),
-			map(([activeAnnotationLayerId, entities]) => entities[activeAnnotationLayerId])
-		);
-
-	currentOverlay$ = this.store$.pipe(
-		select(selectMapsList),
-		map((mapList) => MapFacadeService.mapById(mapList, this.mapId)),
-		filter(Boolean),
-		map((map: ICaseMapState) => map.data.overlay)
-	);
-
-	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
-		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
-		distinctUntilChanged());
-
-	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
-		map((activeMapId: string): boolean => activeMapId === this.mapId),
-		distinctUntilChanged()
-	);
-
-	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
-
-	@AutoSubscription
-	geoFilterSearchMode$ = this.store$.pipe(
-		select(selectGeoFilterSearchMode),
-		tap((searchMode: SearchMode) => {
-			this.mapSearchIsActive = searchMode !== SearchModeEnum.none;
-		})
-	);
-
-	@AutoSubscription
-	annoatationModeChange$: Observable<any> = combineLatest(this.annotationMode$, this.isActiveMap$)
-		.pipe(
-			tap(this.onModeChange.bind(this))
-		);
-
-	@AutoSubscription
-	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
-		select(selectAnnotationProperties),
-		tap((changes: Partial<IVisualizerStyle>) => this.updateStyle({ initial: { ...changes } }))
-	);
-
-	@AutoSubscription
-	onAnnotationsChange$ = combineLatest(
-		this.store$.pipe(select(selectLayersEntities)),
-		this.annotationFlag$,
-		this.store$.select(selectSelectedLayersIds),
-		this.isActiveMap$,
-		this.store$.select(selectActiveAnnotationLayer)
-	).pipe(
-		mergeMap(this.onAnnotationsChange.bind(this))
-	);
+	events = {
+		onClick: new Subject(),
+		onSelect: new Subject<IAnnotationsSelectionEventData>(),
+		onChangeMode: new Subject<AnnotationMode>(),
+		onDrawEnd: new Subject<IDrawEndEvent>()
+	};
 
 	modeDictionary = {
 		Arrow: {
@@ -163,7 +96,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		};
 	}
 
-	static findFeatureWithMinimumArea(featuresArray: any[]) {
+	findFeatureWithMinimumArea(featuresArray: any[]) {
 		return featuresArray.reduce((prevResult, currFeature) => {
 			const currGeometry = currFeature.getGeometry();
 			const currArea = currGeometry.getArea ? currGeometry.getArea() : 0;
@@ -210,18 +143,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
-	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {
-
-		const displayedIds = uniq(
-			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
-		)
-			.filter((id: string) => entities[id] && entities[id].type === LayerType.annotation);
-
-		const features = displayedIds.reduce((array, layerId) => [...array, ...entities[layerId].data.features], []);
-		return this.showAnnotation(featureCollection(features));
-	}
-
-	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService, @Inject(toolsConfig) toolsConfig: IToolsConfig) {
+	constructor(protected projectionService: OpenLayersProjectionService,
+				@Inject(OL_PLUGINS_CONFIG) olPluginsConfig: IOLPluginsConfig) {
 
 		super(null, {
 			initial: {
@@ -250,7 +173,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 
 		//  0 or 1
-		if (Number(toolsConfig.Annotations.displayId)) {
+		if (Number(olPluginsConfig.Annotations.displayId)) {
 			this.updateStyle({
 				initial: {
 					label: {
@@ -264,8 +187,28 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
+	setMode(mode) {
+		if (this.mode !== mode) {
+			this.mode = mode;
+			this.removeDrawInteraction();
+
+			if (this.mode) {
+				const drawInteractionHandler = new Draw({
+					type: this.modeDictionary[mode] ? this.modeDictionary[mode].type : mode,
+					geometryFunction: this.modeDictionary[mode] ? this.modeDictionary[mode].geometryFunction : undefined,
+					condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
+					style: this.featureStyle.bind(this)
+				});
+
+				drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
+				this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
+			}
+			this.events.onChangeMode.next(mode);
+		}
+	}
+
 	resetInteractions(): void {
-		this.store$.dispatch(new SetAnnotationMode());
+		this.setMode(null);
 		this.removeInteraction(VisualizerInteractions.click);
 		this.addInteraction(VisualizerInteractions.click, this.createClickInteraction());
 		this.removeInteraction(VisualizerInteractions.pointerMove);
@@ -287,7 +230,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		const selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(event.selected);
+		const selectedFeature = this.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
 		const { id, showMeasures, label, showLabel, style } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
@@ -301,7 +244,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			showMeasures,
 			showLabel
 		};
-		this.store$.dispatch(new AnnotationSelectAction(eventData));
+
+		this.events.onSelect.next(eventData);
 	}
 
 	clearCurrentHoverSelection() {
@@ -333,7 +277,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let selectedFeature, boundingRect, id, label, showLabel, style;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
-			selectedFeature = AnnotationsVisualizer.findFeatureWithMinimumArea(selected);
+			selectedFeature = this.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
 			id = this.getEntity(selectedFeature).id;
 			label = this.getEntity(selectedFeature).label;
@@ -350,7 +294,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			interactionType: AnnotationInteraction.hover,
 			showLabel: showLabel
 		};
-		this.store$.dispatch(new AnnotationSelectAction(eventData));
+		this.events.onSelect.next(eventData);
 	}
 
 	getFeatureBoundingRect(selectedFeature): IAnnotationBoundingRect {
@@ -398,17 +342,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
-
-		this.store$.dispatch(new SetAnnotationMode());
+		this.setMode(null);
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any>geometry.clone();
-
 		if (cloneGeometry instanceof olCircle) {
 			cloneGeometry = <any>fromCircle(<any>cloneGeometry);
 		}
-
 		feature.setGeometry(cloneGeometry);
-
 		feature.setProperties({
 			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle),
@@ -422,19 +362,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
 				take(1),
-				withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
-				tap(([featureCollection, activeAnnotationLayer, overlay]: [FeatureCollection<GeometryObject>, ILayer, IOverlay]) => {
-					const [geoJsonFeature] = featureCollection.features;
-					const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
-					data.features.push(geoJsonFeature);
-					if (overlay) {
-						geoJsonFeature.properties = {
-							...geoJsonFeature.properties,
-							...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay)
-						};
-					}
-					geoJsonFeature.properties = { ...geoJsonFeature.properties };
-					this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+				mergeMap((GeoJSON: FeatureCollection<GeometryObject>) => {
+					return this.addOrUpdateEntities(this.annotationsLayerToEntities(GeoJSON)).pipe(
+						tap(() => this.events.onDrawEnd.next({ GeoJSON, feature }))
+					);
 				})
 			).subscribe();
 
@@ -442,31 +373,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	removeDrawInteraction() {
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
-	}
-
-	onModeChange([mode, isActiveMap]: [AnnotationMode, boolean]) {
-		this.removeDrawInteraction();
-
-		if (!isActiveMap) {
-			this.mode = undefined;
-			return;
-		}
-
-		this.mode = mode === this.mode ? undefined : mode;
-
-		if (!this.mode) {
-			return;
-		}
-
-		const drawInteractionHandler = new Draw({
-			type: this.modeDictionary[mode] ? this.modeDictionary[mode].type : mode,
-			geometryFunction: this.modeDictionary[mode] ? this.modeDictionary[mode].geometryFunction : undefined,
-			condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
-			style: this.featureStyle.bind(this)
-		});
-
-		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
-		this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
 	}
 
 	rectangleGeometryFunction([topLeft, bottomRight], opt_geometry) {

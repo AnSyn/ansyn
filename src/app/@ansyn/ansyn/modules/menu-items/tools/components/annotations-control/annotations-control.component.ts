@@ -10,12 +10,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
-import { AnnotationMode } from '../../models/annotations.model';
-
-export interface IModeList {
-	mode: AnnotationMode;
-	icon: string;
-}
+import { ANNOTATION_MODE_LIST, AnnotationMode } from '@ansyn/ol';
 
 export enum SelectionBoxTypes {
 	None,
@@ -71,14 +66,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	public mode: AnnotationMode;
 	public annotationProperties: Partial<IVisualizerStyle>;
 
-	public modesList: IModeList[] = [
-		{ mode: 'Point', icon: 'point' },
-		{ mode: 'LineString', icon: 'line' },
-		{ mode: 'Polygon', icon: 'polygon' },
-		{ mode: 'Circle', icon: 'circle' },
-		{ mode: 'Rectangle', icon: 'square' },
-		{ mode: 'Arrow', icon: 'arrow' }
-	];
+	public ANNOTATION_MODE_LIST = ANNOTATION_MODE_LIST;
 
 	@HostBinding('class.expand')
 	@Input()

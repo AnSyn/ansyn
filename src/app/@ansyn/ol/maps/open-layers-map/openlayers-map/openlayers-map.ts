@@ -31,6 +31,7 @@ import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import { ExtentCalculator } from '../../../utils/extent-calculator';
 import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
+import * as olInteraction from 'ol/interaction'
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -147,6 +148,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target,
 			renderer,
 			controls,
+			interaction: olInteraction.defaults({ doubleClickZoom: false }),
 			loadTilesWhileInteracting: true,
 			loadTilesWhileAnimating: true
 		});

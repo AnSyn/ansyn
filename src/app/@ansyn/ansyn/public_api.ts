@@ -324,10 +324,3 @@ export { OpenlayersGeoJsonLayersVisualizer } from './modules/plugins/openlayers/
 
 export { CesiumMap } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
 export { CesiumLayer, ISceneMode } from './modules/plugins/cesium/models/cesium-layer';
-
-export {
-	AnnotationInteraction,
-	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData,
-	IUpdateFeatureEvent
-} from '../ol/plugins/annotations/annotations.model';

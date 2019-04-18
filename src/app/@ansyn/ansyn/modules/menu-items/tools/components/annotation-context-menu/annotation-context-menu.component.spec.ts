@@ -7,16 +7,13 @@ import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 import {
-	AnnotationInteraction,
-	IAnnotationsSelectionEventData
-} from '../../../../../../ol/plugins/annotations/annotations.model';
-import {
 	AnnotationsColorComponent,
 	AnnotationsWeightComponent, ClickOutsideDirective, ColorPickerComponent,
 	IMapState, mapFeatureKey, MapReducer,
 	PositionChangedAction
 } from '@ansyn/map-facade';
 import { AnnotationSelectAction } from '../../actions/tools.actions';
+import { AnnotationInteraction } from '@ansyn/ol';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;

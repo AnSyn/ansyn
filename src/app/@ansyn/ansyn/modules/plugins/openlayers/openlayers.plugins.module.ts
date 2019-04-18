@@ -11,7 +11,7 @@ import { FootprintHeatmapVisualizer } from './plugins/visualizers/overlays/heatm
 import { AlertsPlugin } from './plugins/alerts/alerts.plugin';
 import { FrameVisualizer } from './plugins/visualizers/overlays/frame-visualizer';
 import { FootprintPolylineVisualizer } from './plugins/visualizers/overlays/polyline-visualizer';
-import { AnsynAnnotationsVisualizer } from './plugins/visualizers/tools/annotations.visualizer';
+import { AnsynAnnotationsVisualizer } from './plugins/visualizers/tools/ansyn.annotations.visualizer';
 import { MeasureDistanceVisualizer } from './plugins/visualizers/tools/measure-distance.visualizer';
 import { GoToVisualizer } from './plugins/visualizers/tools/goto.visualizer';
 import { PinPointVisualizer } from './plugins/visualizers/region/pin-point.visualizer';

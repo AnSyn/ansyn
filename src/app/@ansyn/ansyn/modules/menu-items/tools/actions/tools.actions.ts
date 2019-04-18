@@ -4,8 +4,7 @@ import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
-import { IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '../../../../../ol/plugins/annotations/annotations.model';
-import { AnnotationMode } from '@ansyn/ol';
+import { AnnotationMode, IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/ol';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -36,7 +35,7 @@ export const ToolsActionsTypes = {
 
 	ANNOTATION_SELECT: 'ANNOTATION_SELECT',
 	ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
-	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE',
+	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE'
 };
 
 export class UpdateOverlaysManualProcessArgs implements Action {

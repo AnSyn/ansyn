@@ -26,8 +26,6 @@ import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.
 import { ENTRY_COMPONENTS_ENTITIES, EntryComponentsProvider } from './models/entry-components-provider';
 import { IEntryComponent } from './directives/entry-component.directive';
 
-export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
-
 @NgModule({
 	imports: [
 		StoreModule.forFeature(mapFeatureKey, MapReducer),

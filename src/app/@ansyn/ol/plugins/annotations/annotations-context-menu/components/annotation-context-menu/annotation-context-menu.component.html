@@ -8,7 +8,7 @@
 	 (ansynClickOutside)="close()">
 	<!-- Using pointerdown for current Chrome, and mousedown for Chrome 44 -->
 
-	<div class="context-menu">
+	<div class="context-menu" [style.outline-color]="'white'">
 		<ul class="buttons">
 			<li>
 				<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()"><i

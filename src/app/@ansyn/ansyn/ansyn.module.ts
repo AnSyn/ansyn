@@ -29,8 +29,8 @@ import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { HelpModule } from './modules/menu-items/help/help.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
-import { AnnotationContextMenuComponent } from '../ol/plugins/annotations/annotations-context-menu/components/annotation-context-menu/annotation-context-menu.component';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
+import { AnnotationContextMenuComponent } from '@ansyn/ol';
 
 @NgModule({
 	imports: [

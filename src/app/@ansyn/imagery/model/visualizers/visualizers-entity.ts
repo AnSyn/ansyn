@@ -5,7 +5,6 @@ export interface IVisualizerEntity {
 	id: string;
 	label?: string;
 	featureJson: Feature<any>;
-	state?: 'static' | 'activeDisplad';
 	type?: string;
 	style?: Partial<IVisualizerStateStyle>;
 	showMeasures?: boolean;

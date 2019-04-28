@@ -15,17 +15,17 @@ import * as condition from 'ol/events/condition';
 
 import {
 	ImageryVisualizer,
-	IVisualizerEntity,
+	IVisualizerEntity, IVisualizerStateStyle,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
 
-import { cloneDeep } from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Inject } from '@angular/core';
-import { take, tap, mergeMap } from 'rxjs/operators';
+import { mergeMap, take, tap } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer } from '../entities-visualizer';
@@ -69,7 +69,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		onClick: new Subject(),
 		onSelect: new Subject<IAnnotationsSelectionEventData>(),
 		onChangeMode: new Subject<AnnotationMode>(),
-		onDrawEnd: new Subject<IDrawEndEvent>()
+		onDrawEnd: new Subject<IDrawEndEvent>(),
+		removeEntity: new Subject<string>(),
+		updateEntity: new Subject<IVisualizerEntity>()
 	};
 
 	modeDictionary = {
@@ -117,30 +119,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			showLabel: feature.properties.showLabel,
 			label: feature.properties.label
 		}));
-	}
-
-	showAnnotation(annotationsLayer): Observable<any> {
-		const annotationsLayerEntities = this.annotationsLayerToEntities(annotationsLayer);
-		this.getEntities()
-			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
-			.forEach(({ id }) => this.removeEntity(id));
-
-		const entitiesToAdd = annotationsLayerEntities
-			.filter((entity) => {
-				const oldEntity = this.idToEntity.get(entity.id);
-				if (oldEntity) {
-					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
-					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
-					const isShowLabelDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
-					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
-					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
-					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
-					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
-					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
-				}
-				return true;
-			});
-		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
 	constructor(protected projectionService: OpenLayersProjectionService,
@@ -540,6 +518,23 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				})
 			})
 		];
+	}
+
+	removeFeature(logicalEntityId: string, internal = false) {
+		super.removeEntity(logicalEntityId, internal);
+		if (!internal) {
+			this.events.removeEntity.next(logicalEntityId);
+		}
+	}
+
+	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
+		const entity = this.idToEntity.get(featureId);
+
+		if (entity) {
+			entity.originalEntity = merge({}, entity.originalEntity, props);
+			this.events.updateEntity.next(entity.originalEntity);
+		}
+
 	}
 
 }

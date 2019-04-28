@@ -14,12 +14,9 @@ import { ImageryTileProgressComponent } from './components/imagery-tile-progress
 import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-type-notice/overlay-source-type-notice.component';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
-import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
-import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
-import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
@@ -58,11 +55,8 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		ImageryTileProgressComponent,
 		OverlaySourceTypeNoticeComponent,
 		MapSearchBoxComponent,
-		AnnotationsColorComponent,
-		AnnotationsWeightComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
-		ColorPickerComponent,
 		ToastComponent,
 		ClickOutsideDirective,
 		InfiniteScrollDirective,
@@ -72,11 +66,8 @@ import { IEntryComponent } from './directives/entry-component.directive';
 	],
 	exports: [
 		ImageriesManagerComponent,
-		AnnotationsWeightComponent,
-		AnnotationsColorComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
-		ColorPickerComponent,
 		ToastComponent,
 		ClickOutsideDirective,
 		InfiniteScrollDirective,

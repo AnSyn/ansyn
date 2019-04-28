@@ -1,19 +1,10 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, IMapState } from '@ansyn/map-facade';
-import { Store } from '@ngrx/store';
-import { MapActionTypes } from '@ansyn/map-facade';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, tap } from 'rxjs/operators';
+import { filter, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Actions, ofType } from '@ngrx/effects';
-import {
-	AnnotationRemoveFeature,
-	AnnotationSelectAction,
-	AnnotationUpdateFeature,
-	ToolsActionsTypes
-} from '../../actions/tools.actions';
-import { IMapSettings } from '@ansyn/imagery';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/ol';
+import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { AnnotationsVisualizer } from '../../annotations.visualizer';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '../../annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -21,33 +12,34 @@ import { AnnotationInteraction, IAnnotationsSelectionEventData } from '@ansyn/ol
 	styleUrls: ['./annotation-context-menu.component.less']
 })
 @AutoSubscriptions({
-	init: 'ngOnInit',
+	init: 'onInitMap',
 	destroy: 'ngOnDestroy'
 })
-export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntryComponent {
+export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	clickMenuProps: IAnnotationsSelectionEventData;
 	hoverMenuProps: IAnnotationsSelectionEventData;
+	annotations: AnnotationsVisualizer;
+	communicator: CommunicatorEntity;
 	@Input() mapState: IMapSettings;
+	@HostBinding('attr.tabindex') tabindex = 0;
 
 	@AutoSubscription
-	positionChanged$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.POSITION_CHANGED),
+	positionChanged$ = (): Observable<any> => this.communicator.positionChanged.pipe(
 		tap(() => this.clickMenuProps = null)
 	);
 
 	@AutoSubscription
-	annotationContextMenuTrigger$ = this.actions$.pipe(
-		ofType<AnnotationSelectAction>(ToolsActionsTypes.ANNOTATION_SELECT),
-		filter(({ payload }) => payload.mapId === this.mapState.id),
-		tap((action: AnnotationSelectAction) => {
-			const { boundingRect } = action.payload;
-			switch (action.payload.interactionType) {
+	annotationContextMenuTrigger$ = () => this.annotations.events.onSelect.pipe(
+		filter((payload) => payload.mapId === this.mapState.id),
+		tap((payload: IAnnotationsSelectionEventData) => {
+			const { boundingRect } = payload;
+			switch (payload.interactionType) {
 				case AnnotationInteraction.click:
-					this.clickMenuProps = action.payload;
+					this.clickMenuProps = payload;
 					break;
 				case AnnotationInteraction.hover:
-					if ((!this.clickMenuProps || this.clickMenuProps.featureId !== action.payload.featureId) && boundingRect) {
-						this.hoverMenuProps = action.payload;
+					if ((!this.clickMenuProps || this.clickMenuProps.featureId !== payload.featureId) && boundingRect) {
+						this.hoverMenuProps = payload;
 					} else {
 						this.hoverMenuProps = null;
 					}
@@ -55,11 +47,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 			}
 		})
 	);
-
-	@HostBinding('attr.tabindex')
-	get tabindex() {
-		return 0;
-	}
 
 	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
 		$event.preventDefault();
@@ -69,10 +56,23 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 		this.close();
 	}
 
-	constructor(public store: Store<IMapState>, public actions$: Actions, public host: ElementRef) {
+	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService, protected communicatorI: CommunicatorEntity) {
+		console.log(communicatorI)
+	}
+
+	onInitMap() {
 	}
 
 	ngOnInit() {
+		this.communicators.instanceCreated.pipe(
+			filter(({ id }) => id === this.mapState.id),
+			tap(() => {
+				this.communicator = this.communicators.provide(this.mapState.id);
+				this.annotations = this.communicator.getPlugin(AnnotationsVisualizer);
+				this.onInitMap();
+			}),
+			take(1)
+		).subscribe();
 	}
 
 	close() {
@@ -85,27 +85,17 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 	removeFeature() {
 		const { featureId } = this.clickMenuProps;
 		this.close();
-		this.store.dispatch(new AnnotationRemoveFeature(featureId));
+		this.annotations.removeFeature(featureId);
 	}
 
 	toggleColorPicker() {
-		const { featureId } = this.clickMenuProps;
 		const showColorPicker = !this.clickMenuProps.showColorPicker;
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: { showColorPicker, showWeight: !showColorPicker }
-		}));
 		this.clickMenuProps.showColorPicker = showColorPicker;
 		this.clickMenuProps.showWeight = showColorPicker ? !showColorPicker : this.clickMenuProps.showWeight;
 	}
 
 	toggleWeight() {
-		const { featureId } = this.clickMenuProps;
 		const showWeight = !this.clickMenuProps.showWeight;
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: { showWeight, showColorPicker: !showWeight }
-		}));
 		this.clickMenuProps.showWeight = showWeight;
 		this.clickMenuProps.showColorPicker = showWeight ? !showWeight : this.clickMenuProps.showWeight;
 	}
@@ -113,21 +103,14 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 	toggleMeasures() {
 		const { featureId } = this.clickMenuProps;
 		const showMeasures = !this.clickMenuProps.showMeasures;
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: { showMeasures }
-		}));
+		this.annotations.updateFeature(featureId, { showMeasures });
 		this.clickMenuProps.showMeasures = showMeasures;
 	}
 
 	toggleLabel() {
 		const { featureId } = this.clickMenuProps;
 		const showLabel = !this.clickMenuProps.showLabel;
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: { showLabel }
-		}));
-
+		this.annotations.updateFeature(featureId, { showLabel });
 		this.clickMenuProps.showLabel = showLabel;
 	}
 
@@ -141,11 +124,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 			}
 		};
 
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: { style }
-		}));
-
+		this.annotations.updateFeature(featureId, { style });
 		this.clickMenuProps.style = style;
 	}
 
@@ -159,12 +138,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 				[`${$event.label}-opacity`]: $event.event ? opacity[$event.label] : 0
 			}
 		};
-
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: { style }
-		}));
-
+		this.annotations.updateFeature(featureId, { style });
 		this.clickMenuProps.style = style;
 	}
 
@@ -177,24 +151,13 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntry
 				[$event.label]: $event.event
 			}
 		};
-
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: { style }
-		}));
-
+		this.annotations.updateFeature(featureId, { style });
 		this.clickMenuProps.style = style;
 	}
 
 	updateLabel() {
 		const { featureId } = this.clickMenuProps;
-
-		this.store.dispatch(new AnnotationUpdateFeature({
-			featureId,
-			properties: {
-				label: this.clickMenuProps.label
-			}
-		}));
+		this.annotations.updateFeature(featureId, { label: this.clickMenuProps.label });
 		this.close();
 	}
 }

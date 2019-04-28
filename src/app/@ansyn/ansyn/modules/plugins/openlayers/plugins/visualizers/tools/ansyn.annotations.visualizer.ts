@@ -1,20 +1,19 @@
 import { fromCircle } from 'ol/geom/Polygon';
-import { ImageryVisualizer, IVisualizerStyle } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryPlugin, ImageryVisualizer, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
-import { FeatureCollection } from 'geojson';
 import { select, Store } from '@ngrx/store';
 import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, EMPTY } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
-import { featureCollection } from '@turf/turf';
+import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
-	EntitiesVisualizer,
-	IDrawEndEvent,
+	EntitiesVisualizer, IDrawEndEvent,
+
 	IOLPluginsConfig,
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
@@ -32,19 +31,23 @@ import {
 	selectSubMenu,
 	SubMenuEnum
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
-import { AnnotationSelectAction, SetAnnotationMode } from '../../../../../menu-items/tools/actions/tools.actions';
+import {
+	AnnotationRemoveFeature,
+	AnnotationSelectAction, AnnotationUpdateFeature,
+	SetAnnotationMode
+} from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
 import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 
 // @dynamic
-@ImageryVisualizer({
+@ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, OpenLayersProjectionService, OL_PLUGINS_CONFIG],
-	isHideable: true
+	deps: [Store, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
+	// isHideable: true
 })
-export class AnsynAnnotationsVisualizer extends EntitiesVisualizer {
+export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;
 
 	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
@@ -89,7 +92,7 @@ export class AnsynAnnotationsVisualizer extends EntitiesVisualizer {
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
 		select(selectAnnotationProperties),
-		tap((changes: Partial<IVisualizerStyle>) => this.updateStyle({ initial: { ...changes } }))
+		tap((changes: Partial<IVisualizerStyle>) => this.annotationsVisualizer.updateStyle({ initial: { ...changes } }))
 	);
 
 	@AutoSubscription
@@ -132,6 +135,24 @@ export class AnsynAnnotationsVisualizer extends EntitiesVisualizer {
 		})
 	);
 
+	@AutoSubscription
+	removeEntity$ = () => this.annotationsVisualizer.events.removeEntity.pipe(
+		tap((featureId) => {
+			this.store$.dispatch(new AnnotationRemoveFeature(featureId));
+		})
+	);
+
+
+	@AutoSubscription
+	updateEntity$ = () => this.annotationsVisualizer.events.updateEntity.pipe(
+		tap((feature) => {
+			this.store$.dispatch(new AnnotationUpdateFeature({
+				featureId: feature.id,
+				properties: { ...feature }
+			}));
+		})
+	);
+
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {
 		const displayedIds = uniq(
 			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
@@ -139,7 +160,31 @@ export class AnsynAnnotationsVisualizer extends EntitiesVisualizer {
 			.filter((id: string) => entities[id] && entities[id].type === LayerType.annotation);
 
 		const features = displayedIds.reduce((array, layerId) => [...array, ...entities[layerId].data.features], []);
-		return this.annotationsVisualizer.showAnnotation(featureCollection(features));
+		return this.showAnnotation(featureCollection(features));
+	}
+
+	showAnnotation(annotationsLayer): Observable<any> {
+		const annotationsLayerEntities = this.annotationsVisualizer.annotationsLayerToEntities(annotationsLayer);
+		this.annotationsVisualizer.getEntities()
+			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
+			.forEach(({ id }) => this.annotationsVisualizer.removeEntity(id, true));
+
+		const entitiesToAdd = annotationsLayerEntities
+			.filter((entity) => {
+				const oldEntity = this.annotationsVisualizer.idToEntity.get(entity.id);
+				if (oldEntity) {
+					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
+					const isShowLabelDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
+					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
+					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
+					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
+					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
+				}
+				return true;
+			});
+		return this.annotationsVisualizer.addOrUpdateEntities(entitiesToAdd);
 	}
 
 	constructor(public store$: Store<any>,

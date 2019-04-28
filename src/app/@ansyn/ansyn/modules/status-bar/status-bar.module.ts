@@ -12,6 +12,7 @@ import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
+import { AnnotationsContextMenuModule } from '@ansyn/ol';
 
 @NgModule({
 	imports: [
@@ -20,7 +21,8 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 		CoreModule,
 		MapFacadeModule,
 		TreeviewModule.forRoot(),
-		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer)
+		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),
+		AnnotationsContextMenuModule
 	],
 	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, ],
 	providers: [

@@ -1,4 +1,4 @@
-import { ColorPickerComponent } from './plugins/annotations/annotations-context-menu/color-picker/color-picker.component';
+import { ColorPickerComponent } from './plugins/annotations/annotations-context-menu/components/color-picker/color-picker.component';
 
 export  { AnnotationsContextMenuModule } from './plugins/annotations/annotations-context-menu/annotations-context-menu.module';
 
@@ -41,6 +41,7 @@ export {
 } from './plugins/annotations/annotations.model';
 
 export { AnnotationsVisualizer } from './plugins/annotations/annotations.visualizer';
-export { AnnotationsColorComponent } from './plugins/annotations/annotations-context-menu/annotations-color/annotations-color.component';
-export { AnnotationsWeightComponent } from './plugins/annotations/annotations-context-menu/annotations-weight/annotations-weight.component';
-export { ColorPickerComponent } from './plugins/annotations/annotations-context-menu/color-picker/color-picker.component';
+export { AnnotationsColorComponent } from './plugins/annotations/annotations-context-menu/components/annotations-color/annotations-color.component';
+export { AnnotationsWeightComponent } from './plugins/annotations/annotations-context-menu/components/annotations-weight/annotations-weight.component';
+export { ColorPickerComponent } from './plugins/annotations/annotations-context-menu/components/color-picker/color-picker.component';
+export { ClickOutsideDirective } from './plugins/annotations/annotations-context-menu/directives/click-outside.directive';

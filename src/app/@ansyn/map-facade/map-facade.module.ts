@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { MapEffects } from './effects/map.effects';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
@@ -15,18 +15,18 @@ import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-ty
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
-export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
 import { ToastComponent } from './components/toast/toast.component';
-import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 import { AlertsModule } from './alerts/alerts.module';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imagery-status.reducer';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
-import { EntryComponentsProvider, ENTRY_COMPONENTS_ENTITIES } from './models/entry-components-provider';
+import { ENTRY_COMPONENTS_ENTITIES, EntryComponentsProvider } from './models/entry-components-provider';
 import { IEntryComponent } from './directives/entry-component.directive';
+
+export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 
 @NgModule({
 	imports: [
@@ -36,7 +36,7 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		ImageryModule,
 		CommonModule,
 		FormsModule,
-		AlertsModule,
+		AlertsModule
 	],
 	providers: [
 		GeocoderService,
@@ -58,7 +58,6 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
 		ToastComponent,
-		ClickOutsideDirective,
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
@@ -69,11 +68,10 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
 		ToastComponent,
-		ClickOutsideDirective,
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent,
+		AnsynPopoverComponent
 	]
 })
 

@@ -1,17 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnnotationContextMenuComponent } from './annotation-context-menu/annotation-context-menu.component';
-import { MapFacadeModule } from '../../../../map-facade/map-facade.module';
+import { AnnotationContextMenuComponent } from './components/annotation-context-menu/annotation-context-menu.component';
 import { FormsModule } from '@angular/forms';
-import { AnnotationsWeightComponent } from './annotations-weight/annotations-weight.component';
-import { AnnotationsColorComponent } from './annotations-color/annotations-color.component';
-import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
+import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 @NgModule({
-	declarations: [AnnotationContextMenuComponent, AnnotationsWeightComponent, AnnotationsColorComponent, ColorPickerComponent],
+	declarations: [
+		AnnotationContextMenuComponent,
+		AnnotationsWeightComponent,
+		AnnotationsColorComponent,
+		ColorPickerComponent,
+		ClickOutsideDirective
+	],
 	entryComponents: [AnnotationContextMenuComponent],
-	exports: [AnnotationContextMenuComponent, AnnotationsWeightComponent, AnnotationsColorComponent, ColorPickerComponent],
-	imports: [CommonModule, MapFacadeModule, FormsModule]
+	exports: [
+		AnnotationContextMenuComponent,
+		AnnotationsWeightComponent,
+		AnnotationsColorComponent,
+		ColorPickerComponent,
+		ClickOutsideDirective
+	],
+	imports: [CommonModule, FormsModule]
 })
 export class AnnotationsContextMenuModule {
 }

@@ -3,8 +3,8 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
-import { AnnotationsVisualizer } from '../../annotations.visualizer';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '../../annotations.model';
+import { AnnotationsVisualizer } from '../../../annotations.visualizer';
+import { AnnotationInteraction, IAnnotationsSelectionEventData } from '../../../annotations.model';
 
 @Component({
 	selector: 'ansyn-annotations-context-menu',
@@ -24,8 +24,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	@HostBinding('attr.tabindex') tabindex = 0;
 
 	@AutoSubscription
-	positionChanged$ = (): Observable<any> => this.communicator.positionChanged.pipe(
-		tap(() => this.clickMenuProps = null)
+	positionChanged$ = (): Observable<any> => this.communicator.ActiveMap.moveStart.pipe(
+		tap(() => {
+			this.clickMenuProps = null;
+			this.hoverMenuProps = null;
+		})
 	);
 
 	@AutoSubscription
@@ -35,7 +38,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			const { boundingRect } = payload;
 			switch (payload.interactionType) {
 				case AnnotationInteraction.click:
-					this.clickMenuProps = payload;
+					if (boundingRect) {
+						this.clickMenuProps = payload;
+					} else {
+						this.clickMenuProps = null;
+					}
 					break;
 				case AnnotationInteraction.hover:
 					if ((!this.clickMenuProps || this.clickMenuProps.featureId !== payload.featureId) && boundingRect) {
@@ -50,10 +57,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
 		$event.preventDefault();
-	}
-
-	@HostListener('window:mousewheel') onMousewheel() {
-		this.close();
 	}
 
 	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService) {

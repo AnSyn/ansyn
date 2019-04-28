@@ -116,7 +116,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: feature.properties.id,
 			style: feature.properties.style,
 			showMeasures: feature.properties.showMeasures,
-			showLabel: feature.properties.showLabel,
 			label: feature.properties.label
 		}));
 	}
@@ -143,8 +142,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					},
 					text: (feature: olFeature) => {
 						const properties = feature.getProperties();
-						const { showLabel, label } = properties;
-						return showLabel ? label : '';
+						const { label } = properties;
+						return label ? label : '';
 					}
 				}
 			}
@@ -210,7 +209,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = this.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures, label, showLabel, style } = this.getEntity(selectedFeature);
+		const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
 			label: label,
 			mapId: this.mapId,
@@ -219,8 +218,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			boundingRect,
 			type: selectedFeature ? selectedFeature.values_.mode : undefined,
 			interactionType: AnnotationInteraction.click,
-			showMeasures,
-			showLabel
+			showMeasures
 		};
 
 		this.events.onSelect.next(eventData);
@@ -252,14 +250,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		let selectedFeature, boundingRect, id, label, showLabel, style;
+		let selectedFeature, boundingRect, id, label, style;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = this.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
 			id = this.getEntity(selectedFeature).id;
 			label = this.getEntity(selectedFeature).label;
-			showLabel = this.getEntity(selectedFeature).showLabel;
 			style = this.getEntity(selectedFeature).style;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
@@ -269,8 +266,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: style,
 			boundingRect,
 			type: selectedFeature ? selectedFeature.values_.mode : undefined,
-			interactionType: AnnotationInteraction.hover,
-			showLabel: showLabel
+			interactionType: AnnotationInteraction.hover
 		};
 		this.events.onSelect.next(eventData);
 	}
@@ -331,7 +327,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
-			showLabel: false,
 			label: '',
 			mode
 		});

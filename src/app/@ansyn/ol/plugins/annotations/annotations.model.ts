@@ -16,10 +16,7 @@ export interface IAnnotationsSelectionEventData {
 	style: any;
 	boundingRect: IAnnotationBoundingRect;
 	interactionType?: AnnotationInteraction;
-	showLabel?: boolean;
 	showMeasures?: boolean;
-	showColorPicker?: boolean,
-	showWeight?: boolean
 }
 
 export interface IUpdateFeatureEvent {

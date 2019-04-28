@@ -1,4 +1,5 @@
-@import 'ansyn/less/common';
+@application-main-color: #27B2CF;
+@z-index-annotation-cotext-menu: 6000;
 
 :host {
 	position: absolute;
@@ -112,33 +113,74 @@
 			top: calc(~'100% + 20px');
 		}
 
+		//form.annotation-label-edit {
+		//	width: 250px;
+		//	height: 32px;
+		//	position: absolute;
+		//	pointer-events: all;
+		//	border: 1px solid white;
+		//	box-sizing: border-box;
+		//	background-color: rgba(255, 255, 255, 0.7);
+		//	color: black;
+		//	display: flex;
+		//	align-items: center;
+		//	left: 50%;
+		//	transform: translateX(-50%);
+		//	top: calc(~'100% + 20px');
+		//	display: flex;
+		//	flex-direction: row;
+		//	justify-content: space-between;
+		//
+		//	.label-input {
+		//		font-size: 17px;
+		//		width: 100%;
+		//	}
+		//
+		//	i.icon-edit {
+		//		cursor: pointer;
+		//		font-size: 27px;
+		//	}
+		//}
 		form.annotation-label-edit {
-			width: 250px;
-			height: 32px;
+			background: @application-main-color;
+			width: 140px;
+			height: 60px;
 			position: absolute;
-			pointer-events: all;
-			border: 1px solid white;
-			box-sizing: border-box;
-			background-color: rgba(255, 255, 255, 0.7);
-			color: black;
+			top: 100%;
+			z-index: 1;
 			display: flex;
+			justify-content: center;
 			align-items: center;
-			left: 50%;
-			transform: translateX(-50%);
-			top: calc(~'100% + 20px');
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-
-			.label-input {
-				font-size: 17px;
+			padding: 0 15px;
+			box-sizing: border-box;
+			mat-form-field.label-form-field {
 				width: 100%;
 			}
-
-			i.icon-edit {
-				cursor: pointer;
-				font-size: 27px;
-			}
 		}
+	}
+}
+[hidden] {
+	display: none !important;
+}
+@white-inactive: rgba(255, 255, 255, 0.8);
+.mat-form-field {
+	input {
+		caret-color: white;
+		color: white;
+	}
+	/deep/ .mat-form-field-label {
+		color: @white-inactive !important;
+	}
+
+	/deep/ .mat-form-field-underline {
+		background-color: @white-inactive !important;
+	}
+
+	/deep/ .mat-focused .mat-form-field-label {
+		color: white !important;
+	}
+
+	/deep/ .mat-form-field-ripple {
+		background-color: white !important;
 	}
 }

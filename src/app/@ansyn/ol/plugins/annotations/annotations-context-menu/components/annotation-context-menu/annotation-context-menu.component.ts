@@ -6,6 +6,12 @@ import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@a
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationInteraction, IAnnotationsSelectionEventData } from '../../../annotations.model';
 
+enum AnnotationsContextmenuTabs {
+	Colors,
+	Weight,
+	Label,
+}
+
 @Component({
 	selector: 'ansyn-annotations-context-menu',
 	templateUrl: './annotation-context-menu.component.html',
@@ -20,6 +26,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	hoverMenuProps: IAnnotationsSelectionEventData;
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
+	Tabs = AnnotationsContextmenuTabs;
+	selectedTab: AnnotationsContextmenuTabs;
+
 	@Input() mapState: IMapSettings;
 	@HostBinding('attr.tabindex') tabindex = 0;
 
@@ -79,6 +88,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	close() {
 		this.clickMenuProps = null;
+		this.selectedTab = null;
 	}
 
 	ngOnDestroy(): void {
@@ -90,16 +100,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.annotations.removeFeature(featureId);
 	}
 
-	toggleColorPicker() {
-		const showColorPicker = !this.clickMenuProps.showColorPicker;
-		this.clickMenuProps.showColorPicker = showColorPicker;
-		this.clickMenuProps.showWeight = showColorPicker ? !showColorPicker : this.clickMenuProps.showWeight;
-	}
-
-	toggleWeight() {
-		const showWeight = !this.clickMenuProps.showWeight;
-		this.clickMenuProps.showWeight = showWeight;
-		this.clickMenuProps.showColorPicker = showWeight ? !showWeight : this.clickMenuProps.showWeight;
+	selectTab(tab: AnnotationsContextmenuTabs) {
+		this.selectedTab = this.selectedTab === tab ? null : tab;
 	}
 
 	toggleMeasures() {
@@ -107,13 +109,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		const showMeasures = !this.clickMenuProps.showMeasures;
 		this.annotations.updateFeature(featureId, { showMeasures });
 		this.clickMenuProps.showMeasures = showMeasures;
-	}
-
-	toggleLabel() {
-		const { featureId } = this.clickMenuProps;
-		const showLabel = !this.clickMenuProps.showLabel;
-		this.annotations.updateFeature(featureId, { showLabel });
-		this.clickMenuProps.showLabel = showLabel;
 	}
 
 	selectLineWidth(w: number) {
@@ -157,9 +152,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.clickMenuProps.style = style;
 	}
 
-	updateLabel() {
+	updateLabel(label) {
 		const { featureId } = this.clickMenuProps;
-		this.annotations.updateFeature(featureId, { label: this.clickMenuProps.label });
-		this.close();
+		this.annotations.updateFeature(featureId, { label });
+		this.clickMenuProps.label = label
 	}
 }

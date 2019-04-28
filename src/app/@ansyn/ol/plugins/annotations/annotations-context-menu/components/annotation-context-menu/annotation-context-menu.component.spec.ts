@@ -10,6 +10,7 @@ import { ColorPickerComponent } from '../color-picker/color-picker.component';
 import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
@@ -29,7 +30,8 @@ describe('AnnotationContextMenuComponent', () => {
 				ClickOutsideDirective
 			],
 			imports: [
-				FormsModule
+				FormsModule,
+				ColorPickerModule
 			]
 		}).compileComponents();
 	});
@@ -53,7 +55,6 @@ describe('AnnotationContextMenuComponent', () => {
 
 	it('click on remove feature button', () => {
 		component.clickMenuProps = {
-			showLabel: true,
 			featureId: 'featureId',
 			label: 'label',
 			mapId: 'mapId',

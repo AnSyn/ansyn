@@ -15,16 +15,37 @@
 					class="icon-tools-ruler" tooltip-value="Measures" tooltip-class="bottom"></i></button>
 			</li>
 			<li>
-				<button [class.active]="clickMenuProps.showLabel" (click)="toggleLabel()"><i
+				<button [class.active]="selectedTab === Tabs.Label" (click)="selectTab(Tabs.Label)"><i
 					class="icon-annotation-label" tooltip-value="Label" tooltip-class="bottom"></i>
 				</button>
+
+				<form class="annotation-label-edit"
+					  *ngIf="selectedTab === Tabs.Label"
+					  (ngSubmit)="labelInput.blur()">
+
+					<mat-form-field class="label-form-field">
+						<input matInput
+							   type="text"
+							   #labelInput
+							   autofocus
+							   placeholder="Label"
+							   name="EditLabel"
+							   [ngModel]="clickMenuProps.label"
+							   (ngModelChange)="updateLabel($event)">
+					</mat-form-field>
+
+					<!--<input class="label-input" type="text" placeholder="Label"-->
+						   <!--[(ngModel)]="clickMenuProps.label"-->
+						   <!--(ngModelChange)="updateLabel($event)"-->
+						   <!--name="EditLabel">-->
+				</form>
 			</li>
 			<li class="expanded-selection line-width-selection">
 				<p>
-					<button [class.active]="clickMenuProps.showWeight" (click)="toggleWeight()"><i
+					<button [class.active]="selectedTab === Tabs.Weight" (click)="selectTab(Tabs.Weight)"><i
 						class="icon-annotation-weight" tooltip-value="Width" tooltip-class="bottom"></i></button>
 					<ansyn-annotations-weight
-						[show]="clickMenuProps.showWeight"
+						[show]="selectedTab === Tabs.Weight"
 						[properties]="clickMenuProps.style.initial"
 						(selectLineWidth)="selectLineWidth($event.width)">
 					</ansyn-annotations-weight>
@@ -32,11 +53,11 @@
 			</li>
 			<li>
 				<p>
-					<button [class.active]="clickMenuProps.showColorPicker" (click)="toggleColorPicker()">
+					<button [class.active]="selectedTab === Tabs.Colors" (click)="selectTab(Tabs.Colors)">
 						<i class="icon-annotation-color" tooltip-value="Color" tooltip-class="bottom"></i>
 					</button>
 					<ansyn-annotations-color
-						[show]="clickMenuProps.showColorPicker"
+						[show]="selectedTab === Tabs.Colors"
 						[properties]="clickMenuProps.style.initial"
 						(colorChange)="colorChange($event)"
 						(activeChange)="activeChange($event)"
@@ -52,11 +73,13 @@
 		</ul>
 	</div>
 
-	<form class="annotation-label-edit" (ngSubmit)="updateLabel()" *ngIf="clickMenuProps.showLabel">
-		<input class="label-input" type="text" placeholder="{{clickMenuProps.label}}" [(ngModel)]="clickMenuProps.label"
-			   name="EditLabel">
-		<i (click)="updateLabel()" class="icon-edit"></i>
-	</form>
+	<!--<form class="annotation-label-edit" (ngSubmit)="close()" *ngIf="selectedTab === Tabs.Label">-->
+		<!--<input class="label-input" type="text" placeholder="Label"-->
+			   <!--[(ngModel)]="clickMenuProps.label"-->
+			   <!--(ngModelChange)="updateLabel($event)"-->
+			   <!--name="EditLabel">-->
+		<!--<i (click)="updateLabel()" class="icon-edit"></i>-->
+	<!--</form>-->
 
 
 </div>

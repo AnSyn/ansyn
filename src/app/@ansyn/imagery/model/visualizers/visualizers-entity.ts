@@ -8,5 +8,4 @@ export interface IVisualizerEntity {
 	type?: string;
 	style?: Partial<IVisualizerStateStyle>;
 	showMeasures?: boolean;
-	showLabel?: boolean;
 }

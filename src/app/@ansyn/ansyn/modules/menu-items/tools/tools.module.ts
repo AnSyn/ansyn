@@ -19,7 +19,8 @@ import { AnnotationsContextMenuModule } from '@ansyn/ol';
 		MapFacadeModule,
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer),
-		AnnotationsContextMenuModule
+		AnnotationsContextMenuModule,
+
 	],
 	providers: [ProjectionConverterService],
 	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],

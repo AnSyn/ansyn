@@ -175,12 +175,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				if (oldEntity) {
 					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
 					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
-					const isShowLabelDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
 					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
 					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
 					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
 					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
-					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
+					return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
 				}
 				return true;
 			});

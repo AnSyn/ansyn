@@ -56,8 +56,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.close();
 	}
 
-	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService, protected communicatorI: CommunicatorEntity) {
-		console.log(communicatorI)
+	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService) {
 	}
 
 	onInitMap() {

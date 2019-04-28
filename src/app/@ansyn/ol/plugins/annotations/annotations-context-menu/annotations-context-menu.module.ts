@@ -6,6 +6,7 @@ import { AnnotationsWeightComponent } from './components/annotations-weight/anno
 import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
 	declarations: [
@@ -23,7 +24,7 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 		ColorPickerComponent,
 		ClickOutsideDirective
 	],
-	imports: [CommonModule, FormsModule]
+	imports: [CommonModule, FormsModule, ColorPickerModule]
 })
 export class AnnotationsContextMenuModule {
 }

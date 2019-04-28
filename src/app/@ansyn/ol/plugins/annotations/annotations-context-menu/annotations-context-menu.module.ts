@@ -7,7 +7,7 @@ import { AnnotationsColorComponent } from './components/annotations-color/annota
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { MatInputModule, MatIconModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
 
 @NgModule({
 	declarations: [
@@ -29,8 +29,7 @@ import { MatInputModule, MatIconModule } from '@angular/material';
 		CommonModule,
 		FormsModule,
 		ColorPickerModule,
-		MatInputModule,
-		MatIconModule
+		MatInputModule
 	]
 })
 export class AnnotationsContextMenuModule {

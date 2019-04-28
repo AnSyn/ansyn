@@ -151,29 +151,8 @@ export class AnsynAnnotationsVisualizer extends EntitiesVisualizer {
 	onInit() {
 		super.onInit();
 		this.annotationsVisualizer = this.communicator.getPlugin(AnnotationsVisualizer);
-		this.connectEventsToStore();
 	}
 
-	connectEventsToStore() {
-
-		this.annotationsVisualizer.events.onDrawEnd.pipe(
-			withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$)
-		)
-			.subscribe(([{ GeoJSON, feature }, activeAnnotationLayer, overlay]: [IDrawEndEvent, ILayer, IOverlay]) => {
-				const [geoJsonFeature] = GeoJSON.features;
-				const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
-				data.features.push(geoJsonFeature);
-				if (overlay) {
-					geoJsonFeature.properties = {
-						...geoJsonFeature.properties,
-						...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay)
-					};
-				}
-				geoJsonFeature.properties = { ...geoJsonFeature.properties };
-				this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
-			});
-
-	}
 }
 
 

@@ -129,6 +129,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				'stroke-width': 1,
 				fill: `white`,
 				'fill-opacity': AnnotationsVisualizer.fillAlpha,
+				'stroke-opacity': 1,
 				'marker-size': MarkerSize.medium,
 				'marker-color': `#ffffff`,
 				label: {
@@ -141,9 +142,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						return mode === 'Point' ? 30 : 0;
 					},
 					text: (feature: olFeature) => {
-						const properties = feature.getProperties();
-						const { label } = properties;
-						return label ? label : '';
+						const entity = this.idToEntity.get(feature.getId());
+						if (entity) {
+							const { label } = entity.originalEntity;
+							return label || '';
+						}
+						return '';
 					}
 				}
 			}
@@ -528,6 +532,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
 			this.events.updateEntity.next(entity.originalEntity);
+			this.source.refresh();
 		}
 
 	}

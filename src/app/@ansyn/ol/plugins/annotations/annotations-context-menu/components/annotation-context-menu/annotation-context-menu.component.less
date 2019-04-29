@@ -1,5 +1,17 @@
-@application-main-color: #27B2CF;
-@z-index-annotation-cotext-menu: 6000;
+@import 'ansyn/less/common';
+@import 'ansyn/assets/styles/styles';
+
+svg {
+	width: 32px;
+	height: 32px;
+	fill: #ffffff;
+	viewBox: 0 0 1024 1024;
+}
+
+i {
+	font-style: normal;
+	display: inherit;
+}
 
 :host {
 	position: absolute;
@@ -113,34 +125,6 @@
 			top: calc(~'100% + 20px');
 		}
 
-		//form.annotation-label-edit {
-		//	width: 250px;
-		//	height: 32px;
-		//	position: absolute;
-		//	pointer-events: all;
-		//	border: 1px solid white;
-		//	box-sizing: border-box;
-		//	background-color: rgba(255, 255, 255, 0.7);
-		//	color: black;
-		//	display: flex;
-		//	align-items: center;
-		//	left: 50%;
-		//	transform: translateX(-50%);
-		//	top: calc(~'100% + 20px');
-		//	display: flex;
-		//	flex-direction: row;
-		//	justify-content: space-between;
-		//
-		//	.label-input {
-		//		font-size: 17px;
-		//		width: 100%;
-		//	}
-		//
-		//	i.icon-edit {
-		//		cursor: pointer;
-		//		font-size: 27px;
-		//	}
-		//}
 		form.annotation-label-edit {
 			background: @application-main-color;
 			width: 140px;
@@ -158,9 +142,6 @@
 			}
 		}
 	}
-}
-[hidden] {
-	display: none !important;
 }
 @white-inactive: rgba(255, 255, 255, 0.8);
 .mat-form-field {

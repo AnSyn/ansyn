@@ -45,7 +45,6 @@ import { IOverlay } from '../../../../../overlays/models/overlay.model';
 @ImageryPlugin({
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
-	// isHideable: true
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;

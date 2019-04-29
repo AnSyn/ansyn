@@ -7,13 +7,6 @@
 		(colorPickerChange)="colorChange.emit($event)"
 		[style.background]="color"/>
 
-	<!--<input [id]="id"-->
-		   <!--type="color"-->
-		   <!--[disabled]="!active"-->
-		   <!--[value]="color"-->
-		   <!--(change)="colorChange.emit($event.target.value)"-->
-		   <!--[title]="label"/>-->
-
 	<label [for]="id">
 		<div class="text">{{ label }}</div>
 		<div class="color" [style.background]="color"></div>

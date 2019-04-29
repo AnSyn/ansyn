@@ -78,12 +78,31 @@ export class TimelineTimepickerComponent implements OnInit {
 	}
 
 	selectedDateChanged(date: Date, dateString: string, instance: any) {
+		if (!this.isValidDate(date)) {
+			return;
+		}
+
 		this.error = '';
 		if (instance.config.id === 'start') {
 			this.startDatePickerValue = new Date(date[0]);
 		} else {
 			this.endDatePickerValue = new Date(date[0]);
 		}
+	}
+
+	isValidDate(date): boolean {
+		if (Object.prototype.toString.call(date) === "[object Date]") {
+			// it is a date
+			if (isNaN(date.getTime())) {  // d.valueOf() could also work
+				// date is not valid
+				return false;
+			} else {
+				// date is valid
+				return true;
+			}
+		}
+		// not a date
+		return false;
 	}
 
 	confirmDatePlugin(pluginConfig: any) {

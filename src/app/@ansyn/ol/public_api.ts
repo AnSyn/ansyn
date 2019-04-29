@@ -40,6 +40,5 @@ export { AnnotationsVisualizer } from './plugins/annotations/annotations.visuali
 export { AnnotationsColorComponent } from './plugins/annotations/annotations-context-menu/components/annotations-color/annotations-color.component';
 export { AnnotationsWeightComponent } from './plugins/annotations/annotations-context-menu/components/annotations-weight/annotations-weight.component';
 export { ColorPickerComponent } from './plugins/annotations/annotations-context-menu/components/color-picker/color-picker.component';
-export { ClickOutsideDirective } from './plugins/annotations/annotations-context-menu/directives/click-outside.directive';
 export { AnnotationContextMenuComponent } from './plugins/annotations/annotations-context-menu/components/annotation-context-menu/annotation-context-menu.component';
 export  { AnnotationsContextMenuModule } from './plugins/annotations/annotations-context-menu/annotations-context-menu.module';

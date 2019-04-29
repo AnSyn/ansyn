@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
 import { ColorPickerComponent } from '../color-picker/color-picker.component';
 import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { ClickOutsideDirective } from '@ansyn/imagery';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatInputModule } from '@angular/material';

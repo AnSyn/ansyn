@@ -51,8 +51,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private _mapObject: OLMap;
 	private _backgroundMapObject: OLMap;
 	private _backgroundMapParams: object;
-
-	private _moveEndListener: () => void;
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
@@ -64,6 +62,22 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.tilesLoadErrorEventEmitter,
 		this.http
 	);
+
+	private _moveEndListener: () => void = () => {
+		this.getPosition().pipe(take(1)).subscribe(position => {
+			if (position) {
+				this.positionChanged.emit(position);
+			}
+		});
+	};
+
+	private _moveStartListener: () => void = () => {
+		this.getPosition().pipe(take(1)).subscribe(position => {
+			if (position) {
+				this.moveStart.emit(position)
+			}
+		});
+	};
 
 	signalWhenTilesLoadingEnds() {
 		this.isLoading$.next(true);
@@ -164,14 +178,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	initListeners() {
-		this._moveEndListener = () => {
-			this.getPosition().pipe(take(1)).subscribe(position => {
-				if (position) {
-					this.positionChanged.emit(position);
-				}
-			});
-		};
 		this._mapObject.on('moveend', this._moveEndListener);
+		this._mapObject.on('movestart', this._moveStartListener);
 		this._mapObject.on('pointerdown', this._pointerDownListener);
 	}
 
@@ -511,6 +519,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		if (this._mapObject) {
 			this._mapObject.un('moveend', this._moveEndListener);
+			this._mapObject.un('movestart', this._moveStartListener);
 			this._mapObject.un('pointerdown', this._pointerDownListener);
 			this._mapObject.setTarget(null);
 		}

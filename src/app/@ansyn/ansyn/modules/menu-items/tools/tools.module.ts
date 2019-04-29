@@ -10,7 +10,7 @@ import { ImageProcessingControlComponent } from './components/image-processing-c
 import { ProjectionConverterService } from './services/projection-converter.service';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
 import { MapFacadeModule } from '@ansyn/map-facade';
-import { AnnotationContextMenuComponent } from './components/annotation-context-menu/annotation-context-menu.component';
+import { AnnotationsContextMenuModule } from '@ansyn/ol';
 
 // @dynamic
 @NgModule({
@@ -18,12 +18,13 @@ import { AnnotationContextMenuComponent } from './components/annotation-context-
 		CommonModule,
 		MapFacadeModule,
 		GoToModule,
-		StoreModule.forFeature(toolsFeatureKey, ToolsReducer)
+		StoreModule.forFeature(toolsFeatureKey, ToolsReducer),
+		AnnotationsContextMenuModule
 	],
 	providers: [ProjectionConverterService],
-	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, AnnotationContextMenuComponent],
-	entryComponents: [ToolsComponent, AnnotationContextMenuComponent],
-	exports: [ToolsComponent, AnnotationContextMenuComponent]
+	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
+	entryComponents: [ToolsComponent],
+	exports: [ToolsComponent]
 })
 
 export class ToolsModule {

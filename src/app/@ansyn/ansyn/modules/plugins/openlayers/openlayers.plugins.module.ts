@@ -21,6 +21,7 @@ import { OpenlayersGeoJsonLayersVisualizer } from './plugins/layers/openlayers-g
 import { TaskRegionVisualizer } from './plugins/visualizers/algorithms/task-region.visualizer';
 import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis-layers.pulgin";
 import {
+	AnnotationsContextMenuModule,
 	AnnotationsVisualizer,
 	OpenLayerBingSourceProvider,
 	OpenLayerESRI4326SourceProvider,
@@ -75,7 +76,8 @@ import {
 				OpenLayerMarcoSourceProvider
 
 			]
-		})
+		}),
+		AnnotationsContextMenuModule
 	]
 })
 export class OpenlayersPluginsModule {

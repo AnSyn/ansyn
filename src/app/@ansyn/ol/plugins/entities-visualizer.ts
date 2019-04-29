@@ -17,12 +17,12 @@ import {
 	MarkerSizeDic,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { FeatureCollection } from 'geojson';
 import { Observable, of } from 'rxjs';
 import { BaseImageryVisualizer, VisualizerInteractionTypes } from '@ansyn/imagery';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
+import { featureCollection } from '@turf/turf';
 
 export interface IFeatureIdentifier {
 	feature: Feature,
@@ -34,7 +34,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
 	vector: ol_Layer;
-	protected idToEntity: Map<string, IFeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
+	public idToEntity: Map<string, IFeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
 	protected disableCache = false;
 
 	protected visualizerStyle: IVisualizerStateStyle = {
@@ -225,15 +225,12 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		if (filteredLogicalEntities.length <= 0) {
 			return of(true);
 		}
+		const features = filteredLogicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }));
 
-		const featuresCollectionToAdd = <FeatureCollection<any>>{
-			type: 'FeatureCollection',
-			features: filteredLogicalEntities
-				.map(entity => ({ ...entity.featureJson, id: entity.id }))
-		};
+		const featuresCollectionToAdd: any = featureCollection(features);
 
 		filteredLogicalEntities.forEach((entity: IVisualizerEntity) => {
-			this.removeEntity(entity.id);
+			this.removeEntity(entity.id, true);
 		});
 
 		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject)
@@ -266,10 +263,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return this.addOrUpdateEntities(logicalEntities);
 	}
 
-	removeEntity(logicalEntityId: string) {
-		if (!logicalEntityId) {
-			return;
-		}
+	removeEntity(logicalEntityId: string, internal = false) {
 		const entityToRemove = this.idToEntity.get(logicalEntityId);
 		if (!entityToRemove) {
 			return;
@@ -305,18 +299,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	updateStyle(style: Partial<IVisualizerStateStyle>) {
 		merge(this.visualizerStyle, style);
 		this.purgeCache();
-	}
-
-
-	updateFeatureStyle(featureId: string, style: Partial<IVisualizerStateStyle>) {
-		const feature = this.source.getFeatureById(featureId);
-
-		const entity = this.getEntity(feature);
-		if (entity) {
-			entity.style = entity.style ? merge({}, entity.style, style) : style;
-		}
-
-		this.purgeCache(feature);
 	}
 
 	getInteraction(type: VisualizerInteractionTypes) {

@@ -5,6 +5,7 @@
     "auto-subscriptions",
     "@turf/turf",
     "ol",
+    "ngx-color-picker",
     "angular2-uuid"
   ],
   "lib": {

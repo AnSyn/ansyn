@@ -4,8 +4,8 @@ import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
-import { AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/map-facade';
-import { AnnotationMode } from '@ansyn/ol';
+import { AnnotationMode, AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/ol';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -15,7 +15,11 @@ describe('AnnotationsControlComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationsControlComponent, ColorPickerComponent, AnnotationsColorComponent, AnnotationsWeightComponent],
-			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })]
+			imports: [
+				FormsModule,
+				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }),
+				ColorPickerModule
+			]
 		})
 			.compileComponents();
 	}));

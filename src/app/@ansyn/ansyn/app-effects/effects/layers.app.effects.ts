@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { map, mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { Store } from '@ngrx/store';
 import { Feature } from 'geojson';
-import { Observable } from 'rxjs/index';
+import { EMPTY, Observable, of } from 'rxjs';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateLayer,
@@ -37,17 +37,20 @@ export class LayersAppEffects {
 	removeAnnotationFeature$: Observable<any> = this.actions$.pipe(
 		ofType<AnnotationRemoveFeature>(ToolsActionsTypes.ANNOTATION_REMOVE_FEATURE),
 		withLatestFrom(this.store$.select(selectLayers)),
-		map(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
+		mergeMap(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
-			return new UpdateLayer({
-				...layer,
-				data: {
-					...layer.data,
-					features: layer.data.features.filter(({ properties }) => properties.id !== action.payload)
-				}
-			});
+			if (layer) {
+				return of(new UpdateLayer({
+					...layer,
+					data: {
+						...layer.data,
+						features: layer.data.features.filter(({ properties }) => properties.id !== action.payload)
+					}
+				}));
+			}
+			return EMPTY;
 		})
 	);
 

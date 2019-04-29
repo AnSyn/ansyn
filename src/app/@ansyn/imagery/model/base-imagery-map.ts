@@ -24,6 +24,8 @@ export abstract class BaseImageryMap<T = any> {
 	readonly defaultMapSource?: string;
 
 	public positionChanged: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
+	public moveStart: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
+
 	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
 	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
 	public mapObject: T;

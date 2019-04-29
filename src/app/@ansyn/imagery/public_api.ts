@@ -57,3 +57,5 @@ export { IMAGERY_CONFIG } from './model/configuration.token';
 export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME } from './model/imagery-layer.model';
 
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
+export { ClickOutsideDirective } from './click-outside/click-outside.directive';
+export { ClickOutsideModule } from './click-outside/click-outside.module'

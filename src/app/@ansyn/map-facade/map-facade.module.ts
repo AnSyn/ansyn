@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { MapEffects } from './effects/map.effects';
 import { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
@@ -14,21 +14,16 @@ import { ImageryTileProgressComponent } from './components/imagery-tile-progress
 import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-type-notice/overlay-source-type-notice.component';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
 import { GeocoderService } from './services/geocoder.service';
-import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
-import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
-export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
-import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ToastComponent } from './components/toast/toast.component';
-import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 import { AlertsModule } from './alerts/alerts.module';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imagery-status.reducer';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
-import { EntryComponentsProvider, ENTRY_COMPONENTS_ENTITIES } from './models/entry-components-provider';
+import { ENTRY_COMPONENTS_ENTITIES, EntryComponentsProvider } from './models/entry-components-provider';
 import { IEntryComponent } from './directives/entry-component.directive';
 
 @NgModule({
@@ -39,7 +34,7 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		ImageryModule,
 		CommonModule,
 		FormsModule,
-		AlertsModule,
+		AlertsModule
 	],
 	providers: [
 		GeocoderService,
@@ -58,13 +53,9 @@ import { IEntryComponent } from './directives/entry-component.directive';
 		ImageryTileProgressComponent,
 		OverlaySourceTypeNoticeComponent,
 		MapSearchBoxComponent,
-		AnnotationsColorComponent,
-		AnnotationsWeightComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
-		ColorPickerComponent,
 		ToastComponent,
-		ClickOutsideDirective,
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
@@ -72,17 +63,13 @@ import { IEntryComponent } from './directives/entry-component.directive';
 	],
 	exports: [
 		ImageriesManagerComponent,
-		AnnotationsWeightComponent,
-		AnnotationsColorComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
-		ColorPickerComponent,
 		ToastComponent,
-		ClickOutsideDirective,
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent,
+		AnsynPopoverComponent
 	]
 })
 

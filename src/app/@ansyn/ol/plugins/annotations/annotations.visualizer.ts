@@ -15,17 +15,17 @@ import * as condition from 'ol/events/condition';
 
 import {
 	ImageryVisualizer,
-	IVisualizerEntity,
+	IVisualizerEntity, IVisualizerStateStyle,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
 
-import { cloneDeep } from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Inject } from '@angular/core';
-import { take, tap, mergeMap } from 'rxjs/operators';
+import { mergeMap, take, tap } from 'rxjs/operators';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer } from '../entities-visualizer';
@@ -69,7 +69,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		onClick: new Subject(),
 		onSelect: new Subject<IAnnotationsSelectionEventData>(),
 		onChangeMode: new Subject<AnnotationMode>(),
-		onDrawEnd: new Subject<IDrawEndEvent>()
+		onDrawEnd: new Subject<IDrawEndEvent>(),
+		removeEntity: new Subject<string>(),
+		updateEntity: new Subject<IVisualizerEntity>()
 	};
 
 	modeDictionary = {
@@ -114,33 +116,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: feature.properties.id,
 			style: feature.properties.style,
 			showMeasures: feature.properties.showMeasures,
-			showLabel: feature.properties.showLabel,
 			label: feature.properties.label
 		}));
-	}
-
-	showAnnotation(annotationsLayer): Observable<any> {
-		const annotationsLayerEntities = this.annotationsLayerToEntities(annotationsLayer);
-		this.getEntities()
-			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
-			.forEach(({ id }) => this.removeEntity(id));
-
-		const entitiesToAdd = annotationsLayerEntities
-			.filter((entity) => {
-				const oldEntity = this.idToEntity.get(entity.id);
-				if (oldEntity) {
-					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
-					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
-					const isShowLabelDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
-					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
-					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
-					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
-					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
-					return isShowMeasuresDiff || isLabelDiff || isShowLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
-				}
-				return true;
-			});
-		return this.addOrUpdateEntities(entitiesToAdd);
 	}
 
 	constructor(protected projectionService: OpenLayersProjectionService,
@@ -152,6 +129,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				'stroke-width': 1,
 				fill: `white`,
 				'fill-opacity': AnnotationsVisualizer.fillAlpha,
+				'stroke-opacity': 1,
 				'marker-size': MarkerSize.medium,
 				'marker-color': `#ffffff`,
 				label: {
@@ -164,9 +142,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						return mode === 'Point' ? 30 : 0;
 					},
 					text: (feature: olFeature) => {
-						const properties = feature.getProperties();
-						const { showLabel, label } = properties;
-						return showLabel ? label : '';
+						const entity = this.idToEntity.get(feature.getId());
+						if (entity) {
+							const { label } = entity.originalEntity;
+							return label || '';
+						}
+						return '';
 					}
 				}
 			}
@@ -232,7 +213,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		const selectedFeature = this.findFeatureWithMinimumArea(event.selected);
 		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures, label, showLabel, style } = this.getEntity(selectedFeature);
+		const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
 		const eventData: IAnnotationsSelectionEventData = {
 			label: label,
 			mapId: this.mapId,
@@ -241,8 +222,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			boundingRect,
 			type: selectedFeature ? selectedFeature.values_.mode : undefined,
 			interactionType: AnnotationInteraction.click,
-			showMeasures,
-			showLabel
+			showMeasures
 		};
 
 		this.events.onSelect.next(eventData);
@@ -274,14 +254,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		let selectedFeature, boundingRect, id, label, showLabel, style;
+		let selectedFeature, boundingRect, id, label, style;
 		let selected = interaction.getFeatures().getArray();
 		if (selected.length > 0) {
 			selectedFeature = this.findFeatureWithMinimumArea(selected);
 			boundingRect = this.getFeatureBoundingRect(selectedFeature);
 			id = this.getEntity(selectedFeature).id;
 			label = this.getEntity(selectedFeature).label;
-			showLabel = this.getEntity(selectedFeature).showLabel;
 			style = this.getEntity(selectedFeature).style;
 		}
 		const eventData: IAnnotationsSelectionEventData = {
@@ -291,8 +270,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: style,
 			boundingRect,
 			type: selectedFeature ? selectedFeature.values_.mode : undefined,
-			interactionType: AnnotationInteraction.hover,
-			showLabel: showLabel
+			interactionType: AnnotationInteraction.hover
 		};
 		this.events.onSelect.next(eventData);
 	}
@@ -353,7 +331,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
-			showLabel: false,
 			label: '',
 			mode
 		});
@@ -540,6 +517,24 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				})
 			})
 		];
+	}
+
+	removeFeature(logicalEntityId: string, internal = false) {
+		super.removeEntity(logicalEntityId, internal);
+		if (!internal) {
+			this.events.removeEntity.next(logicalEntityId);
+		}
+	}
+
+	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
+		const entity = this.idToEntity.get(featureId);
+
+		if (entity) {
+			entity.originalEntity = merge({}, entity.originalEntity, props);
+			this.events.updateEntity.next(entity.originalEntity);
+			this.source.refresh();
+		}
+
 	}
 
 }

@@ -1,0 +1,104 @@
+<div class="context-menu-wrapper"
+	 *ngIf="clickMenuProps"
+	 [style.top.px]="clickMenuProps.boundingRect.top"
+	 [style.width.px]="clickMenuProps .boundingRect.width"
+	 [style.height.px]="clickMenuProps.boundingRect.height"
+	 [style.left.px]="clickMenuProps.boundingRect.left"
+	 [clickEventType]="['pointerdown', 'mousedown']"
+	 (ansynClickOutside)="close()">
+	<!-- Using pointerdown for current Chrome, and mousedown for Chrome 44 -->
+
+	<div class="context-menu" [style.outline-color]="clickMenuProps?.style?.initial?.stroke">
+		<ul class="buttons">
+			<li>
+				<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()">
+					<i tooltip-value="Measures" tooltip-class="bottom">
+						<svg
+							 viewBox="0 0 1024 1024" fill="#fff">
+							<path d="M691.989 213.333l-478.656 474.965 118.721 122.368 478.612-474.988-118.677-122.345zM728.346 375.595l-16.401 16.3-23.902-24.615-15.13 15.057 23.881 24.593-22.524 22.352-36.774-37.897-15.194 15.057 36.796 37.876-16.405 16.277-23.855-24.593-15.155 15.036 23.859 24.614-22.148 21.956-40.657-41.869-15.172 15.057 40.657 41.869-16.405 16.23-27.759-28.582-15.155 15.057 27.742 28.587-22.498 22.327-40.636-41.865-15.172 15.057 40.653 41.869-16.38 16.277-27.738-28.608-15.155 15.057 27.742 28.608-20.791 20.646-40.653-41.916-15.176 15.083 40.656 41.89-16.405 16.23-27.738-28.582-15.131 15.078 27.718 28.587-22.499 22.353-40.655-41.89-15.153 15.057 40.634 41.89-16.425 16.277-27.739-28.608-15.131 15.057 27.74 28.608-20.262 20.092-77.408-79.791 436.577-433.252 77.385 79.767-25.502 25.325-36.774-37.899-15.155 15.035 36.774 37.876z"></path>
+						</svg>
+					</i>
+				</button>
+			</li>
+			<li>
+				<button [class.active]="selectedTab === Tabs.Label" (click)="selectTab(Tabs.Label)">
+					<i tooltip-value="Label" tooltip-class="bottom">
+						<svg viewBox="0 0 1024 1024">
+							<path d="M772.676 213.333h-192.124c-10.001 0-19.802 4.052-26.871 11.119l-329.236 329.263c-14.816 14.818-14.816 38.903 0 53.722l192.124 192.137c7.395 7.394 17.146 11.093 26.87 11.093 9.702 0 19.452-3.699 26.871-11.068l329.237-329.263c7.168-7.194 11.119-16.742 11.119-26.876v-192.135c0-20.946-17.045-37.992-37.99-37.992zM785.314 443.439c0 3.341-1.34 6.609-3.699 8.964l-329.237 329.263c-4.937 4.937-12.966 4.937-17.903 0l-192.124-192.137c-4.939-4.941-4.939-12.971 0-17.907l329.237-329.263c2.355-2.355 5.623-3.698 8.964-3.698h192.098c6.967 0 12.663 5.674 12.663 12.664v192.114z"></path>
+						</svg>
+					</i>
+				</button>
+
+				<form class="annotation-label-edit"
+					  *ngIf="selectedTab === Tabs.Label"
+					  (ngSubmit)="labelInput.blur()">
+
+					<mat-form-field class="label-form-field">
+						<input matInput
+							   type="text"
+							   #labelInput
+							   autofocus
+							   placeholder="Label"
+							   name="EditLabel"
+							   [ngModel]="clickMenuProps.label"
+							   (ngModelChange)="updateLabel($event)">
+					</mat-form-field>
+
+				</form>
+			</li>
+			<li class="expanded-selection line-width-selection">
+				<p>
+					<button [class.active]="selectedTab === Tabs.Weight" (click)="selectTab(Tabs.Weight)">
+						<i tooltip-value="Width" tooltip-class="bottom">
+							<svg viewBox="0 0 1024 1024">
+								<path d="M256 645.333h511.94v-53.333h-511.94v53.333zM256 725.333h511.94v-26.667h-511.94v26.667zM256 538.667h511.94v-80h-511.94v80zM256 298.667v106.667h511.94v-106.667h-511.94z"></path>
+							</svg>
+						</i>
+					</button>
+					<ansyn-annotations-weight
+						[show]="selectedTab === Tabs.Weight"
+						[properties]="clickMenuProps.style.initial"
+						(selectLineWidth)="selectLineWidth($event.width)">
+					</ansyn-annotations-weight>
+				</p>
+			</li>
+			<li>
+				<p>
+					<button [class.active]="selectedTab === Tabs.Colors" (click)="selectTab(Tabs.Colors)">
+						<i tooltip-value="Color" tooltip-class="bottom">
+							<svg viewBox="0 0 1024 1024">
+								<path d="M370.506 526.251c-52.181 0-94.304 38.11-94.304 85.321 0 37.257-36.464 56.883-62.869 56.883 28.92 34.697 78.272 56.879 125.738 56.879 69.47 0 125.74-50.91 125.74-113.762 0-47.211-42.124-85.321-94.305-85.321zM801.472 259.762l-42.121-38.11c-12.262-11.092-32.064-11.092-44.322 0l-281.655 254.828 86.447 78.212 281.651-254.829c12.258-11.092 12.258-29.009 0-40.101zM213.333 668.454v-21.333h-45.553l29.165 34.991 16.387-13.658zM801.472 259.762v0zM759.351 221.652v0zM715.029 221.652v0zM433.374 476.48l-14.312-15.821-17.485 15.821 17.485 15.817 14.312-15.817zM519.821 554.692l-14.315 15.817 14.315 12.949 14.31-12.949-14.31-15.817zM801.472 299.863v0zM370.506 504.917c-61.904 0-115.637 45.7-115.637 106.654h42.667c0-33.472 30.512-63.987 72.97-63.987v-42.667zM254.869 611.571c0 10.829-5.031 19.204-13.216 25.51-8.667 6.677-19.803 10.039-28.319 10.039v42.667c17.888 0 38.188-6.451 54.353-18.901 16.648-12.826 29.849-32.887 29.849-59.315h-42.667zM196.946 682.112c33.247 39.889 88.769 64.555 142.125 64.555v-42.667c-41.576 0-84.758-19.699-109.35-49.207l-32.775 27.319zM339.071 746.667c79.193 0 147.073-58.5 147.073-135.095h-42.667c0 49.114-44.659 92.429-104.406 92.429v42.667zM486.144 611.571c0-60.954-53.734-106.654-115.638-106.654v42.667c42.458 0 72.972 30.515 72.972 63.987h42.667zM815.787 243.943l-42.125-38.11-28.625 31.639 42.121 38.11 28.629-31.639zM773.662 205.833c-20.386-18.444-52.561-18.444-72.947 0l28.625 31.639c4.134-3.74 11.563-3.74 15.697 0l28.625-31.639zM700.715 205.833l-281.653 254.827 28.627 31.637 281.651-254.825-28.625-31.639zM419.062 492.297l86.444 78.212 28.625-31.637-86.443-78.212-28.627 31.637zM534.131 570.509l281.655-254.826-28.629-31.639-281.651 254.828 28.625 31.637zM815.787 315.683c21.619-19.561 21.619-52.179 0-71.74l-28.629 31.639c1.762 1.593 2.176 3.142 2.176 4.231s-0.414 2.638-2.176 4.231l28.629 31.639zM213.333 832h597.333v-42.667h-597.333v42.667z"></path>
+							</svg>
+						</i>
+					</button>
+					<ansyn-annotations-color
+						[show]="selectedTab === Tabs.Colors"
+						[properties]="clickMenuProps.style.initial"
+						(colorChange)="colorChange($event)"
+						(activeChange)="activeChange($event)"
+					></ansyn-annotations-color>
+				</p>
+			</li>
+
+			<li>
+					<button class='removeFeature' (click)="removeFeature()">
+						<i tooltip-value="Delete" tooltip-class="bottom">
+							<svg viewBox="0 0 1024 1024">
+								<path d="M810.667 273.493l-60.16-60.16-238.507 238.507-238.507-238.507-60.16 60.16 238.507 238.507-238.507 238.507 60.16 60.16 238.507-238.507 238.507 238.507 60.16-60.16-238.507-238.507 238.507-238.507z"></path>
+							</svg>
+						</i>
+					</button>
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+<div class="context-menu-wrapper"
+	 *ngIf="hoverMenuProps"
+	 [style.top.px]="hoverMenuProps.boundingRect.top"
+	 [style.width.px]="hoverMenuProps .boundingRect.width"
+	 [style.height.px]="hoverMenuProps.boundingRect.height"
+	 [style.left.px]="hoverMenuProps.boundingRect.left">
+	<div class="context-menu" [style.outline-color]="hoverMenuProps?.style?.initial?.stroke"></div>
+</div>

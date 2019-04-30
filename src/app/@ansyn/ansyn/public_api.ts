@@ -46,24 +46,24 @@ export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-bo
 
 // menuItems
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
-export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
+export { selectAutoSave } from '../../app/cases/reducers/cases.reducer';
 export { FilterType } from './modules/menu-items/filters/models/filter-type';
 export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 
-export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
+export { SelectCaseSuccessAction } from '../../app/cases/actions/cases.actions';
 export { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
 export { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
 export { IUtmZone } from './modules/menu-items/tools/services/projection-converter.service';
 export { DataLayersService } from './modules/menu-items/layers-manager/services/data-layers.service';
 export { ProjectionConverterService } from './modules/menu-items/tools/services/projection-converter.service';
-export { LoadCaseAction } from './modules/menu-items/cases/actions/cases.actions';
+export { LoadCaseAction } from '../../app/cases/actions/cases.actions';
 export { SettingsComponent } from './modules/menu-items/settings/settings/settings.component';
 export { GoToAction } from './modules/menu-items/tools/actions/tools.actions';
 export { ILayerState } from './modules/menu-items/layers-manager/reducers/layers.reducer';
-export { ICasesState } from './modules/menu-items/cases/reducers/cases.reducer';
+export { ICasesState } from '../../app/cases/reducers/cases.reducer';
 export { IToolsState } from './modules/menu-items/tools/reducers/tools.reducer';
 export { ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive } from './modules/menu-items/settings/reducers/settings.reducer';
-export { LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction } from './modules/menu-items/cases/actions/cases.actions';
+export { LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction } from '../../app/cases/actions/cases.actions';
 export { Filters, IFiltersState } from './modules/menu-items/filters/reducer/filters.reducer';
 export { IFilter } from './modules/menu-items/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
@@ -94,7 +94,7 @@ export {
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
 	UpdateCaseAction
-} from './modules/menu-items/cases/actions/cases.actions';
+} from '../../app/cases/actions/cases.actions';
 export {
 	selectAnnotationMode, selectAnnotationProperties,
 	selectOverlaysManualProcessArgs,
@@ -119,7 +119,7 @@ export { BooleanFilterMetadata } from './modules/menu-items/filters/models/metad
 export { SliderFilterMetadata } from './modules/menu-items/filters/models/metadata/slider-filter-metadata';
 export { FilterMetadata } from './modules/menu-items/filters/models/metadata/filter-metadata.interface';
 export { EnumFilterMetadata } from './modules/menu-items/filters/models/metadata/enum-filter-metadata';
-export { casesConfig, CasesService } from './modules/menu-items/cases/services/cases.service';
+export { casesConfig, CasesService } from '../../app/cases/services/cases.service';
 export {
 	selectActiveAnnotationLayer,
 	selectLayers,
@@ -128,7 +128,7 @@ export {
 } from './modules/menu-items/layers-manager/reducers/layers.reducer';
 export { HelpComponent } from './modules/menu-items/help/components/help.component';
 export { filtersConfig, FiltersService } from './modules/menu-items/filters/services/filters.service';
-export { casesStateSelector, selectSelectedCase } from './modules/menu-items/cases/reducers/cases.reducer';
+export { casesStateSelector, selectSelectedCase } from '../../app/cases/reducers/cases.reducer';
 export {
 	filtersStateSelector,
 	selectFacets,
@@ -139,27 +139,27 @@ export { ToolsComponent } from './modules/menu-items/tools/tools/tools.component
 export { layersConfig } from './modules/menu-items/layers-manager/services/data-layers.service';
 export { LayersManagerComponent } from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 export { FiltersCollectionComponent } from './modules/menu-items/filters/components/filters-collection/filters-collection.component';
-export { CasesComponent } from './modules/menu-items/cases/components/cases/cases.component';
+export { CasesComponent } from '../../app/cases/components/cases/cases.component';
 export { IToolsConfig, toolsConfig, IImageProcParam } from './modules/menu-items/tools/models/tools-config';
-export { CasesModule } from './modules/menu-items/cases/cases.module';
+export { CasesModule } from '../../app/cases/cases.module';
 export { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 export { FiltersModule } from './modules/menu-items/filters/filters.module';
 export { HelpModule } from './modules/menu-items/help/help.module';
 export { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 export { SettingsModule } from './modules/menu-items/settings/settings.module';
 export { ToolsModule } from './modules/menu-items/tools/tools.module';
-export { ICasesConfig } from './modules/menu-items/cases/models/cases-config';
+export { ICasesConfig } from '../../app/cases/models/cases-config';
 export { filtersFeatureKey, FiltersReducer } from './modules/menu-items/filters/reducer/filters.reducer';
 export {
 	initialLayersState, layersFeatureKey,
 	LayersReducer,
 	layersStateSelector
 } from './modules/menu-items/layers-manager/reducers/layers.reducer';
-export { casesFeatureKey, CasesReducer, initialCasesState } from './modules/menu-items/cases/reducers/cases.reducer';
+export { casesFeatureKey, CasesReducer, initialCasesState } from '../../app/cases/reducers/cases.reducer';
 export { PullActiveCenter } from './modules/menu-items/tools/actions/tools.actions';
 export { toolsFeatureKey, toolsInitialState, ToolsReducer } from './modules/menu-items/tools/reducers/tools.reducer';
-export { AddCaseAction } from './modules/menu-items/cases/actions/cases.actions';
-export { QueryParamsHelper } from './modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
+export { AddCaseAction } from '../../app/cases/actions/cases.actions';
+export { QueryParamsHelper } from '../../app/cases/services/helpers/cases.service.query-params-helper';
 export { UpdateFilterAction } from './modules/menu-items/filters/actions/filters.actions';
 export { IEnumFiled } from './modules/menu-items/filters/models/metadata/enum-filter-metadata';
 export {
@@ -186,7 +186,7 @@ export {
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './modules/menu-items/algorithms/models/tasks.model';
-export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
+export { SetAutoSave } from '../../app/cases/actions/cases.actions';
 
 
 // core
@@ -253,23 +253,23 @@ export { GeoRegisteration } from './modules/overlays/models/overlay.model';
 export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
 export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria } from './modules/overlays/models/overlay.model';
 
-export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/case.model';
-export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';
-export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './modules/menu-items/cases/models/case.model';
-export { ICase, ICasePreview, IDilutedCase } from './modules/menu-items/cases/models/case.model';
-export { CaseRegionState, IDataInputFilterValue } from './modules/menu-items/cases/models/case.model';
+export { ICaseSliderFilterMetadata } from '../../app/cases/models/case.model';
+export { ICaseLayersState } from '../../app/cases/models/case.model';
+export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from '../../app/cases/models/case.model';
+export { ICase, ICasePreview, IDilutedCase } from '../../app/cases/models/case.model';
+export { CaseRegionState, IDataInputFilterValue } from '../../app/cases/models/case.model';
 export {
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
 	ICaseDataInputFiltersState,
 	ICaseTimeState
-} from './modules/menu-items/cases/models/case.model';
-export { IContextEntity } from './modules/menu-items/cases/models/case.model';
-export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './modules/menu-items/cases/models/case.model';
-export { ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs } from './modules/menu-items/cases/models/case.model';
-export { CaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
-export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
+} from '../../app/cases/models/case.model';
+export { IContextEntity } from '../../app/cases/models/case.model';
+export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from '../../app/cases/models/case.model';
+export { ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs } from '../../app/cases/models/case.model';
+export { CaseEnumFilterMetadata } from '../../app/cases/models/case.model';
+export { ICaseMapState } from '../../app/cases/models/case.model';
 
 
 

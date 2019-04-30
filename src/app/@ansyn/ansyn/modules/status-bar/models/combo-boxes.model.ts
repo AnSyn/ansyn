@@ -1,4 +1,4 @@
-import { CaseGeoFilter, CaseOrientation, CaseTimeFilter } from '../../menu-items/cases/models/case.model';
+import { CaseGeoFilter, CaseOrientation, CaseTimeFilter } from '../../../../../app/cases/models/case.model';
 import { InjectionToken } from '@angular/core';
 
 export const timeFilters: CaseTimeFilter[] = ['Start - End'];

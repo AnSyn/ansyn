@@ -12,7 +12,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
-import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../../../../../../app/cases/models/case.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

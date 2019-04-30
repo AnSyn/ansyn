@@ -31,7 +31,7 @@ import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers
 import { SetOverlaysCriteriaAction } from '../modules/overlays/actions/overlays.actions';
 import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/actions/overlays.actions';
-import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../../app/cases/models/case.model';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 
 @Injectable({

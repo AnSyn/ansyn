@@ -26,7 +26,7 @@ import {
 	CaseOrientation,
 	CaseTimeFilter,
 	ICaseDataInputFiltersState, ICaseTimeState
-} from '../../../menu-items/cases/models/case.model';
+} from '../../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [

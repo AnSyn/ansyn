@@ -29,8 +29,8 @@ import {
 	casesFeatureKey,
 	CasesReducer,
 	casesStateSelector, initialCasesState
-} from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+} from '../../../../app/cases/reducers/cases.reducer';
+import { CasesService } from '../../../../app/cases/services/cases.service';
 import {
 	IToolsState,
 	toolsFeatureKey,
@@ -52,7 +52,7 @@ import {
 	selectDropMarkup, selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { ICase } from '../../../../app/cases/models/case.model';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;

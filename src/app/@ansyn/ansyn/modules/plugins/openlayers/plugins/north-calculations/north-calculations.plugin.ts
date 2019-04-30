@@ -45,7 +45,7 @@ import {
 	OverlaysActionTypes
 } from '../../../../overlays/actions/overlays.actions';
 import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
-import { CaseOrientation } from '../../../../menu-items/cases/models/case.model';
+import { CaseOrientation } from '../../../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 @ImageryPlugin({

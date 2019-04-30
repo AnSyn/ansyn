@@ -1,6 +1,6 @@
 import { StatusBarInitialState, StatusBarReducer } from './status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../actions/status-bar.actions';
-import { CaseGeoFilter } from '../../menu-items/cases/models/case.model';
+import { CaseGeoFilter } from '../../../../../app/cases/models/case.model';
 
 describe('Status Bar Reducer', () => {
 	let _reducerState;

@@ -7,9 +7,9 @@ import { select } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
 import { Inject } from '@angular/core';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
-import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
-import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
-import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { selectSelectedCase } from '../../../app/cases/reducers/cases.reducer';
+import { LoadDefaultCaseAction } from '../../../app/cases/actions/cases.actions';
+import { ICase, ICaseMapState } from '../../../app/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-app',

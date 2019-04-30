@@ -12,10 +12,10 @@ import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-mana
 import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';
 import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
-import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import { UpdateCaseAction } from '../../../../../app/cases/actions/cases.actions';
+import { selectAutoSave, selectSelectedCase } from '../../../../../app/cases/reducers/cases.reducer';
 import { selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
-import { ICase } from '../../../modules/menu-items/cases/models/case.model';
+import { ICase } from '../../../../../app/cases/models/case.model';
 
 // @todo refactor
 const contextFeatureSelector = createFeatureSelector('context');

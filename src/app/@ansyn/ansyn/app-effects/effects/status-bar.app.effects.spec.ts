@@ -1,7 +1,7 @@
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { AddCaseAction, SelectCaseAction } from '../../../../app/cases/actions/cases.actions';
 import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
@@ -9,8 +9,8 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { ExpandAction, GoNextPresetOverlay } from '../../modules/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
-import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { CasesService } from '../../../../app/cases/services/cases.service';
+import { casesFeatureKey, CasesReducer } from '../../../../app/cases/reducers/cases.reducer';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { OverlayReducer, overlaysFeatureKey } from '../../modules/overlays/reducers/overlays.reducer';
 import {
@@ -29,7 +29,7 @@ import {
 	SetMapsDataActionStore,
 	SetPresetOverlaysAction
 } from '@ansyn/map-facade';
-import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { ICase } from '../../../../app/cases/models/case.model';
 import { IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
 
 @OverlaySourceProvider({

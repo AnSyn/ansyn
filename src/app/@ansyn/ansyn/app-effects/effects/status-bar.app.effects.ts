@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
-import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { casesStateSelector, ICasesState } from '../../../../app/cases/reducers/cases.reducer';
 import {
 	ClickOutsideMap,
 	ContextMenuShowAction, imageryStatusStateSelector,
@@ -20,7 +20,7 @@ import {
 } from '../../modules/status-bar/actions/status-bar.actions';
 import { SearchModeEnum } from '../../modules/status-bar/models/search-mode.enum';
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { CopyCaseLinkAction } from '../../../../app/cases/actions/cases.actions';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';

@@ -36,8 +36,8 @@ import {
 	casesFeatureKey,
 	CasesReducer,
 	casesStateSelector, ICasesState
-} from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+} from '../../../../app/cases/reducers/cases.reducer';
+import { CasesService } from '../../../../app/cases/services/cases.service';
 import {
 	initialLayersState,
 	layersStateSelector
@@ -70,7 +70,7 @@ import {
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { GeoRegisteration, IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
-import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { ICase, ICaseMapState } from '../../../../app/cases/models/case.model';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',

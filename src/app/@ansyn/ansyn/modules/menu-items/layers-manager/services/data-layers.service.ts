@@ -5,12 +5,12 @@ import { UUID } from 'angular2-uuid';
 import { featureCollection } from '@turf/turf';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
+import { selectSelectedCase } from '../../../../../../app/cases/reducers/cases.reducer';
 import { catchError, filter, tap } from 'rxjs/internal/operators';
 import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
-import { ICase } from '../../cases/models/case.model';
+import { ICase } from '../../../../../../app/cases/models/case.model';
 
 export const layersConfig = 'layersManagerConfig';
 

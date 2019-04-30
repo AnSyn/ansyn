@@ -23,7 +23,7 @@ import {
 	CasesReducer,
 	casesStateSelector,
 	ICasesState
-} from '../../modules/menu-items/cases/reducers/cases.reducer';
+} from '../../../../app/cases/reducers/cases.reducer';
 import {
 	ClearActiveInteractionsAction,
 	DisableImageProcessing,
@@ -35,10 +35,10 @@ import {
 	SetMeasureDistanceToolState, SetPinLocationModeAction,
 	ShowOverlaysFootprintAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '../../../../app/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { ICase } from '../../../../app/cases/models/case.model';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

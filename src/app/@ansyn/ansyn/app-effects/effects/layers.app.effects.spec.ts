@@ -15,7 +15,7 @@ import { IAppState } from '../app.effects.module';
 	casesFeatureKey,
 	CasesReducer,
 	casesStateSelector, ICasesState, initialCasesState
-} from '../../modules/menu-items/cases/reducers/cases.reducer';
+} from '../../../../app/cases/reducers/cases.reducer';
 
 	describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;

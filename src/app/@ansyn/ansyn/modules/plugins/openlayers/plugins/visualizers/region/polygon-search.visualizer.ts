@@ -10,7 +10,7 @@ import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap } from '@ansyn/ol';
 import { OpenLayersProjectionService } from '@ansyn/ol';
-import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
+import { CaseGeoFilter, CaseRegionState } from '../../../../../../../../app/cases/models/case.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

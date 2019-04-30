@@ -9,7 +9,7 @@ import { EMPTY } from 'rxjs/index';
 import * as turf from '@turf/turf';
 import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
-import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../../../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { EntitiesVisualizer } from '@ansyn/ol';
 

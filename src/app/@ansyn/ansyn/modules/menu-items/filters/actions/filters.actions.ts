@@ -2,7 +2,7 @@ import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
 import { Action } from '@ngrx/store';
 import { Filters } from '../reducer/filters.reducer';
-import { ICaseFacetsState } from '../../cases/models/case.model';
+import { ICaseFacetsState } from '../../../../../../app/cases/models/case.model';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',

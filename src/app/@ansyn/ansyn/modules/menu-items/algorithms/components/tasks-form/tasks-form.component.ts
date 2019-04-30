@@ -33,7 +33,7 @@ import {
 import { selectActiveMapId, selectMaps, selectFavoriteOverlays } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 import { Dictionary } from '@ngrx/entity';
-import { ICaseMapState } from '../../../cases/models/case.model';
+import { ICaseMapState } from '../../../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 @Component({

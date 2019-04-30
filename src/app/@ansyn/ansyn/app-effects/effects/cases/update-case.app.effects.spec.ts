@@ -3,7 +3,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 import { UpdateCaseAppEffects } from './update-case.app.effects';
-import { casesFeatureKey, CasesReducer } from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer } from '../../../../../app/cases/reducers/cases.reducer';
 
 describe('UpdateCaseAppEffects', () => {
 	let updateCaseAppEffects: UpdateCaseAppEffects;

@@ -24,15 +24,15 @@ import {
 	CasesActionTypes,
 	SelectCaseAction,
 	SelectCaseSuccessAction, SetAutoSave
-} from '../../../modules/menu-items/cases/actions/cases.actions';
-import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+} from '../../../../../app/cases/actions/cases.actions';
+import { CasesService } from '../../../../../app/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
-import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
+import { ICase, ICaseMapState } from '../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 
 @Injectable()

@@ -20,7 +20,7 @@ import {
 	IMultipleOverlaysSourceConfig,
 	IOverlaysSourceProvider, MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
+import { IDataInputFilterValue } from '../../../../../app/cases/models/case.model';
 import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 
 @Injectable({

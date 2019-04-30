@@ -18,7 +18,7 @@ import { COMPONENT_MODE } from './app-providers/component-mode';
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { ANSYN_ID } from './api/ansyn-id.provider';
 import { CoreModule } from './modules/core/core.module';
-import { CasesModule } from './modules/menu-items/cases/cases.module';
+import { CasesModule } from '../../app/cases/cases.module';
 import { FiltersModule } from './modules/menu-items/filters/filters.module';
 import { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 import { TasksModule } from './modules/menu-items/algorithms/tasks.module';

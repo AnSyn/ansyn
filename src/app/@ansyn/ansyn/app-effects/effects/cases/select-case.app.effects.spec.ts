@@ -20,12 +20,12 @@ import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
-import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+import { CasesService } from '../../../../../app/cases/services/cases.service';
 import {
 	SelectCaseAction,
 	SelectCaseSuccessAction,
 	SetAutoSave
-} from '../../../modules/menu-items/cases/actions/cases.actions';
+} from '../../../../../app/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -43,7 +43,7 @@ import {
 	ICaseTimeState,
 	IContextEntity,
 	IOverlaysManualProcessArgs
-} from '../../../modules/menu-items/cases/models/case.model';
+} from '../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 
 describe('SelectCaseAppEffects', () => {

@@ -1,7 +1,7 @@
 import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IVisualizerStyle } from '@ansyn/imagery';
-import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
+import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../../../../../app/cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
 

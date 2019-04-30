@@ -38,7 +38,7 @@ import {
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
-import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../../../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 
 // @dynamic

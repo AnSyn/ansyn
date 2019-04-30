@@ -9,7 +9,7 @@ import {
 	UpdateLayer,
 	UpdateSelectedLayersIds
 } from '../../modules/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SaveCaseAsSuccessAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SaveCaseAsSuccessAction } from '../../../../app/cases/actions/cases.actions';
 import { ILayer, LayerType } from '../../modules/menu-items/layers-manager/models/layers.model';
 import { selectLayers } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import {

@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { LoggerConfig } from '../../../../core/models/logger.config';
-import { casesFeatureKey, CasesReducer } from '../../../cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer } from '../../../../../../../app/cases/reducers/cases.reducer';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;

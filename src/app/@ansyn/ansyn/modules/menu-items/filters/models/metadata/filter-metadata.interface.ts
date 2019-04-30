@@ -1,6 +1,6 @@
 import { FilterType } from '../filter-type';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
-import { ICaseFilter } from '../../../cases/models/case.model';
+import { ICaseFilter } from '../../../../../../../app/cases/models/case.model';
 export abstract class FilterMetadata {
 	type: FilterType;
 

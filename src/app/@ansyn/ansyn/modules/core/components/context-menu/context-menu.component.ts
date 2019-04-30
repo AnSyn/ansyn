@@ -19,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICaseMapState } from '../../../../../../app/cases/models/case.model';
 
 export interface IContextMenuShowPayload {
 	point: Point;

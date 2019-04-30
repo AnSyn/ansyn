@@ -25,7 +25,7 @@ import {
 import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
 import { IOverlayByIdMetaData } from '../../../modules/overlays/services/overlays.service';
 import { GeoRegisteration, IOverlay, Overlay } from '../../../modules/overlays/models/overlay.model';
-import { IDataInputFilterValue } from '../../../modules/menu-items/cases/models/case.model';
+import { IDataInputFilterValue } from '../../../../../app/cases/models/case.model';
 
 const moment = momentNs;
 

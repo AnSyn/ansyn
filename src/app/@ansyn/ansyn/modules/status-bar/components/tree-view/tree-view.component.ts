@@ -14,7 +14,7 @@ import {
 	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
+import { IDataInputFilterValue } from '../../../../../../app/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-tree-view',

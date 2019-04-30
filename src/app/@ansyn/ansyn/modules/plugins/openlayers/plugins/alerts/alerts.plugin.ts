@@ -9,7 +9,7 @@ import { bboxPolygon, intersect } from '@turf/turf';
 import { OpenLayersDisabledMap } from '@ansyn/ol';
 import { selectDrops } from '../../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../../core/utils/overlays';
-import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../../../../../../app/cases/models/case.model';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 
 @ImageryPlugin({

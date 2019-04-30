@@ -10,7 +10,7 @@ import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { selectLayers } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
-import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../../../../../../app/cases/models/case.model';
 
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 

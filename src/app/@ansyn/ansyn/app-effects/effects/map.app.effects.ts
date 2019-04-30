@@ -59,7 +59,7 @@ import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { CesiumMapName } from '../../modules/plugins/cesium/maps/cesium-map/cesium-map';
 import { OpenlayersMapName, DisabledOpenLayersMapName } from '@ansyn/ol';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../../../app/cases/models/case.model';
 
 @Injectable()
 export class MapAppEffects {

@@ -64,7 +64,7 @@ import { overlayOverviewComponentConstants } from '../../modules/overlays/compon
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import * as turf from '@turf/turf';
 import { Position } from 'geojson';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICaseMapState } from '../../../../app/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { IPendingOverlay } from '@ansyn/map-facade';
 

@@ -12,7 +12,7 @@ import { Inject } from '@angular/core';
 import { ProjectableRaster } from '@ansyn/ol';
 import { selectMaps } from '@ansyn/map-facade';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
-import { ICaseMapState, ImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import { ICaseMapState, ImageManualProcessArgs } from '../../../../../../../app/cases/models/case.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],

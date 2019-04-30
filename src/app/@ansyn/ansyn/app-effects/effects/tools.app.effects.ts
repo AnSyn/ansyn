@@ -19,7 +19,7 @@ import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/in
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes } from '../../../../app/cases/actions/cases.actions';
 import {
 	ClearActiveInteractionsAction,
 	DisableImageProcessing,
@@ -37,7 +37,7 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../../../app/cases/models/case.model';
 
 @Injectable()
 export class ToolsAppEffects {

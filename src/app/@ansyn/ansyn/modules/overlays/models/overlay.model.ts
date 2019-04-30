@@ -1,4 +1,4 @@
-import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../../../../app/cases/models/case.model';
 import { MultiPolygon } from "geojson";
 
 export interface IOverlaysFetchData {

@@ -13,7 +13,7 @@ import { Inject } from '@angular/core';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseIfNoActiveCaseAction, SelectCaseAction, SelectDilutedCaseAction
-} from '../../modules/menu-items/cases/actions/cases.actions';
+} from '../../../../app/cases/actions/cases.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { IToolsState, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import {
@@ -23,7 +23,7 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { IDilutedCase, ImageManualProcessArgs } from '../../../../app/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()

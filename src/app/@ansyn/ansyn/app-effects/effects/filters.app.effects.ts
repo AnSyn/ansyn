@@ -43,7 +43,7 @@ import {
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
-import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
+import { ICaseFacetsState } from '../../../../app/cases/models/case.model';
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()

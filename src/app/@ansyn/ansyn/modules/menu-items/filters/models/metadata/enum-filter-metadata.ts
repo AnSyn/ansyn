@@ -1,6 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { mapValuesToArray } from '../../../../core/utils/misc';
-import { CaseEnumFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
+import { CaseEnumFilterMetadata, ICaseFilter } from '../../../../../../../app/cases/models/case.model';
 import { FilterType } from '../filter-type';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 

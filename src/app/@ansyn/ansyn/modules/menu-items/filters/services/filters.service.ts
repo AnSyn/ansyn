@@ -9,7 +9,7 @@ import { buildFilteredOverlays } from '../../../core/utils/overlays';
 import { mapValuesToArray } from '../../../core/utils/misc';
 import { IFilterModel } from '../../../core/models/IFilterModel';
 import { FilterType } from '../models/filter-type';
-import { ICaseFilter } from '../../cases/models/case.model';
+import { ICaseFilter } from '../../../../../../app/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 
 export const filtersConfig = 'filtersConfig';

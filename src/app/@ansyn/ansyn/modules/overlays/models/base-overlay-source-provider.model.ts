@@ -10,7 +10,7 @@ import { sortByDateDesc } from '../../core/utils/sorting';
 import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
 import { IOverlay, IOverlaysFetchData } from './overlay.model';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
+import { IDataInputFilterValue } from '../../../../../app/cases/models/case.model';
 
 export interface IFetchParams {
 	limit: number;

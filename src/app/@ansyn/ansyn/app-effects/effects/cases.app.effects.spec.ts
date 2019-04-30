@@ -24,9 +24,9 @@ import {
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
 	SelectDilutedCaseAction
-} from '../../modules/menu-items/cases/actions/cases.actions';
-import { casesConfig, CasesService } from '../../modules/menu-items/cases/services/cases.service';
-import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
+} from '../../../../app/cases/actions/cases.actions';
+import { casesConfig, CasesService } from '../../../../app/cases/services/cases.service';
+import { casesFeatureKey, CasesReducer } from '../../../../app/cases/reducers/cases.reducer';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { OverlayReducer, overlaysFeatureKey } from '../../modules/overlays/reducers/overlays.reducer';
 import {
@@ -35,7 +35,7 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { ICase } from '../../../../app/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 
 describe('CasesAppEffects', () => {

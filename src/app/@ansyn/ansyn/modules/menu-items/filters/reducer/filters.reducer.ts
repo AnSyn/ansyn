@@ -8,7 +8,7 @@ import {
 	ICaseBooleanFilterMetadata,
 	ICaseFacetsState,
 	ICaseFilter, ICaseSliderFilterMetadata
-} from '../../cases/models/case.model';
+} from '../../../../../../app/cases/models/case.model';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 

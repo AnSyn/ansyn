@@ -9,37 +9,46 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { getTimeFormat } from '../../utils/time';
-import { ALERTS, IAlert } from '../../alerts/alerts.model';
-import { distinctUntilChanged, tap, map } from 'rxjs/internal/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { get as _get } from 'lodash';
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, map, tap } from 'rxjs/internal/operators';
+import {
+	SetRemovedOverlaysIdAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
+} from '../../actions/imagery-status.actions';
 import {
 	BackToWorldView,
 	ChangeImageryMap,
 	SetToastMessageAction,
 	ToggleMapLayersAction
 } from '../../actions/map.actions';
-import { selectAlertMsg } from '../../reducers/imagery-status.reducer';
+import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { AlertMsg } from '../../alerts/model';
+import { IEntryComponent } from '../../directives/entry-component.directive';
 import {
+	selectAlertMsg,
 	selectEnableCopyOriginalOverlayDataFlag,
 	selectFavoriteOverlays,
 	selectPresetOverlays,
 	selectRemovedOverlays
 } from '../../reducers/imagery-status.reducer';
-import {
-	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
-} from '../../actions/imagery-status.actions';
-import { copyFromContent } from '../../utils/clipboard';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
-import { get as _get } from 'lodash';
 import { selectActiveMapId, selectMapsTotal } from '../../reducers/map.reducer';
-import { IEntryComponent } from '../../directives/entry-component.directive';
+import { copyFromContent } from '../../utils/clipboard';
+import { getTimeFormat } from '../../utils/time';
+
+const defaultMapState: IMapSettings = {
+	id: null,
+	data: null,
+	flags: {
+		displayLayers: false
+	},
+	worldView: null
+};
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -78,7 +87,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			this.updateFavoriteStatus();
 			this.updatePresetStatus();
 		}
-		this._mapState = value;
+		this._mapState = value ? value : defaultMapState;
 	};
 
 	@AutoSubscription
@@ -173,7 +182,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	get description() {
 		const ActiveMap = _get(this.communicators.provide(this.mapState.id), 'ActiveMap');
-		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
+		const {description} = (ActiveMap && ActiveMap.getExtraData()) || <any>{};
 		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 
@@ -193,10 +202,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
 			const tagJson = JSON.stringify(this.overlay.tag);
 			copyFromContent(tagJson);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
+			this.store$.dispatch(new SetToastMessageAction({toastText: 'Overlay original data copied to clipboard'}));
 		} else {
 			copyFromContent(this.overlayDescription);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+			this.store$.dispatch(new SetToastMessageAction({toastText: 'Overlay description copied to clipboard'}));
 		}
 	}
 
@@ -238,16 +247,16 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	toggleFavorite() {
 		const overlay = this.overlay;
-		const { id } = overlay;
+		const {id} = overlay;
 		const value = !this.isFavorite;
-		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
+		this.store$.dispatch(new ToggleFavoriteAction({value, id, overlay}));
 	}
 
 	togglePreset() {
 		const overlay = this.overlay;
-		const { id } = overlay;
+		const {id} = overlay;
 		const value = !this.isPreset;
-		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
+		this.store$.dispatch(new TogglePresetOverlayAction({value, id, overlay}));
 	}
 
 	updateFavoriteStatus() {
@@ -271,11 +280,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleMapLayers() {
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapState.id }));
+		this.store$.dispatch(new ToggleMapLayersAction({mapId: this.mapState.id}));
 	}
 
 	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({ mapId: this.mapState.id }));
+		this.store$.dispatch(new BackToWorldView({mapId: this.mapState.id}));
 	}
 
 	removeOverlay() {
@@ -287,6 +296,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	changeActiveMap(mapType: string) {
-		this.store$.dispatch(new ChangeImageryMap({ id: this.mapState.id, mapType }));
+		this.store$.dispatch(new ChangeImageryMap({id: this.mapState.id, mapType}));
 	}
 }

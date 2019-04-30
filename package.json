@@ -1,6 +1,7 @@
 {
   "name": "ansyn-src",
   "version": "0.3.29",
+
   "private": true,
   "license": "MIT",
   "repository": {

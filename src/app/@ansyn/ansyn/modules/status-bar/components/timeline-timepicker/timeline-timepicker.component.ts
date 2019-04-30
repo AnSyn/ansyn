@@ -77,6 +77,7 @@ export class TimelineTimepickerComponent implements OnInit {
 		this.startDatePickerInstance.setDate(this.startDatePickerValue, false);
 	}
 
+
 	selectedDateChanged(date: Date[], dateString: string, instance: any) {
 		this.error = '';
 		if (!this.isValidDate(date[0])) {

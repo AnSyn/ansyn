@@ -1,15 +1,15 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "0.3.27",
+	"version": "0.3.28",
 	"peerDependencies": {
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^7.2.0",
 		"@ngrx/effects": "^7.2.0",
 		"@angular/common": "^7.2.2",
 		"@angular/core": "^7.2.2",
-		"@ansyn/imagery": "0.3.27",
-		"@ansyn/map-facade": "0.3.27",
-		"@ansyn/menu": "0.3.27",
+		"@ansyn/imagery": "0.3.28",
+		"@ansyn/map-facade": "0.3.28",
+		"@ansyn/menu": "0.3.28",
 		"ol": "^5.3.0",
 		"@angular/cdk": "^7.3.0",
 		"@angular/material": "^7.3.0"
@@ -19,7 +19,17 @@
 		"geojson": "^0.5.0",
 		"lodash": "^4.17.11",
 		"moment": "^2.21.0",
-		"wellknown": "^0.5.0"
+		"wellknown": "^0.5.0",
+		"flatpickr": "^4.5.7",
+		"font-awesome": "^4.7.0",
+		"primeng": "^6.1.4",
+		"file-saver": "^1.3.8",
+		"lodash-decorators": "^4.5.0",
+		"ngx-bootstrap": "^2.0.4",
+		"proj4": "^2.5.0",
+		"rison": "^0.1.1",
+		"togeojson": "^0.16.0",
+		"tokml": "^0.4.0"
 	},
 	"license": "MIT"
 }

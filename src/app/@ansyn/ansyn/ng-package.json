@@ -9,7 +9,17 @@
     "geojson",
     "lodash",
     "moment",
-    "wellknown"
+    "wellknown",
+    "flatpickr",
+    "font-awesome",
+    "primeng",
+    "file-saver",
+    "lodash-decorators",
+    "ngx-bootstrap",
+    "proj4",
+    "rison",
+    "togeojson",
+    "tokml"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

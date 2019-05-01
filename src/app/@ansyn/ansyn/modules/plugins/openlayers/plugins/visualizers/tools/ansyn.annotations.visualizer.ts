@@ -1,9 +1,9 @@
 import { fromCircle } from 'ol/geom/Polygon';
-import { BaseImageryPlugin, ImageryPlugin, ImageryVisualizer, IVisualizerStyle, IVisualizerEntity } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { combineLatest, Observable, EMPTY } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -12,12 +12,12 @@ import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
+	IAnnotationsSelectionEventData,
 	IDrawEndEvent,
 	IOLPluginsConfig,
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
-	OpenLayersProjectionService,
-	IAnnotationsSelectionEventData
+	OpenLayersProjectionService
 } from '@ansyn/ol';
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import {
@@ -33,7 +33,8 @@ import {
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import {
 	AnnotationRemoveFeature,
-	AnnotationSelectAction, AnnotationUpdateFeature,
+	AnnotationSelectAction,
+	AnnotationUpdateFeature,
 	SetAnnotationMode
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
@@ -108,7 +109,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
-		tap((mode) => this.store$.dispatch(new SetAnnotationMode(mode)))
+		tap((mode) => {
+			const newMode = !Boolean(mode) ? undefined : mode; // prevent infinite loop
+			this.store$.dispatch(new SetAnnotationMode(newMode))
+		})
 	);
 
 	@AutoSubscription

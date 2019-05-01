@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/menu",
-	"version": "0.3.28",
+	"version": "0.3.29",
 	"peerDependencies": {
 		"@angular/common": "^7.2.2",
 		"@angular/core": "^7.2.2",

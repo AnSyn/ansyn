@@ -1,5 +1,5 @@
 import { fromCircle } from 'ol/geom/Polygon';
-import { BaseImageryPlugin, ImageryPlugin, ImageryVisualizer, IVisualizerStyle } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryPlugin, ImageryVisualizer, IVisualizerStyle, IVisualizerEntity } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
@@ -12,12 +12,12 @@ import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
-	EntitiesVisualizer, IDrawEndEvent,
-
+	IDrawEndEvent,
 	IOLPluginsConfig,
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
-	OpenLayersProjectionService
+	OpenLayersProjectionService,
+	IAnnotationsSelectionEventData
 } from '@ansyn/ol';
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import {
@@ -112,7 +112,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onSelect$ = () => this.annotationsVisualizer.events.onSelect.pipe(
+	onSelect$ = (): Observable<IAnnotationsSelectionEventData> => this.annotationsVisualizer.events.onSelect.pipe(
 		tap((event) => this.store$.dispatch(new AnnotationSelectAction(event)))
 	);
 
@@ -143,7 +143,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 
 	@AutoSubscription
-	updateEntity$ = () => this.annotationsVisualizer.events.updateEntity.pipe(
+	updateEntity$ = (): Observable<IVisualizerEntity> => this.annotationsVisualizer.events.updateEntity.pipe(
 		tap((feature) => {
 			this.store$.dispatch(new AnnotationUpdateFeature({
 				featureId: feature.id,

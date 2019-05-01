@@ -109,8 +109,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
-		map((mode) => !Boolean(mode) ? undefined : mode), // prevent infinite loop
-		tap((mode) => this.store$.dispatch(new SetAnnotationMode(mode)))
+		tap((mode) => {
+			const newMode = !Boolean(mode) ? undefined : mode; // prevent infinite loop
+			this.store$.dispatch(new SetAnnotationMode(newMode))
+		})
 	);
 
 	@AutoSubscription

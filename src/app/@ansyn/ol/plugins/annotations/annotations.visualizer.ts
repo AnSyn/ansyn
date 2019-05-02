@@ -214,46 +214,47 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onInit() {
 		super.onInit();
-
-		this.iMap.mapObject.on('click', (event) => {
-			if (this.mapSearchIsActive || this.mode) {
-				return;
-			}
-			const { shiftKey: multi } = event.originalEvent;
-			const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
-			const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
-			if (selectedFeature) {
-				const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
-				const eventData: IAnnotationsSelectionEventData = {
-					featureId: id,
-					label: label,
-					style: style,
-					boundingRect: () => this.getFeatureBoundingRect(selectedFeature),
-					showMeasures
-				};
-				this.events.onSelect.next({ mapId: this.mapId, multi, data: { [id]: eventData } });
-			} else {
-				this.events.onSelect.next({ mapId: this.mapId, multi, data: {} });
-			}
-		});
-
-		this.iMap.mapObject.on('pointermove', (event) => {
-			if (this.mapSearchIsActive || this.mode) {
-				return;
-			}
-			const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
-			const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
-			const { mapId } = this;
-			this.events.onHover.next({
-				mapId,
-				data: selectedFeature ? {
-					boundingRect: this.getFeatureBoundingRect(selectedFeature),
-					style: this.getEntity(selectedFeature).style
-				} : null
-			});
-		});
-
+		this.iMap.mapObject.on('click', this.mapClick);
+		this.iMap.mapObject.on('pointermove', this.mapPointermove);
 	}
+
+	mapClick = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const { shiftKey: multi } = event.originalEvent;
+		const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
+		const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
+		if (selectedFeature) {
+			const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
+			const eventData: IAnnotationsSelectionEventData = {
+				featureId: id,
+				label: label,
+				style: style,
+				boundingRect: () => this.getFeatureBoundingRect(selectedFeature),
+				showMeasures
+			};
+			this.events.onSelect.next({ mapId: this.mapId, multi, data: { [id]: eventData } });
+		} else {
+			this.events.onSelect.next({ mapId: this.mapId, multi, data: {} });
+		}
+	};
+
+	mapPointermove = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
+		const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
+		const { mapId } = this;
+		this.events.onHover.next({
+			mapId,
+			data: selectedFeature ? {
+				boundingRect: this.getFeatureBoundingRect(selectedFeature),
+				style: this.getEntity(selectedFeature).style
+			} : null
+		});
+	};
 
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
@@ -325,6 +326,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	onDispose(): void {
 		super.onDispose();
 		this.removeDrawInteraction();
+		this.iMap.mapObject.un('click', this.mapClick);
+		this.iMap.mapObject.un('pointermove', this.mapPointermove);
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {

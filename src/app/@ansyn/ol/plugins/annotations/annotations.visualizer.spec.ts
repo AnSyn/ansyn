@@ -38,12 +38,4 @@ describe('AnnotationsVisualizer', () => {
 		expect(annotationsVisualizer.removeDrawInteraction).toHaveBeenCalled();
 	});
 
-	it('resetInteractions should call removeInteraction, addInteraction', () => {
-		spyOn(annotationsVisualizer, 'addInteraction');
-		spyOn(annotationsVisualizer, 'removeInteraction');
-		annotationsVisualizer.resetInteractions();
-		expect(annotationsVisualizer.addInteraction).toHaveBeenCalled();
-		expect(annotationsVisualizer.removeInteraction).toHaveBeenCalled();
-	});
-
 });

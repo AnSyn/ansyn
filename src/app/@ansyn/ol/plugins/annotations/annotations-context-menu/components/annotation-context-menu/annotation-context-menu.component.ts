@@ -4,7 +4,12 @@ import { filter, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
-import { AnnotationInteraction, IAnnotationsSelectionEventData } from '../../../annotations.model';
+import {
+	AnnotationInteraction,
+	IAnnotationsSelectionEventData, IIOnHoverEventData,
+	IOnHoverEvent,
+	IOnSelectEvent, IOnSelectEventData
+} from '../../../annotations.model';
 
 enum AnnotationsContextmenuTabs {
 	Colors,
@@ -22,46 +27,36 @@ enum AnnotationsContextmenuTabs {
 	destroy: 'ngOnDestroy'
 })
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
-	clickMenuProps: IAnnotationsSelectionEventData;
-	hoverMenuProps: IAnnotationsSelectionEventData;
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
 	Tabs = AnnotationsContextmenuTabs;
-	selectedTab: AnnotationsContextmenuTabs;
+	selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
+
+	openMenus: IOnSelectEventData;
+	openMenusArray: IAnnotationsSelectionEventData[];
+	hoverEventData: IIOnHoverEventData;
 
 	@Input() mapState: IMapSettings;
 	@HostBinding('attr.tabindex') tabindex = 0;
 
 	@AutoSubscription
-	positionChanged$ = (): Observable<any> => this.communicator.ActiveMap.moveStart.pipe(
-		tap(() => {
-			this.clickMenuProps = null;
-			this.hoverMenuProps = null;
+	onSelect$ = () => this.annotations.events.onSelect.pipe(
+		filter((payload) => payload.mapId === this.mapState.id),
+		tap((payload: IOnSelectEvent) => {
+			this.openMenus = payload.multi ? (
+				Object.entries(payload.data).reduce((prev, [key, value]) => {
+					const { [key]: feat, ...rest } = prev;
+					return feat ? rest : ({  ...prev, [key]: value  })
+				}, this.openMenus)
+			) : payload.data;
+			this.openMenusArray = Object.values(this.openMenus)
 		})
 	);
 
 	@AutoSubscription
-	annotationContextMenuTrigger$ = () => this.annotations.events.onSelect.pipe(
+	onHover$ = () => this.annotations.events.onHover.pipe(
 		filter((payload) => payload.mapId === this.mapState.id),
-		tap((payload: IAnnotationsSelectionEventData) => {
-			const { boundingRect } = payload;
-			switch (payload.interactionType) {
-				case AnnotationInteraction.click:
-					if (boundingRect) {
-						this.clickMenuProps = payload;
-					} else {
-						this.clickMenuProps = null;
-					}
-					break;
-				case AnnotationInteraction.hover:
-					if ((!this.clickMenuProps || this.clickMenuProps.featureId !== payload.featureId) && boundingRect) {
-						this.hoverMenuProps = payload;
-					} else {
-						this.hoverMenuProps = null;
-					}
-					break;
-			}
-		})
+		tap((payload: IOnHoverEvent) => this.hoverEventData = payload.data)
 	);
 
 	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
@@ -87,74 +82,77 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	close() {
-		this.clickMenuProps = null;
-		this.selectedTab = null;
+		// this.clickMenuProps = null;
+		// this.selectedTab = null;
 	}
 
 	ngOnDestroy(): void {
 	}
 
-	removeFeature() {
-		const { featureId } = this.clickMenuProps;
-		this.close();
+	removeFeature(featureId) {
 		this.annotations.removeFeature(featureId);
+		this.annotations.events.onSelect.next({
+			mapId: this.mapState.id,
+			multi: true,
+			data: { [featureId]: { featureId } }
+		})
 	}
 
-	selectTab(tab: AnnotationsContextmenuTabs) {
-		this.selectedTab = this.selectedTab === tab ? null : tab;
+	selectTab(id: string, tab: AnnotationsContextmenuTabs) {
+		this.selectedTab = { ...this.selectedTab, [id]: this.selectedTab[id] === tab ? null : tab };
 	}
 
 	toggleMeasures() {
-		const { featureId } = this.clickMenuProps;
-		const showMeasures = !this.clickMenuProps.showMeasures;
-		this.annotations.updateFeature(featureId, { showMeasures });
-		this.clickMenuProps.showMeasures = showMeasures;
+	// 	const { featureId } = this.clickMenuProps;
+	// 	const showMeasures = !this.clickMenuProps.showMeasures;
+	// 	this.annotations.updateFeature(featureId, { showMeasures });
+	// 	this.clickMenuProps.showMeasures = showMeasures;
 	}
 
-	selectLineWidth(w: number) {
-		const { featureId } = this.clickMenuProps;
-		const style = {
-			...this.clickMenuProps.style,
+	selectLineWidth(w: number, menuProps: IAnnotationsSelectionEventData) {
+		const { featureId, style } = menuProps;
+		const updateStyle = {
+			...style,
 			initial: {
-				...this.clickMenuProps.style.initial,
+				...style.initial,
 				'stroke-width': w
 			}
 		};
 
-		this.annotations.updateFeature(featureId, { style });
-		this.clickMenuProps.style = style;
+		this.annotations.updateFeature(featureId, { style: updateStyle });
+		menuProps.style = style;
 	}
 
-	activeChange($event: { label: 'stroke' | 'fill', event: string }) {
+	activeChange($event: { label: 'stroke' | 'fill', event: string }, menuProps: IAnnotationsSelectionEventData) {
 		let opacity = { stroke: 1, fill: 0.4 };
-		const { featureId } = this.clickMenuProps;
-		const style = {
-			...this.clickMenuProps.style,
+		const { featureId, style } = menuProps;
+		const updatedStyle = {
+			...style,
 			initial: {
-				...this.clickMenuProps.style.initial,
+				...style.initial,
 				[`${$event.label}-opacity`]: $event.event ? opacity[$event.label] : 0
 			}
 		};
-		this.annotations.updateFeature(featureId, { style });
-		this.clickMenuProps.style = style;
+		this.annotations.updateFeature(featureId, { style: updatedStyle });
+		menuProps.style = style;
 	}
 
-	colorChange($event: { label: 'stroke' | 'fill', event: string }) {
-		const { featureId } = this.clickMenuProps;
-		const style = {
-			...this.clickMenuProps.style,
+	colorChange($event: { label: 'stroke' | 'fill', event: string }, menuProps: IAnnotationsSelectionEventData) {
+		const { featureId, style } = menuProps;
+		const updateStyle = {
+			...style,
 			initial: {
-				...this.clickMenuProps.style.initial,
+				...style.initial,
 				[$event.label]: $event.event
 			}
 		};
-		this.annotations.updateFeature(featureId, { style });
-		this.clickMenuProps.style = style;
+		this.annotations.updateFeature(featureId, { style: updateStyle });
+		menuProps.style = style;
 	}
 
-	updateLabel(label) {
-		const { featureId } = this.clickMenuProps;
+	updateLabel(label, menuProps) {
+		const { featureId } = menuProps;
 		this.annotations.updateFeature(featureId, { label });
-		this.clickMenuProps.label = label
+		menuProps.label = label
 	}
 }

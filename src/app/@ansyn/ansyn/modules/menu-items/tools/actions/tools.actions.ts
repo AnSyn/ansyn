@@ -4,7 +4,7 @@ import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
-import { AnnotationMode, IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/ol';
+import { AnnotationMode, IAnnotationsSelectionEventData, IOnSelectEvent, IUpdateFeatureEvent } from '@ansyn/ol';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -204,7 +204,7 @@ export class ClearActiveInteractionsAction implements Action {
 export class AnnotationSelectAction implements Action {
 	type = ToolsActionsTypes.ANNOTATION_SELECT;
 
-	constructor(public payload: IAnnotationsSelectionEventData) {
+	constructor(public payload: IOnSelectEvent) {
 
 	}
 }

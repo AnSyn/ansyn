@@ -1,5 +1,4 @@
 import Draw from 'ol/interaction/Draw';
-import Select from 'ol/interaction/Select';
 import * as Sphere from 'ol/sphere';
 import olCircle from 'ol/geom/Circle';
 import olLineString from 'ol/geom/LineString';
@@ -10,17 +9,13 @@ import olStyle from 'ol/style/Style';
 import olFill from 'ol/style/Fill';
 import olText from 'ol/style/Text';
 import olStroke from 'ol/style/Stroke';
-
-import * as condition from 'ol/events/condition';
-
 import {
 	ImageryVisualizer,
-	IVisualizerEntity, IVisualizerStateStyle,
+	IVisualizerEntity,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
-
 import { cloneDeep, merge } from 'lodash';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { Subject } from 'rxjs';
@@ -37,9 +32,8 @@ import {
 	AnnotationMode,
 	IAnnotationBoundingRect,
 	IAnnotationsSelectionEventData,
-	IDrawEndEvent
+	IDrawEndEvent, IOnHoverEvent, IOnSelectEvent
 } from './annotations.model';
-
 
 // @dynamic
 @ImageryVisualizer({
@@ -67,7 +61,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	events = {
 		onClick: new Subject(),
-		onSelect: new Subject<IAnnotationsSelectionEventData>(),
+		onSelect: new Subject<IOnSelectEvent>(),
+		onHover: new Subject<IOnHoverEvent>(),
 		onChangeMode: new Subject<AnnotationMode>(),
 		onDrawEnd: new Subject<IDrawEndEvent>(),
 		removeEntity: new Subject<string>(),
@@ -84,19 +79,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometryFunction: this.rectangleGeometryFunction.bind(this)
 		}
 	};
-
-	get mapRotation(): number {
-		return this.iMap.mapObject.getView().getRotation();
-	}
-
-	get interactionParams() {
-		return {
-			layers: [this.vector],
-			hitTolerance: 0,
-			style: (feature) => this.featureStyle(feature),
-			multi: true
-		};
-	}
 
 	findFeatureWithMinimumArea(featuresArray: any[]) {
 		return featuresArray.reduce((prevResult, currFeature) => {
@@ -188,103 +170,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	resetInteractions(): void {
-		this.setMode(null);
-		this.removeInteraction(VisualizerInteractions.click);
-		this.addInteraction(VisualizerInteractions.click, this.createClickInteraction());
-		this.removeInteraction(VisualizerInteractions.pointerMove);
-		this.addInteraction(VisualizerInteractions.pointerMove, this.createHoverInteraction());
-	}
-
-	createClickInteraction() {
-		const interaction = new Select(<any>{
-			condition: condition.click,
-			...this.interactionParams
-		});
-		interaction.on('select', this.onClickAnnotation.bind(this));
-		return interaction;
-	}
-
-	onClickAnnotation(event) {
-		this.clearCurrentHoverSelection();
-		event.target.getFeatures().clear();
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		const selectedFeature = this.findFeatureWithMinimumArea(event.selected);
-		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
-		const eventData: IAnnotationsSelectionEventData = {
-			label: label,
-			mapId: this.mapId,
-			style: style,
-			featureId: id,
-			boundingRect,
-			type: selectedFeature ? selectedFeature.values_.mode : undefined,
-			interactionType: AnnotationInteraction.click,
-			showMeasures
-		};
-
-		this.events.onSelect.next(eventData);
-	}
-
-	clearCurrentHoverSelection() {
-		const hoverInteraction = this.getInteraction(VisualizerInteractions.pointerMove);
-		hoverInteraction.getFeatures().clear();
-		this.onHoverInteraction(hoverInteraction);
-	}
-
-	createHoverInteraction() {
-		const annotationHoverInteraction = new Select(<any>{
-			condition: condition.pointerMove,
-			...this.interactionParams
-		});
-		annotationHoverInteraction.on('select', this.onHoverAnnotation.bind(this));
-		return annotationHoverInteraction;
-	}
-
-	onHoverAnnotation(event) {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		return this.onHoverInteraction(event.target);
-	}
-
-	onHoverInteraction(interaction) {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		let selectedFeature, boundingRect, id, label, style;
-		let selected = interaction.getFeatures().getArray();
-		if (selected.length > 0) {
-			selectedFeature = this.findFeatureWithMinimumArea(selected);
-			boundingRect = this.getFeatureBoundingRect(selectedFeature);
-			id = this.getEntity(selectedFeature).id;
-			label = this.getEntity(selectedFeature).label;
-			style = this.getEntity(selectedFeature).style;
-		}
-		const eventData: IAnnotationsSelectionEventData = {
-			label: label,
-			mapId: this.mapId,
-			featureId: id,
-			style: style,
-			boundingRect,
-			type: selectedFeature ? selectedFeature.values_.mode : undefined,
-			interactionType: AnnotationInteraction.hover
-		};
-		this.events.onSelect.next(eventData);
-	}
-
 	getFeatureBoundingRect(selectedFeature): IAnnotationBoundingRect {
 		const { geometry }: any = new OLGeoJSON().writeFeatureObject(selectedFeature);
 		const { maxX, maxY, minX, minY } = this.findMinMax(geometry.coordinates);
-		const width = maxX - minX;
-		const left = minX;
-		const height = maxY - minY;
-		const top = maxY - height;
+		const width = `${maxX - minX}px`;
+		const left = `${minX}px`;
+		const height = `${maxY - minY}px`;
+		const top = `${minY}px`;
 		return { left, top, width, height };
 	}
-
 	private isNumArray([first, second]) {
 		return typeof first === 'number' && typeof second === 'number';
 	}
@@ -316,6 +210,49 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			};
 
 		}, undefined);
+	}
+
+	onInit() {
+		super.onInit();
+
+		this.iMap.mapObject.on('click', (event) => {
+			if (this.mapSearchIsActive || this.mode) {
+				return;
+			}
+			const { shiftKey: multi } = event.originalEvent;
+			const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
+			const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
+			if (selectedFeature) {
+				const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
+				const eventData: IAnnotationsSelectionEventData = {
+					featureId: id,
+					label: label,
+					style: style,
+					boundingRect: () => this.getFeatureBoundingRect(selectedFeature),
+					showMeasures
+				};
+				this.events.onSelect.next({ mapId: this.mapId, multi, data: { [id]: eventData } });
+			} else {
+				this.events.onSelect.next({ mapId: this.mapId, multi, data: {} });
+			}
+		});
+
+		this.iMap.mapObject.on('pointermove', (event) => {
+			if (this.mapSearchIsActive || this.mode) {
+				return;
+			}
+			const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
+			const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
+			const { mapId } = this;
+			this.events.onHover.next({
+				mapId,
+				data: selectedFeature ? {
+					boundingRect: this.getFeatureBoundingRect(selectedFeature),
+					style: this.getEntity(selectedFeature).style
+				} : null
+			});
+		});
+
 	}
 
 	onDrawEndEvent({ feature }) {

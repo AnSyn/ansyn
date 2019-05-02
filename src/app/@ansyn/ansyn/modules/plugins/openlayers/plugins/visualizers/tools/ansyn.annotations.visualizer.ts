@@ -12,9 +12,8 @@ import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
-	IAnnotationsSelectionEventData,
 	IDrawEndEvent,
-	IOLPluginsConfig,
+	IOLPluginsConfig, IOnSelectEvent,
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
 	OpenLayersProjectionService
@@ -116,7 +115,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onSelect$ = (): Observable<IAnnotationsSelectionEventData> => this.annotationsVisualizer.events.onSelect.pipe(
+	onSelect$ = (): Observable<IOnSelectEvent> => this.annotationsVisualizer.events.onSelect.pipe(
 		tap((event) => this.store$.dispatch(new AnnotationSelectAction(event)))
 	);
 

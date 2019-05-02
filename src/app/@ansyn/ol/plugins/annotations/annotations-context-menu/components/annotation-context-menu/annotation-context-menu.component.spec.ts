@@ -49,31 +49,26 @@ describe('AnnotationContextMenuComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	describe('check annotation context menu trigger the focus and styling', () => {
-		beforeEach(() => {
-			spyOn(component.host.nativeElement, 'click');
-		});
-	});
-
 	it('click on remove feature button', () => {
-		component.clickMenuProps = {
-			featureId: 'featureId',
-			label: 'label',
-			mapId: 'mapId',
-			type: 'Rectangle',
-			style: {},
-			boundingRect: {
-				top: 100,
-				height: 100,
-				left: 100,
-				width: 100
+		component.openMenus = {
+			'featureId': {
+				featureId: 'featureId',
+				label: 'label',
+				style: {},
+				boundingRect: () => ({
+					top: '100px',
+					height: '100px',
+					left: '100px',
+					width: '100px'
+				})
 			}
 		};
+		component.openMenusArray = Object.values(component.openMenus);
 		fixture.detectChanges();
 		spyOn(component, 'removeFeature');
 		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));
 		de.triggerEventHandler('click', {});
-		expect(component.removeFeature).toHaveBeenCalled();
+		expect(component.removeFeature).toHaveBeenCalledWith('featureId');
 	});
 
 

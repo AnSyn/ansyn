@@ -33,9 +33,12 @@ describe('AnnotationsVisualizer', () => {
 	});
 
 	it('onDipsose should call removeDrawInteraction', () => {
+		const mapObject = createSpyObject({ un: () => {} });
+		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({ mapObject }))
 		spyOn(annotationsVisualizer, 'removeDrawInteraction');
 		annotationsVisualizer.onDispose();
 		expect(annotationsVisualizer.removeDrawInteraction).toHaveBeenCalled();
+		expect(mapObject.un).toHaveBeenCalledTimes(2);
 	});
 
 });

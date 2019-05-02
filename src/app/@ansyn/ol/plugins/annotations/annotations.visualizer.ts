@@ -218,13 +218,20 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.iMap.mapObject.on('pointermove', this.mapPointermove);
 	}
 
+	featureAtPixel = (pixel) => {
+		const featuresArray = [];
+		this.iMap.mapObject.forEachFeatureAtPixel(pixel, feature => {
+			featuresArray.push(feature)
+		}, { hitTolerance: 2, layerFilter: (layer) => this.vector === layer });
+		return this.findFeatureWithMinimumArea(featuresArray);
+	};
+
 	mapClick = (event) => {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
 		const { shiftKey: multi } = event.originalEvent;
-		const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
-		const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
+		const selectedFeature = this.featureAtPixel(event.pixel);
 		if (selectedFeature) {
 			const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
 			const eventData: IAnnotationsSelectionEventData = {
@@ -244,11 +251,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
-		const featuresArray = this.source.getFeaturesAtCoordinate(event.coordinate);
-		const selectedFeature = this.findFeatureWithMinimumArea(featuresArray);
-		const { mapId } = this;
+		const selectedFeature = this.featureAtPixel(event.pixel);
 		this.events.onHover.next({
-			mapId,
+			mapId: this.mapId,
 			data: selectedFeature ? {
 				boundingRect: this.getFeatureBoundingRect(selectedFeature),
 				style: this.getEntity(selectedFeature).style

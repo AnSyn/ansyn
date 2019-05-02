@@ -50,6 +50,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				}, this.openMenus)
 			) : payload.data;
 			this.openMenusArray = Object.values(this.openMenus)
+			this.selectedTab = Object.keys(this.openMenus).reduce((prev, id) => ({
+				...prev,
+				[id]: this.selectedTab[id]
+			}), {})
+
 		})
 	);
 
@@ -97,11 +102,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.selectedTab = { ...this.selectedTab, [id]: this.selectedTab[id] === tab ? null : tab };
 	}
 
-	toggleMeasures() {
-	// 	const { featureId } = this.clickMenuProps;
-	// 	const showMeasures = !this.clickMenuProps.showMeasures;
-	// 	this.annotations.updateFeature(featureId, { showMeasures });
-	// 	this.clickMenuProps.showMeasures = showMeasures;
+	toggleMeasures(menuProps) {
+		const { featureId } = menuProps;
+		const showMeasures = !menuProps.showMeasures;
+		this.annotations.updateFeature(featureId, { showMeasures });
+		menuProps.showMeasures = showMeasures;
 	}
 
 	selectLineWidth(w: number, menuProps: IAnnotationsSelectionEventData) {
@@ -129,20 +134,20 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			}
 		};
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
-		menuProps.style = style;
+		menuProps.style = updatedStyle;
 	}
 
 	colorChange($event: { label: 'stroke' | 'fill', event: string }, menuProps: IAnnotationsSelectionEventData) {
 		const { featureId, style } = menuProps;
-		const updateStyle = {
+		const updatedStyle = {
 			...style,
 			initial: {
 				...style.initial,
 				[$event.label]: $event.event
 			}
 		};
-		this.annotations.updateFeature(featureId, { style: updateStyle });
-		menuProps.style = style;
+		this.annotations.updateFeature(featureId, { style: updatedStyle });
+		menuProps.style = updatedStyle;
 	}
 
 	updateLabel(label, menuProps) {

@@ -1,12 +1,12 @@
 <div class="context-menu-wrapper"
-	 *ngFor="let clickMenuProps of openMenusArray"
-	 [ngStyle]="clickMenuProps.boundingRect()">
+	 *ngFor="let menuProps of openMenusArray"
+	 [ngStyle]="menuProps.boundingRect()">
 	<!-- Using pointerdown for current Chrome, and mousedown for Chrome 44 -->
 
-	<div class="context-menu" [style.outline-color]="clickMenuProps?.style?.initial?.stroke">
+	<div class="context-menu" [style.outline-color]="menuProps?.style?.initial?.stroke">
 		<ul class="buttons">
 			<li>
-				<button [class.active]="clickMenuProps.showMeasures" (click)="toggleMeasures()">
+				<button [class.active]="menuProps.showMeasures" (click)="toggleMeasures(menuProps)">
 					<i tooltip-value="Measures" tooltip-class="bottom">
 						<svg
 							viewBox="0 0 1024 1024" fill="#fff">
@@ -17,7 +17,7 @@
 				</button>
 			</li>
 			<li>
-				<button [class.active]="selectedTab[clickMenuProps.featureId] === Tabs.Label" (click)="selectTab(clickMenuProps.featureId, Tabs.Label)">
+				<button [class.active]="selectedTab[menuProps.featureId] === Tabs.Label" (click)="selectTab(menuProps.featureId, Tabs.Label)">
 					<i tooltip-value="Label" tooltip-class="bottom">
 						<svg viewBox="0 0 1024 1024">
 							<path
@@ -27,7 +27,7 @@
 				</button>
 
 				<form class="annotation-label-edit"
-					  *ngIf="selectedTab[clickMenuProps.featureId] === Tabs.Label"
+					  *ngIf="selectedTab[menuProps.featureId] === Tabs.Label"
 					  (ngSubmit)="labelInput.blur()">
 
 					<mat-form-field class="label-form-field">
@@ -37,15 +37,15 @@
 							   autofocus
 							   placeholder="Label"
 							   name="EditLabel"
-							   [ngModel]="clickMenuProps.label"
-							   (ngModelChange)="updateLabel($event, clickMenuProps)">
+							   [ngModel]="menuProps.label"
+							   (ngModelChange)="updateLabel($event, menuProps)">
 					</mat-form-field>
 
 				</form>
 			</li>
 			<li class="expanded-selection line-width-selection">
 				<p>
-					<button [class.active]="selectedTab[clickMenuProps.featureId] === Tabs.Weight" (click)="selectTab(clickMenuProps.featureId, Tabs.Weight)">
+					<button [class.active]="selectedTab[menuProps.featureId] === Tabs.Weight" (click)="selectTab(menuProps.featureId, Tabs.Weight)">
 						<i tooltip-value="Width" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">
 								<path
@@ -54,15 +54,15 @@
 						</i>
 					</button>
 					<ansyn-annotations-weight
-						[show]="selectedTab[clickMenuProps.featureId] === Tabs.Weight"
-						[properties]="clickMenuProps.style.initial"
-						(selectLineWidth)="selectLineWidth($event.width, clickMenuProps)">
+						[show]="selectedTab[menuProps.featureId] === Tabs.Weight"
+						[properties]="menuProps.style.initial"
+						(selectLineWidth)="selectLineWidth($event.width, menuProps)">
 					</ansyn-annotations-weight>
 				</p>
 			</li>
 			<li>
 				<p>
-					<button [class.active]="selectedTab[clickMenuProps.featureId] === Tabs.Colors" (click)="selectTab(clickMenuProps.featureId, Tabs.Colors)">
+					<button [class.active]="selectedTab[menuProps.featureId] === Tabs.Colors" (click)="selectTab(menuProps.featureId, Tabs.Colors)">
 						<i tooltip-value="Color" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">
 								<path
@@ -71,16 +71,16 @@
 						</i>
 					</button>
 					<ansyn-annotations-color
-						[show]="selectedTab[clickMenuProps.featureId] === Tabs.Colors"
-						[properties]="clickMenuProps.style.initial"
-						(colorChange)="colorChange($event, clickMenuProps)"
-						(activeChange)="activeChange($event, clickMenuProps)"
+						[show]="selectedTab[menuProps.featureId] === Tabs.Colors"
+						[properties]="menuProps.style.initial"
+						(colorChange)="colorChange($event, menuProps)"
+						(activeChange)="activeChange($event, menuProps)"
 					></ansyn-annotations-color>
 				</p>
 			</li>
 
 			<li>
-				<button class='removeFeature' (click)="removeFeature(clickMenuProps.featureId)">
+				<button class='removeFeature' (click)="removeFeature(menuProps.featureId)">
 					<i tooltip-value="Delete" tooltip-class="bottom">
 						<svg viewBox="0 0 1024 1024">
 							<path

@@ -81,11 +81,6 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		).subscribe();
 	}
 
-	close() {
-		// this.clickMenuProps = null;
-		// this.selectedTab = null;
-	}
-
 	ngOnDestroy(): void {
 	}
 

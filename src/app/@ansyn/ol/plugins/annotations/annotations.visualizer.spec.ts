@@ -33,7 +33,7 @@ describe('AnnotationsVisualizer', () => {
 	});
 
 	it('onDipsose should call removeDrawInteraction', () => {
-		const mapObject = createSpyObject({ un: () => {} });
+		const mapObject = jasmine.createSpyObj({ un: () => {} });
 		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({ mapObject }))
 		spyOn(annotationsVisualizer, 'removeDrawInteraction');
 		annotationsVisualizer.onDispose();

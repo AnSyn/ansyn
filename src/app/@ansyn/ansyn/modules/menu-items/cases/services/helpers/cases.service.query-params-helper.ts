@@ -1,6 +1,6 @@
 import { IContext } from '../../../../core/models/context.model';
 import { Params } from '@angular/router';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, mapValues } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
@@ -20,6 +20,7 @@ import {
 	ImageManualProcessArgs,
 	IOverlaysManualProcessArgs
 } from '../../models/case.model';
+import { IDilutedOverlaysHash, IOverlay, IOverlaysHash } from "../../../../overlays/models/overlay.model";
 export class QueryParamsHelper {
 
 	constructor(protected casesService: CasesService) {
@@ -179,6 +180,11 @@ export class QueryParamsHelper {
 				return rison.encode(activeMapsManualProcessArgs);
 			case 'layers':
 				return rison.encode(value.activeLayersIds);
+			case 'miscOverlays':
+				const miscOverlays: IOverlaysHash = value || {};
+				const miscOverlaysDiluted: IDilutedOverlaysHash = mapValues(miscOverlays, (overlay: IOverlay) =>
+					overlay ? { id: overlay.id, sourceType: overlay.sourceType } : null);
+				return rison.encode(miscOverlaysDiluted);
 			default:
 				return wellknown.stringify(value);
 		}

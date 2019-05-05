@@ -424,6 +424,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public setPosition(position: ImageryMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
 		const { extentPolygon, projectedState } = position;
+
+		const someIsNan = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
+		if (someIsNan) {
+			console.warn('ol map setposition failed, can\'t handle invalid coordinates ' + extentPolygon);
+			return of(true);
+		}
+
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = projectedState && viewProjection.getCode() === projectedState.projection.code;
 		if (isProjectedPosition) {

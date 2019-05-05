@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../alerts/model';
+import { IOverlay } from "../../ansyn/modules/overlays/models/overlay.model";
 
 export enum ImageryStatusActionTypes {
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
@@ -14,6 +15,30 @@ export enum ImageryStatusActionTypes {
 	ENABLE_COPY_ORIGINAL_OVERLAY_DATA = 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
+	SET_MAP_EXTRA_DESCRIPTION = 'SET_MAP_EXTRA_DESCRIPTION',
+	SET_MISC_OVERLAYS = 'SET_MISC_OVERLAYS',
+	SET_MISC_OVERLAY = 'SET_MISC_OVERLAY'
+}
+
+export class SetMapExtraDescriptionAction implements Action {
+	type: string = ImageryStatusActionTypes.SET_MAP_EXTRA_DESCRIPTION;
+
+	constructor(public payload: { id: string, extraDescription: string }) {
+	}
+}
+
+export class SetMiscOverlaysAction implements Action {
+	type: string = ImageryStatusActionTypes.SET_MISC_OVERLAYS;
+
+	constructor(public payload: { miscOverlays: IOverlaysHash }) {
+	}
+}
+
+export class SetMiscOverlayAction implements Action {
+	type: string = ImageryStatusActionTypes.SET_MISC_OVERLAY;
+
+	constructor(public payload: { key: string, overlay: IOverlay }) {
+	}
 }
 
 export class ToggleFavoriteAction implements Action {

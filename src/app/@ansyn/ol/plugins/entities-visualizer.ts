@@ -241,6 +241,10 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
 					});
+					const featureWithTheSameId = this.source.getFeatureById(_id);
+					if (featureWithTheSameId) {
+						this.source.removeFeature(featureWithTheSameId);
+					}
 				});
 				this.source.addFeatures(features);
 				return true;
@@ -264,13 +268,25 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	removeEntity(logicalEntityId: string, internal = false) {
+		if (!logicalEntityId) {
+			return;
+		}
 		const entityToRemove = this.idToEntity.get(logicalEntityId);
 		if (!entityToRemove) {
 			return;
 		}
 		this.idToEntity.delete(logicalEntityId);
+		const featureId = entityToRemove.feature.getId();
 		if (entityToRemove.feature && this.source.getFeatureById(entityToRemove.feature.getId())) {
-			this.source.removeFeature(entityToRemove.feature);
+			const existingFeatures = this.source.getFeatures();
+			const exists = existingFeatures.find((feature) => {
+				return feature.ol_uid === entityToRemove.feature.ol_uid;
+			});
+			if (exists) {
+				this.source.removeFeature(entityToRemove.feature);
+			} else {
+				console.warn('can\'t remove feature id ', featureId, ' ol_id ', entityToRemove.feature.ol_uid);
+			}
 		}
 	}
 

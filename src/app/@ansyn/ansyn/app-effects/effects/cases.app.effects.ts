@@ -6,7 +6,7 @@ import { IMapState, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade'
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
-import { uniqBy } from 'lodash';
+import { uniqBy, mapValues } from 'lodash';
 import { IAppState } from '../app.effects.module';
 import { catchError, map, mergeMap, withLatestFrom, tap } from 'rxjs/operators';
 import { Inject } from '@angular/core';
@@ -30,7 +30,7 @@ import { IOverlay } from '../../modules/overlays/models/overlay.model';
 export class CasesAppEffects {
 	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
 		return this.config.ImageProcParams.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
@@ -62,12 +62,14 @@ export class CasesAppEffects {
 
 			return new UpdateMapAction({
 				id: mapId,
-				changes: { data: {
-					...currentMap.data,
+				changes: {
+					data: {
+						...currentMap.data,
 						overlay: action.payload.overlay,
 						isAutoImageProcessingActive: false,
 						imageManualProcessArgs
-					} }
+					}
+				}
 			});
 		})
 	);
@@ -81,7 +83,8 @@ export class CasesAppEffects {
 				const ids: IOverlayByIdMetaData[] = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 						.map((mapData) => mapData.data.overlay)
 						.concat(caseValue.state.favoriteOverlays,
-							caseValue.state.presetOverlays || [])
+							caseValue.state.presetOverlays || [],
+							Object.values(caseValue.state.miscOverlays || {}).filter(Boolean))
 					, 'id')
 					.map(({ id, sourceType }: IOverlay): IOverlayByIdMetaData => ({ id, sourceType }));
 
@@ -95,15 +98,21 @@ export class CasesAppEffects {
 							caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
 								.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
 
+							caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || [],
+								(prevOverlay: IOverlay, key: string) => {
+									return prevOverlay && mapOverlay.get(prevOverlay.id);
+								});
+
 							caseValue.state.maps.data
 								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
 								.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
 
 							return new SelectCaseAction(caseValue);
 						}),
-						catchError((result: HttpErrorResponse) => {
+						catchError<any, any>((result: HttpErrorResponse) => {
+							console.warn(result);
 							return [new SetToastMessageAction({
-								toastText: `Failed to load case ${result.status ? `(${result.status})` : ''}`,
+								toastText: `Failed to load case ${ result.status ? `(${ result.status })` : '' }`,
 								showWarningIcon: true
 							}),
 								new LoadDefaultCaseIfNoActiveCaseAction()];

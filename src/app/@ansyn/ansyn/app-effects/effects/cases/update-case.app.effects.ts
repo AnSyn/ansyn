@@ -41,7 +41,8 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
-		this.store$.select(selectContextEntities)
+		this.store$.select(selectContextEntities),
+		this.store$.select(selectMiscOverlays)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
@@ -65,6 +66,7 @@ export class UpdateCaseAppEffects {
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
 				contextEntities,
+				miscOverlays,
 				autoSave
 			] = events;
 
@@ -96,6 +98,7 @@ export class UpdateCaseAppEffects {
 					time,
 					facets,
 					contextEntities,
+					miscOverlays,
 					overlaysManualProcessArgs
 				}
 			};

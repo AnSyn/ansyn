@@ -7,6 +7,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { sessionData } from '../models/core-session-state.model';
 import { MapActions, MapActionTypes, IToastMessage, IPendingOverlay } from '../actions/map.actions';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
+import { ImageryStatusActionTypes } from "../actions/imagery-status.actions";
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: IMapSettings[] = [];
@@ -44,6 +45,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	isHiddenMaps: Set<string>;
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: IPendingOverlay[]; // a list of overlays waiting for maps to be created in order to be displayed
+	mapsExtraDescriptions: Map<string, string>;
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
 	toastMessage: IToastMessage;
@@ -56,6 +58,7 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: [],
+	mapsExtraDescriptions: new Map<string, string>(),
 	layout: <LayoutKey> 'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null
@@ -71,6 +74,12 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 	switch (action.type) {
 		case MapActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: action.payload };
+
+		case ImageryStatusActionTypes.SET_MAP_EXTRA_DESCRIPTION:
+			const { id, extraDescription } = action.payload;
+			const mapsExtraDescriptions = new Map<string, string>(state.mapsExtraDescriptions);
+			mapsExtraDescriptions.set(id, extraDescription);
+			return { ...state, mapsExtraDescriptions };
 
 		case MapActionTypes.IMAGERY_REMOVED: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
@@ -191,3 +200,4 @@ export const selectMaps = createSelector(mapStateSelector, selectEntities);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
+export const selectMapsExtraDescriptions = createSelector(mapStateSelector, (state: IMapState) => state.mapsExtraDescriptions);

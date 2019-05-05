@@ -113,7 +113,7 @@ export class CasesEffects {
 		filter((action: LoadDefaultCaseAction) => !action.payload.context),
 		map((action: LoadDefaultCaseAction) => {
 			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
-			return new SelectCaseAction(defaultCaseQueryParams);
+			return new SelectDilutedCaseAction(defaultCaseQueryParams);
 		}),
 		share());
 

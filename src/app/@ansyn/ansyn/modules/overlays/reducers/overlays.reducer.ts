@@ -5,7 +5,13 @@ import { ExtendMap } from './extendedMap.class';
 import { EntityState, createEntityAdapter, EntityAdapter, Dictionary } from '@ngrx/entity';
 import { ImageryStatusActionTypes, MapActionTypes } from '@ansyn/map-facade';
 import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
-import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaySpecialObject } from '../models/overlay.model';
+import {
+	IOverlay,
+	IOverlayDrop,
+	IOverlaysCriteria,
+	IOverlaysHash,
+	IOverlaySpecialObject
+} from '../models/overlay.model';
 
 export interface ITimelineRange {
 	start: Date;

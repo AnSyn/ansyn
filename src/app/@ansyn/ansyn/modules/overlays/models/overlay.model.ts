@@ -13,6 +13,14 @@ export interface IDilutedOverlay {
 	sourceType?: string;
 }
 
+export interface IOverlaysHash {
+	[key: string]: IOverlay;
+}
+
+export interface IDilutedOverlaysHash {
+	[key: string]: IDilutedOverlay;
+}
+
 export enum GeoRegisteration {
 	geoRegistered = 'geoRegistered',
 	notGeoRegistered = 'notGeoRegistered',

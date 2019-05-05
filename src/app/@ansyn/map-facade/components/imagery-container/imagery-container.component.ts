@@ -25,6 +25,10 @@ export class ImageryContainerComponent {
 		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))
 	);
 
+	extraDescription$ = this.store.select(selectMapsExtraDescriptions).pipe(
+	map((mapDescriptions) => mapDescriptions.get(this.mapState.id))
+	);
+
 	get overlay(): any {
 		return this.mapState.data.overlay;
 	}

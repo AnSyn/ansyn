@@ -53,6 +53,7 @@ import { IEntryComponent } from '../../directives/entry-component.directive';
 export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	// @todo refactor
 	overlay: any;
+	_extraDescription = '';
 	_mapState: IMapSettings;
 	mapsAmount = 1;
 	@HostBinding('class.active') isActiveMap: boolean;
@@ -101,6 +102,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@HostBinding('class.one-map')
 	get oneMap() {
 		return this.mapsAmount === 1;
+	}
+
+	@Input() set extraDescription(extraDescription: string) {
+		this._extraDescription = extraDescription;
 	}
 
 	translatedOverlaySensorName = '';
@@ -174,7 +179,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	get description() {
 		const ActiveMap = _get(this.communicators.provide(this.mapState.id), 'ActiveMap');
 		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
-		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
+		return this._extraDescription ? this._extraDescription : description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 
 	get baseMapDescription() {

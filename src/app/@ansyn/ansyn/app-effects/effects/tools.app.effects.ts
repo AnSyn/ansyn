@@ -77,7 +77,7 @@ export class ToolsAppEffects {
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
 		filter(Boolean),
 		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
-		mergeMap((activeMap: ICaseMapState) => {
+		mergeMap<any, any>((activeMap: ICaseMapState) => {
 			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 			if (!Boolean(activeMap.data.overlay)) {
 				actions.push(new DisableImageProcessing());
@@ -97,7 +97,7 @@ export class ToolsAppEffects {
 	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
 		filter((map) => Boolean(map.data.overlay)),
 		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))),
-		mergeMap(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
+		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
 			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
 			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
@@ -124,7 +124,7 @@ export class ToolsAppEffects {
 	toggleAutoImageProcessing$: Observable<any> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		mergeMap(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
+		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
 			const activeMap: ICaseMapState = MapFacadeService.activeMap(mapsState);
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
@@ -173,7 +173,8 @@ export class ToolsAppEffects {
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = combineLatest(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId)).pipe(
 		filter(([mapsList, activeMapId]) => Boolean(mapsList.length && activeMapId)),
-		mergeMap(([mapsList, activeMapId]) => {
+		withLatestFrom(this.store$.select(SelectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
+		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
 			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
@@ -185,7 +186,7 @@ export class ToolsAppEffects {
 			}
 			return [
 				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }]),
-				this.isShadowMouseActiveByDefault ? new StartMouseShadow() : undefined
+				shadowMouseActiveForManyScreens ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
 

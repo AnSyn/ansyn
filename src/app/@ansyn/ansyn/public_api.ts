@@ -251,7 +251,7 @@ export { PhotoAngle } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
 export { GeoRegisteration } from './modules/overlays/models/overlay.model';
 export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
-export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria } from './modules/overlays/models/overlay.model';
+export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash } from './modules/overlays/models/overlay.model';
 
 export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';

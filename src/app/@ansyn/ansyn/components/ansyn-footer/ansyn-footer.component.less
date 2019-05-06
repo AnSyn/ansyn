@@ -7,6 +7,7 @@
 
 div.status-timeline-container {
 	position: relative;
+	width: 100%;
 
 	.status {
 		position: relative;
@@ -17,24 +18,33 @@ div.status-timeline-container {
 		height: @timeline-area-height;
 		background-color: white;
 	}
-}
 
+	button.hide-menu {
+		position: absolute;
+		transform: translateY(calc(~'-100% - @{status-bar-height}'));
+		left: calc(~'50% - 0px');
+		width: 60px;
+		background: #2e2d46;
+		border: none;
+		color: white;
+		box-shadow: 2px 0 4px -2px black;
+		outline: none;
+		visibility: visible;
+		transition: .5s;
+		z-index: 4000;
 
-button.hide-menu {
-	position: absolute;
-	transform: translateY(calc(~'-100% - @{status-bar-height}'));
-	left: calc(~'50% - 0px');
-	width: 60px;
-	background: #2e2d46;
-	border: none;
-	color: white;
-	box-shadow: 2px 0 4px -2px black;
-	outline: none;
-	visibility: visible;
-	transition: .5s;
-	z-index: 4000;
+		&:hover {
+			background-color: #27B2CF;
+		}
+	}
 
-	&:hover {
-		background-color: #27B2CF;
+	&.collapsed {
+		position: absolute;
+		.status {
+			display: none;
+		}
+		button.hide-menu {
+			transform: translateY(-100%);
+		}
 	}
 }

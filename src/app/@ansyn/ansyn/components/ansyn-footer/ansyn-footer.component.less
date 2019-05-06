@@ -1,0 +1,20 @@
+@import 'ansyn/less/common';
+
+:host {
+	display: block;
+	position: relative;
+}
+
+div.status-timeline-container {
+	position: relative;
+
+	.status {
+		position: relative;
+		height: 0;
+	}
+
+	.app-timeline-container {
+		height: @timeline-area-height;
+		background-color: white;
+	}
+}

@@ -1,15 +1,8 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, take, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
-import {
-	AnnotationInteraction,
-	IAnnotationsSelectionEventData, IIOnHoverEventData,
-	IOnHoverEvent,
-	IOnSelectEvent, IOnSelectEventData
-} from '../../../annotations.model';
 
 enum AnnotationsContextmenuTabs {
 	Colors,
@@ -32,36 +25,27 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	Tabs = AnnotationsContextmenuTabs;
 	selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
-	openMenus: IOnSelectEventData;
-	openMenusArray: IAnnotationsSelectionEventData[];
-	hoverEventData: IIOnHoverEventData;
+	selection: string[];
+	hoverFeatureId: string;
 
 	@Input() mapState: IMapSettings;
 	@HostBinding('attr.tabindex') tabindex = 0;
 
 	@AutoSubscription
 	onSelect$ = () => this.annotations.events.onSelect.pipe(
-		filter((payload) => payload.mapId === this.mapState.id),
-		tap((payload: IOnSelectEvent) => {
-			this.openMenus = payload.multi ? (
-				Object.entries(payload.data).reduce((prev, [key, value]) => {
-					const { [key]: feat, ...rest } = prev;
-					return feat ? rest : ({  ...prev, [key]: value  })
-				}, this.openMenus)
-			) : payload.data;
-			this.openMenusArray = Object.values(this.openMenus)
-			this.selectedTab = Object.keys(this.openMenus).reduce((prev, id) => ({
+		tap((selected: string[]) => {
+			this.selection = selected;
+			this.selectedTab = this.selection.reduce((prev, id) => ({
 				...prev,
 				[id]: this.selectedTab[id]
-			}), {})
+			}), {});
 
 		})
 	);
 
 	@AutoSubscription
 	onHover$ = () => this.annotations.events.onHover.pipe(
-		filter((payload) => payload.mapId === this.mapState.id),
-		tap((payload: IOnHoverEvent) => this.hoverEventData = payload.data)
+		tap((hoverFeatureId: string) => this.hoverFeatureId = hoverFeatureId)
 	);
 
 	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
@@ -69,6 +53,16 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService) {
+	}
+
+	calcBoundingRect(id) {
+		const { feature } = this.annotations.idToEntity.get(id);
+		return this.annotations.getFeatureBoundingRect(feature);
+	}
+
+	getFeatureProps(id) {
+		const { originalEntity: { featureJson: { properties } } } = this.annotations.idToEntity.get(id);
+		return properties;
 	}
 
 	onInitMap() {
@@ -91,26 +85,24 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	removeFeature(featureId) {
 		this.annotations.removeFeature(featureId);
-		this.annotations.events.onSelect.next({
-			mapId: this.mapState.id,
-			multi: true,
-			data: { [featureId]: { featureId } }
-		})
+		// this.annotations.events.onSelect.next({
+		// 	mapId: this.mapState.id,
+		// 	multi: true,
+		// 	data: { [featureId]: { featureId } }
+		// })
 	}
 
 	selectTab(id: string, tab: AnnotationsContextmenuTabs) {
 		this.selectedTab = { ...this.selectedTab, [id]: this.selectedTab[id] === tab ? null : tab };
 	}
 
-	toggleMeasures(menuProps) {
-		const { featureId } = menuProps;
-		const showMeasures = !menuProps.showMeasures;
-		this.annotations.updateFeature(featureId, { showMeasures });
-		menuProps.showMeasures = showMeasures;
+	toggleMeasures(featureId) {
+		const { showMeasures } = this.getFeatureProps(featureId);
+		this.annotations.updateFeature(featureId, { showMeasures: !showMeasures });
 	}
 
-	selectLineWidth(w: number, menuProps: IAnnotationsSelectionEventData) {
-		const { featureId, style } = menuProps;
+	selectLineWidth(w: number, featureId: string) {
+		const { style } = this.getFeatureProps(featureId);
 		const updateStyle = {
 			...style,
 			initial: {
@@ -120,12 +112,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		};
 
 		this.annotations.updateFeature(featureId, { style: updateStyle });
-		menuProps.style = style;
 	}
 
-	activeChange($event: { label: 'stroke' | 'fill', event: string }, menuProps: IAnnotationsSelectionEventData) {
+	activeChange($event: { label: 'stroke' | 'fill', event: string }, featureId: string) {
 		let opacity = { stroke: 1, fill: 0.4 };
-		const { featureId, style } = menuProps;
+		const { style } = this.getFeatureProps(featureId);
 		const updatedStyle = {
 			...style,
 			initial: {
@@ -134,11 +125,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			}
 		};
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
-		menuProps.style = updatedStyle;
 	}
 
-	colorChange($event: { label: 'stroke' | 'fill', event: string }, menuProps: IAnnotationsSelectionEventData) {
-		const { featureId, style } = menuProps;
+	colorChange($event: { label: 'stroke' | 'fill', event: string }, featureId: string) {
+		const { style } = this.getFeatureProps(featureId);
 		const updatedStyle = {
 			...style,
 			initial: {
@@ -147,12 +137,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			}
 		};
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
-		menuProps.style = updatedStyle;
 	}
 
-	updateLabel(label, menuProps) {
-		const { featureId } = menuProps;
+	updateLabel(label, featureId: string) {
 		this.annotations.updateFeature(featureId, { label });
-		menuProps.label = label
 	}
 }

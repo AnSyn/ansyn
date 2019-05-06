@@ -9,6 +9,9 @@ import olStyle from 'ol/style/Style';
 import olFill from 'ol/style/Fill';
 import olText from 'ol/style/Text';
 import olStroke from 'ol/style/Stroke';
+import DragBox from 'ol/interaction/DragBox';
+import { platformModifierKeyOnly } from 'ol/events/condition';
+
 import {
 	ImageryVisualizer,
 	IVisualizerEntity,
@@ -28,12 +31,11 @@ import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlay
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import {
-	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData,
-	IDrawEndEvent, IOnHoverEvent, IOnSelectEvent
+	IDrawEndEvent
 } from './annotations.model';
+import { AutoSubscription } from 'auto-subscriptions';
 
 // @dynamic
 @ImageryVisualizer({
@@ -46,6 +48,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	disableCache = true;
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
+	selected: string[] = [];
+	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
@@ -61,13 +65,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	events = {
 		onClick: new Subject(),
-		onSelect: new Subject<IOnSelectEvent>(),
-		onHover: new Subject<IOnHoverEvent>(),
+		onSelect: new Subject<string[]>(),
+		onHover: new Subject<string>(),
 		onChangeMode: new Subject<AnnotationMode>(),
 		onDrawEnd: new Subject<IDrawEndEvent>(),
 		removeEntity: new Subject<string>(),
 		updateEntity: new Subject<IVisualizerEntity>()
 	};
+
+	@AutoSubscription
+	selected$ = this.events.onSelect.pipe(tap((selected) => this.selected = selected));
 
 	modeDictionary = {
 		Arrow: {
@@ -179,6 +186,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const top = `${minY}px`;
 		return { left, top, width, height };
 	}
+
 	private isNumArray([first, second]) {
 		return typeof first === 'number' && typeof second === 'number';
 	}
@@ -212,53 +220,59 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}, undefined);
 	}
 
-	onInit() {
-		super.onInit();
-		this.iMap.mapObject.on('click', this.mapClick);
-		this.iMap.mapObject.on('pointermove', this.mapPointermove);
-	}
-
-	featureAtPixel = (pixel) => {
-		const featuresArray = [];
-		this.iMap.mapObject.forEachFeatureAtPixel(pixel, feature => {
-			featuresArray.push(feature)
-		}, { hitTolerance: 2, layerFilter: (layer) => this.vector === layer });
-		return this.findFeatureWithMinimumArea(featuresArray);
-	};
-
-	mapClick = (event) => {
+	protected mapClick = (event) => {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
 		const { shiftKey: multi } = event.originalEvent;
 		const selectedFeature = this.featureAtPixel(event.pixel);
+		let ids = [];
 		if (selectedFeature) {
-			const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
-			const eventData: IAnnotationsSelectionEventData = {
-				featureId: id,
-				label: label,
-				style: style,
-				boundingRect: () => this.getFeatureBoundingRect(selectedFeature),
-				showMeasures
-			};
-			this.events.onSelect.next({ mapId: this.mapId, multi, data: { [id]: eventData } });
+			const featureId = selectedFeature.getId();
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [ ...this.selected, featureId] : [featureId];
 		} else {
-			this.events.onSelect.next({ mapId: this.mapId, multi, data: {} });
+			ids = multi ? this.selected : [];
 		}
+		this.events.onSelect.next(ids);
 	};
 
-	mapPointermove = (event) => {
+	protected mapPointermove = (event) => {
 		if (this.mapSearchIsActive || this.mode) {
 			return;
 		}
 		const selectedFeature = this.featureAtPixel(event.pixel);
-		this.events.onHover.next({
-			mapId: this.mapId,
-			data: selectedFeature ? {
-				boundingRect: this.getFeatureBoundingRect(selectedFeature),
-				style: this.getEntity(selectedFeature).style
-			} : null
+		this.events.onHover.next( selectedFeature ? selectedFeature.getId() : null);
+	};
+
+	protected mapBoxstart = () => {
+		this.events.onSelect.next([])
+	};
+
+	protected mapBoxdrag = ({ target }) => {
+		const extent = target.getGeometry().getExtent();
+		const selected = [];
+		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
+			selected.push(feature.getId());
 		});
+		this.events.onSelect.next(selected)
+	};
+
+	onInit() {
+		super.onInit();
+		const { mapObject: map } = this.iMap;
+		map.on('click', this.mapClick);
+		map.on('pointermove', this.mapPointermove);
+		this.dragBox.on('boxstart', this.mapBoxstart);
+		this.dragBox.on('boxdrag', this.mapBoxdrag);
+		map.addInteraction(this.dragBox)
+	}
+
+	featureAtPixel = (pixel) => {
+		const featuresArray = [];
+		this.iMap.mapObject.forEachFeatureAtPixel(pixel, feature => {
+			featuresArray.push(feature);
+		}, { hitTolerance: 2, layerFilter: (layer) => this.vector === layer });
+		return this.findFeatureWithMinimumArea(featuresArray);
 	};
 
 	onDrawEndEvent({ feature }) {
@@ -330,9 +344,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onDispose(): void {
 		super.onDispose();
+		const { mapObject: map } = this.iMap;
 		this.removeDrawInteraction();
-		this.iMap.mapObject.un('click', this.mapClick);
-		this.iMap.mapObject.un('pointermove', this.mapPointermove);
+		map.un('click', this.mapClick);
+		map.un('pointermove', this.mapPointermove);
+		map.removeInteraction(this.dragBox)
+
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
@@ -464,11 +481,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		];
 	}
 
-	removeFeature(logicalEntityId: string, internal = false) {
-		super.removeEntity(logicalEntityId, internal);
+	removeFeature(featureId: string, internal = false) {
+		super.removeEntity(featureId, internal);
 		if (!internal) {
-			this.events.removeEntity.next(logicalEntityId);
+			this.events.removeEntity.next(featureId);
 		}
+		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
 	}
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {

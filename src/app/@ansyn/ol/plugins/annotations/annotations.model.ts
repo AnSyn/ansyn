@@ -8,34 +8,6 @@ export interface IAnnotationBoundingRect {
 	height: string;
 }
 
-export interface IAnnotationsSelectionEventData {
-	featureId: string;
-	label?: string
-	style?: any;
-	boundingRect?: () => IAnnotationBoundingRect;
-	showMeasures?: boolean;
-}
-
-export interface IOnHoverEvent {
-	mapId: string;
-	data?: IIOnHoverEventData;
-}
-
-export interface IIOnHoverEventData {
-	boundingRect: IAnnotationBoundingRect;
-	style: any;
-}
-
-export interface IOnSelectEventData {
-	[id: string]: IAnnotationsSelectionEventData;
-}
-
-export interface IOnSelectEvent {
-	mapId: string;
-	multi: true;
-	data: IOnSelectEventData;
-}
-
 export interface IUpdateFeatureEvent {
 	featureId: string;
 	properties: { [k: string]: any }

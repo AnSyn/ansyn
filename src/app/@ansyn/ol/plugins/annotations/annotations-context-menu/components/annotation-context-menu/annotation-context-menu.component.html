@@ -1,12 +1,11 @@
 <div class="context-menu-wrapper"
-	 *ngFor="let menuProps of openMenusArray"
-	 [ngStyle]="menuProps.boundingRect()">
-	<!-- Using pointerdown for current Chrome, and mousedown for Chrome 44 -->
+	 *ngFor="let featureId of selection"
+	 [ngStyle]="calcBoundingRect(featureId)">
 
-	<div class="context-menu" [style.outline-color]="menuProps?.style?.initial?.stroke">
+	<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
 		<ul class="buttons">
 			<li>
-				<button [class.active]="menuProps.showMeasures" (click)="toggleMeasures(menuProps)">
+				<button [class.active]="getFeatureProps(featureId)?.showMeasures" (click)="toggleMeasures(featureId)">
 					<i tooltip-value="Measures" tooltip-class="bottom">
 						<svg
 							viewBox="0 0 1024 1024" fill="#fff">
@@ -17,7 +16,7 @@
 				</button>
 			</li>
 			<li>
-				<button [class.active]="selectedTab[menuProps.featureId] === Tabs.Label" (click)="selectTab(menuProps.featureId, Tabs.Label)">
+				<button [class.active]="selectedTab[featureId] === Tabs.Label" (click)="selectTab(featureId, Tabs.Label)">
 					<i tooltip-value="Label" tooltip-class="bottom">
 						<svg viewBox="0 0 1024 1024">
 							<path
@@ -27,7 +26,7 @@
 				</button>
 
 				<form class="annotation-label-edit"
-					  *ngIf="selectedTab[menuProps.featureId] === Tabs.Label"
+					  *ngIf="selectedTab[featureId] === Tabs.Label"
 					  (ngSubmit)="labelInput.blur()">
 
 					<mat-form-field class="label-form-field">
@@ -37,15 +36,15 @@
 							   autofocus
 							   placeholder="Label"
 							   name="EditLabel"
-							   [ngModel]="menuProps.label"
-							   (ngModelChange)="updateLabel($event, menuProps)">
+							   [ngModel]="getFeatureProps(featureId)?.label"
+							   (ngModelChange)="updateLabel($event, featureId)">
 					</mat-form-field>
 
 				</form>
 			</li>
 			<li class="expanded-selection line-width-selection">
 				<p>
-					<button [class.active]="selectedTab[menuProps.featureId] === Tabs.Weight" (click)="selectTab(menuProps.featureId, Tabs.Weight)">
+					<button [class.active]="selectedTab[featureId] === Tabs.Weight" (click)="selectTab(featureId, Tabs.Weight)">
 						<i tooltip-value="Width" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">
 								<path
@@ -54,15 +53,15 @@
 						</i>
 					</button>
 					<ansyn-annotations-weight
-						[show]="selectedTab[menuProps.featureId] === Tabs.Weight"
-						[properties]="menuProps.style.initial"
-						(selectLineWidth)="selectLineWidth($event.width, menuProps)">
+						[show]="selectedTab[featureId] === Tabs.Weight"
+						[properties]="getFeatureProps(featureId)?.style.initial"
+						(selectLineWidth)="selectLineWidth($event.width, featureId)">
 					</ansyn-annotations-weight>
 				</p>
 			</li>
 			<li>
 				<p>
-					<button [class.active]="selectedTab[menuProps.featureId] === Tabs.Colors" (click)="selectTab(menuProps.featureId, Tabs.Colors)">
+					<button [class.active]="selectedTab[featureId] === Tabs.Colors" (click)="selectTab(featureId, Tabs.Colors)">
 						<i tooltip-value="Color" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">
 								<path
@@ -71,16 +70,16 @@
 						</i>
 					</button>
 					<ansyn-annotations-color
-						[show]="selectedTab[menuProps.featureId] === Tabs.Colors"
-						[properties]="menuProps.style.initial"
-						(colorChange)="colorChange($event, menuProps)"
-						(activeChange)="activeChange($event, menuProps)"
+						[show]="selectedTab[featureId] === Tabs.Colors"
+						[properties]="getFeatureProps(featureId)?.style?.initial"
+						(colorChange)="colorChange($event, featureId)"
+						(activeChange)="activeChange($event, featureId)"
 					></ansyn-annotations-color>
 				</p>
 			</li>
 
 			<li>
-				<button class='removeFeature' (click)="removeFeature(menuProps.featureId)">
+				<button class='removeFeature' (click)="removeFeature(featureId)">
 					<i tooltip-value="Delete" tooltip-class="bottom">
 						<svg viewBox="0 0 1024 1024">
 							<path
@@ -95,7 +94,7 @@
 </div>
 
 <div class="context-menu-wrapper"
-	 *ngIf="hoverEventData"
-	 [ngStyle]="hoverEventData.boundingRect">
-	<div class="context-menu" [style.outline-color]="hoverEventData?.style?.initial?.stroke"></div>
+	 *ngIf="hoverFeatureId"
+	 [ngStyle]="calcBoundingRect(hoverFeatureId)">
+	<div class="context-menu" [style.outline-color]="getFeatureProps(hoverFeatureId)?.style?.initial?.stroke"></div>
 </div>

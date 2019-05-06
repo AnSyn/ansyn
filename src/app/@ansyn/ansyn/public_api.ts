@@ -86,7 +86,6 @@ export {
 	UpdateOverlaysManualProcessArgs,
 	UpdateToolsFlags,
 	AnnotationRemoveFeature,
-	AnnotationSelectAction,
 	AnnotationUpdateFeature,
 } from './modules/menu-items/tools/actions/tools.actions';
 export {

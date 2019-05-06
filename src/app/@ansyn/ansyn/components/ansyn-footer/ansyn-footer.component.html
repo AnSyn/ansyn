@@ -1,4 +1,12 @@
-<div class="status-timeline-container">
+<div class="status-timeline-container" #footerWrapper>
+	<button
+		*ngIf="config?.isFooterCollapsible"
+		class="hide-menu"
+		(click)="startToggleCollapse()"
+		title="Hide menu">
+		<i class="fa fa-caret-down" [class.fa-caret-up]="collapse"></i>
+	</button>
+
 	<div class="status">
 		<ansyn-status-bar
 			[selectedCaseName]="selectedCaseName"

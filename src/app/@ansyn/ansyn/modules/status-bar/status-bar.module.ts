@@ -12,7 +12,7 @@ import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
-import { ClickOutsideModule } from '@ansyn/imagery';
+import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
 
 @NgModule({
 	imports: [

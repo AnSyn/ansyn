@@ -33,12 +33,13 @@ describe('AnnotationsVisualizer', () => {
 	});
 
 	it('onDipsose should call removeDrawInteraction', () => {
-		const mapObject = jasmine.createSpyObj({ un: () => {} });
-		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({ mapObject }))
+		const map = jasmine.createSpyObj({ un: () => {}, removeInteraction: () => {} });
+		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({ mapObject: map }));
 		spyOn(annotationsVisualizer, 'removeDrawInteraction');
 		annotationsVisualizer.onDispose();
 		expect(annotationsVisualizer.removeDrawInteraction).toHaveBeenCalled();
-		expect(mapObject.un).toHaveBeenCalledTimes(2);
+		expect(map.un).toHaveBeenCalledTimes(2);
+		expect(map.removeInteraction).toHaveBeenCalledWith(annotationsVisualizer.dragBox);
 	});
 
 });

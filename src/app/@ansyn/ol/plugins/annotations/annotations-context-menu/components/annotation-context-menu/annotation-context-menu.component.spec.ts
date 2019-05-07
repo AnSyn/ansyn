@@ -48,20 +48,7 @@ describe('AnnotationContextMenuComponent', () => {
 	});
 
 	it('click on remove feature button', () => {
-		component.openMenus = {
-			'featureId': {
-				featureId: 'featureId',
-				label: 'label',
-				style: {},
-				boundingRect: () => ({
-					top: '100px',
-					height: '100px',
-					left: '100px',
-					width: '100px'
-				})
-			}
-		};
-		component.openMenusArray = Object.values(component.openMenus);
+		component.selection = ['featureId'];
 		fixture.detectChanges();
 		spyOn(component, 'removeFeature');
 		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));

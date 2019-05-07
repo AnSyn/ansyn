@@ -1,8 +1,8 @@
-import { IDilutedOverlay, IOverlay } from '../../../overlays/models/overlay.model';
+import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../overlays/models/overlay.model';
 import { Feature, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../filters/models/filter-type';
-import { ImageryMapPosition, IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
+import { IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
 
 export interface ICasePreview {
@@ -58,7 +58,7 @@ export interface IDilutedCaseState {
 	dataInputFilters: ICaseDataInputFiltersState,
 	timeFilter: CaseTimeFilter,
 	favoriteOverlays?: IDilutedOverlay[],
-	miscOverlays?: IDilutedOverlaysHash[],
+	miscOverlays?: IDilutedOverlaysHash,
 	removedOverlaysIds?: string[],
 	removedOverlaysVisibility: boolean,
 	presetOverlays?: IDilutedOverlay[],
@@ -69,7 +69,7 @@ export interface IDilutedCaseState {
 export interface ICaseState extends IDilutedCaseState {
 	favoriteOverlays?: IOverlay[];
 	presetOverlays?: IOverlay[];
-	miscOverlays?: IOverlaysHash[],
+	miscOverlays?: IOverlaysHash,
 	maps?: ICaseMapsState;
 }
 

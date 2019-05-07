@@ -4,7 +4,7 @@ import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
 import { combineLatest, pipe, Observable } from 'rxjs';
 import {
 	selectActiveMapId, selectLayout, selectMapsList, selectRemovedOverlays,
-	selectRemovedOverlaysVisibility, selectFavoriteOverlays, selectPresetOverlays
+	selectRemovedOverlaysVisibility, selectFavoriteOverlays, selectPresetOverlays, selectMiscOverlays
 } from '@ansyn/map-facade';
 import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';

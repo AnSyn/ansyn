@@ -20,9 +20,9 @@ import {
 	ImageManualProcessArgs,
 	IOverlaysManualProcessArgs
 } from '../../models/case.model';
-import { IDilutedOverlaysHash, IOverlay, IOverlaysHash } from "../../../../overlays/models/overlay.model";
-export class QueryParamsHelper {
+import { IOverlay, IDilutedOverlaysHash, IOverlaysHash } from '../../../../overlays/models/overlay.model';
 
+export class QueryParamsHelper {
 	constructor(protected casesService: CasesService) {
 	}
 

@@ -1,13 +1,11 @@
 import {
 	ImageryStatusActionTypes,
-	SetMiscOverlayAction,
-	SetMiscOverlaysAction
+	SetMiscOverlay,
+	SetMiscOverlays
 } from '../actions/imagery-status.actions';
 import { uniq } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AlertMsg, AlertMsgTypes } from '../alerts/model';
-import { IOverlaysHash } from "../../ansyn/modules/overlays/models/overlay.model";
-import any = jasmine.any;
 
 export const imageryStatusFeatureKey = 'imageryStatus';
 export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);
@@ -62,15 +60,15 @@ export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusIn
 		}
 
 		case ImageryStatusActionTypes.SET_MISC_OVERLAYS:
-			const { miscOverlays } = (<SetMiscOverlaysAction>).payload;
+			const { miscOverlays } = (<SetMiscOverlays>action).payload;
 			return { ...state, miscOverlays };
 
 		case ImageryStatusActionTypes.SET_MISC_OVERLAY:
-			const { key, overlay } = (<SetMiscOverlayAction>).payload;
+			const { key, overlay } = (<SetMiscOverlay>action).payload;
 			return {
 				...state, miscOverlays: {
 					...state.miscOverlays,
-					[key]: any
+					[key]: overlay
 				}
 			};
 

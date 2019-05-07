@@ -13,7 +13,7 @@ import {
 	SetFavoriteOverlaysAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
+	SetRemovedOverlaysVisibilityAction, SetMiscOverlays,
 } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import {

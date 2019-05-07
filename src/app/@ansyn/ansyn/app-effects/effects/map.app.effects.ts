@@ -13,7 +13,7 @@ import {
 	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
-	SetIsLoadingAcion,
+	SetIsLoadingAcion, SetMapExtraDescription,
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {

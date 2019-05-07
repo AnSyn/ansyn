@@ -6,9 +6,9 @@ import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from "@ansyn/imagery";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
-import { selectMiscOverlay, selectMiscOverlays } from "../../../@ansyn/map-facade/reducers/imagery-status.reducer";
 import { Store } from "@ngrx/store";
-import { SetMiscOverlayAction } from "../../../@ansyn/map-facade/actions/imagery-status.actions";
+import { SetMiscOverlay } from "../../../@ansyn/map-facade/actions/imagery-status.actions";
+import { selectMiscOverlays } from '@ansyn/map-facade';
 
 const moment = momentNs;
 
@@ -30,11 +30,11 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	currentOverlays: IOverlay[];
 
-	AutoSubscription
+	@AutoSubscription
 	currentOverlays$ = this.store$.select(selectOverlaysArray).pipe(
 		tap( x => console.log('sandbox' , 'overlays array', x)),
-		tap( (x: IOverlay[]) => this.currentOverlays = x))
-	)
+		tap( (x: IOverlay[]) => this.currentOverlays = x)
+	);
 
 	overlays = [
 		this.overlay('000', OpenLayersStaticImageSourceProviderSourceType, 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', 576, 1024),
@@ -176,7 +176,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	setMiscOverlays() {
 		if (this.currentOverlays.length > 0) {
-			this.store$.dispatch(new SetMiscOverlayAction({ key: 'example', overlay: this.currentOverlays[0]}))
+			this.store$.dispatch(new SetMiscOverlay({ key: 'example', overlay: this.currentOverlays[0]}))
 		}
 	}
 }

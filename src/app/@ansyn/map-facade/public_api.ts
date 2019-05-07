@@ -64,6 +64,9 @@ export {
 	SetRemovedOverlayIdsCount,
 	AddAlertMsg,
 	RemoveAlertMsg,
+	SetMapExtraDescription,
+	SetMiscOverlays,
+	SetMiscOverlay
 } from './actions/imagery-status.actions'
 
 export {
@@ -75,7 +78,9 @@ export {
 	selectFavoriteOverlays,
 	selectPresetOverlays,
 	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
+	selectRemovedOverlaysVisibility,
+	selectMiscOverlays,
+	selectMiscOverlay
 } from './reducers/imagery-status.reducer'
 
 export { copyFromContent } from './utils/clipboard';

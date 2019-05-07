@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../alerts/model';
-import { IOverlay } from "../../ansyn/modules/overlays/models/overlay.model";
 
 export enum ImageryStatusActionTypes {
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
@@ -20,24 +19,24 @@ export enum ImageryStatusActionTypes {
 	SET_MISC_OVERLAY = 'SET_MISC_OVERLAY'
 }
 
-export class SetMapExtraDescriptionAction implements Action {
+export class SetMapExtraDescription implements Action {
 	type: string = ImageryStatusActionTypes.SET_MAP_EXTRA_DESCRIPTION;
 
 	constructor(public payload: { id: string, extraDescription: string }) {
 	}
 }
 
-export class SetMiscOverlaysAction implements Action {
+export class SetMiscOverlays implements Action {
 	type: string = ImageryStatusActionTypes.SET_MISC_OVERLAYS;
 
-	constructor(public payload: { miscOverlays: IOverlaysHash }) {
+	constructor(public payload: { miscOverlays: any }) { // @todo IOverlaysHash
 	}
 }
 
-export class SetMiscOverlayAction implements Action {
+export class SetMiscOverlay implements Action {
 	type: string = ImageryStatusActionTypes.SET_MISC_OVERLAY;
 
-	constructor(public payload: { key: string, overlay: IOverlay }) {
+	constructor(public payload: { key: string, overlay: any }) { // @todo IOverlay
 	}
 }
 

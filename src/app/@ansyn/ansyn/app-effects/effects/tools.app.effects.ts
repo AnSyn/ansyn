@@ -36,7 +36,12 @@ import {
 	ShowOverlaysFootprintAction, StartMouseShadow, StopMouseShadow, ToolsActionsTypes, UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { IToolsState, toolsFlags, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	IToolsState,
+	selectToolFlag,
+	toolsFlags,
+	toolsStateSelector
+} from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 
 @Injectable()
@@ -173,7 +178,7 @@ export class ToolsAppEffects {
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = combineLatest(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId)).pipe(
 		filter(([mapsList, activeMapId]) => Boolean(mapsList.length && activeMapId)),
-		withLatestFrom(this.store$.select(SelectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
+		withLatestFrom(this.store$.select(selectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
 		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);

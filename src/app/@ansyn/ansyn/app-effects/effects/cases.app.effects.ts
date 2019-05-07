@@ -98,8 +98,8 @@ export class CasesAppEffects {
 							caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
 								.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
 
-							caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || [],
-								(prevOverlay: IOverlay, key: string) => {
+							caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || {},
+								(prevOverlay: IOverlay) => {
 									return prevOverlay && mapOverlay.get(prevOverlay.id);
 								});
 

@@ -2,7 +2,7 @@ import { Component, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ImageryMouseEnter, ImageryMouseLeave, SynchronizeMapsAction } from '../../actions/map.actions';
 import { IMapSettings } from '@ansyn/imagery';
-import { IMapState, mapStateSelector } from '../../reducers/map.reducer';
+import { IMapState, mapStateSelector, selectMapsExtraDescriptions } from '../../reducers/map.reducer';
 import { Observable } from 'rxjs';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';

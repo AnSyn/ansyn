@@ -6,10 +6,7 @@ import { tap } from 'rxjs/operators';
 @Directive({
 	selector: '[ansynClickOutside]'
 })
-@AutoSubscriptions({
-	init: 'ngOnInit',
-	destroy: 'ngOnDestroy'
-})
+@AutoSubscriptions()
 export class ClickOutsideDirective implements OnInit, OnDestroy {
 	@Output() ansynClickOutside = new EventEmitter();
 	@Input() trigger: any;

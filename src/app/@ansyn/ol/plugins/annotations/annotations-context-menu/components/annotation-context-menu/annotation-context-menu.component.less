@@ -13,12 +13,14 @@ i {
 }
 
 :host {
+	outline: none;
 	position: absolute;
 	display: block;
 	width: 0;
 	height: 100%;
 	top: 0;
 	left: 0;
+	z-index: 1;
 
 	div.context-menu-wrapper {
 		position: absolute;
@@ -39,6 +41,7 @@ i {
 
 			ul.buttons {
 				position: absolute;
+				outline: none;
 				pointer-events: all;
 				border: 1px solid white;
 				box-sizing: border-box;

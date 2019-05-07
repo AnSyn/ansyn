@@ -2,21 +2,10 @@ import olFeature from 'ol/Feature';
 import { FeatureCollection, GeometryObject } from 'geojson';
 
 export interface IAnnotationBoundingRect {
-	top: number;
-	left: number;
-	width: number;
-	height: number;
-}
-
-export interface IAnnotationsSelectionEventData {
-	label: string
-	featureId: string;
-	type: string,
-	mapId: string;
-	style: any;
-	boundingRect: IAnnotationBoundingRect;
-	interactionType?: AnnotationInteraction;
-	showMeasures?: boolean;
+	top: string;
+	left: string;
+	width: string;
+	height: string;
 }
 
 export interface IUpdateFeatureEvent {

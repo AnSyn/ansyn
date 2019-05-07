@@ -31,7 +31,6 @@ export {
 	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData,
 	IDrawEndEvent,
 	IUpdateFeatureEvent
 } from './plugins/annotations/annotations.model';

@@ -12,7 +12,6 @@ import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
-	IAnnotationsSelectionEventData,
 	IDrawEndEvent,
 	IOLPluginsConfig,
 	OL_PLUGINS_CONFIG,
@@ -33,7 +32,6 @@ import {
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import {
 	AnnotationRemoveFeature,
-	AnnotationSelectAction,
 	AnnotationUpdateFeature,
 	SetAnnotationMode
 } from '../../../../../menu-items/tools/actions/tools.actions';
@@ -78,6 +76,17 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 
 	@AutoSubscription
+	activeChange$ = this.store$.pipe(
+		select(selectActiveMapId),
+		tap((activeMapId) => {
+			if (activeMapId !== this.mapId) {
+				this.annotationsVisualizer.events.onSelect.next([]);
+				this.annotationsVisualizer.events.onHover.next(null);
+			}
+		})
+	);
+
+	@AutoSubscription
 	geoFilterSearchMode$ = this.store$.pipe(
 		select(selectGeoFilterSearchMode),
 		tap((searchMode: SearchMode) => {
@@ -113,11 +122,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			const newMode = !Boolean(mode) ? undefined : mode; // prevent infinite loop
 			this.store$.dispatch(new SetAnnotationMode(newMode))
 		})
-	);
-
-	@AutoSubscription
-	onSelect$ = (): Observable<IAnnotationsSelectionEventData> => this.annotationsVisualizer.events.onSelect.pipe(
-		tap((event) => this.store$.dispatch(new AnnotationSelectAction(event)))
 	);
 
 	@AutoSubscription

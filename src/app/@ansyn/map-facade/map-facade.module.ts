@@ -75,7 +75,10 @@ import { IEntryComponent } from './directives/entry-component.directive';
 
 export class MapFacadeModule {
 
-	static provide(metadata: { entryComponents: { new(...args): IEntryComponent }[] }): ModuleWithProviders {
+	static provide(metadata: { entryComponents: {
+			container: { new(...args): IEntryComponent }[],
+			status: { new(...args): IEntryComponent }[]
+		} }): ModuleWithProviders {
 		return {
 			ngModule: MapFacadeModule,
 			providers: [

@@ -21,7 +21,7 @@
 						  [mapId]="mapState.id"></ansyn-map-search-box>
 
 	<ng-container
-		*ngFor="let component of entryComponents"
+		*ngFor="let component of entryComponents.container"
 		[ansynEntryComponent]="{ component: component , mapState: mapState }">
 	</ng-container>
 

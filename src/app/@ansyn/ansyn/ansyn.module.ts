@@ -54,7 +54,10 @@ import { AnnotationContextMenuComponent } from '@ansyn/ol';
 		AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule.provide({
-			entryComponents: [AnnotationContextMenuComponent]
+			entryComponents: {
+				container: [AnnotationContextMenuComponent],
+				status: []
+			}
 		}),
 		ImageryModule,
 		StatusBarModule,

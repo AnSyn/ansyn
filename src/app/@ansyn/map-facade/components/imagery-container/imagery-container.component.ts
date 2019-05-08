@@ -20,7 +20,6 @@ export class ImageryContainerComponent {
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
 	@Output() onMove = new EventEmitter<void>();
-
 	isHidden$: Observable<boolean> = this.store.select(mapStateSelector).pipe(
 		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))
 	);

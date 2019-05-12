@@ -64,7 +64,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	};
 
 	events = {
-		onClick: new Subject(),
 		onSelect: new Subject<string[]>(),
 		onHover: new Subject<string>(),
 		onChangeMode: new Subject<AnnotationMode>(),
@@ -75,6 +74,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
 	selected$ = this.events.onSelect.pipe(tap((selected) => this.selected = selected));
+
+	@AutoSubscription
+	onEntitiesChange$ = this.entities$.pipe(tap((entities) => {
+		this.events.onSelect.next(this.selected.filter(id => entities[id]))
+	}));
 
 	modeDictionary = {
 		Arrow: {
@@ -102,10 +106,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			featureJson: feature,
-			id: feature.properties.id,
-			style: feature.properties.style,
-			showMeasures: feature.properties.showMeasures,
-			label: feature.properties.label
+			id: feature.properties.id
 		}));
 	}
 
@@ -131,9 +132,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						return mode === 'Point' ? 30 : 0;
 					},
 					text: (feature: olFeature) => {
-						const entity = this.idToEntity.get(feature.getId());
+						const entity = this.entities[feature.getId()];
 						if (entity) {
-							const { label } = entity.originalEntity;
+							const { label } = entity.originalEntity.featureJson.properties;
 							return label || '';
 						}
 						return '';
@@ -277,7 +278,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
-		this.setMode(null);
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any>geometry.clone();
 		if (cloneGeometry instanceof olCircle) {
@@ -297,6 +297,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.pipe(
 				take(1),
 				mergeMap((GeoJSON: FeatureCollection<GeometryObject>) => {
+					this.setMode(null);
 					return this.addOrUpdateEntities(this.annotationsLayerToEntities(GeoJSON)).pipe(
 						tap(() => this.events.onDrawEnd.next({ GeoJSON, feature }))
 					);
@@ -355,7 +356,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
 		const style: olStyle = super.featureStyle(feature, state);
 		const entity = this.getEntity(feature);
-		if (entity && entity.showMeasures) {
+		if (entity && entity.featureJson.properties.showMeasures) {
 			return [style, ...this.getMeasuresAsStyles(feature)];
 		} else {
 			return style;
@@ -481,25 +482,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		];
 	}
 
-	removeFeature(featureId: string, internal = false) {
-		super.removeEntity(featureId, internal);
-		if (!internal) {
-			this.events.removeEntity.next(featureId);
-		}
-		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
+	removeFeature(featureId: string) {
+		super.removeEntity(featureId);
+		this.events.removeEntity.next(featureId);
 	}
 
-	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
-		const entity = this.idToEntity.get(featureId);
-
+	updateFeature(featureId: string, props: Partial<IVisualizerEntity>) {
+		const entity = super.updateEntity(featureId, props);
 		if (entity) {
-			entity.originalEntity = merge({}, entity.originalEntity, props);
 			this.events.updateEntity.next(entity.originalEntity);
-			this.source.refresh();
 		}
-
 	}
-
 }
 
 

@@ -56,7 +56,7 @@ export class StartMouseShadow implements Action {
 export class SetAnnotationMode implements Action {
 	type = ToolsActionsTypes.STORE.SET_ANNOTATION_MODE;
 
-	constructor(public payload?: AnnotationMode) {
+	constructor(public payload: AnnotationMode = null) {
 
 	}
 }

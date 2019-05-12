@@ -94,18 +94,18 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		};
 
 		logicalEntitiesCopy.forEach((entity: IVisualizerEntity) => {
-			this.removeEntity(entity.id);
+			this._removeEntity(entity.id);
 			const clonedFeatureJson: any = { ...entity.featureJson, id: entity.id };
 			featuresCollectionToAdd.features.push(clonedFeatureJson);
-			this.idToEntity.set(entity.id, { originalEntity: entity, feature: null });
+			this.entities = { ...this.entities, [entity.id]: { originalEntity: entity, feature: null } };
 		});
 
 		return this.projectionService.projectCollectionApproximatelyToImage<olFeature>(featuresCollectionToAdd, this.iMap.mapObject).pipe(
 			map((features: olFeature[]) => {
 				features.forEach((feature: olFeature) => {
 					const id: string = <string>feature.getId();
-					const existingEntity = this.idToEntity.get(id);
-					this.idToEntity.set(id, { ...existingEntity, feature: feature });
+					const existingEntity = this.entities[id];
+					this.entities = { ...this.entities, [id]: { ...existingEntity, feature: feature } };
 				});
 				this.source.addFeatures(features);
 				return true;

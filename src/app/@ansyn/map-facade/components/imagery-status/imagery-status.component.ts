@@ -53,7 +53,6 @@ import { IEntryComponent } from '../../directives/entry-component.directive';
 export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	// @todo refactor
 	overlay: any;
-	_extraDescription = '';
 	_mapState: IMapSettings;
 	mapsAmount = 1;
 	@HostBinding('class.active') isActiveMap: boolean;
@@ -172,11 +171,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return formatedTime;
 	}
 
-	get description() {
+	get description(): string {
 		const ActiveMap = _get(this.communicators.provide(this.mapState.id), 'ActiveMap');
 		const extraData = (ActiveMap && ActiveMap.getExtraData()) || {};
 		const description = extraData[ImageryLayerProperties.DESCRIPTION];
-		return this._extraDescription ? this._extraDescription : description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
+		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : '';
 	}
 
 	get baseMapDescription() {

@@ -14,29 +14,13 @@ export enum ImageryStatusActionTypes {
 	ENABLE_COPY_ORIGINAL_OVERLAY_DATA = 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
-	SET_MAP_EXTRA_DESCRIPTION = 'SET_MAP_EXTRA_DESCRIPTION',
-	SET_MISC_OVERLAYS = 'SET_MISC_OVERLAYS',
-	SET_MISC_OVERLAY = 'SET_MISC_OVERLAY'
+	SET_MAP_EXTRA_DESCRIPTION = 'SET_MAP_EXTRA_DESCRIPTION'
 }
 
 export class SetMapExtraDescription implements Action {
 	type: string = ImageryStatusActionTypes.SET_MAP_EXTRA_DESCRIPTION;
 
 	constructor(public payload: { id: string, extraDescription: string }) {
-	}
-}
-
-export class SetMiscOverlays implements Action {
-	type: string = ImageryStatusActionTypes.SET_MISC_OVERLAYS;
-
-	constructor(public payload: { miscOverlays: any }) { // @todo IOverlaysHash
-	}
-}
-
-export class SetMiscOverlay implements Action {
-	type: string = ImageryStatusActionTypes.SET_MISC_OVERLAY;
-
-	constructor(public payload: { key: string, overlay: any }) { // @todo IOverlay
 	}
 }
 

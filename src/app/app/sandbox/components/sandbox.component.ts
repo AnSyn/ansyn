@@ -1,5 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AnsynApi, GeoRegisteration, IOverlay, IOverlaysCriteria, PhotoAngle, selectOverlaysArray } from '@ansyn/ansyn';
+import {
+	AnsynApi,
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysCriteria,
+	PhotoAngle,
+	selectMiscOverlays,
+	selectOverlaysArray, SetMiscOverlay
+} from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
 import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ol';
 import * as momentNs from 'moment';
@@ -7,8 +15,6 @@ import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from "@ansyn/imagery";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 import { Store } from "@ngrx/store";
-import { SetMiscOverlay } from "../../../@ansyn/map-facade/actions/imagery-status.actions";
-import { selectMiscOverlays } from '@ansyn/map-facade';
 
 const moment = momentNs;
 

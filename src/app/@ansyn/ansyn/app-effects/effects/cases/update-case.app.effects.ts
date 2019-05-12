@@ -4,7 +4,7 @@ import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
 import { combineLatest, pipe, Observable } from 'rxjs';
 import {
 	selectActiveMapId, selectLayout, selectMapsList, selectRemovedOverlays,
-	selectRemovedOverlaysVisibility, selectFavoriteOverlays, selectPresetOverlays, selectMiscOverlays
+	selectRemovedOverlaysVisibility, selectFavoriteOverlays, selectPresetOverlays
 } from '@ansyn/map-facade';
 import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
@@ -14,7 +14,7 @@ import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
-import { selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
+import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
 // @todo refactor

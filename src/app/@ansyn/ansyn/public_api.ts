@@ -273,13 +273,17 @@ export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
 
 
 
-export { SetOverlaysCriteriaAction, UpdateOverlaysCountAction } from './modules/overlays/actions/overlays.actions';
+export { SetOverlaysCriteriaAction, UpdateOverlaysCountAction,
+	SetMiscOverlays,
+	SetMiscOverlay } from './modules/overlays/actions/overlays.actions';
 export { IMultipleOverlaysSource, MultipleOverlaysSource } from './modules/overlays/models/overlays-source-providers';
 export { IOverlaysConfig } from './modules/overlays/models/overlays.config';
 export { OverlaySourceProvider } from './modules/overlays/models/overlays-source-providers';
 export { MultipleOverlaysSourceProvider } from './modules/overlays/services/multiple-source-provider';
 export { IOverlayByIdMetaData } from './modules/overlays/services/overlays.service';
-export { selectHoveredOverlay } from './modules/overlays/reducers/overlays.reducer';
+export { selectHoveredOverlay,
+	selectMiscOverlays,
+	selectMiscOverlay } from './modules/overlays/reducers/overlays.reducer';
 export { timeIntersection } from './modules/overlays/models/base-overlay-source-provider.model';
 export { ChangeOverlayPreviewRotationAction } from './modules/overlays/actions/overlays.actions';
 export { selectLoading } from './modules/overlays/reducers/overlays.reducer';

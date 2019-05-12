@@ -13,7 +13,7 @@ import {
 	SetFavoriteOverlaysAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction, SetMiscOverlays,
+	SetRemovedOverlaysVisibilityAction
 } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import {
@@ -31,7 +31,7 @@ import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/too
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
-import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
+import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';

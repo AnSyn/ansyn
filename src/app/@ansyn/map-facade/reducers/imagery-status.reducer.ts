@@ -1,4 +1,6 @@
-import { ImageryStatusActionTypes } from '../actions/imagery-status.actions';
+import {
+	ImageryStatusActionTypes
+} from '../actions/imagery-status.actions';
 import { uniq } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AlertMsg, AlertMsgTypes } from '../alerts/model';
@@ -94,7 +96,7 @@ export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusIn
 		default:
 			return state;
 	}
-};
+}
 
 export const selectRemovedOverlaysVisibility: MemoizedSelector<any, boolean> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.removedOverlaysVisibility);
 export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.removedOverlaysIdsCount);

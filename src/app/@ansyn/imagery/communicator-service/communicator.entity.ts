@@ -125,6 +125,9 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 		const getLayers = layer ? Promise.resolve(layer) : this.createMapSourceForMapType(mapType, sourceType);
 		return getLayers.then((layer) => {
+			if (!Boolean(layer)) {
+				return Promise.reject('failed to load map layer: ' + sourceType);
+			}
 			return mapComponent.createMap(layer, position)
 				.pipe(
 					tap((map) => this.onMapCreated(map, mapType, this.activeMapName))
@@ -276,6 +279,8 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const { worldView: { mapType, sourceType }, data: { position } } = this.mapSettings;
 		this.setActiveMap(mapType, position, sourceType).then(() => {
 			this.imageryCommunicatorService.createCommunicator(this);
+		}, err => {
+			console.error('Error loading map: ', err);
 		});
 	}
 

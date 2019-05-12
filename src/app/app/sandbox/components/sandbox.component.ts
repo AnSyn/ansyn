@@ -183,6 +183,8 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	setMiscOverlays() {
 		if (this.currentOverlays.length > 0) {
 			this.store$.dispatch(new SetMiscOverlay({ key: 'example', overlay: this.currentOverlays[0]}))
+		} else {
+			console.warn('Cannot set misc overlays because there are no query overlays');
 		}
 	}
 }

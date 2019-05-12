@@ -232,7 +232,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		if (calculateCenterOfMass) {
 			const featureId = <string> feature.getId();
-			const entityMap = this.idToEntity.get(featureId);
+			const entityMap = this.entities[featureId];
 			if (entityMap) {
 				const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
 				const centroid = getPointByGeometry(featureGeoJson.geometry);

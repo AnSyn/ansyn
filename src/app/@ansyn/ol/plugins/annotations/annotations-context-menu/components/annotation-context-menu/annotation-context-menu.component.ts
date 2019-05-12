@@ -56,12 +56,12 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	calcBoundingRect(id) {
-		const { feature } = this.annotations.idToEntity.get(id);
+		const { feature } = this.annotations.entities[id];
 		return this.annotations.getFeatureBoundingRect(feature);
 	}
 
 	getFeatureProps(id) {
-		const { originalEntity: { featureJson: { properties } } } = this.annotations.idToEntity.get(id);
+		const { originalEntity: { featureJson: { properties } } } = this.annotations.entities[id];
 		return properties;
 	}
 
@@ -84,12 +84,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	removeFeature(featureId) {
-		this.annotations.removeFeature(featureId);
-		// this.annotations.events.onSelect.next({
-		// 	mapId: this.mapState.id,
-		// 	multi: true,
-		// 	data: { [featureId]: { featureId } }
-		// })
+		this.annotations.removeEntity(featureId);
 	}
 
 	selectTab(id: string, tab: AnnotationsContextmenuTabs) {
@@ -98,7 +93,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	toggleMeasures(featureId) {
 		const { showMeasures } = this.getFeatureProps(featureId);
-		this.annotations.updateFeature(featureId, { showMeasures: !showMeasures });
+		this.annotations.updateEntity(featureId, { showMeasures: !showMeasures });
 	}
 
 	selectLineWidth(w: number, featureId: string) {
@@ -111,7 +106,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			}
 		};
 
-		this.annotations.updateFeature(featureId, { style: updateStyle });
+		this.annotations.updateEntity(featureId, { style: updateStyle });
 	}
 
 	activeChange($event: { label: 'stroke' | 'fill', event: string }, featureId: string) {
@@ -124,7 +119,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				[`${$event.label}-opacity`]: $event.event ? opacity[$event.label] : 0
 			}
 		};
-		this.annotations.updateFeature(featureId, { style: updatedStyle });
+		this.annotations.updateEntity(featureId, { style: updatedStyle });
 	}
 
 	colorChange($event: { label: 'stroke' | 'fill', event: string }, featureId: string) {
@@ -136,10 +131,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				[$event.label]: $event.event
 			}
 		};
-		this.annotations.updateFeature(featureId, { style: updatedStyle });
+		this.annotations.updateEntity(featureId, { style: updatedStyle });
 	}
 
 	updateLabel(label, featureId: string) {
-		this.annotations.updateFeature(featureId, { label });
+		this.annotations.updateEntity(featureId, { label });
 	}
 }

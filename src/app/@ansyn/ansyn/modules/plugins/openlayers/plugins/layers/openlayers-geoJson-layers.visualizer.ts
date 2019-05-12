@@ -69,7 +69,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		return collection.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id || UUID.UUID(),
 			featureJson: feature,
-			style: feature.properties.style
 		}));
 	}
 

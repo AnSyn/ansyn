@@ -1,9 +1,9 @@
 import { fromCircle } from 'ol/geom/Polygon';
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { uniq } from 'lodash';
+import { groupBy as _groupBy, uniq, isEqual as _isEqual, get as _get } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, EMPTY } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -118,10 +118,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
-		tap((mode) => {
-			const newMode = !Boolean(mode) ? undefined : mode; // prevent infinite loop
-			this.store$.dispatch(new SetAnnotationMode(newMode))
-		})
+		tap((mode) => this.store$.dispatch(new SetAnnotationMode(mode)))
 	);
 
 	@AutoSubscription
@@ -174,18 +171,20 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		const annotationsLayerEntities = this.annotationsVisualizer.annotationsLayerToEntities(annotationsLayer);
 		this.annotationsVisualizer.getEntities()
 			.filter(({ id }) => !annotationsLayerEntities.some((entity) => id === entity.id))
-			.forEach(({ id }) => this.annotationsVisualizer.removeEntity(id, true));
+			.forEach(({ id }) => this.annotationsVisualizer._removeEntity(id));
 
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {
-				const oldEntity = this.annotationsVisualizer.idToEntity.get(entity.id);
+				const oldEntity = _get(this.annotationsVisualizer, `entities[${entity.id}].originalEntity`);
 				if (oldEntity) {
-					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
-					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
-					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
-					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
-					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
-					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
+					const { properties: oldProperties } = oldEntity.featureJson;
+					const { properties } = entity.featureJson;
+					const isShowMeasuresDiff = oldProperties.showMeasures !== properties.showMeasures;
+					const isLabelDiff = oldProperties.label !== properties.label;
+					const isFillDiff = oldProperties.style.initial.fill !== properties.style.initial.fill;
+					const isStrokeWidthDiff = oldProperties.style.initial['stroke-width'] !== properties.style.initial['stroke-width'];
+					const isStrokeDiff = oldProperties.style.initial['stroke'] !== properties.style.initial['stroke'];
+					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldProperties.style.initial[o] !== properties.style.initial[o]);
 					return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
 				}
 				return true;

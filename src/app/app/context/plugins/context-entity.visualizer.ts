@@ -84,7 +84,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		if (!this.referenceDate || !(this.getGeometry(feature) instanceof olPoint)) {
 			return '';
 		}
-		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
+		const { originalEntity } = this.entities[feature.getId()];
 		const entityDate = (<IContextEntity>originalEntity).date;
 		const timeDiff = getTimeDiff(this.referenceDate, entityDate);
 
@@ -97,7 +97,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			return this.idToCachedCenter.get(featureId);
 		}
 
-		const entityMap = this.idToEntity.get(featureId);
+		const entityMap = this.entities[featureId];
 
 		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
 			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);

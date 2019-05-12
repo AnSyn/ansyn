@@ -99,7 +99,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {
-		const dispatchValue = this.mode === mode ? undefined : mode;
+		const dispatchValue = this.mode === mode ? null : mode;
 		if (dispatchValue) {
 			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 		}

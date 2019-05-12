@@ -17,7 +17,7 @@ import {
 	MarkerSizeDic,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { BaseImageryVisualizer, VisualizerInteractionTypes } from '@ansyn/imagery';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
@@ -28,13 +28,29 @@ export interface IFeatureIdentifier {
 	feature: Feature,
 	originalEntity: IVisualizerEntity
 }
+export interface IEntities {
+	[key: string]: IFeatureIdentifier
+}
 
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isHidden = false;
 	public source: SourceVector;
 	protected featuresCollection: Feature[];
 	vector: ol_Layer;
-	public idToEntity: Map<string, IFeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
+	entities$ = new Subject<IEntities>();
+	protected _entities: IEntities = {};
+
+	public get entities(): IEntities {
+		return this._entities;
+	}
+
+	public set entities(value: IEntities) {
+		if (value !== this._entities) {
+			this._entities = value;
+			this.entities$.next(this._entities)
+		}
+	}
+
 	protected disableCache = false;
 
 	protected visualizerStyle: IVisualizerStateStyle = {
@@ -54,7 +70,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	getEntity(feature: Feature): IVisualizerEntity {
-		const entity = this.idToEntity.get(<string>feature.getId());
+		const entity = this.entities[feature.getId()];
 		return entity && entity.originalEntity;
 	}
 
@@ -198,14 +214,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 			const entity = this.getEntity(feature);
 			if (entity) {
-				if (entity.type && this.visualizerStyle.entities && this.visualizerStyle.entities[entity.type]) {
-					styles.push(this.visualizerStyle.entities[entity.type][VisualizerStates.INITIAL]);
-					styles.push(this.visualizerStyle.entities[entity.type][state]);
-				}
-
-				if (entity.style) {
-					styles.push(entity.style[VisualizerStates.INITIAL]);
-					styles.push(entity.style[state]);
+				if (entity.featureJson.properties.style) {
+					styles.push(entity.featureJson.properties.style[VisualizerStates.INITIAL]);
+					styles.push(entity.featureJson.properties.style[state]);
 				}
 			}
 
@@ -230,18 +241,21 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		const featuresCollectionToAdd: any = featureCollection(features);
 
 		filteredLogicalEntities.forEach((entity: IVisualizerEntity) => {
-			this.removeEntity(entity.id, true);
+			this._removeEntity(entity.id);
 		});
 
 		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject)
 			.pipe(map((features: Feature[]) => {
-				features.forEach((feature: Feature) => {
+				const updatedEntities = features.reduce((prev, feature: Feature) => {
 					const _id: string = <string>feature.getId();
-					this.idToEntity.set(_id, <any>{
-						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
-						feature: feature
-					});
-				});
+					return {
+						...prev,
+						[_id]: {
+							originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
+							feature: feature
+					}}
+				}, {});
+				this.entities = { ...this.entities, ...updatedEntities };
 				this.source.addFeatures(features);
 				return true;
 			}));
@@ -249,7 +263,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	setEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		const removedEntities = [];
-		this.idToEntity.forEach(((value, key: string) => {
+		Object.entries(this.entities).forEach((([key, value]) => {
 			const item = logicalEntities.find((entity) => entity.id === key);
 			if (!item) {
 				removedEntities.push(key);
@@ -257,36 +271,61 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}));
 
 		removedEntities.forEach((id) => {
-			this.removeEntity(id);
+			this._removeEntity(id);
 		});
 
 		return this.addOrUpdateEntities(logicalEntities);
 	}
 
-	removeEntity(logicalEntityId: string, internal = false) {
-		const entityToRemove = this.idToEntity.get(logicalEntityId);
+	_removeEntity(logicalEntityId: string): boolean {
+		const entityToRemove = this.entities[logicalEntityId];
 		if (!entityToRemove) {
-			return;
+			return false;
 		}
-		this.idToEntity.delete(logicalEntityId);
+
 		if (entityToRemove.feature && this.source.getFeatureById(entityToRemove.feature.getId())) {
 			this.source.removeFeature(entityToRemove.feature);
 		}
+		return true;
 	}
 
-	clearEntities() {
-		if (this.idToEntity) {
-			this.idToEntity.clear();
+	removeEntity(entityId: string) {
+		this._removeEntity(entityId);
+		const { [entityId]: entity, ...rest } = this.entities;
+		this.entities = rest;
+	}
+
+	updateEntity(entityId: string, props: any) {
+		const entity = this.entities[entityId];
+		if (entity) {
+			this.entities = {
+				...this.entities,
+				[entityId]: {
+					...entity,
+					originalEntity: {
+						...entity.originalEntity,
+						featureJson: {
+							...entity.originalEntity.featureJson,
+							properties: merge({}, entity.originalEntity.featureJson.properties, props)
+						}
+					}
+				}
+			};
+			this.source.refresh();
+			return entity;
 		}
+	}
+
+
+	clearEntities() {
+		this.entities = {};
 		if (this.source) {
 			this.source.clear(true);
 		}
 	}
 
 	getEntities(): IVisualizerEntity[] {
-		const entities: IVisualizerEntity[] = [];
-		this.idToEntity.forEach((val, key) => entities.push(val.originalEntity));
-		return entities;
+		return Object.values(this.entities).map(({ originalEntity }) => originalEntity);
 	}
 
 	onResetView(): Observable<boolean> {

@@ -104,10 +104,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return this.mapsAmount === 1;
 	}
 
-	@Input() set extraDescription(extraDescription: string) {
-		this._extraDescription = extraDescription;
-	}
-
 	translatedOverlaySensorName = '';
 
 	@Output() toggleMapSynchronization = new EventEmitter<void>();

@@ -4,7 +4,6 @@
 						  class="with-background"
 						  [mapState]="mapState"
 						  (onMove)="onMove.emit($event)"
-						  [extraDescription]="extraDescription$ | async"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
 

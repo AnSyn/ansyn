@@ -63,8 +63,7 @@ export {
 	EnableCopyOriginalOverlayDataAction,
 	SetRemovedOverlayIdsCount,
 	AddAlertMsg,
-	RemoveAlertMsg,
-	SetMapExtraDescription
+	RemoveAlertMsg
 } from './actions/imagery-status.actions'
 
 export {

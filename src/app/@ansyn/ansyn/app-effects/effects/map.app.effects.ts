@@ -13,7 +13,7 @@ import {
 	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
-	SetIsLoadingAcion, SetMapExtraDescription,
+	SetIsLoadingAcion,
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
@@ -107,15 +107,6 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	onDisplayOverlaySuccessDeleteExtraDescription$: Observable<any> = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		map(({ payload }: DisplayOverlaySuccessAction) => new SetMapExtraDescription({
-			id: payload.mapId,
-			extraDescription: null
-		}))
-	);
-
-	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.pipe(
 			ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
@@ -174,7 +165,7 @@ export class MapAppEffects {
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
 			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
-			map((action) => new SetToastMessageAction({
+			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
 			}))

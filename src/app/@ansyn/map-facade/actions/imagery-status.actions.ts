@@ -13,15 +13,7 @@ export enum ImageryStatusActionTypes {
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	ENABLE_COPY_ORIGINAL_OVERLAY_DATA = 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
-	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
-	SET_MAP_EXTRA_DESCRIPTION = 'SET_MAP_EXTRA_DESCRIPTION'
-}
-
-export class SetMapExtraDescription implements Action {
-	type: string = ImageryStatusActionTypes.SET_MAP_EXTRA_DESCRIPTION;
-
-	constructor(public payload: { id: string, extraDescription: string }) {
-	}
+	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG'
 }
 
 export class ToggleFavoriteAction implements Action {
@@ -30,7 +22,6 @@ export class ToggleFavoriteAction implements Action {
 	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
 	}
 }
-
 
 export class TogglePresetOverlayAction implements Action {
 	type: string = ImageryStatusActionTypes.TOGGLE_OVERLAY_PRESET;

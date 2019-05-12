@@ -28,7 +28,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	selection: string[];
 	hoverFeatureId: string;
 
-	@Input() mapState: IMapSettings;
+	@Input() mapId: string;
 	@HostBinding('attr.tabindex') tabindex = 0;
 
 	@AutoSubscription
@@ -70,9 +70,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.communicators.instanceCreated.pipe(
-			filter(({ id }) => id === this.mapState.id),
+			filter(({ id }) => id === this.mapId),
 			tap(() => {
-				this.communicator = this.communicators.provide(this.mapState.id);
+				this.communicator = this.communicators.provide(this.mapId);
 				this.annotations = this.communicator.getPlugin(AnnotationsVisualizer);
 				this.onInitMap();
 			}),

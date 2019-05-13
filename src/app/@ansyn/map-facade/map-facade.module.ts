@@ -28,7 +28,6 @@ import {
 import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
 import { GeocoderService } from './services/geocoder.service';
-import { ShowFirstPipe } from './pipes/show-first.pipe';
 
 @NgModule({
 	imports: [
@@ -62,8 +61,7 @@ import { ShowFirstPipe } from './pipes/show-first.pipe';
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent,
-		ShowFirstPipe
+		AnsynPopoverComponent
 	],
 	exports: [
 		ImageriesManagerComponent,

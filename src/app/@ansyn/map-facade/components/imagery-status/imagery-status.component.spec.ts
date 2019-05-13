@@ -1,19 +1,18 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { EntryComponentDirective } from "../../directives/entry-component.directive";
-import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
-import { ImageryStatusComponent } from './imagery-status.component';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
-import { MockComponent } from '../../test/mock-component';
-import { FormsModule } from '@angular/forms';
+import { ALERTS } from '../../alerts/alerts.model';
 import { AlertsModule } from '../../alerts/alerts.module';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
+import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { MockComponent } from '../../test/mock-component';
+import { ImageryStatusComponent } from './imagery-status.component';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;

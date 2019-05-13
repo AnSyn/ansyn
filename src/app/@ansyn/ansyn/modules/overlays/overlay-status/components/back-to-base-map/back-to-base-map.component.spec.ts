@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { BackToWorldView } from "@ansyn/map-facade";
 
 import { BackToBaseMapComponent } from './back-to-base-map.component';
 import { Store, StoreModule } from '@ngrx/store';
@@ -31,8 +32,8 @@ describe('BackToBaseMapComponent', () => {
 	});
 
 	it('check click on backToWorldView', () => {
-		spyOn(component, 'backToWorldView');
-		fixture.nativeElement.querySelector('.back-to-world-view').click();
-		expect(component.backToWorldView).toHaveBeenCalled();
+		spyOn(store, 'dispatch');
+		component.backToWorldView();
+		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldView({mapId: 'mapId'}));
 	});
 });

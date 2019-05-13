@@ -11,9 +11,11 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 })
 @AutoSubscriptions()
 export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponent {
+	static showFirst = true;
 	@Input() mapId: string;
 	mapsAmount: number;
 	overlay: any;
+
 	@AutoSubscription
 	mapsAmount$ = this.store$.pipe(
 		select(selectMapsTotal),
@@ -36,10 +38,6 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	ngOnDestroy(): void {
-	}
-
-	showFirst() {
-		return true;
 	}
 
 	backToWorldView() {

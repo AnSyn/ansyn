@@ -1,8 +1,11 @@
 <div class="buttons">
 
 	<ng-container
-		*ngFor="let component of entryComponents.status | showFirst:true"
-		[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="component.showFirst"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
 	</ng-container>
 
 	<button
@@ -47,8 +50,11 @@
 	</button>
 
 	<ng-container
-		*ngFor="let component of entryComponents.status | showFirst:false"
-		[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="!component.showFirst"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
 	</ng-container>
 </div>
 

@@ -56,7 +56,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
-	protected maximumNumberOfRetries = 0.1;
+	protected maximumNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
 	shadowMapObject: OLMap;

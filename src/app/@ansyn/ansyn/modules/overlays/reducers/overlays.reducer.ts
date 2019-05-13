@@ -1,11 +1,17 @@
-import { OverlaysActions, OverlaysActionTypes } from '../actions/overlays.actions';
+import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
-import { EntityState, createEntityAdapter, EntityAdapter, Dictionary } from '@ngrx/entity';
+import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ImageryStatusActionTypes, MapActionTypes } from '@ansyn/map-facade';
 import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
-import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaySpecialObject } from '../models/overlay.model';
+import {
+	IOverlay,
+	IOverlayDrop,
+	IOverlaysCriteria,
+	IOverlaysHash,
+	IOverlaySpecialObject
+} from '../models/overlay.model';
 
 export interface ITimelineRange {
 	start: Date;
@@ -61,6 +67,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	dropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData>;
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
+	miscOverlays: IOverlaysHash;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -81,7 +88,8 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	statusMessage: null,
 	dropsMarkUp: initDropsMarkUp,
 	hoveredOverlay: null,
-	overlaysCriteria: {}
+	overlaysCriteria: {},
+	miscOverlays: {}
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -122,8 +130,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				return Object.assign({}, state, {
 					selectedOverlays: selected1
 				});
-			}
-			else {
+			} else {
 				return state;
 			}
 
@@ -170,7 +177,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		}
 
 		case OverlaysActionTypes.SET_DROPS: {
-			return { ...state, drops: action.payload};
+			return { ...state, drops: action.payload };
 		}
 
 		case OverlaysActionTypes.SET_TIMELINE_STATE:
@@ -182,8 +189,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			) {
 				const result: number = startTime - endTime;
 				return (result > 0) ? state : { ...state, timeLineRange: action.payload.timeLineRange };
-			}
-			else {
+			} else {
 				return state;
 			}
 
@@ -280,6 +286,20 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 			return state;
 
+		case OverlaysActionTypes.SET_MISC_OVERLAYS:
+			const { miscOverlays } = (<SetMiscOverlays>action).payload;
+			return { ...state, miscOverlays };
+
+		case OverlaysActionTypes.SET_MISC_OVERLAY: {
+			const { key, overlay } = (<SetMiscOverlay>action).payload;
+			return {
+				...state, miscOverlays: {
+					...state.miscOverlays,
+					[key]: overlay
+				}
+			};
+		}
+
 		default :
 			return state;
 	}
@@ -289,7 +309,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 export const { selectEntities, selectAll, selectTotal, selectIds } = overlaysAdapter.getSelectors();
 
 export const selectOverlays = createSelector(overlaysStateSelector, selectEntities);
-export const selectOverlaysMap: any = createSelector(selectOverlays , (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
+export const selectOverlaysMap: any = createSelector(selectOverlays, (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
 export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
@@ -302,8 +322,10 @@ export const selectTimelineRange = createSelector(overlaysStateSelector, (overla
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
 
-
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectTime: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
+
+export const selectMiscOverlays: MemoizedSelector<any, any> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays ? overlays.miscOverlays : {});
+export const selectMiscOverlay = (key: string) => createSelector(selectMiscOverlays, (miscOverlays: any) => miscOverlays[key]);

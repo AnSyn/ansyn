@@ -18,6 +18,7 @@ import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
 	let fixture: ComponentFixture<ImageryStatusComponent>;
+	let communicatorService: ImageryCommunicatorService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -52,7 +53,8 @@ describe('ImageryStatusComponent', () => {
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([], () => {
+	beforeEach(inject([ImageryCommunicatorService], (_communicatorService) => {
+		communicatorService = _communicatorService;
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
 		component.mapId = 'test';
@@ -82,4 +84,17 @@ describe('ImageryStatusComponent', () => {
 		fixture.detectChanges();
 		expect(fixture.nativeElement.querySelector('.link-maps')).toBeNull();
 	});
+
+	it('should return map extra description, if exists', () => {
+		const myDescription = 'hehe';
+		spyOn(communicatorService, 'provide').and.returnValue({
+			ActiveMap: {
+				getExtraData: () => ({
+					description: myDescription
+				})
+			}
+		});
+		const result = component.description;
+		expect(result).toEqual(myDescription)
+	})
 });

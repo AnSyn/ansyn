@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -9,12 +9,12 @@ import { distinctUntilChanged, tap, map } from 'rxjs/internal/operators';
 import { ChangeImageryMap, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { AlertMsg } from '../../alerts/model';
-import { IEntryComponent } from "../../directives/entry-component.directive";
-import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
+import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from "../../models/entry-components-provider";
 import { selectAlertMsg, selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
 import { copyFromContent } from "../../utils/clipboard";
 import { getTimeFormat } from '../../utils/time';
+import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -32,7 +32,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	overlay: any; // @TODO: eject to ansyn
 	displayLayers: boolean;
 	@AutoSubscription
-	overlay$ = this.store$.pipe(
+	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
 		tap((maps) => {
 			this.overlay = maps[this.mapId].data.overlay;
@@ -138,7 +138,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponent,
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
 				@Inject(ALERTS) public alerts: IAlert[],
 				protected translate: TranslateService) {
 	}

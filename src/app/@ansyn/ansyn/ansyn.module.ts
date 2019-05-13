@@ -31,7 +31,7 @@ import { HelpModule } from './modules/menu-items/help/help.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 import { AnnotationContextMenuComponent } from '@ansyn/ol';
-import { AnsynFooterComponent } from "./components/ansyn-footer/ansyn-footer.component";
+import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.component';
 
 @NgModule({
 	imports: [

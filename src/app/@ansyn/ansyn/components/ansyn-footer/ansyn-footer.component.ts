@@ -37,7 +37,8 @@ export class AnsynFooterComponent implements OnInit {
 		this.forceRedraw()
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 
-		// this.animatedElement.style.animation = this.collapse ? 'collapsedVertical .3s' : 'unCollapsedVertical .6s';
+		this.animatedElement.style.opacity = '1';
+		this.animatedElement.style.animation = this.collapse ? 'collapsedVertical .3s' : 'unCollapsedVertical .6s';
 	}
 
 	forceRedraw() {

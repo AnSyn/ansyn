@@ -12,6 +12,7 @@ div.status-timeline-container {
 	.status {
 		position: relative;
 		height: 0;
+		z-index: @z-index-status-bar-navigation-area;
 	}
 
 	.app-timeline-container {
@@ -31,7 +32,7 @@ div.status-timeline-container {
 		outline: none;
 		visibility: visible;
 		transition: .5s;
-		z-index: 4000;
+		z-index: @z-index-status-bar-navigation-area;
 
 		&:hover {
 			background-color: #27B2CF;

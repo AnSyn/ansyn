@@ -16,6 +16,7 @@ import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { IOverlay } from "../../models/overlay.model";
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -29,17 +30,17 @@ import { map, tap } from 'rxjs/operators';
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	_mapId: string;
 	mapsAmount = 1;
-	overlay: any;
+	overlay: IOverlay;
 	isActiveMap: boolean;
-	favoriteOverlays: any[];
-	removedOverlaysIds = [];
-	presetOverlays: any[];
-	isFavorite: any;
-	favoritesButtonText: any;
-	isPreset: any;
+	favoriteOverlays: IOverlay[];
+	removedOverlaysIds: string[];
+	presetOverlays: IOverlay[];
+	isFavorite: boolean;
+	favoritesButtonText: string;
+	isPreset: boolean;
 	noGeoRegistration: any;
-	presetsButtonText: any;
-	isRemoved: any;
+	presetsButtonText: string;
+	isRemoved: boolean;
 
 	@Input()
 	set mapId(value: string) {

@@ -1,4 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { EntryComponentDirective } from "../../directives/entry-component.directive";
+import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
 import { ImageryStatusComponent } from './imagery-status.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -44,14 +46,17 @@ describe('ImageryStatusComponent', () => {
 						get: () => EMPTY, setDefaultLang(arg) {
 						}
 					}
-				}]
+				},
+				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] }
+			]
 		}).compileComponents();
 	}));
 
 	beforeEach(inject([], () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
-		component.mapState = <any> { id: 'test', flags: { displayLayers: true } };
+		component.mapId = 'test';
+		component.displayLayers = true;
 		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();
@@ -59,12 +64,6 @@ describe('ImageryStatusComponent', () => {
 
 	it('should be created', () => {
 		expect(component).toBeTruthy();
-	});
-
-	it('check click on backToWorldView', () => {
-		spyOn(component, 'backToWorldView');
-		fixture.nativeElement.querySelector('.back-to-world-view').click();
-		expect(component.backToWorldView).toHaveBeenCalled();
 	});
 
 	it('check click on toggleMapSynchronization', () => {
@@ -76,19 +75,7 @@ describe('ImageryStatusComponent', () => {
 		expect(component.toggleMapSynchronization.emit).toHaveBeenCalled();
 	});
 
-	it('check click on toggleFavorite', () => {
-		spyOn(component, 'toggleFavorite');
-		fixture.nativeElement.querySelector('.set-favorite').click();
-		expect(component.toggleFavorite).toHaveBeenCalled();
-	});
 
-	it('check click on togglePreset', () => {
-		spyOnProperty(component, 'noGeoRegistration', 'get').and.returnValue(false);
-		fixture.detectChanges();
-		spyOn(component, 'togglePreset');
-		fixture.nativeElement.querySelector('.set-preset').click();
-		expect(component.togglePreset).toHaveBeenCalled();
-	});
 
 	it('should not show link when 1 map', () => {
 		component.mapsAmount = 1;

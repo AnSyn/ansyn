@@ -28,7 +28,7 @@ describe('SentinelComboBoxComponent', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		fixture = TestBed.createComponent(SentinelComboBoxComponent);
 		component = fixture.componentInstance;
-		component.mapState = <any> { id: 'mapId' };
+		component.mapId = 'mapId';
 		fixture.detectChanges();
 		store = _store;
 
@@ -48,6 +48,6 @@ describe('SentinelComboBoxComponent', () => {
 		spyOn(store, 'dispatch');
 		const layer = 'TRUE_COLOR';
 		component.changeLayer(layer);
-		expect(store.dispatch).toHaveBeenCalledWith( new SetSentinelLayerOnMap({id: component.mapState.id, layer}));
+		expect(store.dispatch).toHaveBeenCalledWith( new SetSentinelLayerOnMap({id: component.mapId, layer}));
 	})
 });

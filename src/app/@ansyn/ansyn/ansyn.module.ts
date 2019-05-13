@@ -75,7 +75,7 @@ import { StatusBarModule } from './modules/status-bar/status-bar.module';
 		{provide: UrlSerializer, useClass: DefaultUrlSerializer}
 	],
 	entryComponents: [
-		OverlayOutOfBoundsComponent,
+		OverlayOutOfBoundsComponent
 	],
 	declarations: [
 		AnsynComponent,

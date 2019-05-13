@@ -1,6 +1,5 @@
 import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef, ComponentRef, OnInit } from '@angular/core';
 import { IAlertComponent } from '../alerts/alerts.model';
-import { IMapSettings } from '@ansyn/imagery';
 
 export interface IEntryComponent {
 	mapId: string;

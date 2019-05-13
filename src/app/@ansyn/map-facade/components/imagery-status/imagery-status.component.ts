@@ -9,6 +9,7 @@ import { distinctUntilChanged, tap, map } from 'rxjs/internal/operators';
 import { ChangeImageryMap, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { AlertMsg } from '../../alerts/model';
+import { IEntryComponent } from "../../directives/entry-component.directive";
 import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
 import { selectAlertMsg, selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
@@ -120,9 +121,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		}
 	}
 
-
-
-
 	get noGeoRegistration() {
 		if (!this.overlay) {
 			return false;
@@ -140,10 +138,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: any,
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponent,
 				@Inject(ALERTS) public alerts: IAlert[],
 				protected translate: TranslateService) {
-		console.log(this.entryComponents)
 	}
 
 	ngOnInit(): void {

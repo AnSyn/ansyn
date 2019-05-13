@@ -4,7 +4,7 @@ import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
-import { AnnotationMode, IAnnotationsSelectionEventData, IUpdateFeatureEvent } from '@ansyn/ol';
+import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -33,7 +33,6 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER',
 	CLEAR_ACTIVE_TOOLS: 'CLEAR_ACTIVE_TOOLS',
 
-	ANNOTATION_SELECT: 'ANNOTATION_SELECT',
 	ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
 	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE'
 };
@@ -49,7 +48,7 @@ export class UpdateOverlaysManualProcessArgs implements Action {
 export class StartMouseShadow implements Action {
 	type = ToolsActionsTypes.START_MOUSE_SHADOW;
 
-	constructor(public payload?: { updateTools: boolean }) {
+	constructor(public payload?: { updateTools?: boolean, fromUser?: boolean }) {
 		// code...
 	}
 }
@@ -65,7 +64,7 @@ export class SetAnnotationMode implements Action {
 export class StopMouseShadow implements Action {
 	type = ToolsActionsTypes.STOP_MOUSE_SHADOW;
 
-	constructor(public payload?: { updateTools: boolean }) {
+	constructor(public payload?: { updateTools?: boolean, fromUser?: boolean }) {
 		// code...
 	}
 }
@@ -197,14 +196,6 @@ export class ClearActiveInteractionsAction implements Action {
 	type = ToolsActionsTypes.CLEAR_ACTIVE_TOOLS;
 
 	constructor(public payload?: { skipClearFor: Array<any> }) {
-
-	}
-}
-
-export class AnnotationSelectAction implements Action {
-	type = ToolsActionsTypes.ANNOTATION_SELECT;
-
-	constructor(public payload: IAnnotationsSelectionEventData) {
 
 	}
 }

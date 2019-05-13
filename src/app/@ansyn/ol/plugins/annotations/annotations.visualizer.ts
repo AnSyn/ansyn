@@ -1,5 +1,4 @@
 import Draw from 'ol/interaction/Draw';
-import Select from 'ol/interaction/Select';
 import * as Sphere from 'ol/sphere';
 import olCircle from 'ol/geom/Circle';
 import olLineString from 'ol/geom/LineString';
@@ -10,17 +9,16 @@ import olStyle from 'ol/style/Style';
 import olFill from 'ol/style/Fill';
 import olText from 'ol/style/Text';
 import olStroke from 'ol/style/Stroke';
-
-import * as condition from 'ol/events/condition';
+import DragBox from 'ol/interaction/DragBox';
+import { platformModifierKeyOnly } from 'ol/events/condition';
 
 import {
 	ImageryVisualizer,
-	IVisualizerEntity, IVisualizerStateStyle,
+	IVisualizerEntity,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
-
 import { cloneDeep, merge } from 'lodash';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { Subject } from 'rxjs';
@@ -33,13 +31,11 @@ import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlay
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import {
-	AnnotationInteraction,
 	AnnotationMode,
 	IAnnotationBoundingRect,
-	IAnnotationsSelectionEventData,
 	IDrawEndEvent
 } from './annotations.model';
-
+import { AutoSubscription } from 'auto-subscriptions';
 
 // @dynamic
 @ImageryVisualizer({
@@ -52,6 +48,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	disableCache = true;
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
+	selected: string[] = [];
+	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
@@ -67,12 +65,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	events = {
 		onClick: new Subject(),
-		onSelect: new Subject<IAnnotationsSelectionEventData>(),
+		onSelect: new Subject<string[]>(),
+		onHover: new Subject<string>(),
 		onChangeMode: new Subject<AnnotationMode>(),
 		onDrawEnd: new Subject<IDrawEndEvent>(),
 		removeEntity: new Subject<string>(),
 		updateEntity: new Subject<IVisualizerEntity>()
 	};
+
+	@AutoSubscription
+	selected$ = this.events.onSelect.pipe(tap((selected) => this.selected = selected));
 
 	modeDictionary = {
 		Arrow: {
@@ -84,19 +86,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometryFunction: this.rectangleGeometryFunction.bind(this)
 		}
 	};
-
-	get mapRotation(): number {
-		return this.iMap.mapObject.getView().getRotation();
-	}
-
-	get interactionParams() {
-		return {
-			layers: [this.vector],
-			hitTolerance: 0,
-			style: (feature) => this.featureStyle(feature),
-			multi: true
-		};
-	}
 
 	findFeatureWithMinimumArea(featuresArray: any[]) {
 		return featuresArray.reduce((prevResult, currFeature) => {
@@ -188,100 +177,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	resetInteractions(): void {
-		this.setMode(null);
-		this.removeInteraction(VisualizerInteractions.click);
-		this.addInteraction(VisualizerInteractions.click, this.createClickInteraction());
-		this.removeInteraction(VisualizerInteractions.pointerMove);
-		this.addInteraction(VisualizerInteractions.pointerMove, this.createHoverInteraction());
-	}
-
-	createClickInteraction() {
-		const interaction = new Select(<any>{
-			condition: condition.click,
-			...this.interactionParams
-		});
-		interaction.on('select', this.onClickAnnotation.bind(this));
-		return interaction;
-	}
-
-	onClickAnnotation(event) {
-		this.clearCurrentHoverSelection();
-		event.target.getFeatures().clear();
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		const selectedFeature = this.findFeatureWithMinimumArea(event.selected);
-		const boundingRect = this.getFeatureBoundingRect(selectedFeature);
-		const { id, showMeasures, label, style } = this.getEntity(selectedFeature);
-		const eventData: IAnnotationsSelectionEventData = {
-			label: label,
-			mapId: this.mapId,
-			style: style,
-			featureId: id,
-			boundingRect,
-			type: selectedFeature ? selectedFeature.values_.mode : undefined,
-			interactionType: AnnotationInteraction.click,
-			showMeasures
-		};
-
-		this.events.onSelect.next(eventData);
-	}
-
-	clearCurrentHoverSelection() {
-		const hoverInteraction = this.getInteraction(VisualizerInteractions.pointerMove);
-		hoverInteraction.getFeatures().clear();
-		this.onHoverInteraction(hoverInteraction);
-	}
-
-	createHoverInteraction() {
-		const annotationHoverInteraction = new Select(<any>{
-			condition: condition.pointerMove,
-			...this.interactionParams
-		});
-		annotationHoverInteraction.on('select', this.onHoverAnnotation.bind(this));
-		return annotationHoverInteraction;
-	}
-
-	onHoverAnnotation(event) {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		return this.onHoverInteraction(event.target);
-	}
-
-	onHoverInteraction(interaction) {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		let selectedFeature, boundingRect, id, label, style;
-		let selected = interaction.getFeatures().getArray();
-		if (selected.length > 0) {
-			selectedFeature = this.findFeatureWithMinimumArea(selected);
-			boundingRect = this.getFeatureBoundingRect(selectedFeature);
-			id = this.getEntity(selectedFeature).id;
-			label = this.getEntity(selectedFeature).label;
-			style = this.getEntity(selectedFeature).style;
-		}
-		const eventData: IAnnotationsSelectionEventData = {
-			label: label,
-			mapId: this.mapId,
-			featureId: id,
-			style: style,
-			boundingRect,
-			type: selectedFeature ? selectedFeature.values_.mode : undefined,
-			interactionType: AnnotationInteraction.hover
-		};
-		this.events.onSelect.next(eventData);
-	}
-
 	getFeatureBoundingRect(selectedFeature): IAnnotationBoundingRect {
 		const { geometry }: any = new OLGeoJSON().writeFeatureObject(selectedFeature);
 		const { maxX, maxY, minX, minY } = this.findMinMax(geometry.coordinates);
-		const width = maxX - minX;
-		const left = minX;
-		const height = maxY - minY;
-		const top = maxY - height;
+		const width = `${maxX - minX}px`;
+		const left = `${minX}px`;
+		const height = `${maxY - minY}px`;
+		const top = `${minY}px`;
 		return { left, top, width, height };
 	}
 
@@ -317,6 +219,61 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		}, undefined);
 	}
+
+	protected mapClick = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const { shiftKey: multi } = event.originalEvent;
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		let ids = [];
+		if (selectedFeature) {
+			const featureId = selectedFeature.getId();
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [ ...this.selected, featureId] : [featureId];
+		} else {
+			ids = multi ? this.selected : [];
+		}
+		this.events.onSelect.next(ids);
+	};
+
+	protected mapPointermove = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		this.events.onHover.next( selectedFeature ? selectedFeature.getId() : null);
+	};
+
+	protected mapBoxstart = () => {
+		this.events.onSelect.next([])
+	};
+
+	protected mapBoxdrag = ({ target }) => {
+		const extent = target.getGeometry().getExtent();
+		const selected = [];
+		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
+			selected.push(feature.getId());
+		});
+		this.events.onSelect.next(selected)
+	};
+
+	onInit() {
+		super.onInit();
+		const { mapObject: map } = this.iMap;
+		map.on('click', this.mapClick);
+		map.on('pointermove', this.mapPointermove);
+		this.dragBox.on('boxstart', this.mapBoxstart);
+		this.dragBox.on('boxdrag', this.mapBoxdrag);
+		map.addInteraction(this.dragBox)
+	}
+
+	featureAtPixel = (pixel) => {
+		const featuresArray = [];
+		this.iMap.mapObject.forEachFeatureAtPixel(pixel, feature => {
+			featuresArray.push(feature);
+		}, { hitTolerance: 2, layerFilter: (layer) => this.vector === layer });
+		return this.findFeatureWithMinimumArea(featuresArray);
+	};
 
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
@@ -387,7 +344,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onDispose(): void {
 		super.onDispose();
+		const { mapObject: map } = this.iMap;
 		this.removeDrawInteraction();
+		map.un('click', this.mapClick);
+		map.un('pointermove', this.mapPointermove);
+		map.removeInteraction(this.dragBox)
+
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
@@ -519,11 +481,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		];
 	}
 
-	removeFeature(logicalEntityId: string, internal = false) {
-		super.removeEntity(logicalEntityId, internal);
+	removeFeature(featureId: string, internal = false) {
+		super.removeEntity(featureId, internal);
 		if (!internal) {
-			this.events.removeEntity.next(logicalEntityId);
+			this.events.removeEntity.next(featureId);
 		}
+		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
 	}
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {

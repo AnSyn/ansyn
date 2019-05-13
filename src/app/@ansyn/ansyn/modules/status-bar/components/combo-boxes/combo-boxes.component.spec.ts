@@ -11,7 +11,7 @@ import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { MockComponent } from '../../../core/test/mock-component';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
-import { ClickOutsideDirective } from '@ansyn/imagery';
+import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;

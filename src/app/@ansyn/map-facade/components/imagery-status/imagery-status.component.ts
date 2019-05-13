@@ -36,7 +36,7 @@ import {
 	TogglePresetOverlayAction
 } from '../../actions/imagery-status.actions';
 import { copyFromContent } from '../../utils/clipboard';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ImageryLayerProperties, IMapSettings } from '@ansyn/imagery';
 import { get as _get } from 'lodash';
 import { selectActiveMapId, selectMapsTotal } from '../../reducers/map.reducer';
 import { IEntryComponent } from '../../directives/entry-component.directive';
@@ -171,10 +171,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return formatedTime;
 	}
 
-	get description() {
+	get description(): string {
 		const ActiveMap = _get(this.communicators.provide(this.mapState.id), 'ActiveMap');
-		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
-		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
+		const extraData = (ActiveMap && ActiveMap.getExtraData()) || {};
+		const description = extraData[ImageryLayerProperties.DESCRIPTION];
+		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : '';
 	}
 
 	get baseMapDescription() {

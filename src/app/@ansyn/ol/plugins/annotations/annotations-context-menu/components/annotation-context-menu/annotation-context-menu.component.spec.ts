@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
 import { ColorPickerComponent } from '../color-picker/color-picker.component';
 import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
-import { ClickOutsideDirective } from '@ansyn/imagery';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatInputModule } from '@angular/material';
@@ -27,8 +26,7 @@ describe('AnnotationContextMenuComponent', () => {
 				AnnotationContextMenuComponent,
 				AnnotationsWeightComponent,
 				AnnotationsColorComponent,
-				ColorPickerComponent,
-				ClickOutsideDirective
+				ColorPickerComponent
 			],
 			imports: [
 				FormsModule,
@@ -42,6 +40,10 @@ describe('AnnotationContextMenuComponent', () => {
 		fixture = TestBed.createComponent(AnnotationContextMenuComponent);
 		component = fixture.componentInstance;
 		component.mapState = <any>{ id: 'mapId' };
+		// spyOn(component, 'annotations').and.callFake(() => )
+		spyOn(component, 'calcBoundingRect').and.returnValue({ top: `0px`, left: `0px`, width: `0px`, height: `0px`});
+		spyOn(component, 'getFeatureProps').and.returnValue({});
+		component.annotations = <any> { idToEntity: new Map() }
 		fixture.detectChanges();
 	});
 
@@ -49,31 +51,14 @@ describe('AnnotationContextMenuComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	describe('check annotation context menu trigger the focus and styling', () => {
-		beforeEach(() => {
-			spyOn(component.host.nativeElement, 'click');
-		});
-	});
-
 	it('click on remove feature button', () => {
-		component.clickMenuProps = {
-			featureId: 'featureId',
-			label: 'label',
-			mapId: 'mapId',
-			type: 'Rectangle',
-			style: {},
-			boundingRect: {
-				top: 100,
-				height: 100,
-				left: 100,
-				width: 100
-			}
-		};
+		component.selection = ['featureId'];
+		component.annotations.idToEntity.set('featureId', <any> { fake: true });
 		fixture.detectChanges();
 		spyOn(component, 'removeFeature');
 		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));
 		de.triggerEventHandler('click', {});
-		expect(component.removeFeature).toHaveBeenCalled();
+		expect(component.removeFeature).toHaveBeenCalledWith('featureId');
 	});
 
 

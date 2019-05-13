@@ -33,7 +33,7 @@ import {
 	SetToastMessageAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import { filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
@@ -94,6 +94,7 @@ export class MapEffects {
 		.pipe(
 			ofType(MapActionTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(selectMaps)),
+			filter(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => Boolean(entities[action.payload.mapId])),
 			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
 				const mapId = action.payload.mapId;
 				const selectedMap = entities[mapId];
@@ -109,7 +110,14 @@ export class MapEffects {
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
 				}));
 				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
-					.pipe(map(() => new BackToWorldSuccess(payload)));
+					.pipe(
+						map(() => new BackToWorldSuccess(payload)),
+						catchError((err) => {
+							console.error('BACK_TO_WORLD_VIEW ', err);
+							this.store$.dispatch(new SetToastMessageAction({ toastText: 'Failed to load map', showWarningIcon: true}));
+							return EMPTY;
+						})
+					);
 			})
 		);
 
@@ -213,6 +221,11 @@ export class MapEffects {
 					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
 					const worldView: IWorldViewMapState = { mapType, sourceType };
 					return new ChangeImageryMapSuccess({ id, worldView });
+				}),
+				catchError((err) => {
+					console.error('CHANGE_IMAGERY_MAP ', err);
+					this.store$.dispatch(new SetToastMessageAction({ toastText: 'Failed to change map', showWarningIcon: true}));
+					return EMPTY;
 				})
 			);
 		})

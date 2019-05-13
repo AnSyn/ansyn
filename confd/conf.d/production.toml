@@ -23,5 +23,6 @@ keys = [
 	"/ansyn/overlay/imisight/inactive",
 	"/ansyn/overlay/tb/inactive",
 	"/ansyn/sentinel/baseurl",
-	"/ansyn/overlay/sentinel/inactive"
+	"/ansyn/overlay/sentinel/inactive",
+	"/ansyn/iscollapsible"
 ]

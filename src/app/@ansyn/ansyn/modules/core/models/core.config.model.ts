@@ -8,4 +8,5 @@ export interface ICoreConfig {
 		[key: string]: any
 	};
 	httpTimeout: number;
+	isFooterCollapsible: boolean;
 }

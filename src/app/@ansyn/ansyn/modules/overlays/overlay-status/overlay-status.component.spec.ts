@@ -19,7 +19,7 @@ describe('OverlayStatusComponent', () => {
 		fixture = TestBed.createComponent(OverlayStatusComponent);
 		component = fixture.componentInstance;
 		component.mapId = 'mapId';
-		component.overlay = {id: 'overlayId', };
+		component.overlay = <any>{id: 'overlayId' };
 		fixture.detectChanges();
 	});
 
@@ -29,12 +29,6 @@ describe('OverlayStatusComponent', () => {
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
-	});
-
-	it('check click on backToWorldView', () => {
-		spyOn(component, 'backToWorldView');
-		fixture.nativeElement.querySelector('.back-to-world-view').click();
-		expect(component.backToWorldView).toHaveBeenCalled();
 	});
 
 	it('check click on toggleFavorite', () => {

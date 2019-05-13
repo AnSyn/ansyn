@@ -16,7 +16,7 @@ import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { IOverlay } from "../../models/overlay.model";
+import { IOverlay } from "../models/overlay.model";
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -28,12 +28,12 @@ import { IOverlay } from "../../models/overlay.model";
 	destroy: 'ngOnDestroy'
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
-	_mapId: string;
+	@Input() mapId: string;
 	mapsAmount = 1;
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
-	removedOverlaysIds: string[];
+	removedOverlaysIds: string[] = [];
 	presetOverlays: IOverlay[];
 	isFavorite: boolean;
 	favoritesButtonText: string;
@@ -42,14 +42,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	presetsButtonText: string;
 	isRemoved: boolean;
 
-	@Input()
-	set mapId(value: string) {
-		this._mapId = value;
-	}
 
-	get mapId() {
-		return this._mapId;
-	}
 
 	@AutoSubscription
 	mapsAmount$ = this.store$.pipe(
@@ -63,7 +56,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		tap((maps) => {
 			if (maps[this.mapId]) {
 				this.overlay = maps[this.mapId].data.overlay;
-				console.log({overlay: this.overlay})
 			}
 			this.updateRemovedStatus();
 			this.updateFavoriteStatus();
@@ -138,9 +130,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.isRemoved = this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
 	}
 
-	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({mapId: this.mapId}));
-	}
+
 
 	toggleFavorite() {
 		const overlay = this.overlay;

@@ -1,4 +1,10 @@
 <div class="buttons">
+
+	<ng-container
+		*ngFor="let component of entryComponents.status | showFirst:true"
+		[ansynEntryComponent]="{ component: component , mapId: mapId }">
+	</ng-container>
+
 	<button
 		*ngIf="mapsAmount > 1"
 		class="drag-me"
@@ -41,7 +47,7 @@
 	</button>
 
 	<ng-container
-		*ngFor="let component of entryComponents.status"
+		*ngFor="let component of entryComponents.status | showFirst:false"
 		[ansynEntryComponent]="{ component: component , mapId: mapId }">
 	</ng-container>
 </div>

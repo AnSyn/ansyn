@@ -1,6 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { selectMaps } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
 import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
 import { SetSentinelLayerOnMap } from '../actions/sentinel.actions';
@@ -22,7 +22,10 @@ describe('SentinelComboBoxComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [SentinelComboBoxComponent],
 			imports: [FormsModule,
-				StoreModule.forRoot({[sentinelFeatureKey]: SentinelReducer})]
+				StoreModule.forRoot({
+					[sentinelFeatureKey]: SentinelReducer,
+					[mapFeatureKey]: MapReducer
+				})]
 		}).compileComponents();
 	}));
 

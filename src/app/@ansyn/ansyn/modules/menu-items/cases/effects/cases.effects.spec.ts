@@ -26,11 +26,11 @@ import { cold, hot } from 'jasmine-marbles';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import { LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
-import { ICase } from '@ansyn/imagery';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
+import { ICase } from '../models/case.model';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -153,14 +153,14 @@ describe('CasesEffects', () => {
 		expect(casesEffects.onUpdateCase$).toBeObservable(expectedResults);
 	});
 
-	it('loadDefaultCase$ should call updateCaseViaQueryParmas and dispatch SelectCaseAction ', () => {
+	it('loadDefaultCase$ should call updateCaseViaQueryParmas and dispatch SelectDilutedCaseAction ', () => {
 		spyOnProperty(casesService, 'defaultCase', 'get').and.returnValue({ id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any);
 		spyOn(casesService.queryParamsHelper, 'updateCaseViaQueryParmas')
 			.and
 			.returnValue('updateCaseViaQueryParmasResult');
 		const queryParmas: Params = { foo: 'bar' };
 		actions = hot('--a--', { a: new LoadDefaultCaseAction(queryParmas) });
-		const expectedResults = cold('--b--', { b: new SelectCaseAction('updateCaseViaQueryParmasResult' as any) });
+		const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction('updateCaseViaQueryParmasResult' as any) });
 		expect(casesEffects.loadDefaultCase$).toBeObservable(expectedResults);
 	});
 

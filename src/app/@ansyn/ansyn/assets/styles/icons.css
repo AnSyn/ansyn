@@ -226,7 +226,7 @@
 	content: "\e948";
 }
 
-.icon-annotation-line:before {
+.icon-annotation-linestring:before {
 	content: "\e949";
 }
 
@@ -238,7 +238,7 @@
 	content: "\e94b";
 }
 
-.icon-annotation-square:before {
+.icon-annotation-rectangle:before {
 	content: "\e94c";
 }
 

@@ -2,7 +2,7 @@ import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { ICase, ICasePreview } from '@ansyn/imagery';
+import { ICase, ICasePreview } from '../models/case.model';
 
 export interface ICaseModal {
 	show: boolean,

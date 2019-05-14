@@ -5,9 +5,9 @@ import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable, of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
-import { ICase, ICasePreview } from '@ansyn/imagery';
 import { CasesService } from '../../services/cases.service';
 import { map, take } from 'rxjs/operators';
+import { ICase, ICasePreview } from '../../models/case.model';
 
 const animationsDuring = '0.2s';
 

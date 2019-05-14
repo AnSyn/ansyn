@@ -4,13 +4,6 @@ import { IOverlayDropSources, OverlayReducer, overlaysFeatureKey } from '../redu
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { EMPTY, Observable, Observer, of } from 'rxjs';
-import {
-	GeoRegisteration,
-	IOverlay,
-	IOverlaysCriteria,
-	IOverlaysFetchData,
-	IOverlaySpecialObject,
-} from '@ansyn/imagery';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
@@ -18,6 +11,13 @@ import { StoreModule } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
+import {
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysCriteria,
+	IOverlaysFetchData,
+	IOverlaySpecialObject
+} from '../models/overlay.model';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

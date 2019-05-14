@@ -1,4 +1,4 @@
-import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
+import { ProjectableRaster } from '@ansyn/ol';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [

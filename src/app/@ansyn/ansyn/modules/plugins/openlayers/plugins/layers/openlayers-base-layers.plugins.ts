@@ -4,13 +4,13 @@ import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { ICaseMapState } from '@ansyn/imagery';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { selectLayers } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
+import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 

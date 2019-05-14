@@ -1,0 +1,23 @@
+@import "ansyn/less/colors";
+
+div.list {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	padding: 0;
+	outline: none;
+	margin: 0;
+	text-align: center;
+	transition: height 0.3s;
+	background: @application-main-color;
+	.item {
+		cursor: pointer;
+		&:hover, &.selected {
+			background-color: #297f9b;
+		}
+	}
+
+	&.color-selection-expand.open {
+		visibility: visible;
+	}
+}

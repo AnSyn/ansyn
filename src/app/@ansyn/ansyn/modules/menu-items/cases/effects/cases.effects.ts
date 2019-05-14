@@ -28,13 +28,13 @@ import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
-import { ICase, ICasePreview, IDilutedCaseState } from '@ansyn/imagery';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { copyFromContent } from '@ansyn/map-facade';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { toastMessages } from '../../../core/models/toast-messages';
+import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 
 @Injectable()
 export class CasesEffects {
@@ -113,7 +113,7 @@ export class CasesEffects {
 		filter((action: LoadDefaultCaseAction) => !action.payload.context),
 		map((action: LoadDefaultCaseAction) => {
 			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
-			return new SelectCaseAction(defaultCaseQueryParams);
+			return new SelectDilutedCaseAction(defaultCaseQueryParams);
 		}),
 		share());
 

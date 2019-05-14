@@ -4,12 +4,13 @@ import { Feature, GeoJsonObject } from 'geojson';
 import { Injectable } from '@angular/core';
 import { catchError, map } from 'rxjs/operators';
 import { IOverlayByIdMetaData } from '../services/overlays.service';
-import { IDataInputFilterValue, IOverlay, IOverlaysFetchData } from '@ansyn/imagery';
 import { ILimitedArray, mergeLimitedArrays } from '../../core/utils/i-limited-array';
 import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
+import { IOverlay, IOverlaysFetchData } from './overlay.model';
+import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 export interface IFetchParams {
 	limit: number;
@@ -147,4 +148,15 @@ export abstract class BaseOverlaySourceProvider {
 		const requests = ids.map(({ id, sourceType }) => this.getById(id, sourceType));
 		return forkJoinSafe(requests);
 	};
+
+	getThumbnailUrl(overlay, position): Observable<string> {
+		if (!overlay.thumbnailUrl) {
+			overlay.thumbnailUrl = overlay.imageUrl;
+		}
+		return of(overlay.thumbnailUrl);
+	}
+
+	getThumbnailName(overlay): string {
+		return overlay.sensorName;
+	}
 }

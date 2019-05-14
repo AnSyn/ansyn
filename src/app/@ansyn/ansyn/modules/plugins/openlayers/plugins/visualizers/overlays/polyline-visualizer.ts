@@ -16,7 +16,7 @@ import { MultiLineString } from 'geojson';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import * as turf from '@turf/turf';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap } from '@ansyn/ol';
 import { BaseFootprintsVisualizer } from './base-footprints-visualizer';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../../../../overlays/actions/overlays.actions';
 import {

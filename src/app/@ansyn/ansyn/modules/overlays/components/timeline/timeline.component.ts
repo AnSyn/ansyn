@@ -38,7 +38,7 @@ import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
-import { IOverlayDrop } from '@ansyn/imagery';
+import { IOverlayDrop } from '../../models/overlay.model';
 
 export const BASE_DROP_COLOR = '#d393e1';
 selection.prototype.moveToFront = function () {

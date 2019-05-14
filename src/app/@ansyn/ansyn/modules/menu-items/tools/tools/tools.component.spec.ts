@@ -59,11 +59,11 @@ describe('ToolsComponent', () => {
 
 		// expect(component.flags.get(toolsFlags.shadowMouse)).toBe(false);
 		button.click();
-		expect(store.dispatch).toHaveBeenCalledWith(new StartMouseShadow());
+		expect(store.dispatch).toHaveBeenCalledWith(new StartMouseShadow({ fromUser: true }));
 
 		component.flags.set(toolsFlags.shadowMouse, true);
 		button.click();
-		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow());
+		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow({ fromUser: true }));
 	});
 
 	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {

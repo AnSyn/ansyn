@@ -3,16 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection } from 'geojson';
 import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of } from 'rxjs';
-import { ICaseMapState, IVisualizerEntity } from '@ansyn/imagery';
+import { IVisualizerEntity } from '@ansyn/imagery';
 import { MapFacadeService, selectMapsList, SetToastMessageAction } from '@ansyn/map-facade';
 import { distinctUntilChanged } from 'rxjs/internal/operators';
 import { UUID } from 'angular2-uuid';
 import { ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
-import { EntitiesVisualizer } from '../visualizers/entities-visualizer';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
+import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

@@ -7,11 +7,6 @@ export interface ICoreConfig {
 		default: any,
 		[key: string]: any
 	};
-	needToUseLayerExtent: boolean;
 	httpTimeout: number;
-	tilesLoadingDoubleBuffer: {
-		debounceTimeInMs: number,
-		timeoutInMs: number
-	};
-	floatingPositionSuffix?: string;
+	isFooterCollapsible: boolean;
 }

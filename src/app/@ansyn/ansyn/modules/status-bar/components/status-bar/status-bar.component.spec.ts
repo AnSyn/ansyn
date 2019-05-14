@@ -12,8 +12,8 @@ describe('StatusBarComponent', () => {
 	let store: Store<IStatusBarState>;
 	const mockImageryStatusComponent = MockComponent({
 		selector: 'ansyn-imagery-status',
-		inputs: ['overlay', 'active', 'mapId'],
-		outputs: ['backToWorldView']
+		inputs: ['mapId'],
+		outputs: []
 	});
 	const mockSelectedCaseBarComponent = MockComponent({
 		selector: 'ansyn-popover',

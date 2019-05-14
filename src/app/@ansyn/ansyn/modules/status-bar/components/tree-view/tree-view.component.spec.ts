@@ -7,12 +7,12 @@ import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
-import { IOverlaysCriteria } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
+import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;

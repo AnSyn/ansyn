@@ -1,5 +1,7 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseBooleanFilterMetadata, ICaseFilter, IOverlay } from '@ansyn/imagery';
+import { FilterType } from '../filter-type';
+import { ICaseBooleanFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';
@@ -106,8 +108,12 @@ export class BooleanFilterMetadata implements FilterMetadata {
 	}
 
 	showAll(): void {
-		this.properties.true.value = true;
-		this.properties.false.value = true;
+		if (!this.properties.true.disabled) {
+			this.properties.true.value = true;
+		}
+		if (!this.properties.false.disabled) {
+			this.properties.false.value = true;
+		}
 	}
 
 	shouldBeHidden(): boolean {

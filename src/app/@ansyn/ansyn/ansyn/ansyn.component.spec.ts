@@ -8,6 +8,7 @@ import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
+import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -18,9 +19,9 @@ describe('AnsynComponent', () => {
 	const mockContextMenu = MockComponent({ selector: 'ansyn-context-menu' });
 	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version', 'animatedElement'] });
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
-	const mockStatus = MockComponent({
-		selector: 'ansyn-status-bar',
-		inputs: ['selectedCaseName', 'activeMap']
+	const mockFooter = MockComponent({
+		selector: 'ansyn-footer',
+		inputs: ['selectedCaseName', 'activeMap', 'animatedElement']
 	});
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
@@ -54,7 +55,7 @@ describe('AnsynComponent', () => {
 				mockMenu,
 				mockToast,
 				mockOverlaysContainer,
-				mockStatus,
+				mockFooter,
 				mockImageryView,
 				mockEmptyComponent,
 				mockOverlayOverviewComponent,
@@ -63,6 +64,10 @@ describe('AnsynComponent', () => {
 				{
 					provide: COMPONENT_MODE,
 					useValue: false
+				},
+				{
+					provide: toolsConfig,
+					useValue: {}
 				}
 			],
 			imports: [

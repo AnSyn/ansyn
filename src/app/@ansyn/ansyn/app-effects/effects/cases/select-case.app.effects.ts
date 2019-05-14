@@ -13,10 +13,9 @@ import {
 	SetFavoriteOverlaysAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
+	SetRemovedOverlaysVisibilityAction
 } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
-import { ICase, ICaseMapState, IOverlay } from '@ansyn/imagery';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -32,7 +31,10 @@ import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/too
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
-import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
+import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
+import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
+import { IOverlay } from '../../../modules/overlays/models/overlay.model';
+import { mapValues } from 'lodash';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -40,7 +42,7 @@ export class SelectCaseAppEffects {
 	@Effect()
 	selectCase$: Observable<any> = this.actions$.pipe(
 		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE),
-		concatMap(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
+		concatMap<any, any>(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
 	);
 
 	constructor(protected actions$: Actions,
@@ -64,7 +66,7 @@ export class SelectCaseAppEffects {
 			}
 		});
 		// context
-		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities } = state;
+		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
 		let { time } = state;
 		const { layout } = state.maps;
 
@@ -91,6 +93,7 @@ export class SelectCaseAppEffects {
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
+			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this))}),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),

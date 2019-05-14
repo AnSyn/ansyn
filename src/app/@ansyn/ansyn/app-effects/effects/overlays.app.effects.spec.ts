@@ -11,7 +11,6 @@ import {
 	CacheService,
 	ImageryCommunicatorService,
 	ImageryMapSource,
-	ICase,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import {
@@ -53,6 +52,7 @@ import {
 	selectDropMarkup, selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { ICase } from '../../modules/menu-items/cases/models/case.model';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -151,8 +151,8 @@ describe('OverlaysAppEffects', () => {
 		sourceType: 'FIRST'
 	})
 	class MapSourceProviderMock extends BaseMapSourceProvider {
-		public create(metaData: any): any[] {
-			return [];
+		public create(metaData: any): Promise<any> {
+			return Promise.resolve(null);
 		}
 	}
 
@@ -198,7 +198,8 @@ describe('OverlaysAppEffects', () => {
 						},
 						getTimeStateByOverlay: () => {
 						},
-						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays)))
+						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays))),
+						getThumbnailUrl: () => of('this is a url')
 					}
 				},
 				{

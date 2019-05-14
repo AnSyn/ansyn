@@ -30,6 +30,8 @@ import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { HelpModule } from './modules/menu-items/help/help.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
+import { AnnotationContextMenuComponent } from '@ansyn/ol';
+import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.component';
 
 @NgModule({
 	imports: [
@@ -52,7 +54,12 @@ import { UnsupportedDevicesComponent } from './components/unsupported-devices/un
 		MenuModule.provideMenuItems(ansynConfig.ansynMenuItems),
 		AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 		AppEffectsModule,
-		MapFacadeModule,
+		MapFacadeModule.provide({
+			entryComponents: {
+				container: [AnnotationContextMenuComponent],
+				status: []
+			}
+		}),
 		ImageryModule,
 		StatusBarModule,
 		RouterModule,
@@ -76,6 +83,7 @@ import { UnsupportedDevicesComponent } from './components/unsupported-devices/un
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
+		AnsynFooterComponent
 	],
 	exports: [ AnsynComponent, UnsupportedDevicesComponent ]
 })

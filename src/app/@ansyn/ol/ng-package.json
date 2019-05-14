@@ -1,0 +1,17 @@
+{
+  "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../../dist/ansyn/ol",
+  "whitelistedNonPeerDependencies": [
+    "auto-subscriptions",
+    "@turf/turf",
+    "ol",
+    "ngx-color-picker",
+    "angular2-uuid"
+  ],
+  "lib": {
+    "entryFile": "./public_api.ts",
+    "styleIncludePaths": [
+      "../"
+    ]
+  }
+}

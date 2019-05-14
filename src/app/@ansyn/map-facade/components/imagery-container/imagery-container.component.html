@@ -3,10 +3,6 @@
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
 						  [mapId]="mapState.id"
-						  [overlay]="overlay"
-						  [active]="active"
-						  [layerFlag]="mapState.flags.displayLayers"
-						  [mapsAmount]="mapsAmount"
 						  (onMove)="onMove.emit($event)"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
@@ -17,8 +13,6 @@
 
 	<ansyn-imagery-view [settings]="mapState"></ansyn-imagery-view>
 
-	<ansyn-annotations-context-menu [mapId]="mapState.id"></ansyn-annotations-context-menu>
-
 	<ansyn-imagery-loader [mapId]="mapState.id"></ansyn-imagery-loader>
 
 	<ansyn-overlay-source-type-notice [overlay]="overlay"></ansyn-overlay-source-type-notice>
@@ -26,6 +20,9 @@
 	<ansyn-map-search-box *ngIf="packageConfig?.mapSearch?.active && !overlay"
 						  [mapId]="mapState.id"></ansyn-map-search-box>
 
-	<ansyn-sentinel-combo-box *ngIf="overlay && overlay.sourceType === 'SENTINEL'" [mapId]="mapState.id"></ansyn-sentinel-combo-box> <!-- TODO: remove from here-->
+	<ng-container
+		*ngFor="let component of entryComponents.container"
+		[ansynEntryComponent]="{ component: component , mapId: mapState.id }">
+	</ng-container>
 
 </div>

@@ -13,13 +13,19 @@ import {
 	IMapFacadeConfig
 } from '@ansyn/map-facade';
 import { uniq as _uniq } from 'lodash';
-import { CaseGeoFilter, ICaseMapState, IOverlay } from '@ansyn/imagery';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
+import { IOverlay } from '../../../overlays/models/overlay.model';
+import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
 
+export interface IContextMenuShowPayload {
+	point: Point;
+	overlays: IOverlay[];
+	event: MouseEvent;
+}
 
 export interface IOverlayButton {
 	name: string;

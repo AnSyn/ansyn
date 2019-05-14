@@ -15,11 +15,11 @@
 
 <ul class="annotations-options">
 
-	<li *ngFor="let modeList of modesList"
-		[class.mode-on]="mode === modeList.mode"
-		(click)="setAnnotationMode(modeList.mode)">
+	<li *ngFor="let annotationMode of ANNOTATION_MODE_LIST"
+		[class.mode-on]="mode === annotationMode"
+		(click)="setAnnotationMode(annotationMode)">
 		<span
-			class="icon-annotation-{{modeList.icon}}" [attr.tooltip-value]="modeList.mode"
+			class="icon-annotation-{{annotationMode.toLowerCase()}}" [attr.tooltip-value]="annotationMode"
 			tooltip-class="bottom">
 		</span>
 	</li>

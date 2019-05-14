@@ -4,8 +4,13 @@ import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, CaseOrientation, areCoordinatesNumeric, ICaseMapPosition,
-	IOverlay } from '@ansyn/imagery';
+import {
+	areCoordinatesNumeric,
+	BaseImageryPlugin,
+	CommunicatorEntity,
+	ImageryMapPosition,
+	ImageryPlugin
+} from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
 import {
 	BackToWorldSuccess,
@@ -15,7 +20,7 @@ import {
 	selectActiveMapId
 } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenLayersMap, toDegrees, toRadians } from '@ansyn/ol';
 import {
 	catchError,
 	debounceTime,
@@ -31,16 +36,17 @@ import {
 
 import OLMap from 'ol/Map';
 import View from 'ol/View';
-import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { OpenLayersProjectionService } from '@ansyn/ol';
 import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 import { LoggerService } from '../../../../core/services/logger.service';
-import { toDegrees, toRadians } from '@ansyn/map-facade';
 import {
 	ChangeOverlayPreviewRotationAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes
 } from '../../../../overlays/actions/overlays.actions';
 import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
+import { CaseOrientation } from '../../../../menu-items/cases/models/case.model';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -50,7 +56,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
-	protected maximumNumberOfRetries = 0.1;
+	protected maximumNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
 	shadowMapObject: OLMap;
@@ -123,7 +129,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	// @AutoSubscription
 	// positionChangedCalcNorthApproximately$ = () => this.communicator.positionChanged.pipe(
 	// 	debounceTime(50),
-	// 	switchMap((position: ICaseMapPosition) => {
+	// 	switchMap((position: ImageryMapPosition) => {
 	// 		const view = this.communicator.ActiveMap.mapObject.getView();
 	// 		const projection = view.getProjection();
 	// 		if (projection.getUnits() === 'pixels' && position) {
@@ -139,7 +145,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	positionChangedCalcNorthAccurately$ = () => this.communicator.positionChanged.pipe(
 		debounceTime(50),
-		switchMap((position: ICaseMapPosition) => {
+		switchMap((position: ImageryMapPosition) => {
 			const view = this.iMap.mapObject.getView();
 			const projection = view.getProjection();
 			if (projection.getUnits() === 'pixels' && position) {

@@ -5,10 +5,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockComponent } from '../../../core/test/mock-component';
-import { GeoRegisteration, IOverlay } from '@ansyn/imagery';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { SetHoveredOverlayAction } from '../../actions/overlays.actions';
+import { GeoRegisteration, IOverlay } from '../../models/overlay.model';
 
 describe('OverlayOverviewComponent', () => {
 	let component: OverlayOverviewComponent;

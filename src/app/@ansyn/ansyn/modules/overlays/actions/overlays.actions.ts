@@ -1,19 +1,15 @@
 import { Action } from '@ngrx/store';
+import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import { type } from '../../core/utils/type';
 import {
 	IOverlay,
 	IOverlayDrop,
 	IOverlaysCriteria,
 	IOverlaysCriteriaOptions,
+	IOverlaysHash,
 	IOverlaySpecialObject,
-	IPendingOverlay
-} from '@ansyn/imagery';
-import {
-	IMarkUpData,
-	IOverlayDropMarkUp,
-	ITimelineRange,
-	MarkUpClass
-} from '../reducers/overlays.reducer';
-import { type } from '../../core/utils/type';
+} from '../models/overlay.model';
+import { IPendingOverlay } from '@ansyn/map-facade';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -43,9 +39,9 @@ export const OverlaysActionTypes = {
 	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY'),
 	CHANGE_OVERLAY_PREVIEW_ROTATION: type('[Overlay] CHANGE_OVERLAY_PREVIEW_ROTATION'),
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
-	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT'
-
-
+	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
+	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
+	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY'
 };
 
 export class SelectOverlayAction implements Action {
@@ -226,6 +222,19 @@ export class UpdateOverlaysCountAction {
 	}
 }
 
+export class SetMiscOverlays implements Action {
+	type: string = OverlaysActionTypes.SET_MISC_OVERLAYS;
+
+	constructor(public payload: { miscOverlays: IOverlaysHash }) {
+	}
+}
+
+export class SetMiscOverlay implements Action {
+	type: string = OverlaysActionTypes.SET_MISC_OVERLAY;
+
+	constructor(public payload: { key: string, overlay: IOverlay }) {
+	}
+}
 
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
@@ -249,3 +258,5 @@ export type OverlaysActions
 	| SetSpecialObjectsActionStore
 	| SetDropsAction
 	| SetOverlaysCriteriaAction
+	| SetMiscOverlays
+	| SetMiscOverlay

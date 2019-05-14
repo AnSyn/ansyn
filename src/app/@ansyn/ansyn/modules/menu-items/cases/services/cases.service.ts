@@ -1,18 +1,24 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
-import { Observable, EMPTY } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual, mapValues } from 'lodash';
 import { catchError, map, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
-import { isEqual as _isEqual, cloneDeep as _cloneDeep } from 'lodash';
-import { ICase, ICasePreview, ICaseState, ICaseTimeState, IContextEntity, IDilutedCaseState } from '@ansyn/imagery';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IDeltaTime } from '../../../core/models/time.model';
 import { IStoredEntity, StorageService } from '../../../core/services/storage/storage.service';
+import {
+	ICase,
+	ICasePreview,
+	ICaseState,
+	ICaseTimeState,
+	IContextEntity,
+	IDilutedCaseState
+} from '../models/case.model';
 
 const moment = momentNs;
 
@@ -140,6 +146,12 @@ export class CasesService {
 				}));
 			}
 
+			if (dilutedState.miscOverlays && typeof dilutedState.miscOverlays === 'object') {
+				dilutedState.miscOverlays = mapValues(dilutedState.miscOverlays, overlay => {
+					return overlay ? { id: overlay.id, sourceType: overlay.sourceType } : null;
+				});
+			}
+
 			if (Array.isArray(dilutedState.maps.data)) {
 				dilutedState.maps.data.forEach((mapData: any) => {
 					if (Boolean(mapData.data.overlay)) {
@@ -218,13 +230,13 @@ export class CasesService {
 			if (cloneA.data.maps.activeMapId === map.id) {
 				cloneA.data.maps.activeMapId = index;
 			}
-			map.id = index
+			map.id = index;
 		});
 		cloneB.data.maps.data.forEach((map, index) => {
 			if (cloneB.data.maps.activeMapId === map.id) {
 				cloneB.data.maps.activeMapId = index;
 			}
-			map.id = index
+			map.id = index;
 		});
 
 		return _isEqual(cloneA, cloneB);

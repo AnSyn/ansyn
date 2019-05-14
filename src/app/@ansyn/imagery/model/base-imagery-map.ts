@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
-import { CaseMapExtent, ICaseMapPosition } from './case-map-position.model';
+import { ImageryMapExtent, ImageryMapPosition } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 
 export interface IImageryMapMetaData {
@@ -23,7 +23,9 @@ export abstract class BaseImageryMap<T = any> {
 	readonly mapType?: string;
 	readonly defaultMapSource?: string;
 
-	public positionChanged: EventEmitter<ICaseMapPosition> = new EventEmitter<ICaseMapPosition>();
+	public positionChanged: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
+	public moveStart: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
+
 	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
 	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
 	public mapObject: T;
@@ -34,7 +36,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract toggleGroup(groupName: string, newState: boolean);
 
-	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layers?: any, position?: ICaseMapPosition): Observable<boolean>;
+	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer?: any, position?: ImageryMapPosition): Observable<boolean>;
 
 	// This method is for the use of the @AutoSubscription decorator
 	initMapSubscriptions(): void {
@@ -45,7 +47,7 @@ export abstract class BaseImageryMap<T = any> {
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: ICaseMapPosition, extent?: CaseMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
+	abstract resetView(layer: any, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
 
 	abstract addLayer(layer: any): void;
 
@@ -57,13 +59,13 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract removeLayer(layer: any): void;
 
-	abstract setPosition(position: ICaseMapPosition): Observable<boolean>;
+	abstract setPosition(position: ImageryMapPosition): Observable<boolean>;
 
 	abstract setRotation(rotation: number): void;
 
 	abstract getRotation(): number;
 
-	abstract getPosition(): Observable<ICaseMapPosition>;
+	abstract getPosition(): Observable<ImageryMapPosition>;
 
 	abstract updateSize(): void;
 
@@ -76,4 +78,8 @@ export abstract class BaseImageryMap<T = any> {
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');
 	};
+
+	getExtraData(): { [key: string]: any } {
+		return {}
+	}
 }

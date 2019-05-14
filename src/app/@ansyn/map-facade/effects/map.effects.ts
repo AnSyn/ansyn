@@ -6,14 +6,12 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	geojsonMultiPolygonToPolygon,
-	ICaseMapPosition,
-	ICaseMapState,
+	ImageryMapPosition, IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
-	AnnotationSelectAction,
 	ChangeImageryMap,
 	ChangeImageryMapSuccess,
 	DecreasePendingMapsCountAction,
@@ -35,7 +33,7 @@ import {
 	SetToastMessageAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
-import { filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
@@ -44,12 +42,6 @@ import { updateSession } from '../models/core-session-state.model';
 
 @Injectable()
 export class MapEffects {
-
-	@Effect({ dispatch: false })
-	annotationContextMenuTrigger$ = this.actions$.pipe(
-		ofType<AnnotationSelectAction>(MapActionTypes.TRIGGER.ANNOTATION_SELECT),
-		share()
-	);
 
 	@Effect({ dispatch: false })
 	onUpdateSize$: Observable<void> = this.actions$.pipe(
@@ -102,22 +94,30 @@ export class MapEffects {
 		.pipe(
 			ofType(MapActionTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(selectMaps)),
-			map(([action, entities]: [BackToWorldView, Dictionary<ICaseMapState>]) => {
+			filter(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => Boolean(entities[action.payload.mapId])),
+			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
 				const mapId = action.payload.mapId;
 				const selectedMap = entities[mapId];
 				const communicator = this.communicatorsService.provide(mapId);
 				const { position } = selectedMap.data;
 				return [action.payload, selectedMap, communicator, position];
 			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, ICaseMapState, CommunicatorEntity, ICaseMapPosition]) => {
+			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
+			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
 				const disabledMap = communicator.activeMapName === 'disabledOpenLayersMap';
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
 				}));
 				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
-					.pipe(map(() => new BackToWorldSuccess(payload)));
+					.pipe(
+						map(() => new BackToWorldSuccess(payload)),
+						catchError((err) => {
+							console.error('BACK_TO_WORLD_VIEW ', err);
+							this.store$.dispatch(new SetToastMessageAction({ toastText: 'Failed to load map', showWarningIcon: true}));
+							return EMPTY;
+						})
+					);
 			})
 		);
 
@@ -159,13 +159,13 @@ export class MapEffects {
 		switchMap((action: SynchronizeMapsAction) => {
 			const mapId = action.payload.mapId;
 			return this.communicatorsService.provide(mapId).getPosition().pipe(
-				map((position: ICaseMapPosition) => [position, action]));
+				map((position: ImageryMapPosition) => [position, action]));
 		}),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
 			const mapId = action.payload.mapId;
 			if (!mapPosition) {
-				const map: ICaseMapState = mapState.entities[mapId];
+				const map: IMapSettings = mapState.entities[mapId];
 				if (map.data.overlay) {
 					mapPosition = { extentPolygon: geojsonMultiPolygonToPolygon(map.data.overlay.footprint)};
 				} else {
@@ -174,7 +174,7 @@ export class MapEffects {
 			}
 
 			const setPositionObservables = [];
-			Object.values(mapState.entities).forEach((mapItem: ICaseMapState) => {
+			Object.values(mapState.entities).forEach((mapItem: IMapSettings) => {
 				if (mapId !== mapItem.id) {
 					const comm = this.communicatorsService.provide(mapItem.id);
 					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
@@ -221,6 +221,11 @@ export class MapEffects {
 					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
 					const worldView: IWorldViewMapState = { mapType, sourceType };
 					return new ChangeImageryMapSuccess({ id, worldView });
+				}),
+				catchError((err) => {
+					console.error('CHANGE_IMAGERY_MAP ', err);
+					this.store$.dispatch(new SetToastMessageAction({ toastText: 'Failed to change map', showWarningIcon: true}));
+					return EMPTY;
 				})
 			);
 		})
@@ -264,7 +269,7 @@ export class MapEffects {
 				protected store$: Store<any>) {
 	}
 
-	setPosition(position: ICaseMapPosition, comm, mapItem): Observable<any> {
+	setPosition(position: ImageryMapPosition, comm, mapItem): Observable<any> {
 		if (mapItem.data.overlay) {
 			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
 			if (isNotIntersect) {

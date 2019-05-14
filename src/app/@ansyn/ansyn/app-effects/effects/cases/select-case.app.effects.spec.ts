@@ -17,21 +17,6 @@ import {
 	SetRemovedOverlaysVisibilityAction
 } from '@ansyn/map-facade';
 import {
-	CaseOrientation,
-	CaseRegionState,
-	CaseTimeFilter,
-	ICase,
-	ICaseDataInputFiltersState,
-	ICaseFacetsState,
-	ICaseLayersState,
-	ICaseMapsState,
-	ICaseState,
-	ICaseTimeState,
-	IContextEntity,
-	IOverlay,
-	IOverlaysManualProcessArgs
-} from '@ansyn/imagery';
-import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
@@ -44,7 +29,22 @@ import {
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
-import { SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
+import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
+import {
+	CaseOrientation,
+	CaseRegionState,
+	CaseTimeFilter,
+	ICase,
+	ICaseDataInputFiltersState,
+	ICaseFacetsState,
+	ICaseLayersState,
+	ICaseMapsState,
+	ICaseState,
+	ICaseTimeState,
+	IContextEntity,
+	IOverlaysManualProcessArgs
+} from '../../../modules/menu-items/cases/models/case.model';
+import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -96,7 +96,8 @@ describe('SelectCaseAppEffects', () => {
 				},
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }]
+				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }],
+				miscOverlays: IOverlaysHash = {}
 			;
 
 			let noInitialSearch;
@@ -115,7 +116,8 @@ describe('SelectCaseAppEffects', () => {
 				layers,
 				overlaysManualProcessArgs,
 				facets,
-				contextEntities
+				contextEntities,
+				miscOverlays
 			};
 
 			const payload: ICase = {
@@ -130,7 +132,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnop)--', {
+			const expectedResult = cold('--(abcdefghijklmnopq)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -138,15 +140,16 @@ describe('SelectCaseAppEffects', () => {
 				e: new SetActiveMapId(maps.activeMapId),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),
-				h: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-				i: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				j: new UpdateFacetsAction(facets),
-				k: new UpdateSelectedLayersIds([]),
-				l: <any> { type: '[Context] Set context params', payload: { contextEntities }},
-				m: new SetAutoSave(false),
-				n: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-				o: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				p: new SelectCaseSuccessAction(payload)
+				h: new SetMiscOverlays({ miscOverlays }),
+				i: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				j: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				k: new UpdateFacetsAction(facets),
+				l: new UpdateSelectedLayersIds([]),
+				m: <any> { type: '[Context] Set context params', payload: { contextEntities }},
+				n: new SetAutoSave(false),
+				o: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+				p: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
+				q: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

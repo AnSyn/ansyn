@@ -3,20 +3,23 @@ import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { selectActiveMapId } from '@ansyn/map-facade';
-import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
+import {
+	getPointByGeometry,
+	getPolygonByPointAndRadius,
+	ImageryVisualizer,
+	VisualizerInteractions
+} from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
-import { getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
-import { EntitiesVisualizer } from '../entities-visualizer';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import Feature from 'ol/Feature';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import {
-	selectAlgorithmTaskDrawIndicator, selectCurrentAlgorithmTaskAlgorithmName,
+	selectAlgorithmTaskDrawIndicator,
+	selectCurrentAlgorithmTaskAlgorithmName,
 	selectCurrentAlgorithmTaskRegion
 } from '../../../../../menu-items/algorithms/reducers/tasks.reducer';
 import { SetCurrentTaskRegion, SetTaskDrawIndicator } from '../../../../../menu-items/algorithms/actions/tasks.actions';

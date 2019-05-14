@@ -122,13 +122,14 @@
       "region",
       "overlaysManualProcessArgs",
       "orientation",
-      "layers"
+      "layers",
+      "miscOverlays"
     ],
     "updateCaseDebounceTime": 700,
     "useHash": true,
     "defaultSearchFromDeltaTime": {
-    	"unit": "years",
-    	"amount": 1
+    	"unit": "days",
+    	"amount": 80
     }
   },
   "layersManagerConfig": {
@@ -240,9 +241,6 @@
     "schema": "contexts"
   },
   "toolsConfig": {
-	"Annotations": {
-	  "displayId":  "{{ getv "/ansyn/tools/displayid" "0" }}"
-	},
     "GoTo": {
       "from": {
         "datum": "wgs84",
@@ -330,13 +328,21 @@
 			"poorGeoRegistered": "Poor Geo Registered"
 	   	}
     },
-    "needToUseLayerExtent": false,
-    "tilesLoadingDoubleBuffer": {
-    	"debounceTimeInMs": 500,
-	    "timeoutInMs": 3000
-    },
-	 "floatingPositionSuffix": "",
-	 "httpTimeout": "3000"
+	 "httpTimeout": "3000",
+	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
+  },
+  "olConfig": {
+  	 "needToUseLayerExtent": false,
+	 "tilesLoadingDoubleBuffer": {
+		"debounceTimeInMs": 500,
+		"timeoutInMs": 3000
+	 },
+	 "floatingPositionSuffix": ""
+  },
+  "olPluginsConfig": {
+  	"Annotations": {
+  		"displayId":  "{{ getv "/ansyn/tools/displayid" "0" }}"
+  	}
   },
   "menuConfig": {
     "menuItems": {{ getv "/ansyn/menu/items" "null" }},
@@ -350,7 +356,7 @@
     	"title": "Fork me on github",
 		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     },
-    "isCollapsible": false
+    "isCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
   },
   "loginConfig": {
   	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",

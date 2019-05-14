@@ -4,10 +4,6 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import {
-	FilterType,
-	IOverlay,
-} from '@ansyn/imagery';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -34,6 +30,8 @@ import {
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
+import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
+import { IOverlay } from '../../modules/overlays/models/overlay.model';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

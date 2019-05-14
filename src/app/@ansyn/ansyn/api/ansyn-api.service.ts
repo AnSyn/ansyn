@@ -2,6 +2,7 @@ import { Inject, Injectable, NgModuleRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import {
+	LayoutKey,
 	MapActionTypes,
 	selectActiveMapId,
 	selectMaps,
@@ -11,12 +12,7 @@ import {
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
-import {
-	ICaseMapPosition,
-	ICaseMapState,
-	IOverlay,
-	IOverlaysCriteria, LayoutKey
-} from '@ansyn/imagery';
+import { ImageryMapPosition } from '@ansyn/imagery';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
@@ -35,6 +31,8 @@ import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers
 import { SetOverlaysCriteriaAction } from '../modules/overlays/actions/overlays.actions';
 import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
 import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/actions/overlays.actions';
+import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -153,7 +151,7 @@ export class AnsynApi {
 		}
 	}
 
-	getMapPosition(): ICaseMapPosition {
+	getMapPosition(): ImageryMapPosition {
 		return this.mapsEntities[this.activeMapId].data.position;
 	}
 

@@ -12,6 +12,9 @@
       "@ansyn/map-facade": [
         "src/app/@ansyn/map-facade/public_api"
       ],
+      "@ansyn/ol": [
+        "src/app/@ansyn/ol/public_api"
+      ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
       ],

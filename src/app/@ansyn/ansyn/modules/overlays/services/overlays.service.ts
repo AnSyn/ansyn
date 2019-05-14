@@ -1,12 +1,6 @@
 import { IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import {
-	IOverlay,
-	IOverlayDrop,
-	IOverlaysCriteria,
-	IOverlaysFetchData,
-} from '@ansyn/imagery';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
@@ -16,6 +10,7 @@ import { map } from 'rxjs/internal/operators';
 import { selectFavoriteOverlays } from '@ansyn/map-facade';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
+import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -152,5 +147,13 @@ export class OverlaysService {
 		});
 		return this.expendByTenth({ start, end });
 
+	}
+
+	getThumbnailUrl(overlay, position): Observable<any> {
+		return this._overlaySourceProvider.getThumbnailUrl(overlay, position)
+	}
+
+	getThumbnailName(overlay): string {
+		return this._overlaySourceProvider.getThumbnailName(overlay)
 	}
 }

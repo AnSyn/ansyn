@@ -1,5 +1,6 @@
-import { FilterType, ICaseFilter, IOverlay } from '@ansyn/imagery';
-
+import { FilterType } from '../filter-type';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { ICaseFilter } from '../../../cases/models/case.model';
 export abstract class FilterMetadata {
 	type: FilterType;
 

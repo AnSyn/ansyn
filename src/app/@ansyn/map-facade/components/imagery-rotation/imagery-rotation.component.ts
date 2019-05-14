@@ -1,9 +1,11 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CommunicatorEntity, ImageryCommunicatorService, GeoRegisteration, ICaseMapState } from '@ansyn/imagery';
+import {
+	CommunicatorEntity,
+	ImageryCommunicatorService,
+	IMapSettings
+} from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
-import { toDegrees } from '../../utils/math';
-
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -20,7 +22,7 @@ export interface IsGeoRegisteredProperties {
 	styleUrls: ['./imagery-rotation.component.less']
 })
 export class ImageryRotationComponent {
-	@Input() mapState: ICaseMapState;
+	@Input() mapState: IMapSettings;
 
 	protected thresholdDegrees = 0.1;
 
@@ -69,8 +71,12 @@ export class ImageryRotationComponent {
 				protected store: Store<any>) {
 	}
 
+	toDegrees(radians: number): number {
+		return radians * 180 / Math.PI;
+	}
+
 	isGeoRegistered() {
-		return !this.mapState.data.overlay || (this.mapState.data.overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered);
+		return !this.mapState.data.overlay || (this.mapState.data.overlay.isGeoRegistered !== 'notGeoRegistered');
 	}
 
 	stopPropagation($event: Event) {
@@ -83,7 +89,7 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		if (Math.abs(toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
+		if (Math.abs(this.toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
 				this.setRotation(overlay.azimuth);

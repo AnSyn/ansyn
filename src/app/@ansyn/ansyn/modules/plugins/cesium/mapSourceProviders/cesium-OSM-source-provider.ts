@@ -1,6 +1,8 @@
-import { BaseMapSourceProvider, ImageryMapSource, ICaseMapState } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryMapSource, IBaseImageryMapConstructor, IMapSettings } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
 import { CesiumLayer } from '../models/cesium-layer';
+import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
+
 declare const Cesium: any;
 
 export const CesiumOSMSourceProviderSourceType = 'OSM';
@@ -10,11 +12,12 @@ export const CesiumOSMSourceProviderSourceType = 'OSM';
 	sourceType: CesiumOSMSourceProviderSourceType
 })
 export class CesiumOsmSourceProvider extends BaseMapSourceProvider {
+	readonly supported: IBaseImageryMapConstructor[];
 
-	protected create(metaData: ICaseMapState): any[] {
+	protected create(metaData: ICaseMapState): Promise<any> {
 		const cesiumOsmLayer = Cesium.createOpenStreetMapImageryProvider({ url: 'https://a.tile.openstreetmap.org/' });
 		const layer = new CesiumLayer(cesiumOsmLayer);
-		return [layer];
+		return Promise.resolve(layer);
 	}
 
 }

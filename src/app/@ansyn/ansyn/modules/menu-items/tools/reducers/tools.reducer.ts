@@ -1,17 +1,15 @@
-import { ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
+import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import {
-	AnnotationMode,
-	ImageManualProcessArgs,
-	IOverlaysManualProcessArgs,
-	IVisualizerStyle,
-	OverlayDisplayMode
-} from '@ansyn/imagery';
+import { IVisualizerStyle } from '@ansyn/imagery';
+import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
+import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
+import { AnnotationMode } from '@ansyn/ol';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
 	shadowMouse = 'shadowMouse',
 	shadowMouseDisabled = 'shadowMouseDisabled',
+	shadowMouseActiveForManyScreens = 'shadowMouseActiveForManyScreens',
 	pinLocation = 'pinLocation',
 	autoImageProcessing = 'autoImageProcessing',
 	imageProcessingDisabled = 'imageProcessingDisabled',
@@ -67,7 +65,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			};
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
-			return { ...state, annotationMode: <AnnotationMode> action.payload };
+			return { ...state, annotationMode: <AnnotationMode>action.payload };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			tmpMap = new Map(state.flags);
@@ -80,6 +78,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			}
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.shadowMouse, true);
+			if (action.payload && (<StartMouseShadow>action).payload.fromUser) {
+				tmpMap.set(toolsFlags.shadowMouseActiveForManyScreens, true);
+			}
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.STOP_MOUSE_SHADOW:
@@ -88,6 +89,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			}
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.shadowMouse, false);
+			if (action.payload && (<StopMouseShadow>action).payload.fromUser) {
+				tmpMap.set(toolsFlags.shadowMouseActiveForManyScreens, false);
+			}
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.UPDATE_TOOLS_FLAGS: {
@@ -154,3 +158,5 @@ export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsSt
 export const selectOverlaysManualProcessArgs = createSelector(toolsStateSelector, (tools: IToolsState) => tools.overlaysManualProcessArgs);
 export const selectAnnotationMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationMode);
 export const selectAnnotationProperties = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationProperties);
+export const selectToolFlags = createSelector(toolsStateSelector, (tools: IToolsState) => tools.flags);
+export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));

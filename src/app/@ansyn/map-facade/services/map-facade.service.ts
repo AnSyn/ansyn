@@ -3,14 +3,13 @@ import { Store } from '@ngrx/store';
 import { IMapState, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
 import {
-	GeoRegisteration,
-	ICaseMapPosition,
-	ICaseMapState,
-	IOverlay
+	ImageryMapPosition,
+	ImageryCommunicatorService,
+	IMapInstanceChanged,
+	IMapSettings,
+	getFootprintIntersectionRatioInExtent
 } from '@ansyn/imagery';
-import { ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
-import { getFootprintIntersectionRatioInExtent } from '../utils/calc-extent';
 
 // @dynamic
 @Injectable({
@@ -20,26 +19,26 @@ export class MapFacadeService {
 	subscribers: { [key: string]: any[] } = {};
 
 	mapsList$ = this.store.select(selectMapsList);
-	mapsList: ICaseMapState[] = [];
+	mapsList: IMapSettings[] = [];
 
 	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
 		const intersection = getFootprintIntersectionRatioInExtent(extentPolygon, footprint);
 		return intersection < overlayCoverage;
 	}
-
-	static isOverlayGeoRegistered(overlay: IOverlay): boolean {
+	// @todo IOveraly
+	static isOverlayGeoRegistered(overlay: any): boolean {
 		if (!overlay) {
 			return true;
 		}
-		return overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered;
+		return overlay.isGeoRegistered !== 'notGeoRegistered';
 	}
 
-	static activeMap(mapState: IMapState): ICaseMapState {
+	static activeMap(mapState: IMapState): IMapSettings {
 		return mapState.entities[mapState.activeMapId];
 	}
 
-	static mapById(mapsList: ICaseMapState[], mapId: string): ICaseMapState {
-		return mapsList.find(({ id }: ICaseMapState) => {
+	static mapById(mapsList: IMapSettings[], mapId: string): IMapSettings {
+		return mapsList.find(({ id }: IMapSettings) => {
 			return id === mapId;
 		});
 	}
@@ -71,8 +70,8 @@ export class MapFacadeService {
 		this.store.dispatch(new MapInstanceChangedAction($event));
 	}
 
-	positionChanged($event: { id: string, position: ICaseMapPosition }) {
-		const mapInstance = <ICaseMapState> MapFacadeService.mapById(this.mapsList, $event.id);
+	positionChanged($event: { id: string, position: ImageryMapPosition }) {
+		const mapInstance = <IMapSettings> MapFacadeService.mapById(this.mapsList, $event.id);
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
 	}
 }

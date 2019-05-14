@@ -1,20 +1,23 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { ImageryStatusComponent } from './imagery-status.component';
-import { StoreModule } from '@ngrx/store';
-import { IOverlay } from '@ansyn/imagery';
-import { EffectsModule } from '@ngrx/effects';
-import { ALERTS } from '../../alerts/alerts.model';
 import { HttpClientModule } from '@angular/common/http';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
-import { MockComponent } from '../../test/mock-component';
-import { FormsModule } from '@angular/forms';
+import { ALERTS } from '../../alerts/alerts.model';
 import { AlertsModule } from '../../alerts/alerts.module';
+import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
+import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
+import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { MockComponent } from '../../test/mock-component';
+import { ImageryStatusComponent } from './imagery-status.component';
 
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
 	let fixture: ComponentFixture<ImageryStatusComponent>;
+	let communicatorService: ImageryCommunicatorService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -24,7 +27,8 @@ describe('ImageryStatusComponent', () => {
 				AlertsModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({
-					[imageryStatusFeatureKey]: ImageryStatusReducer
+					[imageryStatusFeatureKey]: ImageryStatusReducer,
+					[mapFeatureKey]: MapReducer
 				})
 			],
 			declarations: [
@@ -35,21 +39,26 @@ describe('ImageryStatusComponent', () => {
 				})
 			],
 			providers: [
+				ImageryCommunicatorService,
 				{ provide: ALERTS, useValue: [] },
 				{
 					provide: TranslateService, useValue: {
 						get: () => EMPTY, setDefaultLang(arg) {
 						}
 					}
-				}]
+				},
+				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] }
+			]
 		}).compileComponents();
 	}));
 
-	beforeEach(inject([], () => {
+	beforeEach(inject([ImageryCommunicatorService], (_communicatorService) => {
+		communicatorService = _communicatorService;
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
 		component.mapId = 'test';
-		component.overlay = {} as IOverlay;
+		component.displayLayers = true;
+		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();
 	}));
@@ -58,37 +67,33 @@ describe('ImageryStatusComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('check click on backToWorldView', () => {
-		spyOn(component, 'backToWorldView');
-		fixture.nativeElement.querySelector('.back-to-world-view').click();
-		expect(component.backToWorldView).toHaveBeenCalled();
-	});
-
 	it('check click on toggleMapSynchronization', () => {
 		spyOnProperty(component, 'noGeoRegistration', 'get').and.returnValue(false);
+		component.mapsAmount = 2;
 		fixture.detectChanges();
 		spyOn(component.toggleMapSynchronization, 'emit');
 		fixture.nativeElement.querySelector('.link-maps').click();
 		expect(component.toggleMapSynchronization.emit).toHaveBeenCalled();
 	});
 
-	it('check click on toggleFavorite', () => {
-		spyOn(component, 'toggleFavorite');
-		fixture.nativeElement.querySelector('.set-favorite').click();
-		expect(component.toggleFavorite).toHaveBeenCalled();
-	});
 
-	it('check click on togglePreset', () => {
-		spyOnProperty(component, 'noGeoRegistration', 'get').and.returnValue(false);
-		fixture.detectChanges();
-		spyOn(component, 'togglePreset');
-		fixture.nativeElement.querySelector('.set-preset').click();
-		expect(component.togglePreset).toHaveBeenCalled();
-	});
 
 	it('should not show link when 1 map', () => {
 		component.mapsAmount = 1;
 		fixture.detectChanges();
 		expect(fixture.nativeElement.querySelector('.link-maps')).toBeNull();
 	});
+
+	it('should return map extra description, if exists', () => {
+		const myDescription = 'hehe';
+		spyOn(communicatorService, 'provide').and.returnValue({
+			ActiveMap: {
+				getExtraData: () => ({
+					description: myDescription
+				})
+			}
+		});
+		const result = component.description;
+		expect(result).toEqual(myDescription)
+	})
 });

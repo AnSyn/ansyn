@@ -1,4 +1,3 @@
-import { EntitiesVisualizer } from '../entities-visualizer';
 import olFeature from 'ol/Feature';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
@@ -8,13 +7,11 @@ import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/m
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
-import { ImageryVisualizer } from '@ansyn/imagery';
-import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
-import { IVisualizerEntity } from '@ansyn/imagery';
+import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery';
+import { selectToolFlag, toolsFlags } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '../../../maps/open-layers-map/openlayers-map/openlayers-map';
-import { distinctUntilChanged, filter, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -30,11 +27,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	mouseShadowProducer$ = this.actions$
 		.pipe(ofType<Action>(MapActionTypes.SHADOW_MOUSE_PRODUCER));
 
-	shadowMouseFlag$ = this.store$.select(toolsStateSelector).pipe(
-		pluck<IToolsState, Map<any, any>>('flags'),
-		distinctUntilChanged(),
-		map((flags) => flags.get(toolsFlags.shadowMouse))
-	);
+	shadowMouseFlag$ = this.store$.select(selectToolFlag(toolsFlags.shadowMouse));
 
 	onEnterMap$ = this.actions$
 		.pipe(ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER));

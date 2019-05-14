@@ -4,9 +4,8 @@ import { Store } from '@ngrx/store';
 import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { Observable, Subscription } from 'rxjs';
-import { ImageManualProcessArgs } from '@ansyn/imagery';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-
+import { ImageManualProcessArgs } from '../../../cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-image-processing-control',

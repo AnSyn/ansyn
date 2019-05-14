@@ -8,14 +8,14 @@ import {
 } from '@ansyn/map-facade';
 import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
 import { IAppState } from '../../app.effects.module';
-import { ICase } from '@ansyn/imagery';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';
 import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
-import { selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
+import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
+import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
 // @todo refactor
 const contextFeatureSelector = createFeatureSelector('context');
@@ -41,7 +41,8 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
-		this.store$.select(selectContextEntities)
+		this.store$.select(selectContextEntities),
+		this.store$.select(selectMiscOverlays)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
@@ -65,6 +66,7 @@ export class UpdateCaseAppEffects {
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
 				contextEntities,
+				miscOverlays,
 				autoSave
 			] = events;
 
@@ -96,6 +98,7 @@ export class UpdateCaseAppEffects {
 					time,
 					facets,
 					contextEntities,
+					miscOverlays,
 					overlaysManualProcessArgs
 				}
 			};

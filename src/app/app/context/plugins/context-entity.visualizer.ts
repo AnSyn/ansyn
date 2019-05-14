@@ -6,8 +6,7 @@ import {
 } from '@ansyn/map-facade';
 import {
 	getPointByGeometry,
-	ICaseMapState,
-	IContextEntity,
+
 	IVisualizerEntity
 } from '@ansyn/imagery';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -19,7 +18,8 @@ import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectContextEntities } from '../reducers/context.reducer';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ansyn';
+import { ICaseMapState, IContextEntity,  } from '@ansyn/ansyn';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

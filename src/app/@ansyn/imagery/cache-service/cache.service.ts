@@ -8,32 +8,34 @@ import { ImageryLayerProperties } from '../model/imagery-layer.model';
 export class CacheService {
 
 	protected cacheSize = this.config.maxCachedLayers || 100;
-	protected cachedLayesrMap: Map<string, any> = new Map<string, any>();
+	protected cachedLayersMap: Map<string, any> = new Map<string, any>();
 
 	constructor(@Inject(IMAGERY_CONFIG) protected config: IImageryConfig,
 				public imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	isDisplayedLayer(layers, cacheId) {
+	isDisplayedLayer(cacheId) {
 		return this.imageryCommunicatorService
 			.communicatorsAsArray()
 			.some((communicator) => {
 				const communicatorLayers = communicator.getLayers();
-				return layers.some((layer) => communicatorLayers.some((layer) => (layer.get && layer.get(ImageryLayerProperties.CACHE_ID)) === cacheId));
+				return communicatorLayers.some((layer) => (layer.get && layer.get(ImageryLayerProperties.CACHE_ID)) === cacheId);
 			});
 	}
 
-	getLayerFromCache(cacheId: string): any[] {
-		const layers = this.cachedLayesrMap.get(cacheId);
-		return layers && !this.isDisplayedLayer(layers, cacheId) ? [...layers] : [];
+	getLayerFromCache(cacheId: string): any {
+		const layer = this.cachedLayersMap.get(cacheId);
+		return layer && !this.isDisplayedLayer(cacheId) ? layer : null;
 	}
 
-	addLayerToCache(cacheId: string, layers: any[]) {
-		if (this.cachedLayesrMap.size >= this.cacheSize) {
-			const key = this.cachedLayesrMap.keys().next();
-			this.cachedLayesrMap.delete(key.value);
+	addLayerToCache(cacheId: string, layer: any) {
+		if (this.cachedLayersMap.size >= this.cacheSize) {
+			const key = this.cachedLayersMap.keys().next();
+			this.cachedLayersMap.delete(key.value);
 		}
-		layers.filter((layer) => Boolean(layer.set)).forEach((layer) => layer.set(ImageryLayerProperties.CACHE_ID, cacheId));
-		this.cachedLayesrMap.set(cacheId, [...layers]);
+		if (layer.set) {
+			layer.set(ImageryLayerProperties.CACHE_ID, cacheId)
+		}
+		this.cachedLayersMap.set(cacheId, layer);
 	}
 }

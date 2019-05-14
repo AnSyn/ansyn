@@ -18,7 +18,6 @@ import {
 } from '@ansyn/map-facade';
 import {
 	BackToWorldView,
-	extentFromGeojson,
 	ToggleMapLayersAction,
 	SetToastMessageAction
 } from '@ansyn/map-facade'
@@ -26,8 +25,7 @@ import {
 	BaseMapSourceProvider,
 	CommunicatorEntity,
 	ImageryCommunicatorService,
-	GeoRegisteration,
-	ICaseMapState
+	extentFromGeojson
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -59,8 +57,9 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { CesiumMapName } from '../../modules/plugins/cesium/maps/cesium-map/cesium-map';
-import { DisabledOpenLayersMapName } from '../../modules/plugins/openlayers/maps/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenlayersMapName } from '../../modules/plugins/openlayers/maps/open-layers-map/openlayers-map/openlayers-map';
+import { OpenlayersMapName, DisabledOpenLayersMapName } from '@ansyn/ol';
+import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
+import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 
 @Injectable()
 export class MapAppEffects {
@@ -166,7 +165,7 @@ export class MapAppEffects {
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
 			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
-			map((action) => new SetToastMessageAction({
+			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
 			}))
@@ -317,13 +316,23 @@ export class MapAppEffects {
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		if (payload.force) {
-			return true
+			return true;
 		}
-		const isFull = isFullOverlay(payload.overlay);
-		const { overlay } = payload;
-		const mapData = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId).data;
-		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
-		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
+
+		const payloadOverlay = payload.overlay;
+		const isFull = isFullOverlay(payloadOverlay);
+		if (!isFull) {
+			return false;
+		}
+
+		const caseMapState: ICaseMapState = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId);
+		if (!caseMapState) {
+			return false;
+		}
+
+		const mapData = caseMapState.data;
+		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === payloadOverlay.id);
+		return (isNotDisplayed || payload.forceFirstDisplay);
 	}
 
 	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {

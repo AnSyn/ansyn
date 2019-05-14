@@ -1,5 +1,7 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { FilterType, ICaseFilter, ICaseSliderFilterMetadata, IOverlay } from '@ansyn/imagery';
+import { FilterType } from '../filter-type';
+import { ICaseFilter, ICaseSliderFilterMetadata } from '../../../cases/models/case.model';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 export class SliderFilterMetadata implements FilterMetadata {
 	count = 0;

@@ -1,6 +1,8 @@
 import { FilterMetadata } from './filter-metadata.interface';
-import { CaseEnumFilterMetadata, FilterType, ICaseFilter, IOverlay } from '@ansyn/imagery';
 import { mapValuesToArray } from '../../../../core/utils/misc';
+import { CaseEnumFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
+import { FilterType } from '../filter-type';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 export interface IEnumFiled {
 	key: string;
@@ -98,7 +100,9 @@ export class EnumFilterMetadata implements FilterMetadata {
 
 	showAll(): void {
 		this.enumsFields.forEach((value: IEnumFiled) => {
-			value.isChecked = true;
+			if (!value.disabled) {
+				value.isChecked = true;
+			}
 		});
 	}
 

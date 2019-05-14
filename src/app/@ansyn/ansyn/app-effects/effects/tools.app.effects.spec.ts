@@ -2,7 +2,7 @@ import { ToolsAppEffects } from './tools.app.effects';
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
-import { ImageryCommunicatorService, ICase } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { BackToWorldView, MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
@@ -38,6 +38,7 @@ import {
 import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
+import { ICase } from '../../modules/menu-items/cases/models/case.model';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;

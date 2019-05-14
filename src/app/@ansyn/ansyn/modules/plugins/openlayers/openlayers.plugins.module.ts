@@ -11,7 +11,7 @@ import { FootprintHeatmapVisualizer } from './plugins/visualizers/overlays/heatm
 import { AlertsPlugin } from './plugins/alerts/alerts.plugin';
 import { FrameVisualizer } from './plugins/visualizers/overlays/frame-visualizer';
 import { FootprintPolylineVisualizer } from './plugins/visualizers/overlays/polyline-visualizer';
-import { AnnotationsVisualizer } from './plugins/visualizers/tools/annotations.visualizer';
+import { AnsynAnnotationsVisualizer } from './plugins/visualizers/tools/ansyn.annotations.visualizer';
 import { MeasureDistanceVisualizer } from './plugins/visualizers/tools/measure-distance.visualizer';
 import { GoToVisualizer } from './plugins/visualizers/tools/goto.visualizer';
 import { PinPointVisualizer } from './plugins/visualizers/region/pin-point.visualizer';
@@ -19,19 +19,21 @@ import { MouseShadowVisualizer } from './plugins/visualizers/tools/mouse-shadow.
 import { PolygonSearchVisualizer } from './plugins/visualizers/region/polygon-search.visualizer';
 import { OpenlayersGeoJsonLayersVisualizer } from './plugins/layers/openlayers-geoJson-layers.visualizer';
 import { TaskRegionVisualizer } from './plugins/visualizers/algorithms/task-region.visualizer';
-import { OpenLayersMap } from './maps/open-layers-map/openlayers-map/openlayers-map';
-import { OpenLayersDisabledMap } from './maps/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayerTileWMSSourceProvider } from './mapSourceProviders/open-layers-TileWMS-source-provider';
-import { OpenLayerMapBoxSourceProvider } from './mapSourceProviders/open-layers-MapBox-source-provider';
-import { OpenLayerOSMSourceProvider } from './mapSourceProviders/open-layers-OSM-source-provider';
-import { OpenLayerIDAHOSourceProvider } from './mapSourceProviders/open-layers-IDAHO-source-provider';
-import { OpenLayerPlanetSourceProvider } from './mapSourceProviders/open-layers-planet-source-provider';
-import { OpenLayerBingSourceProvider } from './mapSourceProviders/open-layers-BING-source-provider';
-import { OpenLayerESRI4326SourceProvider } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';
-import { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-layers-open-aerial-source-provider';
-import { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis-layers.pulgin";
-import { OpenLayerMarcoSourceProvider } from "./mapSourceProviders/marco/open-layers-MARCO-source-provider";
+import {
+	AnnotationsContextMenuModule,
+	AnnotationsVisualizer,
+	OpenLayerBingSourceProvider,
+	OpenLayerESRI4326SourceProvider,
+	OpenLayerIDAHOSourceProvider,
+	OpenLayerMapBoxSourceProvider, OpenLayerMarcoSourceProvider,
+	OpenLayerOpenAerialSourceProvider,
+	OpenLayerOSMSourceProvider,
+	OpenLayerPlanetSourceProvider,
+	OpenLayersDisabledMap,
+	OpenLayersMap, OpenLayersStaticImageSourceProvider,
+	OpenLayerTileWMSSourceProvider
+} from '@ansyn/ol';
 
 @NgModule({
 	imports: [
@@ -51,6 +53,7 @@ import { OpenLayerMarcoSourceProvider } from "./mapSourceProviders/marco/open-la
 				FrameVisualizer,
 				FootprintPolylineVisualizer,
 				AnnotationsVisualizer,
+				AnsynAnnotationsVisualizer,
 				MeasureDistanceVisualizer,
 				GoToVisualizer,
 				PinPointVisualizer,
@@ -73,7 +76,8 @@ import { OpenLayerMarcoSourceProvider } from "./mapSourceProviders/marco/open-la
 				OpenLayerMarcoSourceProvider
 
 			]
-		})
+		}),
+		AnnotationsContextMenuModule
 	]
 })
 export class OpenlayersPluginsModule {

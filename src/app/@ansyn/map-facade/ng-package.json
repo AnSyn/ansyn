@@ -4,7 +4,6 @@
   "whitelistedNonPeerDependencies": [
     "@turf/turf",
     "lodash",
-    "@ansyn/imagery",
     "@ngx-translate/core",
     "angular2-uuid",
     "auto-subscriptions"

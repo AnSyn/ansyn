@@ -22,9 +22,9 @@ import { SearchModeEnum } from '../../modules/status-bar/models/search-mode.enum
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { IOverlay, IOverlayDrop } from '@ansyn/imagery';
 import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
+import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 
 
 @Injectable()

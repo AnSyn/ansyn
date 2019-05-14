@@ -1,24 +1,23 @@
-import { ICaseMapState, IPendingOverlay, layoutOptions } from '@ansyn/imagery';
+import { IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { LayoutKey } from '@ansyn/imagery';
 import { sessionData } from '../models/core-session-state.model';
-import { MapActions, MapActionTypes, IToastMessage } from '../actions/map.actions';
-
+import { IPendingOverlay, IToastMessage, MapActions, MapActionTypes } from '../actions/map.actions';
+import { LayoutKey, layoutOptions } from '../models/maps-layout';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
-	const mapsList: ICaseMapState[] = [];
-	const activeMap: ICaseMapState = oldEntities[oldActiveMapId];
+	const mapsList: IMapSettings[] = [];
+	const activeMap: IMapSettings = oldEntities[oldActiveMapId];
 	const oldMapsList = Object.values(oldEntities);
 
 	range(layout.mapsCount).forEach((index) => {
 		if (oldMapsList[index]) {
 			mapsList.push(oldMapsList[index]);
 		} else {
-			const mapStateCopy: ICaseMapState = {
+			const mapStateCopy: IMapSettings = {
 				id: UUID.UUID(),
 				data: { position: null },
 				worldView: { ...activeMap.worldView },
@@ -37,12 +36,12 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 	return mapsList;
 }
 
-export const mapsAdapter: EntityAdapter<ICaseMapState> = createEntityAdapter<ICaseMapState>();
+export const mapsAdapter: EntityAdapter<IMapSettings> = createEntityAdapter<IMapSettings>();
 
-export interface IMapState extends EntityState<ICaseMapState> {
+export interface IMapState extends EntityState<IMapSettings> {
 	activeMapId: string;
-	isLoadingMaps: Map<string, string>,
-	isHiddenMaps: Set<string>,
+	isLoadingMaps: Map<string, string>;
+	isHiddenMaps: Set<string>;
 	pendingMapsCount: number; // number of maps to be opened
 	pendingOverlays: IPendingOverlay[]; // a list of overlays waiting for maps to be created in order to be displayed
 	layout: LayoutKey;
@@ -57,9 +56,9 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: [],
-	layout: <LayoutKey> 'layout1',
+	layout: <LayoutKey>'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
-	toastMessage: null,
+	toastMessage: null
 });
 
 export const mapFeatureKey = 'map';
@@ -154,9 +153,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			if (layout.mapsCount !== Object.values(state.entities).length && Object.values(state.entities).length) {
 				const pendingMapsCount = Math.abs(layout.mapsCount - Object.values(state.entities).length);
 				const mapsList = setMapsDataChanges(state.entities, state.activeMapId, layout);
-				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount, layout: action.payload  });
+				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount, layout: action.payload });
 			}
-			return { ... state, layout: action.payload};
+			return { ...state, layout: action.payload };
 
 		case MapActionTypes.CHANGE_IMAGERY_MAP: {
 			const { id, mapType, sourceType } = action.payload;
@@ -183,9 +182,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 	}
 }
 
-const { selectAll, selectEntities, selectIds } = mapsAdapter.getSelectors();
+const { selectAll, selectEntities, selectIds, selectTotal } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
+export const selectMapsTotal = createSelector(mapStateSelector, selectTotal);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);
 export const selectMaps = createSelector(mapStateSelector, selectEntities);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);

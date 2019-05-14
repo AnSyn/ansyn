@@ -28,8 +28,6 @@ import {
 	UpdateMapAction,
 	SetWasWelcomeNotificationShownFlagAction,
 	SetLayoutSuccessAction,
-	BackToWorldView,
-	BackToWorldSuccess,
 	SetToastMessageAction
 } from '../actions/map.actions';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
@@ -88,38 +86,6 @@ export class MapEffects {
 		filter(([action, mapState]) => mapState.pendingMapsCount === 0),
 		map(() => new SetLayoutSuccessAction())
 	);
-
-	@Effect()
-	backToWorldView$: Observable<any> = this.actions$
-		.pipe(
-			ofType(MapActionTypes.BACK_TO_WORLD_VIEW),
-			withLatestFrom(this.store$.select(selectMaps)),
-			filter(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => Boolean(entities[action.payload.mapId])),
-			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
-				const mapId = action.payload.mapId;
-				const selectedMap = entities[mapId];
-				const communicator = this.communicatorsService.provide(mapId);
-				const { position } = selectedMap.data;
-				return [action.payload, selectedMap, communicator, position];
-			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
-				const disabledMap = communicator.activeMapName === 'disabledOpenLayersMap';
-				this.store$.dispatch(new UpdateMapAction({
-					id: communicator.id,
-					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
-				}));
-				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
-					.pipe(
-						map(() => new BackToWorldSuccess(payload)),
-						catchError((err) => {
-							console.error('BACK_TO_WORLD_VIEW ', err);
-							this.store$.dispatch(new SetToastMessageAction({ toastText: 'Failed to load map', showWarningIcon: true}));
-							return EMPTY;
-						})
-					);
-			})
-		);
 
 	@Effect({ dispatch: false })
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(

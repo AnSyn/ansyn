@@ -17,7 +17,6 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	BackToWorldView,
 	ToggleMapLayersAction,
 	SetToastMessageAction
 } from '@ansyn/map-facade'
@@ -60,6 +59,10 @@ import { CesiumMapName } from '../../modules/plugins/cesium/maps/cesium-map/cesi
 import { OpenlayersMapName, DisabledOpenLayersMapName } from '@ansyn/ol';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import {
+	BackToWorldView,
+	OverlayStatusActionsTypes
+} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -99,7 +102,7 @@ export class MapAppEffects {
 			ofType<DisplayOverlayAction>(
 				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-				MapActionTypes.BACK_TO_WORLD_VIEW
+				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
 			),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
 				mapId: payload.mapId, show: false

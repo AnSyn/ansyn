@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { BackToWorldView, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { BackToWorldView } from '../../actions/overlay-status.actions';
 
 import { BackToBaseMapComponent } from './back-to-base-map.component';
 import { Store, StoreModule } from '@ngrx/store';

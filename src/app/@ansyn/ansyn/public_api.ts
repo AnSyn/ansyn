@@ -43,7 +43,6 @@ export { StatusBarModule } from './modules/status-bar/status-bar.module';
 export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-boxes.model';
 
 
-
 // menuItems
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
 export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
@@ -62,8 +61,12 @@ export { GoToAction } from './modules/menu-items/tools/actions/tools.actions';
 export { ILayerState } from './modules/menu-items/layers-manager/reducers/layers.reducer';
 export { ICasesState } from './modules/menu-items/cases/reducers/cases.reducer';
 export { IToolsState } from './modules/menu-items/tools/reducers/tools.reducer';
-export { ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive } from './modules/menu-items/settings/reducers/settings.reducer';
-export { LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction } from './modules/menu-items/cases/actions/cases.actions';
+export {
+	ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive
+}from './modules/menu-items/settings/reducers/settings.reducer';
+export {
+	LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction
+}from './modules/menu-items/cases/actions/cases.actions';
 export { Filters, IFiltersState } from './modules/menu-items/filters/reducer/filters.reducer';
 export { IFilter } from './modules/menu-items/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
@@ -113,7 +116,9 @@ export {
 	UpdateLayer,
 	UpdateSelectedLayersIds
 } from './modules/menu-items/layers-manager/actions/layers.actions';
-export { layerPluginType, layerPluginTypeEnum, LayerType } from './modules/menu-items/layers-manager/models/layers.model';
+export {
+	layerPluginType, layerPluginTypeEnum, LayerType
+}from './modules/menu-items/layers-manager/models/layers.model';
 export { BooleanFilterMetadata } from './modules/menu-items/filters/models/metadata/boolean-filter-metadata';
 export { SliderFilterMetadata } from './modules/menu-items/filters/models/metadata/slider-filter-metadata';
 export { FilterMetadata } from './modules/menu-items/filters/models/metadata/filter-metadata.interface';
@@ -136,8 +141,12 @@ export {
 } from './modules/menu-items/filters/reducer/filters.reducer';
 export { ToolsComponent } from './modules/menu-items/tools/tools/tools.component';
 export { layersConfig } from './modules/menu-items/layers-manager/services/data-layers.service';
-export { LayersManagerComponent } from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
-export { FiltersCollectionComponent } from './modules/menu-items/filters/components/filters-collection/filters-collection.component';
+export {
+	LayersManagerComponent
+}from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
+export {
+	FiltersCollectionComponent
+}from './modules/menu-items/filters/components/filters-collection/filters-collection.component';
 export { CasesComponent } from './modules/menu-items/cases/components/cases/cases.component';
 export { IToolsConfig, toolsConfig, IImageProcParam } from './modules/menu-items/tools/models/tools-config';
 export { CasesModule } from './modules/menu-items/cases/cases.module';
@@ -222,7 +231,9 @@ export { IStoredEntity, StorageService } from './modules/core/services/storage/s
 export { AnsynInputComponent } from './modules/core/forms/ansyn-input/ansyn-input.component';
 export { ErrorHandlerService } from './modules/core/services/error-handler.service';
 export { LoggerService } from './modules/core/services/logger.service';
-export { selectDataInputFilter, selectOverlaysCriteria, selectRegion } from './modules/overlays/reducers/overlays.reducer';
+export {
+	selectDataInputFilter, selectOverlaysCriteria, selectRegion
+}from './modules/overlays/reducers/overlays.reducer';
 export { GoAdjacentOverlay } from './modules/status-bar/actions/status-bar.actions';
 export { ICoreConfig } from './modules/core/models/core.config.model';
 export { CoreConfig } from './modules/core/models/core.config';
@@ -250,7 +261,9 @@ export { PhotoAngle } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
 export { GeoRegisteration } from './modules/overlays/models/overlay.model';
 export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
-export { IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash } from './modules/overlays/models/overlay.model';
+export {
+	IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash
+}from './modules/overlays/models/overlay.model';
 
 export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';
@@ -265,24 +278,31 @@ export {
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
 export { IContextEntity } from './modules/menu-items/cases/models/case.model';
-export { ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs } from './modules/menu-items/cases/models/case.model';
-export { ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs } from './modules/menu-items/cases/models/case.model';
+export {
+	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
+}from './modules/menu-items/cases/models/case.model';
+export {
+	ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs
+}from './modules/menu-items/cases/models/case.model';
 export { CaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
 
 
-
-export { SetOverlaysCriteriaAction, UpdateOverlaysCountAction,
+export {
+	SetOverlaysCriteriaAction, UpdateOverlaysCountAction,
 	SetMiscOverlays,
-	SetMiscOverlay } from './modules/overlays/actions/overlays.actions';
+	SetMiscOverlay
+} from './modules/overlays/actions/overlays.actions';
 export { IMultipleOverlaysSource, MultipleOverlaysSource } from './modules/overlays/models/overlays-source-providers';
 export { IOverlaysConfig } from './modules/overlays/models/overlays.config';
 export { OverlaySourceProvider } from './modules/overlays/models/overlays-source-providers';
 export { MultipleOverlaysSourceProvider } from './modules/overlays/services/multiple-source-provider';
 export { IOverlayByIdMetaData } from './modules/overlays/services/overlays.service';
-export { selectHoveredOverlay,
+export {
+	selectHoveredOverlay,
 	selectMiscOverlays,
-	selectMiscOverlay } from './modules/overlays/reducers/overlays.reducer';
+	selectMiscOverlay
+} from './modules/overlays/reducers/overlays.reducer';
 export { timeIntersection } from './modules/overlays/models/base-overlay-source-provider.model';
 export { ChangeOverlayPreviewRotationAction } from './modules/overlays/actions/overlays.actions';
 export { selectLoading } from './modules/overlays/reducers/overlays.reducer';
@@ -313,17 +333,29 @@ export {
 } from './modules/overlays/reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './modules/overlays/services/overlays.service';
 export { BaseOverlaySourceProvider } from './modules/overlays/models/base-overlay-source-provider.model';
-export { overlayOverviewComponentConstants } from './modules/overlays/components/overlay-overview/overlay-overview.component.const';
+export {
+	overlayOverviewComponentConstants
+}from './modules/overlays/components/overlay-overview/overlay-overview.component.const';
 export { OverlaysModule } from './modules/overlays/overlays.module';
 export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './modules/overlays/reducers/overlays.reducer';
 
 // plugins
 
 export { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
-export { NorthCalculationsPlugin } from './modules/plugins/openlayers/plugins/north-calculations/north-calculations.plugin';
+export {
+	NorthCalculationsPlugin
+}from './modules/plugins/openlayers/plugins/north-calculations/north-calculations.plugin';
 export { ImageProcessingPlugin } from './modules/plugins/openlayers/plugins/image-processing/image-processing.plugin';
 export { CesiumMapName } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
-export { OpenlayersGeoJsonLayersVisualizer } from './modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer';
+export {
+	OpenlayersGeoJsonLayersVisualizer
+}from './modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer';
 
 export { CesiumMap } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
 export { CesiumLayer, ISceneMode } from './modules/plugins/cesium/models/cesium-layer';
+
+// overlay-status
+export {
+	OverlayStatusActions, OverlayStatusActionsTypes, BackToWorldSuccess,
+	BackToWorldView,
+} from './modules/overlays/overlay-status/actions/overlay-status.actions';

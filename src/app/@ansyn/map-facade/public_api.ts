@@ -42,8 +42,6 @@ export {
 	SetMapPositionByRadiusAction,
 	SetToastMessageAction,
 	PositionChangedAction,
-	BackToWorldSuccess,
-	BackToWorldView,
 	ToggleMapLayersAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,

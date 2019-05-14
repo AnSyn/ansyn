@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { BackToWorldView, IEntryComponent, selectMaps, selectMapsTotal } from "@ansyn/map-facade";
+import { IEntryComponent, selectMaps, selectMapsTotal } from "@ansyn/map-facade";
 import { Store, select } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { BackToWorldView } from '../../actions/overlay-status.actions';
 
 @Component({
 	selector: 'ansyn-back-to-base-map',

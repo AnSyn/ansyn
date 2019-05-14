@@ -16,6 +16,7 @@ import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith, isEqual } from 'lodash';
 import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
+import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
@@ -114,7 +115,7 @@ export class ToolsAppEffects {
 	@Effect()
 	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
 		.pipe(
-			ofType(MapActionTypes.BACK_TO_WORLD_VIEW),
+			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),
 			filter(communicator => Boolean(communicator)),
 			map(() => new DisableImageProcessing())

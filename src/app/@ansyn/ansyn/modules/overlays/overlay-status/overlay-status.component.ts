@@ -1,6 +1,5 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-	BackToWorldView,
 	IEntryComponent,
 	selectActiveMapId,
 	selectFavoriteOverlays,

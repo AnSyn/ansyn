@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, tap, map } from 'rxjs/internal/operators';
+import { distinctUntilChanged, tap, map, filter } from 'rxjs/internal/operators';
 import { ChangeImageryMap, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { AlertMsg } from '../../alerts/model';
@@ -34,6 +34,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
+		filter((maps) => Boolean(maps[this.mapId])),
 		tap((maps) => {
 			this.overlay = maps[this.mapId].data.overlay;
 			this.displayLayers = maps[this.mapId].flags.displayLayers;

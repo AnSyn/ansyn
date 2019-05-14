@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService, ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import {  selectMaps, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
+import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
@@ -27,16 +28,17 @@ export class OverlayStatusEffects {
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
-				const disabledMap = communicator.activeMapName === 'disabledOpenLayersMap';
+				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: {data: {...selectedMap.data, overlay: null, isAutoImageProcessingActive: false}}
 				}));
-				return fromPromise(disabledMap ? communicator.setActiveMap('openLayersMap', position) : communicator.loadInitialMapSource(position))
+
+				return fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.pipe(
 						map(() => new BackToWorldSuccess(payload)),
 						catchError((err) => {
-							console.error('BACK_TO_WORLD_VIEW ', err);
+							console.error(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW, err);
 							this.store$.dispatch(new SetToastMessageAction({
 								toastText: 'Failed to load map',
 								showWarningIcon: true

@@ -2,23 +2,8 @@
   "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@ansyn/menu": [
-        "dist/ansyn/menu"
-      ],
-      "@ansyn/map-facade": [
-        "dist/ansyn/map-facade"
-      ],
-      "@ansyn/map-facade/*": [
-        "dist/ansyn/map-facade/*"
-      ],
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
-      ],
-      "@ansyn/ol": [
-        "dist/ansyn/ol"
-      ],
-      "@ansyn/imagery-cesium": [
-        "dist/ansyn/imagery-cesium"
       ]
     },
     "outDir": "../../../out-tsc/lib",

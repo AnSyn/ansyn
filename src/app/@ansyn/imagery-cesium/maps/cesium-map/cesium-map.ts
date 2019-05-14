@@ -9,9 +9,9 @@ import { CesiumProjectionService } from '../../projection/cesium-projection.serv
 
 import { fromPromise } from "rxjs/internal-compatibility";
 import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
-import { CoreConfig } from '../../../../core/models/core.config';
+import { CoreConfig } from '../../../ansyn/modules/core/models/core.config';
 import { ExtentCalculator } from '@ansyn/ol';
-import { ICoreConfig } from '../../../../core/models/core.config.model';
+import { ICoreConfig } from '../../../ansyn/modules/core/models/core.config.model';
 import { toDegrees } from '@ansyn/ol';
 
 declare const Cesium: any;
@@ -127,7 +127,16 @@ export class CesiumMap extends BaseImageryMap<any> {
 			const viewer = new Cesium.Viewer(this.element, {
 				sceneMode: cesiumSceneMode,
 				imageryLayers: [layer.layer],
-				baseLayerPicker: true
+				baseLayerPicker: false,
+				sceneModePicker: false,
+				timeline: false,
+				navigationHelpButton: false,
+				navigationInstructionsInitiallyVisible: false,
+				animation: false,
+				fullscreenButton: false,
+				homeButton: false,
+				infoBox: false,
+				geocoder: false
 			});
 
 			// Set the global imagery layer to fully transparent and set the globe's base color to black

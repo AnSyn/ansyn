@@ -56,7 +56,7 @@ import {
 	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
-import { CesiumMapName } from '../../modules/plugins/cesium/maps/cesium-map/cesium-map';
+import { CesiumMapName } from '../../../imagery-cesium/maps/cesium-map/cesium-map';
 import { OpenlayersMapName, DisabledOpenLayersMapName } from '@ansyn/ol';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';

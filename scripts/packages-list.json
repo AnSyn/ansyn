@@ -3,5 +3,6 @@
   "imagery",
   "map-facade",
   "menu",
+  "imagery-cesium",
   "ol"
 ]

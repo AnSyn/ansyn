@@ -20,17 +20,16 @@
 
 	<select
 		class="combo-box-width"
-		hidden
 		name="mapSource"
 		(ngModelChange)="changeActiveMap($event)"
 		[ngModel]="selectedMap">
 
 		<option value="openLayersMap">
-			Openlayers
+			2D
 		</option>
 
 		<option value="CesiumMap">
-			Cesium
+			3D
 		</option>
 	</select>
 

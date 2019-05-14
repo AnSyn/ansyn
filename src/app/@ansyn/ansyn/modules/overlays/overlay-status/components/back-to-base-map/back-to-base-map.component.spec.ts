@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../actions/overlay-status.actions';
 
 import { BackToBaseMapComponent } from './back-to-base-map.component';
@@ -7,11 +8,14 @@ import { Store, StoreModule } from '@ngrx/store';
 describe('BackToBaseMapComponent', () => {
 	let component: BackToBaseMapComponent;
 	let fixture: ComponentFixture<BackToBaseMapComponent>;
-	let store: Store<any>
+	let store: Store<any>;
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [BackToBaseMapComponent],
-			imports: [StoreModule.forRoot({})]
+			imports: [StoreModule.forRoot({
+				[mapFeatureKey]: MapReducer
+			})]
 		})
 			.compileComponents();
 	}));

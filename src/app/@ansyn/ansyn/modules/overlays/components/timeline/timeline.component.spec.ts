@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { TimelineComponent } from './timeline.component';
 import { DebugElement } from '@angular/core';
-import * as d3 from 'd3/build/d3';
+import * as d3 from 'd3/dist/d3';
 import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '../../effects/overlays.effects';

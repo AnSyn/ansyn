@@ -12,7 +12,7 @@ describe('StatusBarComponent', () => {
 	let store: Store<IStatusBarState>;
 	const mockImageryStatusComponent = MockComponent({
 		selector: 'ansyn-imagery-status',
-		inputs: ['mapState'],
+		inputs: ['mapId'],
 		outputs: []
 	});
 	const mockSelectedCaseBarComponent = MockComponent({

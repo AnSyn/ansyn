@@ -1,5 +1,5 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { OverlayStatusComponent } from './overlay-status.component';
+import { OverlayTimelineStatusComponent } from './overlay-timeline-status.component';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -10,16 +10,16 @@ import {
 import { Store, StoreModule } from '@ngrx/store';
 import { EventEmitter } from '@angular/core';
 
-describe('OverlayStatusComponent', () => {
-	let component: OverlayStatusComponent;
-	let fixture: ComponentFixture<OverlayStatusComponent>;
+describe('OverlayTimelineStatusComponent', () => {
+	let component: OverlayTimelineStatusComponent;
+	let fixture: ComponentFixture<OverlayTimelineStatusComponent>;
 	let store: Store<IOverlaysState>;
 	const selectStatusMessageMock$ = new EventEmitter();
 	const selectLoadingMock$ = new EventEmitter();
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [OverlayStatusComponent],
+			declarations: [OverlayTimelineStatusComponent],
 			imports: [
 				StoreModule.forRoot({
 					[overlaysFeatureKey]: OverlayReducer
@@ -30,7 +30,7 @@ describe('OverlayStatusComponent', () => {
 	}));
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
-		fixture = TestBed.createComponent(OverlayStatusComponent);
+		fixture = TestBed.createComponent(OverlayTimelineStatusComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		store = _store;

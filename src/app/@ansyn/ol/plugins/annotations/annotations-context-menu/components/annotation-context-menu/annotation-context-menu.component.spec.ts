@@ -39,8 +39,7 @@ describe('AnnotationContextMenuComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AnnotationContextMenuComponent);
 		component = fixture.componentInstance;
-		component.mapState = <any>{ id: 'mapId' };
-		// spyOn(component, 'annotations').and.callFake(() => )
+		component.mapId = 'mapId';
 		spyOn(component, 'calcBoundingRect').and.returnValue({ top: `0px`, left: `0px`, width: `0px`, height: `0px`});
 		spyOn(component, 'getFeatureProps').and.returnValue({});
 		component.annotations = <any> { idToEntity: new Map() }

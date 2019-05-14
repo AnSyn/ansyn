@@ -100,7 +100,9 @@ export class EnumFilterMetadata implements FilterMetadata {
 
 	showAll(): void {
 		this.enumsFields.forEach((value: IEnumFiled) => {
-			value.isChecked = true;
+			if (!value.disabled) {
+				value.isChecked = true;
+			}
 		});
 	}
 

@@ -42,8 +42,6 @@ export {
 	SetMapPositionByRadiusAction,
 	SetToastMessageAction,
 	PositionChangedAction,
-	BackToWorldSuccess,
-	BackToWorldView,
 	ToggleMapLayersAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
@@ -63,7 +61,7 @@ export {
 	EnableCopyOriginalOverlayDataAction,
 	SetRemovedOverlayIdsCount,
 	AddAlertMsg,
-	RemoveAlertMsg,
+	RemoveAlertMsg
 } from './actions/imagery-status.actions'
 
 export {

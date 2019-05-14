@@ -1,10 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { AnsynApi, GeoRegisteration, IOverlay, IOverlaysCriteria, PhotoAngle } from '@ansyn/ansyn';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+	AnsynApi,
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysCriteria,
+	PhotoAngle,
+	selectMiscOverlays,
+	selectOverlaysArray, SetMiscOverlay
+} from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
 import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ol';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from "@ansyn/imagery";
+import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
+import { Store } from "@ngrx/store";
 
 const moment = momentNs;
 
@@ -13,7 +23,25 @@ const moment = momentNs;
 	templateUrl: './sandbox.component.html',
 	styleUrls: ['./sandbox.component.less']
 })
-export class SandboxComponent implements OnInit {
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
+export class SandboxComponent implements OnInit, OnDestroy {
+
+	@AutoSubscription
+	miscOverlays$ = this.store$.select(selectMiscOverlays).pipe(
+		tap( x => console.log('sandbox' , 'miscOverlays', x))
+	);
+
+	currentOverlays: IOverlay[];
+
+	@AutoSubscription
+	currentOverlays$ = this.store$.select(selectOverlaysArray).pipe(
+		tap( x => console.log('sandbox' , 'overlays array', x)),
+		tap( (x: IOverlay[]) => this.currentOverlays = x)
+	);
+
 	overlays = [
 		this.overlay('000', OpenLayersStaticImageSourceProviderSourceType, 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', 576, 1024),
 		this.overlay('111', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
@@ -67,10 +95,14 @@ export class SandboxComponent implements OnInit {
 	}
 
 	constructor(protected ansynApi: AnsynApi,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
+				protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected store$: Store<any>) {
 	}
 
 	ngOnInit() {
+	}
+
+	ngOnDestroy() {
 	}
 
 	setPositionByRadius() {
@@ -146,5 +178,13 @@ export class SandboxComponent implements OnInit {
 
 	loadImageToCesium() {
 
+	}
+
+	setMiscOverlays() {
+		if (this.currentOverlays.length > 0) {
+			this.store$.dispatch(new SetMiscOverlay({ key: 'example', overlay: this.currentOverlays[0]}))
+		} else {
+			console.warn('Cannot set misc overlays because there are no query overlays');
+		}
 	}
 }

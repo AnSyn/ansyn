@@ -1,9 +1,8 @@
 import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef, ComponentRef, OnInit } from '@angular/core';
 import { IAlertComponent } from '../alerts/alerts.model';
-import { IMapSettings } from '@ansyn/imagery';
 
 export interface IEntryComponent {
-	mapState: IMapSettings;
+	mapId: string;
 }
 
 export interface IEntryComponentSettings extends IEntryComponent {
@@ -16,7 +15,7 @@ export interface IEntryComponentSettings extends IEntryComponent {
 })
 export class EntryComponentDirective implements OnDestroy, OnInit {
 	componentRef: ComponentRef<any>;
-	@Input('ansynEntryComponent') ansynEntryComponent;
+	@Input('ansynEntryComponent') ansynEntryComponent: IEntryComponentSettings;
 
 	constructor(public viewContainerRef: ViewContainerRef, public componentFactoryResolver: ComponentFactoryResolver) {
 	}
@@ -27,7 +26,7 @@ export class EntryComponentDirective implements OnDestroy, OnInit {
 		}
 		const factory = this.componentFactoryResolver.resolveComponentFactory<IAlertComponent>(this.ansynEntryComponent.component);
 		this.componentRef = this.viewContainerRef.createComponent<IAlertComponent>(factory);
-		this.componentRef.instance.mapState = this.ansynEntryComponent.mapState;
+		this.componentRef.instance.mapId = this.ansynEntryComponent.mapId;
 
 	};
 

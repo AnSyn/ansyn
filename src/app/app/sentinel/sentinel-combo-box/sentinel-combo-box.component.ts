@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit, HostBinding } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { IEntryComponent } from '@ansyn/map-facade';
+import { IEntryComponent, selectMaps } from '@ansyn/map-facade';
 import { ISentinelLayer, selectSentinelLayers, selectSentinelselectedLayers } from '../reducers/sentinel.reducer';
 import { SetSentinelLayerOnMap } from '../actions/sentinel.actions';
 import { get as _get } from 'lodash';
@@ -14,17 +14,21 @@ import { SentinelOverlaySourceType } from '../sentinel-source-provider';
 	templateUrl: './sentinel-combo-box.component.html',
 	styleUrls: ['./sentinel-combo-box.component.less']
 })
-@AutoSubscriptions({
-	init: 'ngOnInit',
-	destroy: 'ngOnDestroy'
-})
+@AutoSubscriptions()
 export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryComponent {
-	@Input() mapState: ICaseMapState;
+	@HostBinding('hidden') hidden = true;
 
-	@HostBinding('hidden')
-	get hidden() {
-		return _get( this.mapState, 'data.overlay.sourceType') !== SentinelOverlaySourceType
-	}
+	@Input() mapId: string;
+	mapState: ICaseMapState;
+
+	@AutoSubscription
+	mapState$ = this.store.pipe(
+		select(selectMaps),
+		tap((maps) => {
+			this.mapState = maps[this.mapId];
+			this.hidden = _get(this.mapState, 'data.overlay.sourceType') !== SentinelOverlaySourceType;
+		})
+	);
 
 	sentinelLayers: ISentinelLayer[];
 	selectedLayer: string;
@@ -38,7 +42,7 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	@AutoSubscription
 	getLayer$ = this.store.select(selectSentinelselectedLayers).pipe(
 		tap((selectedLayers) => {
-			this.selectedLayer = selectedLayers[this.mapState.id] ? selectedLayers[this.mapState.id] : selectedLayers.defaultLayer;
+			this.selectedLayer = selectedLayers[this.mapId] ? selectedLayers[this.mapId] : selectedLayers.defaultLayer;
 		})
 	);
 
@@ -47,7 +51,7 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	}
 
 	changeLayer(layer) {
-		this.store.dispatch(new SetSentinelLayerOnMap({ id: this.mapState.id, layer }));
+		this.store.dispatch(new SetSentinelLayerOnMap({ id: this.mapId, layer }));
 	}
 
 	ngOnInit(): void {

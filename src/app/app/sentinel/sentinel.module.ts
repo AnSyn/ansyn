@@ -28,7 +28,10 @@ import { SentinelComboBoxComponent } from './sentinel-combo-box/sentinel-combo-b
 			plugins: []
 		}),
 		MapFacadeModule.provide({
-			entryComponents: [SentinelComboBoxComponent]
+			entryComponents: {
+				container: [SentinelComboBoxComponent],
+				status: []
+			}
 		}),
 		OverlaysModule.provide({
 			overlaySourceProviders: [

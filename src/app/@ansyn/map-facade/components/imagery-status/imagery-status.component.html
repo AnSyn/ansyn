@@ -1,13 +1,12 @@
 <div class="buttons">
 
-	<button (click)="backToWorldView()"
-			class="back-to-world-view"
-			*ngIf="overlay"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
-			tooltip-value="Back to base map">
-		<i class="icon-context-menu-prev"></i>
-		Back to base map
-	</button>
+	<ng-container
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="component.showFirst"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
+	</ng-container>
 
 	<button
 		*ngIf="mapsAmount > 1"
@@ -45,36 +44,17 @@
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()"
 			tooltip-value="Show/ Hide layers"
-			[disabled]="noGeoRegistration"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i [class.icon-main-data-layers]="mapState.flags?.displayLayers"
-		   [class.icon-layers-hide]="!mapState.flags?.displayLayers"></i>
+		<i [class.icon-main-data-layers]="displayLayers"
+		   [class.icon-layers-hide]="!displayLayers"></i>
 	</button>
 
-	<ng-container *ngIf="overlay">
-		<button class="small-icon-button set-favorite"
-				[class.active2]="isFavorite"
-				(click)="toggleFavorite()"
-				[attr.tooltip-value]="favoritesButtonText"
-				[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-			<i class="icon icon-favorites"></i>
-		</button>
-
-		<button class="small-icon-button set-preset"
-				[class.active2]="isPreset"
-				(click)="togglePreset()"
-				[disabled]="noGeoRegistration"
-				[attr.tooltip-value]="presetsButtonText"
-				[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-			<i class="icon icon-presets"></i>
-		</button>
-
-		<button class="small-icon-button remove-overlay"
-				(click)="removeOverlay()"
-				[attr.tooltip-value]="isRemoved ? 'Restore overlay' : 'Remove overlay'"
-				[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-			<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
-		</button>
+	<ng-container
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="!component.showFirst"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
 	</ng-container>
 </div>
 
@@ -97,7 +77,7 @@
 
 			<ng-container
 				*ngIf="alert.component; else textAlert"
-				[ansynEntryComponent]="{ component: alert.component, mapState: mapState }">
+				[ansynEntryComponent]="{ component: alert.component, mapId: mapId}">
 			</ng-container>
 
 			<ng-template #textAlert>
@@ -113,3 +93,4 @@
 	</ng-container>
 
 </div>
+

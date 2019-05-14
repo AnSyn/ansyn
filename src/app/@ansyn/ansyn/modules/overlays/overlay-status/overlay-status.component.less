@@ -1,0 +1,42 @@
+:host {
+	line-height: 0;
+	left: 5px;
+	top: 6px;
+	display: flex;
+	button {
+		position: relative;
+		padding: 4px 6px;
+		vertical-align: middle;
+		color: white;
+		line-height: 0;
+
+		&.small-icon-button {
+			margin-left: 3px;
+			font-size: 17px;
+			background: transparent;
+			border: none;
+			outline: none;
+			padding: 2px 4px;
+			display: flex;
+			align-items: center;
+			z-index: 1;
+			&:hover:not(:disabled) {
+				background: rgba(0, 0, 0, 0.5);
+			}
+
+			&:disabled {
+				opacity: .6;
+			}
+		}
+
+		&.set-favorite.active2 i, &.set-preset.active2 i, &.remove-overlay.active2 i {
+			text-shadow: 0 0 9px yellow;
+			-webkit-text-stroke: 0.2px yellow;
+		}
+
+		.icon::before {
+			vertical-align: middle;
+			display: block;
+		}
+	}
+}

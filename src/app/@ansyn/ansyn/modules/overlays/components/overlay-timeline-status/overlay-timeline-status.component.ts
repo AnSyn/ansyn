@@ -21,16 +21,16 @@ const animations: any[] = [
 ];
 
 @Component({
-	selector: 'ansyn-overlay-status',
-	templateUrl: './overlay-status.component.html',
-	styleUrls: ['./overlay-status.component.less'],
+	selector: 'ansyn-timeline-overlay-status',
+	templateUrl: './overlay-timeline-status.component.html',
+	styleUrls: ['./overlay-timeline-status.component.less'],
 	animations
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class OverlayStatusComponent implements OnInit, OnDestroy {
+export class OverlayTimelineStatusComponent implements OnInit, OnDestroy {
 	showStatus: boolean;
 
 	overlaysStatusMessage$: Observable<any> = this.store$.pipe(

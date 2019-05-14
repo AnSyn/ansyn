@@ -55,7 +55,10 @@ import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.com
 		AlertsModule.provideAlerts(ansynConfig.ansynAlerts),
 		AppEffectsModule,
 		MapFacadeModule.provide({
-			entryComponents: [AnnotationContextMenuComponent]
+			entryComponents: {
+				container: [AnnotationContextMenuComponent],
+				status: []
+			}
 		}),
 		ImageryModule,
 		StatusBarModule,
@@ -80,7 +83,7 @@ import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.com
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
-		AnsynFooterComponent,
+		AnsynFooterComponent
 	],
 	exports: [ AnsynComponent, UnsupportedDevicesComponent ]
 })

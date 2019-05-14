@@ -1,14 +1,12 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService, } from '@ansyn/imagery';
-import { mapFeatureKey, MapReducer, selectMaps, UpdateMapAction } from '@ansyn/map-facade';
-import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
+import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
+import { OpenlayersMapName } from '@ansyn/ol';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { cold, hot } from 'jasmine-marbles';
-import { of, ReplaySubject  } from 'rxjs';
+import { of, ReplaySubject } from 'rxjs';
 import { BackToWorldSuccess, BackToWorldView } from '../actions/overlay-status.actions';
 import { OverlayStatusEffects } from './overlay-status.effects';
-import { fromPromise } from 'rxjs/internal-compatibility';
 
 
 const fakeMaps = {
@@ -68,7 +66,7 @@ describe('OverlayStatusEffects', () => {
 
 			spyOn(imageryCommunicatorService, 'provide').and.returnValues(communicator);
 			spyOn(communicator, 'loadInitialMapSource').and.callFake(() => Promise.resolve(true));
-			overlayStatusEffects.backToWorldView$.subscribe( (result) => {
+			overlayStatusEffects.backToWorldView$.subscribe((result) => {
 				expect(result).toBeObservable(new BackToWorldSuccess({mapId: 'mapId'}));
 			})
 

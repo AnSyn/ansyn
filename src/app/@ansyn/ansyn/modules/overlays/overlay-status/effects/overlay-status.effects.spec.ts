@@ -50,7 +50,7 @@ describe('OverlayStatusEffects', () => {
 		overlayStatusEffects = _overlayStatusEffects;
 	}));
 
-	fdescribe('backToWorldView$', () => {
+	describe('backToWorldView$', () => {
 
 		it('should be defined', () => {
 			expect(overlayStatusEffects.backToWorldView$).toBeDefined();

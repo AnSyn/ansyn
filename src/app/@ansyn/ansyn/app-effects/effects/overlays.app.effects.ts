@@ -2,9 +2,9 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import {
-	BackToWorldView,
 	ContextMenuTriggerAction,
 	ImageryStatusActionTypes,
 	IMapState,

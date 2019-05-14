@@ -1,10 +1,11 @@
+import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { ToolsAppEffects } from './tools.app.effects';
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { BackToWorldView, MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
+import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {

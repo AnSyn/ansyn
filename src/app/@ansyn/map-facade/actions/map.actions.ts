@@ -66,8 +66,6 @@ export const MapActionTypes = {
 	SET_LAYOUT_SUCCESS: 'SET_LAYOUT_SUCCESS',
 	TOGGLE_MAP_LAYERS: 'TOGGLE_MAP_LAYERS',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
-	BACK_TO_WORLD_VIEW: 'BACK_TO_WORLD_VIEW',
-	BACK_TO_WORLD_SUCCESS: 'BACK_TO_WORLD_SUCCESS',
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE'
 };
 
@@ -314,18 +312,6 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 	constructor(public payload: boolean) {
 
 	}
-}
-
-export class BackToWorldView implements Action {
-	type = MapActionTypes.BACK_TO_WORLD_VIEW;
-
-	constructor(public payload: { mapId: string }) {
-
-	}
-}
-
-export class BackToWorldSuccess extends BackToWorldView {
-	type = MapActionTypes.BACK_TO_WORLD_SUCCESS;
 }
 
 export class SetToastMessageAction implements Action {

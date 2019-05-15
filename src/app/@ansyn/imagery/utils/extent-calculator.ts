@@ -1,13 +1,13 @@
 import { center, polygon } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
-import { ImageryMapExtent, ImageryMapExtentPolygon } from "../model/case-map-position.model";
+import { ImageryMapExtent, ImageryMapExtentPolygon } from '../model/case-map-position.model';
 import { toRadians } from './math';
 
 // @dynamic
 export class ExtentCalculator {
 
 	static polygonToExtent(extentPolygon: ImageryMapExtentPolygon): ImageryMapExtent {
-		return <ImageryMapExtent> [...extentPolygon.coordinates[0][0], ...extentPolygon.coordinates[0][2]];
+		return <ImageryMapExtent>[...extentPolygon.coordinates[0][0], ...extentPolygon.coordinates[0][2]];
 	}
 
 	static extentToPolygon(extent: ImageryMapExtent): Feature<Polygon> {
@@ -34,7 +34,7 @@ export class ExtentCalculator {
 		const type = 'Feature';
 		const properties = {};
 		const geometry = extentPolygon;
-		return <[number, number]>center(<any> { type, geometry, properties }).geometry.coordinates;
+		return <[number, number]>center(<any>{ type, geometry, properties }).geometry.coordinates;
 	}
 
 	static calcResolution(extentPolygon: ImageryMapExtentPolygon, mapSize: [number, number], rotation: number) {

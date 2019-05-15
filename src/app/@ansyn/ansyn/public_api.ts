@@ -352,9 +352,6 @@ export {
 	OpenlayersGeoJsonLayersVisualizer
 }from './modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer';
 
-export { CesiumMap, CesiumMapName } from '../imagery-cesium/maps/cesium-map/cesium-map';
-export { CesiumLayer, ISceneMode } from '../imagery-cesium/models/cesium-layer';
-
 // overlay-status
 export {
 	OverlayStatusActions, OverlayStatusActionsTypes, BackToWorldSuccess,

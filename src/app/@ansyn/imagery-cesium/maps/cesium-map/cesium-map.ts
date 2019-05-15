@@ -1,16 +1,21 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition, toDegrees, ExtentCalculator } from '@ansyn/imagery';
+import {
+	BaseImageryMap,
+	ImageryMap,
+	ImageryMapExtent,
+	ImageryMapPosition,
+	toDegrees,
+	ExtentCalculator
+} from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
 
-import { fromPromise } from "rxjs/internal-compatibility";
-import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
-import { CoreConfig } from '../../../ansyn/modules/core/models/core.config';
-import { ICoreConfig } from '../../../ansyn/modules/core/models/core.config.model';
+import { fromPromise } from 'rxjs/internal-compatibility';
+import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 
 declare const Cesium: any;
 
@@ -22,7 +27,7 @@ export const CesiumMapName = 'CesiumMap';
 // @dynamic
 @ImageryMap({
 	mapType: CesiumMapName,
-	deps: [CesiumProjectionService, CoreConfig]
+	deps: [CesiumProjectionService]
 })
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
@@ -30,7 +35,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	element: HTMLElement;
 	_moveEndListener;
 
-	constructor(public projectionService: CesiumProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	constructor(public projectionService: CesiumProjectionService) {
 		super();
 	}
 

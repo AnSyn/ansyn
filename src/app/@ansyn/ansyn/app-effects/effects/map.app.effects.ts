@@ -55,7 +55,7 @@ import {
 	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
-import { CesiumMapName } from '../../../imagery-cesium/maps/cesium-map/cesium-map';
+import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { OpenlayersMapName, DisabledOpenLayersMapName } from '@ansyn/ol';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
@@ -137,7 +137,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
+				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -167,7 +167,7 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
 			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true

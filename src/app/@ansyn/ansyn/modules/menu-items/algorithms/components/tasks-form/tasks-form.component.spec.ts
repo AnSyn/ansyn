@@ -1,4 +1,5 @@
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { SetFavoriteOverlaysAction } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
 
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +12,7 @@ import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks
 import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { mapFeatureKey, MapReducer, SetFavoriteOverlaysAction } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
 import { MockComponent } from '../../../../core/test/mock-component';
 import {

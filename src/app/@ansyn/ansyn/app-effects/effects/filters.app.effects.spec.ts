@@ -1,3 +1,4 @@
+import { SetFavoriteOverlaysAction } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { FiltersAppEffects } from './filters.app.effects';
 import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -17,7 +18,6 @@ import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
 import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/metadata/slider-filter-metadata';
 import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
-import { SetFavoriteOverlaysAction } from '@ansyn/map-facade';
 import {
 	LoadOverlaysAction,
 	SetDropsAction,

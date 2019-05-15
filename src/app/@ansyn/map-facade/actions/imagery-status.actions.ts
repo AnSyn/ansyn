@@ -2,9 +2,7 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../alerts/model';
 
 export enum ImageryStatusActionTypes {
-	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
 	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
-	SET_FAVORITE_OVERLAYS = 'SET_FAVORITE_OVERLAYS',
 	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS',
 	SET_REMOVED_OVERLAY_IDS = 'SET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAY_IDS_COUNT = 'SET_REMOVED_OVERLAY_IDS_COUNT',
@@ -16,24 +14,12 @@ export enum ImageryStatusActionTypes {
 	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG'
 }
 
-export class ToggleFavoriteAction implements Action {
-	type: string = ImageryStatusActionTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
-	}
-}
 
 export class TogglePresetOverlayAction implements Action {
 	type: string = ImageryStatusActionTypes.TOGGLE_OVERLAY_PRESET;
 
 	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
-	}
-}
-
-export class SetFavoriteOverlaysAction implements Action {
-	type = ImageryStatusActionTypes.SET_FAVORITE_OVERLAYS;
-
-	constructor(public payload: any[]) {
 	}
 }
 
@@ -43,7 +29,6 @@ export class SetPresetOverlaysAction implements Action {
 	constructor(public payload: any[]) {
 	}
 }
-
 
 export class SetRemovedOverlaysIdsAction implements Action {
 	type = ImageryStatusActionTypes.SET_REMOVED_OVERLAY_IDS;

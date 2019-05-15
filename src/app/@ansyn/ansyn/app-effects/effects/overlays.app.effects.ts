@@ -2,7 +2,10 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import {
+	BackToWorldView,
+	ToggleFavoriteAction
+} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import {
 	ContextMenuTriggerAction,
@@ -22,7 +25,6 @@ import {
 	SetPresetOverlaysAction,
 	SetRemovedOverlayIdsCount,
 	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '@ansyn/map-facade';
 

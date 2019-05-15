@@ -2,13 +2,11 @@ import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core
 import {
 	IEntryComponent,
 	selectActiveMapId,
-	selectFavoriteOverlays,
 	selectMaps,
 	selectMapsTotal,
 	selectPresetOverlays,
 	selectRemovedOverlays,
 	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from "@ansyn/map-facade";
 import { select, Store } from '@ngrx/store';
@@ -16,6 +14,8 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { IOverlay } from "../models/overlay.model";
+import { ToggleFavoriteAction } from './actions/overlay-status.actions';
+import { selectFavoriteOverlays } from './reducers/overlay-status.reducer';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -128,8 +128,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	updateRemovedStatus() {
 		this.isRemoved = this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
 	}
-
-
 
 	toggleFavorite() {
 		const overlay = this.overlay;

@@ -68,8 +68,8 @@ describe('OverlayStatusEffects', () => {
 			spyOn(communicator, 'loadInitialMapSource').and.callFake(() => Promise.resolve(true));
 			overlayStatusEffects.backToWorldView$.subscribe((result) => {
 				expect(result).toBeObservable(new BackToWorldSuccess({mapId: 'mapId'}));
-			})
-
+			});
+			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
 		});
 	});
 

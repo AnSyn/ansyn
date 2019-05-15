@@ -1,3 +1,5 @@
+import { SetFavoriteOverlaysAction } from './modules/overlays/overlay-status/actions/overlay-status.actions';
+
 export { ANSYN_ID } from './api/ansyn-id.provider';
 export { AnsynApi } from './api/ansyn-api.service';
 export { MapAppEffects } from './app-effects/effects/map.app.effects';
@@ -357,4 +359,6 @@ export { CesiumLayer, ISceneMode } from '../imagery-cesium/models/cesium-layer';
 export {
 	OverlayStatusActions, OverlayStatusActionsTypes, BackToWorldSuccess,
 	BackToWorldView,
+	SetFavoriteOverlaysAction,
+	ToggleFavoriteAction
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';

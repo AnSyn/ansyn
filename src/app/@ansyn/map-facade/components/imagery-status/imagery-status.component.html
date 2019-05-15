@@ -17,21 +17,6 @@
 		<i class="fa fa-arrows"></i>
 	</button>
 
-	<select
-		class="combo-box-width"
-		name="mapSource"
-		(ngModelChange)="changeActiveMap($event)"
-		[ngModel]="selectedMap">
-
-		<option value="openLayersMap">
-			2D
-		</option>
-
-		<option value="CesiumMap">
-			3D
-		</option>
-	</select>
-
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"

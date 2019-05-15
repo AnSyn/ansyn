@@ -8,9 +8,13 @@ import {
 	CesiumOsmSourceProvider,
 	CesiumPlanetSourceProvider
 } from '@ansyn/imagery-cesium';
-
+import { MapFacadeModule } from '@ansyn/map-facade';
+import { ImageryDimensionModeComponent } from './components/imagery-dimension-mode/imagery-dimension-mode.component';
 
 @NgModule({
+	declarations: [ ImageryDimensionModeComponent ],
+	entryComponents: [ ImageryDimensionModeComponent ],
+	exports: [ ImageryDimensionModeComponent ],
 	imports: [
 		CommonModule,
 		OpenlayersPluginsModule,
@@ -22,6 +26,12 @@ import {
 				CesiumOsmSourceProvider,
 				CesiumPlanetSourceProvider
 			]
+		}),
+		MapFacadeModule.provide({
+			entryComponents: {
+				container: [ ImageryDimensionModeComponent ],
+				status: []
+			}
 		})
 	]
 })

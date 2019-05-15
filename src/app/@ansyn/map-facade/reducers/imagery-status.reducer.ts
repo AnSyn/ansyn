@@ -10,7 +10,7 @@ export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusStat
 
 export interface ImageryStatusState {
 	// @todo IOverlay
-	favoriteOverlays: any[],
+
 	removedOverlaysIds: any[],
 	presetOverlays: any[],
 	removedOverlaysVisibility: boolean,
@@ -20,7 +20,6 @@ export interface ImageryStatusState {
 }
 
 export const imageryStatusInitialState: ImageryStatusState = {
-	favoriteOverlays: [],
 	removedOverlaysIds: [],
 	presetOverlays: [],
 	removedOverlaysVisibility: true,
@@ -55,20 +54,11 @@ export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusIn
 			return { ...state, alertMsg };
 		}
 
-		case ImageryStatusActionTypes.TOGGLE_OVERLAY_FAVORITE: {
-			const { overlay, id, value } = action.payload;
-			const fo = [...state.favoriteOverlays];
-			return { ...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id) };
-		}
-
 		case ImageryStatusActionTypes.TOGGLE_OVERLAY_PRESET: {
 			const { overlay, id, value } = action.payload;
 			const po = [...state.presetOverlays];
 			return { ...state, presetOverlays: value ? uniq([...po, overlay]) : po.filter((o) => o.id !== id) };
 		}
-
-		case ImageryStatusActionTypes.SET_FAVORITE_OVERLAYS:
-			return { ...state, favoriteOverlays: action.payload };
 
 		case ImageryStatusActionTypes.SET_REMOVED_OVERLAY_IDS:
 			return { ...state, removedOverlaysIds: action.payload };
@@ -100,7 +90,6 @@ export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusIn
 
 export const selectRemovedOverlaysVisibility: MemoizedSelector<any, boolean> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.removedOverlaysVisibility);
 export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.removedOverlaysIdsCount);
-export const selectFavoriteOverlays: MemoizedSelector<any, any[]> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.favoriteOverlays);
 export const selectPresetOverlays: MemoizedSelector<any, any[]> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.presetOverlays);
 export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.removedOverlaysIds);
 export const selectEnableCopyOriginalOverlayDataFlag: MemoizedSelector<any, any> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.enableCopyOriginalOverlayData);

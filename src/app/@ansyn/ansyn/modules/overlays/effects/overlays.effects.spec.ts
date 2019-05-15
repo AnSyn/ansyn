@@ -69,22 +69,6 @@ describe('Overlays Effects ', () => {
 			footprint: {}
 		}
 	];
-	const favoriteOverlays = <IOverlay[]>[
-		{
-			id: '13',
-			name: 'tmp13',
-			photoTime: new Date(Date.now()).toISOString(),
-			azimuth: 10,
-			footprint: {}
-		},
-		{
-			id: '14',
-			name: 'tmp14',
-			photoTime: new Date(Date.now()).toISOString(),
-			azimuth: 14,
-			footprint: {}
-		}
-	];
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
 			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
@@ -105,7 +89,6 @@ describe('Overlays Effects ', () => {
 		const imageryStatusState = { ...imageryStatusInitialState };
 		let overlayState = cloneDeep(overlaysInitialState);
 		overlayState = overlaysAdapter.addAll(overlays, overlayState);
-		imageryStatusState.favoriteOverlays = favoriteOverlays;
 
 		const fakeStore = new Map<any, any>([
 			[imageryStatusFeatureKey, imageryStatusState],

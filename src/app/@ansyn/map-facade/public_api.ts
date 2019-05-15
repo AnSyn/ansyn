@@ -50,10 +50,8 @@ export {
 
 export {
 	ImageryStatusActionTypes,
-	ToggleFavoriteAction,
 	TogglePresetOverlayAction,
 	SetRemovedOverlaysIdAction,
-	SetFavoriteOverlaysAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
 	ResetRemovedOverlaysIdsAction,
@@ -70,7 +68,6 @@ export {
 	imageryStatusStateSelector,
 	imageryStatusInitialState,
 	selectRemovedOverlaysIdsCount,
-	selectFavoriteOverlays,
 	selectPresetOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility

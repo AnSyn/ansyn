@@ -7,7 +7,7 @@ import { unionBy } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/internal/operators';
-import { selectFavoriteOverlays } from '@ansyn/map-facade';
+import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
 import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';

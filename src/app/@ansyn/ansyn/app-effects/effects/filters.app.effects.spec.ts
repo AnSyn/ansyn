@@ -1,4 +1,8 @@
 import { SetFavoriteOverlaysAction } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { FiltersAppEffects } from './filters.app.effects';
 import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -58,7 +62,8 @@ describe('Filters app effects', () => {
 					[filtersFeatureKey]: FiltersReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[menuFeatureKey]: MenuReducer,
-					[imageryStatusFeatureKey]: ImageryStatusReducer
+					[imageryStatusFeatureKey]: ImageryStatusReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
 				})
 			],
 			providers: [

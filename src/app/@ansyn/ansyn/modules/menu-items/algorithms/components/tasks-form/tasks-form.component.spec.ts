@@ -1,5 +1,9 @@
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { SetFavoriteOverlaysAction } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 
 import { TasksFormComponent } from './tasks-form.component';
 import { FormsModule } from '@angular/forms';
@@ -42,7 +46,8 @@ describe('TasksFormComponent', () => {
 				StoreModule.forRoot({
 					[tasksFeatureKey]: TasksReducer,
 					[mapFeatureKey]: MapReducer,
-					[imageryStatusFeatureKey]: ImageryStatusReducer
+					[imageryStatusFeatureKey]: ImageryStatusReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
 				EffectsModule.forRoot([])
 			],

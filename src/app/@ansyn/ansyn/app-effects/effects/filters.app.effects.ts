@@ -131,7 +131,8 @@ export class FiltersAppEffects {
 
 	@Effect()
 	setShowFavoritesFlagOnFilters$: Observable<any> = this.favoriteOverlays$.pipe(
-		map((favoriteOverlays: IOverlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length))));
+		map((favoriteOverlays: IOverlay[]) => new EnableOnlyFavoritesSelectionAction(Boolean(favoriteOverlays.length)))
+	);
 
 	@Effect({ dispatch: false })
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys).pipe(

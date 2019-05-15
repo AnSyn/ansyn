@@ -29,4 +29,4 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 	}
 }
 
-export const selectFavoriteOverlays: MemoizedSelector<any, any[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.favoriteOverlays);
+export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus ? overlayStatus.favoriteOverlays : []);

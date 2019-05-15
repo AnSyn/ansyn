@@ -1,20 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageryDimentionsModeComponent } from './imagery-dimention-mode.component';
+import { ImageryDimensionModeComponent } from './imagery-dimension-mode.component';
+import { StoreModule } from "@ngrx/store";
+import { ImageryCommunicatorService } from "@ansyn/imagery";
 
 describe('ImageryDimensionModeComponent', () => {
-	let component: ImageryDimentionsModeComponent;
-	let fixture: ComponentFixture<ImageryDimentionsModeComponent>;
+	let component: ImageryDimensionModeComponent;
+	let fixture: ComponentFixture<ImageryDimensionModeComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ImageryDimentionsModeComponent]
-		})
-			.compileComponents();
+			declarations: [ ImageryDimensionModeComponent ],
+			imports: [ StoreModule.forRoot({}) ],
+			providers: [ ImageryCommunicatorService ]
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(ImageryDimentionsModeComponent);
+		fixture = TestBed.createComponent(ImageryDimensionModeComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

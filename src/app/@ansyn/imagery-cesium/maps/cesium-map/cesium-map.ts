@@ -1,6 +1,6 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition  } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition, toDegrees, ExtentCalculator } from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
@@ -10,9 +10,7 @@ import { CesiumProjectionService } from '../../projection/cesium-projection.serv
 import { fromPromise } from "rxjs/internal-compatibility";
 import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
 import { CoreConfig } from '../../../ansyn/modules/core/models/core.config';
-import { ExtentCalculator } from '@ansyn/ol';
 import { ICoreConfig } from '../../../ansyn/modules/core/models/core.config.model';
-import { toDegrees } from '@ansyn/ol';
 
 declare const Cesium: any;
 
@@ -144,6 +142,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			// baseImageryLayer.alpha = 0.0;
 			viewer.scene.globe.baseColor = Cesium.Color.BLACK;
 			this.mapObject = viewer;
+			this.initListeners();
 			return of(true);
 		}
 	}

@@ -1,6 +1,6 @@
 import { center, polygon } from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
-import { ImageryMapExtent, ImageryMapExtentPolygon } from '@ansyn/imagery';
+import { ImageryMapExtent, ImageryMapExtentPolygon } from "../model/case-map-position.model";
 import { toRadians } from './math';
 
 // @dynamic

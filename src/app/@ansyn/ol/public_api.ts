@@ -5,7 +5,6 @@ export { OpenLayerBingSourceProviderSourceType } from './mapSourceProviders/open
 export { EntitiesVisualizer } from './plugins/entities-visualizer';
 export { ProjectableRaster } from './maps/open-layers-map/models/projectable-raster';
 export { OpenLayersProjectionService } from './projection/open-layers-projection.service';
-export { ExtentCalculator } from './utils/extent-calculator';
 export { DisabledOpenLayersMapName } from './maps/openlayers-disabled-map/openlayers-disabled-map';
 export { OpenlayersMapName } from './maps/open-layers-map/openlayers-map/openlayers-map';
 export {
@@ -25,7 +24,6 @@ export { OpenLayerESRI4326SourceProvider } from './mapSourceProviders/open-layer
 export { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-layers-open-aerial-source-provider';
 export { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 export { OpenLayerMarcoSourceProvider } from './mapSourceProviders/marco/open-layers-MARCO-source-provider';
-export { toDegrees, toRadians } from './utils/math';
 
 export {
 	AnnotationInteraction,

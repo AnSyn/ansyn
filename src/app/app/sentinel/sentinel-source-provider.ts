@@ -8,7 +8,7 @@ import {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 } from '@ansyn/imagery';
-import { toRadians } from '@ansyn/ol';
+import { toRadians } from '@ansyn/imagery';
 import { empty, Observable } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 

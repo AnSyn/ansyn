@@ -348,13 +348,9 @@ export {
 	NorthCalculationsPlugin
 }from './modules/plugins/openlayers/plugins/north-calculations/north-calculations.plugin';
 export { ImageProcessingPlugin } from './modules/plugins/openlayers/plugins/image-processing/image-processing.plugin';
-export { CesiumMapName } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
 export {
 	OpenlayersGeoJsonLayersVisualizer
 }from './modules/plugins/openlayers/plugins/layers/openlayers-geoJson-layers.visualizer';
-
-export { CesiumMap } from './modules/plugins/cesium/maps/cesium-map/cesium-map';
-export { CesiumLayer, ISceneMode } from './modules/plugins/cesium/models/cesium-layer';
 
 // overlay-status
 export {

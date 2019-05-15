@@ -451,6 +451,26 @@
         }
       }
     },
+    "@ansyn/imagery-cesium": {
+      "root": "src/app/@ansyn/imagery-cesium",
+      "sourceRoot": "projects/ansyn/imagery-cesium/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "src/app/@ansyn/imagery-cesium/tsconfig.lib.json",
+            "project": "src/app/@ansyn/imagery-cesium/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "src/app/@ansyn/imagery-cesium/ng-package.json"
+            }
+          }
+        }
+      }
+    },
     "@ansyn/imagery": {
       "root": "src/app/@ansyn/imagery",
       "sourceRoot": "src/app/@ansyn/imagery",

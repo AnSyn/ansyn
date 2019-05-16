@@ -171,7 +171,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			});
 		}
 
-		if (styleSettings['marker-color'] || styleSettings['marker-size']) {
+		if ((styleSettings['marker-color'] || styleSettings['marker-size']) && (!styleSettings.icon || feature.getGeometry().getType() !== 'Point')) {
 			const color = styleSettings['marker-color'];
 			const radius = MarkerSizeDic[styleSettings['marker-size']];
 			firstStyle.image = new Circle({ fill: new Fill({ color }), stroke: null, radius });

@@ -1,7 +1,7 @@
 Info
 
-http://ansyn.io:81/#/?context=infoEntity&geometry=POINT(-117.91897%2034.81265)&time=2019-01-01T09:25:40
-http://ansyn.io:81/#/?context=infoEntity&geometry=POLYGON%20((-118%2033,%20-118.5%2033,%20-118.5%2034,%20-118%2034,%20-118%2033))&time=2019-02-16T09:25:40
+http://platform.ansyn.io:81/#/?context=infoEntity&geometry=POINT(-117.91897%2034.81265)&time=2019-04-01T09:25:40
+http://platform.ansyn.io:81/#/?context=infoEntity&geometry=POLYGON%20((-118%2033,%20-118.5%2033,%20-118.5%2034,%20-118%2034,%20-118%2033))&time=2019-05-05T09:25:40
 
 Area
-http://ansyn.io:81/#/?context=areaAnalysis&geopoint=34.81265,-117.91897
+http://platform.ansyn.io:81/#/?context=areaAnalysis&geopoint=34.81265,-117.91897

@@ -5,16 +5,17 @@ import { Observable } from 'rxjs';
 
 import { cold, hot } from 'jasmine-marbles';
 import { HttpClientModule } from '@angular/common/http';
-import { SetFavoriteOverlaysAction } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import {
+	SetFavoriteOverlaysAction,
+	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction
+} from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import {
 	SetActiveMapId,
 	SetLayoutAction,
 	SetMapsDataActionStore,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
+	SetPresetOverlaysAction
 } from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,

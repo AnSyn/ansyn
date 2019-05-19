@@ -6,6 +6,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { of, ReplaySubject } from 'rxjs';
 import { BackToWorldSuccess, BackToWorldView } from '../actions/overlay-status.actions';
+import { overlayStatusFeatureKey, OverlayStatusReducer } from '../reducers/overlay-status.reducer';
 import { OverlayStatusEffects } from './overlay-status.effects';
 
 
@@ -25,7 +26,7 @@ describe('OverlayStatusEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({[mapFeatureKey]: MapReducer})
+				StoreModule.forRoot({[mapFeatureKey]: MapReducer,[overlayStatusFeatureKey]: OverlayStatusReducer})
 			],
 			providers: [
 				OverlayStatusEffects,

@@ -18,10 +18,9 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
-	RemovePendingOverlayAction,
 	selectMapsList,
 	SetPendingOverlaysAction,
-	SetLayoutAction, SetLayoutSuccessAction
+	SetLayoutAction, SetLayoutSuccessAction, RemovePendingOverlayAction
 } from '@ansyn/map-facade';
 
 import { cloneDeep as _cloneDeep } from 'lodash';

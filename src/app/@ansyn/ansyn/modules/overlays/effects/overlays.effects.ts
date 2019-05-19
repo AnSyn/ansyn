@@ -12,12 +12,11 @@ import {
 	SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
 import { BackToWorldView } from '../overlay-status/actions/overlay-status.actions';
-import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
+import { selectFavoriteOverlays, selectPresetOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import { OverlaysService } from '../services/overlays.service';
 import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStateSelector, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
-import { selectPresetOverlays  } from '@ansyn/map-facade';
 import { UpdateOverlaysCountAction } from '../../overlays/actions/overlays.actions';
 import { LoggerService } from '../../core/services/logger.service';
 import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';

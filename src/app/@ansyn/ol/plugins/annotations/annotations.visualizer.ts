@@ -1,5 +1,16 @@
-import { Inject } from '@angular/core';
-
+import Draw from 'ol/interaction/Draw';
+import * as Sphere from 'ol/sphere';
+import olCircle from 'ol/geom/Circle';
+import olLineString from 'ol/geom/LineString';
+import olMultiLineString from 'ol/geom/MultiLineString';
+import olPolygon, { fromCircle } from 'ol/geom/Polygon';
+import olFeature from 'ol/Feature';
+import olStyle from 'ol/style/Style';
+import olFill from 'ol/style/Fill';
+import olText from 'ol/style/Text';
+import olStroke from 'ol/style/Stroke';
+import DragBox from 'ol/interaction/DragBox';
+import { platformModifierKeyOnly } from 'ol/events/condition';
 import {
 	getPointByGeometry,
 	ImageryVisualizer,
@@ -8,33 +19,23 @@ import {
 	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { UUID } from 'angular2-uuid';
-import { AutoSubscription } from 'auto-subscriptions';
-import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { cloneDeep, merge } from 'lodash';
-import { platformModifierKeyOnly } from 'ol/events/condition';
-import olFeature from 'ol/Feature';
-import OLGeoJSON from 'ol/format/GeoJSON';
-import olCircle from 'ol/geom/Circle';
-import olLineString from 'ol/geom/LineString';
-import olMultiLineString from 'ol/geom/MultiLineString';
-import olPoint from 'ol/geom/Point';
-import olPolygon, { fromCircle } from 'ol/geom/Polygon';
-import DragBox from 'ol/interaction/DragBox';
-import Draw from 'ol/interaction/Draw';
-import * as Sphere from 'ol/sphere';
-import olFill from 'ol/style/Fill';
-import olIcon from 'ol/style/Icon';
-import olStroke from 'ol/style/Stroke';
-import olStyle from 'ol/style/Style';
-import olText from 'ol/style/Text';
+import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { Subject } from 'rxjs';
+import { Inject } from '@angular/core';
 import { mergeMap, take, tap } from 'rxjs/operators';
+import OLGeoJSON from 'ol/format/GeoJSON';
+import { UUID } from 'angular2-uuid';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
-import { EntitiesVisualizer } from '../entities-visualizer';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
-import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
+import olPoint from 'ol/geom/Point';
+import olIcon from 'ol/style/Icon';
+import { AnnotationMode,
+	IAnnotationBoundingRect,
+	IDrawEndEvent } from './annotations.model';
+import { AutoSubscription } from 'auto-subscriptions';
 
 // @dynamic
 @ImageryVisualizer({
@@ -48,7 +49,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
 	selected: string[] = [];
-	idToCachedCenter: Map<string, olPoint> = new Map<string, olPoint>();
+	annotationIdToCenter: Map<string, olPoint> = new Map<string, olPoint>();
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
@@ -142,7 +143,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			}
 		});
-		this.geoJsonFormat = new OLGeoJSON();
+
 		//  0 or 1
 		if (Number(olPluginsConfig.Annotations.displayId)) {
 			this.updateStyle({
@@ -156,6 +157,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			});
 		}
+		this.geoJsonFormat = new OLGeoJSON();
 	}
 
 	setMode(mode) {
@@ -230,7 +232,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let ids = [];
 		if (selectedFeature) {
 			const featureId = selectedFeature.getId();
-			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [ ...this.selected, featureId] : [featureId];
 		} else {
 			ids = multi ? this.selected : [];
 		}
@@ -242,7 +244,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			return;
 		}
 		const selectedFeature = this.featureAtPixel(event.pixel);
-		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
+		this.events.onHover.next( selectedFeature ? selectedFeature.getId() : null);
 	};
 
 	protected mapBoxstart = () => {
@@ -292,18 +294,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			label: '',
 			mode
 		});
-		if (this.olPluginsConfig.Annotations.icon || true) {
+		if (this.olPluginsConfig.Annotations.icon) {
 			const featureId = feature.get('id');
 			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(feature);
 			const centroid = getPointByGeometry(featureGeoJson.geometry);
 			const pointFeature = new olFeature(new olPoint(<[number, number]>centroid.coordinates));
 			pointFeature.setStyle(new olStyle({
-				image: new olIcon({
-					src: 'assets/icons/map/entity-marker.svg'
-				})
+				image: new olIcon(this.olPluginsConfig.Annotations.icon)
 			}));
-			this.idToCachedCenter.set(featureId, pointFeature);
-			this.source.addFeature(this.idToCachedCenter.get(featureId));
+			this.annotationIdToCenter.set(featureId, pointFeature);
+			this.source.addFeature(this.annotationIdToCenter.get(featureId));
 		}
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
@@ -312,7 +312,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				mergeMap((GeoJSON: FeatureCollection<GeometryObject>) => {
 					return this.addOrUpdateEntities(this.annotationsLayerToEntities(GeoJSON)).pipe(
 						tap(() => this.events.onDrawEnd.next({ GeoJSON, feature }))
-					)
+					);
 				})
 			).subscribe();
 
@@ -366,7 +366,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
-		console.log({ feature, state });
 		const style: olStyle = super.featureStyle(feature, state);
 		const entity = this.getEntity(feature);
 		if (entity && entity.showMeasures) {
@@ -499,7 +498,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		super.removeEntity(featureId, internal);
 		if (!internal) {
 			this.events.removeEntity.next(featureId);
-			this.source.removeFeature(this.idToCachedCenter.get(featureId));
+			this.source.removeFeature(this.annotationIdToCenter.get(featureId));
 		}
 		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
 	}

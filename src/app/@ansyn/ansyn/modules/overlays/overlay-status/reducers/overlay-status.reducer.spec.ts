@@ -1,5 +1,5 @@
 import {
-	SetFavoriteOverlaysAction,
+	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
 	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '../actions/overlay-status.actions';
@@ -40,15 +40,13 @@ describe('Overlay Status Reducer', () => {
 	it('should add overlay to presetOverlay', () => {
 		const action = new TogglePresetOverlayAction({id: o1.id, value: true, overlay: o1})
 		let result: IOverlayStatusState = OverlayStatusReducer(overlayStatusInitialState, action);
-		expect(result.favoriteOverlays.length).toBe(1);
+		expect(result.presetOverlays.length).toBe(1);
 	});
 
 	it('should add array of overlays to preset', () => {
-		const favoriteOverlays = [o1, o2];
-		const action = new SetFavoriteOverlaysAction(favoriteOverlays);
+		const presetOverlays = [o1, o2];
+		const action = new SetPresetOverlaysAction(presetOverlays);
 		let result: IOverlayStatusState = OverlayStatusReducer(overlayStatusInitialState, action);
-		expect(result.presetOverlays).toEqual(favoriteOverlays);
+		expect(result.presetOverlays).toEqual(presetOverlays);
 	});
-
-
 });

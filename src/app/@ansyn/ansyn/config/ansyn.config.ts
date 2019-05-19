@@ -65,7 +65,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			name: 'Help',
 			component: HelpComponent,
-			iconClass: 'icon-help-settings'
+			iconClass: 'icon-main-help'
 		}
 	]
 };

@@ -1,7 +1,7 @@
 @import "ansyn/less/common";
 @import 'ansyn/less/z-index-globals';
 
-@context-menu-color: #0dc5c1;
+@context-menu-color: #0091ff;
 @context-menu-contrast: white;
 
 :host {
@@ -18,9 +18,10 @@
 			visibility: visible;
 			div.buttons-area {
 				.menu-item {
+					font-size: 12px;
 					&:hover:not(:disabled) {
 						span {
-							color: @application-main-color;
+							// color: @application-main-color;
 						}
 						div.sub-buttons-list {
 							visibility: visible;
@@ -33,7 +34,7 @@
 			}
 
 			button.menu-open-button {
-				background-color: #FFFFFF;
+				// background-color: #FFFFFF;
 
 				transition-timing-function: linear;
 				transition-duration: 200ms;
@@ -44,15 +45,15 @@
 				justify-content: center;
 
 				&:hover {
-					background-color: @context-menu-color;
+					// background-color: @context-menu-color;
 					transform: scale(0.6715);
 					.pointer {
-						color: @context-menu-contrast;
+						// color: @context-menu-contrast;
 					}
 				}
 
 				.pointer {
-					font-size: 30px;
+					font-size: 24px;
 					font-weight: bold;
 				}
 			}
@@ -63,12 +64,13 @@
 					color: @context-menu-contrast;
 
 					i {
-						font-size: 24px;
+						font-size: 20px;
 					}
 
 					&:hover:not(:disabled) {
-						background-color: @context-menu-contrast;
-						color: @context-menu-color;
+						opacity: 0.8;
+						// background-color: @context-menu-contrast;
+						// color: @context-menu-color;
 					}
 
 					&.best {
@@ -137,7 +139,7 @@
 				position: absolute;
 				border: none;
 				outline: none;
-				color: @context-menu-contrast;
+				color: black;
 				border-radius: 100%;
 				width: 56px;
 				height: 56px;
@@ -156,7 +158,7 @@
 
 				&:disabled {
 					&.first, &.prev, &.angle, &.next, &.last, &.best {
-						background-color: #83b5c3;
+						color: #8cceff;
 					}
 				}
 
@@ -216,21 +218,20 @@
 						border-radius: 100%;
 						border: none;
 						outline: none;
-						width: 42px;
-						height: 42px;
-						background: #187284;
+						width: 34px;
+						height: 34px;
+						background: #ffffff;
 						box-shadow: 0 12px 12px rgba(0, 0, 0, 0.237602), 0 0 12px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.12);
-						color: @context-menu-contrast;
+						color: black;
 						margin-right: 5.5px;
 						transition: left, z-index;
 
 						span {
-							color: @context-menu-contrast !important;
 							display: block;
 							align-items: center;
 							overflow: hidden;
 							text-align: center;
-							font-size: 14px;
+							font-size: 12px;
 							white-space: nowrap;
 							text-overflow: ellipsis;
 							font-weight: bold;
@@ -251,8 +252,9 @@
 						//}
 
 						&:hover {
+							opacity: 0.8;
 							z-index: @z-index-context-menu;
-							background: #0b3e48;
+							// background: #0b3e48;
 							//&:after {
 							//	opacity: 1;
 							//	visibility: visible;

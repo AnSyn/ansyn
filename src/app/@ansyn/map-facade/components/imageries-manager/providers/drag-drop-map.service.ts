@@ -116,7 +116,8 @@ export class DragDropMapService {
 			dropElement.style.height = `${dragHeight}px`;
 			this.store.dispatch(new UpdateMapSizeAction());
 		} else {
-			forkJoin(dragEnd).pipe(transitionsEnd).subscribe();
+			// TODO: This line causes build to break...
+			// forkJoin(dragEnd).pipe(transitionsEnd).subscribe();
 			dragElement.style.transform = `translate(0, 0)`;
 		}
 

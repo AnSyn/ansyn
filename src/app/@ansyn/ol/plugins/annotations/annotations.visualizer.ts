@@ -11,8 +11,8 @@ import olText from 'ol/style/Text';
 import olStroke from 'ol/style/Stroke';
 import DragBox from 'ol/interaction/DragBox';
 import { platformModifierKeyOnly } from 'ol/events/condition';
-
 import {
+	getPointByGeometry,
 	ImageryVisualizer,
 	IVisualizerEntity,
 	MarkerSize,
@@ -30,11 +30,11 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
-import {
-	AnnotationMode,
+import olPoint from 'ol/geom/Point';
+import olIcon from 'ol/style/Icon';
+import { AnnotationMode,
 	IAnnotationBoundingRect,
-	IDrawEndEvent
-} from './annotations.model';
+	IDrawEndEvent } from './annotations.model';
 import { AutoSubscription } from 'auto-subscriptions';
 
 // @dynamic
@@ -49,6 +49,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
 	selected: string[] = [];
+	annotationIdToCenter: Map<string, olPoint> = new Map<string, olPoint>();
+	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
 	protected measuresTextStyle = {
@@ -110,7 +112,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	constructor(protected projectionService: OpenLayersProjectionService,
-				@Inject(OL_PLUGINS_CONFIG) olPluginsConfig: IOLPluginsConfig) {
+				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
 
 		super(null, {
 			initial: {
@@ -155,6 +157,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				}
 			});
 		}
+		this.geoJsonFormat = new OLGeoJSON();
 	}
 
 	setMode(mode) {
@@ -291,7 +294,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			label: '',
 			mode
 		});
-
+		if (this.olPluginsConfig.Annotations.icon) {
+			const featureId = feature.get('id');
+			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(feature);
+			const centroid = getPointByGeometry(featureGeoJson.geometry);
+			const pointFeature = new olFeature(new olPoint(<[number, number]>centroid.coordinates));
+			pointFeature.setStyle(new olStyle({
+				image: new olIcon(this.olPluginsConfig.Annotations.icon)
+			}));
+			this.annotationIdToCenter.set(featureId, pointFeature);
+			this.source.addFeature(this.annotationIdToCenter.get(featureId));
+		}
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
@@ -485,6 +498,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		super.removeEntity(featureId, internal);
 		if (!internal) {
 			this.events.removeEntity.next(featureId);
+			this.source.removeFeature(this.annotationIdToCenter.get(featureId));
 		}
 		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
 	}

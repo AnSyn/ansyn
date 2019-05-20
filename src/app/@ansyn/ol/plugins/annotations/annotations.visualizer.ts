@@ -1,16 +1,4 @@
-import Draw from 'ol/interaction/Draw';
-import * as Sphere from 'ol/sphere';
-import olCircle from 'ol/geom/Circle';
-import olLineString from 'ol/geom/LineString';
-import olMultiLineString from 'ol/geom/MultiLineString';
-import olPolygon, { fromCircle } from 'ol/geom/Polygon';
-import olFeature from 'ol/Feature';
-import olStyle from 'ol/style/Style';
-import olFill from 'ol/style/Fill';
-import olText from 'ol/style/Text';
-import olStroke from 'ol/style/Stroke';
-import DragBox from 'ol/interaction/DragBox';
-import { platformModifierKeyOnly } from 'ol/events/condition';
+import { Inject } from '@angular/core';
 import {
 	getPointByGeometry,
 	ImageryVisualizer,
@@ -19,23 +7,33 @@ import {
 	VisualizerInteractions,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { cloneDeep, merge } from 'lodash';
-import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { Subject } from 'rxjs';
-import { Inject } from '@angular/core';
-import { mergeMap, take, tap } from 'rxjs/operators';
-import OLGeoJSON from 'ol/format/GeoJSON';
 import { UUID } from 'angular2-uuid';
-import { EntitiesVisualizer } from '../entities-visualizer';
+import { AutoSubscription } from 'auto-subscriptions';
+import { Feature, FeatureCollection, GeometryObject } from 'geojson';
+import { cloneDeep, merge } from 'lodash';
+import { platformModifierKeyOnly } from 'ol/events/condition';
+import olFeature from 'ol/Feature';
+import OLGeoJSON from 'ol/format/GeoJSON';
+import olCircle from 'ol/geom/Circle';
+import olLineString from 'ol/geom/LineString';
+import olMultiLineString from 'ol/geom/MultiLineString';
+import olPoint from 'ol/geom/Point';
+import olPolygon, { fromCircle } from 'ol/geom/Polygon';
+import DragBox from 'ol/interaction/DragBox';
+import Draw from 'ol/interaction/Draw';
+import * as Sphere from 'ol/sphere';
+import olFill from 'ol/style/Fill';
+import olIcon from 'ol/style/Icon';
+import olStroke from 'ol/style/Stroke';
+import olStyle from 'ol/style/Style';
+import olText from 'ol/style/Text';
+import { Subject } from 'rxjs';
+import { mergeMap, take, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { EntitiesVisualizer } from '../entities-visualizer';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
-import olPoint from 'ol/geom/Point';
-import olIcon from 'ol/style/Icon';
-import { AnnotationMode,
-	IAnnotationBoundingRect,
-	IDrawEndEvent } from './annotations.model';
-import { AutoSubscription } from 'auto-subscriptions';
+import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 
 // @dynamic
 @ImageryVisualizer({
@@ -50,6 +48,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	mapSearchIsActive = false;
 	selected: string[] = [];
 	annotationIdToCenter: Map<string, olPoint> = new Map<string, olPoint>();
+	showCenterIcon = true;
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
@@ -232,7 +231,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let ids = [];
 		if (selectedFeature) {
 			const featureId = selectedFeature.getId();
-			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [ ...this.selected, featureId] : [featureId];
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
 		} else {
 			ids = multi ? this.selected : [];
 		}
@@ -244,7 +243,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			return;
 		}
 		const selectedFeature = this.featureAtPixel(event.pixel);
-		this.events.onHover.next( selectedFeature ? selectedFeature.getId() : null);
+		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
 	};
 
 	protected mapBoxstart = () => {
@@ -303,7 +302,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				image: new olIcon(this.olPluginsConfig.Annotations.icon)
 			}));
 			this.annotationIdToCenter.set(featureId, pointFeature);
-			this.source.addFeature(this.annotationIdToCenter.get(featureId));
+			if (this.showCenterIcon) {
+				this.source.addFeature(this.annotationIdToCenter.get(featureId));
+			}
 		}
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
@@ -499,6 +500,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (!internal) {
 			this.events.removeEntity.next(featureId);
 			this.source.removeFeature(this.annotationIdToCenter.get(featureId));
+			this.annotationIdToCenter.delete(featureId);
 		}
 		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
 	}
@@ -514,6 +516,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
+	public hideAnnotationIcon() {
+		this.showCenterIcon = false;
+		this.annotationIdToCenter.forEach(feature => this.source.removeFeature(feature));
+	}
+
+	public showAnnotaionIcon() {
+		this.showCenterIcon = true;
+		this.annotationIdToCenter.forEach(feature => this.source.addFeature(feature))
+	}
 }
 
 

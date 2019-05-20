@@ -1,8 +1,3 @@
-import { async, TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { StoreModule } from '@ngrx/store';
-import { hot } from 'jasmine-marbles';
-import { Observable } from 'rxjs';
 import { GeoRegisteration, IOverlay } from '../../models/overlay.model';
 import {
 	SetFavoriteOverlaysAction,
@@ -10,12 +5,7 @@ import {
 	SetRemovedOverlaysVisibilityAction,
 	ToggleFavoriteAction
 } from '../actions/overlay-status.actions';
-import {
-	IOverlayStatusState,
-	overlayStatusFeatureKey,
-	overlayStatusInitialState,
-	OverlayStatusReducer
-} from './overlay-status.reducer';
+import { IOverlayStatusState, overlayStatusInitialState, OverlayStatusReducer } from './overlay-status.reducer';
 
 
 const o1: IOverlay = {
@@ -27,7 +17,7 @@ const o1: IOverlay = {
 	isGeoRegistered: GeoRegisteration.geoRegistered
 
 };
-const o2: IOverlay= {
+const o2: IOverlay = {
 	id: '13',
 	name: 'tmp13',
 	date: new Date(2017, 6, 30),
@@ -56,7 +46,6 @@ describe('Overlay Status Reducer', () => {
 		const result: IOverlayStatusState = OverlayStatusReducer(overlayStatusInitialState, action);
 		expect(result.removedOverlaysIds.length).toBe(1);
 		expect(result.removedOverlaysVisibility).toEqual(true);
-		console.log(result.removedOverlaysIds);
 		const action2 = new SetRemovedOverlaysVisibilityAction(false);
 		const result2: IOverlayStatusState = OverlayStatusReducer(result, action2);
 		expect(result2.removedOverlaysVisibility).toEqual(false);

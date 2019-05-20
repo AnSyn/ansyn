@@ -26,7 +26,7 @@ describe('OverlayStatusEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({[mapFeatureKey]: MapReducer,[overlayStatusFeatureKey]: OverlayStatusReducer})
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [overlayStatusFeatureKey]: OverlayStatusReducer })
 			],
 			providers: [
 				OverlayStatusEffects,
@@ -57,7 +57,7 @@ describe('OverlayStatusEffects', () => {
 
 		it('should be call to BackToWorldSuccess', () => {
 			actions = new ReplaySubject(1);
-			actions.next(new BackToWorldView({mapId: 'mapId'}))
+			actions.next(new BackToWorldView({ mapId: 'mapId' }))
 			const communicator = {
 				id: 'mapId',
 				setActiveMap: () => Promise.resolve(true),
@@ -68,7 +68,7 @@ describe('OverlayStatusEffects', () => {
 			spyOn(imageryCommunicatorService, 'provide').and.returnValues(communicator);
 			spyOn(communicator, 'loadInitialMapSource').and.callFake(() => Promise.resolve(true));
 			overlayStatusEffects.backToWorldView$.subscribe((result) => {
-				expect(result).toBeObservable(new BackToWorldSuccess({mapId: 'mapId'}));
+				expect(result).toBeObservable(new BackToWorldSuccess({ mapId: 'mapId' }));
 			});
 			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
 		});

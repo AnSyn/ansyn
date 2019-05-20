@@ -47,7 +47,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
 	selected: string[] = [];
-	showCenterIndication = true;
+	private showCenterIndication = true;
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
@@ -513,6 +513,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
+	public isShowAnnotationCenter(){
+		return this.showCenterIndication;
+	}
 	public toggleAnnotaionCenerIndication(value) {
 		this.showCenterIndication = value;
 		this.source.refresh();

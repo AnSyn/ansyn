@@ -353,16 +353,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
-		let style: olStyle[] = [super.featureStyle(feature, state)];
+		let styles: olStyle[] = [super.featureStyle(feature, state)];
 		const entity = this.getEntity(feature);
 		if (entity && entity.showMeasures) {
-			style = style.concat(this.getMeasuresAsStyles(feature));
+			styles.push(...this.getMeasuresAsStyles(feature));
 		}
 		if (entity && this.showCenterIndication && this.olPluginsConfig.Annotations.icon) {
-			style.push(this.getCenterIndicationStyle(feature))
+			styles.push(this.getCenterIndicationStyle(feature))
 		}
 
-		return style;
+		return styles;
 	}
 
 	getMeasuresAsStyles(feature: olFeature): olStyle[] {
@@ -452,18 +452,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			image: new olIcon(this.olPluginsConfig.Annotations.icon)
 
 		});
-		/*if (this.olPluginsConfig.Annotations.icon) {
-
-			const centroid = getPointByGeometry(featureGeoJson.geometry);
-			const pointFeature = new olFeature(new olPoint(<[number, number]>centroid.coordinates));
-			pointFeature.setStyle(new olStyle({
-				image: new olIcon(this.olPluginsConfig.Annotations.icon)
-			}));
-			this.annotationIdToCenter.set(featureId, pointFeature);
-			if (this.showCenterIcon) {
-				this.source.addFeature(this.annotationIdToCenter.get(featureId));
-			}
-		}*/
 	}
 
 	formatArea(calcArea: number): string {

@@ -18,12 +18,12 @@ import olCircle from 'ol/geom/Circle';
 import olLineString from 'ol/geom/LineString';
 import olMultiLineString from 'ol/geom/MultiLineString';
 import olPoint from 'ol/geom/Point';
-import olIcon from 'ol/style/Icon'
 import olPolygon, { fromCircle } from 'ol/geom/Polygon';
 import DragBox from 'ol/interaction/DragBox';
 import Draw from 'ol/interaction/Draw';
 import * as Sphere from 'ol/sphere';
 import olFill from 'ol/style/Fill';
+import olIcon from 'ol/style/Icon'
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
@@ -513,9 +513,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
-	public isShowAnnotationCenter(){
+	public isShowAnnotationCenter() {
 		return this.showCenterIndication;
 	}
+
 	public toggleAnnotaionCenerIndication(value) {
 		this.showCenterIndication = value;
 		this.source.refresh();

@@ -18,12 +18,12 @@ import olCircle from 'ol/geom/Circle';
 import olLineString from 'ol/geom/LineString';
 import olMultiLineString from 'ol/geom/MultiLineString';
 import olPoint from 'ol/geom/Point';
+import olIcon from 'ol/style/Icon'
 import olPolygon, { fromCircle } from 'ol/geom/Polygon';
 import DragBox from 'ol/interaction/DragBox';
 import Draw from 'ol/interaction/Draw';
 import * as Sphere from 'ol/sphere';
 import olFill from 'ol/style/Fill';
-import olIcon from 'ol/style/Icon';
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
@@ -47,8 +47,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
 	selected: string[] = [];
-	annotationIdToCenter: Map<string, olPoint> = new Map<string, olPoint>();
-	showCenterIcon = true;
+	showCenterIndication = true;
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
@@ -293,19 +292,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			label: '',
 			mode
 		});
-		if (this.olPluginsConfig.Annotations.icon) {
-			const featureId = feature.get('id');
-			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(feature);
-			const centroid = getPointByGeometry(featureGeoJson.geometry);
-			const pointFeature = new olFeature(new olPoint(<[number, number]>centroid.coordinates));
-			pointFeature.setStyle(new olStyle({
-				image: new olIcon(this.olPluginsConfig.Annotations.icon)
-			}));
-			this.annotationIdToCenter.set(featureId, pointFeature);
-			if (this.showCenterIcon) {
-				this.source.addFeature(this.annotationIdToCenter.get(featureId));
-			}
-		}
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
@@ -367,13 +353,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
-		const style: olStyle = super.featureStyle(feature, state);
+		let style: olStyle[] = [super.featureStyle(feature, state)];
 		const entity = this.getEntity(feature);
 		if (entity && entity.showMeasures) {
-			return [style, ...this.getMeasuresAsStyles(feature)];
-		} else {
-			return style;
+			style = style.concat(this.getMeasuresAsStyles(feature));
 		}
+		if (entity && this.showCenterIndication && this.olPluginsConfig.Annotations.icon) {
+			style.push(this.getCenterIndicationStyle(feature))
+		}
+
+		return style;
 	}
 
 	getMeasuresAsStyles(feature: olFeature): olStyle[] {
@@ -455,6 +444,28 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return moreStyles;
 	}
 
+	getCenterIndicationStyle(feature: olFeature): olStyle {
+		const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(feature);
+		const centerPoint = getPointByGeometry(featureGeoJson.geometry);
+		return new olStyle({
+			geometry: new olPoint(centerPoint.coordinates),
+			image: new olIcon(this.olPluginsConfig.Annotations.icon)
+
+		});
+		/*if (this.olPluginsConfig.Annotations.icon) {
+
+			const centroid = getPointByGeometry(featureGeoJson.geometry);
+			const pointFeature = new olFeature(new olPoint(<[number, number]>centroid.coordinates));
+			pointFeature.setStyle(new olStyle({
+				image: new olIcon(this.olPluginsConfig.Annotations.icon)
+			}));
+			this.annotationIdToCenter.set(featureId, pointFeature);
+			if (this.showCenterIcon) {
+				this.source.addFeature(this.annotationIdToCenter.get(featureId));
+			}
+		}*/
+	}
+
 	formatArea(calcArea: number): string {
 		return Math.round(calcArea * 100) / 100 + ' Km²';
 	};
@@ -499,8 +510,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		super.removeEntity(featureId, internal);
 		if (!internal) {
 			this.events.removeEntity.next(featureId);
-			this.source.removeFeature(this.annotationIdToCenter.get(featureId));
-			this.annotationIdToCenter.delete(featureId);
 		}
 		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
 	}
@@ -516,14 +525,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
-	public hideAnnotationIcon() {
-		this.showCenterIcon = false;
-		this.annotationIdToCenter.forEach(feature => this.source.removeFeature(feature));
-	}
-
-	public showAnnotaionIcon() {
-		this.showCenterIcon = true;
-		this.annotationIdToCenter.forEach(feature => this.source.addFeature(feature))
+	public toggleAnnotaionCenerIndication(value) {
+		this.showCenterIndication = value;
+		this.source.refresh();
 	}
 }
 

@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-	BackToWorldView, SetPresetOverlaysAction,
-	ToggleFavoriteAction, TogglePresetOverlayAction
+	BackToWorldView, OverlayStatusActionsTypes, SetRemovedOverlayIdsCount, SetRemovedOverlaysIdAction,
+	ToggleFavoriteAction, SetPresetOverlaysAction, TogglePresetOverlayAction
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { selectRemovedOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import {
 	ContextMenuTriggerAction,
-	ImageryStatusActionTypes,
 	IMapState,
 	LayoutKey,
 	layoutOptions,
@@ -18,12 +18,9 @@ import {
 	RemovePendingOverlayAction,
 	selectActiveMapId,
 	selectMapsList,
-	selectRemovedOverlays,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetPendingOverlaysAction,
-	SetRemovedOverlayIdsCount,
-	SetRemovedOverlaysIdAction
 } from '@ansyn/map-facade';
 
 import { CommunicatorEntity, ImageryMapPosition, ImageryCommunicatorService } from '@ansyn/imagery';
@@ -175,7 +172,7 @@ export class OverlaysAppEffects {
 
 	@Effect()
 	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
-		ofType<SetRemovedOverlaysIdAction>(ImageryStatusActionTypes.SET_REMOVED_OVERLAY_ID),
+		ofType<SetRemovedOverlaysIdAction>(OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID),
 		filter(({ payload }) => payload.value),
 		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
 		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {

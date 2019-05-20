@@ -3,7 +3,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import * as _ from 'lodash';
 import { ExtendMap } from './extendedMap.class';
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
-import { ImageryStatusActionTypes, MapActionTypes } from '@ansyn/map-facade';
+import { MapActionTypes } from '@ansyn/map-facade';
 import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
 import {
 	IOverlay,
@@ -12,6 +12,7 @@ import {
 	IOverlaysHash,
 	IOverlaySpecialObject
 } from '../models/overlay.model';
+import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 
 export interface ITimelineRange {
 	start: Date;
@@ -263,7 +264,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				}
 			};
 
-		case ImageryStatusActionTypes.SET_REMOVED_OVERLAY_ID:
+		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID:
 			if (action.payload.value) {
 				const displayOverlayHistory = { ...state.displayOverlayHistory };
 				Object.entries(displayOverlayHistory).forEach(([key, value]) => {

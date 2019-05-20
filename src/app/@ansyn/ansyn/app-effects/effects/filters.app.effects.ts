@@ -2,7 +2,10 @@ import { combineLatest, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import { selectFavoriteOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import {
+	selectFavoriteOverlays, selectRemovedOverlays,
+	selectRemovedOverlaysVisibility
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
@@ -27,10 +30,6 @@ import { GenericTypeResolverService } from '../../modules/core/services/generic-
 import { IFilterModel } from '../../modules/core/models/IFilterModel';
 import { InjectionResolverFilter } from '../../modules/core/services/generic-type-resolver';
 import { mapValuesToArray } from '../../modules/core/utils/misc';
-import {
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
-} from '@ansyn/map-facade';
 import {
 	LoadOverlaysAction, OverlaysActionTypes,
 	SetDropsAction, SetFilteredOverlaysAction,

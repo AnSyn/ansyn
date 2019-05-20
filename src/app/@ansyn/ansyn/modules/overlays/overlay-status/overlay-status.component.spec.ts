@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing'
 import { OverlayStatusComponent } from './overlay-status.component';
 import { StoreModule, Store } from '@ngrx/store';
 import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
@@ -13,7 +14,8 @@ describe('OverlayStatusComponent', () => {
 			declarations: [OverlayStatusComponent],
 			imports: [StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer,
-				[imageryStatusFeatureKey]: ImageryStatusReducer
+				[imageryStatusFeatureKey]: ImageryStatusReducer,
+				[overlayStatusFeatureKey]: OverlayStatusReducer
 			})]
 		})
 			.compileComponents();

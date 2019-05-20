@@ -50,12 +50,7 @@ export {
 
 export {
 	ImageryStatusActionTypes,
-	SetRemovedOverlaysIdAction,
-	SetRemovedOverlaysIdsAction,
-	ResetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
 	EnableCopyOriginalOverlayDataAction,
-	SetRemovedOverlayIdsCount,
 	AddAlertMsg,
 	RemoveAlertMsg
 } from './actions/imagery-status.actions'
@@ -64,10 +59,7 @@ export {
 	imageryStatusFeatureKey,
 	ImageryStatusReducer,
 	imageryStatusStateSelector,
-	imageryStatusInitialState,
-	selectRemovedOverlaysIdsCount,
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
+	imageryStatusInitialState
 } from './reducers/imagery-status.reducer'
 
 export { copyFromContent } from './utils/clipboard';

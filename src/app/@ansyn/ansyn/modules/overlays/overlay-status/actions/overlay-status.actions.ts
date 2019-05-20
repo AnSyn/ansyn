@@ -12,10 +12,13 @@ export enum OverlayStatusActionsTypes {
 	RESET_REMOVED_OVERLAY_IDS = 'RESET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAY_ID = 'SET_REMOVED_OVERLAY_ID',
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
-};
+	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
+	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS'
+}
+
 
 export type OverlayStatusActions = BackToWorldView | BackToWorldSuccess | ToggleFavoriteAction |
-	SetFavoriteOverlaysAction;
+	SetFavoriteOverlaysAction | TogglePresetOverlayAction | SetPresetOverlaysAction;
 
 export class BackToWorldView implements Action {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW;
@@ -75,5 +78,19 @@ export class SetRemovedOverlayIdsCount implements Action {
 	readonly type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS_COUNT;
 
 	constructor(public payload: number) {
+	}
+}
+
+export class TogglePresetOverlayAction implements Action {
+	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET;
+
+	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
+	}
+}
+
+export class SetPresetOverlaysAction implements Action {
+	type = OverlayStatusActionsTypes.SET_PRESET_OVERLAYS;
+
+	constructor(public payload: any[]) {
 	}
 }

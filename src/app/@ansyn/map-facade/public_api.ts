@@ -50,8 +50,6 @@ export {
 
 export {
 	ImageryStatusActionTypes,
-	TogglePresetOverlayAction,
-	SetPresetOverlaysAction,
 	EnableCopyOriginalOverlayDataAction,
 	AddAlertMsg,
 	RemoveAlertMsg
@@ -61,8 +59,7 @@ export {
 	imageryStatusFeatureKey,
 	ImageryStatusReducer,
 	imageryStatusStateSelector,
-	imageryStatusInitialState,
-	selectPresetOverlays
+	imageryStatusInitialState
 } from './reducers/imagery-status.reducer'
 
 export { copyFromContent } from './utils/clipboard';

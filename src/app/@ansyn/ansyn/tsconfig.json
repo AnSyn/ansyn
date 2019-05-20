@@ -11,6 +11,9 @@
       "@ansyn/ol": [
         "src/app/@ansyn/ol/public_api"
       ],
+      "@ansyn/imagery-cesium": [
+        "src/app/@ansyn/imagery-cesium/public_api"
+      ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
       ]

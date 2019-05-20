@@ -1,7 +1,6 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, take, tap } from 'rxjs/operators';
-import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged, IMapSettings } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 
 enum AnnotationsContextmenuTabs {
@@ -15,10 +14,6 @@ enum AnnotationsContextmenuTabs {
 	templateUrl: './annotation-context-menu.component.html',
 	styleUrls: ['./annotation-context-menu.component.less']
 })
-@AutoSubscriptions({
-	init: 'onInitMap',
-	destroy: 'ngOnDestroy'
-})
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
@@ -31,22 +26,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
 	@HostBinding('attr.tabindex') tabindex = 0;
 
-	@AutoSubscription
-	onSelect$ = () => this.annotations.events.onSelect.pipe(
-		tap((selected: string[]) => {
-			this.selection = selected;
-			this.selectedTab = this.selection.reduce((prev, id) => ({
-				...prev,
-				[id]: this.selectedTab[id]
-			}), {});
-
-		})
-	);
-
-	@AutoSubscription
-	onHover$ = () => this.annotations.events.onHover.pipe(
-		tap((hoverFeatureId: string) => this.hoverFeatureId = hoverFeatureId)
-	);
+	subscribers = [];
+	annotationsSubscribers = [];
 
 	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
 		$event.preventDefault();
@@ -65,22 +46,59 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		return properties;
 	}
 
-	onInitMap() {
-	}
-
-	ngOnInit() {
+		ngOnInit() {
 		this.communicators.instanceCreated.pipe(
 			filter(({ id }) => id === this.mapId),
 			tap(() => {
 				this.communicator = this.communicators.provide(this.mapId);
 				this.annotations = this.communicator.getPlugin(AnnotationsVisualizer);
-				this.onInitMap();
+				if (this.annotations) {
+					this.subscribeVisualizerEvents();
+				} else {
+					this.unSubscribeVisualizerEvents();
+				}
+
+				this.subscribers.push(this.communicator.mapInstanceChanged.subscribe((mapInstanceChanged: IMapInstanceChanged) => {
+					this.unSubscribeVisualizerEvents();
+					this.annotations = this.communicator.getPlugin(AnnotationsVisualizer);
+					if (this.annotations) {
+						this.subscribeVisualizerEvents();
+					}
+				}));
 			}),
 			take(1)
 		).subscribe();
 	}
 
+	subscribeVisualizerEvents() {
+		this.annotationsSubscribers.push(
+			this.annotations.events.onHover.subscribe((hoverFeatureId: string) => {
+				this.hoverFeatureId = hoverFeatureId;
+			}),
+			this.annotations.events.onSelect.subscribe((selected: string[]) => {
+					this.selection = selected;
+					this.selectedTab = this.selection.reduce((prev, id) => ({
+						...prev,
+						[id]: this.selectedTab[id]
+					}), {});
+				}
+			)
+		);
+	}
+
+	unSubscribeVisualizerEvents() {
+		if (this.annotationsSubscribers) {
+			this.annotationsSubscribers.forEach((subscriber) => subscriber.unsubscribe());
+			this.annotationsSubscribers = [];
+		}
+	}
+
 	ngOnDestroy(): void {
+		if (this.subscribers) {
+			this.subscribers.forEach((subscriber) => subscriber.unsubscribe());
+			delete this.subscribers;
+		}
+		this.unSubscribeVisualizerEvents();
 	}
 
 	removeFeature(featureId) {
@@ -121,7 +139,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			...style,
 			initial: {
 				...style.initial,
-				[`${$event.label}-opacity`]: $event.event ? opacity[$event.label] : 0
+				[`${ $event.label }-opacity`]: $event.event ? opacity[$event.label] : 0
 			}
 		};
 		this.annotations.updateFeature(featureId, { style: updatedStyle });

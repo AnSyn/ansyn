@@ -10,14 +10,11 @@ export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusStat
 
 export interface ImageryStatusState {
 	// @todo IOverlay
-
-	presetOverlays: any[],
 	enableCopyOriginalOverlayData: boolean;
 	alertMsg: AlertMsg;
 }
 
 export const imageryStatusInitialState: ImageryStatusState = {
-	presetOverlays: [],
 	enableCopyOriginalOverlayData: false,
 	alertMsg: new Map([
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
@@ -48,15 +45,6 @@ export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusIn
 			return { ...state, alertMsg };
 		}
 
-		case ImageryStatusActionTypes.TOGGLE_OVERLAY_PRESET: {
-			const { overlay, id, value } = action.payload;
-			const po = [...state.presetOverlays];
-			return { ...state, presetOverlays: value ? uniq([...po, overlay]) : po.filter((o) => o.id !== id) };
-		}
-
-		case ImageryStatusActionTypes.SET_PRESET_OVERLAYS:
-			return { ...state, presetOverlays: action.payload };
-
 		case ImageryStatusActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA:
 			return { ...state, enableCopyOriginalOverlayData: action.payload };
 
@@ -65,7 +53,5 @@ export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusIn
 	}
 }
 
-
-export const selectPresetOverlays: MemoizedSelector<any, any[]> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.presetOverlays);
 export const selectEnableCopyOriginalOverlayDataFlag: MemoizedSelector<any, any> = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.enableCopyOriginalOverlayData);
 export const selectAlertMsg = createSelector(imageryStatusStateSelector, (imageryStatus) => imageryStatus.alertMsg);

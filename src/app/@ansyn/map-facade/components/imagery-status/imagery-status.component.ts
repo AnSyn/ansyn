@@ -6,7 +6,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, tap, map, filter } from 'rxjs/internal/operators';
-import { ChangeImageryMap, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { AlertMsg } from '../../alerts/model';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from "../../models/entry-components-provider";
@@ -39,11 +39,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			this.overlay = maps[this.mapId].data.overlay;
 			this.displayLayers = maps[this.mapId].flags.displayLayers;
 		})
-
 	);
-	get selectedMap() {
-		return _get(this.communicators.provide(this.mapId), 'ActiveMap.mapType');
-	}
 
 	@AutoSubscription
 	active$ = this.store$.pipe(
@@ -157,10 +153,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		} else {
 			return this[alertKey];
 		}
-	}
-
-	changeActiveMap(mapType: string) {
-		this.store$.dispatch(new ChangeImageryMap({id: this.mapId, mapType}));
 	}
 
 	toggleMapLayers() {

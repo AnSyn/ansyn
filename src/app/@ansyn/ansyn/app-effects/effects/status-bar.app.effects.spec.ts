@@ -1,4 +1,9 @@
 import { Store, StoreModule } from '@ngrx/store';
+import { SetPresetOverlaysAction } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
@@ -27,7 +32,6 @@ import {
 	MapReducer,
 	SetActiveMapId,
 	SetMapsDataActionStore,
-	SetPresetOverlaysAction
 } from '@ansyn/map-facade';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
@@ -78,7 +82,8 @@ describe('StatusBarAppEffects', () => {
 					[casesFeatureKey]: CasesReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[mapFeatureKey]: MapReducer,
-					[imageryStatusFeatureKey]: ImageryStatusReducer
+					[imageryStatusFeatureKey]: ImageryStatusReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
 				})
 			],
 			providers: [

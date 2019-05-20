@@ -1,18 +1,21 @@
 import { GeoJsonObject, Point, Polygon } from 'geojson';
 import { Observable, of } from 'rxjs';
-import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition  } from '@ansyn/imagery';
+import {
+	BaseImageryMap,
+	ImageryMap,
+	ImageryMapExtent,
+	ImageryMapPosition,
+	toDegrees,
+	ExtentCalculator
+} from '@ansyn/imagery';
 import { Inject } from '@angular/core';
 import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
 
-import { fromPromise } from "rxjs/internal-compatibility";
-import { CesiumLayer, ISceneMode } from "../../models/cesium-layer";
-import { CoreConfig } from '../../../../core/models/core.config';
-import { ExtentCalculator } from '@ansyn/ol';
-import { ICoreConfig } from '../../../../core/models/core.config.model';
-import { toDegrees } from '@ansyn/ol';
+import { fromPromise } from 'rxjs/internal-compatibility';
+import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 
 declare const Cesium: any;
 
@@ -24,7 +27,7 @@ export const CesiumMapName = 'CesiumMap';
 // @dynamic
 @ImageryMap({
 	mapType: CesiumMapName,
-	deps: [CesiumProjectionService, CoreConfig]
+	deps: [CesiumProjectionService]
 })
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
@@ -32,7 +35,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	element: HTMLElement;
 	_moveEndListener;
 
-	constructor(public projectionService: CesiumProjectionService, @Inject(CoreConfig) public coreConfig: ICoreConfig) {
+	constructor(public projectionService: CesiumProjectionService) {
 		super();
 	}
 
@@ -127,7 +130,16 @@ export class CesiumMap extends BaseImageryMap<any> {
 			const viewer = new Cesium.Viewer(this.element, {
 				sceneMode: cesiumSceneMode,
 				imageryLayers: [layer.layer],
-				baseLayerPicker: true
+				baseLayerPicker: false,
+				sceneModePicker: false,
+				timeline: false,
+				navigationHelpButton: false,
+				navigationInstructionsInitiallyVisible: false,
+				animation: false,
+				fullscreenButton: false,
+				homeButton: false,
+				infoBox: false,
+				geocoder: false
 			});
 
 			// Set the global imagery layer to fully transparent and set the globe's base color to black
@@ -135,6 +147,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			// baseImageryLayer.alpha = 0.0;
 			viewer.scene.globe.baseColor = Cesium.Color.BLACK;
 			this.mapObject = viewer;
+			this.initListeners();
 			return of(true);
 		}
 	}

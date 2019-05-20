@@ -76,6 +76,7 @@ export class ImageryRotationComponent {
 	}
 
 	isGeoRegistered() {
+		// todo: overlay is not known in map facade
 		return !this.mapState.data.overlay || (this.mapState.data.overlay.isGeoRegistered !== 'notGeoRegistered');
 	}
 

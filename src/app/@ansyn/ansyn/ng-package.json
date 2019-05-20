@@ -4,6 +4,7 @@
   "whitelistedNonPeerDependencies": [
     "@ansyn/imagery",
     "@ansyn/map-facade",
+    "@ansyn/imagery-cesium",
     "@ansyn/menu",
     "@turf/turf",
     "geojson",

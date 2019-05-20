@@ -17,7 +17,9 @@ import {
 	BaseImageryMap, ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapPosition,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
-	ImageryMap, IMapProgress
+	ImageryMap,
+	IMapProgress,
+	ExtentCalculator
 } from '@ansyn/imagery';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
@@ -29,7 +31,6 @@ import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
-import { ExtentCalculator } from '../../../utils/extent-calculator';
 import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
 import * as olInteraction from 'ol/interaction'
 

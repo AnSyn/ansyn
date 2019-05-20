@@ -4,7 +4,7 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
 	BackToWorldView, OverlayStatusActionsTypes, SetRemovedOverlayIdsCount, SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction
+	ToggleFavoriteAction, SetPresetOverlaysAction, TogglePresetOverlayAction
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { selectRemovedOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
@@ -14,14 +14,13 @@ import {
 	LayoutKey,
 	layoutOptions,
 	MapActionTypes,
-	mapStateSelector, RemovePendingOverlayAction,
+	mapStateSelector,
+	RemovePendingOverlayAction,
 	selectActiveMapId,
 	selectMapsList,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetPendingOverlaysAction,
-	SetPresetOverlaysAction,
-	TogglePresetOverlayAction
 } from '@ansyn/map-facade';
 
 import { CommunicatorEntity, ImageryMapPosition, ImageryCommunicatorService } from '@ansyn/imagery';

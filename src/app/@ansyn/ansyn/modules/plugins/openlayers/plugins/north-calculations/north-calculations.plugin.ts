@@ -9,7 +9,9 @@ import {
 	BaseImageryPlugin,
 	CommunicatorEntity,
 	ImageryMapPosition,
-	ImageryPlugin
+	ImageryPlugin,
+	toDegrees,
+	toRadians
 } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
 import {
@@ -18,7 +20,7 @@ import {
 	selectActiveMapId
 } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap, toDegrees, toRadians } from '@ansyn/ol';
+import { OpenLayersMap } from '@ansyn/ol';
 import {
 	catchError,
 	debounceTime,

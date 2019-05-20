@@ -4,16 +4,14 @@ import {
 	selectActiveMapId,
 	selectMaps,
 	selectMapsTotal,
-	selectPresetOverlays,
-	TogglePresetOverlayAction
 } from "@ansyn/map-facade";
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { IOverlay } from "../models/overlay.model";
-import { SetRemovedOverlaysIdAction, ToggleFavoriteAction } from './actions/overlay-status.actions';
-import { selectFavoriteOverlays, selectRemovedOverlays } from './reducers/overlay-status.reducer';
+import { ToggleFavoriteAction, TogglePresetOverlayAction, SetRemovedOverlaysIdAction } from './actions/overlay-status.actions';
+import { selectFavoriteOverlays, selectPresetOverlays, selectRemovedOverlays } from './reducers/overlay-status.reducer';
 
 @Component({
 	selector: 'ansyn-overlay-status',

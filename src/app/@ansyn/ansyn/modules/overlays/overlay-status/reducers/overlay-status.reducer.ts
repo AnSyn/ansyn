@@ -11,10 +11,12 @@ export interface IOverlayStatusState {
 	removedOverlaysIds: string[];
 	removedOverlaysVisibility: boolean;
 	removedOverlaysIdsCount: number;
+	presetOverlays: IOverlay[],
 }
 
 export const overlayStatusInitialState: IOverlayStatusState = {
 	favoriteOverlays: [],
+	presetOverlays: [],
 	removedOverlaysIds: [],
 	removedOverlaysVisibility: true,
 	removedOverlaysIdsCount: 0,
@@ -30,6 +32,15 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			const fo = [...state.favoriteOverlays];
 			return {...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id)};
 		}
+
+		case OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET: {
+			const { overlay, id, value } = action.payload;
+			const po = [...state.presetOverlays];
+			return { ...state, presetOverlays: value ? uniq([...po, overlay]) : po.filter((o) => o.id !== id) };
+		}
+
+		case OverlayStatusActionsTypes.SET_PRESET_OVERLAYS:
+			return { ...state, presetOverlays: action.payload };
 
 		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS:
 			return { ...state, removedOverlaysIds: action.payload };
@@ -56,3 +67,4 @@ export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createS
 export const selectRemovedOverlaysVisibility: MemoizedSelector<any, boolean> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysVisibility);
 export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysIdsCount);
 export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysIds);
+export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.presetOverlays);

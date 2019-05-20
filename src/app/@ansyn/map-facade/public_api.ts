@@ -50,9 +50,7 @@ export {
 
 export {
 	ImageryStatusActionTypes,
-	TogglePresetOverlayAction,
 	SetRemovedOverlaysIdAction,
-	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
 	ResetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction,
@@ -68,7 +66,6 @@ export {
 	imageryStatusStateSelector,
 	imageryStatusInitialState,
 	selectRemovedOverlaysIdsCount,
-	selectPresetOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility
 } from './reducers/imagery-status.reducer'

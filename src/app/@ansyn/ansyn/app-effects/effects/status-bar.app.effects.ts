@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import {
+	overlayStatusStateSelector,
+	selectPresetOverlays
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
@@ -56,7 +60,7 @@ export class StatusBarAppEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
 		}),
-		withLatestFrom(this.store.select(imageryStatusStateSelector), ({ overlayId, mapId }, { presetOverlays }): { overlay: IOverlay, mapId: string } => {
+		withLatestFrom(this.store.select(selectPresetOverlays), ({ overlayId, mapId },  presetOverlays ): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;
 			if (length === 0) {
 				return;

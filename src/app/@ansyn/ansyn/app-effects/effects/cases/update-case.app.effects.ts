@@ -4,10 +4,13 @@ import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
 import { combineLatest, pipe, Observable } from 'rxjs';
 import {
 	selectActiveMapId, selectLayout, selectMapsList, selectRemovedOverlays,
-	selectRemovedOverlaysVisibility, selectPresetOverlays
+	selectRemovedOverlaysVisibility
 } from '@ansyn/map-facade';
 import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
-import { selectFavoriteOverlays } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import {
+	selectFavoriteOverlays,
+	selectPresetOverlays
+} from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';

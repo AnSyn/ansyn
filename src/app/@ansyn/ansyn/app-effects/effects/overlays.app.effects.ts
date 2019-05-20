@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-	BackToWorldView,
-	ToggleFavoriteAction
+	BackToWorldView, SetPresetOverlaysAction,
+	ToggleFavoriteAction, TogglePresetOverlayAction
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import {
@@ -22,10 +22,8 @@ import {
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetPendingOverlaysAction,
-	SetPresetOverlaysAction,
 	SetRemovedOverlayIdsCount,
-	SetRemovedOverlaysIdAction,
-	TogglePresetOverlayAction
+	SetRemovedOverlaysIdAction
 } from '@ansyn/map-facade';
 
 import { CommunicatorEntity, ImageryMapPosition, ImageryCommunicatorService } from '@ansyn/imagery';

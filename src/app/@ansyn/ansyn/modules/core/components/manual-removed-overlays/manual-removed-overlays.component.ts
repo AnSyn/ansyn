@@ -4,11 +4,13 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/internal/operators';
 import { Observable } from 'rxjs';
 import {
-	selectRemovedOverlaysIdsCount,
 	ResetRemovedOverlaysIdsAction,
-	selectRemovedOverlaysVisibility,
 	SetRemovedOverlaysVisibilityAction
-} from '@ansyn/map-facade';
+} from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import {
+	selectRemovedOverlaysIdsCount,
+	selectRemovedOverlaysVisibility
+} from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
 
 @Component({
 	selector: 'ansyn-manual-removed-overlays',

@@ -1,26 +1,19 @@
 <div class="app animations" [ngClass]="(isPinnedClass$ | async)">
 	<div class="menu">
-		<ansyn-menu [version]="version" [animatedElement]="animatedElement"></ansyn-menu>
+		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
 
-	<div class="layer" #animatedElement>
-		<div class="maps-container">
+	<div class="layer" #animatedElementHorizontal>
+		<div class="maps-container" #animatedElementVertical>
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
 
-		<div class="status-timeline-container">
-			<div class="status">
-				<ansyn-status-bar
-					[selectedCaseName]="(selectedCaseName$ | async)"
-					[activeMap]="(activeMap$ | async)">
-				</ansyn-status-bar>
-			</div>
-
-			<div class="app-timeline-container">
-				<ansyn-overlays-container></ansyn-overlays-container>
-			</div>
-		</div>
+		<ansyn-footer
+			[selectedCaseName]="(selectedCaseName$ | async)"
+			[activeMap]="(activeMap$ | async)"
+			[animatedElement]="animatedElementVertical"
+		></ansyn-footer>
 	</div>
 </div>
 

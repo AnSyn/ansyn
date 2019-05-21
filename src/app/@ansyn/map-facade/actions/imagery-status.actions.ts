@@ -2,9 +2,7 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../alerts/model';
 
 export enum ImageryStatusActionTypes {
-	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
 	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
-	SET_FAVORITE_OVERLAYS = 'SET_FAVORITE_OVERLAYS',
 	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS',
 	SET_REMOVED_OVERLAY_IDS = 'SET_REMOVED_OVERLAY_IDS',
 	SET_REMOVED_OVERLAY_IDS_COUNT = 'SET_REMOVED_OVERLAY_IDS_COUNT',
@@ -13,15 +11,9 @@ export enum ImageryStatusActionTypes {
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	ENABLE_COPY_ORIGINAL_OVERLAY_DATA = 'ENABLE_COPY_ORIGINAL_OVERLAY_DATA',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
-	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
+	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG'
 }
 
-export class ToggleFavoriteAction implements Action {
-	type: string = ImageryStatusActionTypes.TOGGLE_OVERLAY_FAVORITE;
-
-	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
-	}
-}
 
 
 export class TogglePresetOverlayAction implements Action {
@@ -31,20 +23,12 @@ export class TogglePresetOverlayAction implements Action {
 	}
 }
 
-export class SetFavoriteOverlaysAction implements Action {
-	type = ImageryStatusActionTypes.SET_FAVORITE_OVERLAYS;
-
-	constructor(public payload: any[]) {
-	}
-}
-
 export class SetPresetOverlaysAction implements Action {
 	type = ImageryStatusActionTypes.SET_PRESET_OVERLAYS;
 
 	constructor(public payload: any[]) {
 	}
 }
-
 
 export class SetRemovedOverlaysIdsAction implements Action {
 	type = ImageryStatusActionTypes.SET_REMOVED_OVERLAY_IDS;

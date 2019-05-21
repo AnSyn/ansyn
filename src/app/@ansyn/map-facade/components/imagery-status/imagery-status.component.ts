@@ -1,45 +1,20 @@
-import {
-	Component,
-	EventEmitter,
-	HostBinding,
-	HostListener,
-	Inject,
-	Input,
-	OnDestroy,
-	OnInit,
-	Output
-} from '@angular/core';
+import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { getTimeFormat } from '../../utils/time';
-import { ALERTS, IAlert } from '../../alerts/alerts.model';
-import { distinctUntilChanged, tap, map } from 'rxjs/internal/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import {
-	BackToWorldView,
-	ChangeImageryMap,
-	SetToastMessageAction,
-	ToggleMapLayersAction
-} from '../../actions/map.actions';
-import { selectAlertMsg } from '../../reducers/imagery-status.reducer';
+import { get as _get } from 'lodash'
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, tap, map, filter } from 'rxjs/internal/operators';
+import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import { ALERTS, IAlert } from '../../alerts/alerts.model';
 import { AlertMsg } from '../../alerts/model';
-import {
-	selectEnableCopyOriginalOverlayDataFlag,
-	selectFavoriteOverlays,
-	selectPresetOverlays,
-	selectRemovedOverlays
-} from '../../reducers/imagery-status.reducer';
-import {
-	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
-} from '../../actions/imagery-status.actions';
-import { copyFromContent } from '../../utils/clipboard';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
-import { get as _get } from 'lodash';
-import { selectActiveMapId, selectMapsTotal } from '../../reducers/map.reducer';
-import { IEntryComponent } from '../../directives/entry-component.directive';
+import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from "../../models/entry-components-provider";
+import { selectAlertMsg, selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
+import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
+import { copyFromContent } from "../../utils/clipboard";
+import { getTimeFormat } from '../../utils/time';
+import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -50,41 +25,26 @@ import { IEntryComponent } from '../../directives/entry-component.directive';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponent {
-	// @todo refactor
-	overlay: any;
-	_mapState: IMapSettings;
+export class ImageryStatusComponent implements OnInit, OnDestroy {
 	mapsAmount = 1;
 	@HostBinding('class.active') isActiveMap: boolean;
-
-	get selectedMap() {
-		return _get(this.communicators.provide(this.mapState.id), 'ActiveMap.mapType');
-	}
-
-	@Input()
-	set mapState(value: IMapSettings) {
-		if (_get(this._mapState, 'data.overlay') !== _get(value, 'data.overlay')) {
-			this.overlay = value.data.overlay;
-			if (!this.overlay) {
-				this.translatedOverlaySensorName = '';
-			} else {
-				if (this.overlay.sensorName) {
-					this.translate.get(this.overlay.sensorName).subscribe((res: string) => {
-						this.translatedOverlaySensorName = res;
-					});
-				}
-			}
-			this.updateRemovedStatus();
-			this.updateFavoriteStatus();
-			this.updatePresetStatus();
-		}
-		this._mapState = value;
-	};
+	@Input() mapId: string;
+	overlay: any; // @TODO: eject to ansyn
+	displayLayers: boolean;
+	@AutoSubscription
+	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
+		select(selectMaps),
+		filter((maps) => Boolean(maps[this.mapId])),
+		tap((maps) => {
+			this.overlay = maps[this.mapId].data.overlay;
+			this.displayLayers = maps[this.mapId].flags.displayLayers;
+		})
+	);
 
 	@AutoSubscription
 	active$ = this.store$.pipe(
 		select(selectActiveMapId),
-		map((activeMapId) => activeMapId === this.mapState.id),
+		map((activeMapId) => activeMapId === this.mapId),
 		tap((isActiveMap) => this.isActiveMap = isActiveMap)
 	);
 
@@ -93,10 +53,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		select(selectMapsTotal),
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
-
-	get mapState() {
-		return this._mapState;
-	}
 
 	@HostBinding('class.one-map')
 	get oneMap() {
@@ -107,30 +63,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 	@Output() onMove = new EventEmitter<MouseEvent>();
-
-	@AutoSubscription
-	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
-		tap((favoriteOverlays) => {
-			this.favoriteOverlays = favoriteOverlays;
-			this.updateFavoriteStatus();
-		})
-	);
-
-	@AutoSubscription
-	presetOverlays$: Observable<any[]> = this.store$.select(selectPresetOverlays).pipe(
-		tap((presetOverlays) => {
-			this.presetOverlays = presetOverlays;
-			this.updatePresetStatus();
-		})
-	);
-
-	@AutoSubscription
-	removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays).pipe(
-		tap((removedOverlaysIds) => {
-			this.removedOverlaysIds = removedOverlaysIds;
-			this.updateRemovedStatus();
-		})
-	);
 
 	alertMsg: AlertMsg;
 	enableCopyOriginalOverlayData: boolean;
@@ -149,22 +81,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	favoriteOverlays: any[];
-	isFavorite: boolean;
 	removedOverlaysIds = [];
-
-	favoritesButtonText: string;
-
 	presetOverlays: any[];
-	isPreset: boolean;
-	presetsButtonText: string;
-	isRemoved: boolean;
-
-	@HostListener('window:keydown', ['$event'])
-	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.isActiveMap && this.overlay && $event.which === 46 && !this.isRemoved) {
-			this.removeOverlay();
-		}
-	}
 
 	getFormattedTime(dateTimeSring: string): string {
 		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
@@ -172,7 +90,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	get description() {
-		const ActiveMap = _get(this.communicators.provide(this.mapState.id), 'ActiveMap');
+		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
 		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
 		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
@@ -217,6 +135,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
 				@Inject(ALERTS) public alerts: IAlert[],
 				protected translate: TranslateService) {
 	}
@@ -230,63 +149,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	showAlert(alertKey) {
 		const ids = this.alertMsg.get(alertKey);
 		if (ids) {
-			return ids.has(this.mapState.id);
+			return ids.has(this.mapId);
 		} else {
 			return this[alertKey];
 		}
 	}
 
-	toggleFavorite() {
-		const overlay = this.overlay;
-		const { id } = overlay;
-		const value = !this.isFavorite;
-		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
-	}
-
-	togglePreset() {
-		const overlay = this.overlay;
-		const { id } = overlay;
-		const value = !this.isPreset;
-		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
-	}
-
-	updateFavoriteStatus() {
-		this.isFavorite = false;
-		if (this.overlay && this.favoriteOverlays && this.favoriteOverlays.length > 0) {
-			this.isFavorite = this.favoriteOverlays.some(o => o.id === this.overlay.id);
-		}
-		this.favoritesButtonText = this.isFavorite ? 'Remove from favorites' : 'Add to favorites';
-	}
-
-	updatePresetStatus() {
-		this.isPreset = false;
-		if (this.overlay && this.presetOverlays && this.presetOverlays.length > 0) {
-			this.isPreset = this.presetOverlays.some(o => o.id === this.overlay.id);
-		}
-		this.presetsButtonText = this.isPreset ? 'Remove from overlays quick loop' : 'Add to overlays quick loop';
-	}
-
-	updateRemovedStatus() {
-		this.isRemoved = this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
-	}
-
 	toggleMapLayers() {
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapState.id }));
-	}
-
-	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({ mapId: this.mapState.id }));
-	}
-
-	removeOverlay() {
-		this.store$.dispatch(new SetRemovedOverlaysIdAction({
-			mapId: this.mapState.id,
-			id: this.overlay.id,
-			value: !this.isRemoved
-		}));
-	}
-
-	changeActiveMap(mapType: string) {
-		this.store$.dispatch(new ChangeImageryMap({ id: this.mapState.id, mapType }));
+		this.store$.dispatch(new ToggleMapLayersAction({mapId: this.mapId}));
 	}
 }

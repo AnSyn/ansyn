@@ -8,30 +8,41 @@ import {
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../reducers/tools.reducer';
+import {
+	IToolsState,
+	selectSubMenu, selectToolFlag,
+	selectToolFlags,
+	SubMenuEnum,
+	toolsFlags,
+	toolsStateSelector
+} from '../reducers/tools.reducer';
 import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 
 @Component({
 	selector: 'ansyn-tools',
 	templateUrl: './tools.component.html',
 	styleUrls: ['./tools.component.less']
 })
+@AutoSubscriptions({
+	init: 'ngOnInit',
+	destroy: 'ngOnDestroy'
+})
 export class ToolsComponent implements OnInit, OnDestroy {
 	isImageControlActive = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
-	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(toolsStateSelector).pipe(
-		map((tools: IToolsState) => tools.flags),
-		distinctUntilChanged()
+
+	@AutoSubscription
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(selectToolFlags).pipe(
+		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
 	);
 
-	public imageProcessingDisabled$: Observable<boolean> = this.store.select(toolsStateSelector).pipe(
-		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
-		distinctUntilChanged(),
-		map((flags) => flags.get(toolsFlags.imageProcessingDisabled)),
-		distinctUntilChanged(),
+	@AutoSubscription
+	public imageProcessingDisabled$: Observable<boolean> =
+		this.store.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
 		filter(Boolean),
 		tap(this.closeManualProcessingMenu.bind(this))
 	);
@@ -40,10 +51,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		map(Boolean)
 	);
 
-	subMenu$ = this.store.select(selectSubMenu).pipe(tap((subMenu) => this.subMenu = subMenu));
-	subMenu: SubMenuEnum;
+	@AutoSubscription
+	subMenu$ = this.store.select(selectSubMenu).pipe(
+		tap((subMenu) => this.subMenu = subMenu)
+	);
 
-	subscribers = [];
+	subMenu: SubMenuEnum;
 
 	get subMenuEnum() {
 		return SubMenuEnum;
@@ -83,27 +96,19 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.subscribers.push(
-			this.subMenu$.subscribe(),
-			this.flags$.subscribe(_flags => {
-				this.flags = _flags;
-			}),
-			this.imageProcessingDisabled$.subscribe()
-		);
 	}
 
 	ngOnDestroy() {
 		this.toggleSubMenu(null);
-		this.subscribers.forEach(sub => sub.unsubscribe());
 	}
 
 	toggleShadowMouse() {
 		const value = this.onShadowMouse;
 
 		if (value) {
-			this.store.dispatch(new StopMouseShadow());
+			this.store.dispatch(new StopMouseShadow({ fromUser: true }));
 		} else {
-			this.store.dispatch(new StartMouseShadow());
+			this.store.dispatch(new StartMouseShadow({ fromUser: true }));
 		}
 	}
 

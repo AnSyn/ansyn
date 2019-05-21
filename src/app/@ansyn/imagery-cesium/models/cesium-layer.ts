@@ -10,7 +10,7 @@ export class CesiumLayer {
 	constructor(public layer: any,
 				public mapProjection: any = null,
 				public terrainProvider: any = null,
-				public sceneMode: ISceneMode = ISceneMode.SCENE2D,
+				public sceneMode: ISceneMode = ISceneMode.SCENE3D,
 				public removePrevLayers = false) {
 
 	}

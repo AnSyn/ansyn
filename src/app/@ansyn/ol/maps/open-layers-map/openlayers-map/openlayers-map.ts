@@ -17,7 +17,9 @@ import {
 	BaseImageryMap, ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapPosition,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
-	ImageryMap, IMapProgress
+	ImageryMap,
+	IMapProgress,
+	ExtentCalculator
 } from '@ansyn/imagery';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
@@ -29,7 +31,6 @@ import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
-import { ExtentCalculator } from '../../../utils/extent-calculator';
 import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
 import * as olInteraction from 'ol/interaction'
 
@@ -424,6 +425,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public setPosition(position: ImageryMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
 		const { extentPolygon, projectedState } = position;
+
+		const someIsNan = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
+		if (someIsNan) {
+			console.warn('ol map setposition failed, can\'t handle invalid coordinates ' + extentPolygon);
+			return of(true);
+		}
+
 		const viewProjection = view.getProjection();
 		const isProjectedPosition = projectedState && viewProjection.getCode() === projectedState.projection.code;
 		if (isProjectedPosition) {

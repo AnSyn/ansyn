@@ -9,18 +9,18 @@ import {
 	BaseImageryPlugin,
 	CommunicatorEntity,
 	ImageryMapPosition,
-	ImageryPlugin
+	ImageryPlugin,
+	toDegrees,
+	toRadians
 } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
 import {
-	BackToWorldSuccess,
-	BackToWorldView,
 	MapActionTypes,
 	PointToRealNorthAction,
 	selectActiveMapId
 } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap, toDegrees, toRadians } from '@ansyn/ol';
+import { OpenLayersMap } from '@ansyn/ol';
 import {
 	catchError,
 	debounceTime,
@@ -47,6 +47,11 @@ import {
 import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
 import { CaseOrientation } from '../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import {
+	BackToWorldSuccess,
+	BackToWorldView,
+	OverlayStatusActionsTypes
+} from '../../../../overlays/overlay-status/actions/overlay-status.actions';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -56,7 +61,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
-	protected maximumNumberOfRetries = 0.1;
+	protected maximumNumberOfRetries = 10;
 	protected thresholdDegrees = 0.1;
 
 	shadowMapObject: OLMap;
@@ -113,7 +118,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$.pipe(
-		ofType<BackToWorldSuccess>(MapActionTypes.BACK_TO_WORLD_SUCCESS),
+		ofType<BackToWorldSuccess>(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
 		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
 		withLatestFrom(this.store$.select(statusBarStateSelector)),
 		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {

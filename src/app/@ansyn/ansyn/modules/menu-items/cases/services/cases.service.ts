@@ -4,7 +4,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
-import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual } from 'lodash';
+import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual, mapValues } from 'lodash';
 import { catchError, map, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
@@ -144,6 +144,12 @@ export class CasesService {
 					id: overlay.id,
 					sourceType: overlay.sourceType
 				}));
+			}
+
+			if (dilutedState.miscOverlays && typeof dilutedState.miscOverlays === 'object') {
+				dilutedState.miscOverlays = mapValues(dilutedState.miscOverlays, overlay => {
+					return overlay ? { id: overlay.id, sourceType: overlay.sourceType } : null;
+				});
 			}
 
 			if (Array.isArray(dilutedState.maps.data)) {

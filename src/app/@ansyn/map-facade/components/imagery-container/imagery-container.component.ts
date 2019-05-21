@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { map } from 'rxjs/operators';
-import { ENTRY_COMPONENTS_PROVIDER } from '../../models/entry-components-provider';
+import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 
 @Component({
 	selector: 'ansyn-imagery-container',
@@ -20,7 +20,6 @@ export class ImageryContainerComponent {
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
 	@Output() onMove = new EventEmitter<void>();
-
 	isHidden$: Observable<boolean> = this.store.select(mapStateSelector).pipe(
 		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))
 	);
@@ -30,7 +29,7 @@ export class ImageryContainerComponent {
 	}
 
 	constructor(protected store: Store<any>,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: any,
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
 				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig
 	) {
 	}

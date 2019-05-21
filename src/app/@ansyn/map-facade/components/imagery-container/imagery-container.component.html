@@ -2,7 +2,7 @@
 	 [style.visibility]="(isHidden$ | async) ? 'hidden' : 'visible'">
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
-						  [mapState]="mapState"
+						  [mapId]="mapState.id"
 						  (onMove)="onMove.emit($event)"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
@@ -21,8 +21,8 @@
 						  [mapId]="mapState.id"></ansyn-map-search-box>
 
 	<ng-container
-		*ngFor="let component of entryComponents"
-		[ansynEntryComponent]="{ component: component , mapState: mapState }">
+		*ngFor="let component of entryComponents.container"
+		[ansynEntryComponent]="{ component: component , mapId: mapState.id }">
 	</ng-container>
 
 </div>

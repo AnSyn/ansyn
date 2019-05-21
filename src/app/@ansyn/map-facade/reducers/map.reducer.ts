@@ -5,7 +5,7 @@ import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { sessionData } from '../models/core-session-state.model';
-import { MapActions, MapActionTypes, IToastMessage, IPendingOverlay } from '../actions/map.actions';
+import { IPendingOverlay, IToastMessage, MapActions, MapActionTypes } from '../actions/map.actions';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
@@ -19,7 +19,7 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 		} else {
 			const mapStateCopy: IMapSettings = {
 				id: UUID.UUID(),
-				data: { position: null },
+				data: { position: { extentPolygon: activeMap.data.position.extentPolygon } },
 				worldView: { ...activeMap.worldView },
 				flags: {}
 			};
@@ -56,7 +56,7 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	isHiddenMaps: new Set<string>(),
 	pendingMapsCount: 0,
 	pendingOverlays: [],
-	layout: <LayoutKey> 'layout1',
+	layout: <LayoutKey>'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null
 });
@@ -153,9 +153,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			if (layout.mapsCount !== Object.values(state.entities).length && Object.values(state.entities).length) {
 				const pendingMapsCount = Math.abs(layout.mapsCount - Object.values(state.entities).length);
 				const mapsList = setMapsDataChanges(state.entities, state.activeMapId, layout);
-				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount, layout: action.payload  });
+				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount, layout: action.payload });
 			}
-			return { ... state, layout: action.payload};
+			return { ...state, layout: action.payload };
 
 		case MapActionTypes.CHANGE_IMAGERY_MAP: {
 			const { id, mapType, sourceType } = action.payload;

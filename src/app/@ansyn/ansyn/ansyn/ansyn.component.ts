@@ -1,15 +1,16 @@
-import { Store } from '@ngrx/store';
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
-import { select } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
-import { Inject } from '@angular/core';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { IToolsConfig, toolsConfig } from "../modules/menu-items/tools/models/tools-config";
+import { UpdateToolsFlags } from "../modules/menu-items/tools/actions/tools.actions";
+import { toolsFlags } from "../modules/menu-items/tools/reducers/tools.reducer";
 
 @Component({
 	selector: 'ansyn-app',
@@ -41,12 +42,20 @@ export class AnsynComponent implements OnInit {
 	@HostBinding('class.component') component = this.componentMode;
 	@Input() version;
 
-	constructor(protected store$: Store<any>, @Inject(COMPONENT_MODE) public componentMode: boolean) {
-		if (componentMode) {
-			store$.dispatch(new LoadDefaultCaseAction());
-		}
+	constructor(protected store$: Store<any>,
+				@Inject(COMPONENT_MODE) public componentMode: boolean,
+				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 	}
 	ngOnInit(): void {
+		if (this.componentMode) {
+			this.store$.dispatch(new LoadDefaultCaseAction());
+		}
+
+		this.store$.dispatch(new UpdateToolsFlags([{
+			key: toolsFlags.shadowMouseActiveForManyScreens,
+			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.activeByDefault
+		}]));
+
 		setTimeout(() => {
 			this.renderContextMenu = true;
 		}, 1000);

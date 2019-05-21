@@ -122,7 +122,8 @@
       "region",
       "overlaysManualProcessArgs",
       "orientation",
-      "layers"
+      "layers",
+      "miscOverlays"
     ],
     "updateCaseDebounceTime": 700,
     "useHash": true,
@@ -327,7 +328,8 @@
 			"poorGeoRegistered": "Poor Geo Registered"
 	   	}
     },
-	 "httpTimeout": "3000"
+	 "httpTimeout": "3000",
+	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,
@@ -354,7 +356,7 @@
     	"title": "Fork me on github",
 		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     },
-    "isCollapsible": false
+    "isCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
   },
   "loginConfig": {
   	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",

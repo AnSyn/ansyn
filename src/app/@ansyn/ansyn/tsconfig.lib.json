@@ -16,6 +16,9 @@
       ],
       "@ansyn/ol": [
         "dist/ansyn/ol"
+      ],
+      "@ansyn/imagery-cesium": [
+        "dist/ansyn/imagery-cesium"
       ]
     },
     "outDir": "../../../out-tsc/lib",

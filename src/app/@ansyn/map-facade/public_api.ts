@@ -42,8 +42,6 @@ export {
 	SetMapPositionByRadiusAction,
 	SetToastMessageAction,
 	PositionChangedAction,
-	BackToWorldSuccess,
-	BackToWorldView,
 	ToggleMapLayersAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
@@ -52,30 +50,16 @@ export {
 
 export {
 	ImageryStatusActionTypes,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction,
-	SetRemovedOverlaysIdAction,
-	SetFavoriteOverlaysAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	ResetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
 	EnableCopyOriginalOverlayDataAction,
-	SetRemovedOverlayIdsCount,
 	AddAlertMsg,
-	RemoveAlertMsg,
+	RemoveAlertMsg
 } from './actions/imagery-status.actions'
 
 export {
 	imageryStatusFeatureKey,
 	ImageryStatusReducer,
 	imageryStatusStateSelector,
-	imageryStatusInitialState,
-	selectRemovedOverlaysIdsCount,
-	selectFavoriteOverlays,
-	selectPresetOverlays,
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
+	imageryStatusInitialState
 } from './reducers/imagery-status.reducer'
 
 export { copyFromContent } from './utils/clipboard';

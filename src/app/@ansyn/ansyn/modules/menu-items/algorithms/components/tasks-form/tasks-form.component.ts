@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { selectFavoriteOverlays } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { TasksService } from '../../services/tasks.service';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, of } from 'rxjs';
@@ -30,7 +31,7 @@ import {
 	selectCurrentAlgorithmTaskRegion,
 	selectCurrentAlgorithmTaskStatus
 } from '../../reducers/tasks.reducer';
-import { selectActiveMapId, selectMaps, selectFavoriteOverlays } from '@ansyn/map-facade';
+import { selectActiveMapId, selectMaps } from '@ansyn/map-facade';
 import { ToggleIsPinnedAction } from '@ansyn/menu';
 import { Dictionary } from '@ngrx/entity';
 import { ICaseMapState } from '../../../cases/models/case.model';

@@ -17,7 +17,6 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	BackToWorldView,
 	ToggleMapLayersAction,
 	SetToastMessageAction
 } from '@ansyn/map-facade'
@@ -56,10 +55,14 @@ import {
 	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
-import { CesiumMapName } from '../../modules/plugins/cesium/maps/cesium-map/cesium-map';
+import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { OpenlayersMapName, DisabledOpenLayersMapName } from '@ansyn/ol';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import {
+	BackToWorldView,
+	OverlayStatusActionsTypes
+} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -99,7 +102,7 @@ export class MapAppEffects {
 			ofType<DisplayOverlayAction>(
 				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-				MapActionTypes.BACK_TO_WORLD_VIEW
+				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
 			),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
 				mapId: payload.mapId, show: false
@@ -134,7 +137,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
+				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -164,8 +167,8 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
-			map((action) => new SetToastMessageAction({
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
+			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
 			}))
@@ -316,13 +319,23 @@ export class MapAppEffects {
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		if (payload.force) {
-			return true
+			return true;
 		}
-		const isFull = isFullOverlay(payload.overlay);
-		const { overlay } = payload;
-		const mapData = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId).data;
-		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === overlay.id);
-		return isFull && (isNotDisplayed || payload.forceFirstDisplay);
+
+		const payloadOverlay = payload.overlay;
+		const isFull = isFullOverlay(payloadOverlay);
+		if (!isFull) {
+			return false;
+		}
+
+		const caseMapState: ICaseMapState = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId);
+		if (!caseMapState) {
+			return false;
+		}
+
+		const mapData = caseMapState.data;
+		const isNotDisplayed = !(isFullOverlay(mapData.overlay) && mapData.overlay.id === payloadOverlay.id);
+		return (isNotDisplayed || payload.forceFirstDisplay);
 	}
 
 	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {

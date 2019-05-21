@@ -290,6 +290,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
 			label: '',
+			icon: this.olPluginsConfig.Annotations.icon,
 			mode
 		});
 		this.projectionService
@@ -449,7 +450,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const centerPoint = getPointByGeometry(featureGeoJson.geometry);
 		return new olStyle({
 			geometry: new olPoint(centerPoint.coordinates),
-			image: new olIcon(this.olPluginsConfig.Annotations.icon)
+			image: new olIcon(featureGeoJson.properties.icon)
 
 		});
 	}

@@ -1,23 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { OverlaySourceTypeNoticeComponent } from './overlay-source-type-notice.component';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
-import { mapFacadeConfig } from '../../models/map-facade.config';
+import { Store, StoreModule } from '@ngrx/store';
+import { OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
+import { OverlaysConfig } from '../../services/overlays.service';
+import { OverlaySourceTypeNoticeComponent } from './overlay-source-type-notice.component';
 
 describe('OverlaySourceTypeNoticeComponent', () => {
 	let component: OverlaySourceTypeNoticeComponent;
 	let fixture: ComponentFixture<OverlaySourceTypeNoticeComponent>;
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({}),
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
 				EffectsModule.forRoot([])
 			],
 			declarations: [OverlaySourceTypeNoticeComponent],
 			providers: [
 				{
-					provide: mapFacadeConfig, useValue: {
+					provide: OverlaysConfig, useValue: {
 						sourceTypeNotices: {
 							'SRC_TYPE_1': {
 								Default: 'DDD',

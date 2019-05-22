@@ -4,7 +4,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../../models/overlays.config';
-import { selectdisplayOverlayHistory, selectOverlaysMap } from '../../reducers/overlays.reducer';
+import { selectdisplayOverlayHistory, selectLoadedOverlays, selectOverlaysMap } from '../../reducers/overlays.reducer';
 import { OverlaysConfig } from '../../services/overlays.service';
 
 @Component({
@@ -15,18 +15,18 @@ import { OverlaysConfig } from '../../services/overlays.service';
 @AutoSubscriptions()
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
-	overlayHistory$ = this.store$.select(selectdisplayOverlayHistory);
+	loadedOverlays$ = this.store$.select(selectLoadedOverlays);
 	overlays$ = this.store$.select(selectOverlaysMap);
 	@AutoSubscription
-	overlay$ = this.overlayHistory$.pipe(
+	overlay$ = this.loadedOverlays$.pipe(
 		withLatestFrom(this.overlays$),
-		filter(([overlaysHistory, overlays]) => Boolean(overlaysHistory[this.mapId] && overlays)),
-		tap(([overlaysHistory, overlays]) => {
-			const lastOverlay = overlaysHistory[this.mapId][overlaysHistory[this.mapId].length - 1];
+		filter(([loadedOverlays, overlays]) => Boolean(overlays)),
+		tap(([loadedOverlays, overlays]) => {
+			const lastOverlay = loadedOverlays[this.mapId];
 			this.overlay = overlays.get(lastOverlay);
 		})
 	);
-	set overlay(newOverlay: IOverlay){
+	set overlay(newOverlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration
 		this._title = newOverlay

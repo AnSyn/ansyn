@@ -28,7 +28,6 @@ import { HelpModule } from './modules/menu-items/help/help.module';
 import { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 import { SettingsModule } from './modules/menu-items/settings/settings.module';
 import { ToolsModule } from './modules/menu-items/tools/tools.module';
-import { OverlaySourceTypeNoticeComponent } from './modules/overlays/components/overlay-source-type-notice/overlay-source-type-notice.component';
 import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
@@ -56,7 +55,7 @@ import { StatusBarModule } from './modules/status-bar/status-bar.module';
 		AppEffectsModule,
 		MapFacadeModule.provide({
 			entryComponents: {
-				container: [AnnotationContextMenuComponent, OverlaySourceTypeNoticeComponent],
+				container: [AnnotationContextMenuComponent],
 				status: []
 			}
 		}),
@@ -77,14 +76,13 @@ import { StatusBarModule } from './modules/status-bar/status-bar.module';
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
-		OverlayOutOfBoundsComponent, OverlaySourceTypeNoticeComponent
+		OverlayOutOfBoundsComponent
 	],
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
-		AnsynFooterComponent,
-		OverlaySourceTypeNoticeComponent
+		AnsynFooterComponent
 	],
 	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })

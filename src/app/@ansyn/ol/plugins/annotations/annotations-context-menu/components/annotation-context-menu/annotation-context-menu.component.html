@@ -83,40 +83,6 @@
 					</p>
 				</li>
 				<li>
-					<button [class.active]="selectedTab[featureId] === Tabs.Icon"
-							(click)="selectTab(featureId, Tabs.Icon)">
-						<i tooltip-value="Change Icon" tooltip-class="bottom">
-							<svg viewBox="0 0 1024 1024">
-								<path
-									d="M772.676 213.333h-192.124c-10.001 0-19.802 4.052-26.871 11.119l-329.236 329.263c-14.816 14.818-14.816 38.903 0 53.722l192.124 192.137c7.395 7.394 17.146 11.093 26.87 11.093 9.702 0 19.452-3.699 26.871-11.068l329.237-329.263c7.168-7.194 11.119-16.742 11.119-26.876v-192.135c0-20.946-17.045-37.992-37.99-37.992zM785.314 443.439c0 3.341-1.34 6.609-3.699 8.964l-329.237 329.263c-4.937 4.937-12.966 4.937-17.903 0l-192.124-192.137c-4.939-4.941-4.939-12.971 0-17.907l329.237-329.263c2.355-2.355 5.623-3.698 8.964-3.698h192.098c6.967 0 12.663 5.674 12.663 12.664v192.114z"></path>
-							</svg>
-						</i>
-					</button>
-
-					<form class="annotation-label-edit annotation-icon"
-						  *ngIf="selectedTab[featureId] === Tabs.Icon"
-						  (ngSubmit)="updateIcon({src: iconSrc.value,scale: iconScale.value}, featureId)">
-						<mat-form-field class="label-form-field">
-							<input matInput
-								   type="text"
-								   #iconSrc
-								   placeholder="Src:"
-								   name="EditIconSrc"
-								   [ngModel]="getFeatureProps(featureId)?.icon.src">
-						</mat-form-field>
-						<mat-form-field class="label-form-field">
-							<input matInput
-								   type="number"
-								   #iconScale
-								   placeholder="Scale:"
-								   name="EditIconScale"
-								   [ngModel]="getFeatureProps(featureId)?.icon.scale">
-						</mat-form-field>
-						<input type="submit" value="change icon">
-
-					</form>
-				</li>
-				<li>
 					<button class='removeFeature' (click)="removeFeature(featureId)">
 						<i tooltip-value="Delete" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">

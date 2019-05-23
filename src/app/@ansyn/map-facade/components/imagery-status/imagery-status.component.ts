@@ -69,10 +69,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	favoriteOverlays: any[];
-	removedOverlaysIds = [];
-	presetOverlays: any[];
-
 	getFormattedTime(dateTimeSring: string): string {
 		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
 		return formatedTime;

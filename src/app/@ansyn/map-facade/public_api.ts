@@ -1,5 +1,3 @@
-export { selectAlertMsg } from './reducers/imagery-status.reducer';
-
 export { IEntryComponent } from './directives/entry-component.directive';
 
 export {
@@ -51,9 +49,7 @@ export {
 
 export {
 	ImageryStatusActionTypes,
-	EnableCopyOriginalOverlayDataAction,
-	AddAlertMsg,
-	RemoveAlertMsg
+	EnableCopyOriginalOverlayDataAction
 } from './actions/imagery-status.actions'
 
 export {

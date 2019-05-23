@@ -1,10 +1,11 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { selectAlertMsg, selectMaps, selectMapsTotal } from '@ansyn/map-facade';
+import { selectMaps, selectMapsTotal } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { IOverlay } from '../../../overlays/models/overlay.model';
+import { selectAlertMsg } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { ALERTS, IAlert } from '../../alerts.model';
 import { AlertMsg } from '../../model';
 

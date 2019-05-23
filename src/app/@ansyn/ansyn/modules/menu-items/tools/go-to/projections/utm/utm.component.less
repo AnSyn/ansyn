@@ -1,3 +1,7 @@
+@import 'ansyn/less/common';
+@import 'ansyn/less/colors';
+@import "ansyn/less/z-index-globals";
+
 :host {
 	box-sizing: border-box;
 	display: flex;
@@ -27,7 +31,7 @@
 				width: 100%;
 				background: transparent;
 				border: none;
-				border-bottom: 1px solid #229db6;
+				border-bottom: 1px solid @application-primary-color;
 				outline: none;
 				color: white;
 				font-size: 14px;

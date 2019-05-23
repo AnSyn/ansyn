@@ -1,5 +1,6 @@
-@import "ansyn/less/z-index-globals";
 @import 'ansyn/less/common';
+@import 'ansyn/less/colors';
+@import "ansyn/less/z-index-globals";
 
 :host {
 	display: block;
@@ -20,7 +21,7 @@
 				padding: 0;
 				border: none;
 				color: white;
-				background: rgba(255, 255, 255, 0.25);
+				background: @background-color-5;
 				box-sizing: border-box;
 				outline: none;
 				width: 34px;
@@ -41,11 +42,12 @@
 				}
 
 				&:hover:not(:disabled), &.active {
-					background-color: rgb(41, 127, 155);
+					border: 1px solid @application-primary-color;
+					border-radius: 1px;
 				}
 			}
 			&.user-annotations {
-				.icon-annotation {
+				.icon-annotations {
 					font-size: 26px;
 					padding-left: 2px;
 				}

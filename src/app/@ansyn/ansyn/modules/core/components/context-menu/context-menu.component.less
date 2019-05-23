@@ -1,6 +1,6 @@
 @import "ansyn/less/common";
 @import "ansyn/less/colors";
-@import 'ansyn/less/z-index-globals';
+@import "ansyn/less/z-index-globals";
 
 @context-menu-color: @application-primary-color;
 @context-menu-contrast: white;
@@ -22,7 +22,7 @@
 					font-size: 12px;
 					&:hover:not(:disabled) {
 						span {
-							// color: @application-main-color;
+							// color: @background-color-3;
 						}
 						div.sub-buttons-list {
 							visibility: visible;
@@ -159,7 +159,7 @@
 
 				&:disabled {
 					&.first, &.prev, &.angle, &.next, &.last, &.best {
-						color: #8cceff;
+						color: @application-contrast-color;
 					}
 				}
 

@@ -1,6 +1,6 @@
 @import "ansyn/less/common";
 @import "ansyn/less/colors";
-@import 'ansyn/less/z-index-globals';
+@import "ansyn/less/z-index-globals";
 
 @number-of-menu-item: 8;
 
@@ -34,7 +34,7 @@ div.menu-wrapper {
 
 	div.menu {
 		position: relative;
-		background: @menu-color;
+		background: @background-color-1;
 		flex-direction: column;
 		display: flex;
 		z-index: @z-index-menu;
@@ -74,7 +74,7 @@ div.menu-wrapper {
 
 			span.badge {
 				position: absolute;
-				background: #fb634e;
+				background: @application-secondary-color;
 				right: 17px;
 				top: 4px;
 				width: 18px;
@@ -88,7 +88,7 @@ div.menu-wrapper {
 				display: block;
 			}
 			&:hover {
-				background-color: @application-main-color;
+				background-color: @background-color-3;
 			}
 			&.active {
 				background-color: @application-primary-color;
@@ -102,12 +102,12 @@ div.menu-wrapper {
 		left: 90px;
 		z-index: @z-index-menu-container;
 		height: 100%;
-		background: rgba(red(@application-main-color), green(@application-main-color), blue(@application-main-color), .9);
+		background: rgba(red(@background-color-3), green(@background-color-3), blue(@background-color-3), .9);
 
 		&.pinned {
 			position: relative;
 			left: 0;
-			background: @application-main-color;
+			background: @background-color-3;
 			button.pin i {
 				transform: rotate(0);
 			}

@@ -38,7 +38,7 @@ input:disabled ~ .switch {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: darken(@application-main-color, 20%);
+	background-color: darken(@background-color-3, 20%);
 	-webkit-transition: transform .4s, background-color .4s;
 	transition: transform .4s, background-color .4s;
 }
@@ -56,11 +56,11 @@ input:disabled ~ .switch {
 }
 
 input:checked + .slider {
-	background-color: lighten(@application-main-color, 20%);
+	background-color: lighten(@background-color-3, 20%);
 }
 
 input:focus + .slider {
-	box-shadow: 0 0 1px lighten(@application-main-color, 20%);
+	box-shadow: 0 0 1px lighten(@background-color-3, 20%);
 }
 
 input:checked + .slider:before {

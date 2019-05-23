@@ -1,17 +1,21 @@
 import {
 	ImageryStatusActionTypes
 } from '../actions/imagery-status.actions';
-import { uniq } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { AlertMsg, AlertMsgTypes } from '../../ansyn/modules/alerts/model';
 
 export const imageryStatusFeatureKey = 'imageryStatus';
 export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);
 
+// TODO: move to ansyn
+enum AlertMsgTypes {
+	OverlaysOutOfBounds = 'overlaysOutOfBounds',
+	overlayIsNotPartOfQuery = 'overlayIsNotPartOfQuery'
+}
+
 export interface ImageryStatusState {
-	// @todo IOverlay
+	// @todo AlertMsg
 	enableCopyOriginalOverlayData: boolean;
-	alertMsg: AlertMsg;
+	alertMsg: Map<AlertMsgTypes, Set<string>>;
 }
 
 export const imageryStatusInitialState: ImageryStatusState = {

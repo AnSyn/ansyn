@@ -1,20 +1,18 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { Dictionary } from '@ngrx/entity';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, tap, map, filter } from 'rxjs/internal/operators';
+import { filter, map, tap } from 'rxjs/internal/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
-import { ALERTS, IAlert } from '../../../ansyn/modules/alerts/alerts.model';
-import { AlertMsg } from '../../../ansyn/modules/alerts/model';
-import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from "../../models/entry-components-provider";
-import { selectAlertMsg, selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
+import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
+import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
-import { copyFromContent } from "../../utils/clipboard";
+import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
-import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-imagery-status',

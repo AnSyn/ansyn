@@ -6,8 +6,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import { ALERTS } from '../../../ansyn/modules/alerts/alerts.model';
-import { AlertsModule } from '../../../ansyn/modules/alerts/alerts.module';
 import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';

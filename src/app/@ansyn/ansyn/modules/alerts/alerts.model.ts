@@ -1,5 +1,5 @@
 import { FactoryProvider, InjectionToken } from '@angular/core';
-import { IEntryComponent } from '../directives/entry-component.directive';
+import { IEntryComponent } from '../../../map-facade/directives/entry-component.directive';
 
 export interface IAlert {
 	key: string;

@@ -1,5 +1,6 @@
+export { selectAlertMsg } from './reducers/imagery-status.reducer';
+
 export { IEntryComponent } from './directives/entry-component.directive';
-export { AlertMsgTypes } from './alerts/model';
 
 export {
 	initialMapState,
@@ -68,8 +69,6 @@ export { getTimeFormat, getTimeDiff, getTimeDiffFormat  } from './utils/time';
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
-export { AlertsModule } from './alerts/alerts.module';
-export { IAlert, IAlertComponent } from './alerts/alerts.model';
 export { EntryComponentDirective } from './directives/entry-component.directive';
 export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';

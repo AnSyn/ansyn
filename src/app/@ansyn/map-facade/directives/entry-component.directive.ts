@@ -1,5 +1,4 @@
 import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef, ComponentRef, OnInit } from '@angular/core';
-import { IAlertComponent } from '../alerts/alerts.model';
 
 export interface IEntryComponent {
 	mapId: string;
@@ -24,8 +23,8 @@ export class EntryComponentDirective implements OnDestroy, OnInit {
 		if (this.componentRef) {
 			this.componentRef.destroy();
 		}
-		const factory = this.componentFactoryResolver.resolveComponentFactory<IAlertComponent>(this.ansynEntryComponent.component);
-		this.componentRef = this.viewContainerRef.createComponent<IAlertComponent>(factory);
+		const factory = this.componentFactoryResolver.resolveComponentFactory<IEntryComponent>(this.ansynEntryComponent.component);
+		this.componentRef = this.viewContainerRef.createComponent<IEntryComponent>(factory);
 		this.componentRef.instance.mapId = this.ansynEntryComponent.mapId;
 
 	};

@@ -23,6 +23,7 @@ import { selectFavoriteOverlays, selectPresetOverlays, selectRemovedOverlays } f
 	destroy: 'ngOnDestroy'
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+	static TYPE = 'buttons';
 	@Input() mapId: string;
 	mapsAmount = 1;
 	overlay: IOverlay;

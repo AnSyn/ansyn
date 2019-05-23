@@ -3,7 +3,7 @@ import {
 } from '../actions/imagery-status.actions';
 import { uniq } from 'lodash';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { AlertMsg, AlertMsgTypes } from '../alerts/model';
+import { AlertMsg, AlertMsgTypes } from '../../ansyn/modules/alerts/model';
 
 export const imageryStatusFeatureKey = 'imageryStatus';
 export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { AlertMsgTypes } from '../alerts/model';
+import { AlertMsgTypes } from '../../ansyn/modules/alerts/model';
 
 export enum ImageryStatusActionTypes {
 	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',

@@ -7,8 +7,8 @@ import { get as _get } from 'lodash'
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, tap, map, filter } from 'rxjs/internal/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
-import { ALERTS, IAlert } from '../../alerts/alerts.model';
-import { AlertMsg } from '../../alerts/model';
+import { ALERTS, IAlert } from '../../../ansyn/modules/alerts/alerts.model';
+import { AlertMsg } from '../../../ansyn/modules/alerts/model';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from "../../models/entry-components-provider";
 import { selectAlertMsg, selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
@@ -64,16 +64,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 	@Output() onMove = new EventEmitter<MouseEvent>();
 
-	alertMsg: AlertMsg;
 	enableCopyOriginalOverlayData: boolean;
-
-	@AutoSubscription
-	alertMsg$: Observable<AlertMsg> = this.store$
-		.pipe(
-			select(selectAlertMsg),
-			tap((alertMsg) => this.alertMsg = alertMsg),
-			distinctUntilChanged()
-		);
 
 	@AutoSubscription
 	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
@@ -136,7 +127,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
-				@Inject(ALERTS) public alerts: IAlert[],
 				protected translate: TranslateService) {
 	}
 
@@ -144,15 +134,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-	}
-
-	showAlert(alertKey) {
-		const ids = this.alertMsg.get(alertKey);
-		if (ids) {
-			return ids.has(this.mapId);
-		} else {
-			return this[alertKey];
-		}
 	}
 
 	toggleMapLayers() {

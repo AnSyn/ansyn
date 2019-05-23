@@ -12,6 +12,7 @@ import { BackToWorldView } from '../../actions/overlay-status.actions';
 })
 @AutoSubscriptions()
 export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponent {
+	static TYPE = 'buttons';
 	static showFirst = true;
 	@Input() mapId: string;
 	mapsAmount: number;

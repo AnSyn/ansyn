@@ -1,23 +1,24 @@
 @import "ansyn/less/common";
+@import "ansyn/less/colors";
 @import "ansyn/less/z-index-globals";
 
 @tools-box-width: 220px;
 @tools-box-height: 275px;
 
 // input range styles (see https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
-@track-color: white;
-@thumb-color: white;
+@track-progress-color: @application-primary-color;
+@track-color: @background-color-6;
+@thumb-color: @background-color-7;
 
 @thumb-radius: 50%;
-@thumb-size: 20px;
+@thumb-size: 8px;
 @thumb-border-width: 1px;
-@thumb-border-color: white;
+@thumb-border-color: @background-color-7;
 
-@reset-btn-width: 20%;
-@track-width: 75%;
+@track-width: 120px;
 @track-height: 2px;
 @track-border-width: 1px;
-@track-border-color: white;
+@track-border-color: @background-color-6;
 
 @track-radius: 5px;
 @contrast: 5%;
@@ -50,31 +51,39 @@
 	div.image-processing-container {
 		transition-delay: 0.05s;
 		visibility: hidden;
-		div.resetAll {
-			align-self: flex-end;
-			margin-top: 10px;
-			font-size: 12px;
-			cursor: pointer;
+		.title-wrapper {
+			display: flex;
+			margin: 10px 0;
+			.title {
+				font-size: 13px;
+				width: 100px;
+			}
+			.resetAll {
+				margin-left: auto;
+				color: @background-color-6;
+				margin-top: 5px;
+				font-size: 9px;
+				cursor: pointer;
+			}
 		}
 		ul.image-processing-options {
 			padding: 0;
 			li {
-				&:hover {
-					button {
-						opacity: 1;
-					}
-				}
 				list-style-type: none;
+				font-size: 9px;
+				margin-bottom: 16px;
+				.input-wrapper {
+					display: flex;
+					
+				}
 				button {
-					transition: opacity .3s;
-					opacity: 0;
 					vertical-align: top;
-					width: @reset-btn-width;
 					background: transparent;
 					padding: 0;
 					border: none;
 					outline: 0 none;
-					color: white;
+					margin-left: auto;
+					color: @background-color-6;
 					&:hover {
 						text-decoration: underline;
 					}
@@ -100,7 +109,7 @@
 					-webkit-appearance: none;
 					margin: @thumb-size/2 0;
 					width: @track-width;
-
+					background-color: transparent;
 					&:focus {
 						outline: none;
 					}
@@ -159,6 +168,7 @@
 					&:focus::-ms-fill-upper {
 						background: lighten(@track-color, @contrast);
 					}
+					
 				}
 			}
 		}

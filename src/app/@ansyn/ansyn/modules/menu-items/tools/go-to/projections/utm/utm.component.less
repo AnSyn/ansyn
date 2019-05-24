@@ -7,36 +7,30 @@
 	display: flex;
 	flex-direction: column;
 	color: white;
-	margin-left: 12px;
 	.inputs {
 		display: flex;
-
+		margin-top: 15px;
 		.input-box {
-			margin-right: 5px;
-			padding: 0 10px;
-			&.narrow {
-				width: 15%;
-			}
-			&:last-child {
-				width: 10%;
-				text-align: center;
-				margin-right: 0;
-			}
+			display: flex;
+    	flex-direction: column;
+			margin-right: 20px;
 			label {
 				opacity: 0.7;
-				font-size: 12px;
+				margin-bottom: 5px;
+				font-size: 10px;
 			}
 			input {
-				display: block;
-				width: 100%;
+				width: 75px;
 				background: transparent;
 				border: none;
-				border-bottom: 1px solid @application-primary-color;
 				outline: none;
 				color: white;
 				font-size: 14px;
-				padding: 1px 0 1px 1px;
-
+				padding: 6px 11px;
+				background: black;
+			}
+			#utm-z-input {
+				width: 24px;
 			}
 		}
 		.utm-copy-to-clipboard {
@@ -44,11 +38,19 @@
 			font-size: 18px;
 			display: flex;
 			justify-content: flex-end;
-			align-items: center;
-			padding-right: 17px;
+			align-items: flex-end;
+    	margin-bottom: 5px;
+			margin-left: auto;
 			cursor: pointer;
 		}
 
+	}
+	.error-message {
+		position: absolute;
+		color: #d50000;
+		font-size: 12px;
+		margin: 0;
+		padding: 0 10px;
 	}
 	.error-font() {
 		color: #d50000;
@@ -63,7 +65,7 @@
 	.goto-projection-title {
 		display: flex;
 		align-items: flex-end;
-
+		margin-top: 24px;
 		.ed50-notification {
 			margin-left: 1em;
 			direction: rtl;

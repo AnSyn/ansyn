@@ -17,7 +17,7 @@
 .icon-icon-export:before { content: '\e80f'; }
 .icon-icon-favorites_2:before { content: '\e810'; }
 .icon-icon-favorites:before { content: '\e811'; }
-.icon-icon-frame-mode:before { content: '\e812'; }
+.icon-frame-mode:before { content: '\e812'; }
 .icon-icon-import:before { content: '\e813'; }
 .icon-icon-input_filter:before { content: '\e814'; }
 .icon-icon-layers-hide:before { content: '\e815'; }
@@ -49,7 +49,7 @@
 .icon-icon-status-bar-prev:before { content: '\e82f'; }
 .icon-icon-status-bar-time:before { content: '\e830'; }
 .icon-icon-temporary-link:before { content: '\e831'; }
-.icon-icon-tools-heatmap:before { content: '\e832'; }
+.icon-tools-heatmap:before { content: '\e832'; }
 .icon-icon-tools-go-to:before { content: '\e833'; }
 .icon-icon-tools-image-processing:before { content: '\e834'; }
 .icon-icon-tools-ruler:before { content: '\e835'; }
@@ -106,7 +106,6 @@
 .icon-automatic-image-processing:before { content: '\e92e'; }
 .icon-status-bar-imagery-count:before { content: '\e92f'; }
 .icon-label:before { content: '\e930'; }
-.icon-tools-heatmap:before { content: '\e931'; }
 .icon-color:before { content: '\e932'; }
 .icon-weight:before { content: '\e933'; }
 .icon-restore:before { content: '\e934'; }
@@ -116,7 +115,7 @@
 .icon-delete:before { content: '\e943'; }
 .icon-edit:before { content: '\e944'; }
 .icon-share:before { content: '\e945'; }
-.icon-annotation-square:before { content: '\e94c'; }
+.icon-annotation-square:before { content: '\e807'; }
 .icon-annotation-duplicate:before { content: '\e951'; }
 .icon-layers-hide:before { content: '\e954'; }
 .icon-status-bar-show-pin-point:before { content: '\e956'; }
@@ -125,4 +124,3 @@
 .icon-context-menu-best:before { content: '\e95b'; }
 .icon-remove-from-case:before { content: '\e978'; }
 .icon-reset-timeline:before { content: '\e97a'; }
-.icon-frame-mode:before { content: '\e97b'; }

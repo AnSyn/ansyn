@@ -20,8 +20,6 @@ div.menu-wrapper {
 			.menu-content {
 				opacity: .5;
 			}
-			.menu-btn {
-			}
 			div.menu-btn i {
 				opacity: 1;
 				font-size: 20px;
@@ -57,7 +55,7 @@ div.menu-wrapper {
 			text-align: center;
 			color: white;
 			text-decoration: none;
-			padding: 10px 0;
+			padding: 14px 0;
 			cursor: pointer;
 			font-size: 0.9rem;
 
@@ -98,11 +96,10 @@ div.menu-wrapper {
 
 	div.container {
 		position: absolute;
-
 		left: 90px;
 		z-index: @z-index-menu-container;
 		height: 100%;
-		background: rgba(red(@background-color-3), green(@background-color-3), blue(@background-color-3), .9);
+		background: fade(@background-color-3, 95%);
 
 		&.pinned {
 			position: relative;

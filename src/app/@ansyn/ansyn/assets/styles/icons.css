@@ -3,7 +3,7 @@
 .icon-annotation-arrow:before { content: '\e801'; } /* '' */
 .icon-annotation-circle:before { content: '\e802'; } /* '' */
 .icon-annotation-color:before { content: '\e803'; } /* '' */
-.icon-annotation-line:before { content: '\e804'; } /* '' */
+.icon-annotation-linestring:before { content: '\e804'; } /* '' */
 .icon-annotation-point:before { content: '\e805'; } /* '' */
 .icon-annotation-polygon:before { content: '\e806'; } /* '' */
 .icon-annotation-weight:before { content: '\e808'; } /* '' */
@@ -54,7 +54,7 @@
 .icon-status-bar-geo:before { content: '\e838'; } /* '' */
 .icon-status-bar-case:before { content: '\e839'; } /* '' */
 .icon-share:before { content: '\e83a'; } /* '' */
-.icon-annotation-square:before { content: '\e842'; } /* '' */
+.icon-annotation-rectangle:before { content: '\e842'; } /* '' */
 .icon-screen-7:before { content: '\e85e'; } /* '' */
 .icon-screen-8:before { content: '\e85f'; } /* '' */
 .icon-screen-9:before { content: '\e860'; } /* '' */

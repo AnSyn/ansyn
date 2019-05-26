@@ -1,23 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { EntryComponentDirective, MapFacadeModule, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { mapFacadeConfig, MapFacadeModule, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { ALERTS } from '../../alerts.model';
-import { AlertsModule } from '../../alerts.module';
 
 import { AlertsContainerComponent } from './alerts-container.component';
 import { StoreModule } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('AlertsContainerComponent', () => {
 	let component: AlertsContainerComponent;
 	let fixture: ComponentFixture<AlertsContainerComponent>;
-
+	let actions: Observable<any>;
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [AlertsContainerComponent],
 			imports: [
 				MapFacadeModule,
-				StoreModule.forRoot({[mapFeatureKey]: MapReducer})],
+				StoreModule.forRoot({[mapFeatureKey]: MapReducer}),
+				EffectsModule.forRoot([])],
 			providers: [
 				{ provide: ALERTS, useValue: [] },
+				{ provide: mapFacadeConfig, useValue: {} },
+				provideMockActions(() => actions),
 			]
 		})
 			.compileComponents();

@@ -6,6 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
+import { EntryComponentDirective } from '../../directives/entry-component.directive';
 import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
@@ -30,6 +31,7 @@ describe('ImageryStatusComponent', () => {
 			],
 			declarations: [
 				ImageryStatusComponent,
+				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-popover',
 					inputs: ['text', 'icon', 'popDirection']

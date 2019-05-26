@@ -61,4 +61,12 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 	getType(): string {
 		return '';
 	}
+
+	get moveToMap() {
+		if (this.selectedMap === DimensionMode.D2 ) {
+			return DimensionMode.D3;
+		} else {
+			return DimensionMode.D2;
+		}
+	}
 }

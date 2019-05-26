@@ -1,0 +1,71 @@
+@status-bar-height: 35px;
+@source-type-notice-width: 40%;
+@z-index-overlay-source-type-notice: 3;
+
+:host {
+	position: absolute;
+	// bottom position is set in imagery-manager.component.less
+	//
+	// horizontally  centered
+	left: 50%;
+	transform: translateX(-50%);
+	max-width: @source-type-notice-width;
+	z-index: @z-index-overlay-source-type-notice;
+	bottom: 0;
+
+	.overlay-source-type-notice {
+		background-color: rgba(0, 0, 0, 0.3);
+		color: white;
+		padding: 5px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		font-size: 12px;
+	}
+}
+
+.imageries-container {
+	&.layout1 {
+		:host {
+			bottom: @status-bar-height;
+		}
+	}
+
+	&.layout2 {
+		:host {
+			bottom: @status-bar-height;
+		}
+	}
+
+	&.layout3 {
+		div.map-container-wrapper:last-child {
+			:host {
+				bottom: @status-bar-height;
+			}
+		}
+	}
+
+	&.layout4 {
+		div.map-container-wrapper:first-child, div.map-container-wrapper:last-child {
+			:host {
+				bottom: @status-bar-height;
+			}
+		}
+	}
+
+	&.layout5 {
+		div.map-container-wrapper:not(:first-child) {
+			:host {
+				bottom: @status-bar-height;
+			}
+		}
+	}
+
+	&.layout6 {
+		div.map-container-wrapper:nth-child(3), div.map-container-wrapper:nth-child(4) {
+			:host {
+				bottom: @status-bar-height;
+			}
+		}
+	}
+}

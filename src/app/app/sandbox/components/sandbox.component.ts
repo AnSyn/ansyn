@@ -187,4 +187,109 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			console.warn('Cannot set misc overlays because there are no query overlays');
 		}
 	}
+
+	setAnnotationsWithIcons() {
+		let center: Point = {
+			type: 'Point',
+			coordinates: [-117.9402, 33.8181]
+		};
+		this.ansynApi.setMapPositionByRadius(center, 5000, true);
+		this.ansynApi.setAnnotations({
+			"type": "FeatureCollection",
+			"features": [
+				{
+					"type": "Feature",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [
+							-117.94590568490094,
+							33.816596031188965
+						]
+					},
+					"properties": {
+						"id": "efecb919-089e-d5e6-9ab3-3b3b73d9d9c8",
+						"style": {
+							"opacity": 1,
+							"initial": {
+								"fill": "#ff0080",
+								"stroke": "#ff80c0",
+								"stroke-width": 1,
+								"fill-opacity": 0.4,
+								"marker-size": "medium",
+								"marker-color": "#ff0080",
+								"label": {
+									"overflow": true,
+									"font": "27px Calibri,sans-serif",
+									"stroke": "#000",
+									"fill": "white"
+								},
+								"stroke-opacity": 1
+							}
+						},
+						"showMeasures": false,
+						"showLabel": false,
+						"label": "",
+						"mode": "Point",
+						"icon": "assets/icons/map/entity-marker.svg"
+					}
+				},
+				{
+					"type": "Feature",
+					"geometry": {
+						"type": "Polygon",
+						"coordinates": [
+							[
+								[
+									-117.93876457057195,
+									33.82112789180246
+								],
+								[
+									-117.92475700378418,
+									33.82112789180246
+								],
+								[
+									-117.92475700378418,
+									33.817145347071346
+								],
+								[
+									-117.93876457057195,
+									33.817145347071346
+								],
+								[
+									-117.93876457057195,
+									33.82112789180246
+								]
+							]
+						]
+					},
+					"properties": {
+						"id": "79bbd5d3-6df8-f861-d036-7589555673a9",
+						"style": {
+							"opacity": 1,
+							"initial": {
+								"fill": "#400040",
+								"stroke": "#008040",
+								"stroke-width": 1,
+								"fill-opacity": 0.4,
+								"marker-size": "medium",
+								"marker-color": "#400040",
+								"label": {
+									"overflow": true,
+									"font": "27px Calibri,sans-serif",
+									"stroke": "#000",
+									"fill": "white"
+								},
+								"stroke-opacity": 1
+							}
+						},
+						"showMeasures": false,
+						"showLabel": false,
+						"label": "",
+						"mode": "Rectangle",
+						"icon": "assets/logo.svg"
+					}
+				}
+			]
+		})
+	}
 }

@@ -47,7 +47,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
 	selected: string[] = [];
-	private showCenterIndication = true;
+	private iconSrc = '';
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 
@@ -105,7 +105,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: feature.properties.id,
 			style: feature.properties.style,
 			showMeasures: feature.properties.showMeasures,
-			label: feature.properties.label
+			label: feature.properties.label,
+			icon: feature.properties.icon
 		}));
 	}
 
@@ -290,6 +291,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
 			label: '',
+			icon: this.iconSrc,
 			mode
 		});
 		this.projectionService
@@ -358,7 +360,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (entity && entity.showMeasures) {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
-		if (entity && this.showCenterIndication && this.olPluginsConfig.Annotations.icon) {
+		if (entity && entity.icon ) {
 			styles.push(this.getCenterIndicationStyle(feature))
 		}
 
@@ -449,7 +451,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const centerPoint = getPointByGeometry(featureGeoJson.geometry);
 		return new olStyle({
 			geometry: new olPoint(centerPoint.coordinates),
-			image: new olIcon(this.olPluginsConfig.Annotations.icon)
+			image: new olIcon({
+				scale: 1,
+				src: featureGeoJson.properties.icon
+			})
 
 		});
 	}
@@ -513,13 +518,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
-	public isShowAnnotationCenter() {
-		return this.showCenterIndication;
-	}
-
-	public toggleAnnotaionCenerIndication(value) {
-		this.showCenterIndication = value;
-		this.source.refresh();
+	public setIconSrc(src: string) {
+		this.iconSrc = src;
 	}
 }
 

@@ -14,7 +14,6 @@ import { ImageryRotationComponent } from './components/imagery-rotation/imagery-
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { ImageryTileProgressComponent } from './components/imagery-tile-progress/imagery-tile-progress.component';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
-import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-type-notice/overlay-source-type-notice.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
 import { EntryComponentDirective } from './directives/entry-component.directive';
@@ -48,7 +47,6 @@ import { GeocoderService } from './services/geocoder.service';
 		ImageryContainerComponent,
 		ImageryLoaderComponent,
 		ImageryTileProgressComponent,
-		OverlaySourceTypeNoticeComponent,
 		MapSearchBoxComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,

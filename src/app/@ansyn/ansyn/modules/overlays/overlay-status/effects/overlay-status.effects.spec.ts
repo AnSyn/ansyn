@@ -4,10 +4,11 @@ import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
 import { OpenlayersMapName } from '@ansyn/ol';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { of, ReplaySubject } from 'rxjs';
+import { of, ReplaySubject, Observable } from 'rxjs';
 import { BackToWorldSuccess, BackToWorldView } from '../actions/overlay-status.actions';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from '../reducers/overlay-status.reducer';
 import { OverlayStatusEffects } from './overlay-status.effects';
+import { initTestScheduler } from 'jasmine-marbles';
 
 
 const fakeMaps = {
@@ -19,7 +20,7 @@ const fakeMaps = {
 };
 describe('OverlayStatusEffects', () => {
 	let overlayStatusEffects: OverlayStatusEffects;
-	let actions: ReplaySubject<any>;
+	let actions: Observable<any>;
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 
@@ -53,24 +54,6 @@ describe('OverlayStatusEffects', () => {
 
 		it('should be defined', () => {
 			expect(overlayStatusEffects.backToWorldView$).toBeDefined();
-		});
-
-		it('should be call to BackToWorldSuccess', () => {
-			actions = new ReplaySubject(1);
-			actions.next(new BackToWorldView({ mapId: 'mapId' }))
-			const communicator = {
-				id: 'mapId',
-				setActiveMap: () => Promise.resolve(true),
-				loadInitialMapSource: () => Promise.resolve(true),
-				activeMapName: OpenlayersMapName
-			};
-
-			spyOn(imageryCommunicatorService, 'provide').and.returnValues(communicator);
-			spyOn(communicator, 'loadInitialMapSource').and.callFake(() => Promise.resolve(true));
-			overlayStatusEffects.backToWorldView$.subscribe((result) => {
-				expect(result).toBeObservable(new BackToWorldSuccess({ mapId: 'mapId' }));
-			});
-			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
 		});
 	});
 

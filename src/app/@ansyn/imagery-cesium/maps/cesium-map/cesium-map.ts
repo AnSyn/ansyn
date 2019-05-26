@@ -345,4 +345,49 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
+	set2DPosition(go_north: boolean = false): Observable<any> {
+
+		if (this.mapObject.scene.mode === Cesium.SceneMode.SCENE2D) {
+			return;
+		}
+
+		if (Math.cos(this.mapObject.camera.pitch) < 0.001) {
+			return;
+		}
+
+		return new Observable<any>(obs => {
+			let position;
+			try {
+				const rect = this.mapObject.canvas.getBoundingClientRect();
+				const center = new Cesium.Cartesian2(rect.width / 2, rect.height / 2);
+				position = this.mapObject.camera.pickEllipsoid(center, this.mapObject.scene.globe.ellipsoid);
+				let cartographic = Cesium.Cartographic.fromCartesian(position);
+				cartographic.height = this.mapObject.camera.positionCartographic.height;
+
+				position = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, cartographic.height);
+			} catch (err) {
+				position = this.mapObject.camera.position;
+			}
+
+			let flyToObj = {
+				destination: position,
+				easingFunction: Cesium.EasingFunction.LINEAR_NONE,
+				orientation: {
+					heading: go_north ? 0 : this.mapObject.camera.heading,
+					pitch: Cesium.Math.toRadians(-90.0), // look down
+					roll: 0.0 // no change
+				},
+				duration: 0.5,
+				complete: () => {
+					this.getPosition().pipe(take(1)).subscribe(position => {
+						if (position) {
+							this.positionChanged.emit(position);
+						}
+						obs.next(true);
+					});
+				}
+			};
+			this.mapObject.camera.flyTo(flyToObj);
+		});
+	}
 }

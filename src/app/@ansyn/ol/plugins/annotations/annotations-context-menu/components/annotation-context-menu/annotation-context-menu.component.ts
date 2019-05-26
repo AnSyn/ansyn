@@ -7,7 +7,6 @@ enum AnnotationsContextmenuTabs {
 	Colors,
 	Weight,
 	Label,
-	Icon,
 }
 
 @Component({

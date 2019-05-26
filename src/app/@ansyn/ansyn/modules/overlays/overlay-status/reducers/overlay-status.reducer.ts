@@ -25,12 +25,12 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
 	switch (action.type) {
 		case OverlayStatusActionsTypes.SET_FAVORITE_OVERLAYS:
-			return {...state, favoriteOverlays: action.payload};
+			return { ...state, favoriteOverlays: action.payload };
 
 		case OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE: {
-			const {overlay, id, value} = action.payload;
+			const { overlay, id, value } = action.payload;
 			const fo = [...state.favoriteOverlays];
-			return {...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id)};
+			return { ...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id) };
 		}
 
 		case OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET: {

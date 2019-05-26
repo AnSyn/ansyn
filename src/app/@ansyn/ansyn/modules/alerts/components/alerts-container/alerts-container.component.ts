@@ -16,7 +16,7 @@ import { AlertMsg } from '../../model';
 })
 @AutoSubscriptions()
 export class AlertsContainerComponent implements OnInit, OnDestroy {
-	static TYPE = 'notification';
+
 	alertMsg: AlertMsg;
 	overlay: IOverlay;
 	mapsAmount: number;
@@ -67,4 +67,7 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 	}
 
+	getType() {
+		return 'notification';
+	}
 }

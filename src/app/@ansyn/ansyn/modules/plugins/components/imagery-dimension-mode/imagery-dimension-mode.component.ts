@@ -57,4 +57,8 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 		}
 		return DimensionMode.NA;
 	}
+
+	getType(): string {
+		return '';
+	}
 }

@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ImageryModule } from '@ansyn/imagery';
-import { AlertsModule, MapFacadeModule } from '@ansyn/map-facade';
+import { MapFacadeModule } from '@ansyn/map-facade';
 import { MenuModule } from '@ansyn/menu';
 import { AnnotationContextMenuComponent } from '@ansyn/ol';
 import { EffectsModule } from '@ngrx/effects';

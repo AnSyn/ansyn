@@ -2,6 +2,7 @@ import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef
 
 export interface IEntryComponent {
 	mapId: string;
+	getType(): string;
 }
 
 export interface IEntryComponentSettings extends IEntryComponent {

@@ -1,4 +1,5 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { IMapSettings } from '@ansyn/imagery';
 import {
 	IEntryComponent,
 	selectActiveMapId,
@@ -12,6 +13,7 @@ import { map, tap } from 'rxjs/operators';
 import { IOverlay } from "../models/overlay.model";
 import { ToggleFavoriteAction, TogglePresetOverlayAction, SetRemovedOverlaysIdAction } from './actions/overlay-status.actions';
 import { selectFavoriteOverlays, selectPresetOverlays, selectRemovedOverlays } from './reducers/overlay-status.reducer';
+import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -23,7 +25,6 @@ import { selectFavoriteOverlays, selectPresetOverlays, selectRemovedOverlays } f
 	destroy: 'ngOnDestroy'
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
-	static TYPE = 'buttons';
 	@Input() mapId: string;
 	mapsAmount = 1;
 	overlay: IOverlay;
@@ -47,7 +48,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	overlay$ = this.store$.pipe(
+	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
 		tap((maps) => {
 			if (maps[this.mapId]) {
@@ -148,5 +149,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			value: !this.isRemoved
 
 		}))
+	}
+
+	getType(): string {
+		return 'buttons';
 	}
 }

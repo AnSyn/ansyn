@@ -69,7 +69,6 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
 	miscOverlays: IOverlaysHash;
-	loadedOverlays: { [mapId: string]: string };
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -92,7 +91,6 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	hoveredOverlay: null,
 	overlaysCriteria: {},
 	miscOverlays: {},
-	loadedOverlays: {}
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -303,17 +301,6 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			};
 		}
 
-		case OverlaysActionTypes.UPDATE_LOADED_OVERLAYS: {
-			const { mapId, overlayId } = action.payload;
-			return {
-				...state,
-				loadedOverlays: {
-					...state.loadedOverlays,
-					[mapId]: overlayId
-				}
-			}
-		}
-
 		default :
 			return state;
 	}
@@ -335,7 +322,6 @@ export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overl
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
-export const selectLoadedOverlays = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string } => overlays.loadedOverlays);
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);

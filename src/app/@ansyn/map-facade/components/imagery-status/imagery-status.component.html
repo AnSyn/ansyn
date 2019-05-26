@@ -3,7 +3,7 @@
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
-			*ngIf="component.showFirst && component.TYPE === 'buttons'"
+			*ngIf="component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
@@ -36,7 +36,7 @@
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
-			*ngIf="!component.showFirst && component.TYPE === 'buttons'"
+			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
@@ -57,7 +57,7 @@
 <ng-container
 	*ngFor="let component of entryComponents.status">
 	<ng-container
-		*ngIf="component.TYPE === 'notification'"
+		*ngIf="component.prototype.getType() === 'notification'"
 		[ansynEntryComponent]="{ component: component , mapId: mapId }">
 	</ng-container>
 </ng-container>

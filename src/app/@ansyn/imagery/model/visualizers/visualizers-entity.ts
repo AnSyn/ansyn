@@ -5,6 +5,7 @@ export interface IVisualizerEntity {
 	id: string;
 	label?: string;
 	featureJson: Feature<any>;
+	icon?: any;
 	type?: string;
 	style?: Partial<IVisualizerStateStyle>;
 	showMeasures?: boolean;

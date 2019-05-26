@@ -1,5 +1,10 @@
 import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef, ComponentRef, OnInit } from '@angular/core';
 
+/**
+ *
+ * getType - function that return the type of this component. needed for overlayStatus to
+ * 	define if this component is part of the buttons part or the notification(Alert) part.
+ */
 export interface IEntryComponent {
 	mapId: string;
 	getType(): string;

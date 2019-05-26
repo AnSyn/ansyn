@@ -1,10 +1,11 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { mapFeatureKey, MapReducer, selectMaps, UpdateMapAction } from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { LoadOverlaysSuccessAction, UpdateLoadedOverlays } from '../../actions/overlays.actions';
-import { OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
+import { of } from 'rxjs';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { OverlaySourceTypeNoticeComponent } from './overlay-source-type-notice.component';
+
 
 const overlays = [
 	{ id: 'overlay1', sourceType: 'SRC_TYPE_5' },
@@ -24,7 +25,7 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				EffectsModule.forRoot([])
 			],
 			declarations: [OverlaySourceTypeNoticeComponent],
@@ -47,13 +48,12 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
+		spyOn(store, 'select').and.callFake((type) => of());
 	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(OverlaySourceTypeNoticeComponent);
 		component = fixture.componentInstance;
-
-		store.dispatch(new LoadOverlaysSuccessAction(<any>overlays, true))
 		fixture.detectChanges();
 	});
 
@@ -63,29 +63,25 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 	});
 
 	it('should not find the title for the overlay', () => {
-		component.mapId = 'mapId1';
-		store.dispatch(new UpdateLoadedOverlays({ mapId: component.mapId, overlayId: 'overlay1' }));
+		component.overlay = <any>overlays[0];
 		fixture.detectChanges();
 		expect(component.title).toBeFalsy();
 	});
 
 	it('should find the title for the overlay, default value for source type', () => {
-		component.mapId = 'mapId2';
-		store.dispatch(new UpdateLoadedOverlays({ mapId: component.mapId, overlayId: 'overlay2' }));
+		component.overlay = <any>overlays[1];
 		fixture.detectChanges();
 		expect(component.title).toEqual('DDD');
 	});
 
 	it('should find the title for the overlay, value for sensor type', () => {
-		component.mapId = 'mapId3';
-		store.dispatch(new UpdateLoadedOverlays({ mapId: component.mapId, overlayId: 'overlay3' }));
+		component.overlay = <any>overlays[2];
 		fixture.detectChanges();
 		expect(component.title).toEqual('blublublu');
 	});
 
 	it('should find the title for the overlay, value for sensor type, plus year', () => {
-		component.mapId = 'mapId4';
-		store.dispatch(new UpdateLoadedOverlays({ mapId: component.mapId, overlayId: 'overlay4' }));
+		component.overlay = <any>overlays[3]
 		fixture.detectChanges();
 		expect(component.title).toEqual('My year is 1969');
 	});

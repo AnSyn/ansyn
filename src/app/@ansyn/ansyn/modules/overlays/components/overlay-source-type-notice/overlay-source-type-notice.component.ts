@@ -14,8 +14,10 @@ import { OverlaysConfig } from '../../services/overlays.service';
 @AutoSubscriptions()
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
+
 	loadedOverlays$ = this.store$.select(selectLoadedOverlays);
 	overlays$ = this.store$.select(selectOverlaysMap);
+
 	@AutoSubscription
 	overlay$ = this.loadedOverlays$.pipe(
 		withLatestFrom(this.overlays$),

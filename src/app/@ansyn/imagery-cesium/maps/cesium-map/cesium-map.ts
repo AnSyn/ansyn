@@ -16,6 +16,7 @@ import { CesiumProjectionService } from '../../projection/cesium-projection.serv
 
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
+import { ImageryMapProjectedState } from '../../../imagery/model/case-map-position.model';
 
 declare const Cesium: any;
 
@@ -254,8 +255,20 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
+// 	export interface ImageryMapProjectedState {
+// 	projection: {
+// 		code: string;
+// 	};
+// 	center?: [number, number];
+// 	resolution?: number;
+// 	rotation?: number
+// 	zoom?: number;
+// }
 	getPosition(): Observable<ImageryMapPosition> {
 		try {
+			// const projectedState: ImageryMapProjectedState = {
+			// 	center:
+			// }
 			const { height, width } = this.mapObject.canvas;
 			const topLeft = this._imageToGround({ x: 0, y: 0 });
 			const topRight = this._imageToGround({ x: width, y: 0 });
@@ -269,7 +282,13 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	setRotation(rotation: number): void {
-		throw new Error('Method not implemented.');
+		if (this.mapObject && this.mapObject.camera) {
+			this.mapObject.camera.setView({
+				orientation: {
+					heading: rotation
+				}
+			});
+		}
 	}
 
 	updateSize(): void {
@@ -304,7 +323,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	getRotation(): number {
-		return NaN;
+		if (this.mapObject && this.mapObject.camera) {
+			return this.mapObject.camera.heading;
+		}
+		return 0;
 	}
 
 	removeAllLayers(): void {

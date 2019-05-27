@@ -1,5 +1,5 @@
+import { IPendingOverlay } from '@ansyn/map-facade';
 import { Action } from '@ngrx/store';
-import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
 import { type } from '../../core/utils/type';
 import {
 	IOverlay,
@@ -9,7 +9,7 @@ import {
 	IOverlaysHash,
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
-import { IPendingOverlay } from '@ansyn/map-facade';
+import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -41,7 +41,7 @@ export const OverlaysActionTypes = {
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
-	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY'
+	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
 };
 
 export class SelectOverlayAction implements Action {

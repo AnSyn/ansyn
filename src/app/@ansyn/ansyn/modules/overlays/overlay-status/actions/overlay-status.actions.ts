@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
 
 
@@ -13,7 +14,9 @@ export enum OverlayStatusActionsTypes {
 	SET_REMOVED_OVERLAY_ID = 'SET_REMOVED_OVERLAY_ID',
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
-	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS'
+	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS',
+	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
+	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG'
 }
 
 
@@ -92,5 +95,17 @@ export class SetPresetOverlaysAction implements Action {
 	type = OverlayStatusActionsTypes.SET_PRESET_OVERLAYS;
 
 	constructor(public payload: any[]) {
+	}
+}
+
+export class AddAlertMsg implements Action {
+	type = OverlayStatusActionsTypes.ADD_ALERT_MSG;
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}
+
+export class RemoveAlertMsg implements Action {
+	type = OverlayStatusActionsTypes.REMOVE_ALERT_MSG;
+	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
 }

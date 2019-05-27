@@ -1,17 +1,21 @@
-import { Store, StoreModule } from '@ngrx/store';
-import { FiltersModule } from '../../filters.module';
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
-import { FiltersCollectionComponent } from './filters-collection.component';
-import { filtersConfig } from '../../services/filters.service';
-import { Subject } from 'rxjs';
-import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
-import { UpdateFacetsAction } from '../../actions/filters.actions';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { mapFacadeConfig } from '@ansyn/map-facade';
+import { EffectsModule } from '@ngrx/effects';
+import { Store, StoreModule } from '@ngrx/store';
+import { Subject } from 'rxjs';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { MockComponent } from '../../../../core/test/mock-component';
-import { mapFacadeConfig } from '@ansyn/map-facade';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { UpdateFacetsAction } from '../../actions/filters.actions';
+import { FiltersModule } from '../../filters.module';
+import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
+import { filtersConfig } from '../../services/filters.service';
+import { FiltersCollectionComponent } from './filters-collection.component';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -40,14 +44,17 @@ describe('FiltersCollectionComponent', () => {
 				HttpClientModule,
 				FiltersModule,
 				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })
+				StoreModule.forRoot({
+					[filtersFeatureKey]: FiltersReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
+				})
 			],
 			providers: [
 				{ provide: mapFacadeConfig, useValue: {} },
 				{ provide: filtersConfig, useValue: { filters: null } }, {
-				provide: LoggerConfig,
-				useValue: {}
-			}, { provide: CoreConfig, useValue: {} }]
+					provide: LoggerConfig,
+					useValue: {}
+				}, { provide: CoreConfig, useValue: {} }]
 		})
 			.compileComponents();
 	}));

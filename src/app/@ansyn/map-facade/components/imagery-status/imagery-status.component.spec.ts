@@ -6,8 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import { ALERTS } from '../../alerts/alerts.model';
-import { AlertsModule } from '../../alerts/alerts.module';
+import { EntryComponentDirective } from '../../directives/entry-component.directive';
 import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
@@ -24,7 +23,6 @@ describe('ImageryStatusComponent', () => {
 			imports: [
 				HttpClientModule,
 				FormsModule,
-				AlertsModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
@@ -33,6 +31,7 @@ describe('ImageryStatusComponent', () => {
 			],
 			declarations: [
 				ImageryStatusComponent,
+				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-popover',
 					inputs: ['text', 'icon', 'popDirection']
@@ -40,7 +39,6 @@ describe('ImageryStatusComponent', () => {
 			],
 			providers: [
 				ImageryCommunicatorService,
-				{ provide: ALERTS, useValue: [] },
 				{
 					provide: TranslateService, useValue: {
 						get: () => EMPTY, setDefaultLang(arg) {

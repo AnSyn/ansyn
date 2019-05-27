@@ -1,10 +1,9 @@
-import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
+import { MapActionTypes } from '@ansyn/map-facade';
+import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
-import { ExtendMap } from './extendedMap.class';
-import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
-import { MapActionTypes } from '@ansyn/map-facade';
 import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
+import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
 import {
 	IOverlay,
 	IOverlayDrop,
@@ -13,6 +12,7 @@ import {
 	IOverlaySpecialObject
 } from '../models/overlay.model';
 import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
+import { ExtendMap } from './extendedMap.class';
 
 export interface ITimelineRange {
 	start: Date;
@@ -90,7 +90,7 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	dropsMarkUp: initDropsMarkUp,
 	hoveredOverlay: null,
 	overlaysCriteria: {},
-	miscOverlays: {}
+	miscOverlays: {},
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -322,7 +322,6 @@ export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overl
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
-
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);

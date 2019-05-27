@@ -5,7 +5,8 @@ import { get as _get } from "lodash";
 import { Store } from "@ngrx/store";
 import { ImageryCommunicatorService } from "@ansyn/imagery";
 import { DisabledOpenLayersMapName, OpenlayersMapName } from "@ansyn/ol";
-import { CesiumMapName } from "@ansyn/imagery-cesium";
+import { CesiumMap, CesiumMapName } from '@ansyn/imagery-cesium';
+import { take } from 'rxjs/operators';
 
 export enum DimensionMode {
 	D2 = '2D',
@@ -40,7 +41,9 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 		if (this.selectedMap === DimensionMode.D2) {
 			this.store$.dispatch(new ChangeImageryMap({id: this.mapId, mapType: CesiumMapName}));
 		} else if (this.selectedMap === DimensionMode.D3) {
-			this.store$.dispatch(new ChangeImageryMap({id: this.mapId, mapType: OpenlayersMapName}));
+			(<CesiumMap>this.communicators.provide(this.mapId).ActiveMap).set2DPosition().pipe(take(1)).subscribe((result) => {
+				this.store$.dispatch(new ChangeImageryMap({id: this.mapId, mapType: OpenlayersMapName}));
+			})
 		}
 	}
 
@@ -56,5 +59,17 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 			return DimensionMode.D3;
 		}
 		return DimensionMode.NA;
+	}
+
+	getType(): string {
+		return '';
+	}
+
+	get moveToMap() {
+		if (this.selectedMap === DimensionMode.D2 ) {
+			return DimensionMode.D3;
+		} else {
+			return DimensionMode.D2;
+		}
 	}
 }

@@ -1,4 +1,8 @@
 import { async, inject, TestBed } from '@angular/core/testing';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { CasesAppEffects } from './cases.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -79,7 +83,8 @@ describe('CasesAppEffects', () => {
 				StoreModule.forRoot({
 					[overlaysFeatureKey]: OverlayReducer,
 					[casesFeatureKey]: CasesReducer,
-					[mapFeatureKey]: MapReducer
+					[mapFeatureKey]: MapReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
 				RouterTestingModule
 			],

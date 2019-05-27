@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { ImageryModule } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { AlertsModule } from './alerts/alerts.module';
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
@@ -15,9 +14,9 @@ import { ImageryRotationComponent } from './components/imagery-rotation/imagery-
 import { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
 import { ImageryTileProgressComponent } from './components/imagery-tile-progress/imagery-tile-progress.component';
 import { MapSearchBoxComponent } from './components/map-search-box/map-search-box.component';
-import { OverlaySourceTypeNoticeComponent } from './components/overlay-source-type-notice/overlay-source-type-notice.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
+import { EntryComponentDirective } from './directives/entry-component.directive';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { MapEffects } from './effects/map.effects';
 import {
@@ -36,15 +35,10 @@ import { GeocoderService } from './services/geocoder.service';
 		EffectsModule.forFeature([MapEffects]),
 		ImageryModule,
 		CommonModule,
-		FormsModule,
-		AlertsModule
+		FormsModule
 	],
 	providers: [
 		GeocoderService,
-		provideEntryComponentsEntities({
-			container: [],
-			status: []
-		}),
 		EntryComponentsProvider
 	],
 	declarations: [
@@ -53,7 +47,6 @@ import { GeocoderService } from './services/geocoder.service';
 		ImageryContainerComponent,
 		ImageryLoaderComponent,
 		ImageryTileProgressComponent,
-		OverlaySourceTypeNoticeComponent,
 		MapSearchBoxComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
@@ -61,7 +54,8 @@ import { GeocoderService } from './services/geocoder.service';
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent
+		AnsynPopoverComponent,
+		EntryComponentDirective
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -71,7 +65,8 @@ import { GeocoderService } from './services/geocoder.service';
 		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
-		AnsynPopoverComponent
+		AnsynPopoverComponent,
+		EntryComponentDirective
 	]
 })
 

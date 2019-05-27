@@ -36,17 +36,19 @@ export class ArrayFilterMetadata implements FilterMetadata {
 			this.accumulateData(overlay[modelName]);
 		});
 
-		caseFilter.metadata.forEach(([key, value]: [string, boolean]) => {
-			if (this.fields.has(key)) {
-				this.fields.set(key, value);
-			}
-		});
+		if (caseFilter && Array.isArray(caseFilter.metadata)) {
+			caseFilter.metadata.forEach(([key, value]: [string, boolean]) => {
+				if (this.fields.has(key)) {
+					this.fields.set(key, value);
+				}
+			});
+		}
 	}
 
 	filterFunc(overlay: any, key: string): boolean {
 		return Array.from(this.fields).every(([fieldsKey, value]) => {
 			if (value) {
-				return overlay[key].includes(fieldsKey);
+				return (overlay[key] || []).includes(fieldsKey);
 			}
 			return true;
 		});

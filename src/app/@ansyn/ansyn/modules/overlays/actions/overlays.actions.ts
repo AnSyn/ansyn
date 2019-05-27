@@ -42,7 +42,6 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
-	UPDATE_LOADED_OVERLAYS: 'UPDATE_LOADED_OVERLAYS'
 };
 
 export class SelectOverlayAction implements Action {
@@ -147,13 +146,6 @@ export class DisplayOverlayFailedAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
 	constructor(public payload: { id: string, mapId?: string }) {
-	}
-}
-
-export class UpdateLoadedOverlays implements Action {
-	type = OverlaysActionTypes.UPDATE_LOADED_OVERLAYS;
-
-	constructor(public payload: { mapId: string, overlayId: string }) {
 	}
 }
 
@@ -268,4 +260,3 @@ export type OverlaysActions
 	| SetOverlaysCriteriaAction
 	| SetMiscOverlays
 	| SetMiscOverlay
-	| UpdateLoadedOverlays

@@ -60,4 +60,8 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	ngOnDestroy(): void {
 	};
 
+	getType(): string {
+		return '';
+	}
+
 }

@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
-import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged, IMapSettings } from '@ansyn/imagery';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 
 enum AnnotationsContextmenuTabs {
@@ -46,7 +46,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		return properties;
 	}
 
-		ngOnInit() {
+	ngOnInit() {
 		this.communicators.instanceCreated.pipe(
 			filter(({ id }) => id === this.mapId),
 			tap(() => {
@@ -139,7 +139,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			...style,
 			initial: {
 				...style.initial,
-				[`${ $event.label }-opacity`]: $event.event ? opacity[$event.label] : 0
+				[`${$event.label}-opacity`]: $event.event ? opacity[$event.label] : 0
 			}
 		};
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
@@ -159,5 +159,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	updateLabel(label, featureId: string) {
 		this.annotations.updateFeature(featureId, { label });
+	}
+
+	getType(): string {
+		return '';
 	}
 }

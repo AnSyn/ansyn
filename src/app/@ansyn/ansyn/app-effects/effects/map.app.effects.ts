@@ -56,7 +56,7 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction, OverlaysActionTypes,
-	RequestOverlayByIDFromBackendAction, SetMarkUp, UpdateLoadedOverlays
+	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
 import {
@@ -104,13 +104,7 @@ export class MapAppEffects {
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
 				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
 			),
-			mergeMap(({ payload }: DisplayOverlayAction) => [
-				new SetIsLoadingAcion({ mapId: payload.mapId, show: false }),
-				new UpdateLoadedOverlays({
-					mapId: payload.mapId,
-					overlayId: payload.overlay ? payload.overlay.id : undefined
-				})]
-			)
+			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
 		);
 
 	@Effect()

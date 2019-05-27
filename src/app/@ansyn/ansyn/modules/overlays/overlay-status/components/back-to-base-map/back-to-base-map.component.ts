@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { IMapSettings } from '@ansyn/imagery';
 import { IEntryComponent, selectMaps, selectMapsTotal } from "@ansyn/map-facade";
 import { Store, select } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { BackToWorldView } from '../../actions/overlay-status.actions';
+import { Observable } from 'rxjs';
+import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-back-to-base-map',
@@ -24,7 +27,7 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	overlay$ = this.store$.pipe(
+	overlay$: Observable<Dictionary<IMapSettings>>  = this.store$.pipe(
 		select(selectMaps),
 		tap((maps) => {
 			if (maps[this.mapId]) {
@@ -41,6 +44,9 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	ngOnDestroy(): void {
 	}
 
+	getType(): string {
+		return 'buttons';
+	}
 	backToWorldView() {
 		this.store$.dispatch(new BackToWorldView({mapId: this.mapId}));
 	}

@@ -1,16 +1,16 @@
-import { ILayersManagerConfig } from '../models/layers-manager-config';
 import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UUID } from 'angular2-uuid';
-import { featureCollection } from '@turf/turf';
 import { select, Store } from '@ngrx/store';
+import { featureCollection } from '@turf/turf';
+import { UUID } from 'angular2-uuid';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
+import { Observable, of } from 'rxjs';
 import { catchError, filter, tap } from 'rxjs/internal/operators';
-import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../../cases/models/case.model';
+import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
+import { ILayersManagerConfig } from '../models/layers-manager-config';
+import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 
 export const layersConfig = 'layersManagerConfig';
 
@@ -58,6 +58,9 @@ export class DataLayersService implements OnInit, OnDestroy {
 	}
 
 	public getAllLayersInATree({ caseId }): Observable<{} | ILayer[]> {
+		if (!this.config.schema) {
+			return of([]);
+		}
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers'))

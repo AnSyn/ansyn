@@ -21,8 +21,10 @@ describe('AlertsContainerComponent', () => {
 			declarations: [AlertsContainerComponent],
 			imports: [
 				MapFacadeModule,
-				StoreModule.forRoot({[mapFeatureKey]: MapReducer,
-				[overlayStatusFeatureKey]: OverlayStatusReducer}),
+				StoreModule.forRoot({
+					[mapFeatureKey]: MapReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
+				}),
 				EffectsModule.forRoot([])],
 			providers: [
 				{ provide: ALERTS, useValue: [] },

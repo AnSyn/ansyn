@@ -1,5 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { mapFacadeConfig, MapFacadeModule, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { ALERTS } from '../../alerts.model';
 
 import { AlertsContainerComponent } from './alerts-container.component';
@@ -17,7 +21,8 @@ describe('AlertsContainerComponent', () => {
 			declarations: [AlertsContainerComponent],
 			imports: [
 				MapFacadeModule,
-				StoreModule.forRoot({[mapFeatureKey]: MapReducer}),
+				StoreModule.forRoot({[mapFeatureKey]: MapReducer,
+				[overlayStatusFeatureKey]: OverlayStatusReducer}),
 				EffectsModule.forRoot([])],
 			providers: [
 				{ provide: ALERTS, useValue: [] },

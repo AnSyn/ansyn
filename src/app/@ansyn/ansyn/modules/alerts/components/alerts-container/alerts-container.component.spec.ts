@@ -1,9 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { mapFacadeConfig, MapFacadeModule, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
-import { EffectsModule } from '@ngrx/effects';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import {
 	overlayStatusFeatureKey,
 	OverlayStatusReducer
@@ -11,6 +7,10 @@ import {
 import { ALERTS } from '../../alerts.model';
 
 import { AlertsContainerComponent } from './alerts-container.component';
+import { StoreModule } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('AlertsContainerComponent', () => {
 	let component: AlertsContainerComponent;

@@ -8,6 +8,7 @@ import { EnumFilterMetadata } from '../modules/menu-items/filters/models/metadat
 import { FilterMetadata } from '../modules/menu-items/filters/models/metadata/filter-metadata.interface';
 import { SliderFilterMetadata } from '../modules/menu-items/filters/models/metadata/slider-filter-metadata';
 import { OverlaysModule } from '../modules/overlays/overlays.module';
+import { ArrayFilterMetadata } from '../modules/menu-items/filters/models/metadata/array-filter-metadata';
 
 @NgModule({
 	imports: [
@@ -24,7 +25,8 @@ import { OverlaysModule } from '../modules/overlays/overlays.module';
 		// Source provider for filters
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true }
+		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
+		{ provide: FilterMetadata, useClass: ArrayFilterMetadata, multi: true }
 	]
 })
 export class AppProvidersModule {

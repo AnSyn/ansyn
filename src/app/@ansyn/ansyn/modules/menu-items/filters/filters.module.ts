@@ -20,6 +20,7 @@ import { ShowMorePipe } from './pipes/show-more.pipe';
 import { FilterCounterComponent } from './components/filter-counter/filter-counter.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CoreModule } from '../../core/core.module';
+import { ArrayFilterContainerComponent } from './components/array-filter-container/array-filter-container.component';
 
 // @dynamic
 @NgModule({
@@ -42,7 +43,9 @@ import { CoreModule } from '../../core/core.module';
 		SortPipe,
 		BooleanFilterContainerComponent,
 		ShowMorePipe,
-		FilterCounterComponent],
+		FilterCounterComponent,
+		ArrayFilterContainerComponent
+	],
 	entryComponents: [FiltersCollectionComponent]
 })
 export class FiltersModule {

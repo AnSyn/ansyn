@@ -9,6 +9,7 @@ import {
 	CesiumPlanetSourceProvider
 } from '@ansyn/imagery-cesium';
 import { MapFacadeModule } from '@ansyn/map-facade';
+import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calculations.plugin';
 
 @NgModule({
 	declarations: [ImageryDimensionModeComponent],
@@ -17,7 +18,7 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 	imports: [
 		CommonModule,
 		ImageryModule.provide({
-			plugins: [],
+			plugins: [NorthCalculationsPlugin],
 			maps: [CesiumMap],
 			mapSourceProviders: [
 				CesiumBINGSourceProvider,

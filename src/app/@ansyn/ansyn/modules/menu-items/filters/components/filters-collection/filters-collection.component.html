@@ -15,7 +15,7 @@
 	</ansyn-input>
 
 	<div class="allFilters">
-		<ng-container *ngIf="filters.length; else noFiltersFound">
+		<ng-container *ngIf="filters?.length; else noFiltersFound">
 			<ansyn-filter-container
 				*ngFor="let filter of filters"
 				[filter]="filter">

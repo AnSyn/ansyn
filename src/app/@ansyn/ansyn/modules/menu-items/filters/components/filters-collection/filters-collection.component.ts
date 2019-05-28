@@ -26,7 +26,7 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
 	public filters: IFilter[] = this.config.filters;
-	private filtersSearch = '';
+	public filtersSearch = '';
 
 	@AutoSubscription
 	filtersSearch$: any = this.store.select(selectFiltersSearch).pipe(

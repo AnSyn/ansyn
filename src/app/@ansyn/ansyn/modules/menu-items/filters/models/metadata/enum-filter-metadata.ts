@@ -3,6 +3,7 @@ import { mapValuesToArray } from '../../../../core/utils/misc';
 import { CaseEnumFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
 import { FilterType } from '../filter-type';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { get as _get } from 'lodash';
 
 export interface IEnumFiled {
 	key: string;
@@ -50,7 +51,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 		this.enumsFields = new Map<string, IEnumFiled>();
 
 		overlays.forEach((overlay: any) => {
-			this.accumulateData(overlay[modelName]);
+			this.accumulateData(_get(overlay, modelName));
 		});
 
 		if (caseFilter) {
@@ -79,7 +80,7 @@ export class EnumFilterMetadata implements FilterMetadata {
 			}
 		});
 
-		return selectedFields.some((filterParams) => overlay[key] === filterParams);
+		return selectedFields.some((filterParams) => _get(overlay, key) === filterParams);
 	}
 
 	getMetadataForOuterState(): string[] {

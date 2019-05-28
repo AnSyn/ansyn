@@ -17,6 +17,7 @@ export interface IFiltersState {
 	isLoading: boolean;
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
+	filtersSearch: string;
 }
 
 export const initialFiltersState: IFiltersState = {
@@ -26,7 +27,8 @@ export const initialFiltersState: IFiltersState = {
 		showOnlyFavorites: false,
 		filters: []
 	},
-	enableOnlyFavoritesSelection: false
+	enableOnlyFavoritesSelection: false,
+	filtersSearch: '',
 };
 
 export const filtersFeatureKey = 'filters';
@@ -60,6 +62,9 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 		case FiltersActionTypes.UPDATE_FACETS:
 			return { ...state, facets: { ...state.facets, ...action.payload } };
 
+		case FiltersActionTypes.SET_FILTER_SEARCH:
+			return { ...state, filtersSearch: action.payload };
+
 		default:
 			return state;
 	}
@@ -69,3 +74,4 @@ export const selectFilters = createSelector(filtersStateSelector, ({ filters }) 
 export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
 export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
 export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);
+export const selectFiltersSearch = createSelector(filtersStateSelector, (state) => state && state.filtersSearch);

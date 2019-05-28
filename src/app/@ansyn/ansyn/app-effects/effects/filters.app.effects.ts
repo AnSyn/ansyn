@@ -2,10 +2,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import {
-	selectFavoriteOverlays, selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
-} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import { selectFavoriteOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
@@ -31,6 +28,10 @@ import { IFilterModel } from '../../modules/core/models/IFilterModel';
 import { InjectionResolverFilter } from '../../modules/core/services/generic-type-resolver';
 import { mapValuesToArray } from '../../modules/core/utils/misc';
 import {
+	selectRemovedOverlays,
+	selectRemovedOverlaysVisibility
+} from '@ansyn/map-facade';
+import {
 	LoadOverlaysAction, OverlaysActionTypes,
 	SetDropsAction, SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
@@ -44,6 +45,7 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
+import { get as _get } from 'lodash'
 
 @Injectable()
 export class FiltersAppEffects {
@@ -145,7 +147,7 @@ export class FiltersAppEffects {
 				metadata.resetFilteredCount();
 				filteredOverlays.forEach((id: string) => {
 					const overlay = overlays.get(id);
-					metadata.incrementFilteredCount(overlay[metadataKey.modelName]);
+					metadata.incrementFilteredCount(_get(overlay, metadataKey.modelName));
 				});
 				if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
 					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);

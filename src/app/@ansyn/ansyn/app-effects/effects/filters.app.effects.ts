@@ -2,14 +2,19 @@ import { combineLatest, Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
-import { selectFavoriteOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import {
+	selectFavoriteOverlays,
+	selectRemovedOverlays,
+	selectRemovedOverlaysVisibility
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
 import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/menu-items/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
-	InitializeFiltersAction, InitializeFiltersSuccessAction
+	InitializeFiltersAction,
+	InitializeFiltersSuccessAction
 } from '../../modules/menu-items/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
@@ -17,7 +22,9 @@ import {
 	Filters,
 	filtersStateSelector,
 	IFiltersState,
-	selectFacets, selectFilters, selectShowOnlyFavorites
+	selectFacets,
+	selectFilters,
+	selectShowOnlyFavorites
 } from '../../modules/menu-items/filters/reducer/filters.reducer';
 import { filtersConfig, FiltersService } from '../../modules/menu-items/filters/services/filters.service';
 import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
@@ -28,24 +35,24 @@ import { IFilterModel } from '../../modules/core/models/IFilterModel';
 import { InjectionResolverFilter } from '../../modules/core/services/generic-type-resolver';
 import { mapValuesToArray } from '../../modules/core/utils/misc';
 import {
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
-} from '@ansyn/map-facade';
-import {
-	LoadOverlaysAction, OverlaysActionTypes,
-	SetDropsAction, SetFilteredOverlaysAction,
+	LoadOverlaysAction,
+	OverlaysActionTypes,
+	SetDropsAction,
+	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessage
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
-	selectFilteredOveralys, selectOverlaysArray,
-	selectOverlaysMap, selectSpecialObjects
+	selectFilteredOveralys,
+	selectOverlaysArray,
+	selectOverlaysMap,
+	selectSpecialObjects
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
-import { get as _get } from 'lodash'
+import { get as _get } from 'lodash';
 
 @Injectable()
 export class FiltersAppEffects {

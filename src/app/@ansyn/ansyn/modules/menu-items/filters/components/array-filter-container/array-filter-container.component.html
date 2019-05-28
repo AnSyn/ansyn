@@ -1,0 +1,14 @@
+<div class="array-filter-wrapper">
+	<div class="checkboxes">
+		<ng-container *ngFor="let option of fields">
+
+			<input [id]="option[0]" type="checkbox" [checked]="option[1]" (change)="onInputClicked(option[0])"/>
+			<label [for]="option[0]">{{option[0]}}</label>
+
+		</ng-container>
+
+	</div>
+
+	<ansyn-filter-counter [count]="metadata.count" [filteredCount]="metadata.filteredCount"></ansyn-filter-counter>
+
+</div>

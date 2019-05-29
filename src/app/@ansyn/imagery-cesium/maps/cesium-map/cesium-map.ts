@@ -16,7 +16,7 @@ import { CesiumProjectionService } from '../../projection/cesium-projection.serv
 
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
-import { ImageryMapProjectedState } from '../../../imagery/model/case-map-position.model';
+import { ImageryMapProjectedState } from '@ansyn/imagery';
 
 declare const Cesium: any;
 

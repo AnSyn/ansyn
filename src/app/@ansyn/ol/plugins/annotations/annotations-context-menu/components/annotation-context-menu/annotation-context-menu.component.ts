@@ -2,6 +2,7 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
+import { IEntryComponent } from '../../../../../../map-facade/directives/entry-component.directive';
 
 enum AnnotationsContextmenuTabs {
 	Colors,
@@ -14,7 +15,7 @@ enum AnnotationsContextmenuTabs {
 	templateUrl: './annotation-context-menu.component.html',
 	styleUrls: ['./annotation-context-menu.component.less']
 })
-export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
+export class AnnotationContextMenuComponent implements OnInit, OnDestroy, IEntryComponent {
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
 	Tabs = AnnotationsContextmenuTabs;

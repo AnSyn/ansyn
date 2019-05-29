@@ -27,8 +27,7 @@ export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 	}
 
 	registerMouseEvents() {
-		const communicator = this.communicators.provide(this.mapId);
-		this.mouseMovedEventSubscriber = communicator.ActiveMap.mousePointerMoved.subscribe( (args: IMousePointerMove) => {
+		this.mouseMovedEventSubscriber = this.communicator.ActiveMap.mousePointerMoved.subscribe( (args: IMousePointerMove) => {
 			this.lat = !isNaN(args.lat) ? args.lat.toFixed(5) : null;
 			this.long = !isNaN(args.long) ? args.long.toFixed(5) : null;
 			this.height = !isNaN(args.height) ? args.height.toFixed(2) : null;

@@ -1,16 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImageryMouseCoordinatesComponent } from './imagery-mouse-coordinates.component';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { mapFacadeConfig } from '../../models/map-facade.config';
+import { IMapFacadeConfig } from '../../models/map-config.model';
 
-describe('ImageryMouseCoordinatesComponent.Component', () => {
+describe('ImageryMouseCoordinatesComponent', () => {
 	let component: ImageryMouseCoordinatesComponent;
 	let fixture: ComponentFixture<ImageryMouseCoordinatesComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ImageryMouseCoordinatesComponent]
-		})
-			.compileComponents();
+			declarations: [ImageryMouseCoordinatesComponent],
+			imports: [],
+			providers: [
+				ImageryCommunicatorService,
+				{
+					provide: mapFacadeConfig,
+					useValue: <IMapFacadeConfig>{
+						floatingPositionSuffix: 'test sufix'
+					}
+				}
+			]
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {

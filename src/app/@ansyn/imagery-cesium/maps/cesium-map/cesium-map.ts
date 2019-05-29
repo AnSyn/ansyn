@@ -16,6 +16,7 @@ import { CesiumProjectionService } from '../../projection/cesium-projection.serv
 
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
+import { ImageryMapProjectedState } from '@ansyn/imagery';
 
 declare const Cesium: any;
 
@@ -34,6 +35,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	mapObject: any;
 	element: HTMLElement;
 	_moveEndListener;
+	lastRotation = 0;
 
 	constructor(public projectionService: CesiumProjectionService) {
 		super();
@@ -58,19 +60,28 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	getCenter(): Observable<Point> {
+		const point = this.getInnerCenter();
+		return of(point);
+	}
+
+	getInnerCenter() {
 		const viewer = this.mapObject;
-		const windowPosition = new Cesium.Cartesian2(viewer.container.clientWidth / 2, viewer.container.clientHeight / 2);
-		const pickRay = viewer.scene.camera.getPickRay(windowPosition);
-		const pickPosition = viewer.scene.globe.pick(pickRay, viewer.scene);
-		const pickPositionCartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(pickPosition);
-		const long = toDegrees(pickPositionCartographic.longitude);
-		const lat = toDegrees(pickPositionCartographic.latitude);
+		// const windowPosition = new Cesium.Cartesian2(viewer.container.clientWidth / 2, viewer.container.clientHeight / 2);
+		// const pickRay = viewer.scene.camera.getPickRay(windowPosition);
+		// const pickPosition = viewer.scene.globe.pick(pickRay, viewer.scene);
+		// const pickPositionCartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(pickPosition);
+		const rect = this.mapObject.camera.computeViewRectangle(this.mapObject.scene.globe.ellipsoid);
+		const centerRect = Cesium.Rectangle.center(rect);
+
+		const longitude = Cesium.Math.toDegrees(centerRect.longitude);
+		const latitude = Cesium.Math.toDegrees(centerRect.latitude);
+		const height = this.mapObject.camera.positionCartographic.height;
 		// TODO: add projection
 		const point: Point = {
 			type: 'Point',
-			coordinates: [long, lat]
+			coordinates: [longitude, latitude, height]
 		};
-		return of(point);
+		return point;
 	}
 
 	setCenter(center: Point, animation: boolean): Observable<boolean> {
@@ -110,6 +121,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			return fromPromise(layer.mapProjection.readyPromise).pipe(
 				map(() => {
 					const viewer = new Cesium.Viewer(this.element, {
+						terrainProvider: Cesium.createWorldTerrain(),
 						mapProjection: layer.mapProjection,
 						sceneMode: cesiumSceneMode,
 						imageryLayers: [layer.layer],
@@ -128,6 +140,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			);
 		} else {
 			const viewer = new Cesium.Viewer(this.element, {
+				terrainProvider: Cesium.createWorldTerrain(),
 				sceneMode: cesiumSceneMode,
 				imageryLayers: [layer.layer],
 				baseLayerPicker: false,
@@ -221,9 +234,30 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
+	setCameraView(heading: number, pitch: number, roll: number, destination: [number, number, number]) {
+		this.mapObject.camera.setView({
+			destination: Cesium.Cartesian3.fromDegrees(
+				destination[0],
+				destination[1],
+				destination[2]
+			),
+			orientation: {
+				heading: heading,
+				pitch: pitch,
+				roll: roll
+			}
+		});
+	}
+
 	setPosition(position: ImageryMapPosition): Observable<boolean> {
-		const { extentPolygon } = position;
-		return this.internalSetPosition(extentPolygon);
+		if (position.projectedState && position.projectedState.projection &&
+			position.projectedState.projection.code === 'cesium_WGS84') {
+			this.setCameraView(position.projectedState.rotation, position.projectedState.pitch, position.projectedState.roll, position.projectedState.center);
+			return of(true);
+		} else {
+			const { extentPolygon } = position;
+			return this.internalSetPosition(extentPolygon);
+		}
 	}
 
 	internalSetPosition(extentPolygon: Polygon): Observable<boolean> {
@@ -256,20 +290,54 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	getPosition(): Observable<ImageryMapPosition> {
 		try {
-			const { height, width } = this.mapObject.canvas;
-			const topLeft = this._imageToGround({ x: 0, y: 0 });
-			const topRight = this._imageToGround({ x: width, y: 0 });
-			const bottomRight = this._imageToGround({ x: width, y: height });
-			const bottomLeft = this._imageToGround({ x: 0, y: height });
-			const extentPolygon = <Polygon>geometry('Polygon', [[topLeft, topRight, bottomRight, bottomLeft, topLeft]]);
-			return of({ extentPolygon });
+			const center = this.getInnerCenter();
+			const projectedState: ImageryMapProjectedState = {
+				center: [center.coordinates[0], center.coordinates[1], center.coordinates[2]],
+				rotation: +this.mapObject.camera.heading.toFixed(7),
+				pitch: +this.mapObject.camera.pitch.toFixed(7),
+				roll: +this.mapObject.camera.roll.toFixed(7),
+				projection: {
+					code: 'cesium_WGS84'
+				}
+			};
+
+			const rect = this.mapObject.camera.computeViewRectangle(this.mapObject.scene.globe.ellipsoid);
+			const north: number = +Cesium.Math.toDegrees(rect.north).toFixed(10);
+			const east: number = +Cesium.Math.toDegrees(rect.east).toFixed(10);
+			const south: number = +Cesium.Math.toDegrees(rect.south).toFixed(10);
+			const west: number = +Cesium.Math.toDegrees(rect.west).toFixed(10);
+			const topLeft = [west, north];
+			const topRight = [east, north];
+			const bottomLeft = [west, south];
+			const bottomRight = [east, south];
+
+			// const bounds = this.getBounds();
+			// console.log('bounds: ', bounds);
+			// const center1 = new Cesium.Cartesian2(rect.width / 2, rect.height / 2);
+			// let position = this.mapObject.camera.pickEllipsoid(center1, this.mapObject.scene.globe.ellipsoid);
+			// let cartographic = Cesium.Cartographic.fromCartesian(position);
+			// cartographic.height = this.mapObject.camera.positionCartographic.height;
+
+			// position = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, cartographic.height);
+
+			// const { height, width } = this.mapObject.canvas;
+			// const topLeft = this._imageToGround({ x: 0, y: 0 });
+			// const topRight = this._imageToGround({ x: width, y: 0 });
+			// const bottomRight = this._imageToGround({ x: width, y: height });
+			// const bottomLeft = this._imageToGround({ x: 0, y: height });
+			const extentPolygon = <Polygon>geometry('Polygon', [[topLeft, topRight , bottomRight, bottomLeft, topLeft]]);
+			// const extentPolygon = <Polygon>geometry('Polygon', [[topLeft, bottomLeft, bottomRight, topRight, topLeft]]);
+			return of({ extentPolygon, projectedState });
 		} catch (error) {
 			return of(null);
 		}
 	}
 
 	setRotation(rotation: number): void {
-		throw new Error('Method not implemented.');
+		if (this.mapObject && this.mapObject.camera) {
+			const center = this.getInnerCenter();
+			this.setCameraView(rotation, this.mapObject.camera.pitch, this.mapObject.camera.roll, [center.coordinates[0], center.coordinates[1], center.coordinates[2]]);
+		}
 	}
 
 	updateSize(): void {
@@ -304,6 +372,17 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	getRotation(): number {
+		if (this.mapObject && this.mapObject.camera) {
+			const rotation = +this.mapObject.camera.heading.toFixed(7);
+			const lastRotationDeg = toDegrees(this.lastRotation) % 360;
+			const currentRotationDeg = toDegrees(rotation) % 360;
+			if (Math.abs(Math.abs(lastRotationDeg) - Math.abs(currentRotationDeg)) < 0.0001 ||
+				Math.abs(Math.abs(lastRotationDeg) - Math.abs(currentRotationDeg)) > 359.9999) {
+				return this.lastRotation;
+			}
+			this.lastRotation = rotation;
+			return rotation;
+		}
 		return NaN;
 	}
 
@@ -326,11 +405,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 	set2DPosition(go_north: boolean = false): Observable<any> {
 
 		if (this.mapObject.scene.mode === Cesium.SceneMode.SCENE2D) {
-			return;
+			return of(true);
 		}
 
 		if (Math.cos(this.mapObject.camera.pitch) < 0.001) {
-			return;
+			return of(true);
 		}
 
 		return new Observable<any>(obs => {

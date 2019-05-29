@@ -35,6 +35,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	mapObject: any;
 	element: HTMLElement;
 	_moveEndListener;
+	_mouseMoveHandler;
 	lastRotation = 0;
 
 	constructor(public projectionService: CesiumProjectionService) {
@@ -57,6 +58,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		};
 
 		this.mapObject.camera.moveEnd.addEventListener(this._moveEndListener);
+		this._mouseMoveHandler = this.registerMouseMoveEvent();
 	}
 
 	getCenter(): Observable<Point> {
@@ -106,6 +108,33 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	toggleGroup(groupName: string, newState: boolean) {
 		throw new Error('Method not implemented.');
+	}
+
+	registerMouseMoveEvent(): any {
+		const handler = new Cesium.ScreenSpaceEventHandler(this.mapObject.scene.canvas);
+		handler.setInputAction((movement) => {
+			// Cesium's camera.pickEllipsoid works in 2D, 2.5D (Columbus View), and 3D.
+			// PickEllipsoid produces a coordinate on the surface of the 3D globe,
+			// but this can easily be converted to a latitude/longitude coordinate
+			// using Cesium.Cartographic.fromCartesian.
+			const cartesian = this.mapObject.camera.pickEllipsoid(movement.endPosition, this.mapObject.scene.globe.ellipsoid);
+			if (cartesian) {
+				const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+				this.mousePointerMoved.emit({
+					long: +Cesium.Math.toDegrees(cartographic.longitude).toFixed(10),
+					lat: +Cesium.Math.toDegrees(cartographic.latitude).toFixed(10),
+					height: cartographic.height});
+			} else {
+				this.mousePointerMoved.emit({ long: NaN, lat: NaN, height: NaN});
+			}
+
+		}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+		return handler;
+	}
+
+	unregisterMouseMoveEvent(handler) {
+		handler = handler && handler.destroy();
 	}
 
 	createMapObject(layer: CesiumLayer): Observable<boolean> {
@@ -398,6 +427,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	internalDestroyCesium() {
 		if (this.mapObject) {
 			this.mapObject.camera.moveEnd.removeEventListener(this._moveEndListener);
+			this.unregisterMouseMoveEvent(this._mouseMoveHandler);
 			this.mapObject.destroy();
 		}
 	}

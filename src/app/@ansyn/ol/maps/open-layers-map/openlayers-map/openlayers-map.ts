@@ -23,7 +23,6 @@ import {
 } from '@ansyn/imagery';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
-import { OpenLayersMousePositionControl } from './openlayers-mouseposition-control';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { Inject } from '@angular/core';
@@ -72,6 +71,22 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	};
 
+	private _pointerMoveListener: (args) => void = (args) => {
+		if (areCoordinatesNumeric(args.coordinate)) {
+			this.mousePointerMoved.emit({
+				long: args.coordinate[0],
+				lat: args.coordinate[1],
+				height: NaN
+			});
+		} else {
+			this.mousePointerMoved.emit({
+				long: NaN,
+				lat: NaN,
+				height: NaN
+			});
+		}
+	};
+
 	private _moveStartListener: () => void = () => {
 		this.getPosition().pipe(take(1)).subscribe(position => {
 			if (position) {
@@ -107,11 +122,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	) {
 		super();
 		// todo: a more orderly way to give default values to config params
-		this.olConfig.tilesLoadingDoubleBuffer =  this.olConfig.tilesLoadingDoubleBuffer || {
+		this.olConfig.tilesLoadingDoubleBuffer = this.olConfig.tilesLoadingDoubleBuffer || {
 			debounceTimeInMs: 500,
 			timeoutInMs: 3000
 		};
-		this.olConfig.floatingPositionSuffix = this.olConfig.floatingPositionSuffix || '';
 	}
 
 	/**
@@ -151,12 +165,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
-			new AttributionControl(),
-			new OpenLayersMousePositionControl({
-					projection: 'EPSG:4326',
-					coordinateFormat: (coords: [number, number]): string => coords.map((num) => + num.toFixed(4)).toString() + this.olConfig.floatingPositionSuffix
-				},
-				(point) => this.projectionService.projectApproximately(point, this.mapObject))
+			new AttributionControl()
 		];
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({
@@ -182,6 +191,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapObject.on('moveend', this._moveEndListener);
 		this._mapObject.on('movestart', this._moveStartListener);
 		this._mapObject.on('pointerdown', this._pointerDownListener);
+		this._mapObject.on('pointermove', this._pointerMoveListener);
 	}
 
 	createView(layer): View {
@@ -529,6 +539,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._mapObject.un('moveend', this._moveEndListener);
 			this._mapObject.un('movestart', this._moveStartListener);
 			this._mapObject.un('pointerdown', this._pointerDownListener);
+			this._mapObject.un('pointermove', this._pointerMoveListener);
 			this._mapObject.setTarget(null);
 		}
 

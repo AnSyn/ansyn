@@ -16,6 +16,7 @@ export interface IMapFacadeConfig {
 		headerText: string;
 		mainText: string;
 	};
+	floatingPositionSuffix?: string;
 }
 
 

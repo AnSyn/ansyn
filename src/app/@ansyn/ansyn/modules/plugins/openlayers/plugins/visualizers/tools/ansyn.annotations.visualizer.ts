@@ -95,8 +95,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	annoatationModeChange$: Observable<any> = combineLatest(this.annotationMode$, this.isActiveMap$)
-		.pipe(tap(([mode, isActiveMap]) => this.annotationsVisualizer.setMode(isActiveMap ? mode : null)));
+	annoatationModeChange$: Observable<any> = this.annotationMode$
+		.pipe(tap((mode) => {
+			this.annotationsVisualizer.setMode(mode)
+		}));
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.store$.pipe(

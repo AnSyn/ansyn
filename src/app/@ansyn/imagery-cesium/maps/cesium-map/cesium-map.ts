@@ -125,14 +125,8 @@ export class CesiumMap extends BaseImageryMap<any> {
 					long: +Cesium.Math.toDegrees(cartographic.longitude).toFixed(10),
 					lat: +Cesium.Math.toDegrees(cartographic.latitude).toFixed(10),
 					height: cartographic.height});
-				// entity.label.text =
-				// 	'Lon: ' + ('   ' + longitudeString).slice(-10) + '\u00B0' + ' Lat: ' + ('   ' + latitudeString).slice(-10) + '\u00B0';
 			} else {
-				this.mousePointerMoved.emit({
-					long: NaN,
-					lat: NaN,
-					height: NaN});
-				console.log("NaN");
+				this.mousePointerMoved.emit({ long: NaN, lat: NaN, height: NaN});
 			}
 
 		}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);

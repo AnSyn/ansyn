@@ -1,6 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { filter, take, tap } from 'rxjs/operators';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged, IMousePointerMove } from '@ansyn/imagery';
+import { mapFacadeConfig } from '../../models/map-facade.config';
+import { IMapFacadeConfig } from '../../models/map-config.model';
 
 @Component({
 	selector: 'ansyn-imagery-mouse-coordinates',
@@ -10,22 +12,26 @@ import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged, IM
 export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 
 	@Input() mapId;
+	@Input() isVisible;
 	mouseMovedEventSubscriber;
 	communicator: CommunicatorEntity;
+	floatingPositionSuffix = '';
 
-	lat: number;
-	long: number;
-	height: number;
+	lat: string;
+	long: string;
+	height: string;
 
-	constructor(protected communicators: ImageryCommunicatorService) {
+	constructor(protected communicators: ImageryCommunicatorService,
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
+		this.floatingPositionSuffix = this.config.floatingPositionSuffix || '';
 	}
 
 	registerMouseEvents() {
 		const communicator = this.communicators.provide(this.mapId);
 		this.mouseMovedEventSubscriber = communicator.ActiveMap.mousePointerMoved.subscribe( (args: IMousePointerMove) => {
-			this.lat = args.lat;
-			this.long = args.long;
-			this.height = args.height;
+			this.lat = !isNaN(args.lat) ? args.lat.toFixed(5) : null;
+			this.long = !isNaN(args.long) ? args.long.toFixed(5) : null;
+			this.height = !isNaN(args.height) ? args.height.toFixed(2) : null;
 		});
 	}
 

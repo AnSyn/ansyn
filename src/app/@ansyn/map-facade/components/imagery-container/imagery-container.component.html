@@ -18,7 +18,7 @@
 	<ansyn-map-search-box *ngIf="packageConfig?.mapSearch?.active && !overlay"
 						  [mapId]="mapState.id"></ansyn-map-search-box>
 
-	<ansyn-imagery-mouse-coordinates [mapId]="mapState.id"></ansyn-imagery-mouse-coordinates>
+	<ansyn-imagery-mouse-coordinates [mapId]="mapState.id" [isVisible]="isInImagery"></ansyn-imagery-mouse-coordinates>
 
 	<ng-container
 		*ngFor="let component of entryComponents.container"

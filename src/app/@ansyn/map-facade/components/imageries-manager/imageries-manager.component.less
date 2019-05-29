@@ -55,6 +55,7 @@
 			padding-bottom: 18px;
 			color: #cccccc;
 		}
+
 		/deep/ .ol-scale-line {
 			bottom: 0;
 			height: 32px;
@@ -75,10 +76,19 @@
 			bottom: 0;
 		}
 
+		/deep/ ansyn-imagery-mouse-coordinates {
+			bottom: 55px - @status-bar-height;
+		}
+
 		&.layout1 {
 			/deep/ .ol-mouse-position, /deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 				bottom: @status-bar-height;
 			}
+
+			/deep/ ansyn-imagery-mouse-coordinates {
+				bottom: 55px;
+			}
+
 			div.map-container-wrapper {
 				top: 0;
 				left: 0;
@@ -94,6 +104,11 @@
 			/deep/ .ol-mouse-position, /deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 				bottom: @status-bar-height;
 			}
+
+			/deep/ ansyn-imagery-mouse-coordinates {
+				bottom: 55px;
+			}
+
 			div.map-container-wrapper {
 				width: 50%;
 				height: 100%;
@@ -131,6 +146,10 @@
 					/deep/ .ol-mouse-position, /deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;
 					}
+
+					/deep/ ansyn-imagery-mouse-coordinates {
+						bottom: 55px;
+					}
 				}
 			}
 		}
@@ -148,6 +167,10 @@
 					}
 					/deep/ .ol-mouse-position, /deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;
+					}
+
+					/deep/ ansyn-imagery-mouse-coordinates {
+						bottom: 55px;
 					}
 				}
 				&:nth-child(1) {
@@ -180,6 +203,10 @@
 					/deep/ .ol-mouse-position, /deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;
 					}
+
+					/deep/ ansyn-imagery-mouse-coordinates {
+						bottom: 55px;
+					}
 				}
 				&:nth-child(1) {
 					top: 0;
@@ -205,6 +232,10 @@
 					}
 					/deep/ .ol-mouse-position, /deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;
+					}
+
+					/deep/ ansyn-imagery-mouse-coordinates {
+						bottom: 55px;
 					}
 				}
 				&:nth-child(1) {

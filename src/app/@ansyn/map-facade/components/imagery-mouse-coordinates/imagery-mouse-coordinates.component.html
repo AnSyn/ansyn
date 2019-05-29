@@ -1,4 +1,4 @@
-<div *ngIf=long>
-	{{ long }}&deg; {{lat}}&deg; {{height}}m
+<div *ngIf='long && isVisible'>
+	{{ long }}&deg; {{lat}}&deg; <span *ngIf=height>{{height}}m</span> {{floatingPositionSuffix}}
 </div>
 

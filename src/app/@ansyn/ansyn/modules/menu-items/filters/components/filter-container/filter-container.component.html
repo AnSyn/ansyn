@@ -43,6 +43,12 @@
 					[customData]="filter.customData"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-boolean-filter-container>
+
+				<ansyn-array-filter-container
+					*ngSwitchCase="'Array'"
+					[metadata]="metadataFromState"
+					(onMetadataChange)="onMetadataChange($event)">
+				</ansyn-array-filter-container>
 			</div>
 		</div>
 

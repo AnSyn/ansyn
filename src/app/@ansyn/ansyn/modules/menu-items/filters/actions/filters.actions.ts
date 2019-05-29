@@ -12,7 +12,8 @@ export const FiltersActionTypes = {
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
 
 	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION',
-	UPDATE_FACETS: 'UPDATE_FACETS'
+	UPDATE_FACETS: 'UPDATE_FACETS',
+	SET_FILTER_SEARCH: 'SET_FILTER_SEARCH'
 };
 
 export class InitializeFiltersAction implements Action {
@@ -50,6 +51,11 @@ export class UpdateFacetsAction implements Action {
 
 	}
 }
+
+export const setFilterSearch = (filterSearch) => ({
+	type: FiltersActionTypes.SET_FILTER_SEARCH,
+	payload: filterSearch
+});
 
 export type FiltersActions = InitializeFiltersAction
 	| InitializeFiltersSuccessAction

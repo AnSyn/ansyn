@@ -11,7 +11,7 @@ import { IFilterModel } from '../../../core/models/IFilterModel';
 import { FilterType } from '../models/filter-type';
 import { ICaseFilter } from '../../cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-
+import { get as _get } from 'lodash'
 export const filtersConfig = 'filtersConfig';
 
 // @dynamic
@@ -71,7 +71,7 @@ export class FiltersService {
 		filteredOverlays
 			.map((id) => overlays.get(id))
 			.filter(Boolean)
-			.forEach((overlay) => metadata.incrementFilteredCount(overlay[metadataKey.modelName]));
+			.forEach((overlay) => metadata.incrementFilteredCount(_get(overlay, metadataKey.modelName)));
 	}
 
 }

@@ -1,7 +1,9 @@
-export { ImageryMapExtent, ImageryMapExtentPolygon, IMousePointerMove } from './model/case-map-position.model';
+export {
+	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
+}from './model/case-map-position.model';
+
 export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
 
-export { ImageryMapPosition } from './model/case-map-position.model';
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
 export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
@@ -57,5 +59,5 @@ export { IMAGERY_CONFIG } from './model/configuration.token';
 export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME } from './model/imagery-layer.model';
 
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
-export { toDegrees, toRadians } from "./utils/math";
-export { ExtentCalculator } from "./utils/extent-calculator";
+export { toDegrees, toRadians } from './utils/math';
+export { ExtentCalculator } from './utils/extent-calculator';

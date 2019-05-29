@@ -19,7 +19,7 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 		} else {
 			const mapStateCopy: IMapSettings = {
 				id: UUID.UUID(),
-				data: { position: { extentPolygon: activeMap.data.position.extentPolygon } },
+				data: { position: { extentPolygon: activeMap.data.position.extentPolygon, projectedState: activeMap.data.position.projectedState } },
 				worldView: { ...activeMap.worldView },
 				flags: {}
 			};

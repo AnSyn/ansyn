@@ -1,4 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { IMapSettings } from '@ansyn/imagery';
 import { selectMaps } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -6,6 +7,8 @@ import { filter, tap } from 'rxjs/operators';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../../models/overlays.config';
 import { OverlaysConfig } from '../../services/overlays.service';
+import { Observable } from 'rxjs';
+import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',
@@ -16,7 +19,7 @@ import { OverlaysConfig } from '../../services/overlays.service';
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
 	@AutoSubscription
-	overlay$ = this.store$.pipe(
+	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
 		filter((maps) => Boolean(maps[this.mapId])),
 		tap((maps) => {

@@ -160,3 +160,4 @@ export const selectAnnotationMode = createSelector(toolsStateSelector, (tools: I
 export const selectAnnotationProperties = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationProperties);
 export const selectToolFlags = createSelector(toolsStateSelector, (tools: IToolsState) => tools.flags);
 export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));
+export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.isMeasureToolActive));

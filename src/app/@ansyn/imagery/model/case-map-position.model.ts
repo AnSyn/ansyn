@@ -12,6 +12,12 @@ export interface ImageryMapProjectedState {
 	zoom?: number;
 }
 
+export interface IMousePointerMove {
+	lat: number;
+	long: number;
+	height: number;
+}
+
 export type ImageryMapExtentPolygon = Polygon;
 
 export interface ImageryMapPosition {

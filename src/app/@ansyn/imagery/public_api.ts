@@ -1,4 +1,4 @@
-export { ImageryMapExtent, ImageryMapExtentPolygon } from './model/case-map-position.model';
+export { ImageryMapExtent, ImageryMapExtentPolygon, IMousePointerMove } from './model/case-map-position.model';
 export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
 
 export { ImageryMapPosition } from './model/case-map-position.model';

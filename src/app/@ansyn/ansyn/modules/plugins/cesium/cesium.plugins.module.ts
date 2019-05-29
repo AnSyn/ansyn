@@ -4,6 +4,7 @@ import { ImageryModule } from '@ansyn/imagery';
 import { ImageryDimensionModeComponent } from '../components/imagery-dimension-mode/imagery-dimension-mode.component';
 import {
 	CesiumBINGSourceProvider,
+	CesiumOpenAerialSourceProvider,
 	CesiumMap,
 	CesiumOsmSourceProvider,
 	CesiumPlanetSourceProvider
@@ -23,7 +24,8 @@ import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calc
 			mapSourceProviders: [
 				CesiumBINGSourceProvider,
 				CesiumOsmSourceProvider,
-				CesiumPlanetSourceProvider
+				CesiumPlanetSourceProvider,
+				CesiumOpenAerialSourceProvider
 			]
 		}),
 		MapFacadeModule.provide({

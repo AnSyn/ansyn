@@ -46,6 +46,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		return properties;
 	}
 
+	initData() {
+		this.selection = [];
+		this.hoverFeatureId = '';
+	}
+
 	ngOnInit() {
 		this.communicators.instanceCreated.pipe(
 			filter(({ id }) => id === this.mapId),
@@ -60,6 +65,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 				this.subscribers.push(this.communicator.mapInstanceChanged.subscribe((mapInstanceChanged: IMapInstanceChanged) => {
 					this.unSubscribeVisualizerEvents();
+					this.initData();
 					this.annotations = this.communicator.getPlugin(AnnotationsVisualizer);
 					if (this.annotations) {
 						this.subscribeVisualizerEvents();
@@ -139,7 +145,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			...style,
 			initial: {
 				...style.initial,
-				[`${$event.label}-opacity`]: $event.event ? opacity[$event.label] : 0
+				[`${ $event.label }-opacity`]: $event.event ? opacity[$event.label] : 0
 			}
 		};
 		this.annotations.updateFeature(featureId, { style: updatedStyle });

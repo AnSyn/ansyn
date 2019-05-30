@@ -1,3 +1,4 @@
+export { CesiumGeoServerSourceProvider } from './mapSourceProviders/cesium-GEO-SERVER-source-provider';
 export { CesiumOpenAerialSourceProvider } from './mapSourceProviders/cesium-open-aerial-source-provider';
 export { CesiumProjectionService } from './projection/cesium-projection.service';
 export { CesiumPlanetSourceProvider } from './mapSourceProviders/cesium-PLANET-source-provider';

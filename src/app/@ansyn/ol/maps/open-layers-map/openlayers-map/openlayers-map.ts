@@ -72,19 +72,21 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	};
 
 	private _pointerMoveListener: (args) => void = (args) => {
-		if (areCoordinatesNumeric(args.coordinate)) {
-			this.mousePointerMoved.emit({
-				long: args.coordinate[0],
-				lat: args.coordinate[1],
-				height: NaN
-			});
-		} else {
-			this.mousePointerMoved.emit({
-				long: NaN,
-				lat: NaN,
-				height: NaN
-			});
-		}
+		const point = <GeoPoint>turf.geometry('Point', args.coordinate);
+		return this.projectionService.projectApproximately(point, this.mapObject).pipe(
+			take(1),
+			tap((projectedPoint) => {
+				if (areCoordinatesNumeric(projectedPoint.coordinates)) {
+					this.mousePointerMoved.emit({
+						long: projectedPoint.coordinates[0],
+						lat: projectedPoint.coordinates[1],
+						height: NaN
+					});
+				} else {
+					this.mousePointerMoved.emit({ long: NaN, lat: NaN, height: NaN });
+				}
+			}))
+			.subscribe();
 	};
 
 	private _moveStartListener: () => void = () => {

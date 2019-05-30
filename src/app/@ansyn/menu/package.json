@@ -9,7 +9,8 @@
 		"@ngrx/entity": "^7.2.0"
 	},
 	"dependencies": {
-		"auto-subscriptions": "^2.0.5"
+		"auto-subscriptions": "^2.0.5",
+		"@ansyn/translation": "0.3.33"
 	},
 	"license": "MIT"
 }

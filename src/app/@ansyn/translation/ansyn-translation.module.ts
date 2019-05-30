@@ -1,9 +1,9 @@
 import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { MissingTranslationLogging } from '../utils/missing-translation-logging';
+import { MissingTranslationLogging } from './utils/missing-translation-logging';
 import { HttpClient } from '@angular/common/http';
-import { AnsynTranslationLoader } from './ansyn-translation-loader';
+import { AnsynTranslationLoader } from './loaders/ansyn-translation-loader';
 
 export const ROOT_TRANSLATION_PROVIDERS = new InjectionToken('ROOT_TRANSLATION_PROVIDERS');
 export const TRANSLATION_PROVIDERS = new InjectionToken('TRANSLATION_PROVIDERS');

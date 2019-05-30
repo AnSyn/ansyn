@@ -1,6 +1,6 @@
-import { ILoggerConfig } from '../models/logger-config.model';
-import { LoggerService } from '../services/logger.service';
-import { LoggerConfig } from '../models/logger.config';
+import { ILoggerConfig } from '../../ansyn/modules/core/models/logger-config.model';
+import { LoggerService } from '../../ansyn/modules/core/services/logger.service';
+import { LoggerConfig } from '../../ansyn/modules/core/models/logger.config';
 import { MissingTranslationHandler, MissingTranslationHandlerParams } from '@ngx-translate/core';
 import { Inject } from '@angular/core';
 

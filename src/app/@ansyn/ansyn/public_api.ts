@@ -214,6 +214,8 @@ export { mergeArrays } from './modules/core/utils/merge-arrays';
 export { selectTime } from './modules/overlays/reducers/overlays.reducer';
 export { ILoggerConfig } from './modules/core/models/logger-config.model';
 export { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
+export { ComponentTranslateLoader } from './modules/core/translation/component-translate-loader';
+export { DefaultTranslateLoader } from './modules/core/translation/default-translate-loader';
 export { SliderCheckboxComponent } from './modules/core/forms/slider-checkbox/slider-checkbox.component';
 export { MockComponent } from './modules/core/test/mock-component';
 export { createStore, IStoreFixture } from './modules/core/test/mock-store';

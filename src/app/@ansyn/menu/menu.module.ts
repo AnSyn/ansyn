@@ -1,5 +1,7 @@
 import { ANALYZE_FOR_ENTRY_COMPONENTS, Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AnsynTranslationModule } from '../ansyn/modules/core/translation/ansyn-translation.module';
+import { ComponentTranslateLoader } from '../ansyn/modules/core/translation/component-translate-loader';
 import { MenuComponent } from './menu/menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MenuConfig } from './models/menuConfig';
@@ -16,6 +18,7 @@ export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(menuFeatureKey, MenuReducer),
+		AnsynTranslationModule.addLoader([ComponentTranslateLoader]),
 		BrowserAnimationsModule
 	],
 	declarations: [MenuComponent],

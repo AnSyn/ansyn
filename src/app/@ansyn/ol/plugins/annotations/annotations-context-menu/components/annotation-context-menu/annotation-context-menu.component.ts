@@ -2,13 +2,13 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
+import { TranslateService } from '@ngx-translate/core';
 
 enum AnnotationsContextmenuTabs {
 	Colors,
 	Weight,
 	Label,
 }
-
 @Component({
 	selector: 'ansyn-annotations-context-menu',
 	templateUrl: './annotation-context-menu.component.html',
@@ -33,7 +33,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		$event.preventDefault();
 	}
 
-	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService) {
+	constructor(public translate: TranslateService,
+				public host: ElementRef,
+				protected communicators: ImageryCommunicatorService) {
 	}
 
 	calcBoundingRect(id) {

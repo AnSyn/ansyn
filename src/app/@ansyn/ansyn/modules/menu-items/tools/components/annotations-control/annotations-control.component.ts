@@ -11,6 +11,7 @@ import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manag
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
 import { ANNOTATION_MODE_LIST, AnnotationMode } from '@ansyn/ol';
+import { TranslateService } from '@ngx-translate/core';
 
 export enum SelectionBoxTypes {
 	None,
@@ -81,7 +82,9 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		return this._expand;
 	}
 
-	constructor(public store: Store<any>, @Inject(DOCUMENT) public document: any) {
+	constructor(public store: Store<any>,
+				public translate: TranslateService,
+				@Inject(DOCUMENT) public document: any) {
 	}
 
 	ngOnInit() {

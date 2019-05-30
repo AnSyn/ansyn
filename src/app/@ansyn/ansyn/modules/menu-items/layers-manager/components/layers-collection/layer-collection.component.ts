@@ -5,12 +5,12 @@ import { SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
 import { ILayer, LayerType } from '../../models/layers.model';
 import { ILayerState } from '../../reducers/layers.reducer';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface ILayerCollection {
 	type: LayerType;
 	data: ILayer[];
 }
-
 @Component({
 	selector: 'ansyn-layer-collection',
 	templateUrl: './layer-collection.component.html',
@@ -51,7 +51,7 @@ export class LayerCollectionComponent {
 		return LayerType;
 	}
 
-	constructor(public store: Store<ILayerState>) {
+	constructor(public store: Store<ILayerState>, public translate: TranslateService) {
 	}
 
 	showAll() {

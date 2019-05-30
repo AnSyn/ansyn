@@ -11,7 +11,7 @@
 
 				<i [ngClass]="menuItem.iconClass"></i>
 				<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
-				{{menuItem.name}}
+				{{menuItem.name | translate}}
 			</div>
 
 			<div class="logo">
@@ -51,7 +51,7 @@
 		 (@expand.start)="onExpandStart()">
 		<!--<button class="close" (click)="closeMenu()">×</button>-->
 		<button class="pin" (click)="toggleIsPinned()"
-				[attr.tooltip-value]="pinText" tooltip-class="right">
+				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
 			<i class="icon-tools-pin"></i>
 		</button>
 

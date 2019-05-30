@@ -1,7 +1,7 @@
 <div class="list color-selection-expand" *ngIf="show">
 
 	<ansyn-color-picker
-		label="Fill"
+		[label]="translate.get('Fill') | async"
 		[color]="properties.fill"
 		[active]="properties['fill-opacity']"
 		[activeDisabled]="!(properties['stroke-opacity'])"
@@ -10,7 +10,7 @@
 	</ansyn-color-picker>
 
 	<ansyn-color-picker
-		label="Stroke"
+		[label]="translate.get('Stroke') | async"
 		[color]="properties.stroke"
 		[active]="properties['stroke-opacity']"
 		[activeDisabled]="!(properties['fill-opacity'])"

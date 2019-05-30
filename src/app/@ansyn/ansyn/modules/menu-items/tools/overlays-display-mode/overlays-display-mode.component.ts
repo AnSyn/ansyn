@@ -5,6 +5,7 @@ import { ShowOverlaysFootprintAction } from '../actions/tools.actions';
 import { Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 export type OverlayDisplayMode = 'Heatmap' | 'Polygon' | 'None';
 
@@ -81,7 +82,8 @@ export class OverlaysDisplayModeComponent {
 		return this._modeOn;
 	}
 
-	constructor(public store$: Store<IToolsState>) {
+	constructor(public store$: Store<IToolsState>,
+				public translate: TranslateService) {
 		this.needToDispatchAction = false;
 		this.visualizerType = 'None';
 		this.needToDispatchAction = true;

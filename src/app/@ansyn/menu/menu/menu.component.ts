@@ -35,6 +35,7 @@ import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap, withLatestFrom } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 const animations: any[] = [
 	trigger(
@@ -143,6 +144,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
+				public translate: TranslateService,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 	}

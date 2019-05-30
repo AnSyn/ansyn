@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { IFiltersConfig } from '../../models/filters-config';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { FilterType } from '../../models/filter-type';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -73,7 +74,8 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	);
 
 
-	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, public store: Store<IFiltersState>) {
+	constructor(@Inject(filtersConfig) protected config: IFiltersConfig,
+				public store: Store<IFiltersState>) {
 	}
 
 	showOnlyFavorites($event) {

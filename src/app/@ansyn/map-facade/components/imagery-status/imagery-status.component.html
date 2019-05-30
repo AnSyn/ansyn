@@ -21,6 +21,7 @@
 			class="small-icon-button link-maps"
 			tooltip-value="Momentarily link screens"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
+			[disabled]="noGeoRegistration"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>
 	</button>

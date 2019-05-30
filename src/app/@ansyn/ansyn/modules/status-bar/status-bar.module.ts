@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AnsynTranslationModule } from '../../../translation/public_api';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
@@ -22,7 +23,8 @@ import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
 		MapFacadeModule,
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),
-		ClickOutsideModule
+		ClickOutsideModule,
+		AnsynTranslationModule
 	],
 	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent, ],
 	providers: [

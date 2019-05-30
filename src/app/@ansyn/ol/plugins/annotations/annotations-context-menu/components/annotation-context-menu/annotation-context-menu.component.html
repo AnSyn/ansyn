@@ -8,7 +8,7 @@
 				<li>
 					<button [class.active]="getFeatureProps(featureId)?.showMeasures"
 							(click)="toggleMeasures(featureId)">
-						<i [attr.tooltip-value]="translate.get('Measures') | async" tooltip-class="bottom">
+						<i [attr.tooltip-value]="'Measures' | translate" tooltip-class="bottom">
 							<svg
 								viewBox="0 0 1024 1024" fill="#fff">
 								<path
@@ -20,7 +20,7 @@
 				<li>
 					<button [class.active]="selectedTab[featureId] === Tabs.Label"
 							(click)="selectTab(featureId, Tabs.Label)">
-						<i [attr.tooltip-value]="translate.get('Label') | async" tooltip-class="bottom">
+						<i [attr.tooltip-value]="'Label' | translate" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">
 								<path
 									d="M772.676 213.333h-192.124c-10.001 0-19.802 4.052-26.871 11.119l-329.236 329.263c-14.816 14.818-14.816 38.903 0 53.722l192.124 192.137c7.395 7.394 17.146 11.093 26.87 11.093 9.702 0 19.452-3.699 26.871-11.068l329.237-329.263c7.168-7.194 11.119-16.742 11.119-26.876v-192.135c0-20.946-17.045-37.992-37.99-37.992zM785.314 443.439c0 3.341-1.34 6.609-3.699 8.964l-329.237 329.263c-4.937 4.937-12.966 4.937-17.903 0l-192.124-192.137c-4.939-4.941-4.939-12.971 0-17.907l329.237-329.263c2.355-2.355 5.623-3.698 8.964-3.698h192.098c6.967 0 12.663 5.674 12.663 12.664v192.114z"></path>
@@ -37,7 +37,7 @@
 								   type="text"
 								   #labelInput
 								   autofocus
-								   [attr.placeholder]="translate.get('Label') | async"
+								   [attr.placeholder]="'Label' | translate"
 								   name="EditLabel"
 								   [ngModel]="getFeatureProps(featureId)?.label"
 								   (ngModelChange)="updateLabel($event, featureId)">
@@ -49,7 +49,7 @@
 					<p>
 						<button [class.active]="selectedTab[featureId] === Tabs.Weight"
 								(click)="selectTab(featureId, Tabs.Weight)">
-							<i [attr.tooltip-value]="translate.get('Width') | async" tooltip-class="bottom">
+							<i [attr.tooltip-value]="'Width' | translate" tooltip-class="bottom">
 								<svg viewBox="0 0 1024 1024">
 									<path
 										d="M256 645.333h511.94v-53.333h-511.94v53.333zM256 725.333h511.94v-26.667h-511.94v26.667zM256 538.667h511.94v-80h-511.94v80zM256 298.667v106.667h511.94v-106.667h-511.94z"></path>
@@ -67,7 +67,7 @@
 					<p>
 						<button [class.active]="selectedTab[featureId] === Tabs.Colors"
 								(click)="selectTab(featureId, Tabs.Colors)">
-							<i [attr.tooltip-value]="translate.get('Color') | async" tooltip-class="bottom">
+							<i [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom">
 								<svg viewBox="0 0 1024 1024">
 									<path
 										d="M370.506 526.251c-52.181 0-94.304 38.11-94.304 85.321 0 37.257-36.464 56.883-62.869 56.883 28.92 34.697 78.272 56.879 125.738 56.879 69.47 0 125.74-50.91 125.74-113.762 0-47.211-42.124-85.321-94.305-85.321zM801.472 259.762l-42.121-38.11c-12.262-11.092-32.064-11.092-44.322 0l-281.655 254.828 86.447 78.212 281.651-254.829c12.258-11.092 12.258-29.009 0-40.101zM213.333 668.454v-21.333h-45.553l29.165 34.991 16.387-13.658zM801.472 259.762v0zM759.351 221.652v0zM715.029 221.652v0zM433.374 476.48l-14.312-15.821-17.485 15.821 17.485 15.817 14.312-15.817zM519.821 554.692l-14.315 15.817 14.315 12.949 14.31-12.949-14.31-15.817zM801.472 299.863v0zM370.506 504.917c-61.904 0-115.637 45.7-115.637 106.654h42.667c0-33.472 30.512-63.987 72.97-63.987v-42.667zM254.869 611.571c0 10.829-5.031 19.204-13.216 25.51-8.667 6.677-19.803 10.039-28.319 10.039v42.667c17.888 0 38.188-6.451 54.353-18.901 16.648-12.826 29.849-32.887 29.849-59.315h-42.667zM196.946 682.112c33.247 39.889 88.769 64.555 142.125 64.555v-42.667c-41.576 0-84.758-19.699-109.35-49.207l-32.775 27.319zM339.071 746.667c79.193 0 147.073-58.5 147.073-135.095h-42.667c0 49.114-44.659 92.429-104.406 92.429v42.667zM486.144 611.571c0-60.954-53.734-106.654-115.638-106.654v42.667c42.458 0 72.972 30.515 72.972 63.987h42.667zM815.787 243.943l-42.125-38.11-28.625 31.639 42.121 38.11 28.629-31.639zM773.662 205.833c-20.386-18.444-52.561-18.444-72.947 0l28.625 31.639c4.134-3.74 11.563-3.74 15.697 0l28.625-31.639zM700.715 205.833l-281.653 254.827 28.627 31.637 281.651-254.825-28.625-31.639zM419.062 492.297l86.444 78.212 28.625-31.637-86.443-78.212-28.627 31.637zM534.131 570.509l281.655-254.826-28.629-31.639-281.651 254.828 28.625 31.637zM815.787 315.683c21.619-19.561 21.619-52.179 0-71.74l-28.629 31.639c1.762 1.593 2.176 3.142 2.176 4.231s-0.414 2.638-2.176 4.231l28.629 31.639zM213.333 832h597.333v-42.667h-597.333v42.667z"></path>
@@ -84,7 +84,7 @@
 				</li>
 				<li>
 					<button class='removeFeature' (click)="removeFeature(featureId)">
-						<i [attr.tooltip-value]="translate.get('Delete') | async" tooltip-class="bottom">
+						<i [attr.tooltip-value]="'Delete' | translate" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">
 								<path
 									d="M810.667 273.493l-60.16-60.16-238.507 238.507-238.507-238.507-60.16 60.16 238.507 238.507-238.507 238.507 60.16 60.16 238.507-238.507 238.507 238.507 60.16-60.16-238.507-238.507 238.507-238.507z"></path>

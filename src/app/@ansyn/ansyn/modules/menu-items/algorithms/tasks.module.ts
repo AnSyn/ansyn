@@ -2,6 +2,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CommonModule } from '@angular/common';
+import { AnsynTranslationModule } from '../../../../translation/public_api';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { TasksTableComponent } from './components/tasks-table/tasks-table.component';
 import { TasksTablePageComponent } from './components/tasks-table-page/tasks-table-page.component';
@@ -29,7 +30,8 @@ import { CoreModule } from '../../core/core.module';
 		CommonModule,
 		FormsModule,
 		StoreModule.forFeature(tasksFeatureKey, TasksReducer),
-		EffectsModule.forFeature([TasksEffects])
+		EffectsModule.forFeature([TasksEffects]),
+		AnsynTranslationModule
 	],
 	declarations: [TasksComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent,
 		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, RemoveTaskModalComponent],

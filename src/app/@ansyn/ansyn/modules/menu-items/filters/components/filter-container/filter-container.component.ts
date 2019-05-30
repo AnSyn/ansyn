@@ -17,7 +17,6 @@ import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../../models/filters-config';
 import { filter, map, tap } from 'rxjs/operators';
 import { FilterType } from '../../models/filter-type';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -80,8 +79,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	);
 
 	constructor(protected store: Store<IFiltersState>,
-				@Inject(filtersConfig) protected config: IFiltersConfig,
-				public translate: TranslateService) {
+				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
 	get disabledShowAll() {

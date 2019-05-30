@@ -17,6 +17,9 @@
       "@ansyn/ol": [
         "dist/ansyn/ol"
       ],
+      "@ansyn/translation": [
+        "dist/ansyn/translation"
+      ],
       "@ansyn/imagery-cesium": [
         "dist/ansyn/imagery-cesium"
       ]

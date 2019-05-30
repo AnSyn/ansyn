@@ -4,6 +4,9 @@
     "paths": {
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
+      ],
+      "@ansyn/translation": [
+        "dist/ansyn/translation"
       ]
     },
     "outDir": "../../../out-tsc/lib",

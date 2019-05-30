@@ -15,7 +15,6 @@ import { ProjectionConverterService } from '../../services/projection-converter.
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { copyFromContent } from '@ansyn/map-facade';
 import { ICoordinatesSystem } from '../../../../core/models/coordinate-system.model';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -94,7 +93,6 @@ export class GoToComponent implements OnInit {
 
 	constructor(protected store$: Store<IToolsState>,
 				@Inject(toolsConfig) protected config: IToolsConfig,
-				public translate: TranslateService,
 				protected projectionConverterService: ProjectionConverterService) {
 	}
 

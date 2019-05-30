@@ -1,3 +1,4 @@
+import { AnsynTranslationModule } from '../../../../translation/public_api';
 import { MapIteratorPipe } from './pipes/map-iterator.pipe';
 import { EffectsModule } from '@ngrx/effects';
 import { filtersConfig } from './services/filters.service';
@@ -32,7 +33,8 @@ import { ArrayFilterContainerComponent } from './components/array-filter-contain
 		SliderModule,
 		FormsModule,
 		MapFacadeModule,
-		EffectsModule.forFeature([FiltersEffects])
+		EffectsModule.forFeature([FiltersEffects]),
+		AnsynTranslationModule
 	],
 	declarations: [
 		FiltersCollectionComponent,

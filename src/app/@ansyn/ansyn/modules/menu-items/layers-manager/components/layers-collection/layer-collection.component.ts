@@ -5,7 +5,6 @@ import { SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
 import { ILayer, LayerType } from '../../models/layers.model';
 import { ILayerState } from '../../reducers/layers.reducer';
-import { TranslateService } from '@ngx-translate/core';
 
 export interface ILayerCollection {
 	type: LayerType;
@@ -51,7 +50,7 @@ export class LayerCollectionComponent {
 		return LayerType;
 	}
 
-	constructor(public store: Store<ILayerState>, public translate: TranslateService) {
+	constructor(public store: Store<ILayerState>) {
 	}
 
 	showAll() {

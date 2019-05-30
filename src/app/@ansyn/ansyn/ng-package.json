@@ -5,6 +5,7 @@
     "@ansyn/imagery",
     "@ansyn/map-facade",
     "@ansyn/imagery-cesium",
+    "@ansyn/translation",
     "@ansyn/menu",
     "@turf/turf",
     "geojson",

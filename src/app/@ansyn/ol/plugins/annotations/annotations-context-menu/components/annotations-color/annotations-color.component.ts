@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 export interface IAnnotationColorProps {
 	fill: string;
@@ -20,7 +19,7 @@ export class AnnotationsColorComponent implements OnInit {
 	@Output() colorChange = new EventEmitter();
 
 
-	constructor(public translate: TranslateService) {
+	constructor() {
 	}
 
 	ngOnInit() {

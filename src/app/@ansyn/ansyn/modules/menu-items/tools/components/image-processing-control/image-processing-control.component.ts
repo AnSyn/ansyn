@@ -6,7 +6,6 @@ import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-c
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 import { ImageManualProcessArgs } from '../../../cases/models/case.model';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-image-processing-control',
@@ -39,7 +38,6 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	@HostBinding('class.expand') @Input() expand;
 
 	constructor(public store$: Store<IToolsState>,
-				public translate: TranslateService,
 				@Inject(toolsConfig) protected config: IToolsConfig) {
 	}
 

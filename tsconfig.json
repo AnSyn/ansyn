@@ -21,6 +21,9 @@
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
       ],
+      "@ansyn/translation": [
+        "src/app/@ansyn/translation/public_api"
+      ],
       "root/package.json": ["./package.json"]
     },
     "outDir": "./dist/out-tsc",

@@ -8,7 +8,7 @@
 		{{layer?.name | translate}}
 	</ansyn-checkbox>
 
-	<span class="only-filter" (click)="selectOnly()" [hidden]="showOnly">{{translate.get('only') | async}}</span>
+	<span class="only-filter" (click)="selectOnly()" [hidden]="showOnly">{{'only' | translate}}</span>
 
 	<ng-content></ng-content>
 

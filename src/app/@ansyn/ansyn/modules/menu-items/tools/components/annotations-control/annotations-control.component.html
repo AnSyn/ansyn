@@ -19,7 +19,7 @@
 		[class.mode-on]="mode === annotationMode"
 		(click)="setAnnotationMode(annotationMode)">
 		<span
-			class="icon-annotation-{{annotationMode.toLowerCase()}}" [attr.tooltip-value]="translate.get(annotationMode) | async"
+			class="icon-annotation-{{annotationMode.toLowerCase()}}" [attr.tooltip-value]="annotationMode | translate"
 			tooltip-class="bottom">
 		</span>
 	</li>
@@ -32,7 +32,7 @@
 
 		<button (click)="toggleSelection(SelectionBoxTypes.LineWidth)"
 				[class.expand]="selectedBox === SelectionBoxTypes.LineWidth">
-			<span class="icon-annotation-weight" [attr.tooltip-value]="translate.get('Width') | async" tooltip-class="bottom"></span>
+			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate" tooltip-class="bottom"></span>
 		</button>
 
 		<ansyn-annotations-weight
@@ -46,7 +46,7 @@
 
 		<button (click)="toggleSelection(SelectionBoxTypes.ColorPicker)"
 				[class.expand]="selectedBox === SelectionBoxTypes.ColorPicker">
-			<span class="icon-annotation-color" [attr.tooltip-value]="translate.get('Color') | async" tooltip-class="bottom"></span>
+			<span class="icon-annotation-color" [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom"></span>
 		</button>
 
 		<ansyn-annotations-color

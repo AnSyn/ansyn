@@ -11,7 +11,7 @@
 
 	<div>
 		<button tooltip-class="right"
-				[attr.tooltip-value]="translate.get('Go To') | async"
+				[attr.tooltip-value]="'Go To' | translate"
 				(click)="toggleSubMenu(subMenuEnum.goTo)"
 				[class.active]="isExpand(subMenuEnum.goTo) && !isGeoOptionsDisabled"
 				[disabled]="isGeoOptionsDisabled">
@@ -22,7 +22,7 @@
 
 	<div class="image-auto-processing">
 		<button tooltip-class="right"
-				[attr.tooltip-value]="translate.get('Automatic Processing - Grayscale Images Only') | async"
+				[attr.tooltip-value]="'Automatic Processing - Grayscale Images Only' | translate"
 				(click)="toggleAutoImageProcessing()"
 				[class.mode-on]="onAutoImageProcessing && !imageProcessingDisabled"
 				[disabled]="imageProcessingDisabled">
@@ -32,7 +32,7 @@
 
 	<div class="image-manual-processing">
 		<button tooltip-class="right"
-				[attr.tooltip-value]="translate.get('Manual Image Enhancement') | async"
+				[attr.tooltip-value]="'Manual Image Enhancement' | translate"
 				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
 				[class.mode-on]="isImageControlActive && !imageManualProcessingDisabled"
 				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageManualProcessingDisabled"
@@ -44,7 +44,7 @@
 	</div>
 	<div class="display-overlay-visualizer">
 		<button tooltip-class="right"
-				[attr.tooltip-value]="translate.get('Display Overlays') | async"
+				[attr.tooltip-value]="'Display Overlays' | translate"
 				(click)="toggleSubMenu(subMenuEnum.overlays)"
 				[disabled]="isGeoOptionsDisabled"
 				[class.mode-on]="displayModeOn && !isGeoOptionsDisabled"
@@ -61,7 +61,7 @@
 
 	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">
 		<button tooltip-class="right"
-				[attr.tooltip-value]="translate.get('Annotations') | async"
+				[attr.tooltip-value]="'Annotations' | translate"
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
 				(click)="toggleSubMenu(subMenuEnum.annotations)"
 				[disabled]="!(isActiveAnnotationLayer$ | async) || isGeoOptionsDisabled">
@@ -73,7 +73,7 @@
 
 	<div class="distance-measure-tool">
 		<button tooltip-class="right"
-				[attr.tooltip-value]="translate.get('Measure Distance') | async"
+				[attr.tooltip-value]="'Measure Distance' | translate"
 				(click)="toggleMeasureDistanceTool()"
 				[disabled]="isGeoOptionsDisabled"
 				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">

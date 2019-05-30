@@ -4,6 +4,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { ComponentTranslateLoader, AnsynTranslationModule } from '../../../translation/public_api';
 import { CoreModule } from '../core/core.module';
 import { OverlaysContainerComponent } from './components/container/overlays-container.component';
 import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';
@@ -33,7 +34,8 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 				container: [OverlaySourceTypeNoticeComponent],
 				status: []
 			}
-		})
+		}),
+		AnsynTranslationModule
 	],
 	declarations: [
 		TimelineComponent,

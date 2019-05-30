@@ -1,3 +1,4 @@
+import { AnsynTranslationModule } from '../../../../translation/public_api';
 import { ILayersManagerConfig } from './models/layers-manager-config';
 import { LayersEffects } from './effects/layers.effects';
 import { EffectsModule } from '@ngrx/effects';
@@ -25,7 +26,8 @@ import { CoreModule } from '../../core/core.module';
 		CommonModule,
 		FormsModule,
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
-		EffectsModule.forFeature([LayersEffects])
+		EffectsModule.forFeature([LayersEffects]),
+		AnsynTranslationModule
 	],
 	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
 	entryComponents: [LayersManagerComponent],

@@ -4,5 +4,6 @@
   "map-facade",
   "menu",
   "imagery-cesium",
-  "ol"
+  "ol",
+  "translation"
 ]

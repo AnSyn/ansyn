@@ -9,18 +9,15 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
-	IToolsState,
 	selectSubMenu, selectToolFlag,
 	selectToolFlags,
 	SubMenuEnum,
-	toolsFlags,
-	toolsStateSelector
+	toolsFlags
 } from '../reducers/tools.reducer';
-import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -92,8 +89,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	// @TODO display the shadow mouse only if there more then one map .
-	constructor(protected store: Store<any>,
-				public translate: TranslateService) {
+	constructor(protected store: Store<any>) {
 
 	}
 

@@ -2,6 +2,9 @@
   "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
+      "@ansyn/translation": [
+        "src/app/@ansyn/translation/public_api"
+      ]
     }
   }
 }

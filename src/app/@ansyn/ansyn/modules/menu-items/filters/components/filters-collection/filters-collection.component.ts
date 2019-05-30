@@ -11,8 +11,6 @@ import { Observable } from 'rxjs';
 import { IFiltersConfig } from '../../models/filters-config';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
 import { FilterType } from '../../models/filter-type';
-import { TranslateService } from '@ngx-translate/core';
-
 
 @Component({
 	selector: 'ansyn-filters',

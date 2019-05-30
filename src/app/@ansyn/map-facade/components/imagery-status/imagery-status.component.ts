@@ -2,7 +2,6 @@ import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit,
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { Dictionary } from '@ngrx/entity';
 import { select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { Observable } from 'rxjs';
@@ -120,8 +119,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
-				protected translate: TranslateService) {
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
 	ngOnInit(): void {

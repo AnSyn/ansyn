@@ -14,6 +14,9 @@
       "@ansyn/imagery-cesium": [
         "src/app/@ansyn/imagery-cesium/public_api"
       ],
+      "@ansyn/translation": [
+        "src/app/@ansyn/translation/public_api"
+      ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
       ]

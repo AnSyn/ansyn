@@ -6,7 +6,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectSelectedLayersIds } from '../../reducers/layers.reducer';
 import { ILayer } from '../../models/layers.model';
 import { SelectOnlyLayer, SetLayerSelection } from '../../actions/layers.actions';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-layer',
@@ -35,8 +34,7 @@ export class LayerComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 	}
 
-	constructor(protected store$: Store<any>,
-				public translate: TranslateService) {
+	constructor(protected store$: Store<any>) {
 	}
 
 	public onCheckboxClicked(checked: boolean): void {

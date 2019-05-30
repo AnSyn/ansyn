@@ -15,6 +15,9 @@
     "paths": {
       "@ansyn/menu": [
         "src/app/@ansyn/menu"
+      ],
+      "@ansyn/translation": [
+        "dist/ansyn/translation"
       ]
     }
   },

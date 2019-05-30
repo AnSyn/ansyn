@@ -3,6 +3,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+	AnsynTranslateService,
+	ComponentTranslateLoader,
+	DefaultTranslateLoader,
+	AnsynTranslationModule
+} from '../translation/public_api';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ImageryModule } from '@ansyn/imagery';
@@ -63,7 +69,8 @@ import { StatusBarModule } from './modules/status-bar/status-bar.module';
 		ImageryModule,
 		StatusBarModule,
 		RouterModule,
-		HelpModule
+		HelpModule,
+		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader])
 	],
 	providers: [
 		{
@@ -103,5 +110,9 @@ export class AnsynModule {
 				}
 			]
 		};
+	}
+
+	constructor(public translate: AnsynTranslateService) {
+		translate.setDefaultLang('default');
 	}
 }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AnsynTranslationModule } from '../../../../translation/public_api';
 import { AnnotationContextMenuComponent } from './components/annotation-context-menu/annotation-context-menu.component';
 import { FormsModule } from '@angular/forms';
 import { AnnotationsWeightComponent } from './components/annotations-weight/annotations-weight.component';
@@ -26,7 +27,8 @@ import { MatInputModule } from '@angular/material';
 		CommonModule,
 		FormsModule,
 		ColorPickerModule,
-		MatInputModule
+		MatInputModule,
+		AnsynTranslationModule
 	]
 })
 export class AnnotationsContextMenuModule {

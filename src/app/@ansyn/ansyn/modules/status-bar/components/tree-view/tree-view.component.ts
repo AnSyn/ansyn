@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
+import { AnsynTranslateService } from '../../../../../translation/public_api';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { Observable } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 import { filter, tap, take } from 'rxjs/operators';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
@@ -53,7 +53,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				public store: Store<IStatusBarState>,
-				private translate: TranslateService) {
+				private translate: AnsynTranslateService) {
 
 		this.dataFilters.forEach((f) => {
 			translate.get(f.text).subscribe((res: string) => {

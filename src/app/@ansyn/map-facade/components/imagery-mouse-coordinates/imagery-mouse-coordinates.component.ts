@@ -27,7 +27,7 @@ export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 	}
 
 	registerMouseEvents() {
-		this.mouseMovedEventSubscriber = this.communicator.ActiveMap.mousePointerMoved.subscribe( (args: IMousePointerMove) => {
+		this.mouseMovedEventSubscriber = this.communicator.ActiveMap.mousePointerMoved.subscribe((args: IMousePointerMove) => {
 			this.lat = !isNaN(args.lat) ? args.lat.toFixed(5) : null;
 			this.long = !isNaN(args.long) ? args.long.toFixed(5) : null;
 			this.height = !isNaN(args.height) ? args.height.toFixed(2) : null;
@@ -41,6 +41,12 @@ export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	initCoordinates() {
+		this.lat = null;
+		this.long = null;
+		this.height = null;
+	}
+
 	ngOnInit() {
 		this.communicators.instanceCreated.pipe(
 			filter(({ id }) => id === this.mapId),
@@ -49,6 +55,7 @@ export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 				this.registerMouseEvents();
 				this.communicator.mapInstanceChanged.subscribe((args: IMapInstanceChanged) => {
 					this.unregisterMouseEvents();
+					this.initCoordinates();
 					this.registerMouseEvents();
 				})
 

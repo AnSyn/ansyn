@@ -3,10 +3,10 @@
 		<ansyn-slider-checkbox [checked]="!removedOverlaysVisibility"
 							   (checkedChange)="showRemoved()"></ansyn-slider-checkbox>
 		<div class="show-hide-filtered-overlays-text">
-			<span>{{'Show manually filtered overlays' | translate}} ({{removedOverlaysCount}})</span>
+			<span>{{'Show manually filtered overlays' | translate}} - {{removedOverlaysCount}}</span>
 		</div>
 	</div>
 	<div class="reset-list">
-		<span (click)="showAll()">Reset list</span>
+		<span (click)="showAll()">{{'Reset list' | translate}}</span>
 	</div>
 </div>

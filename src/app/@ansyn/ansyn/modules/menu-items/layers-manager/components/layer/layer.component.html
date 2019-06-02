@@ -5,7 +5,7 @@
 		[id]="'checkbox' + layer?.id"
 		(ngModelChange)="onCheckboxClicked($event)"
 		[ngModel]="isChecked">
-		{{layer?.name | translate}}
+		{{layer?.name}}
 	</ansyn-checkbox>
 
 	<span class="only-filter" (click)="selectOnly()" [hidden]="showOnly">{{'only' | translate}}</span>

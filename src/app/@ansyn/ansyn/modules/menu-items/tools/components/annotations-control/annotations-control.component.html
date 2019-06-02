@@ -1,7 +1,7 @@
 <div class="selected-layer"
 	 *ngIf="(annotationLayerIds$ | async)?.length > 1">
 	<div>
-		Layer:
+		{{'Layer' | translate}}:
 		<select class="active-annotation-layer" (change)="setSelectedAnnotationLayer($event.target.value)">
 			<option
 				[selected]="(activeAnnotationLayer$ | async) === layer?.id"

@@ -1,3 +1,4 @@
+export { BaseEntitiesVisualizer } from './plugins/entities-visualizer/base-entities-visualizer';
 export { CesiumGeoServerSourceProvider } from './mapSourceProviders/cesium-GEO-SERVER-source-provider';
 export { CesiumOpenAerialSourceProvider } from './mapSourceProviders/cesium-open-aerial-source-provider';
 export { CesiumProjectionService } from './projection/cesium-projection.service';

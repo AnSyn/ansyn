@@ -33,7 +33,7 @@ describe('AnnotationContextMenuComponent', () => {
 				FormsModule,
 				ColorPickerModule,
 				MatInputModule,
-				TranslateModule
+				TranslateModule.forRoot()
 			]
 		}).compileComponents();
 	});

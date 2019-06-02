@@ -153,7 +153,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 						terrainProvider: Cesium.createWorldTerrain(),
 						mapProjection: layer.mapProjection,
 						sceneMode: cesiumSceneMode,
-						imageryLayers: [layer.layer],
+						imageryProvider : layer.layer,
 						baseLayerPicker: true
 					});
 
@@ -171,7 +171,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			const viewer = new Cesium.Viewer(this.element, {
 				terrainProvider: Cesium.createWorldTerrain(),
 				sceneMode: cesiumSceneMode,
-				imageryLayers: [layer.layer],
+				imageryProvider : layer.layer,
 				baseLayerPicker: false,
 				sceneModePicker: false,
 				timeline: false,

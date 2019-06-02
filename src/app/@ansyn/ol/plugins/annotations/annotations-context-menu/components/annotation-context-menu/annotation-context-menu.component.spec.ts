@@ -11,6 +11,7 @@ import { AnnotationsWeightComponent } from '../annotations-weight/annotations-we
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatInputModule } from '@angular/material';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
@@ -31,7 +32,8 @@ describe('AnnotationContextMenuComponent', () => {
 			imports: [
 				FormsModule,
 				ColorPickerModule,
-				MatInputModule
+				MatInputModule,
+				TranslateModule
 			]
 		}).compileComponents();
 	});

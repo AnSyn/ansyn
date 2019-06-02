@@ -1,5 +1,6 @@
 import { TimelineTimepickerComponent } from './timeline-timepicker.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 describe('TimelineTimepickerComponent', () => {
@@ -8,7 +9,10 @@ describe('TimelineTimepickerComponent', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			declarations: [TimelineTimepickerComponent]
+			declarations: [TimelineTimepickerComponent],
+			imports: [
+				TranslateModule
+			]
 		}).compileComponents();
 	});
 

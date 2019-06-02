@@ -4,6 +4,7 @@ import { BackToWorldView } from '../../actions/overlay-status.actions';
 
 import { BackToBaseMapComponent } from './back-to-base-map.component';
 import { Store, StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('BackToBaseMapComponent', () => {
 	let component: BackToBaseMapComponent;
@@ -15,7 +16,8 @@ describe('BackToBaseMapComponent', () => {
 			declarations: [BackToBaseMapComponent],
 			imports: [StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer
-			})]
+			}),
+				TranslateModule]
 		})
 			.compileComponents();
 	}));

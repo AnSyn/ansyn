@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerChangedTriggerAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuItem } from '../models/menu-item.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -15,7 +16,7 @@ describe('MenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer })],
+			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer }), TranslateModule],
 			declarations: [MenuComponent],
 			providers: [{ provide: MenuConfig, useValue: {} }]
 		}).compileComponents();

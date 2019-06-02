@@ -4,6 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '../../../core/test/mock-component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 describe('ToolsComponent', () => {
@@ -30,7 +31,7 @@ describe('ToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
+			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), TranslateModule],
 			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing]
 		})
 			.compileComponents();

@@ -1,7 +1,7 @@
 <div class="collection">
 	<ansyn-slider-checkbox [checked]="onlyFavorite" (checkedChange)="showOnlyFavorites($event)"
 						   [disabled]="disableShowOnlyFavoritesSelection">
-		Show only favorites
+		{{'Show only favorites' | translate}}
 	</ansyn-slider-checkbox>
 
 	<ansyn-input
@@ -11,7 +11,7 @@
 		name="search"
 		id="ansyn-task-name"
 		class="margin"
-		label="Search">
+		[label]="'Search' | translate">
 	</ansyn-input>
 
 	<div class="allFilters">
@@ -24,7 +24,7 @@
 
 		<ng-template #noFiltersFound>
 			<p class="noFiltersFound">
-				Couldn't find any results.
+				{{"Couldn't find any results." | translate}}
 			</p>
 		</ng-template>
 	</div>

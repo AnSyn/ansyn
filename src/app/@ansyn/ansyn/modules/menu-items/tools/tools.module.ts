@@ -1,5 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
 import { GoToModule } from './go-to/go-to.module';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
@@ -19,7 +20,8 @@ import { AnnotationsContextMenuModule } from '@ansyn/ol';
 		MapFacadeModule,
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer),
-		AnnotationsContextMenuModule
+		AnnotationsContextMenuModule,
+		CoreModule
 	],
 	providers: [ProjectionConverterService],
 	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],

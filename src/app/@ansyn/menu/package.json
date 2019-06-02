@@ -6,7 +6,8 @@
 		"@angular/core": "^7.2.2",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^7.2.0",
-		"@ngrx/entity": "^7.2.0"
+		"@ngrx/entity": "^7.2.0",
+		"@ngx-translate/core": "^10.0.2"
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5"

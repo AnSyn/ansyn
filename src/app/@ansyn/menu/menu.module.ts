@@ -6,6 +6,7 @@ import { MenuConfig } from './models/menuConfig';
 import { IMenuConfig } from './models/menu-config.model';
 import { IMenuItem } from './models/menu-item.model';
 import { Store, StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { InitializeMenuItemsAction } from './actions/menu.actions';
 import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
 
@@ -16,7 +17,8 @@ export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(menuFeatureKey, MenuReducer),
-		BrowserAnimationsModule
+		BrowserAnimationsModule,
+		TranslateModule
 	],
 	declarations: [MenuComponent],
 	exports: [MenuComponent]

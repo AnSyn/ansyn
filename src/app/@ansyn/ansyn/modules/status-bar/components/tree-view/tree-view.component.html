@@ -11,11 +11,11 @@
 								   (checkedChange)="activateDataInputFilters($event)"></ansyn-slider-checkbox>
 			<div>
 				<button>
-					<a (click)="onTreeViewClose()">Cancel</a>
+					<a (click)="onTreeViewClose()">{{'Cancel' | translate}}</a>
 				</button>
 
 				<button [disabled]="!dataInputFiltersItems.length">
-					<a class="ok-button" (click)="dataInputFiltersOk()">Ok</a>
+					<a class="ok-button" (click)="dataInputFiltersOk()">{{'Ok' | translate}}</a>
 				</button>
 			</div>
 		</div>

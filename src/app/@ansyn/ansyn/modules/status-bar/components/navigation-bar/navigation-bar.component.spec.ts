@@ -4,6 +4,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { ExpandAction, GoAdjacentOverlay } from '../../actions/status-bar.actions';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('NavigationBarComponent', () => {
 	let component: NavigationBarComponent;
@@ -13,7 +14,7 @@ describe('NavigationBarComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [NavigationBarComponent],
-			imports: [StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer })],
+			imports: [StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer }), TranslateModule],
 			providers: [
 				{
 					provide: StatusBarConfig,

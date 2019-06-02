@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { EntryComponentDirective } from '../../directives/entry-component.directive';
-import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
+import { ENTRY_COMPONENTS_PROVIDER } from '../../models/entry-components-provider';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MockComponent } from '../../test/mock-component';
@@ -27,7 +27,8 @@ describe('ImageryStatusComponent', () => {
 				StoreModule.forRoot({
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
 					[mapFeatureKey]: MapReducer
-				})
+				}),
+				TranslateModule
 			],
 			declarations: [
 				ImageryStatusComponent,

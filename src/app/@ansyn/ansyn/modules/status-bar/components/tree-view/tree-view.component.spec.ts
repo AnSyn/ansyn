@@ -8,7 +8,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { cloneDeep } from 'lodash';
 import { By } from '@angular/platform-browser';
-import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
@@ -29,10 +29,9 @@ describe('TreeViewComponent', () => {
 				StoreModule.forRoot({
 					[overlaysFeatureKey]: OverlayReducer
 				}),
-				TreeviewModule.forRoot()],
+				TreeviewModule.forRoot(),
+				TranslateModule],
 			providers: [
-				{ provide: USE_DEFAULT_LANG },
-				MissingTranslationHandler,
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {

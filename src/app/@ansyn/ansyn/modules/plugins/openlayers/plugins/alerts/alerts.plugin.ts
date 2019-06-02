@@ -1,21 +1,26 @@
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
-import { OpenLayersMap } from '@ansyn/ol';
+import {
+	BaseImageryPlugin,
+	geojsonMultiPolygonToPolygon,
+	ImageryMapPosition,
+	ImageryPlugin
+} from '@ansyn/imagery';
+import { OpenLayersMap, OpenLayersDisabledMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { debounceTime, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { bboxPolygon, intersect } from '@turf/turf';
-import { OpenLayersDisabledMap } from '@ansyn/ol';
 import { AlertMsgTypes } from '../../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { selectDrops } from '../../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../../core/utils/overlays';
 import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
+import { CesiumMap } from '@ansyn/imagery-cesium';
 
 @ImageryPlugin({
-	supported: [OpenLayersMap, OpenLayersDisabledMap],
+	supported: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
 	deps: [Store]
 })
 export class AlertsPlugin extends BaseImageryPlugin {
@@ -33,6 +38,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	positionChanged$ = () => this.communicator.positionChanged.pipe(
+		debounceTime(500),
 		withLatestFrom(this.currentMap$),
 		map(this.positionChanged.bind(this)),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
@@ -50,14 +56,15 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
-	positionChanged([position, currentMap]: [any, ICaseMapState]): RemoveAlertMsg | AddAlertMsg {
+	positionChanged([position, currentMap]: [ImageryMapPosition, ICaseMapState]): RemoveAlertMsg | AddAlertMsg {
 		const isWorldView = !isFullOverlay(currentMap.data.overlay);
 		let isInBound;
 		if (!isWorldView) {
-			const layerExtent = this.iMap.getMainLayer().getExtent();
-			const viewExtent = this.iMap.mapObject.getView().calculateExtent();
+			const viewExtent = position.extentPolygon;
+			const layerExtent = geojsonMultiPolygonToPolygon(currentMap.data.overlay.footprint);
+
 			try {
-				isInBound = Boolean(intersect(bboxPolygon(layerExtent), bboxPolygon(viewExtent)));
+				isInBound = Boolean(intersect(layerExtent, viewExtent));
 			} catch (e) {
 				console.warn('checkImageOutOfBounds$: turf exception', e);
 			}

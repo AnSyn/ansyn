@@ -12,6 +12,7 @@ import {
 } from '@ansyn/imagery-cesium';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calculations.plugin';
+import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
 
 @NgModule({
 	declarations: [ImageryDimensionModeComponent],
@@ -20,7 +21,10 @@ import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calc
 	imports: [
 		CommonModule,
 		ImageryModule.provide({
-			plugins: [NorthCalculationsPlugin],
+			plugins: [
+				NorthCalculationsPlugin,
+				MouseMarkerPlugin
+			],
 			maps: [CesiumMap],
 			mapSourceProviders: [
 				CesiumBINGSourceProvider,

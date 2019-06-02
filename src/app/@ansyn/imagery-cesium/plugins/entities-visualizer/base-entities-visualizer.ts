@@ -30,6 +30,7 @@ export abstract class BaseEntitiesVisualizer extends BaseImageryVisualizer {
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		logicalEntities.forEach((entity: IVisualizerEntity) => {
 			if (entity.icon) {
+				const id = this.getIds(entity);
 				const billboardEntity = {
 					show: true,
 					position: Cesium.Cartesian3.fromDegrees(
@@ -46,7 +47,7 @@ export abstract class BaseEntitiesVisualizer extends BaseImageryVisualizer {
 					image: entity.icon,
 					imageSubRegion: undefined,
 					color: Cesium.Color.WHITE,
-					id: this.getIds(entity),
+					id: id,
 					rotation: 0.0,
 					alignedAxis: Cesium.Cartesian3.ZERO,
 					width: undefined,
@@ -58,11 +59,10 @@ export abstract class BaseEntitiesVisualizer extends BaseImageryVisualizer {
 					distanceDisplayCondition: undefined
 				};
 				const feature = this.billboardCollection.add(billboardEntity);
-				this.idToEntity.set(`billboard_${ entity.id }`, <any>{
+				this.idToEntity.set(id, <any>{
 					originalEntity: entity,
 					feature: feature
 				});
-				console.log('add ');
 			}
 		});
 		return of(true);
@@ -86,7 +86,7 @@ export abstract class BaseEntitiesVisualizer extends BaseImageryVisualizer {
 		if (entity) {
 			const cesiumEntityId = this.getIds(entity);
 			const visEntity = this.idToEntity.get(cesiumEntityId);
-			const result = this.billboardCollection.remove(visEntity.feature);
+			this.billboardCollection.remove(visEntity.feature);
 			visEntity.feature = undefined;
 			this.idToEntity.delete(cesiumEntityId);
 		}

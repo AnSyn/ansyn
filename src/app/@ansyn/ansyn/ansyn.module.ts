@@ -8,7 +8,7 @@ import {
 	ComponentTranslateLoader,
 	DefaultTranslateLoader,
 	AnsynTranslationModule
-} from '../translation/public_api';
+} from '@ansyn/translation';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ImageryModule } from '@ansyn/imagery';

@@ -1,6 +1,6 @@
 import { ANALYZE_FOR_ENTRY_COMPONENTS, Inject, InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ComponentTranslateLoader, AnsynTranslationModule } from '../translation/public_api';
+import { ComponentTranslateLoader, AnsynTranslationModule } from '@ansyn/translation';
 
 import { MenuComponent } from './menu/menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

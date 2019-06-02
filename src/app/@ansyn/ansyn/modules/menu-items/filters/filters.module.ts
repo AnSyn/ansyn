@@ -1,4 +1,4 @@
-import { AnsynTranslationModule } from '../../../../translation/public_api';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { MapIteratorPipe } from './pipes/map-iterator.pipe';
 import { EffectsModule } from '@ngrx/effects';
 import { filtersConfig } from './services/filters.service';

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnsynTranslationModule } from '../../../../../translation/public_api';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { GoToComponent } from './go-to/go-to.component';
 import { FormsModule } from '@angular/forms';
 import { GeoComponent } from './projections/geo/geo.component';

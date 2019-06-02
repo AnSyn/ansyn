@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MapFacadeModule } from '@ansyn/map-facade';
-import { ComponentTranslateLoader } from '../../../../translation/loaders/component-translate-loader';
-import { AnsynTranslationModule } from '../../../../translation/ansyn-translation.module';
+import { AnsynTranslationModule, ComponentTranslateLoader } from '@ansyn/translation';
 import { BackToBaseMapComponent } from './components/back-to-base-map/back-to-base-map.component';
 import { OverlayStatusEffects } from './effects/overlay-status.effects';
 import { OverlayStatusComponent } from './overlay-status.component';
@@ -23,7 +22,7 @@ import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overla
 				container: []
 			}
 		}),
-		AnsynTranslationModule.addLoader([ComponentTranslateLoader])
+		AnsynTranslationModule
 	]
 })
 export class OverlayStatusModule {

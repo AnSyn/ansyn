@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnsynTranslationModule } from '../../../translation/public_api';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';

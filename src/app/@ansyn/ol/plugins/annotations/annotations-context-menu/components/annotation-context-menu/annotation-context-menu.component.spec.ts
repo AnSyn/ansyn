@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { AnnotationContextMenuComponent } from './annotation-context-menu.component';
 import { DebugElement, EventEmitter } from '@angular/core';
 import { Actions } from '@ngrx/effects';
@@ -31,7 +32,8 @@ describe('AnnotationContextMenuComponent', () => {
 			imports: [
 				FormsModule,
 				ColorPickerModule,
-				MatInputModule
+				MatInputModule,
+				AnsynTranslationModule
 			]
 		}).compileComponents();
 	});

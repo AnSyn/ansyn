@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
-import { AnsynTranslateService } from '../../../../../translation/public_api';
+import { AnsynTranslateService } from '@ansyn/translation';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';

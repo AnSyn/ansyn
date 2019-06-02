@@ -5,6 +5,9 @@
     "paths": {
       "@ansyn/imagery": [
         "src/app/@ansyn/imagery/public_api"
+      ],
+      "@ansyn/translation": [
+        "src/app/@ansyn/translation/public_api"
       ]
     },
     "target": "es5",

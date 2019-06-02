@@ -2,7 +2,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MenuModule } from '@ansyn/menu';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CommonModule } from '@angular/common';
-import { AnsynTranslationModule } from '../../../../translation/public_api';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { TasksTableComponent } from './components/tasks-table/tasks-table.component';
 import { TasksTablePageComponent } from './components/tasks-table-page/tasks-table-page.component';

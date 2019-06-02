@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ComponentTranslateLoader, DefaultTranslateLoader, AnsynTranslationModule } from '../../../translation/public_api';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';

@@ -4,7 +4,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { ComponentTranslateLoader, AnsynTranslationModule } from '../../../translation/public_api';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { CoreModule } from '../core/core.module';
 import { OverlaysContainerComponent } from './components/container/overlays-container.component';
 import { OverlayOverviewComponent } from './components/overlay-overview/overlay-overview.component';

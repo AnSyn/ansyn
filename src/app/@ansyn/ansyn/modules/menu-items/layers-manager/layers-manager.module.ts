@@ -1,4 +1,4 @@
-import { AnsynTranslationModule } from '../../../../translation/public_api';
+import { AnsynTranslationModule } from '@ansyn/translation';
 import { ILayersManagerConfig } from './models/layers-manager-config';
 import { LayersEffects } from './effects/layers.effects';
 import { EffectsModule } from '@ngrx/effects';

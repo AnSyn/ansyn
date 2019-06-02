@@ -28,7 +28,7 @@ describe('ImageryStatusComponent', () => {
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
 					[mapFeatureKey]: MapReducer
 				}),
-				TranslateModule
+				TranslateModule.forRoot()
 			],
 			declarations: [
 				ImageryStatusComponent,
@@ -40,12 +40,6 @@ describe('ImageryStatusComponent', () => {
 			],
 			providers: [
 				ImageryCommunicatorService,
-				{
-					provide: TranslateService, useValue: {
-						get: () => EMPTY, setDefaultLang(arg) {
-						}
-					}
-				},
 				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] }
 			]
 		}).compileComponents();

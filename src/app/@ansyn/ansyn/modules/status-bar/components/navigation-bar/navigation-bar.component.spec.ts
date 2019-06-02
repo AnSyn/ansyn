@@ -14,7 +14,7 @@ describe('NavigationBarComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [NavigationBarComponent],
-			imports: [StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer }), TranslateModule],
+			imports: [StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer }), TranslateModule.forRoot()],
 			providers: [
 				{
 					provide: StatusBarConfig,

@@ -3,6 +3,7 @@ import { OverlayStatusComponent } from './overlay-status.component';
 import { StoreModule, Store } from '@ngrx/store';
 import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
@@ -16,7 +17,8 @@ describe('OverlayStatusComponent', () => {
 				[mapFeatureKey]: MapReducer,
 				[imageryStatusFeatureKey]: ImageryStatusReducer,
 				[overlayStatusFeatureKey]: OverlayStatusReducer
-			})]
+			}),
+			TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

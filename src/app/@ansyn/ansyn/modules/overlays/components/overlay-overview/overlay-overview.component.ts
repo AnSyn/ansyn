@@ -2,7 +2,6 @@ import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Vi
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { TranslateService } from '@ngx-translate/core';
 import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import {
@@ -81,8 +80,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	constructor(
 		public store$: Store<IOverlaysState>,
 		public actions$: Actions,
-		protected el: ElementRef,
-		protected translate: TranslateService) {
+		protected el: ElementRef) {
 	}
 
 	ngOnInit() {

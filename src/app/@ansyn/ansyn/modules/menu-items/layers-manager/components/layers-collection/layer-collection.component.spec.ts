@@ -18,7 +18,7 @@ describe('LayerCollectionComponent', () => {
 			imports: [
 				BrowserAnimationsModule,
 				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }),
-				TranslateModule
+				TranslateModule.forRoot()
 			],
 			declarations: [
 				LayerCollectionComponent,

@@ -4,6 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { SelectOnlyLayer } from '../../actions/layers.actions';
 import { FormsModule } from '@angular/forms';
 import { AnsynCheckboxComponent } from '../../../../core/forms/ansyn-checkbox/ansyn-checkbox.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('LayerComponent', () => {
 	let component: LayerComponent;
@@ -13,7 +14,7 @@ describe('LayerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [LayerComponent, AnsynCheckboxComponent],
-			imports: [StoreModule.forRoot({}), FormsModule]
+			imports: [StoreModule.forRoot({}), FormsModule, TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

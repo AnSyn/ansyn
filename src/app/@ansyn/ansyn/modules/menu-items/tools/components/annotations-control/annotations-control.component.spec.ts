@@ -20,7 +20,7 @@ describe('AnnotationsControlComponent', () => {
 				FormsModule,
 				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }),
 				ColorPickerModule,
-				TranslateModule
+				TranslateModule.forRoot()
 			]
 		})
 			.compileComponents();

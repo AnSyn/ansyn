@@ -98,7 +98,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				color: '#FFFFFF'
 			}),
 			stroke: new Stroke({
-				color: '#3399CC',
+				color: '#000',
 				width: 3
 			}),
 			offsetY: 30
@@ -217,7 +217,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	// points string styles
 	getMeasureTextStyle(feature: Feature, calculateCenterOfMass = false) {
 		const styles = [];
-		const geometry = <LineString> feature.getGeometry();
+		const geometry = <LineString>feature.getGeometry();
 
 		if (geometry.getType() === 'Point') {
 			return styles;
@@ -231,12 +231,12 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		let allLinePoint = new Point(geometry.getCoordinates()[0]);
 
 		if (calculateCenterOfMass) {
-			const featureId = <string> feature.getId();
+			const featureId = <string>feature.getId();
 			const entityMap = this.idToEntity.get(featureId);
 			if (entityMap) {
-				const featureGeoJson = <any> this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+				const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
 				const centroid = getPointByGeometry(featureGeoJson.geometry);
-				allLinePoint = new Point(<[number, number]> centroid.coordinates);
+				allLinePoint = new Point(<[number, number]>centroid.coordinates);
 			}
 		}
 
@@ -245,11 +245,15 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		if (length > 2) {
 			geometry.forEachSegment((start, end) => {
 				const lineString = new LineString([start, end]);
+				const centroid = getPointByGeometry(<any>{
+					type: lineString.getType(),
+					coordinates: lineString.getCoordinates()
+				});
 				const segmentLengthText = this.formatLength(lineString, projection);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				styles.push(new Style({
-					geometry: new Point(end),
+					geometry: new Point(<[number, number]>centroid.coordinates),
 					text: singlePointLengthTextStyle
 				}));
 			});

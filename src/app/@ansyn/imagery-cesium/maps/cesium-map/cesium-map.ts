@@ -148,7 +148,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 		handler.setInputAction(function (movement) {
 			(<any>document.activeElement).blur();
-		}, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
+		}, Cesium.ScreenSpaceEventType.PINCH_START);
 		return handler;
 	}
 

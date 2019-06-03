@@ -9,15 +9,15 @@ import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, select
 import { areCoordinatesNumeric } from '@ansyn/imagery'
 import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '@ansyn/ol';
-import { OpenLayersProjectionService } from '@ansyn/ol';
-import { overlaysStateSelector } from '../../../../overlays/reducers/overlays.reducer';
-import { DisplayOverlayFromStoreAction } from '../../../../overlays/actions/overlays.actions';
-import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { overlaysStateSelector } from '../../../overlays/reducers/overlays.reducer';
+import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
+import { IOverlay } from '../../../overlays/models/overlay.model';
+import { OpenLayersMap, OpenlayersMapName, OpenLayersProjectionService } from '@ansyn/ol';
+import { CesiumMap, CesiumMapName, CesiumProjectionService } from '@ansyn/imagery-cesium';
 
 @ImageryPlugin({
-	supported: [OpenLayersMap],
-	deps: [Store, Actions, OpenLayersProjectionService]
+	supported: [OpenLayersMap, CesiumMap],
+	deps: [Store, Actions, OpenLayersProjectionService, CesiumProjectionService]
 })
 export class ContextMenuPlugin extends BaseImageryPlugin {
 	isActiveOperators: UnaryFunction<any, any> = pipe(
@@ -43,10 +43,10 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		);
 
 	get containerElem(): HTMLElement {
-		return <HTMLElement> this.iMap.mapObject.getViewport();
+		return this.iMap.getHtmlContainer();
 	}
 
-	constructor(protected store$: Store<any>, protected actions$: Actions, protected projectionService: OpenLayersProjectionService) {
+	constructor(protected store$: Store<any>, protected actions$: Actions, protected olProjectionService: OpenLayersProjectionService, protected cesiumProjectionService: CesiumProjectionService) {
 		super();
 	}
 
@@ -55,7 +55,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 
 		this.containerElem.click();
 
-		let coordinate = this.iMap.mapObject.getCoordinateFromPixel([event.offsetX, event.offsetY]);
+		let coordinate = this.iMap.getCoordinateFromScreenPixel({x: event.offsetX, y: event.offsetY});
 		if (!areCoordinatesNumeric(coordinate)) {
 			console.warn('no coordinate for pixel');
 			return;
@@ -72,9 +72,17 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			.subscribe();
 	}
 
-	positionToPoint(coordinates: [number, number]): Observable<any> {
-		const point = <GeoPoint> turf.geometry('Point', coordinates);
-		return this.projectionService
-			.projectAccurately(point, this.iMap.mapObject).pipe(take(1));
+	positionToPoint(coordinates: [number, number, number]): Observable<any> {
+		const point = <GeoPoint>turf.geometry('Point', coordinates);
+		if (this.iMap.mapType === OpenlayersMapName) {
+			return this.olProjectionService
+				.projectAccurately(point, this.iMap.mapObject).pipe(take(1));
+		} else if (this.iMap.mapType === CesiumMapName) {
+			return this.cesiumProjectionService
+				.projectAccurately(point, this.iMap.mapObject).pipe(take(1));
+		}
+		else {
+			console.error('not implemented');
+		}
 	}
 }

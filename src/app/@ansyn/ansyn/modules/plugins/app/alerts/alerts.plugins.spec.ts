@@ -1,10 +1,10 @@
-import { AddAlertMsg, RemoveAlertMsg } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
+import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { AlertsPlugin } from './alerts.plugin';
 import { Store, StoreModule } from '@ngrx/store';
 import { inject, TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { AlertMsgTypes } from '../../../../alerts/model';
+import { AlertMsgTypes } from '../../../alerts/model';
 
 describe('AlertsPlugin', () => {
 	let alertsPlugin: AlertsPlugin;

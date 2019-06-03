@@ -58,7 +58,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		};
 
 		this.mapObject.camera.moveEnd.addEventListener(this._moveEndListener);
-		this._mouseMoveHandler = this.registerMouseMoveEvent();
+		this._mouseMoveHandler = this.registerScreenEvents();
 	}
 
 	getCenter(): Observable<Point> {
@@ -110,31 +110,65 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	registerMouseMoveEvent(): any {
+	registerScreenEvents(): any {
 		const handler = new Cesium.ScreenSpaceEventHandler(this.mapObject.scene.canvas);
 		handler.setInputAction((movement) => {
 			// Cesium's camera.pickEllipsoid works in 2D, 2.5D (Columbus View), and 3D.
 			// PickEllipsoid produces a coordinate on the surface of the 3D globe,
 			// but this can easily be converted to a latitude/longitude coordinate
 			// using Cesium.Cartographic.fromCartesian.
-			const cartesian = this.mapObject.camera.pickEllipsoid(movement.endPosition, this.mapObject.scene.globe.ellipsoid);
-			if (cartesian) {
-				const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-
+			const latLongCoord: [number, number, number] = this.getCoordinateFromScreenPixel(movement.endPosition);
+			if (latLongCoord) {
 				this.mousePointerMoved.emit({
-					long: +Cesium.Math.toDegrees(cartographic.longitude).toFixed(10),
-					lat: +Cesium.Math.toDegrees(cartographic.latitude).toFixed(10),
-					height: cartographic.height});
+					long: latLongCoord[0],
+					lat: latLongCoord[1],
+					height: latLongCoord[2]
+				});
 			} else {
-				this.mousePointerMoved.emit({ long: NaN, lat: NaN, height: NaN});
+				this.mousePointerMoved.emit({ long: NaN, lat: NaN, height: NaN });
 			}
 
 		}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+		handler.setInputAction(function (movement) {
+			(<any>document.activeElement).blur();
+		}, Cesium.ScreenSpaceEventType.LEFT_DOWN);
+
+		handler.setInputAction(function (movement) {
+			(<any>document.activeElement).blur();
+		}, Cesium.ScreenSpaceEventType.WHEEL);
+
+		handler.setInputAction(function (movement) {
+			(<any>document.activeElement).blur();
+		}, Cesium.ScreenSpaceEventType.MIDDLE_DOWN);
+
+		handler.setInputAction(function (movement) {
+			(<any>document.activeElement).blur();
+		}, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
+
+		handler.setInputAction(function (movement) {
+			(<any>document.activeElement).blur();
+		}, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
 		return handler;
 	}
 
-	unregisterMouseMoveEvent(handler) {
+	unregisterScreenEvents(handler) {
 		handler = handler && handler.destroy();
+	}
+
+	getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number] {
+		const cartesian = this.mapObject.camera.pickEllipsoid(screenPixel, this.mapObject.scene.globe.ellipsoid);
+		if (cartesian) {
+			const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+			const result: [number, number, number] = [+Cesium.Math.toDegrees(cartographic.longitude).toFixed(10), +Cesium.Math.toDegrees(cartographic.latitude).toFixed(10), +cartographic.height.toFixed(10)];
+			return result;
+		}
+		return null;
+	}
+
+	getHtmlContainer(): HTMLElement {
+		return <HTMLElement>this.element;
 	}
 
 	createMapObject(layer: CesiumLayer): Observable<boolean> {
@@ -153,7 +187,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 						terrainProvider: Cesium.createWorldTerrain(),
 						mapProjection: layer.mapProjection,
 						sceneMode: cesiumSceneMode,
-						imageryProvider : layer.layer,
+						imageryProvider: layer.layer,
 						baseLayerPicker: true
 					});
 
@@ -171,7 +205,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			const viewer = new Cesium.Viewer(this.element, {
 				terrainProvider: Cesium.createWorldTerrain(),
 				sceneMode: cesiumSceneMode,
-				imageryProvider : layer.layer,
+				imageryProvider: layer.layer,
 				baseLayerPicker: false,
 				sceneModePicker: false,
 				timeline: false,
@@ -215,7 +249,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent?: ImageryMapExtent): Observable<boolean> {
+	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent ?: ImageryMapExtent): Observable<boolean> {
 		if (!this.mapObject || (layer.mapProjection && this.mapObject.scene.mapProjection.projectionName !== layer.mapProjection.projectionName)) {
 			return this.createMapObject(layer).pipe(
 				mergeMap((isReady) => {
@@ -354,7 +388,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			// const topRight = this._imageToGround({ x: width, y: 0 });
 			// const bottomRight = this._imageToGround({ x: width, y: height });
 			// const bottomLeft = this._imageToGround({ x: 0, y: height });
-			const extentPolygon = <Polygon>geometry('Polygon', [[topLeft, topRight , bottomRight, bottomLeft, topLeft]]);
+			const extentPolygon = <Polygon>geometry('Polygon', [[topLeft, topRight, bottomRight, bottomLeft, topLeft]]);
 			// const extentPolygon = <Polygon>geometry('Polygon', [[topLeft, bottomLeft, bottomRight, topRight, topLeft]]);
 			return of({ extentPolygon, projectedState });
 		} catch (error) {
@@ -427,7 +461,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	internalDestroyCesium() {
 		if (this.mapObject) {
 			this.mapObject.camera.moveEnd.removeEventListener(this._moveEndListener);
-			this.unregisterMouseMoveEvent(this._mouseMoveHandler);
+			this.unregisterScreenEvents(this._mouseMoveHandler);
 			this.mapObject.destroy();
 		}
 	}

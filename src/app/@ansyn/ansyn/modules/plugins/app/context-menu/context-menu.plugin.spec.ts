@@ -7,7 +7,8 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 import { ContextMenuPlugin } from './context-menu.plugin';
 import { OpenLayersProjectionService } from '@ansyn/ol';
-import { DisplayOverlayFromStoreAction } from '../../../../overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
+import { CesiumProjectionService } from '@ansyn/imagery-cesium';
 
 describe('ContextMenuPlugin', () => {
 	let contextMenuPlugin: ContextMenuPlugin;
@@ -19,7 +20,9 @@ describe('ContextMenuPlugin', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				provideMockActions(() => actions),
-				ContextMenuPlugin, { provide: OpenLayersProjectionService, useValue: {} }],
+				ContextMenuPlugin,
+				{ provide: OpenLayersProjectionService, useValue: {} },
+				{ provide: CesiumProjectionService, useValue: {} }],
 			imports: [StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer
 			}), EffectsModule.forRoot([])]

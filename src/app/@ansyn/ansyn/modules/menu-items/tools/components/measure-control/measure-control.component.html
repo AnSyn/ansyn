@@ -1,14 +1,17 @@
-<div *ngIf="show"
-	 [class.measure]="show">
-	<p>Measure distance</p>
 
-	<button
-	(click)="clearMeasure()">
-		Clear
-	</button>
+	<div
+		*ngIf="show"
+		[class.measure]="show">
+		<p>Measure distance</p>
 
-	<button
-	(click)="done()">
-		<span class="bold">Done</span>
-	</button>
-</div>
+		<button
+			(click)="clearMeasure()">
+			<span class="bold">Clear</span>
+		</button>
+
+		<button
+			(click)="done()">
+			<span class="bold">Done</span>
+		</button>
+	</div>
+

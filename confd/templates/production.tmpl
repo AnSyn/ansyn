@@ -289,7 +289,7 @@
       }
     ],
     "ShadowMouse": {
-    	"activeByDefault": false
+    	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}}
     }
   },
   "loggerConfig": {
@@ -337,7 +337,7 @@
 		"debounceTimeInMs": 500,
 		"timeoutInMs": 3000
 	 },
-	 "floatingPositionSuffix": ""
+	 "floatingPositionSuffix": "{{ getv "/ansyn/floation/position/suffix" "" }}"
   },
   "olPluginsConfig": {
   	"Annotations": {

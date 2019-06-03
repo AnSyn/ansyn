@@ -5,17 +5,20 @@
 	right: 120px;
 	z-index: 3;
 	background-color: white;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 	color: black;
 
-	.measure{
+	.measure {
 		padding: 5px 15px;
 	}
 
-	button{
+	button {
 		border: none;
 		background-color: inherit;
 
-		.bold{
+		.bold:hover {
 			font-weight: bold;
 		}
 	}
@@ -25,7 +28,7 @@
 }
 
 .imageries-container {
-	&.layout2, &.layout3, &.layout4, &.layout5, &.layout6{
+	&.layout2, &.layout3, &.layout4, &.layout5, &.layout6 {
 		:host {
 			top: 50px;
 		}

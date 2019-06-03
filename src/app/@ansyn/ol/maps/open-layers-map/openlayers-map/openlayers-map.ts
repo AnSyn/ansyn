@@ -54,6 +54,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 	private _mapLayers = [];
 	public isValidPosition;
+	targetElement: HTMLElement = null;
 	public shadowNorthElement = null;
 	private isLoading$: Subject<boolean> = new Subject();
 
@@ -163,6 +164,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
+		this.targetElement = target;
 		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
 		const controls = [
@@ -531,6 +533,15 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	getExtraData() {
 		return this.getMainLayer().getProperties()
+	}
+
+	getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number] {
+		const coordinate = this.mapObject.getCoordinateFromPixel([screenPixel.x, screenPixel.y]);
+		return coordinate;
+	}
+
+	getHtmlContainer(): HTMLElement {
+		return this.targetElement;
 	}
 
 	// BaseImageryMap End

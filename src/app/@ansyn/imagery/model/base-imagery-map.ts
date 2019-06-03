@@ -76,6 +76,10 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addLayerIfNotExist(layer: any);
 
+	abstract getCoordinateFromScreenPixel(screenPixel: { x, y}): [number, number, number];
+
+	abstract getHtmlContainer(): HTMLElement;
+
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');
 	};

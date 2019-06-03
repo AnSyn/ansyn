@@ -1,38 +1,42 @@
 import { Inject, Injectable, NgModuleRef } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Actions, ofType } from '@ngrx/effects';
+import { ImageryMapPosition } from '@ansyn/imagery';
 import {
 	LayoutKey,
 	MapActionTypes,
 	selectActiveMapId,
 	selectMaps,
-	selectMapsList, SetLayoutAction,
+	selectMapsList,
+	SetLayoutAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
 	ShadowMouseProducer
 } from '@ansyn/map-facade';
-import { Observable } from 'rxjs';
-import { ImageryMapPosition } from '@ansyn/imagery';
-import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { Actions, ofType } from '@ngrx/effects';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { select, Store } from '@ngrx/store';
+import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
-import { featureCollection } from '@turf/turf';
 import { cloneDeep } from 'lodash';
-import { Dictionary } from '@ngrx/entity/src/models';
-import { ANSYN_ID } from './ansyn-id.provider';
-import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
+import { Observable } from 'rxjs';
+import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
+import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
 import { ILayer } from '../modules/menu-items/layers-manager/models/layers.model';
-import { ProjectionConverterService } from '../modules/menu-items/tools/services/projection-converter.service';
 import {
 	selectActiveAnnotationLayer,
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
-import { SetOverlaysCriteriaAction } from '../modules/overlays/actions/overlays.actions';
-import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
-import { DisplayOverlayAction, LoadOverlaysSuccessAction } from '../modules/overlays/actions/overlays.actions';
-import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
+import { ProjectionConverterService } from '../modules/menu-items/tools/services/projection-converter.service';
+import {
+	DisplayOverlayAction,
+	LoadOverlaysSuccessAction,
+	SetOverlaysCriteriaAction
+} from '../modules/overlays/actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
+import { ANSYN_ID } from './ansyn-id.provider';
 
 @Injectable({
 	providedIn: 'root'
@@ -175,6 +179,10 @@ export class AnsynApi {
 
 	setOverlaysCriteria(criteria: IOverlaysCriteria) {
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+	}
+
+	getOverlayData(mapId: string = this.activeMapId) {
+		return this.mapsEntities[mapId].data.overlay;
 	}
 
 	init(): void {

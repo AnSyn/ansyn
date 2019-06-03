@@ -84,6 +84,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return 'Base Map';
 	}
 
+	// @todo refactor
 	get overlayDescription() {
 		if (!this.overlay) {
 			return this.baseMapDescription;
@@ -92,6 +93,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return `${this.description} ${this.translatedOverlaySensorName}${catalogId}`;
 	}
 
+	// @todo refactor
 	copyOverlayDescription() {
 		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
 			const tagJson = JSON.stringify(this.overlay.tag);
@@ -103,14 +105,15 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	// @todo refactor
 	get noGeoRegistration() {
 		if (!this.overlay) {
 			return false;
 		}
-		// @todo refactor
 		return this.overlay.isGeoRegistered === 'notGeoRegistered';
 	}
 
+	// @todo refactor
 	get poorGeoRegistered() {
 		if (!this.overlay) {
 			return false;

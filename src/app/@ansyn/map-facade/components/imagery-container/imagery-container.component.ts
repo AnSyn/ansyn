@@ -20,6 +20,7 @@ export class ImageryContainerComponent {
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;
 	@Output() onMove = new EventEmitter<void>();
+	isInImagery = false;
 	isHidden$: Observable<boolean> = this.store.select(mapStateSelector).pipe(
 		map((mapState: IMapState) => mapState.isHiddenMaps.has(this.mapState.id))
 	);
@@ -39,10 +40,12 @@ export class ImageryContainerComponent {
 	}
 
 	mouseLeave() {
+		this.isInImagery = false;
 		this.store.dispatch(new ImageryMouseLeave(this.mapState.id));
 	}
 
 	mouseEnter() {
+		this.isInImagery = true;
 		this.store.dispatch(new ImageryMouseEnter(this.mapState.id));
 	}
 }

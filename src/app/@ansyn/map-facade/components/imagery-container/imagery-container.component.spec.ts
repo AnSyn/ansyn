@@ -56,7 +56,11 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-sentinel-combo-box', inputs: ['mapId']
-				})
+				}),
+				MockComponent({
+					selector: 'ansyn-imagery-mouse-coordinates',
+					inputs: ['mapId', 'isVisible']
+				}),
 			]
 		}).compileComponents();
 	}));

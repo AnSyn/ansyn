@@ -4,7 +4,7 @@ import { CesiumLayer } from '../models/cesium-layer';
 
 declare const Cesium: any;
 
-export const CesiumBingSourceProviderSourceType = 'BING_CESIUM';
+export const CesiumBingSourceProviderSourceType = 'CESIUM_BING';
 
 @ImageryMapSource({
 	sourceType: CesiumBingSourceProviderSourceType,

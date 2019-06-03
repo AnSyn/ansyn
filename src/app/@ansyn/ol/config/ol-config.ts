@@ -6,5 +6,4 @@ export interface IOlConfig {
 		debounceTimeInMs: number,
 		timeoutInMs: number
 	};
-	floatingPositionSuffix?: string;
 }

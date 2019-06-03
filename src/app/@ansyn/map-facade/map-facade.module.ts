@@ -27,6 +27,7 @@ import {
 import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
 import { GeocoderService } from './services/geocoder.service';
+import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coordinates/imagery-mouse-coordinates.component';
 
 @NgModule({
 	imports: [
@@ -55,7 +56,8 @@ import { GeocoderService } from './services/geocoder.service';
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
-		EntryComponentDirective
+		EntryComponentDirective,
+		ImageryMouseCoordinatesComponent
 	],
 	exports: [
 		ImageriesManagerComponent,

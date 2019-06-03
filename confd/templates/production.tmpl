@@ -69,7 +69,7 @@
 				 "flags": {},
 				 "worldView": {
 				   "mapType": "openLayersMap",
-				   "sourceType": "BING"
+				   "sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
 				 },
 				 "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
 			   }
@@ -167,14 +167,15 @@
 		"active": true,
 		"url": "http://dev.virtualearth.net/REST/v1/Locations?locality=$searchString&maxResults=1&key=$apiKey",
 		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
-	}
+	},
+	"floatingPositionSuffix": ""
   },
   "mapProvidersConfig": {
   	"openLayersMap": {
   		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
   	},
   	"CesiumMap": {
-  		"defaultMapSource": "BING_CESIUM"
+  		"defaultMapSource": "CESIUM_BING"
   	}
   },
   "mapSourceProvidersConfig": {
@@ -200,6 +201,10 @@
     	"maxZoom": 16,
     	"tileSize": 512,
     	"attributions": "Copyright:© 2013 ESRI, i-cubed, GeoEye"
+    },
+    "CESIUM_GEO_SERVER": {
+    	"layers": ["Hydrography:bores"],
+    	"url": "https://nationalmap.gov.au/proxy/http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows"
     }
   },
   "filtersConfig": {
@@ -336,8 +341,7 @@
 	 "tilesLoadingDoubleBuffer": {
 		"debounceTimeInMs": 500,
 		"timeoutInMs": 3000
-	 },
-	 "floatingPositionSuffix": "{{ getv "/ansyn/floation/position/suffix" "" }}"
+	 }
   },
   "olPluginsConfig": {
   	"Annotations": {

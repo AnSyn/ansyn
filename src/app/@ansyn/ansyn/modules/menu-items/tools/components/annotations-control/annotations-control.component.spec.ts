@@ -6,6 +6,7 @@ import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
 import { AnnotationMode, AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/ol';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AnnotationsControlComponent', () => {
 	let component: AnnotationsControlComponent;
@@ -18,7 +19,8 @@ describe('AnnotationsControlComponent', () => {
 			imports: [
 				FormsModule,
 				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }),
-				ColorPickerModule
+				ColorPickerModule,
+				TranslateModule.forRoot()
 			]
 		})
 			.compileComponents();

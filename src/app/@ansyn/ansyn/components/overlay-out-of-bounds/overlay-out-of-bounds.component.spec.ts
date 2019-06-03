@@ -1,13 +1,14 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { mapFeatureKey, MapReducer, selectMaps } from "@ansyn/map-facade";
-import { casesStateSelector } from "../../modules/menu-items/cases/reducers/cases.reducer";
-import { layersStateSelector } from "../../modules/menu-items/layers-manager/reducers/layers.reducer";
+import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
+import { casesStateSelector } from '../../modules/menu-items/cases/reducers/cases.reducer';
+import { layersStateSelector } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { OverlayOutOfBoundsComponent } from './overlay-out-of-bounds.component';
 import { ImageryCommunicatorService, extentFromGeojson } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { geometry } from '@turf/turf';
 import { StoreModule, Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('OverlayOutOfBoundsComponent', () => {
 	let component: OverlayOutOfBoundsComponent;
@@ -19,7 +20,7 @@ describe('OverlayOutOfBoundsComponent', () => {
 		TestBed.configureTestingModule({
 			providers: [ImageryCommunicatorService],
 			declarations: [OverlayOutOfBoundsComponent],
-			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer })]
+			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer }), TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

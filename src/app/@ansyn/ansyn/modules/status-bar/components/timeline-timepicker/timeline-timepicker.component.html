@@ -1,5 +1,5 @@
 <div class="time-row" tabindex="0">
-	<span>Start time:</span>
+	<span>{{'Start time:' | translate}}</span>
 	<label class="time-row-button">
 		<input type="date" #startDatePicker>
 		<i class="icon-status-bar-time"></i>
@@ -7,7 +7,7 @@
 </div>
 
 <div class="time-row">
-	<span>End time:</span>
+	<span>{{'End time:' | translate}}</span>
 	<label class="time-row-button">
 		<input type="date" #endDatePicker>
 		<i class="icon-status-bar-time"></i>
@@ -19,7 +19,7 @@
 		{{error}}
 	</div>
 	<div>
-		<a (click)="closeComponent.emit()" class="timelinepicker-cancel">Cancel</a>
-		<a (click)="applyTimepickerEvent()" class="timelinepicker-apply">Ok</a>
+		<a (click)="closeComponent.emit()" class="timelinepicker-cancel">{{'Cancel' | translate}}</a>
+		<a (click)="applyTimepickerEvent()" class="timelinepicker-apply">{{'Ok' | translate}}</a>
 	</div>
 </div>

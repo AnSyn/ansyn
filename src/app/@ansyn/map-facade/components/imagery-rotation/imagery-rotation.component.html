@@ -1,5 +1,5 @@
 <div
-	[attr.tooltip-value]="geoRegisteredProperties.tooltipNorth"
+	[attr.tooltip-value]="geoRegisteredProperties.tooltipNorth | translate"
 	tooltip-class="left">
 	<div class="tooltip-container"
 		 [style.cursor]="isRotating ? '-webkit-grabbing' : '-webkit-grab'"
@@ -10,7 +10,7 @@
 </div>
 
 <div class="img-container"
-	 [attr.tooltip-value]="geoRegisteredProperties.tooltip"
+	 [attr.tooltip-value]="geoRegisteredProperties.tooltip | translate"
 	 tooltip-class="bottom left">
 	<img [src]="geoRegisteredProperties.compass"
 		 (click)="toggleNorth()"

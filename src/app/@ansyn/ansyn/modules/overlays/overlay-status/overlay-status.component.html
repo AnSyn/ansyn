@@ -1,7 +1,7 @@
 	<button class="small-icon-button set-favorite" *ngIf="overlay "
 			[class.active2]="isFavorite"
 			(click)="toggleFavorite()"
-			[attr.tooltip-value]="favoritesButtonText"
+			[attr.tooltip-value]="favoritesButtonText | translate"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon icon-favorites"></i>
 	</button>
@@ -10,14 +10,14 @@
 			[class.active2]="isPreset"
 			(click)="togglePreset()"
 			[disabled]="noGeoRegistration"
-			[attr.tooltip-value]="presetsButtonText"
+			[attr.tooltip-value]="presetsButtonText | translate"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon icon-presets"></i>
 	</button>
 
 	<button class="small-icon-button remove-overlay" *ngIf="overlay "
 			(click)="removeOverlay()"
-			[attr.tooltip-value]="isRemoved ? 'Restore overlay' : 'Remove overlay'"
+			[attr.tooltip-value]="isRemoved ? 'Restore overlay' : 'Remove overlay' | translate"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
 	</button>

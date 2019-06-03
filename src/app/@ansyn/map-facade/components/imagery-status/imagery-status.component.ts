@@ -123,8 +123,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
-				protected translate: TranslateService) {
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
 	ngOnInit(): void {

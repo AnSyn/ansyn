@@ -2,7 +2,7 @@
 
 	<div class="title-row">
 
-		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName }}</span>
+		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate}}</span>
 
 		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered() && !showOnlyFavorite"
 			  class="filtered">(filtered)</span>
@@ -12,12 +12,12 @@
 		</button>
 
 		<div *ngIf="!showOnlyFavorite" class="show-all">
-			<span (click)="showAll()">Show all</span>
+			<span (click)="showAll()">{{'Show all' | translate}}</span>
 		</div>
 	</div>
 
 	<div *ngIf="(isLoading$ | async); else filterBody">
-		<ansyn-animated-ellipsis text="Loading"></ansyn-animated-ellipsis>
+		<ansyn-animated-ellipsis [text]="'Loading' | translate"></ansyn-animated-ellipsis>
 	</div>
 
 	<ng-template #filterBody>
@@ -53,11 +53,11 @@
 		</div>
 
 		<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
-			<span (click)="toggleShowMoreLess()">SHOW MORE</span>
+			<span (click)="toggleShowMoreLess()">{{'SHOW MORE' | translate}}</span>
 		</div>
 
 		<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
-			<span (click)="toggleShowMoreLess()">SHOW LESS</span>
+			<span (click)="toggleShowMoreLess()">{{'SHOW LESS' | translate}}</span>
 		</div>
 
 	</ng-template>

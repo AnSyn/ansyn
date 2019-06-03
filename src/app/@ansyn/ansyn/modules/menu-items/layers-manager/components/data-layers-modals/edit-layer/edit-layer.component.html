@@ -6,12 +6,12 @@
 			[ngModel]="layer?.name"
 			select
 			name="name"
-			label="Name">
+			[label]="'Name' | translate">
 		</ansyn-input>
 
 		<div class="bottom-btns">
-			<button type="button" (click)="closeModal()">Cancel</button>
-			<button [disabled]="!layerName.value?.trim()">OK</button>
+			<button type="button" (click)="closeModal()">{{'Cancel' | translate}}</button>
+			<button [disabled]="!layerName.value?.trim()">{{'Ok' | translate}}</button>
 		</div>
 	</form>
 </div>

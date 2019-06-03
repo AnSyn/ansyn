@@ -8,9 +8,9 @@
 			(click)="toggleDataInputFilterIcon()"
 			icon="icon-status-bar-input-data"
 			[isActive]="dataInputFilterExpand"
-			[attr.tooltip-value]="toolTips.dataInputFilter"
+			[attr.tooltip-value]="toolTips.dataInputFilter | translate"
 			tooltip-class="top">
-			<span class="render">{{ dataInputFiltersTitle }}</span>
+			<span class="render">{{ dataInputFiltersTitle | translate}}</span>
 		</button>
 
 		<ansyn-tree-view [@fade]
@@ -29,11 +29,11 @@
 			direction="top"
 			name="orientation"
 			[ngModel]="comboBoxesProperties?.orientation"
-			[comboBoxToolTipDescription]="toolTips?.orientation"
+			[comboBoxToolTipDescription]="toolTips?.orientation | translate"
 			(ngModelChange)="comboBoxesChange({ orientation: $event })">
 
 			<ansyn-combo-box-option *ngFor="let orientation of orientations" [value]="orientation">
-				{{ orientation }}
+				{{ orientation | translate}}
 			</ansyn-combo-box-option>
 
 		</ansyn-combo-box>
@@ -46,13 +46,13 @@
 			class="combo-box-width"
 			direction="top"
 			name="GeoFilter"
-			[comboBoxToolTipDescription]="toolTips.geoFilter"
+			[comboBoxToolTipDescription]="toolTips.geoFilter | translate"
 			icon="icon-status-bar-geo"
 			[ngModel]="geoFilter"
 			(ngModelChange)="geoFilterChanged($event)">
 
 			<ansyn-combo-box-option *ngFor="let _geoFilter of geoFilters" [value]="_geoFilter">
-				{{ _geoFilter }}
+				{{ _geoFilter | translate}}
 			</ansyn-combo-box-option>
 
 		</ansyn-combo-box>
@@ -60,7 +60,7 @@
 		<div class="buttons" [class.active]="geoFilterStatus.searchMode !== SearchModeEnum.none">
 			<button (click)="toggleIndicatorView()"
 					[disabled]="geoFilterStatus.searchMode !== SearchModeEnum.none"
-					[attr.tooltip-value]="toolTips.geoFilterShow"
+					[attr.tooltip-value]="toolTips.geoFilterShow | translate"
 					tooltip-class="top right"
 					class="eye-button toggle-icon"
 					[class.active2]="geoFilterStatus.indicator">
@@ -68,7 +68,7 @@
 			</button>
 			<button
 				(click)="toggleMapSearch()"
-				[attr.tooltip-value]="toolTips.geoFilterEdit"
+				[attr.tooltip-value]="toolTips.geoFilterEdit | translate"
 				tooltip-class="top right"
 				class="edit-pinpoint">
 				<i class="icon-edit"></i>
@@ -83,19 +83,19 @@
 			direction="top"
 			name="time"
 			icon="icon-status-bar-time"
-			[comboBoxToolTipDescription]="toolTips.timeFilter"
+			[comboBoxToolTipDescription]="toolTips.timeFilter | translate"
 			[ngModel]="comboBoxesProperties.timeFilter"
 			(ngModelChange)="comboBoxesChange({ timeFilter: $event })">
 
 			<ansyn-combo-box-option *ngFor="let timeFilter of timeFilters" [value]="timeFilter">
-				{{ timeFilter }}
+				{{ timeFilter | translate}}
 			</ansyn-combo-box-option>
 
 		</ansyn-combo-box>
 
 		<div class="buttons" [class.active]="timeSelectionEditIcon">
 			<button (click)="toggleTimelineStartEndSearch()"
-					[attr.tooltip-value]="toolTips.timeFilterEdit"
+					[attr.tooltip-value]="toolTips.timeFilterEdit | translate"
 					tooltip-class="top right"
 					#timePickerTrigger
 					class="relative">
@@ -122,7 +122,7 @@
 			class="combo-center"
 			direction="top"
 			name="layout"
-			[comboBoxToolTipDescription]="toolTips.screenNumber"
+			[comboBoxToolTipDescription]="toolTips.screenNumber | translate"
 			[ngModel]="layout"
 			toolTipField="mapsCount"
 			(ngModelChange)="layoutSelectChange($event)">
@@ -136,7 +136,7 @@
 
 	<!-- Overlays -->
 	<div class="block"
-		 [attr.tooltip-value]="toolTips.overlayCount"
+		 [attr.tooltip-value]="toolTips.overlayCount | translate"
 		 tooltip-class="top right">
 		<i class="block-icon icon-status-bar-imagery-count"></i>
 		<span>{{overlaysCount$ | async}}</span>

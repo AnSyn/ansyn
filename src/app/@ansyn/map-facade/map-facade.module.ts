@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ImageryModule } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 import { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 import { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
@@ -36,7 +37,8 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 		EffectsModule.forFeature([MapEffects]),
 		ImageryModule,
 		CommonModule,
-		FormsModule
+		FormsModule,
+		TranslateModule
 	],
 	providers: [
 		GeocoderService,

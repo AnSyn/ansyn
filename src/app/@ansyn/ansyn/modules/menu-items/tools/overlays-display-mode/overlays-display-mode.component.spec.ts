@@ -4,7 +4,8 @@ import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode.component';
 import { toolsFeatureKey, ToolsReducer, toolsStateSelector } from '../reducers/tools.reducer';
 import { FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, EMPTY } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('overlaysDisplayModeComponent', () => {
 	let component: OverlaysDisplayModeComponent;
@@ -13,7 +14,7 @@ describe('overlaysDisplayModeComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer })],
+			imports: [FormsModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), TranslateModule.forRoot()],
 			declarations: [OverlaysDisplayModeComponent]
 		}).compileComponents();
 	}));

@@ -21,7 +21,8 @@ describe('ContextMenuComponent', () => {
 			imports: [HttpClientModule, TranslateModule.forRoot(), FormsModule, StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer,
 				[overlaysFeatureKey]: OverlayReducer
-			}), EffectsModule.forRoot([])],
+			}), EffectsModule.forRoot([]),
+			TranslateModule.forRoot()],
 			declarations: [ContextMenuComponent],
 			providers: [{
 				provide: mapFacadeConfig,

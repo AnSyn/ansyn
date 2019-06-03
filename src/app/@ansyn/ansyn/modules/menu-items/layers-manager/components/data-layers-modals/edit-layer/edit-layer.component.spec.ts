@@ -14,6 +14,7 @@ import { ErrorHandlerService } from '../../../../../core/services/error-handler.
 import { LoggerService } from '../../../../../core/services/logger.service';
 import { LoggerConfig } from '../../../../../core/models/logger.config';
 import { StorageService } from '../../../../../core/services/storage/storage.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('EditLayerComponent', () => {
 	let component: EditLayerComponent;
@@ -21,7 +22,7 @@ describe('EditLayerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule, HttpClientModule, MatInputModule, BrowserAnimationsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })],
+			imports: [FormsModule, HttpClientModule, MatInputModule, BrowserAnimationsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }), TranslateModule.forRoot()],
 			providers: [
 				{ provide: StorageService, useValue: {} },
 				DataLayersService,

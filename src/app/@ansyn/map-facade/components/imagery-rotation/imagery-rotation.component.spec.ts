@@ -4,6 +4,7 @@ import { ImageryRotationComponent } from './imagery-rotation.component';
 import { EffectsModule } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpClientModule } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ImageryRotationComponent', () => {
 	let component: ImageryRotationComponent;
@@ -14,7 +15,8 @@ describe('ImageryRotationComponent', () => {
 			imports: [
 				HttpClientModule,
 				StoreModule.forRoot({}),
-				EffectsModule.forRoot([])
+				EffectsModule.forRoot([]),
+				TranslateModule.forRoot()
 			],
 			providers: [ImageryCommunicatorService],
 			declarations: [

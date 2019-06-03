@@ -1,7 +1,7 @@
 <div class="navigation">
 	<button (click)="clickGoAdjacent(false)"
 			[class.active]="goPrevActive"
-			[attr.tooltip-value]="toolTips.backwards"
+			[attr.tooltip-value]="toolTips.backwards | translate"
 			tooltip-class="top left"
 	>
 		<i class="icon-status-bar-prev"></i>
@@ -9,7 +9,7 @@
 
 	<button (click)="clickGoNextPresetOverlay()"
 			[class.active]="goNextQuickLoop"
-			[attr.tooltip-value]="toolTips.quickloop"
+			[attr.tooltip-value]="toolTips.quickloop | translate"
 			tooltip-class="top left"
 	>
 		<i class="icon-presets"></i>
@@ -17,7 +17,7 @@
 
 	<button (click)="clickGoAdjacent(true)"
 			[class.active]="goNextActive"
-			[attr.tooltip-value]="toolTips.forward"
+			[attr.tooltip-value]="toolTips.forward | translate"
 			tooltip-class="top left"
 	>
 		<i class="icon-status-bar-next"></i>
@@ -25,7 +25,7 @@
 	<!--unUsed stop button - future development -->
 	<button style="display: none" class="transparent"
 			(click)="clickTime()"
-			[attr.tooltip-value]="toolTips.reset"
+			[attr.tooltip-value]="toolTips.reset | translate"
 			tooltip-class="top left"
 	>
 		<i class="icon-annotation-square"></i>
@@ -33,7 +33,7 @@
 	<!--unUsed expand button - future development -->
 	<button style="display: none" class="transparent"
 			(click)="clickExpand()"
-			[attr.tooltip-value]="toolTips.enlarge"
+			[attr.tooltip-value]="toolTips.enlarge | translate"
 			tooltip-class="top left"
 	>
 		<i class="icon-status-bar-expand"></i>

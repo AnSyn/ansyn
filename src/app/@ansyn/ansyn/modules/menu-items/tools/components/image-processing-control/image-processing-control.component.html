@@ -1,15 +1,15 @@
 <div class="image-processing-container">
-	<div class="resetAll" (click)="resetParams()">Reset all</div>
+	<div class="resetAll" (click)="resetParams()">{{'Reset all' | translate}}</div>
 	<ul class="image-processing-options">
 		<li *ngFor="let param of params">
-			<label [for]="'image-processing-' + param">{{param.name}}</label><br>
+			<label [for]="'image-processing-' + param">{{param.name | translate}}</label><br>
 			<input [id]="'image-processing-' + param"
 				   type="range"
 				   [min]="param.min"
 				   [max]="param.max"
 				   [ngModel]="imageManualProcessArgs[param.name]"
 				   (ngModelChange)="updateParam($event, param.name)">
-			<button class="button-reset" (click)="resetOne(param)">reset</button>
+			<button class="button-reset" (click)="resetOne(param)">{{'reset' | translate}}</button>
 		</li>
 	</ul>
 </div>

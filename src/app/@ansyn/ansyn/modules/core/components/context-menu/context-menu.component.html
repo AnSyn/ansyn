@@ -14,7 +14,7 @@
 			[disabled]="isDisabled(data.subList)"
 			(mousedown)="isClick($event) && data.action($event)">
 			<i class="icon-context-menu-{{data.name}}"></i>
-			<span>{{data.name | titlecase}}</span>
+			<span>{{data.name | translate  | titlecase}}</span>
 			<div class="sub-buttons-list">
 				<button
 					*ngFor="let filter of this[data.subList]"

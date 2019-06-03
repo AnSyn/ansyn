@@ -1,5 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
 import { GoToModule } from './go-to/go-to.module';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
@@ -27,7 +28,8 @@ import { TranslateModule } from '@ngx-translate/core';
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer),
 		AnnotationsContextMenuModule,
-		TranslateModule
+		TranslateModule,
+		CoreModule
 	],
 	providers: [ProjectionConverterService],
 	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent],

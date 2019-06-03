@@ -1,7 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AnnotationsColorComponent } from './annotations-color.component';
-import { ColorPickerComponent } from '../color-picker/color-picker.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent } from '../color-picker/color-picker.component';
+import { AnnotationsColorComponent } from './annotations-color.component';
+import { EMPTY } from 'rxjs';
 
 describe('AnnotationsColorComponent', () => {
 	let component: AnnotationsColorComponent;
@@ -13,7 +15,8 @@ describe('AnnotationsColorComponent', () => {
 				AnnotationsColorComponent,
 				ColorPickerComponent
 			],
-			imports: [ColorPickerModule]
+			imports: [ColorPickerModule,
+				TranslateModule.forRoot()],
 		})
 			.compileComponents();
 	}));

@@ -11,6 +11,7 @@ import { StoreModule } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { EffectsModule } from '@ngrx/effects';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AlertsContainerComponent', () => {
 	let component: AlertsContainerComponent;
@@ -25,7 +26,8 @@ describe('AlertsContainerComponent', () => {
 					[mapFeatureKey]: MapReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
-				EffectsModule.forRoot([])],
+				EffectsModule.forRoot([]),
+			TranslateModule.forRoot()],
 			providers: [
 				{ provide: ALERTS, useValue: [] },
 				{ provide: mapFacadeConfig, useValue: {} },

@@ -3,6 +3,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ALERTS_COLLECTION, AlertsProvider, IAlert } from './alerts.model';
 import { AlertsContainerComponent } from './components/alerts-container/alerts-container.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 // @dynamic
 @NgModule({
@@ -13,7 +14,8 @@ import { AlertsContainerComponent } from './components/alerts-container/alerts-c
 				container: [],
 				status: [AlertsContainerComponent]
 			}
-		})
+		}),
+		TranslateModule
 	],
 	declarations: [AlertsContainerComponent],
 	entryComponents: [AlertsContainerComponent],

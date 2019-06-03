@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { selectFavoriteOverlays } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { TasksService } from '../../services/tasks.service';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -194,7 +193,6 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public tasksService: TasksService,
-		public translate: TranslateService,
 		protected store$: Store<any>
 	) {
 	}

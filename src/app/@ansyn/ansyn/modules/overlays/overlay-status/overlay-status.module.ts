@@ -7,6 +7,7 @@ import { OverlayStatusComponent } from './overlay-status.component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [OverlayStatusComponent, BackToBaseMapComponent],
@@ -20,7 +21,8 @@ import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overla
 				status: [OverlayStatusComponent, BackToBaseMapComponent],
 				container: []
 			}
-		})
+		}),
+		TranslateModule
 	]
 })
 export class OverlayStatusModule {

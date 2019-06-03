@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule, MatFormFieldModule } from '@angular/material';
 import { AnsynModalComponent } from '../../../../core/components/ansyn-modal/ansyn-modal.component';
 import { AnsynInputComponent } from '../../../../core/forms/ansyn-input/ansyn-input.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('DataLayersModalsComponent', () => {
 	let component: DataLayersModalsComponent;
@@ -18,7 +19,7 @@ describe('DataLayersModalsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [DataLayersModalsComponent, AnsynModalComponent, DownloadLayersComponent, EditLayerComponent, DeleteLayerComponent, AnsynInputComponent],
-			imports: [MatInputModule, MatFormFieldModule, FormsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })]
+			imports: [MatInputModule, MatFormFieldModule, FormsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }), TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

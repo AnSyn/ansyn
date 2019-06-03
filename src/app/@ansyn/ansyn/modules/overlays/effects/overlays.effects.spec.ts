@@ -24,6 +24,7 @@ import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
 import { imageryStatusInitialState, imageryStatusFeatureKey } from '@ansyn/map-facade';
 import { IOverlay } from '../models/overlay.model';
+import { TranslateModule, USE_DEFAULT_LANG, MissingTranslationHandler } from '@ngx-translate/core';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -71,9 +72,16 @@ describe('Overlays Effects ', () => {
 	];
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
-			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
+			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
+			TranslateModule.forRoot()
 		],
 		providers: [
+			{ provide: USE_DEFAULT_LANG },
+			{
+				provide: MissingTranslationHandler, useValue: {
+					handle: () => ''
+				}
+			},
 			{ provide: LoggerService, useValue: { error: (some) => null } },
 			OverlaysEffects, {
 				provide: OverlaysService,

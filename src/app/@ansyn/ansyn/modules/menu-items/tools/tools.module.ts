@@ -12,6 +12,7 @@ import { IToolsConfig, toolsConfig } from './models/tools-config';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 // @dynamic
 @NgModule({
@@ -25,7 +26,8 @@ import { MeasureControlComponent } from './components/measure-control/measure-co
 		}),
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer),
-		AnnotationsContextMenuModule
+		AnnotationsContextMenuModule,
+		TranslateModule
 	],
 	providers: [ProjectionConverterService],
 	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent],

@@ -4,6 +4,7 @@ import { selectIsMeasureToolActive, toolsFeatureKey, ToolsReducer } from '../../
 
 import { MeasureControlComponent } from './measure-control.component';
 import { StoreModule, Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 const mockStore = new Map<any, any>([
 	[selectActiveMapId, 'mapId']
@@ -17,7 +18,8 @@ describe('MeasureControlComponent', () => {
 			declarations: [MeasureControlComponent],
 			imports: [
 				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer,
-				[mapFeatureKey]: MapReducer})
+				[mapFeatureKey]: MapReducer}),
+				TranslateModule.forRoot()
 			]
 		})
 			.compileComponents();

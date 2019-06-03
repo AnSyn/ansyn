@@ -2,16 +2,16 @@
 	<div
 		*ngIf="show"
 		[class.measure]="show">
-		<p>Measure distance</p>
+		<p>{{'Measure distance' | translate}}</p>
 
 		<button
 			(click)="clearMeasure()">
-			<span class="bold">Clear</span>
+			<span class="bold">{{'Clear' | translate}}</span>
 		</button>
 
 		<button
 			(click)="done()">
-			<span class="bold">Done</span>
+			<span class="bold">{{'Done' | translate}}</span>
 		</button>
 	</div>
 

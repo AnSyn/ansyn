@@ -63,6 +63,21 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	get noGeoRegistration() {
+		if (!this.overlay) {
+			return false;
+		}
+
+		return this.overlay.isGeoRegistered === 'notGeoRegistered';
+	}
+
+	get poorGeoRegistered() {
+		if (!this.overlay) {
+			return false;
+		}
+		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
+	}
+
 	ngOnInit() {
 	}
 

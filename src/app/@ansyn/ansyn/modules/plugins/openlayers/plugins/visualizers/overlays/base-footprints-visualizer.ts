@@ -31,7 +31,9 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 			mergeMap(([[overlayDisplayMode, drops], overlays]: [[string, IOverlay[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === this.overlayDisplayMode) {
 					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
-					const entitiesToDraw = pluckOverlays.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
+					const entitiesToDraw = pluckOverlays
+						.filter(({ id, footprint }) => footprint.type === 'MultiPolygon')
+						.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
 					return this.setEntities(entitiesToDraw);
 				} else if (this.getEntities().length > 0) {
 					this.clearEntities();

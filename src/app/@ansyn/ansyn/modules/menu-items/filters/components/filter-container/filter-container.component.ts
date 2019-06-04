@@ -1,9 +1,9 @@
 import { UpdateFilterAction } from '../../actions/filters.actions';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
 	Filters,
 	IFiltersState,
-	selectFilters,
+	selectFilters, selectFiltersSearchResults,
 	selectIsLoading,
 	selectShowOnlyFavorites
 } from '../../reducer/filters.reducer';
@@ -53,10 +53,15 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	public isGotSmallListFromProvider = true;
 	public metadataFromState: FilterMetadata;
 	subscribers = [];
+	filtersSearchResults = {};
 
 	@Input() filter;
 	@ViewChild('fields') fields: ElementRef;
-	public isLoading$: Observable<boolean> = this.store.select(selectIsLoading);
+
+	filterSearchResults$: Observable<any> = this.store.pipe(
+		select(selectFiltersSearchResults),
+		tap((filtersSearchResults) => this.filtersSearchResults = filtersSearchResults)
+	);
 
 	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
 		map((filters: Filters) => filters.get(this.filter)),
@@ -89,7 +94,8 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		this.subscribers.push(
 			this.metadataFromState$.subscribe(),
 			this.isGotSmallListFromProvider$.subscribe(),
-			this.showOnlyFavorites$.subscribe()
+			this.showOnlyFavorites$.subscribe(),
+			this.filterSearchResults$.subscribe()
 		);
 	}
 

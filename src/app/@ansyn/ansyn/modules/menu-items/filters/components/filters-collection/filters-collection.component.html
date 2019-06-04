@@ -1,32 +1,39 @@
 <div class="collection">
 	<ansyn-slider-checkbox [checked]="onlyFavorite" (checkedChange)="showOnlyFavorites($event)"
 						   [disabled]="disableShowOnlyFavoritesSelection">
-		{{'Show only favorites' | translate}}
+		Show only favorites
 	</ansyn-slider-checkbox>
 
 	<ansyn-input
-		[ngModel]="filtersSearch"
+		[ngModel]="filtersSearch$ | async"
 		(ngModelChange)="setFiltersSearch($event)"
 		[white]="true"
 		name="search"
 		id="ansyn-task-name"
 		class="margin"
-		[label]="'Search' | translate">
+		label="Search">
 	</ansyn-input>
 
 	<div class="allFilters">
-		<ng-container *ngIf="filters?.length; else noFiltersFound">
-			<ansyn-filter-container
-				*ngFor="let filter of filters"
-				[filter]="filter">
-			</ansyn-filter-container>
-		</ng-container>
+		<div *ngIf="(isLoading$ | async); else filterBody">
+			<ansyn-animated-ellipsis text="Loading"></ansyn-animated-ellipsis>
+		</div>
 
-		<ng-template #noFiltersFound>
-			<p class="noFiltersFound">
-				{{"Couldn't find any results." | translate}}
-			</p>
+		<ng-template #filterBody>
+			<ng-container *ngIf="filters?.length; else noFiltersFound">
+				<ansyn-filter-container
+					*ngFor="let filter of filters"
+					[filter]="filter">
+				</ansyn-filter-container>
+			</ng-container>
+
+			<ng-template #noFiltersFound>
+				<p class="noFiltersFound">
+					Couldn't find any results.
+				</p>
+			</ng-template>
 		</ng-template>
+
 	</div>
 
 	<ansyn-manual-removed-overlays>

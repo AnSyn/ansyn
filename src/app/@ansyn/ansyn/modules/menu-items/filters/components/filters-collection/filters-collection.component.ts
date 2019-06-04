@@ -6,8 +6,7 @@ import {
 	filtersStateSelector,
 	IFiltersState,
 	selectFiltersSearch,
-	selectFiltersSearchResults,
-	selectIsLoading
+	selectFiltersSearchResults
 } from '../../reducer/filters.reducer';
 import { SetFilterSearch, UpdateFacetsAction } from '../../actions/filters.actions';
 import { distinctUntilChanged, map } from 'rxjs/internal/operators';
@@ -28,7 +27,6 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	public onlyFavorite: boolean;
 	public filters: IFilter[] = this.config.filters;
 	filtersSearch$: any = this.store.select(selectFiltersSearch);
-	public isLoading$: Observable<boolean> = this.store.select(selectIsLoading);
 
 	@AutoSubscription
 	filtersSearchResults$: any = this.store.pipe(

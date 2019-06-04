@@ -15,25 +15,18 @@
 	</ansyn-input>
 
 	<div class="allFilters">
-		<div *ngIf="(isLoading$ | async); else filterBody">
-			<ansyn-animated-ellipsis text="Loading"></ansyn-animated-ellipsis>
-		</div>
+		<ng-container *ngIf="filters?.length; else noFiltersFound">
+			<ansyn-filter-container
+				*ngFor="let filter of filters"
+				[filter]="filter">
+			</ansyn-filter-container>
+		</ng-container>
 
-		<ng-template #filterBody>
-			<ng-container *ngIf="filters?.length; else noFiltersFound">
-				<ansyn-filter-container
-					*ngFor="let filter of filters"
-					[filter]="filter">
-				</ansyn-filter-container>
-			</ng-container>
-
-			<ng-template #noFiltersFound>
-				<p class="noFiltersFound">
-					Couldn't find any results.
-				</p>
-			</ng-template>
+		<ng-template #noFiltersFound>
+			<p class="noFiltersFound">
+				Couldn't find any results.
+			</p>
 		</ng-template>
-
 	</div>
 
 	<ansyn-manual-removed-overlays>

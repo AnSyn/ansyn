@@ -1,0 +1,68 @@
+<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()">
+
+	<div class="title-row">
+
+		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName }}</span>
+
+		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered() && !showOnlyFavorite"
+			  class="filtered">(filtered)</span>
+
+		<button [@rotateArrow]="show" #downArrow class="down-arrow" [disabled]="disabledShowAll"
+				(click)="show = !show">
+		</button>
+
+		<div *ngIf="!showOnlyFavorite" class="show-all">
+			<span (click)="showAll()">Show all</span>
+		</div>
+	</div>
+
+	<div *ngIf="(isLoading$ | async); else filterBody">
+		<ansyn-animated-ellipsis text="Loading"></ansyn-animated-ellipsis>
+	</div>
+
+	<ng-template #filterBody>
+		<div class="fields" *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="show">
+			<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
+
+				<ansyn-enum-filter-container
+					*ngSwitchCase="'Enum'"
+					[isLongFiltersList]="isLongFiltersList"
+					[metadata]="metadataFromState"
+					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
+					(onMetadataChange)="onMetadataChange($event)">
+				</ansyn-enum-filter-container>
+
+				<ansyn-slider-filter-container
+					*ngSwitchCase="'Slider'"
+					[metadata]="metadataFromState"
+					(onMetadataChange)="onMetadataChange($event)">
+				</ansyn-slider-filter-container>
+
+				<ansyn-boolean-filter-container
+					*ngSwitchCase="'Boolean'"
+					[metadata]="metadataFromState"
+					[customData]="filter.customData"
+					(onMetadataChange)="onMetadataChange($event)">
+				</ansyn-boolean-filter-container>
+
+				<ansyn-array-filter-container
+					*ngSwitchCase="'Array'"
+					[metadata]="metadataFromState"
+					(onMetadataChange)="onMetadataChange($event)"
+					[filtersSearchResult]="filtersSearchResults[filter.displayName]">
+				</ansyn-array-filter-container>
+			</div>
+		</div>
+
+		<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
+			<span (click)="toggleShowMoreLess()">SHOW MORE</span>
+		</div>
+
+		<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
+			<span (click)="toggleShowMoreLess()">SHOW LESS</span>
+		</div>
+
+	</ng-template>
+
+
+</div>

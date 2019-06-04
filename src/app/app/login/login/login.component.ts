@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 import { catchError, filter, map, switchMap, mergeMap } from 'rxjs/operators';
+import { LoginConfig } from '../services/login-config.service';
+import { ILoginConfig } from '../models/login.config';
 
 @Component({
 	selector: 'ansyn-login',
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit {
 
 	constructor(protected authService: AuthService,
 				protected activatedRoute: ActivatedRoute,
+				@Inject(LoginConfig) public config: ILoginConfig,
 				protected router: Router) {
 	}
 
@@ -44,7 +47,7 @@ export class LoginComponent implements OnInit {
 				this.showTryAgainMsg();
 				return throwError('Unauthorized');
 			})
-	);
+		);
 	}
 
 	hideTryAgainMsg() {

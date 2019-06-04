@@ -196,7 +196,7 @@ export class OverlaysAppEffects {
 
 
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
-		overlays.get(markupMap && markupMap.get(MarkUpClass.hover).overlaysIds[0])
+		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 	);
 	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => {
 		const result = [overlay, this.imageryCommunicatorService.provide(activeMapId)];

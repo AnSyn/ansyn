@@ -81,7 +81,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 
 	private onMarkupsChange() {
 		const hover = this.markups.get(MarkUpClass.hover);
-		const [overlayId] = hover.overlaysIds;
+		const overlayId = hover ? hover.overlaysIds[0] : null;
 		this.setHoverFeature(overlayId);
 
 		if (this.hoverLayer) {

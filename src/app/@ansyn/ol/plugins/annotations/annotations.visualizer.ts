@@ -518,6 +518,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
+	toggleVisibility() {
+		super.toggleVisibility();
+		this.events.onSelect.next([])
+	}
+
 	public setIconSrc(src: string) {
 		this.iconSrc = src;
 	}

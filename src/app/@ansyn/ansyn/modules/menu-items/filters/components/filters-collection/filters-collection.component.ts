@@ -1,34 +1,28 @@
 import { filtersConfig } from '../../services/filters.service';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IFilter } from '../../models/IFilter';
-import { Store, select } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
 	filtersStateSelector,
 	IFiltersState,
-	selectFilters,
 	selectFiltersSearch,
-	selectFiltersSearchResults, selectIsLoading
+	selectFiltersSearchResults,
+	selectIsLoading
 } from '../../reducer/filters.reducer';
 import { SetFilterSearch, UpdateFacetsAction } from '../../actions/filters.actions';
-import { distinctUntilChanged, map, withLatestFrom } from 'rxjs/internal/operators';
+import { distinctUntilChanged, map } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { IFiltersConfig } from '../../models/filters-config';
-import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
-import { FilterType } from '../../models/filter-type';
 import { IFilterSearchResults } from '../../models/filter-search-results';
-
 
 @Component({
 	selector: 'ansyn-filters',
 	templateUrl: './filters-collection.component.html',
 	styleUrls: ['./filters-collection.component.less']
 })
-@AutoSubscriptions({
-	destroy: 'ngOnDestroy',
-	init: 'ngOnInit'
-})
+@AutoSubscriptions()
 export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	public disableShowOnlyFavoritesSelection: boolean;
 	public onlyFavorite: boolean;
@@ -42,7 +36,7 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 		tap((filtersSearchResults: IFilterSearchResults): any => {
 			this.filters = this.config.filters.filter((key) => {
 				const { [key.displayName]: filtersSearchResult } = filtersSearchResults;
-				return filtersSearchResult === 'all' || (Array.isArray(filtersSearchResult) && filtersSearchResult.length)
+				return filtersSearchResult === 'all' || (Array.isArray(filtersSearchResult) && filtersSearchResult.length);
 			});
 		})
 	);

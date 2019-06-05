@@ -7,7 +7,7 @@ if (process.argv.length <= 2) {
 const cluster = process.argv[2];
 const services = process.argv[3];
 
-services.split(' ').forEach((service) => {
+services.split(',').forEach((service) => {
 	console.log(`killing all ${service} tasks`);
 	killService(service);
 });

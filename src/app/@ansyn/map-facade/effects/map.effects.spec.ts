@@ -14,7 +14,7 @@ import {
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
 	SynchronizeMapsAction,
-	SetLayoutSuccessAction
+	SetLayoutSuccessAction, ImageryCreatedAction
 } from '../actions/map.actions';
 import { mapFacadeConfig } from '../models/map-facade.config';
 
@@ -61,10 +61,10 @@ describe('MapEffects', () => {
 
 	describe('onMapCreatedDecreasePendingCount$', () => {
 
-		it('ImageryRemovedAction should call DecreasePendingMapsCountAction', () => {
+		it('ImageryCreatedAction should call DecreasePendingMapsCountAction', () => {
 			mapState.pendingMapsCount = 1;
 
-			actions = hot('--a--', { a: new ImageryRemovedAction({ id: 'id' }) });
+			actions = hot('--a--', { a: new ImageryCreatedAction({ id: 'id' }) });
 
 			const expectedResults = cold('--b--', {
 				b: new DecreasePendingMapsCountAction()

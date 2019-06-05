@@ -28,7 +28,7 @@ import { TranslateModule } from '@ngx-translate/core';
 		FormsModule,
 		ColorPickerModule,
 		MatInputModule,
-		TranslateModule
+		TranslateModule.forRoot()
 	]
 })
 export class AnnotationsContextMenuModule {

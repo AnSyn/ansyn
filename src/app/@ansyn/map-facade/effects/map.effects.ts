@@ -73,7 +73,7 @@ export class MapEffects {
 
 	@Effect()
 	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_REMOVED),
+		ofType(MapActionTypes.IMAGERY_CREATED),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		filter(([action, mapState]) => mapState.pendingMapsCount > 0),
 		map(() => new DecreasePendingMapsCountAction())

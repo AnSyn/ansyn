@@ -42,7 +42,7 @@ describe('AnnotationsVisualizer', () => {
 		expect(map.removeInteraction).toHaveBeenCalledWith(annotationsVisualizer.dragBox);
 	});
 
-	fit('on toggleVisable selected should be empty', () => {
+	it('on toggleVisable selected should be empty', () => {
 		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({ removeLayer: () => {}, addLayer: () => {} }));
 		annotationsVisualizer.toggleVisibility();
 		expect(annotationsVisualizer.selected.length).toBe(0);

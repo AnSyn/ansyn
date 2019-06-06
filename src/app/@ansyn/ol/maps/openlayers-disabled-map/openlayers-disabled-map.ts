@@ -148,8 +148,8 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return <HTMLElement>this.element;
 	}
 
-	getExportData(): any {
-		return {};
+	getExportData(): ImageData {
+		return new ImageData(100, 100);
 	}
 
 	dispose() {

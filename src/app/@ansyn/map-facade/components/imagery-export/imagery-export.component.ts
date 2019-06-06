@@ -35,6 +35,7 @@ export class ImageryExportComponent implements OnInit {
 	}
 
 	private buildCanvasForAllMaps(maps: any[], layout: string) {
+		// @TODO: cleaner function
 		const c = this.document.createElement('canvas');
 		let ctx;
 		let cW, cH;

@@ -171,7 +171,10 @@ export class AnsynApi {
 	setRotation(mapId: string | number, degree?: number) {
 		if (typeof (mapId) === 'number') {
 			degree = <number>mapId;
-			mapId = this.activeMapId;
+			mapId = <string>this.activeMapId;
+		}
+		if (!degree) {
+			degree = 100;
 		}
 		this.imageryCommunicatorService.provide(mapId).setRotation(degree);
 	}

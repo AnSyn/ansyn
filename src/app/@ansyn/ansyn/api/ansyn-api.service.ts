@@ -168,7 +168,7 @@ export class AnsynApi {
 		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
 	}
 
-	setRotation(mapId: string | number, degree: number) {
+	setRotation(mapId: string | number, degree?: number) {
 		if (typeof (mapId) === 'number') {
 			degree = <number>mapId;
 			mapId = this.activeMapId;

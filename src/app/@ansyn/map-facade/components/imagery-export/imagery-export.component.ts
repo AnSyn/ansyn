@@ -45,7 +45,7 @@ export class ImageryExportComponent implements OnInit {
 				c.height = maps[0].height;
 				ctx = c.getContext('2d');
 				ctx.clearRect(0, 0, cW, cH);
-				ctx.putImage(maps[0]);
+				ctx.putImageData(maps[0]);
 				return;
 			case 'layout2':
 				cW = maps[0].width + maps[1].width;

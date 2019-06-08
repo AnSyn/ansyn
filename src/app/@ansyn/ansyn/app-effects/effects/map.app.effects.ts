@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
+import { CesiumMapName } from '@ansyn/imagery-cesium';
+import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
@@ -38,6 +40,11 @@ import {
 	tap,
 	withLatestFrom
 } from 'rxjs/operators';
+import { toastMessages } from '../../modules/core/models/toast-messages';
+import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
+import { isFullOverlay } from '../../modules/core/utils/overlays';
+import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -45,20 +52,13 @@ import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore, ToolsActionsTypes, UpdateOverlaysManualProcessArgs
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
-import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { toastMessages } from '../../modules/core/models/toast-messages';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	DisplayOverlaySuccessAction, OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction, SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
-import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
-import { CesiumMapName } from '@ansyn/imagery-cesium';
-import { OpenlayersMapName, DisabledOpenLayersMapName } from '@ansyn/ol';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
@@ -104,9 +104,7 @@ export class MapAppEffects {
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
 				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
 			),
-			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({
-				mapId: payload.mapId, show: false
-			}))
+			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
 		);
 
 	@Effect()
@@ -137,7 +135,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
+				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -167,7 +165,7 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
 			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true

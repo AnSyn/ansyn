@@ -6,10 +6,18 @@ export interface ImageryMapProjectedState {
 	projection: {
 		code: string;
 	};
-	center?: [number, number];
+	center?: [number, number, number];
 	resolution?: number;
-	rotation?: number
+	rotation?: number;
+	pitch?: number;
+	roll?: number;
 	zoom?: number;
+}
+
+export interface IMousePointerMove {
+	lat: number;
+	long: number;
+	height: number;
 }
 
 export type ImageryMapExtentPolygon = Polygon;

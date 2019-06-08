@@ -14,8 +14,10 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 })
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
+	element: HTMLElement;
 
 	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: any, position?: ImageryMapPosition): Observable<boolean> {
+		this.element = element;
 		this.mapObject = new Map({
 			target: element,
 			renderer: 'canvas',
@@ -136,6 +138,14 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 
 	getRotation(): number {
 		return this.mapObject.getView().getRotation();
+	}
+
+	getCoordinateFromScreenPixel(screenPixel: { x, y}): [number, number, number] {
+		return null;
+	}
+
+	getHtmlContainer(): HTMLElement {
+		return <HTMLElement>this.element;
 	}
 
 	dispose() {

@@ -1,20 +1,18 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { Dictionary } from '@ngrx/entity';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, tap, map, filter } from 'rxjs/internal/operators';
+import { filter, map, tap } from 'rxjs/internal/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
-import { ALERTS, IAlert } from '../../alerts/alerts.model';
-import { AlertMsg } from '../../alerts/model';
-import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from "../../models/entry-components-provider";
-import { selectAlertMsg, selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
+import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
+import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
-import { copyFromContent } from "../../utils/clipboard";
+import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
-import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -64,25 +62,12 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 	@Output() onMove = new EventEmitter<MouseEvent>();
 
-	alertMsg: AlertMsg;
 	enableCopyOriginalOverlayData: boolean;
-
-	@AutoSubscription
-	alertMsg$: Observable<AlertMsg> = this.store$
-		.pipe(
-			select(selectAlertMsg),
-			tap((alertMsg) => this.alertMsg = alertMsg),
-			distinctUntilChanged()
-		);
 
 	@AutoSubscription
 	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
-
-	favoriteOverlays: any[];
-	removedOverlaysIds = [];
-	presetOverlays: any[];
 
 	getFormattedTime(dateTimeSring: string): string {
 		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
@@ -99,6 +84,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return 'Base Map';
 	}
 
+	// @todo refactor
 	get overlayDescription() {
 		if (!this.overlay) {
 			return this.baseMapDescription;
@@ -107,6 +93,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return `${this.description} ${this.translatedOverlaySensorName}${catalogId}`;
 	}
 
+	// @todo refactor
 	copyOverlayDescription() {
 		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
 			const tagJson = JSON.stringify(this.overlay.tag);
@@ -118,14 +105,15 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	// @todo refactor
 	get noGeoRegistration() {
 		if (!this.overlay) {
 			return false;
 		}
-		// @todo refactor
 		return this.overlay.isGeoRegistered === 'notGeoRegistered';
 	}
 
+	// @todo refactor
 	get poorGeoRegistered() {
 		if (!this.overlay) {
 			return false;
@@ -135,24 +123,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
-				@Inject(ALERTS) public alerts: IAlert[],
-				protected translate: TranslateService) {
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
 	ngOnInit(): void {
 	}
 
 	ngOnDestroy(): void {
-	}
-
-	showAlert(alertKey) {
-		const ids = this.alertMsg.get(alertKey);
-		if (ids) {
-			return ids.has(this.mapId);
-		} else {
-			return this[alertKey];
-		}
 	}
 
 	toggleMapLayers() {

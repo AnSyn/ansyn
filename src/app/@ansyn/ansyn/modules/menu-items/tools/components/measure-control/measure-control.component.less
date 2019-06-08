@@ -1,0 +1,36 @@
+:host {
+	position: absolute;
+	width: 200px;
+	top: 10px;
+	right: 120px;
+	z-index: 3;
+	background-color: white;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	color: black;
+
+	.measure {
+		padding: 5px 15px;
+	}
+
+	button {
+		border: none;
+		background-color: inherit;
+
+		.bold-on-hover:hover {
+			font-weight: bold;
+		}
+	}
+
+
+
+}
+
+.imageries-container {
+	&.layout2, &.layout3, &.layout4, &.layout5, &.layout6 {
+		:host {
+			top: 50px;
+		}
+	}
+}

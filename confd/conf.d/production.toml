@@ -24,5 +24,7 @@ keys = [
 	"/ansyn/overlay/tb/inactive",
 	"/ansyn/sentinel/baseurl",
 	"/ansyn/overlay/sentinel/inactive",
-	"/ansyn/iscollapsible"
+	"/ansyn/iscollapsible",
+	"/ansyn/floation/position/suffix",
+	"/ansyn/is/shadow/active"
 ]

@@ -1,9 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
 
 import { ManualRemovedOverlaysComponent } from './manual-removed-overlays.component';
 import { StoreModule } from '@ngrx/store';
 import { SliderCheckboxComponent } from '../../forms/slider-checkbox/slider-checkbox.component';
-import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { EMPTY } from 'rxjs';
 
 describe('ManualRemovedOverlaysComponent', () => {
 	let component: ManualRemovedOverlaysComponent;
@@ -13,8 +18,9 @@ describe('ManualRemovedOverlaysComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [SliderCheckboxComponent, ManualRemovedOverlaysComponent],
 			imports: [StoreModule.forRoot({
-				[imageryStatusFeatureKey]: ImageryStatusReducer
-			})]
+				[overlayStatusFeatureKey]: OverlayStatusReducer
+			}),
+			TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

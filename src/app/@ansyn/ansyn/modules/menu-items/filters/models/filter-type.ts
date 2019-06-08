@@ -1,1 +1,1 @@
-export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean'}
+export enum FilterType { Enum = 'Enum', Slider = 'Slider', Boolean = 'Boolean', Array = 'Array' }

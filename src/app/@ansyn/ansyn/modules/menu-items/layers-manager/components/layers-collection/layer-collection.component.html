@@ -1,7 +1,7 @@
 <div class="container" [ngClass]="collection.type">
 
 	<div class="title-row">
-		<span class="title">{{ collection.type }} Layers</span>
+		<span class="title">{{collection.type + ' Layers' | translate}}</span>
 
 		<div class="actions">
 			<button [@rotateArrow]="show"
@@ -10,13 +10,13 @@
 			</button>
 
 			<div class="show-all">
-				<span (click)="showAll()">Show all</span>
+				<span (click)="showAll()">{{'Show all' | translate}}</span>
 			</div>
 
-			<ansyn-import-layer tooltip-value="Import layer" tooltip-class="bottom right"></ansyn-import-layer>
+			<ansyn-import-layer [attr.tooltip-value]="'Import layer' | translate" tooltip-class="bottom right"></ansyn-import-layer>
 
 			<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
-					tooltip-value="Create new layer" tooltip-class="bottom right">
+					[attr.tooltip-value]="'Create new layer' | translate" tooltip-class="bottom right">
 				<i class="icon-layer-add"></i>
 			</button>
 

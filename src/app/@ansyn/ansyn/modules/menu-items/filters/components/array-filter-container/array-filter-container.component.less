@@ -1,0 +1,38 @@
+@import "ansyn/less/colors";
+
+div.array-filter-wrapper {
+	justify-content: space-between;
+	width: 100%;
+	display: flex;
+
+	div.checkboxes {
+		display: flex;
+		input[type=checkbox]:checked + label {
+			background: white;
+			color: @application-main-color;
+		}
+		input[type=checkbox] {
+			display: none;
+		}
+		label {
+			cursor: pointer;
+			background: transparent;
+			border: 1px solid white;
+			border-radius: 20px;
+			color: white;
+			box-sizing: border-box;
+			width: 80px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 22px;
+			&:hover {
+				background: white;
+				color: @application-main-color;
+			}
+			&:not(:last-child) {
+				margin-right: 10px;
+			}
+		}
+	}
+}

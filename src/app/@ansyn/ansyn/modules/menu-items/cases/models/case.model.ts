@@ -105,7 +105,9 @@ export interface ICaseSliderFilterMetadata {
 
 export type CaseEnumFilterMetadata = string[];
 
-export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata;
+export type CaseArrayFilterMetadata = [string, boolean][];
+
+export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata | CaseArrayFilterMetadata;
 
 export interface ICaseFilter<T = CaseFilterMetadata> {
 	type: FilterType;

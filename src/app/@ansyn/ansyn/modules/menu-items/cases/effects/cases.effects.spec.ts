@@ -1,8 +1,22 @@
-import { CasesEffects } from './cases.effects';
+import { HttpClientModule } from '@angular/common/http';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { casesConfig, CasesService } from '../services/cases.service';
+import { Params } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
+import { cold, hot } from 'jasmine-marbles';
+import { Observable, of, throwError } from 'rxjs';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ErrorHandlerService } from '../../../core/services/error-handler.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { StorageService } from '../../../core/services/storage/storage.service';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { LayerType } from '../../layers-manager/models/layers.model';
+import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
+import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import {
 	AddCaseAction,
 	AddCasesAction,
@@ -13,24 +27,15 @@ import {
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
-	SelectDilutedCaseAction, SetAutoSave,
+	SelectDilutedCaseAction,
+	SetAutoSave,
 	UpdateCaseAction,
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
-import { Observable, of, throwError } from 'rxjs';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { Params } from '@angular/router';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { cold, hot } from 'jasmine-marbles';
-import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
-import { LayerType } from '../../layers-manager/models/layers.model';
-import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
-import { CoreConfig } from '../../../core/models/core.config';
-import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { LoggerService } from '../../../core/services/logger.service';
-import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../models/case.model';
+import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
+import { casesConfig, CasesService } from '../services/cases.service';
+import { CasesEffects } from './cases.effects';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -70,7 +75,10 @@ describe('CasesEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,
-				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
+				StoreModule.forRoot({
+					[casesFeatureKey]: CasesReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
+				}),
 				RouterTestingModule
 			],
 			providers: [

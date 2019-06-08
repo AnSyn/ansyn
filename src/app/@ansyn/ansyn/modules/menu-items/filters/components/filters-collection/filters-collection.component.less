@@ -11,7 +11,7 @@
 	height: 100%;
 	.allFilters {
 		overflow-y: auto;
-		height: 100%;
+		height: calc(~'100% - 120px');
 		padding-right: 10px;
 	}
 }
@@ -36,4 +36,9 @@
 	background-clip: padding-box;
 	border-radius: 2px;
 	background: white -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+}
+
+.noFiltersFound {
+	color: white;
+	font-weight: 600;
 }

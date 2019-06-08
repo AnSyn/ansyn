@@ -3,7 +3,7 @@
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
-			*ngIf="component.showFirst"
+			*ngIf="component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
@@ -11,7 +11,7 @@
 	<button
 		*ngIf="mapsAmount > 1"
 		class="drag-me"
-		tooltip-value="Move"
+		[attr.tooltip-value]="'Move' | translate"
 		tooltip-class="bottom"
 		(mousedown)="onMove.emit($event)">
 		<i class="fa fa-arrows"></i>
@@ -19,15 +19,16 @@
 
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
-			tooltip-value="Momentarily link screens"
+			[attr.tooltip-value]="'Momentarily link screens' | translate"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
+			[disabled]="noGeoRegistration"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>
 	</button>
 
 	<button class="small-icon-button hide-layers"
 			(click)="toggleMapLayers()"
-			tooltip-value="Show/ Hide layers"
+			[attr.tooltip-value]="'Show/ Hide layers' | translate"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i [class.icon-main-data-layers]="displayLayers"
 		   [class.icon-layers-hide]="!displayLayers"></i>
@@ -36,7 +37,7 @@
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
-			*ngIf="!component.showFirst"
+			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
@@ -46,35 +47,18 @@
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
 				   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
 		<button class="share-link" (click)="copyOverlayDescription()">
-			<span>{{overlayDescription}}</span>
+			<span>{{overlayDescription | translate}}</span>
 		</button>
 	</ansyn-popover>
 	<div *ngIf="!overlay">
-		{{baseMapDescription}}
+		{{baseMapDescription | translate}}
 	</div>
 </div>
 
-<div class="notification">
-
-	<ng-container *ngFor="let alert of alerts">
-		<ng-container *ngIf="showAlert(alert.key)">
-
-			<ng-container
-				*ngIf="alert.component; else textAlert"
-				[ansynEntryComponent]="{ component: alert.component, mapId: mapId}">
-			</ng-container>
-
-			<ng-template #textAlert>
-				<div
-					[style.background]="alert.background"
-					[attr.tooltip-value]="alert.text"
-					[attr.tooltip-class]="mapsAmount === 1 ? 'top left': 'bottom left'">
-					{{ alert.text }}
-				</div>
-			</ng-template>
-
-		</ng-container>
+<ng-container
+	*ngFor="let component of entryComponents.status">
+	<ng-container
+		*ngIf="component.prototype.getType() === 'notification'"
+		[ansynEntryComponent]="{ component: component , mapId: mapId }">
 	</ng-container>
-
-</div>
-
+</ng-container>

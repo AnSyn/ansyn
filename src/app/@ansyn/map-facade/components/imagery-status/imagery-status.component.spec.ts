@@ -4,11 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs/internal/observable/empty';
-import { ALERTS } from '../../alerts/alerts.model';
-import { AlertsModule } from '../../alerts/alerts.module';
-import { ENTRY_COMPONENTS_PROVIDER } from "../../models/entry-components-provider";
+import { EntryComponentDirective } from '../../directives/entry-component.directive';
+import { ENTRY_COMPONENTS_PROVIDER } from '../../models/entry-components-provider';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/imagery-status.reducer';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MockComponent } from '../../test/mock-component';
@@ -24,15 +23,16 @@ describe('ImageryStatusComponent', () => {
 			imports: [
 				HttpClientModule,
 				FormsModule,
-				AlertsModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
 					[mapFeatureKey]: MapReducer
-				})
+				}),
+				TranslateModule.forRoot()
 			],
 			declarations: [
 				ImageryStatusComponent,
+				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-popover',
 					inputs: ['text', 'icon', 'popDirection']
@@ -40,13 +40,6 @@ describe('ImageryStatusComponent', () => {
 			],
 			providers: [
 				ImageryCommunicatorService,
-				{ provide: ALERTS, useValue: [] },
-				{
-					provide: TranslateService, useValue: {
-						get: () => EMPTY, setDefaultLang(arg) {
-						}
-					}
-				},
 				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] }
 			]
 		}).compileComponents();

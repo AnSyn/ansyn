@@ -4,6 +4,7 @@ import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { LayerCollectionComponent } from './layer-collection.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockComponent } from '../../../../core/test/mock-component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('LayerCollectionComponent', () => {
 	let component: LayerCollectionComponent;
@@ -16,7 +17,8 @@ describe('LayerCollectionComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				BrowserAnimationsModule,
-				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer })
+				StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }),
+				TranslateModule.forRoot()
 			],
 			declarations: [
 				LayerCollectionComponent,

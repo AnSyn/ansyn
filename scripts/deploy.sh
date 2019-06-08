@@ -22,13 +22,13 @@ eval $(aws ecr get-login --no-include-email --region us-west-2)
 
 docker tag "ansyn:$version" "$target:latest"
 
-docker tag "$target:latest" "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:latest"
+docker tag "$target:latest" "$target:latest"
 
-docker tag "$target:latest" "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:$version"
+docker tag "$target:latest" "$target:$version"
 
-docker push "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:latest"
+docker push "$target:latest"
 
-docker push "223455578796.dkr.ecr.us-west-2.amazonaws.com/$target:$version"
+docker push "$target:$version"
 
 echo "deployment succeeded";
 

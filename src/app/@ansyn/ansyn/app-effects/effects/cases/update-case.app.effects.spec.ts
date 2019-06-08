@@ -2,6 +2,10 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
+import {
+	overlayStatusFeatureKey,
+	OverlayStatusReducer
+} from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { UpdateCaseAppEffects } from './update-case.app.effects';
 import { casesFeatureKey, CasesReducer } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 
@@ -14,7 +18,8 @@ describe('UpdateCaseAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({
-					[casesFeatureKey]: CasesReducer
+					[casesFeatureKey]: CasesReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
 				})
 			],
 			providers: [

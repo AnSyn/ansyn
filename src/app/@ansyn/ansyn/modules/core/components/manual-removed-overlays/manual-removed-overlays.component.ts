@@ -56,5 +56,4 @@ export class ManualRemovedOverlaysComponent implements OnInit, OnDestroy {
 	showAll() {
 		this.store.dispatch(new ResetRemovedOverlaysIdsAction());
 	}
-
 }

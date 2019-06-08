@@ -7,6 +7,7 @@ import { AnnotationsColorComponent } from './components/annotations-color/annota
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatInputModule } from '@angular/material';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -26,7 +27,8 @@ import { MatInputModule } from '@angular/material';
 		CommonModule,
 		FormsModule,
 		ColorPickerModule,
-		MatInputModule
+		MatInputModule,
+		TranslateModule.forRoot()
 	]
 })
 export class AnnotationsContextMenuModule {

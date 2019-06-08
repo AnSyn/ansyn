@@ -4,11 +4,15 @@ import { ImageryModule } from '@ansyn/imagery';
 import { ImageryDimensionModeComponent } from '../components/imagery-dimension-mode/imagery-dimension-mode.component';
 import {
 	CesiumBINGSourceProvider,
+	CesiumOpenAerialSourceProvider,
 	CesiumMap,
 	CesiumOsmSourceProvider,
-	CesiumPlanetSourceProvider
+	CesiumPlanetSourceProvider,
+	CesiumGeoServerSourceProvider
 } from '@ansyn/imagery-cesium';
 import { MapFacadeModule } from '@ansyn/map-facade';
+import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calculations.plugin';
+import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
 
 @NgModule({
 	declarations: [ImageryDimensionModeComponent],
@@ -17,12 +21,17 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 	imports: [
 		CommonModule,
 		ImageryModule.provide({
-			plugins: [],
+			plugins: [
+				NorthCalculationsPlugin,
+				MouseMarkerPlugin
+			],
 			maps: [CesiumMap],
 			mapSourceProviders: [
 				CesiumBINGSourceProvider,
 				CesiumOsmSourceProvider,
-				CesiumPlanetSourceProvider
+				CesiumPlanetSourceProvider,
+				CesiumOpenAerialSourceProvider,
+				CesiumGeoServerSourceProvider
 			]
 		}),
 		MapFacadeModule.provide({

@@ -49,11 +49,11 @@
 
 	<div class="buttons-area">
 
-		<button ansynButton type="submit" [disabled]="form.invalid || disabled">Go</button>
+		<button ansynButton type="submit" [disabled]="form.invalid || disabled">{{'Go' | translate}}</button>
 		<button [disabled]="disabled" class="pin-location" type="button" (click)="togglePinLocation()"
 				[class.active]="pinLocationMode">
 				<i class="icon-tools-pin"></i>
-			<span>Pin location</span>
+			<span>{{'Pin location' | translate}}</span>
 		</button>
 	</div>
 

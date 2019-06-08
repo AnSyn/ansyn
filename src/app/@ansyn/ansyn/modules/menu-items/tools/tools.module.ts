@@ -1,5 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
 import { GoToModule } from './go-to/go-to.module';
 import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
@@ -11,19 +12,28 @@ import { ProjectionConverterService } from './services/projection-converter.serv
 import { IToolsConfig, toolsConfig } from './models/tools-config';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { AnnotationsContextMenuModule } from '@ansyn/ol';
+import { MeasureControlComponent } from './components/measure-control/measure-control.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 // @dynamic
 @NgModule({
 	imports: [
 		CommonModule,
-		MapFacadeModule,
+		MapFacadeModule.provide({
+			entryComponents: {
+				container: [MeasureControlComponent],
+				status: [],
+			}
+		}),
 		GoToModule,
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer),
-		AnnotationsContextMenuModule
+		AnnotationsContextMenuModule,
+		TranslateModule,
+		CoreModule
 	],
 	providers: [ProjectionConverterService],
-	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent],
-	entryComponents: [ToolsComponent],
+	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent],
+	entryComponents: [ToolsComponent, MeasureControlComponent],
 	exports: [ToolsComponent]
 })
 

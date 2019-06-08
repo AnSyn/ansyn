@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryMapExtent, ImageryMapPosition } from './case-map-position.model';
+import { ImageryMapExtent, ImageryMapPosition, IMousePointerMove } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 
 export interface IImageryMapMetaData {
@@ -24,6 +24,7 @@ export abstract class BaseImageryMap<T = any> {
 	readonly defaultMapSource?: string;
 
 	public positionChanged: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
+	public mousePointerMoved: EventEmitter<IMousePointerMove> = new EventEmitter<IMousePointerMove>();
 	public moveStart: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
 
 	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
@@ -74,6 +75,10 @@ export abstract class BaseImageryMap<T = any> {
 	abstract dispose(): void;
 
 	abstract addLayerIfNotExist(layer: any);
+
+	abstract getCoordinateFromScreenPixel(screenPixel: { x, y}): [number, number, number];
+
+	abstract getHtmlContainer(): HTMLElement;
 
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');

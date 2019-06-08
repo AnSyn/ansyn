@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { from, Observable } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { LoggerService } from '../../core/services/logger.service';
+import { UpdateOverlaysCountAction } from '../../overlays/actions/overlays.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -8,18 +13,15 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
-	SetMarkUp, SetOverlaysCriteriaAction,
+	SetMarkUp,
+	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
+import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 import { BackToWorldView } from '../overlay-status/actions/overlay-status.actions';
 import { selectFavoriteOverlays, selectPresetOverlays } from '../overlay-status/reducers/overlay-status.reducer';
-import { OverlaysService } from '../services/overlays.service';
-import { select, Store } from '@ngrx/store';
 import { MarkUpClass, overlaysStateSelector, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
-import { UpdateOverlaysCountAction } from '../../overlays/actions/overlays.actions';
-import { LoggerService } from '../../core/services/logger.service';
-import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
+import { OverlaysService } from '../services/overlays.service';
 
 @Injectable()
 export class OverlaysEffects {
@@ -37,22 +39,23 @@ export class OverlaysEffects {
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		switchMap((action: LoadOverlaysAction) => {
 			return this.overlaysService.search(action.payload).pipe(
-				mergeMap((overlays: IOverlaysFetchData) => {
+				withLatestFrom(this.translate.get(overlaysStatusMessages.noOverLayMatchQuery), this.translate.get(overlaysStatusMessages.overLoad), this.translate.get('Error on overlays request')),
+				mergeMap(([overlays, noOverlayMatchQuery, overLoad, error]: [IOverlaysFetchData, string, string, string]) => {
 					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
 						return [new LoadOverlaysSuccessAction(overlaysResult),
-							new SetOverlaysStatusMessage('Error on overlays request')];
+							new SetOverlaysStatusMessage(error)];
 					}
 
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
 
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
-						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchQuery));
+						actions.push(new SetOverlaysStatusMessage(noOverlayMatchQuery));
 					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
-						actions.push(new SetOverlaysStatusMessage(overlaysStatusMessages.overLoad.replace('$overLoad', overlays.data.length.toString())));
+						actions.push(new SetOverlaysStatusMessage(overLoad.replace('$overLoad', overlays.data.length.toString())));
 					}
 					return actions;
 				}),
@@ -118,6 +121,7 @@ export class OverlaysEffects {
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>,
+				protected translate: TranslateService,
 				protected overlaysService: OverlaysService,
 				protected loggerService: LoggerService) {
 	}

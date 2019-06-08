@@ -7,7 +7,7 @@ import {
 } from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, debounceTime } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
@@ -206,6 +206,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		const body = this.buildFilters({ config: planetFilters, sensors, type: 'OrFilter' });
 		const options = { headers: this.httpHeaders, params: { _page_size } };
 		return this.http.post(baseUrl, body, options).pipe(
+			debounceTime(200),
 			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
 			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,

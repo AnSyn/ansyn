@@ -12,6 +12,8 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { MockComponent } from '../../../core/test/mock-component';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { EMPTY } from 'rxjs/internal/observable/empty';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
@@ -51,7 +53,8 @@ describe('ComboBoxesComponent', () => {
 				[statusBarFeatureKey]: StatusBarReducer,
 				[overlaysFeatureKey]: OverlayReducer,
 				[mapFeatureKey]: MapReducer
-			}), EffectsModule.forRoot([])],
+			}), EffectsModule.forRoot([]),
+				TranslateModule.forRoot()],
 			providers: [
 				{
 					provide: ORIENTATIONS,

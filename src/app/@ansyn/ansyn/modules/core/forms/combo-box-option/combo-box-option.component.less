@@ -1,3 +1,5 @@
+@import 'ansyn/less/colors';
+
 :host {
 	display: block;
 	/* temporary */
@@ -9,10 +11,12 @@
 	}
 
 	&:not(.disabled) .option {
-		&:hover, &.selected {
-			background-color: white;
-			color: black;
-			border-color: white;
+		&:hover {
+			background-color: @background-color-3;
+			color: white;
+		}
+		&.selected {
+			color: @application-primary-color;
 			i {
 				opacity: 1;
 			}
@@ -23,7 +27,8 @@
 		line-height: 29px;
 		align-self: center;
 		background: transparent;
-		padding: 0 6px;
+		display: flex;
+		padding: 5px 12px;
 		color: white;
 		cursor: pointer;
 		box-sizing: border-box;
@@ -34,7 +39,6 @@
 		text-overflow: ellipsis;
 		border: none;
 		text-align: left;
-		height: 29px;
 		display: block;
 		align-items: center;
 		i {

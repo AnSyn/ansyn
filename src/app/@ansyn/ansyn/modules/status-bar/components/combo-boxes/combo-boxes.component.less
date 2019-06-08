@@ -1,9 +1,10 @@
+@import "ansyn/less/colors";
+
 :host {
 	display: block;
 	position: relative;
 	height: 100%;
 	.block {
-		padding: 3px;
 		box-sizing: border-box;
 		vertical-align: middle;
 		align-items: center;
@@ -42,16 +43,15 @@
 			}
 
 			.buttons {
-				background-color: black;
 				height: 100%;
 				align-items: center;
 				display: flex;
-				border: 1px solid white;
 				border-left: none;
 				box-sizing: border-box;
 				.icon-edit {
 					font-size: 17px;
 				}
+				border: 1px solid white;
 				&::before {
 					content: "";
 					display: block;
@@ -65,8 +65,9 @@
 					border-right: none;
 					border-top: none;
 				}
+				
 				&.active {
-					background-color: #f32ee1;
+					background-color: @application-primary-color;
 				}
 
 				button {
@@ -76,13 +77,16 @@
 					color: white;
 					border: none;
 					font-size: 10px;
+					&:hover:not(.selected) {
+						background: @background-color-3;
+					}
 
 					&.toggle-icon {
 						position: relative;
 						color: rgba(255, 255, 255, 0.5);
 
 						&.active2 {
-							color: rgba(255, 255, 255, 1);
+							color: white;
 						}
 					}
 				}

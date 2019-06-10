@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MapFacadeService } from '@ansyn/map-facade';
 import {
 	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
@@ -91,7 +92,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	// @TODO display the shadow mouse only if there more then one map .
-	constructor(protected store: Store<any>) {
+	constructor(protected store: Store<any>, protected mapFacadeService: MapFacadeService) {
 
 	}
 
@@ -140,5 +141,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
 			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
 		}
+	}
+
+	exportMaps() {
+		this.mapFacadeService.exportMaps();
 	}
 }

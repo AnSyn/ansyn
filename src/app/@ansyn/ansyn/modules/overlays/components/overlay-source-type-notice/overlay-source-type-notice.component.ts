@@ -4,11 +4,14 @@ import { selectMaps } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ICoreConfig } from '../../../core/models/core.config.model';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../../models/overlays.config';
 import { OverlaysConfig } from '../../services/overlays.service';
-import { Observable } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 import { Dictionary } from '@ngrx/entity';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',
@@ -18,12 +21,22 @@ import { Dictionary } from '@ngrx/entity';
 @AutoSubscriptions()
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
+	isFooterCollapsible =  this.config.isFooterCollapsible;
+	isFooterCollapsibleClick = false;
 	@AutoSubscription
 	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
 		filter((maps) => Boolean(maps[this.mapId])),
 		tap((maps) => {
 			this.overlay = maps[this.mapId].data.overlay;
+		})
+	);
+
+	@AutoSubscription
+	collapsibleClick$ = fromEvent(this.document.querySelector('ansyn-footer'), 'click').pipe(
+		filter( (event: any) => event.path[0].classList.contains('hide-menu')),
+		tap( (event) => {
+			this.isFooterCollapsibleClick = !this.isFooterCollapsibleClick
 		})
 	);
 
@@ -45,14 +58,18 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(protected store$: Store<any>,
-				@Inject(OverlaysConfig) public _config: IOverlaysConfig) {
+				@Inject(OverlaysConfig) public _config: IOverlaysConfig,
+				@Inject(CoreConfig) protected config: ICoreConfig,
+				@Inject(DOCUMENT) protected document: Document) {
 	}
 
 	ngOnDestroy(): void {
 	}
 
+
 	ngOnInit(): void {
 	}
+
 
 	getType(): string {
 		return '';

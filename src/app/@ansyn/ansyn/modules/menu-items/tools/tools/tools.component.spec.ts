@@ -1,4 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryExportComponent } from '../../../../../map-facade/components/imagery-export/imagery-export.component';
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
@@ -33,7 +35,8 @@ describe('ToolsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), TranslateModule.forRoot()],
-			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing]
+			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing, ImageryExportComponent],
+			providers: [ImageryCommunicatorService]
 		})
 			.compileComponents();
 	}));

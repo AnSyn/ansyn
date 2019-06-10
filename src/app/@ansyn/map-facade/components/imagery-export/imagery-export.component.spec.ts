@@ -1,8 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 
 import { ImageryExportComponent } from './imagery-export.component';
 import { DOCUMENT } from '@angular/common';
+import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ImageryExportComponent', () => {
 	let component: ImageryExportComponent;
@@ -11,8 +14,14 @@ describe('ImageryExportComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImageryExportComponent],
-			imports: [ImageryCommunicatorService],
+			imports: [
+				TranslateModule.forRoot(),
+				StoreModule.forRoot({
+					[mapFeatureKey]: MapReducer
+				})
+			],
 			providers: [
+				ImageryCommunicatorService,
 				{
 					provide: DOCUMENT,
 					useValue: document

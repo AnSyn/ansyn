@@ -12,7 +12,6 @@ import { Point, Polygon } from 'geojson';
 import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ol';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
-import { ImageryCommunicatorService } from "@ansyn/imagery";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 import { Store } from "@ngrx/store";
 
@@ -95,7 +94,6 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(protected ansynApi: AnsynApi,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected store$: Store<any>) {
 	}
 

@@ -333,3 +333,7 @@
 .icon-show-menu:before {
 	content: '\e92a';
 }
+
+.icon-export-maps:before {
+	content: '\e92b'
+}

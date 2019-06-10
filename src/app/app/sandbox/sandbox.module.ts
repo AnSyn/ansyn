@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MapFacadeModule } from '@ansyn/map-facade';
 import { SandboxComponent } from './components/sandbox.component';
 import { MenuModule } from '@ansyn/menu';
 import { AnsynPluginsModule } from '@ansyn/ansyn';
@@ -9,7 +8,6 @@ import { AnsynPluginsModule } from '@ansyn/ansyn';
 	imports: [
 		CommonModule,
 		AnsynPluginsModule,
-		MapFacadeModule,
 		MenuModule.provideMenuItems([
 			{
 				name: 'Sandbox',

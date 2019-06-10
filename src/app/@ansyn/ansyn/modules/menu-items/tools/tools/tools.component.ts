@@ -141,8 +141,4 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
 		}
 	}
-
-	exportMaps() {
-
-	}
 }

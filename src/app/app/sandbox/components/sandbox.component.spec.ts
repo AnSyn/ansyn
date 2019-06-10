@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ImageryExportComponent } from '../../../@ansyn/map-facade/components/imagery-export/imagery-export.component';
 
 import { SandboxComponent } from './sandbox.component';
 import { AnsynApi, OverlayReducer, overlaysFeatureKey } from '@ansyn/ansyn';

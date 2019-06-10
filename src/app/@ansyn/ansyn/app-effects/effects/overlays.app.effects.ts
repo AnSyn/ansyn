@@ -1,5 +1,5 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
@@ -64,6 +64,7 @@ import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { IPendingOverlay } from '@ansyn/map-facade';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -235,6 +236,11 @@ export class OverlaysAppEffects {
 		return new SetHoveredOverlayAction(overlay);
 	});
 
+	private hasAnsynFooterCollapsed = filter( () => {
+		const footer = this.document.querySelector('ansyn-footer');
+		return footer && !footer.children[0].classList.contains('collapsed');
+	});
+
 	@Effect()
 	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
 		.pipe(
@@ -243,6 +249,7 @@ export class OverlaysAppEffects {
 			filter(this.onDropMarkupFilter.bind(this)),
 			map(([prevAction, currentAction]) => currentAction),
 			withLatestFrom(this.overlaysService.getAllOverlays$),
+			this.hasAnsynFooterCollapsed,
 			this.getOverlayFromDropMarkup,
 			withLatestFrom(this.store$.select(selectActiveMapId)),
 			this.getCommunicatorForActiveMap,
@@ -271,6 +278,7 @@ export class OverlaysAppEffects {
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
+				@Inject(DOCUMENT) protected document: Document,
 				public imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 

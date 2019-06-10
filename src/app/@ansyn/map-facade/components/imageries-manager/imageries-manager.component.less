@@ -57,7 +57,7 @@
 		}
 
 		/deep/ .ol-attribution {
-			bottom: 40px;
+			bottom: 60px;
 		}
 
 		/deep/ .ol-scale-line {
@@ -114,6 +114,10 @@
 				}
 				div.active-border {
 					height: @height-minus-status;
+
+					&.footer-collapsed{
+						height: 100%;
+					}
 				}
 			}
 
@@ -134,6 +138,9 @@
 				&:last-child {
 					div.active-border {
 						height: @height-minus-status;
+						&.footer-collapsed{
+							height: 100%;
+						}
 					}
 					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;
@@ -156,6 +163,9 @@
 				&:first-child, &:last-child {
 					div.active-border {
 						height: @height-minus-status;
+						&.footer-collapsed{
+							height: 100%;
+						}
 					}
 					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;
@@ -191,6 +201,10 @@
 				&:not(:first-child) {
 					div.active-border {
 						height: @height-minus-status;
+
+						&.footer-collapsed{
+							height: 100%;
+						}
 					}
 					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;
@@ -221,6 +235,10 @@
 				&:nth-child(3), &:nth-child(4) {
 					div.active-border {
 						height: @height-minus-status;
+
+						&.footer-collapsed{
+							height: 100%;
+						}
 					}
 					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
 						bottom: @status-bar-height;

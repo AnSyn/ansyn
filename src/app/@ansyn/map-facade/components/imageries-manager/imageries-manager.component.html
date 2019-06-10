@@ -19,6 +19,7 @@
 			</ansyn-imagery-container>
 
 			<div class="active-border"
+				 [class.footer-collapsed]="document.querySelector('.status-timeline-container.collapsed')"
 				 [class.active]="activeMapId === mapId">
 			</div>
 		</div>

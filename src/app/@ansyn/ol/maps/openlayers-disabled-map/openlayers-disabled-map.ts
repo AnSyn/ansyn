@@ -1,10 +1,15 @@
-import { Observable, of } from 'rxjs';
+import {
+	BaseImageryMap,
+	IMAGERY_MAIN_LAYER_NAME,
+	ImageryLayerProperties,
+	ImageryMap,
+	ImageryMapPosition
+} from '@ansyn/imagery';
+import { GeoJsonObject, Point } from 'geojson';
+import Layer from 'ol/layer/Layer';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import Layer from 'ol/layer/Layer';
-import { ImageryMapPosition } from '@ansyn/imagery';
-import { GeoJsonObject, Point } from 'geojson';
-import { BaseImageryMap, IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, ImageryMap } from '@ansyn/imagery';
+import { Observable, of } from 'rxjs';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
@@ -140,12 +145,22 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return this.mapObject.getView().getRotation();
 	}
 
-	getCoordinateFromScreenPixel(screenPixel: { x, y}): [number, number, number] {
+	getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number] {
 		return null;
 	}
 
 	getHtmlContainer(): HTMLElement {
 		return <HTMLElement>this.element;
+	}
+
+	getExportData(): ImageData {
+		const c = this.mapObject.getViewport().firstChild;
+		const ctx = c.getContext('2d');
+		try {
+			return ctx.getImageData(0, 0, c.width, c.height);
+		} catch (e) {
+			return new ImageData(c.width, c.height);
+		}
 	}
 
 	dispose() {

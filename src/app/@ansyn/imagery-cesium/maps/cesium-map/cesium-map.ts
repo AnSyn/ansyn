@@ -1,22 +1,21 @@
-import { GeoJsonObject, Point, Polygon } from 'geojson';
-import { Observable, of } from 'rxjs';
 import {
 	BaseImageryMap,
+	ExtentCalculator,
 	ImageryMap,
 	ImageryMapExtent,
 	ImageryMapPosition,
-	toDegrees,
-	ExtentCalculator
+	ImageryMapProjectedState,
+	toDegrees
 } from '@ansyn/imagery';
-import { Inject } from '@angular/core';
-import { feature, geometry } from '@turf/turf';
 import { featureCollection } from '@turf/helpers';
-import { map, mergeMap, take } from 'rxjs/operators';
-import { CesiumProjectionService } from '../../projection/cesium-projection.service';
+import { feature, geometry } from '@turf/turf';
+import { GeoJsonObject, Point, Polygon } from 'geojson';
+import { Observable, of } from 'rxjs';
 
 import { fromPromise } from 'rxjs/internal-compatibility';
+import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
-import { ImageryMapProjectedState } from '@ansyn/imagery';
+import { CesiumProjectionService } from '../../projection/cesium-projection.service';
 
 declare const Cesium: any;
 
@@ -169,6 +168,13 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	getHtmlContainer(): HTMLElement {
 		return <HTMLElement>this.element;
+	}
+
+	getExportData(): ImageData {
+		// @TODO: get cesium real map image.
+		this.mapObject.render();
+		const c = this.mapObject.canvas;
+		return new ImageData(c.width, c.height);
 	}
 
 	createMapObject(layer: CesiumLayer): Observable<boolean> {

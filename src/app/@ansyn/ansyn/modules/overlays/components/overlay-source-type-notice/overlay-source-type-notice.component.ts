@@ -59,7 +59,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	constructor(protected store$: Store<any>,
 				@Inject(OverlaysConfig) public _config: IOverlaysConfig,
 				@Inject(CoreConfig) protected config: ICoreConfig,
-				@Inject(DOCUMENT) protected document: Document) {
+				@Inject(DOCUMENT) protected document: any) {
 	}
 
 	ngOnDestroy(): void {

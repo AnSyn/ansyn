@@ -1,5 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { layersFeatureKey, LayersReducer } from '../../layers-manager/reducers/layers.reducer';
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
@@ -33,7 +35,9 @@ describe('ToolsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), TranslateModule.forRoot()],
+			imports: [StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer,
+			[layersFeatureKey]: LayersReducer,
+			[mapFeatureKey]: MapReducer }), TranslateModule.forRoot()],
 			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing],
 			providers: [ImageryCommunicatorService]
 		})

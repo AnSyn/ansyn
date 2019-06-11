@@ -59,8 +59,7 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
 		EntryComponentDirective,
-		ImageryMouseCoordinatesComponent,
-
+		ImageryMouseCoordinatesComponent
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -71,8 +70,7 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
-		EntryComponentDirective,
-
+		EntryComponentDirective
 	]
 })
 

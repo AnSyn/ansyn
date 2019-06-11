@@ -1,5 +1,5 @@
 <div class="enum-fields-enumerator"
-	 *ngFor="let enumMetadata of metadata && metadata.enumsFields | mapIterator | sort | showMore:isLongFiltersList ">
+	 *ngFor="let enumMetadata of fields | sort | showMore:isLongFiltersList ">
 
 	<div class="left-side">
 
@@ -7,7 +7,7 @@
 			[disabled]="enumMetadata.value.disabled"
 			[ngModel]="enumMetadata.value.isChecked"
 			(ngModelChange)="onInputClicked(enumMetadata.key)">
-			<span class="field-name" [title]="enumMetadata.key | translate">{{enumMetadata.key | translate}}</span>
+			<span class="field-name" [title]="((enumMetadata?.key || 'Unknown')?.toString() | translate) || 'Unknown'">{{((enumMetadata?.key || 'Unknown')?.toString() | translate) || 'Unknown'}}</span>
 		</ansyn-checkbox>
 
 		<span class="only-filter"

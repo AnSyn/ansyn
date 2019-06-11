@@ -5,7 +5,7 @@
 	</ansyn-slider-checkbox>
 
 	<ansyn-input
-		[ngModel]="filtersSearch"
+		[ngModel]="filtersSearch$ | async"
 		(ngModelChange)="setFiltersSearch($event)"
 		[white]="true"
 		name="search"

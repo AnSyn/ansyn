@@ -89,7 +89,10 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			right: 10
 		},
 		line: {
-			color: (d, i) => schemeCategory10[i]
+			color: (d, i) => {
+				console.log(schemeCategory10[i])
+				return schemeCategory10[i]
+			}
 		},
 		drop: {
 			onMouseOver: this.onMouseOver.bind(this),

@@ -19,7 +19,7 @@ import {
 } from '../reducers/tools.reducer';
 import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
-import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { ClearActiveInteractionsAction } from '../actions/tools.actions';
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 
 @Component({

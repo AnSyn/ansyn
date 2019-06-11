@@ -247,15 +247,15 @@
 }
 
 .icon-annotation-weight:before {
-	content: "\e933";
+	content: "\e94e";
 }
 
 .icon-annotation-color:before {
-	content: "\e932";
+	content: "\e94f";
 }
 
 .icon-annotation-label:before {
-	content: "\e930";
+	content: "\e950";
 }
 
 .icon-annotation-duplicate:before {
@@ -332,4 +332,8 @@
 
 .icon-show-menu:before {
 	content: '\e92a';
+}
+
+.icon-export-maps:before {
+	content: '\e92b'
 }

@@ -1,4 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu';
 import { Store, StoreModule } from '@ngrx/store';
 import { OverlaysAppEffects } from './overlays.app.effects';
 import { Observable, of } from 'rxjs';
@@ -52,6 +53,7 @@ import {
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { DOCUMENT } from '@angular/common';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -163,7 +165,8 @@ describe('OverlaysAppEffects', () => {
 					[casesFeatureKey]: CasesReducer,
 					[overlaysFeatureKey]: OverlayReducer,
 					[toolsFeatureKey]: ToolsReducer,
-					[mapFeatureKey]: MapReducer
+					[mapFeatureKey]: MapReducer,
+					[menuFeatureKey]: MenuReducer
 				})
 			],
 			providers: [
@@ -214,6 +217,10 @@ describe('OverlaysAppEffects', () => {
 					provide: CacheService,
 					useClass: () => {
 					}
+				},
+				{
+					provide: DOCUMENT,
+					useValue: document
 				}
 			]
 

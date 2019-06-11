@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { menuFeatureKey, MenuReducer } from '@ansyn/menu';
 
 import { AnsynFooterComponent } from './ansyn-footer.component';
 import { MockComponent } from '../../modules/core/test/mock-component';
 import { StoreModule } from '@ngrx/store';
 import { CoreConfig } from '../../modules/core/models/core.config';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AnsynFooterComponent', () => {
 	let component: AnsynFooterComponent;
@@ -25,7 +27,8 @@ describe('AnsynFooterComponent', () => {
 				mockOverlays
 			],
 			imports: [
-				StoreModule.forRoot({})
+				StoreModule.forRoot({[menuFeatureKey]: MenuReducer}),
+				TranslateModule.forRoot()
 			],
 			providers: [
 				{

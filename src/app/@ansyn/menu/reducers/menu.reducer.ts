@@ -17,12 +17,14 @@ export interface IMenuState extends EntityState<IMenuItem> {
 	selectedMenuItem: string;
 	isPinned: boolean;
 	autoClose: boolean;
+	footerCollapse: boolean;
 }
 
 export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
 	selectedMenuItem: getMenuSessionData() ? getMenuSessionData().selectedMenuItem : '',
 	isPinned: getMenuSessionData() ? getMenuSessionData().isPinned : false,
-	autoClose: true
+	autoClose: true,
+	footerCollapse: false
 });
 
 export const menuFeatureKey = 'menu';
@@ -62,6 +64,8 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.SET_AUTO_CLODE:
 			return { ...state, autoClose: action.payload };
 
+		case MenuActionTypes.FOOTER_COLLAPSE:
+			return { ...state, footerCollapse: !state.footerCollapse};
 		default:
 			return state;
 	}
@@ -75,4 +79,4 @@ export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<IM
 export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
-
+export const selectFooterCollapse = createSelector(menuStateSelector, (menu) => menu.footerCollapse);

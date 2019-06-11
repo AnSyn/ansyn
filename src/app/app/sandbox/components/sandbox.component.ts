@@ -188,7 +188,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setRotation(){
+	setRotation() {
 		this.ansynApi.setRotation(100);
 	}
 

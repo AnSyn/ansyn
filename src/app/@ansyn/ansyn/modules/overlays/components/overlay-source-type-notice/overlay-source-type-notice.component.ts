@@ -22,7 +22,6 @@ import { DOCUMENT } from '@angular/common';
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
 	isFooterCollapsible =  this.config.isFooterCollapsible;
-	isFooterCollapsibleClick = false;
 	@AutoSubscription
 	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
@@ -36,7 +35,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	collapsibleClick$ = fromEvent(this.document.querySelector('ansyn-footer'), 'click').pipe(
 		filter( (event: any) => event.path[0].classList.contains('hide-menu')),
 		tap( (event) => {
-			this.isFooterCollapsibleClick = !this.isFooterCollapsibleClick
+			this.isFooterCollapsible = !this.isFooterCollapsible
 		})
 	);
 

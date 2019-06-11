@@ -3,8 +3,10 @@ import { mapFeatureKey, MapReducer, selectMaps, UpdateMapAction } from '@ansyn/m
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
+import { CoreConfig } from '../../../core/models/core.config';
 import { OverlaysConfig } from '../../services/overlays.service';
 import { OverlaySourceTypeNoticeComponent } from './overlay-source-type-notice.component';
+import { DOCUMENT } from '@angular/common';
 
 
 const overlays = [
@@ -40,6 +42,14 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 							}
 						}
 					}
+				},
+				{
+				provide: CoreConfig,
+					useValue: {}
+				},
+				{
+					provide: DOCUMENT,
+					useValue: document
 				}
 			]
 		})

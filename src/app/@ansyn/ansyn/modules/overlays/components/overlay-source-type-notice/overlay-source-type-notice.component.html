@@ -1,4 +1,6 @@
 <div [hidden]="!title" class="overlay-source-type-notice"
+	 [class.with-collapse]="isFooterCollapsible"
+	 [class.collapse-click]="!isFooterCollapsible"
 	 [attr.tooltip-value]="title"
 	 tooltip-class="top wrap">{{title}}
 </div>

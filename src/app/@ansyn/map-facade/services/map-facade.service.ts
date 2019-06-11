@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IMapState, selectMapsList } from '../reducers/map.reducer';
+import { LayoutKey } from '../models/maps-layout';
+import { IMapState, selectLayout, selectMapsList } from '../reducers/map.reducer';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
 import {
 	ImageryMapPosition,
@@ -10,6 +11,8 @@ import {
 	getFootprintIntersectionRatioInExtent
 } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
+import { mapsToJpg } from '../utils/exportMaps';
 
 // @dynamic
 @Injectable({
@@ -20,6 +23,9 @@ export class MapFacadeService {
 
 	mapsList$ = this.store.select(selectMapsList);
 	mapsList: IMapSettings[] = [];
+
+	layout: LayoutKey;
+	layout$ = this.store.select(selectLayout);
 
 	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
 		const intersection = getFootprintIntersectionRatioInExtent(extentPolygon, footprint);
@@ -45,6 +51,7 @@ export class MapFacadeService {
 
 	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
 		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
+		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
 	}
 
 	initEmitters(id: string) {
@@ -73,5 +80,15 @@ export class MapFacadeService {
 	positionChanged($event: { id: string, position: ImageryMapPosition }) {
 		const mapInstance = <IMapSettings> MapFacadeService.mapById(this.mapsList, $event.id);
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
+	}
+
+	exportMaps() {
+				const communicators = this.imageryCommunicatorService.communicatorsAsArray();
+				const maps = [];
+				communicators.forEach(comm => {
+					const map = comm.ActiveMap;
+					maps.push(map.getExportData());
+				});
+				mapsToJpg(maps, this.layout).subscribe(blob => saveAs(blob, "map.jpg"));
 	}
 }

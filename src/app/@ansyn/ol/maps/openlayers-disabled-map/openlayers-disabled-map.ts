@@ -153,14 +153,9 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return <HTMLElement>this.element;
 	}
 
-	getExportData(): ImageData {
+	getExportData(): HTMLImageElement {
 		const c = this.mapObject.getViewport().firstChild;
-		const ctx = c.getContext('2d');
-		try {
-			return ctx.getImageData(0, 0, c.width, c.height);
-		} catch (e) {
-			return new ImageData(c.width, c.height);
-		}
+		return new Image(c.width, c.height);
 	}
 
 	dispose() {

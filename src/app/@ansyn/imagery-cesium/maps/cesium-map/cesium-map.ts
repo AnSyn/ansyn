@@ -170,11 +170,13 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return <HTMLElement>this.element;
 	}
 
-	getExportData(): ImageData {
+	getExportData(): HTMLImageElement {
 		// @TODO: get cesium real map image.
 		this.mapObject.render();
 		const c = this.mapObject.canvas;
-		return new ImageData(c.width, c.height);
+		const imgData = new Image(c.width, c.height);
+		imgData.src = c.toDataURL("image/jpg");
+		return imgData;
 	}
 
 	createMapObject(layer: CesiumLayer): Observable<boolean> {

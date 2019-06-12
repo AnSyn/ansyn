@@ -89,6 +89,6 @@ export class MapFacadeService {
 					const map = comm.ActiveMap;
 					maps.push(map.getExportData());
 				});
-				mapsToJpg(maps, this.layout).subscribe(blob => saveAs(blob, "map.jpg"));
+				mapsToJpg(maps, this.layout).subscribe(blob => saveAs(blob, "map.png"));
 	}
 }

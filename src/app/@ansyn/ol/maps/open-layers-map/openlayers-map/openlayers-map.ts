@@ -547,10 +547,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.targetElement;
 	}
 
-	getExportData(): ImageData {
-		const c = this.mapObject.getViewport().firstChild;
-		const ctx = c.getContext('2d');
-		return ctx.getImageData(0, 0, c.width, c.height);
+	getExportData(): HTMLImageElement {
+		const c: HTMLCanvasElement = this.mapObject.getViewport().firstChild;
+		//const ctx = c.getContext('2d');
+		const imgData = new Image(c.width, c.height);
+		imgData.src = c.toDataURL("image/jpg");
+		return imgData;
+		//return ctx.getImageData(0, 0, c.width, c.height);
 	}
 
 	// BaseImageryMap End

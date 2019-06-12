@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { LayoutKey } from '../models/maps-layout';
 
-export function mapsToJpg(maps: ImageData[], layout: LayoutKey): Observable<Blob> {
+export function mapsToJpg(maps: HTMLImageElement[], layout: LayoutKey): Observable<Blob> {
 	let c = document.createElement('canvas');
 	let size = getSizeByLayout(layout, maps);
 	c.width = size.width;
@@ -19,7 +19,7 @@ export function mapsToJpg(maps: ImageData[], layout: LayoutKey): Observable<Blob
 }
 
 
-function getSizeByLayout(layout: LayoutKey, maps: Array<ImageData>) {
+function getSizeByLayout(layout: LayoutKey, maps: HTMLImageElement[]) {
 	const size = { width: 0, height: 0 }
 	switch (layout) {
 		case 'layout1':
@@ -49,34 +49,34 @@ function getSizeByLayout(layout: LayoutKey, maps: Array<ImageData>) {
 	}
 }
 
-function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ImageData[], layout: LayoutKey) {
+function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: HTMLImageElement[], layout: LayoutKey) {
 	switch (layout) {
 		case 'layout1':
-			ctx.putImageData(maps[0], 0, 0);
+			ctx.drawImage(maps[0], 0, 0, maps[0].width, maps[0].height);
 			break;
 		case 'layout2':
-			ctx.putImageData(maps[0], 0, 0);
-			ctx.putImageData(maps[1], maps[0].width, 0);
+			ctx.drawImage(maps[0], 0, 0, maps[0].width, maps[0].height);
+			ctx.drawImage(maps[1], maps[0].width, 0, maps[1].width, maps[1].height);
 			break;
 		case 'layout3':
-			ctx.putImageData(maps[0], 0, 0);
-			ctx.putImageData(maps[1], 0, maps[0].height);
+			ctx.drawImage(maps[0], 0, 0, maps[0].width, maps[0].height);
+			ctx.drawImage(maps[1], 0, maps[0].height, maps[1].width, maps[1].height);
 			break;
 		case 'layout4':
-			ctx.putImageData(maps[0], 0, 0);
-			ctx.putImageData(maps[1], maps[0].width, 0);
-			ctx.putImageData(maps[2], maps[0].width, maps[1].height);
+			ctx.drawImage(maps[0], 0, 0, maps[0].width, maps[0].height);
+			ctx.drawImage(maps[1], maps[0].width, 0, maps[1].width, maps[1].height);
+			ctx.drawImage(maps[2], maps[0].width, maps[1].height, maps[2].width, maps[2].height);
 			break;
 		case 'layout5':
-			ctx.putImageData(maps[0], 0, 0);
-			ctx.putImageData(maps[1], 0, maps[0].height);
-			ctx.putImageData(maps[2], maps[1].width, maps[0].height);
+			ctx.drawImage(maps[0], 0, 0, maps[0].width, maps[0].height);
+			ctx.drawImage(maps[1], 0, maps[0].height, maps[1].width, maps[1].height);
+			ctx.drawImage(maps[2], maps[1].width, maps[0].height, maps[2].width, maps[2].height);
 			break;
 		case 'layout6':
-			ctx.putImageData(maps[0], 0, 0);
-			ctx.putImageData(maps[1], maps[0].width, 0);
-			ctx.putImageData(maps[2], 0, maps[0].height);
-			ctx.putImageData(maps[3], maps[2].width, maps[1].height);
+			ctx.drawImage(maps[0], 0, 0, maps[0].width, maps[0].height);
+			ctx.drawImage(maps[1], maps[0].width, 0, maps[1].width, maps[1].height);
+			ctx.drawImage(maps[2], 0, maps[0].height, maps[2].width, maps[2].height);
+			ctx.drawImage(maps[3], maps[2].width, maps[1].height, maps[3].width, maps[3].height);
 			break;
 	}
 }

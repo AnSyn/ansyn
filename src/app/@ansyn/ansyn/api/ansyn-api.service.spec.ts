@@ -1,4 +1,5 @@
 import { async, inject, TestBed } from '@angular/core/testing';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AnsynApi } from './ansyn-api.service';
@@ -22,6 +23,7 @@ describe('apiService', () => {
 			],
 			providers: [
 				AnsynApi,
+				ImageryCommunicatorService,
 				{
 					provide: ProjectionConverterService,
 					useValue: {}

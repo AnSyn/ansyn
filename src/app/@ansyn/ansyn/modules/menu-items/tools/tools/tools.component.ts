@@ -143,7 +143,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	exportMaps() {
-		this.mapFacadeService.exportMaps();
+	exportMapsToPng() {
+		this.mapFacadeService.exportMapsToPng();
 	}
 }

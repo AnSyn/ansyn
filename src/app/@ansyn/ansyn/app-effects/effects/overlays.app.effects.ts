@@ -1,5 +1,5 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectFooterCollapse } from "@ansyn/map-facade";
@@ -65,7 +65,6 @@ import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { IPendingOverlay } from '@ansyn/map-facade';
-import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -274,7 +273,6 @@ export class OverlaysAppEffects {
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
-				@Inject(DOCUMENT) protected document: any,
 				public imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 

@@ -180,7 +180,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, wasWelcomeNotificationShown: action.payload };
 
 		case MapActionTypes.FOOTER_COLLAPSE:
-			return { ...state, footerCollapse: !state.footerCollapse};
+			return { ...state, footerCollapse: action.payload};
 
 		default:
 			return state;

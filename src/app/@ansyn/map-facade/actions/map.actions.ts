@@ -324,4 +324,6 @@ export class SetToastMessageAction implements Action {
 
 export class ToggleFooter implements Action{
 	type = MapActionTypes.FOOTER_COLLAPSE;
+
+	constructor(public payload: boolean) {}
 }

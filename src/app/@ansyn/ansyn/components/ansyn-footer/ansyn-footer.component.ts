@@ -42,7 +42,7 @@ export class AnsynFooterComponent implements OnInit, OnDestroy{
 	}
 
 	toggle() {
-		this.store.dispatch( new ToggleFooter());
+		this.store.dispatch( new ToggleFooter(!this.collapse));
 	}
 
 	startToggleCollapse(collapse: boolean) {

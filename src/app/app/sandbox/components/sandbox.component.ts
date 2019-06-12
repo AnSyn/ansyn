@@ -296,4 +296,9 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	getOverlayData() {
 		console.log(this.ansynApi.getOverlayData());
 	}
+
+	footerCollapse(collapse) {
+		this.ansynApi.collapseFooter(JSON.parse(collapse));
+
+	}
 }

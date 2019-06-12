@@ -1,6 +1,5 @@
 import { Component, ElementRef, Inject, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { ToggleFooter } from '../../../menu/actions/menu.actions';
-import { selectFooterCollapse } from '../../../menu/reducers/menu.reducer';
+import { selectFooterCollapse, ToggleFooter } from "@ansyn/map-facade";
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { ContainerChangedTriggerAction, IMenuState } from '@ansyn/menu';
 import { Store } from '@ngrx/store';

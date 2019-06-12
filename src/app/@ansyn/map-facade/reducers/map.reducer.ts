@@ -47,6 +47,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
 	toastMessage: IToastMessage;
+	footerCollapse: boolean;
 }
 
 
@@ -58,7 +59,8 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	pendingOverlays: [],
 	layout: <LayoutKey>'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
-	toastMessage: null
+	toastMessage: null,
+	footerCollapse: false
 });
 
 export const mapFeatureKey = 'map';
@@ -177,6 +179,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
 			return { ...state, wasWelcomeNotificationShown: action.payload };
 
+		case MapActionTypes.FOOTER_COLLAPSE:
+			return { ...state, footerCollapse: !state.footerCollapse};
+
 		default:
 			return state;
 	}
@@ -191,3 +196,4 @@ export const selectMaps = createSelector(mapStateSelector, selectEntities);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
+export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);

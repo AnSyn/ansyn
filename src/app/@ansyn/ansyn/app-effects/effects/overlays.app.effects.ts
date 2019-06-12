@@ -2,7 +2,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable, Inject } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectFooterCollapse } from '../../../menu/reducers/menu.reducer';
+import { selectFooterCollapse } from "@ansyn/map-facade";
 import {
 	BackToWorldView, OverlayStatusActionsTypes, SetRemovedOverlayIdsCount, SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction, SetPresetOverlaysAction, TogglePresetOverlayAction

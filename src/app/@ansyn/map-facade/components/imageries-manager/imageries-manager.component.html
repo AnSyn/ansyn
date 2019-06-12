@@ -1,7 +1,7 @@
 <div class="imageries-container"
 	 #imageriesContainer
 	 [ngClass]="{'pin-location': pinLocationMode}"
-	 [class.footer-collapsed]="document.querySelector('.status-timeline-container.collapsed')">
+	 [class.footer-collapsed]="footerCollapse">
 
 	<ng-template [ngIf]="ids.length">
 		<div *ngFor="let mapId of ids; count as count"

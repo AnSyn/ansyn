@@ -12,7 +12,6 @@ export const MenuActionTypes = {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
 	SET_AUTO_CLODE: 'SET_AUTO_CLODE',
-	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE'
 };
 
 export class InitializeMenuItemsAction implements Action {
@@ -69,9 +68,5 @@ export class SetAutoClose implements Action {
 
 	constructor(public payload: boolean) {
 	}
-}
-
-export class ToggleFooter implements Action{
-	type = MenuActionTypes.FOOTER_COLLAPSE;
 }
 

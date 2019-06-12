@@ -1,10 +1,9 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
-import { selectMaps } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectMaps } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
-import { selectFooterCollapse } from '../../../../../menu/reducers/menu.reducer';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ICoreConfig } from '../../../core/models/core.config.model';
 import { IOverlay } from '../../models/overlay.model';
@@ -54,7 +53,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				@Inject(OverlaysConfig) public _config: IOverlaysConfig,
-				@Inject(CoreConfig) protected config: ICoreConfig) {
+				@Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
 	ngOnDestroy(): void {

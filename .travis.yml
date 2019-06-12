@@ -36,7 +36,7 @@ script:
 
 cache:
   directories:
-     - ./node_modules
+  - ./node_modules
 
 before_deploy:
   - docker --version

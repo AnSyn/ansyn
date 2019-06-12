@@ -17,6 +17,7 @@ import { UUID } from 'angular2-uuid';
 })
 export class AnsynRadioComponent implements OnInit, ControlValueAccessor {
 	@Input() value;
+	@Input() name;
 	id = UUID.UUID();
 	private _model: any = '';
 	private onTouchedCallback: () => void = noop;

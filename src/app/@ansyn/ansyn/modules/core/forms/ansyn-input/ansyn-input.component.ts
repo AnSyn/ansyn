@@ -1,6 +1,5 @@
 import { Component, ElementRef, forwardRef, HostBinding, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { UUID } from 'angular2-uuid';
 import { noop } from 'rxjs';
 import { Attribute } from '@angular/core';
 
@@ -23,6 +22,7 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	@Input() autocomplete: 'off' | 'on' = 'off';
 	@Input()
 	@HostBinding('class.white') white: boolean;
+	disabled: boolean;
 
 	private innerValue: any = '';
 	private onTouchedCallback: () => void = noop;
@@ -69,4 +69,9 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	registerOnTouched(fn: any) {
 		this.onTouchedCallback = fn;
 	}
+
+	setDisabledState(isDisabled: boolean): void {
+		this.disabled = isDisabled;
+	}
+
 }

@@ -12,7 +12,7 @@ import {
 } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
-import { mapsToJpg } from '../utils/exportMaps';
+import { mapsToPng } from '../utils/exportMaps';
 
 // @dynamic
 @Injectable({
@@ -82,13 +82,13 @@ export class MapFacadeService {
 		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
 	}
 
-	exportMaps() {
+	exportMapsToPng() {
 				const communicators = this.imageryCommunicatorService.communicatorsAsArray();
 				const maps = [];
 				communicators.forEach(comm => {
 					const map = comm.ActiveMap;
 					maps.push(map.getExportData());
 				});
-				mapsToJpg(maps, this.layout).subscribe(blob => saveAs(blob, "map.jpg"));
+				mapsToPng(maps, this.layout).subscribe(blob => saveAs(blob, "map.jpg"));
 	}
 }

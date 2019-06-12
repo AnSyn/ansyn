@@ -8,6 +8,7 @@ keys = [
     "/ansyn/overlay/api/default",
     "/ansyn/login/baseurl",
     "/ansyn/login/active",
+    "/ansyn/login/title",
     "/ansyn/menu/items",
     "/ansyn/menu/background",
     "/ansyn/menu/color",

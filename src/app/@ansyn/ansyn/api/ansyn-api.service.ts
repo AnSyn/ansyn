@@ -1,5 +1,5 @@
 import { Inject, Injectable, NgModuleRef } from '@angular/core';
-import { ImageryMapPosition } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
 import {
 	LayoutKey,
 	MapActionTypes,
@@ -100,6 +100,7 @@ export class AnsynApi {
 	constructor(public store: Store<any>,
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected moduleRef: NgModuleRef<any>,
 				@Inject(ANSYN_ID) public id: string) {
 		this.init();
@@ -165,6 +166,15 @@ export class AnsynApi {
 
 	setMapPositionByRect(rect: Polygon) {
 		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
+	}
+
+	/**
+	 * rotate the map by degree. if it is not geo registered image rotate the image.
+	 * @param degree
+	 * @param mapId
+	 */
+	setRotation(degree: number, mapId?: string) {
+		this.imageryCommunicatorService.provide(mapId ? mapId : this.activeMapId).setRotation(degree);
 	}
 
 	setMapPositionByRadius(center: Point, radiusInMeters: number, search: boolean = false) {

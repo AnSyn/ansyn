@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
+import { LoginConfig } from '../services/login-config.service';
 
 describe('LoginComponent', () => {
 	let component: LoginComponent;
@@ -23,7 +24,10 @@ describe('LoginComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [LoginComponent],
 			imports: [RouterTestingModule, FormsModule],
-			providers: [{ provide: AuthService, useValue: mockAuthService }]
+			providers: [
+				{ provide: AuthService, useValue: mockAuthService },
+				{ provide: LoginConfig, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

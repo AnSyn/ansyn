@@ -168,15 +168,13 @@ export class AnsynApi {
 		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
 	}
 
-	setRotation(mapId: string | number, degree?: number) {
-		if (typeof (mapId) === 'number') {
-			degree = <number>mapId;
-			mapId = <string>this.activeMapId;
-		}
-		if (!degree) {
-			degree = 100;
-		}
-		this.imageryCommunicatorService.provide(mapId).setRotation(degree);
+	/**
+	 * rotate the map by degree. if it is not geo registered image rotate the image.
+	 * @param degree
+	 * @param mapId
+	 */
+	setRotation(degree: number, mapId?: string) {
+		this.imageryCommunicatorService.provide(mapId ? mapId : this.activeMapId).setRotation(degree);
 	}
 
 	setMapPositionByRadius(center: Point, radiusInMeters: number, search: boolean = false) {

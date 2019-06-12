@@ -2,7 +2,7 @@
 
 	<div class="title-row">
 
-		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate}}</span>
+		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate }}</span>
 
 		<span *ngIf="!show && metadataFromState && metadataFromState.isFiltered() && !showOnlyFavorite"
 			  class="filtered">(filtered)</span>
@@ -28,6 +28,7 @@
 					*ngSwitchCase="'Enum'"
 					[isLongFiltersList]="isLongFiltersList"
 					[metadata]="metadataFromState"
+					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-enum-filter-container>
 
@@ -47,7 +48,8 @@
 				<ansyn-array-filter-container
 					*ngSwitchCase="'Array'"
 					[metadata]="metadataFromState"
-					(onMetadataChange)="onMetadataChange($event)">
+					(onMetadataChange)="onMetadataChange($event)"
+					[filtersSearchResult]="filtersSearchResults[filter.displayName]">
 				</ansyn-array-filter-container>
 			</div>
 		</div>

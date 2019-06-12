@@ -27,7 +27,7 @@ describe('EnumFilterContainerComponent', () => {
 		fixture = TestBed.createComponent(EnumFilterContainerComponent);
 		component = fixture.componentInstance;
 		component.metadata = new EnumFilterMetadata();
-
+		// component
 		fixture.detectChanges();
 	});
 

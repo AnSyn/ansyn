@@ -1,8 +1,9 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '../filter-type';
 import { ICaseFilter } from '../../../cases/models/case.model';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
-export class ArrayFilterMetadata implements FilterMetadata {
+export class ArrayFilterMetadata extends FilterMetadata {
 	fields = new Map<string, boolean>();
 	type: FilterType = FilterType.Array;
 	count = 0;
@@ -29,7 +30,8 @@ export class ArrayFilterMetadata implements FilterMetadata {
 		this.filteredCount = 0;
 	}
 
-	initializeFilter(overlays: any[], modelName: string, caseFilter?: ICaseFilter<[string, boolean][]>): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<[string, boolean][]>, visibility?: boolean): void {
+		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.fields = new Map<string, boolean>();
 
 		overlays.forEach((overlay: any) => {
@@ -69,6 +71,6 @@ export class ArrayFilterMetadata implements FilterMetadata {
 	}
 
 	shouldBeHidden(): boolean {
-		return false;
+		return !this.visible;
 	}
 }

@@ -13,7 +13,7 @@ export interface IEnumFiled {
 	disabled?: boolean;
 }
 
-export class EnumFilterMetadata implements FilterMetadata {
+export class EnumFilterMetadata extends FilterMetadata {
 	enumsFields: Map<string, IEnumFiled> = new Map<string, IEnumFiled>();
 	type: FilterType = FilterType.Enum;
 
@@ -47,7 +47,8 @@ export class EnumFilterMetadata implements FilterMetadata {
 		});
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<CaseEnumFilterMetadata>): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<CaseEnumFilterMetadata>, visibility?: boolean): void {
+		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.enumsFields = new Map<string, IEnumFiled>();
 
 		overlays.forEach((overlay: any) => {
@@ -108,6 +109,6 @@ export class EnumFilterMetadata implements FilterMetadata {
 	}
 
 	shouldBeHidden(): boolean {
-		return false;
+		return !this.visible;
 	}
 }

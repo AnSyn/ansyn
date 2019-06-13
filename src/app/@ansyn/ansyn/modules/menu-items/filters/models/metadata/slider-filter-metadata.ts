@@ -3,7 +3,7 @@ import { FilterType } from '../filter-type';
 import { ICaseFilter, ICaseSliderFilterMetadata } from '../../../cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 
-export class SliderFilterMetadata implements FilterMetadata {
+export class SliderFilterMetadata extends FilterMetadata {
 	count = 0;
 	filteredCount = 0;
 
@@ -43,7 +43,8 @@ export class SliderFilterMetadata implements FilterMetadata {
 		this.filteredCount = 0;
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<ICaseSliderFilterMetadata>): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<ICaseSliderFilterMetadata>, visibility?: boolean): void {
+		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.count = 0;
 
 		overlays.forEach((overlay: any) => {
@@ -77,6 +78,6 @@ export class SliderFilterMetadata implements FilterMetadata {
 	}
 
 	shouldBeHidden(): boolean {
-		return this.min === this.max;
+		return !this.visible || this.min === this.max;
 	}
 }

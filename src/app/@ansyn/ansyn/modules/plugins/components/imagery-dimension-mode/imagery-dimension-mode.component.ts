@@ -31,7 +31,7 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				@Inject(CoreConfig) protected coreConfig: ICoreConfig) {
+				@Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
 	ngOnInit() {

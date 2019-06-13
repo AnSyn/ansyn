@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
-import { selectMaps } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectMaps } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
@@ -9,9 +9,8 @@ import { ICoreConfig } from '../../../core/models/core.config.model';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../../models/overlays.config';
 import { OverlaysConfig } from '../../services/overlays.service';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Dictionary } from '@ngrx/entity';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',
@@ -21,7 +20,7 @@ import { DOCUMENT } from '@angular/common';
 @AutoSubscriptions()
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
-	isFooterCollapsible =  this.config.isFooterCollapsible;
+	footerCollapse: boolean;
 	@AutoSubscription
 	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
@@ -32,13 +31,9 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	collapsibleClick$ = fromEvent(this.document.querySelector('ansyn-footer'), 'click').pipe(
-		filter( (event: any) => event.path[0].classList.contains('hide-menu')),
-		tap( (event) => {
-			this.isFooterCollapsible = !this.isFooterCollapsible
-		})
+	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
+		tap( (collapse) => this.footerCollapse = collapse)
 	);
-
 	set overlay(overlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration
@@ -58,8 +53,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				@Inject(OverlaysConfig) public _config: IOverlaysConfig,
-				@Inject(CoreConfig) protected config: ICoreConfig,
-				@Inject(DOCUMENT) protected document: any) {
+				@Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
 	ngOnDestroy(): void {

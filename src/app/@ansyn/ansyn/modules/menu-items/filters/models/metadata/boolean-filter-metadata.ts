@@ -17,7 +17,7 @@ export interface IBooleanProperties {
 	false: IBooleanProperty;
 }
 
-export class BooleanFilterMetadata implements FilterMetadata {
+export class BooleanFilterMetadata extends FilterMetadata {
 	type: FilterType = FilterType.Boolean;
 	properties: IBooleanProperties = {
 		true: {
@@ -69,7 +69,8 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<ICaseBooleanFilterMetadata>): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<ICaseBooleanFilterMetadata>, visibility?: boolean): void {
+		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.properties.true.count = 0;
 		this.properties.true.value = true;
 		this.properties.false.value = true;
@@ -117,7 +118,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 	}
 
 	shouldBeHidden(): boolean {
-		return false;
+		return !this.visible;
 	}
 
 }

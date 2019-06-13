@@ -29,11 +29,11 @@
 		:host {
 			bottom: @status-bar-height;
 
-			.with-collapse {
+			.collapse-enable {
 				margin-bottom: 20px;
 			}
 
-			.collapse-click {
+			.collapse-enable.footer-collapse {
 				margin-bottom: -14px;
 			}
 		}
@@ -42,23 +42,31 @@
 	&.layout2 {
 		:host {
 			bottom: @status-bar-height;
+			.collapse-enable.footer-collapse {
+				margin-bottom: -@status-bar-height
+			}
 		}
+
 	}
 
 	&.layout3 {
 		div.map-container-wrapper:last-child {
 			:host {
 				bottom: @status-bar-height;
-
-				.with-collapse {
-					margin-bottom: 20px;
-				}
-
-				.collapse-click {
-					margin-bottom: -14px;
-				}
 			}
 
+			:last-child {
+				:host {
+
+					.collapse-enable {
+						margin-bottom: 20px;
+					}
+
+					.collapse-enable.footer-collapse {
+						margin-bottom: -14px;
+					}
+				}
+			}
 		}
 	}
 
@@ -66,6 +74,9 @@
 		div.map-container-wrapper:first-child, div.map-container-wrapper:last-child {
 			:host {
 				bottom: @status-bar-height;
+				.collapse-enable.footer-collapse {
+					margin-bottom: -@status-bar-height
+				}
 			}
 		}
 	}
@@ -74,6 +85,9 @@
 		div.map-container-wrapper:not(:first-child) {
 			:host {
 				bottom: @status-bar-height;
+				.collapse-enable.footer-collapse {
+					margin-bottom: -@status-bar-height
+				}
 			}
 		}
 	}
@@ -82,6 +96,9 @@
 		div.map-container-wrapper:nth-child(3), div.map-container-wrapper:nth-child(4) {
 			:host {
 				bottom: @status-bar-height;
+				.collapse-enable.footer-collapse {
+					margin-bottom: -@status-bar-height
+				}
 			}
 		}
 	}

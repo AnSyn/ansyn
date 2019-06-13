@@ -2,6 +2,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { selectFooterCollapse } from "@ansyn/map-facade";
 import {
 	BackToWorldView, OverlayStatusActionsTypes, SetRemovedOverlayIdsCount, SetRemovedOverlaysIdAction,
 	ToggleFavoriteAction, SetPresetOverlaysAction, TogglePresetOverlayAction
@@ -236,13 +237,14 @@ export class OverlaysAppEffects {
 	});
 
 	@Effect()
-	setHoveredOverlay$: Observable<any> = this.store$.select(selectDropMarkup)
+	setHoveredOverlay$: Observable<any> = combineLatest(this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse))
 		.pipe(
+			filter(([drop, footerCollapse]) => Boolean(!footerCollapse)),
 			startWith(null),
 			pairwise(),
 			filter(this.onDropMarkupFilter.bind(this)),
 			map(([prevAction, currentAction]) => currentAction),
-			withLatestFrom(this.overlaysService.getAllOverlays$),
+			withLatestFrom(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
 			this.getOverlayFromDropMarkup,
 			withLatestFrom(this.store$.select(selectActiveMapId)),
 			this.getCommunicatorForActiveMap,

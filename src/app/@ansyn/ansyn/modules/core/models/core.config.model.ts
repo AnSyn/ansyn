@@ -9,4 +9,5 @@ export interface ICoreConfig {
 	};
 	httpTimeout: number;
 	isFooterCollapsible: boolean;
+	enable3D: boolean;
 }

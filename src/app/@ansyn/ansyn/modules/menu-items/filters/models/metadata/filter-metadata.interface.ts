@@ -1,10 +1,14 @@
 import { FilterType } from '../filter-type';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import { ICaseFilter } from '../../../cases/models/case.model';
+
 export abstract class FilterMetadata {
 	type: FilterType;
+	visible: boolean;
 
-	abstract initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter): void;
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter, visible?: boolean) {
+		this.visible = visible !== undefined ? visible : true;
+	};
 
 	abstract accumulateData(value: any): void;
 

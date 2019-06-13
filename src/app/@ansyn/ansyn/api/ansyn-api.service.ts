@@ -9,7 +9,7 @@ import {
 	SetLayoutAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	ShadowMouseProducer
+	ShadowMouseProducer, ToggleFooter
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -193,6 +193,10 @@ export class AnsynApi {
 
 	getOverlayData(mapId: string = this.activeMapId) {
 		return this.mapsEntities[mapId].data.overlay;
+	}
+
+	collapseFooter(collapse: boolean) {
+		this.store.dispatch( new ToggleFooter(collapse))
 	}
 
 	init(): void {

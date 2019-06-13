@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ChangeImageryMap, IEntryComponent } from "@ansyn/map-facade";
 import { AutoSubscriptions } from "auto-subscriptions";
 import { get as _get } from "lodash";
@@ -7,6 +7,8 @@ import { ImageryCommunicatorService } from "@ansyn/imagery";
 import { DisabledOpenLayersMapName, OpenlayersMapName } from "@ansyn/ol";
 import { CesiumMap, CesiumMapName } from '@ansyn/imagery-cesium';
 import { take } from 'rxjs/operators';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ICoreConfig } from '../../../core/models/core.config.model';
 
 export enum DimensionMode {
 	D2 = '2D',
@@ -28,7 +30,8 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 	@Input() mapId: string;
 
 	constructor(protected store$: Store<any>,
-				protected communicators: ImageryCommunicatorService) {
+				protected communicators: ImageryCommunicatorService,
+				@Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
 	ngOnInit() {

@@ -3,7 +3,7 @@ import { ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
 import {
 	LayoutKey,
 	MapActionTypes,
-	selectActiveMapId, selectFooterCollapse,
+	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
 	SetLayoutAction,

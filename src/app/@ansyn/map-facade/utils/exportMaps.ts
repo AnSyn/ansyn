@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { LayoutKey } from '../models/maps-layout';
 
-export function mapsToJpg(maps: HTMLImageElement[], layout: LayoutKey): Observable<Blob> {
+export function mapsToPng(maps: ImageData[], layout: LayoutKey): Observable<Blob> {
 	let c = document.createElement('canvas');
 	let size = getSizeByLayout(layout, maps);
 	c.width = size.width;
@@ -19,8 +19,8 @@ export function mapsToJpg(maps: HTMLImageElement[], layout: LayoutKey): Observab
 }
 
 
-function getSizeByLayout(layout: LayoutKey, maps: HTMLImageElement[]) {
-	const size = { width: 0, height: 0 }
+function getSizeByLayout(layout: LayoutKey, maps: Array<ImageData>) {
+	const size = { width: 0, height: 0 };
 	switch (layout) {
 		case 'layout1':
 			size.width = maps[0].width;

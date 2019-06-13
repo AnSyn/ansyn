@@ -188,6 +188,10 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	setRotation() {
+		this.ansynApi.setRotation(100);
+	}
+
 	setAnnotationsWithIcons() {
 		let center: Point = {
 			type: 'Point',

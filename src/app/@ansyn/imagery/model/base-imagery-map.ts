@@ -10,6 +10,13 @@ export interface IImageryMapMetaData {
 	defaultMapSource?: string;
 }
 
+export interface ICanvasExportData {
+	width: number;
+	height: number;
+	data: string;
+
+}
+
 export interface IBaseImageryMapConstructor {
 	groupLayers: Map<string, any>;
 
@@ -80,7 +87,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract getHtmlContainer(): HTMLElement;
 
-	abstract getExportData(): HTMLImageElement;
+	abstract getExportData(): ICanvasExportData;
 
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');

@@ -3,7 +3,7 @@ import { Inject } from '@angular/core';
 import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
-	ExtentCalculator,
+	ExtentCalculator, ICanvasExportData,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
@@ -547,13 +547,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.targetElement;
 	}
 
-	getExportData(): HTMLImageElement {
+	getExportData(): ICanvasExportData {
 		const c: HTMLCanvasElement = this.mapObject.getViewport().firstChild;
-		//const ctx = c.getContext('2d');
-		const imgData = new Image(c.width, c.height);
-		imgData.src = c.toDataURL("image/jpg");
-		return imgData;
-		//return ctx.getImageData(0, 0, c.width, c.height);
+		const exportData: ICanvasExportData = {
+			width: c.width,
+			height: c.height,
+			data: c.toDataURL()
+		};
+		return exportData;
 	}
 
 	// BaseImageryMap End

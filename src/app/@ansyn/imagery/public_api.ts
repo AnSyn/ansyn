@@ -1,3 +1,4 @@
+export { ICanvasExportData } from './model/base-imagery-map';
 export {
 	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
 }from './model/case-map-position.model';

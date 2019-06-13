@@ -12,7 +12,8 @@ export {
 	selectMaps,
 	selectLayout,
 	selectWasWelcomeNotificationShown,
-	selectToastMessage
+	selectToastMessage,
+	selectFooterCollapse
 } from './reducers/map.reducer';
 
 export {
@@ -44,7 +45,8 @@ export {
 	ToggleMapLayersAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	IPendingOverlay
+	IPendingOverlay,
+	ToggleFooter
 } from './actions/map.actions';
 
 export {

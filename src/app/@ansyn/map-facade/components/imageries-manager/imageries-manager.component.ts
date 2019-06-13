@@ -4,7 +4,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import {
 	IMapState,
-	selectActiveMapId,
+	selectActiveMapId, selectFooterCollapse,
 	selectLayout,
 	selectMaps,
 	selectMapsIds,
@@ -39,6 +39,7 @@ export class ImageriesManagerComponent implements OnInit {
 	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
 	public mapsEntities$: Observable<Dictionary<IMapSettings>> = this.store.select(selectMaps);
 	public ids$ = this.store.select(selectMapsIds);
+	public footerCollapse$ = this.store.select(selectFooterCollapse);
 
 	public showWelcomeNotification$ = this.store.pipe(
 		select(selectWasWelcomeNotificationShown),
@@ -57,6 +58,7 @@ export class ImageriesManagerComponent implements OnInit {
 	ids: string[] = [];
 	mapsEntities: Dictionary<IMapSettings>;
 	activeMapId: string;
+	footerCollapse: boolean;
 
 	constructor(protected mapEffects: MapEffects,
 				protected store: Store<IMapState>,
@@ -86,6 +88,7 @@ export class ImageriesManagerComponent implements OnInit {
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
 		this.mapsEntities$.subscribe((mapsEntities) => this.mapsEntities = mapsEntities);
 		this.ids$.subscribe((ids: string[]) => this.ids = ids);
+		this.footerCollapse$.subscribe( collapse => this.footerCollapse = collapse);
 	}
 
 
